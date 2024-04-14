@@ -261,6 +261,9 @@
     <ClCompile Include="Ellysia\Math\Collision\Collision.cpp">
       <Filter>Project</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Animation.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">

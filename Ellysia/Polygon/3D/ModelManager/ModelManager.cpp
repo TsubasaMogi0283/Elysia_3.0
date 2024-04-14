@@ -97,7 +97,7 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 		}
 	}
 
-
+	//ノードの読み込み
 	modelData.rootNode = ReadNode::GetInstance()->Read(scene->mRootNode);
 
 	//ModelDataを返す
@@ -120,8 +120,12 @@ uint32_t ModelManager::LoadModelFile(const std::string& directoryPath, const std
 
 	//モデルの読み込み
 	ModelData newModelData = ModelManager::GetInstance()->LoadFile(directoryPath, fileName);
+	//アニメーションの読み込み
+	Animation newAnimation = LoadAnimationFile(directoryPath, fileName);
+
 	//新規登録
-	ModelManager::GetInstance()->modelInfromtion_[modelhandle].data = newModelData;
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].modelData = newModelData;
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].animationData = newAnimation;
 	ModelManager::GetInstance()->modelInfromtion_[modelhandle].directoryPath = directoryPath;
 	ModelManager::GetInstance()->modelInfromtion_[modelhandle].filePath = fileName;
 	ModelManager::GetInstance()->modelInfromtion_[modelhandle].handle = modelhandle;

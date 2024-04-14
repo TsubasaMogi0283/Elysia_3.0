@@ -11,3 +11,5 @@ struct Animation {
 	std::map<std::string, NodeAnimation>nodeAnimations;
 
 };
+
+Animation LoadAnimationFile(const std::string& directoryPath, const std::string& fileName);
