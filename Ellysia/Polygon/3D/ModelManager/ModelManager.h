@@ -1,12 +1,13 @@
 #pragma once
 #include <string>
 #include <array>
-#include <ModelData.h>
 #include <fstream>
 #include <sstream>
 #include <list>
 
 
+#include <ModelData.h>
+#include "Animation.h"
 
 class ModelManager final{
 private:
@@ -30,9 +31,11 @@ public:
 public:
 
 	ModelData GetModelData(uint32_t handle) {
-		return modelInfromtion_[handle].data;
+		return modelInfromtion_[handle].modelData;
 	}
-
+	Animation GetModelAnimation(uint32_t handle) {
+		return modelInfromtion_[handle].animationData;
+	}
 
 	//モデルデータの読み込み(ハンドルを登録する)
 	//本体はここで使う
@@ -55,7 +58,10 @@ private:
 
 	struct ModelInformation {
 		//モデルデータ
-		ModelData data;
+		ModelData modelData;
+		//アニメーション
+		Animation animationData;
+
 		//ハンドル
 		uint32_t handle;
 

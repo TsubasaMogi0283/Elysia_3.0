@@ -157,7 +157,7 @@
     <Filter Include="Ellysia\Header File\AdjustmentItems">
       <UniqueIdentifier>{790ca7fe-3aed-4cdc-bdf7-edc3fdacdae6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Header File\Math\ModelManager">
+    <Filter Include="Ellysia\Header File\ModelManager">
       <UniqueIdentifier>{3d3be091-044e-42b8-93ea-7d8380a25a1b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Text">
@@ -234,9 +234,6 @@
     <ClCompile Include="Ellysia\main.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Math\Collision\Collision.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Project\AllGameScene\SampleScene2\SampleScene2.cpp">
       <Filter>Project\GameScene\Sample2</Filter>
     </ClCompile>
@@ -263,6 +260,12 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\ReadNode.cpp">
       <Filter>Ellysia\Source File\ModelManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Math\Collision\Collision.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Animation.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -394,9 +397,6 @@
     <ClInclude Include="Ellysia\Math\Shape\AABB.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\Collision\Collision.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Project\AllGameScene\SampleScene2\SampleScene2.h">
       <Filter>Project\GameScene\Sample2</Filter>
     </ClInclude>
@@ -413,7 +413,7 @@
       <Filter>Ellysia\Header File\Lighting</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\ModelManager.h">
-      <Filter>Ellysia\Header File\Math\ModelManager</Filter>
+      <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\SrvManager\SrvManager.h">
       <Filter>Ellysia\Header File</Filter>
@@ -446,10 +446,22 @@
       <Filter>Ellysia\Header File\AdjustmentItems</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Node.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\ReadNode.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Collision\Collision.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\KeyFrame.h">
+      <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\NodeAnimation.h">
+      <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Animation.h">
+      <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

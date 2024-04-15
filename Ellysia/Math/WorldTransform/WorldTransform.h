@@ -30,6 +30,8 @@ public:
 	//行列を計算・転送する
 	void Update();
 
+	void Update(Matrix4x4 animationLocalMatrix);
+
 	//ペアレントの設定
 	void SetParent(const WorldTransform* parent) {
 		parent = parent_;
@@ -65,6 +67,8 @@ public:
 
 	//glTFからローカル行列を受け取る
 	Matrix4x4 rootNodeLocalMatrix_ = {};
+
+	Matrix4x4 animationLocalMatrix_ = {};
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> bufferResource_;

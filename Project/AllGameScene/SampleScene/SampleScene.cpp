@@ -20,9 +20,7 @@ void SampleScene::Initialize() {
 	
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
-
-	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.gltf");
-	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/05_02", "plane.obj"); 
+	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf");
 
 	model_.reset(Model::Create(modelHandle));
 	
@@ -74,11 +72,13 @@ void SampleScene::Update(GameManager* gameManager) {
 		audio_->ResumeWave(audioHandle_);
 	}
 
-	AdjustmentItems::GetInstance()->SaveFile(GroupName);
-
 	
-	worldTransform_.Update();
+
+	Matrix4x4 localMatrix = model_->GetAnimationLocalMatrix();
+	worldTransform_.Update(localMatrix);
 	camera_.Update();
+
+
 #ifdef _DEBUG
 	ImGui::Begin("Audio");
 	ImGui::SliderFloat("Pan", &pan_, -1.0f, 1.0f);
@@ -95,13 +95,14 @@ void SampleScene::Update(GameManager* gameManager) {
 
 #endif
 
+	AdjustmentItems::GetInstance()->SaveFile(GroupName);
 }
 
 /// <summary>
 /// 描画
 /// </summary>
 void SampleScene::Draw() {
-	model_->Draw(worldTransform_, camera_);
+	model_->Draw(worldTransform_, camera_,ModelManager::GetInstance()->GetModelAnimation(modelHandle));
 }
 
 
@@ -111,5 +112,5 @@ void SampleScene::Draw() {
 /// デストラクタ
 /// </summary>
 SampleScene::~SampleScene() {
-
+	
 }

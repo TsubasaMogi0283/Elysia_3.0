@@ -242,6 +242,7 @@ Quaternion QuaternionSlerp(Quaternion q0, Quaternion q1, float t) {
     float theta = std::acosf(dot);
 
     //Quaternionの前にある係数
+    //scale...係数
     float scale0 = float(std::sin((1 - t) * theta) / std::sin(theta));
     float scale1 = float(std::sin(t * theta) / std::sin(theta));
 

@@ -7,8 +7,6 @@
 
 
 static uint32_t modelIndex;
-std::list<ModelData> Model::modelInformationList_{};
-
 
 Model::Model() {
 
@@ -30,6 +28,8 @@ Model* Model::Create(uint32_t modelHandle) {
 
 	//テクスチャの読み込み
 	model->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).material.textureFilePath);
+	//Drawでも使いたいので取り入れる
+	model->modelHandle_ = modelHandle;
 
 	//頂点リソースを作る
 	model->vertices_ = ModelManager::GetInstance()->GetModelData(modelHandle).vertices;
@@ -88,9 +88,6 @@ Model* Model::Create(uint32_t modelHandle) {
 
 //描画
 void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
-	
-
-	
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
@@ -175,6 +172,8 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 	
 #pragma endregion
 
+
+
 	//コマンドを積む
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetModelRootSignature().Get());
@@ -212,6 +211,164 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 	//PointLight
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(6, pointLightResource_->GetGPUVirtualAddress());
 	
+	//SpotLight
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
+
+
+
+	//DrawCall
+	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(UINT(vertices_.size()), 1, 0, 0);
+}
+
+
+
+
+void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation animation){
+	//資料にはなかったけどUnMapはあった方がいいらしい
+	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
+	//プログラムが安定するらしいとのこと
+
+#pragma region 頂点バッファ
+	//頂点バッファにデータを書き込む
+	VertexData* vertexData = nullptr;
+	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
+	std::memcpy(vertexData, vertices_.data(), sizeof(VertexData) * vertices_.size());
+	vertexResource_->Unmap(0, nullptr);
+
+#pragma endregion
+
+#pragma region マテリアル
+	////書き込むためのアドレスを取得
+	////reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
+	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	materialData_->color = materialColor_;
+	materialData_->lightingKinds = selectLighting_;
+	materialData_->shininess = shininess_;
+	materialData_->uvTransform = MakeIdentity4x4();
+
+	materialResource_->Unmap(0, nullptr);
+
+#pragma endregion
+
+#pragma region DirectionalLight
+
+
+	if (selectLighting_ == Directional) {
+		directionalLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
+		directionalLightData_->color = lightColor_;
+		directionalLightData_->direction = lightingDirection_;
+		directionalLightData_->intensity = directionalLightIntensity_;
+		directionalLightResource_->Unmap(0, nullptr);
+	}
+
+
+#pragma endregion
+
+#pragma region PixelShaderに送る方のカメラ
+	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+	Vector3 cameraWorldPosition = {};
+	cameraWorldPosition.x = camera.worldMatrix_.m[3][0];
+	cameraWorldPosition.y = camera.worldMatrix_.m[3][1];
+	cameraWorldPosition.z = camera.worldMatrix_.m[3][2];
+
+	cameraForGPU_->worldPosition = cameraWorldPosition;
+	cameraResource_->Unmap(0, nullptr);
+#pragma endregion
+
+#pragma region 点光源
+	//PointLight
+	if (selectLighting_ == Point) {
+		pointLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&pointLightMapData_));
+		pointLightMapData_->color = pointLightData_.color;
+		pointLightMapData_->position = pointLightData_.position;
+		pointLightMapData_->intensity = pointLightData_.intensity;
+		pointLightMapData_->radius = pointLightData_.radius;
+		pointLightMapData_->decay = pointLightData_.decay;
+
+		pointLightResource_->Unmap(0, nullptr);
+	}
+
+
+#pragma endregion
+
+#pragma region スポットライト
+	if (selectLighting_ == Spot) {
+		spotLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&spotLightMapData_));
+		spotLightMapData_->color = spotLightData_.color;
+		spotLightMapData_->position = spotLightData_.position;
+		spotLightMapData_->intensity = spotLightData_.intensity;
+		spotLightMapData_->direction = spotLightData_.direction;
+		spotLightMapData_->distance = spotLightData_.distance;
+		spotLightMapData_->decay = spotLightData_.decay;
+		spotLightMapData_->cosFallowoffStart = spotLightData_.cosFallowoffStart;
+		spotLightMapData_->cosAngle = spotLightData_.cosAngle;
+		spotLightResource_->Unmap(0, nullptr);
+	}
+
+
+#pragma endregion
+
+#pragma region アニメーション用
+
+	//時刻を進める
+	//計測した時間を使って可変フレーム対応した方が良い
+	animationTime_ += 1.0f / 60.0f;
+	//最後までいったら最初からリピート再生
+	//リピートするかしないかの設定をフラグでやった方がよさそう
+	animationTime_ = std::fmod(animationTime_, animation.duration);
+	//rootNodeのAnimationを取得
+	NodeAnimation& rootNodeAnimation = animation.nodeAnimations[ModelManager::GetInstance()->GetModelData(modelHandle_).rootNode.name];
+	//指定時刻の値を取得
+	Vector3 translate = CalculationValue(rootNodeAnimation.translate.keyFrames, animationTime_);
+	Quaternion rotate = CalculationValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
+	Vector3 scale = CalculationValue(rootNodeAnimation.scale.keyFrames, animationTime_);
+
+	Vector3 newRotate = { rotate .x,rotate.y,rotate.z };
+	animationLocalMatrix_ = MakeAffineMatrix(scale, newRotate,translate);
+
+
+	//シェーダーに渡した方がよさそう
+	//後々やるつもり
+
+#pragma endregion
+
+	//コマンドを積む
+
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetModelRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetModelGraphicsPipelineState().Get());
+
+	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
+	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
+	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+	//Material
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+
+
+	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
+	//コマンド送ってGPUで計算
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform.bufferResource_->GetGPUVirtualAddress());
+
+
+	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
+	if (textureHandle_ != 0) {
+		TextureManager::GraphicsCommand(textureHandle_);
+	}
+
+	//DirectionalLight
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
+
+	//カメラ
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource_->GetGPUVirtualAddress());
+
+	//PixelShaderに送る方のカメラ
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
+
+	//PointLight
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(6, pointLightResource_->GetGPUVirtualAddress());
+
 	//SpotLight
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
 
