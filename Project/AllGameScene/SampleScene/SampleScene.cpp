@@ -95,6 +95,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 #endif
 
+	AdjustmentItems::GetInstance()->SaveFile(GroupName);
 }
 
 /// <summary>
@@ -111,5 +112,5 @@ void SampleScene::Draw() {
 /// デストラクタ
 /// </summary>
 SampleScene::~SampleScene() {
-	AdjustmentItems::GetInstance()->SaveFile(GroupName);
+	
 }
