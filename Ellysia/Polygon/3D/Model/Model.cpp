@@ -88,9 +88,6 @@ Model* Model::Create(uint32_t modelHandle) {
 
 //描画
 void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
-	
-
-	
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと

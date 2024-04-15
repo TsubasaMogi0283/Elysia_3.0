@@ -3,6 +3,9 @@
 #include <corecrt_math.h>
 #include <Matrix4x4.h>
 #include <cassert>
+#include <numbers>
+#include <corecrt_math.h>
+#include <cmath>
 
 Vector3 Add(Vector3 v1, Vector3 v2) {
 	Vector3 result = {};
@@ -90,6 +93,32 @@ Vector3 Lerp(Vector3 start, Vector3 end, float t){
 
 	return result;
 
+}
+
+Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
+	float newT = Clamp(t, 0.0f, 1.0f);
+
+	Vector3 normalizeV1 = Normalize(v1);
+	Vector3 normalizeV2 = Normalize(v2);
+
+
+	float dot = DotVector3(normalizeV1, normalizeV2);
+
+	float theta = std::acosf(dot) * newT;
+
+	Vector3 subtractVector3 = Subtract(v2, v1);
+	Vector3 relativeVector = Normalize(
+		{ subtractVector3.x * newT,
+		subtractVector3.y * newT,
+		subtractVector3.z * newT });
+
+	Vector3 result = {
+		v1.x * std::cos(theta) + relativeVector.x * std::sin(theta),
+		v1.y * std::cos(theta) + relativeVector.y * std::sin(theta),
+		v1.z * std::cos(theta) + relativeVector.z * std::sin(theta)
+	};
+	
+	return result;
 }
 
 

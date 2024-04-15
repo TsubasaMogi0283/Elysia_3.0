@@ -4,6 +4,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <VectorCalculation.h>
 
 Animation LoadAnimationFile(const std::string& directoryPath, const std::string& fileName){
     Animation animation = {};
@@ -88,10 +89,31 @@ Vector3 CalculationValue(const std::vector<KeyFrameVector3>& keyFrames, float ti
         if (keyFrames[index].time <= time <= time <= keyFrames[nextIndex].time) {
             //範囲内を補間する
             float t = (time - keyFrames[index].time) / (keyFrames[nextIndex].time - keyFrames[index].time);
-            return Lerp()
-
+            //Vector3 だと線形補間
+            return Lerp(keyFrames[index].value, keyFrames[nextIndex].value, t);
         }
-
-
     }
 }
+
+
+Quaternion CalculationValue(const std::vector<KeyFrameQuaternion>& keyFrames, float time) {
+    //特殊なケースを除外
+    //キーが無いものは✕
+    assert(!keyFrames.empty());
+    //キーが1つか、時刻がキーフレーム前なら最初の値とする
+    if (keyFrames.size() == 1 || keyFrames[0].time) {
+        return keyFrames[0].value;
+    }
+
+    for (size_t index = 0; index < keyFrames.size() - 1; ++index) {
+        size_t nextIndex = index + 1;
+        //indexとnextIndexの2つのkeyFrameを取得して範囲内に時刻があるかを判定
+        if (keyFrames[index].time <= time <= time <= keyFrames[nextIndex].time) {
+            //範囲内を補間する
+            float t = (time - keyFrames[index].time) / (keyFrames[nextIndex].time - keyFrames[index].time);
+            //QuaternionだとSlerp
+            return QuaternionSlerp(keyFrames[index].value, keyFrames[nextIndex].value, t);
+        }
+    }
+}
+

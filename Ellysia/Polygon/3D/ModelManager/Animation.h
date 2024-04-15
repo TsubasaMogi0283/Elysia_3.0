@@ -27,3 +27,11 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
 /// <param name="time"></param>
 /// <returns></returns>
 Vector3 CalculationValue(const std::vector<KeyFrameVector3>& keyFrames, float time);
+
+/// <summary>
+///  任意の時刻の値を取得(Quaternion版)
+/// </summary>
+/// <param name="keyFrames"></param>
+/// <param name="time"></param>
+/// <returns></returns>
+Quaternion CalculationValue(const std::vector<KeyFrameQuaternion>& keyFrames, float time);

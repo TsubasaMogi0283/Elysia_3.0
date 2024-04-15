@@ -49,6 +49,16 @@ float Lerp(float start, float end, float t);
 /// <returns></returns>
 Vector3 Lerp(Vector3 start, Vector3 end, float t);
 
+/// <summary>
+/// 球面線形補間
+/// </summary>
+/// <param name="v1"></param>
+/// <param name="v2"></param>
+/// <param name="t"></param>
+/// <returns></returns>
+Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);
+
+
 float Cot(float theta);
 
 //外積
