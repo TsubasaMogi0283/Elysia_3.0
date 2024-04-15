@@ -74,8 +74,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	
 
-	
-	worldTransform_.Update(model_->GetAnimationLocalMatrix());
+	Matrix4x4 localMatrix = model_->GetAnimationLocalMatrix();
+	worldTransform_.Update(localMatrix);
 	camera_.Update();
 
 
@@ -101,7 +101,7 @@ void SampleScene::Update(GameManager* gameManager) {
 /// 描画
 /// </summary>
 void SampleScene::Draw() {
-	model_->Draw(worldTransform_, camera_);
+	model_->Draw(worldTransform_, camera_,ModelManager::GetInstance()->GetModelAnimation(modelHandle));
 }
 
 

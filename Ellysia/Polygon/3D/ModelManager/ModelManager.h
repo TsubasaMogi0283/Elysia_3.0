@@ -33,7 +33,9 @@ public:
 	ModelData GetModelData(uint32_t handle) {
 		return modelInfromtion_[handle].modelData;
 	}
-
+	Animation GetModelAnimation(uint32_t handle) {
+		return modelInfromtion_[handle].animationData;
+	}
 
 	//モデルデータの読み込み(ハンドルを登録する)
 	//本体はここで使う
