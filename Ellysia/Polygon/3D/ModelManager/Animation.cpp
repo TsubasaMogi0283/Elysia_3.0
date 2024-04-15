@@ -38,11 +38,9 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
             keyFrame.value = { -keyAssimp.mValue.x,keyAssimp.mValue.y,keyAssimp.mValue.z };
             nodeAnimation.translate.keyFrames.push_back(keyFrame);
         }
+
         //RotateはmNunRotateionKeys/mRotateKeys
         //RotateはQuaternionで、右手->左手に変換するために、YとZを反転させる必要がある。
-         
-        
-        
         //Rotate
         for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumRotationKeys; ++keyIndex) {
             aiQuatKey& keyAssimp = nodeAnimationAssimp->mRotationKeys[keyIndex];

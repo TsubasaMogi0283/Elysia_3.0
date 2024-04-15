@@ -1,4 +1,5 @@
 #include "ReadNode.h"
+#include <Matrix4x4Calculation.h>
 
 ReadNode* ReadNode::GetInstance(){
     static ReadNode instance;
@@ -33,6 +34,24 @@ Node ReadNode::Read(aiNode* node){
     result.localMatrix.m[3][1] = ailocalMatrix[3][1];
     result.localMatrix.m[3][2] = ailocalMatrix[3][2];
     result.localMatrix.m[3][3] = ailocalMatrix[3][3];
+
+
+
+
+    aiVector3D scale = {};
+    aiVector3D translate = {};
+    aiQuaternion rotate = {};
+    //assimpの行列からSRTを抽出する関数を利用
+    node->mTransformation.Decompose(scale, rotate, translate);
+    //Scale
+    result.transform.scale = { scale.x,scale.y,scale.z };
+    //rotate
+    result.transform.rotate = { rotate.x,-rotate.y,-rotate.z,rotate.w };
+    //translate
+    result.transform.translate = { -translate.x,translate.y,translate.z};
+
+    Vector3 newRotate = { result.transform.rotate.x, result.transform.rotate.y, result.transform.rotate.z };
+    result.localMatrix = MakeAffineMatrix(result.transform.scale, newRotate, result.transform.translate);
 
 
     //Node名を格納
