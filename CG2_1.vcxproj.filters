@@ -160,6 +160,9 @@
     <Filter Include="Ellysia\Header File\Math\ModelManager">
       <UniqueIdentifier>{3d3be091-044e-42b8-93ea-7d8380a25a1b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Text">
+      <UniqueIdentifier>{86ea6656-3c90-41a3-872c-722ea8f63729}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -458,6 +461,15 @@
     </None>
     <None Include="Resources\Shader\Object3D\Object3d.hlsli">
       <Filter>Ellysia\Resource File\Object3d</Filter>
+    </None>
+    <None Include=".editorconfig">
+      <Filter>Text</Filter>
+    </None>
+    <None Include=".gitattributes">
+      <Filter>Text</Filter>
+    </None>
+    <None Include=".gitignore">
+      <Filter>Text</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
