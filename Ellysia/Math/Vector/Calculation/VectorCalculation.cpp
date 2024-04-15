@@ -72,6 +72,26 @@ Vector3 Normalize(Vector3 V1) {
 	return result;
 }
 
+float Lerp(float start, float end, float t){
+	float result = 0.0f;
+
+	result = (1.0f - t) * start + t * end;
+
+	return result;
+	
+}
+
+Vector3 Lerp(Vector3 start, Vector3 end, float t){
+	Vector3 result = {};
+
+	result.x = (1.0f - t) * start.x + t * end.x;
+	result.y = (1.0f - t) * start.y + t * end.y;
+	result.z = (1.0f - t) * start.z + t * end.z;
+
+	return result;
+
+}
+
 
 Vector3 Cross(const Vector3 v1, const Vector3 v2) {
 	Vector3 result;

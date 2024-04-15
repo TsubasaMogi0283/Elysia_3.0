@@ -12,4 +12,18 @@ struct Animation {
 
 };
 
+/// <summary>
+/// アニメーションの読み込み
+/// </summary>
+/// <param name="directoryPath">フォルダ名</param>
+/// <param name="fileName">ファイル名</param>
+/// <returns></returns>
 Animation LoadAnimationFile(const std::string& directoryPath, const std::string& fileName);
+
+/// <summary>
+/// 任意の時刻の値を取得(Vector3版)
+/// </summary>
+/// <param name="keyFrames"></param>
+/// <param name="time"></param>
+/// <returns></returns>
+Vector3 CalculationValue(const std::vector<KeyFrameVector3>& keyFrames, float time);
