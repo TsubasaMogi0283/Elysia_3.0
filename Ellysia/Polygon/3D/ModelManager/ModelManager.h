@@ -26,6 +26,34 @@ public:
 	ModelManager& operator=(const ModelManager& modelManager) = delete;
 
 
+private:
+
+	//モデルデータの読み込み
+	static ModelData LoadFile(const std::string& directoryPath, const std::string& fileName);
+
+
+public:
+
+	/// <summary>
+	/// モデルデータの読み込み(ハンドルを登録する)
+	/// </summary>
+	/// <param name="directoryPath">パス</param>
+	/// <param name="fileName">ファイル名</param>
+	/// <returns></returns>
+	static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName);
+
+	/// <summary>
+	/// アニメーション付きのglTFを読み込みたいときはこっちで
+	/// falseにすればobjも読み込めるよ
+	/// </summary>
+	/// <param name="directoryPath">パス</param>
+	/// <param name="fileName">ファイル名</param>
+	/// <param name="isAnimationLoad">アニメーションを読み込むかどうか</param>
+	/// <returns></returns>
+	static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName,bool isAnimationLoad);
+
+
+
 
 
 public:
@@ -36,18 +64,6 @@ public:
 	Animation GetModelAnimation(uint32_t handle) {
 		return modelInfromtion_[handle].animationData;
 	}
-
-	//モデルデータの読み込み(ハンドルを登録する)
-	//本体はここで使う
-	static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName);
-
-
-private:
-
-	//モデルデータの読み込み(本体)
-	static ModelData LoadFile(const std::string& directoryPath, const std::string& fileName);
-
-
 
 
 

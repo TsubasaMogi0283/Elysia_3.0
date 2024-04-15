@@ -25,6 +25,8 @@ ModelManager* ModelManager::GetInstance() {
 }
 
 
+
+
 //モデルデータの読み込み
 ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::string& fileName) {
 	//1.中で必要となる変数の宣言
@@ -121,17 +123,48 @@ uint32_t ModelManager::LoadModelFile(const std::string& directoryPath, const std
 	//モデルの読み込み
 	ModelData newModelData = ModelManager::GetInstance()->LoadFile(directoryPath, fileName);
 	//アニメーションの読み込み
-	Animation newAnimation = LoadAnimationFile(directoryPath, fileName);
+	//Animation newAnimation = LoadAnimationFile(directoryPath, fileName);
 
+	//新規登録
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].modelData = newModelData;
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].animationData = {};
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].directoryPath = directoryPath;
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].filePath = fileName;
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].handle = modelhandle;
+
+	//値を返す
+	return modelhandle;
+}
+
+uint32_t ModelManager::LoadModelFile(const std::string& directoryPath, const std::string& fileName, bool isAnimationLoad) {
+	//一度読み込んだものはその値を返す
+	//新規は勿論読み込みをする
+	for (uint32_t i = 0; i < MODEL_MAX_AMOUNT_; i++) {
+		//同じモデルを探す
+		if (ModelManager::GetInstance()->modelInfromtion_[i].directoryPath == directoryPath &&
+			ModelManager::GetInstance()->modelInfromtion_[i].filePath == fileName) {
+			return ModelManager::GetInstance()->modelInfromtion_[i].handle;
+		}
+	}
+
+	modelhandle++;
+
+	//モデルの読み込み
+	ModelData newModelData = ModelManager::GetInstance()->LoadFile(directoryPath, fileName);
+
+	Animation newAnimation = {};
+	if (isAnimationLoad == true) {
+		//アニメーションの読み込み
+		newAnimation = LoadAnimationFile(directoryPath, fileName);
+
+	}
+	
 	//新規登録
 	ModelManager::GetInstance()->modelInfromtion_[modelhandle].modelData = newModelData;
 	ModelManager::GetInstance()->modelInfromtion_[modelhandle].animationData = newAnimation;
 	ModelManager::GetInstance()->modelInfromtion_[modelhandle].directoryPath = directoryPath;
 	ModelManager::GetInstance()->modelInfromtion_[modelhandle].filePath = fileName;
 	ModelManager::GetInstance()->modelInfromtion_[modelhandle].handle = modelhandle;
-
-
-
 
 	//値を返す
 	return modelhandle;

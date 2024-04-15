@@ -20,13 +20,16 @@ void SampleScene::Initialize() {
 	
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
-	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf");
+	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf",false);
+	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
 
+
+	
 	model_.reset(Model::Create(modelHandle));
 	
 	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
 
-	worldTransform_.Initialize(true,localMatrix);
+	worldTransform_.Initialize();
 	camera_.Initialize();
 
 
@@ -75,7 +78,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	
 
 	Matrix4x4 localMatrix = model_->GetAnimationLocalMatrix();
-	worldTransform_.Update(localMatrix);
+	worldTransform_.Update();
 	camera_.Update();
 
 
@@ -102,7 +105,7 @@ void SampleScene::Update(GameManager* gameManager) {
 /// 描画
 /// </summary>
 void SampleScene::Draw() {
-	model_->Draw(worldTransform_, camera_,ModelManager::GetInstance()->GetModelAnimation(modelHandle));
+	model_->Draw(worldTransform_, camera_);
 }
 
 
