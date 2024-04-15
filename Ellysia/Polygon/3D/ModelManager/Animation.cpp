@@ -29,7 +29,7 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
         aiNodeAnim* nodeAnimationAssimp = animationAssimp->mChannels[channelIndex];
         NodeAnimation& nodeAnimation = animation.nodeAnimations[nodeAnimationAssimp->mNodeName.C_Str()];
         //Translate
-        for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumPositionKeys; keyIndex) {
+        for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumPositionKeys; ++keyIndex) {
             aiVectorKey& keyAssimp = nodeAnimationAssimp->mPositionKeys[keyIndex];
             KeyFrameVector3 keyFrame = {};
             //秒変換
@@ -44,7 +44,7 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
         
         
         //Rotate
-        for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumRotationKeys; keyIndex) {
+        for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumRotationKeys; ++keyIndex) {
             aiQuatKey& keyAssimp = nodeAnimationAssimp->mRotationKeys[keyIndex];
             KeyFrameQuaternion keyFrame = {};
             //秒変換
@@ -59,7 +59,7 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
         //Scaleはそのままで良い
 
         //Scale
-        for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumScalingKeys; keyIndex) {
+        for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumScalingKeys; ++keyIndex) {
             aiVectorKey& keyAssimp = nodeAnimationAssimp->mScalingKeys[keyIndex];
             KeyFrameVector3 keyFrame = {};
             //秒変換
