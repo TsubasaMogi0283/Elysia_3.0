@@ -53,6 +53,11 @@ public:
 	//描画
 	void Draw(WorldTransform& worldTransform, Camera& camera);
 
+
+	//アニメーション付きの描画
+	void Draw(WorldTransform& worldTransform, Camera& camera, Animation animation);
+
+
 	//デストラクタ
 	~Model();
 
@@ -61,9 +66,6 @@ public:
 
 public:
 
-
-
-	
 	//透明度の変更
 	void SetColor(Vector4 color) {
 		this->materialColor_ = color;
@@ -113,7 +115,6 @@ public:
 
 #pragma endregion
 
-
 #pragma region SpotLightの設定
 	//色
 	void SetSpotLightColor(Vector4 color) {
@@ -153,7 +154,12 @@ public:
 		this->spotLightData_.cosAngle = cosAngle;
 	}
 
+#pragma endregion
 
+
+	Matrix4x4 GetAnimationLocalMatrix() {
+		return animationLocalMatrix_;
+	}
 
 
 private:
@@ -215,17 +221,26 @@ private:
 	SpotLight* spotLightMapData_ = {};
 	SpotLight spotLightData_ = {};
 
+	//アニメーションを再生するときに使う時間
+	float animationTime_ = 0.0f;
 
+	//テクスチャハンドル
+	uint32_t textureHandle_ = 0u;
 
-
-	uint32_t textureHandle_ = 0;
-
-
-	//TextureManagerを参考にする
-	static std::list<ModelData> modelInformationList_;
-
+	//モデルハンドル
+	uint32_t modelHandle_ = 0u;
+	//アニメーションのローカル座標
+	//後々シェーダーで渡す
+	Matrix4x4 animationLocalMatrix_ = {};
 
 	//デフォルトはα加算
-	int32_t blendModeNumber_ = 1;;
+	int32_t blendModeNumber_ = 1;
+
+
+
+
+
+
+
 
 };

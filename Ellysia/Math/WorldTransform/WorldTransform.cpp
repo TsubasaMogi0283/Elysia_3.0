@@ -45,6 +45,26 @@ void WorldTransform::Update() {
 	Transfer();
 }
 
+void WorldTransform::Update(Matrix4x4 animationLocalMatrix){
+	//SRT合成
+	worldMatrix_ = MakeAffineMatrix(scale_, rotate_, translate_);
+	//逆転置行列
+	//ワールド行列を逆転置にする
+	Matrix4x4 worldInverseMatrix = Inverse(worldMatrix_);
+	//転置にした
+	worldInverseTransposeMatrix_ = MakeTransposeMatrix(worldInverseMatrix);
+
+	//親があれば親のワールド行列を掛ける
+	if (parent_) {
+		worldMatrix_ = Multiply(worldMatrix_, parent_->worldMatrix_);
+	}
+
+	animationLocalMatrix_ = animationLocalMatrix;
+
+	Transfer();
+}
+
+
 
 void WorldTransform::Transfer() {
 	//Resourceに書き込む
@@ -58,7 +78,7 @@ void WorldTransform::Transfer() {
 	}
 	else {
 		//glTF
-		tranceformationData_->world = Multiply(rootNodeLocalMatrix_, worldMatrix_);
+		tranceformationData_->world = Multiply(animationLocalMatrix_,Multiply(rootNodeLocalMatrix_, worldMatrix_));
 
 	}
 
