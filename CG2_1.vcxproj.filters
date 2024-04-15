@@ -463,6 +463,12 @@
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Animation.h">
       <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
+    <ClInclude Include="Ellysia\Math\Transform\EulerTransform.h">
+      <Filter>Ellysia\Header File\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Transform\QuaternionTransform.h">
+      <Filter>Ellysia\Header File\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">
