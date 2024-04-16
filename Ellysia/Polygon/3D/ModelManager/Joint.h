@@ -1,10 +1,12 @@
 #pragma once
 #include <QuaternionTransform.h>
 #include "Matrix4x4.h"
+#include "Node.h"
 
 #include <string>
 #include <vector>
 #include <optional>
+
 
 struct Joint {
 	//Transform情報
@@ -24,3 +26,6 @@ struct Joint {
 	std::optional<int32_t>parent;
 
 };
+
+
+int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints);

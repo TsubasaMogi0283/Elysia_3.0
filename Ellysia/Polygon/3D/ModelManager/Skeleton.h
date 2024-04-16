@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <Joint.h>
+#include <Node.h>
 
 struct Skeleton {
 	//RootJointのIndex
@@ -14,3 +15,10 @@ struct Skeleton {
 	std::vector<Joint> joints;
 
 };
+
+//Nodeの階層構造からSkeletonを作る
+Skeleton CreateSkeleton(const Node& rootNode);
+
+
+//Skeletonの更新
+void SkeletonUpdate(Skeleton& skeleton);

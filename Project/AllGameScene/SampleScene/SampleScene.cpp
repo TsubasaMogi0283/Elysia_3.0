@@ -20,8 +20,8 @@ void SampleScene::Initialize() {
 	
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
-	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf",false);
-	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf",false);
+	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
 
 
 	
@@ -29,7 +29,7 @@ void SampleScene::Initialize() {
 	
 	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
 
-	worldTransform_.Initialize();
+	worldTransform_.Initialize(true, localMatrix);
 	camera_.Initialize();
 
 
@@ -78,7 +78,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	
 
 	Matrix4x4 localMatrix = model_->GetAnimationLocalMatrix();
-	worldTransform_.Update();
+	worldTransform_.Update(localMatrix);
 	camera_.Update();
 
 
@@ -105,7 +105,8 @@ void SampleScene::Update(GameManager* gameManager) {
 /// 描画
 /// </summary>
 void SampleScene::Draw() {
-	model_->Draw(worldTransform_, camera_);
+	//AnimationManagerを作った方が良いかも引数を増やすの嫌だ。
+	model_->Draw(worldTransform_, camera_, ModelManager::GetInstance()->GetModelAnimation(modelHandle));
 }
 
 

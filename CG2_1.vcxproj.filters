@@ -267,6 +267,12 @@
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Animation.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Skeleton.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Joint.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
