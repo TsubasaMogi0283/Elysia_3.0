@@ -181,7 +181,7 @@ private:
 
 
 	//頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
 
 	
 
@@ -252,7 +252,6 @@ private:
 
 
 	//非表示
-	//いつ使うのだろうか・・・
 	bool isInvisible_ = false;
 
 
