@@ -125,9 +125,10 @@ void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animat
     for (Joint& joint : skeleton.joints) {
         //対象のJointのAnimation
         //対象のJOintのAnimationがあれば、値の適用を行う。下記のif文はC++17から可能になった
-
+        joint;
     }
-
-
+    animation;
+    skeleton;
+    animationTime;
 }
 
