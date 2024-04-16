@@ -230,11 +230,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\3D\MaterialData\MaterialData.h" />
     <ClInclude Include="Ellysia\Polygon\3D\ModelData\ModelData.h" />
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Animation.h" />
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Joint.h" />
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\KeyFrame.h" />
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\ModelManager.h" />
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Node.h" />
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\NodeAnimation.h" />
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\ReadNode.h" />
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Skeleton.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Model\Model.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\AccelerationField.h" />
