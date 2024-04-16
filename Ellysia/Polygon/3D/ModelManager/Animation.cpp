@@ -121,3 +121,13 @@ Quaternion CalculationValue(const std::vector<KeyFrameQuaternion>& keyFrames, fl
     return (*keyFrames.rbegin()).value;
 }
 
+void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime){
+    for (Joint& joint : skeleton.joints) {
+        //対象のJointのAnimation
+        //対象のJOintのAnimationがあれば、値の適用を行う。下記のif文はC++17から可能になった
+
+    }
+
+
+}
+
