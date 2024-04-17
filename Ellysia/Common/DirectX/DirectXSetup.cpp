@@ -117,6 +117,62 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateDepthStencilTextureResource(const int
 
 }
 
+ComPtr<ID3D12Resource> DirectXSetup::CreateRenderTextureResource(
+	ComPtr<ID3D12Device> device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4 clearColor){
+
+	D3D12_RESOURCE_DESC resourceDesc{};
+	//Textureの幅
+	resourceDesc.Width = width;
+	//Textureの高さ
+	resourceDesc.Height = height;
+	//mipmapの数
+	resourceDesc.MipLevels = 1;
+	//奥行 or 配列Textureの配列数
+	resourceDesc.DepthOrArraySize = 1;
+	//利用可能なフォーマット
+	resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//サンプリングカウント。1固定
+	resourceDesc.SampleDesc.Count = 1;
+	//2次元
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	//RenderTargetとして利用可能にする
+	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+
+
+
+
+	//利用するHeapの設定
+	D3D12_HEAP_PROPERTIES heapProperties{};
+	//VRAM上に作る
+	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+
+
+
+	//クリア設定
+	D3D12_CLEAR_VALUE clearValue{};
+	clearValue.Format = format;
+	clearValue.Color[0] = clearColor.x;
+	clearValue.Color[1] = clearColor.y;
+	clearValue.Color[2] = clearColor.z;
+	clearValue.Color[3] = clearColor.w;
+
+
+	//Resourceの作成
+	ComPtr<ID3D12Resource> resource = nullptr;
+	HRESULT hr = device->CreateCommittedResource(
+		&heapProperties,					//Heapの設定 
+		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定。特になし。
+		&resourceDesc,						//Resourceの設定
+		D3D12_RESOURCE_STATE_RENDER_TARGET,	//これから描画することを前提としたTextureなのでRenderTargetとして使うことから始める
+		&clearValue,						//Clear最適値。ClearRenderTargetをこの色でClearするようにする。最適化されているので高速！
+		IID_PPV_ARGS(&resource));			//作成するResourceポインタへのポインタ
+	assert(SUCCEEDED(hr));
+
+
+	return resource;
+}
+
 
 
 

@@ -85,7 +85,8 @@ private:
 	//						Textureの中でも特に例外的な扱いが必要となっている
 	static ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(const int32_t width,const int32_t height);
 
-	
+	static ComPtr<ID3D12Resource> CreateRenderTextureResource(
+		ComPtr<ID3D12Device>device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4 clearColor);
 
 #pragma region 初期化について
 	//初期化へ

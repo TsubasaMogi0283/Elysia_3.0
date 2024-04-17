@@ -163,6 +163,9 @@
     <Filter Include="Text">
       <UniqueIdentifier>{86ea6656-3c90-41a3-872c-722ea8f63729}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\PostEffect">
+      <UniqueIdentifier>{354fe1e6-abce-4ef8-8cf2-e8f5425b6cd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
