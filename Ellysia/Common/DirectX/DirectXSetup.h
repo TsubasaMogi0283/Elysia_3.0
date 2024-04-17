@@ -223,7 +223,7 @@ private:
 
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{};
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_;
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2] = {};
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[3] = {};
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc_{};
 
 	
