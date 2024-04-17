@@ -482,20 +482,7 @@ void DirectXSetup::SetRTV() {
 
 
 
-	//PostEffect用
-
-	//const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };//今回は赤
-	////縦横を取得
-	//uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
-	//uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
-
-	//auto renderTextureResource = CreateRenderTextureResource(
-	//	width, height, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
-
-	//rtvHandles[2].ptr = rtvHandles[1].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-	//device->CreateRenderTargetView(renderTextureResource.Get(), &rtvDesc, rtvHandles[2]);
-
+	
 
 
 	DirectXSetup::GetInstance()->m_rtvDescriptorHeap_=rtvDescriptorHeap;
@@ -692,6 +679,62 @@ void DirectXSetup::UpdateFPS() {
 }
 
 
+
+void DirectXSetup::ForRenderTargetTexture(){
+	//const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };//今回は赤
+	////縦横を取得
+	//uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
+	//uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
+	//
+	//auto renderTextureResource = CreateRenderTextureResource(
+	//	width, height, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+	//
+	//rtvHandles[2].ptr = rtvHandles[1].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	//
+	//device->CreateRenderTargetView(renderTextureResource.Get(), &rtvDesc, rtvHandles[2]);
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = DirectXSetup::GetInstance()->m_dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+
+	DirectXSetup::GetInstance()->m_commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, &dsvHandle);
+	//指定した色で画面全体をクリアする
+	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色
+
+
+	DirectXSetup::GetInstance()->m_commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], clearColor, 0, nullptr);
+
+
+	DirectXSetup::GetInstance()->m_commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+
+
+	DirectXSetup::GetInstance()->m_commandList_->RSSetViewports(1, &viewport_);
+	DirectXSetup::GetInstance()->m_commandList_->RSSetScissorRects(1, &scissorRect_);
+}
+
+void DirectXSetup::ForSwapchain(){
+	//描画先のRTVを設定する
+	//DirectXSetup::GetInstance()->m_commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, nullptr);
+
+	//描画先のRTVとDSVを設定する
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = DirectXSetup::GetInstance()->m_dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+
+	DirectXSetup::GetInstance()->m_commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, &dsvHandle);
+	//指定した色で画面全体をクリアする
+	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色
+
+
+	DirectXSetup::GetInstance()->m_commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], clearColor, 0, nullptr);
+
+	//DirectXSetup::GetInstance()->m_commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+
+	
+
+	DirectXSetup::GetInstance()->m_commandList_->RSSetViewports(1, &viewport_);
+	DirectXSetup::GetInstance()->m_commandList_->RSSetScissorRects(1, &scissorRect_);
+
+}
+
+
 void DirectXSetup::BeginFrame() {
 
 
@@ -740,33 +783,23 @@ void DirectXSetup::BeginFrame() {
 
 
 
-	//描画先のRTVを設定する
-	DirectXSetup::GetInstance()->m_commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, nullptr);
-	//指定した色で画面全体をクリアする
-	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色
-
-	
-	DirectXSetup::GetInstance()->m_commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], clearColor, 0, nullptr);
-
-
-
-
-
-
-
-
-
-
-	//描画先のRTVとDSVを設定する
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = DirectXSetup::GetInstance()->m_dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-
-	DirectXSetup::GetInstance()->m_commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, &dsvHandle);
-	DirectXSetup::GetInstance()->m_commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+#pragma region RenderTargetTextureに対して
+	//ForRenderTargetTexture();
 	
 
-	DirectXSetup::GetInstance()->m_commandList_->RSSetViewports(1, &viewport_);
-	DirectXSetup::GetInstance()->m_commandList_->RSSetScissorRects(1, &scissorRect_);
 
+#pragma endregion
+
+
+
+#pragma region Swapchainに対して
+	//
+	//ForSwapchain();
+
+
+	
+
+#pragma endregion
 	
 }
 
@@ -776,7 +809,7 @@ void DirectXSetup::EndFrame() {
 	//ここがflameの最後
 	//画面に描く処理は「全て終わり」、画面に映すので、状態を遷移
 	//今回はRenderTargetからPresentにする
-
+	
 	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 	//TransitionBarrierを張る
@@ -835,5 +868,7 @@ void DirectXSetup::Release() {
 	//解放処理
 	CloseHandle(fenceEvent_);
 }
+
+
 
 

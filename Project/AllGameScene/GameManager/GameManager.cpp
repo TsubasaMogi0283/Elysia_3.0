@@ -18,8 +18,12 @@ void GameManager::Update() {
 	currentGamaScene_->Update(this);
 }
 
-void GameManager::Draw() {
-	currentGamaScene_->Draw();
+void GameManager::DrawObject3D() {
+	currentGamaScene_->DrawObject3D();
+}
+
+void GameManager::DrawSprite(){
+	currentGamaScene_->DrawSprite();
 }
 
 

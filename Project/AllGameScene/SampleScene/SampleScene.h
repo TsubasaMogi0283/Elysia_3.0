@@ -31,9 +31,9 @@ public:
 	void Update(GameManager* gameManager)override;
 
 	/// 描画
-	void Draw()override;
+	void DrawObject3D()override;
 
-
+	void DrawSprite()override;
 
 private:
 

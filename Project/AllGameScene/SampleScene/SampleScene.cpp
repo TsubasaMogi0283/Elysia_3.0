@@ -2,6 +2,7 @@
 #include <imgui.h>
 #include <Input.h>
 #include <AdjustmentItems.h>
+#include "SampleScene2/SampleScene2.h"
 
 #include "ModelManager.h"
 /// <summary>
@@ -97,15 +98,22 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::End();
 
 #endif
-
-	AdjustmentItems::GetInstance()->SaveFile(GroupName);
+	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
+		AdjustmentItems::GetInstance()->SaveFile(GroupName);
+		gameManager->ChangeScene(new SampleScene2());
+	}
+	
 }
 
 /// <summary>
 /// 描画
 /// </summary>
-void SampleScene::Draw() {
+void SampleScene::DrawObject3D() {
 	model_->Draw(worldTransform_, camera_);
+}
+
+void SampleScene::DrawSprite(){
+
 }
 
 

@@ -146,40 +146,39 @@ public:
 #pragma region 解放処理
 	//解放
 	void Release();
-
-
-	
-
 #pragma endregion
 	
-	
 
+
+
+	void ForRenderTargetTexture();
+	void ForSwapchain();
+
+
+
+
+
+
+public:
 
 
 
 #pragma region 他のクラスでも使いたいのでGetter
 	
-	 
-
-
-
 	ComPtr<ID3D12Device> GetDevice() {
 		return m_device_;
 	}
-	
+
 	ComPtr<ID3D12GraphicsCommandList> GetCommandList() {
 		return DirectXSetup::GetInstance()->m_commandList_;
 	}
 	
-
-
 	ComPtr<ID3D12DescriptorHeap> GetRtvDescriptorHeap() {
 		return  m_rtvDescriptorHeap_;
 	}
 	ComPtr<ID3D12DescriptorHeap> GetDsvDescriptorHeap() {
 		return  m_dsvDescriptorHeap_;
 	}
-
 
 	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc() {
 		return rtvDesc_;
@@ -189,9 +188,9 @@ public:
 		return DirectXSetup::GetInstance()->swapChain;
 	}
 
-	
-	
 #pragma endregion
+
+
 
 private:
 	
@@ -229,8 +228,8 @@ private:
 
 	
 
-	
 	D3D12_RESOURCE_BARRIER barrier_{};
+	
 
 	ComPtr<ID3D12Fence> m_fence_ = nullptr;
 

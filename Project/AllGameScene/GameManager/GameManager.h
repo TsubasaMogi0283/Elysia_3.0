@@ -6,7 +6,6 @@
 //main.cppにあるものを全部こっちに引っ越しする
 class GameManager {
 public:
-	//シングルトンダメだった
 	//コンストラクタ
 	GameManager();
 
@@ -20,7 +19,11 @@ public:
 	void Update();
 
 	//描画
-	void Draw();
+	void DrawObject3D();
+	void DrawSprite();
+
+
+
 
 	//デストラクタ
 	~GameManager();

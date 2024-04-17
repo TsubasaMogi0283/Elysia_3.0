@@ -79,15 +79,17 @@ void Ellysia::Update(){
 }
 
 void Ellysia::Draw(){
-	//OffScreen
 
-
+	
+	DirectXSetup::GetInstance()->ForRenderTargetTexture();
 
 	//ゲームシーンの描画
-	gameManager_->Draw();
+	gameManager_->DrawObject3D();
 
+	DirectXSetup::GetInstance()->ForSwapchain();
 
-	//SwapChain
+	//スプライトの描画
+	gameManager_->DrawSprite();
 
 
 	//ImGuiの描画

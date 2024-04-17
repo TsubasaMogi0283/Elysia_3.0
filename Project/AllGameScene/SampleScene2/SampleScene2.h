@@ -27,9 +27,13 @@ public:
 	void Update(GameManager* gameManager)override;
 
 	/// 描画
-	void Draw()override;
+	void DrawObject3D()override;
 
-	
+	/// <summary>
+	/// スプライトの描画
+	/// </summary>
+	void DrawSprite()override;
+
 	/// デストラクタ
 	~SampleScene2();
 
