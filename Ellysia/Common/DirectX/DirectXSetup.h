@@ -147,7 +147,6 @@ public:
 	//解放
 	void Release();
 
-	void CheckRelease();
 
 	
 

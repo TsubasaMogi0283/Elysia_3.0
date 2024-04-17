@@ -79,12 +79,22 @@ void Ellysia::Update(){
 }
 
 void Ellysia::Draw(){
+	//OffScreen
+
+
+
+	//ゲームシーンの描画
+	gameManager_->Draw();
+
+
+	//SwapChain
+
+
 	//ImGuiの描画
 	ImGuiManager::GetInstance()->PreDraw();	
 	ImGuiManager::GetInstance()->Draw();
 	
-	//ゲームシーンの描画
-	gameManager_->Draw();
+	
 }
 
 

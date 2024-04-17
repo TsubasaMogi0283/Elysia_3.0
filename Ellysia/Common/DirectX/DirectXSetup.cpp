@@ -480,17 +480,21 @@ void DirectXSetup::SetRTV() {
 
 
 
-	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };//今回は赤
-	//縦横を取得
-	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
-	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
 
-	auto renderTextureResource = CreateRenderTextureResource(
-		width, height, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
 
-	rtvHandles[2].ptr = rtvHandles[1].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	//PostEffect用
 
-	device->CreateRenderTargetView(renderTextureResource.Get(), &rtvDesc, rtvHandles[2]);
+	//const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };//今回は赤
+	////縦横を取得
+	//uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
+	//uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
+
+	//auto renderTextureResource = CreateRenderTextureResource(
+	//	width, height, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+
+	//rtvHandles[2].ptr = rtvHandles[1].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	//device->CreateRenderTargetView(renderTextureResource.Get(), &rtvDesc, rtvHandles[2]);
 
 
 
@@ -828,19 +832,8 @@ void DirectXSetup::EndFrame() {
 }
 
 void DirectXSetup::Release() {
-	//////解放処理
+	//解放処理
 	CloseHandle(fenceEvent_);
-	//DirectXSetup::GetInstance()->infoQueue->Release();
 }
-
-
-void DirectXSetup::CheckRelease() {
-	////ReportLiveObjects
-	//DirectX12より低レベルのDXGIに問い合わせをする
-	//リソースリークチェック
-	
-	
-}
-
 
 
