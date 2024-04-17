@@ -49,5 +49,7 @@ private:
 	WorldTransform worldTransform_ = {};
 	Camera camera_ = {};
 
+	Skeleton skeleton_ = {};
+
 	const char* GroupName = "Player";
 };

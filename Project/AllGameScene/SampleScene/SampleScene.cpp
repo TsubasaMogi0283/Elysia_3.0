@@ -23,6 +23,7 @@ void SampleScene::Initialize() {
 	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf",false);
 	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
 
+	skeleton_ = CreateSkeleton(ModelManager::GetInstance()->GetModelData().rootNode.);
 
 	
 	model_.reset(Model::Create(modelHandle));
