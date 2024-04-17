@@ -73,10 +73,10 @@ public:
 #pragma region アクセッサ
 
 	//Getter
-	int GetClientWidth() {
+	uint32_t GetClientWidth() {
 		return clientWidth_;
 	}
-	int GetClientHeight() {
+	uint32_t GetClientHeight() {
 		return clientHeight_;
 	}
 
@@ -99,8 +99,8 @@ private:
 	////ウィンドウクラスを登録する
 	const wchar_t* title_=L"Ellysia";
 	
-	int32_t clientWidth_=0;
-	int32_t clientHeight_=0;
+	uint32_t clientWidth_=0;
+	uint32_t clientHeight_=0;
 	
 
 	HWND hwnd_=0;

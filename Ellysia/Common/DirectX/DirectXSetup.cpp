@@ -130,7 +130,7 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateRenderTextureResource(
 	//奥行 or 配列Textureの配列数
 	resourceDesc.DepthOrArraySize = 1;
 	//利用可能なフォーマット
-	resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	resourceDesc.Format = format;
 	//サンプリングカウント。1固定
 	resourceDesc.SampleDesc.Count = 1;
 	//2次元
@@ -138,7 +138,7 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateRenderTextureResource(
 	//RenderTargetとして利用可能にする
 	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
-
+	//resourceDescとclearValueにあるFormatはしっかり統一させてね
 
 
 	//利用するHeapの設定
@@ -464,7 +464,6 @@ void DirectXSetup::SetRTV() {
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;			//2dテクスチャとして書き込む
 	//ディスクリプタの先頭を取得する
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
-	//D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc_{};
 	rtvStartHandle = rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
 
@@ -483,8 +482,8 @@ void DirectXSetup::SetRTV() {
 
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };//今回は赤
 	//縦横を取得
-	float width = float(WindowsSetup::GetInstance()->GetClientWidth());
-	float height = float(WindowsSetup::GetInstance()->GetClientHeight());
+	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
+	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
 
 	auto renderTextureResource = CreateRenderTextureResource(
 		width, height, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
