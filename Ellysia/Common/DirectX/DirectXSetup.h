@@ -212,6 +212,7 @@ private:
 
 
 	//ディスクリプタ
+	const uint32_t RTV_DESCRIPTOR_SIZE_ = 3;
 	ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap_ = nullptr;
 	ComPtr<ID3D12DescriptorHeap> m_dsvDescriptorHeap_ = nullptr;
 

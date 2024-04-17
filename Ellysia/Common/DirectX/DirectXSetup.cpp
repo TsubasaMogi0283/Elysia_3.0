@@ -398,7 +398,8 @@ void DirectXSetup::MakeDescriptorHeap() {
 	//Resourceに対して作業を行うにはViewが必要
 	//Viewは作業方法
 	//作った関数をここで使う
-	DirectXSetup::GetInstance()->m_rtvDescriptorHeap_ = GenarateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 3, false);
+	DirectXSetup::GetInstance()->m_rtvDescriptorHeap_ = GenarateDescriptorHeap(
+		D3D12_DESCRIPTOR_HEAP_TYPE_RTV, DirectXSetup::GetInstance()->RTV_DESCRIPTOR_SIZE_, false);
 
 
 
