@@ -125,7 +125,18 @@ void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animat
     for (Joint& joint : skeleton.joints) {
         //対象のJointのAnimation
         //対象のJOintのAnimationがあれば、値の適用を行う。下記のif文はC++17から可能になった
-        joint;
+        
+        if (auto it = animation.nodeAnimations.find(joint.name); it != animation.nodeAnimations.end()) {
+            const NodeAnimation& rootNodeAnimation = (*it).second;
+            joint.transform.translate = CalculationValue(rootNodeAnimation.translate.keyFrames, animationTime);
+            joint.transform.rotate = CalculationValue(rootNodeAnimation.rotate.keyFrames, animationTime);
+            joint.transform.scale = CalculationValue(rootNodeAnimation.scale.keyFrames, animationTime);
+
+
+
+        }
+
+
     }
     animation;
     skeleton;
