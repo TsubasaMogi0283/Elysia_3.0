@@ -118,7 +118,7 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateDepthStencilTextureResource(const int
 }
 
 ComPtr<ID3D12Resource> DirectXSetup::CreateRenderTextureResource(
-	ComPtr<ID3D12Device> device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4 clearColor){
+	uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4 clearColor){
 
 	D3D12_RESOURCE_DESC resourceDesc{};
 	//Textureの幅
@@ -160,7 +160,7 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateRenderTextureResource(
 
 	//Resourceの作成
 	ComPtr<ID3D12Resource> resource = nullptr;
-	HRESULT hr = device->CreateCommittedResource(
+	HRESULT hr = DirectXSetup::GetInstance()->m_device_->CreateCommittedResource(
 		&heapProperties,					//Heapの設定 
 		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定。特になし。
 		&resourceDesc,						//Resourceの設定
@@ -469,15 +469,31 @@ void DirectXSetup::SetRTV() {
 
 
 	//RTVを２つ作るのでディスクリプタを２つ用意
-	//D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2] = {};
+	//PostEffectでもう一つ必要になったので3つに増やす
 	//まず1つ目を作る。１つ目は最初の所に作る。作る場所をこちらで指定してあげる必要がある
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2] = {};
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[3] = {};
 	rtvHandles[0] = rtvStartHandle;
 	device->CreateRenderTargetView(DirectXSetup::GetInstance()->swapChain.m_pResource[0].Get(), &rtvDesc, rtvHandles[0]);
 	//２つ目のディスクリプタハンドルを得る(自力で)
 	rtvHandles[1].ptr = rtvHandles[0].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	//２つ目を作る
 	device->CreateRenderTargetView(DirectXSetup::GetInstance()->swapChain.m_pResource[1].Get(), &rtvDesc, rtvHandles[1]);
+
+
+
+	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };//今回は赤
+	//縦横を取得
+	float width = float(WindowsSetup::GetInstance()->GetClientWidth());
+	float height = float(WindowsSetup::GetInstance()->GetClientHeight());
+
+	auto renderTextureResource = CreateRenderTextureResource(
+		width, height, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+
+	rtvHandles[2].ptr = rtvHandles[1].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	device->CreateRenderTargetView(renderTextureResource.Get(), &rtvDesc, rtvHandles[2]);
+
+
 
 	DirectXSetup::GetInstance()->m_rtvDescriptorHeap_=rtvDescriptorHeap;
 
@@ -724,7 +740,9 @@ void DirectXSetup::BeginFrame() {
 	//描画先のRTVを設定する
 	DirectXSetup::GetInstance()->m_commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, nullptr);
 	//指定した色で画面全体をクリアする
-	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色,RGBA
+	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色
+
+	
 	DirectXSetup::GetInstance()->m_commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], clearColor, 0, nullptr);
 
 
