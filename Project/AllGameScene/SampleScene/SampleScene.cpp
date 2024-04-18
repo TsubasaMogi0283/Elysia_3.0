@@ -20,10 +20,12 @@ void SampleScene::Initialize() {
 	
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
-	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf",false);
-	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf",true);
 
-	skeleton_ = CreateSkeleton(ModelManager::GetInstance()->GetModelData().rootNode.);
+	//後々AnimationManagerを作ってここで読み込みたい
+	//animationHandle = Animation::GetInstance()->LoadAnimationFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf");
+
+	skeleton_ = CreateSkeleton(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
 
 	
 	model_.reset(Model::Create(modelHandle));
@@ -33,20 +35,6 @@ void SampleScene::Initialize() {
 	worldTransform_.Initialize(true, localMatrix);
 	camera_.Initialize();
 
-
-	audio_ = Audio::GetInstance();
-	//audioHandle_ = audio_->LoadMP3(L"Resources/Audio/Sample/WIP.mp3");
-
-	audioHandle_ = audio_->LoadWave("Resources/Audio/Sample/Game.wav");
-
-	audio_->PlayWave(audioHandle_,false);
-	audio_->SetPan(audioHandle_, pan_);
-	audio_->ChangePitch(audioHandle_, pitch_);
-
-
-	audio_->SendChannels(audioHandle_, 1);
-
-	
 	
 }
 
@@ -61,21 +49,6 @@ void SampleScene::Initialize() {
 void SampleScene::Update(GameManager* gameManager) {
 	gameManager;
 
-	audio_->SetLowPassFilter(audioHandle_, cutOff_);
-	audio_->ChangePitch(audioHandle_, pitch_);
-	audio_->SetPan(audioHandle_, pan_);
-
-	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
-		audio_->ExitLoop(audioHandle_);
-	}
-
-	if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
-		audio_->PauseWave(audioHandle_);
-	}
-	if (Input::GetInstance()->IsTriggerKey(DIK_2) == true) {
-		audio_->ResumeWave(audioHandle_);
-	}
-
 	
 
 	Matrix4x4 localMatrix = model_->GetAnimationLocalMatrix();
@@ -83,16 +56,11 @@ void SampleScene::Update(GameManager* gameManager) {
 	camera_.Update();
 
 
+	animationTime_ += 1.0f/60.0f;
+	ApplyAnimation(skeleton_, ModelManager::GetInstance()->GetModelAnimation(modelHandle), animationTime_);
+	SkeletonUpdate(skeleton_);
+
 #ifdef _DEBUG
-	ImGui::Begin("Audio");
-	ImGui::SliderFloat("Pan", &pan_, -1.0f, 1.0f);
-	ImGui::SliderFloat("LowPassFilter", &cutOff_, 0.0f, 1.0f);
-
-	ImGui::InputInt("Pitch", &pitch_);
-	ImGui::End();
-
-
-
 	ImGui::Begin("Model");
 	ImGui::SliderFloat3("Translate", &worldTransform_.rotate_.x, -30.0f, 30.0f);
 	ImGui::End();

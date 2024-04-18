@@ -117,29 +117,22 @@ Quaternion CalculationValue(const std::vector<KeyFrameQuaternion>& keyFrames, fl
             return QuaternionSlerp(keyFrames[index].value, keyFrames[nextIndex].value, t);
         }
     }
-    //ここまで来た場合は一番後ろの時刻よりも後ろなので最後の値を返す琴にする
+    //ここまで来た場合は一番後ろの時刻よりも後ろなので最後の値を返すことにする
     return (*keyFrames.rbegin()).value;
 }
 
 void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime){
+
     for (Joint& joint : skeleton.joints) {
         //対象のJointのAnimation
-        //対象のJOintのAnimationがあれば、値の適用を行う。下記のif文はC++17から可能になった
+        //対象のJointのAnimationがあれば、値の適用を行う。下記のif文はC++17から可能になった
         
         if (auto it = animation.nodeAnimations.find(joint.name); it != animation.nodeAnimations.end()) {
             const NodeAnimation& rootNodeAnimation = (*it).second;
             joint.transform.translate = CalculationValue(rootNodeAnimation.translate.keyFrames, animationTime);
             joint.transform.rotate = CalculationValue(rootNodeAnimation.rotate.keyFrames, animationTime);
             joint.transform.scale = CalculationValue(rootNodeAnimation.scale.keyFrames, animationTime);
-
-
-
         }
-
-
     }
-    animation;
-    skeleton;
-    animationTime;
 }
 
