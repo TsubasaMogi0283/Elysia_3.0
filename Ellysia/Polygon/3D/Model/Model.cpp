@@ -222,7 +222,6 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 
 
 
-
 void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation animation){
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
