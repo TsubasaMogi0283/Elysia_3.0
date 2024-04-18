@@ -166,6 +166,9 @@
     <Filter Include="Ellysia\Header File\PostEffect">
       <UniqueIdentifier>{354fe1e6-abce-4ef8-8cf2-e8f5425b6cd5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Resource File\CopyImage">
+      <UniqueIdentifier>{948c1c8c-4060-41f9-bd03-0d5cbfb08e8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -289,6 +292,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\Object3D\Object3d.VS.hlsl">
       <Filter>Ellysia\Resource File\Object3d</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\CopyImage\CopyImage.PS.hlsl">
+      <Filter>Ellysia\Resource File\CopyImage</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\CopyImage\CopyImage.VS.hlsl">
+      <Filter>Ellysia\Resource File\CopyImage</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -485,6 +494,9 @@
     </None>
     <None Include=".gitignore">
       <Filter>Text</Filter>
+    </None>
+    <None Include="Resources\Shader\CopyImage\CopyImage.hlsli">
+      <Filter>Ellysia\Resource File\CopyImage</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
