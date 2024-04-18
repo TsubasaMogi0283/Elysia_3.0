@@ -316,7 +316,8 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation anima
 	//リピートするかしないかの設定をフラグでやった方がよさそう
 	animationTime_ = std::fmod(animationTime_, animation.duration);
 	//rootNodeのAnimationを取得
-	NodeAnimation& rootNodeAnimation = animation.nodeAnimations[ModelManager::GetInstance()->GetModelData(modelHandle_).rootNode.name];
+	ModelData modelData = ModelManager::GetInstance()->GetModelData(modelHandle_);
+	NodeAnimation& rootNodeAnimation = animation.nodeAnimations[modelData.rootNode.name];
 	//指定時刻の値を取得
 	Vector3 translate = CalculationValue(rootNodeAnimation.translate.keyFrames, animationTime_);
 	Quaternion rotate = CalculationValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
