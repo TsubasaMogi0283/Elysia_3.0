@@ -70,7 +70,7 @@ public:
 		return linePSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積む専用のGetter(Sprite)
+	//コマンドに積むためのGetter(Sprite)
 	ComPtr<ID3D12RootSignature> GetSpriteRootSignature() {
 		return spritePSO_.rootSignature_;
 	}
@@ -78,7 +78,7 @@ public:
 		return spritePSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積む専用のGetter(Model)
+	//コマンドに積むためのGetter(Model)
 	ComPtr<ID3D12RootSignature> GetModelRootSignature() {
 		return modelPSO_.rootSignature_;
 	}
@@ -86,12 +86,21 @@ public:
 		return modelPSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積む専用のGetter(Particle3D)
+	//コマンドに積むためのGetter(Particle3D)
 	ComPtr<ID3D12RootSignature> GetParticle3DRootSignature() {
 		return particle3DPSO_.rootSignature_;
 	}
 	ComPtr<ID3D12PipelineState> GetParticle3DGraphicsPipelineState() {
 		return particle3DPSO_.graphicsPipelineState_;
+	}
+
+
+	//コマンドに積むためのGetter(CopyImage)
+	ComPtr<ID3D12RootSignature> GetParticle3DRootSignature() {
+		return copyImagePSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetParticle3DGraphicsPipelineState() {
+		return copyImagePSO_.graphicsPipelineState_;
 	}
 
 
@@ -103,6 +112,8 @@ public:
 	}
 
 
+
+	
 #pragma endregion
 
 public:
@@ -118,6 +129,9 @@ public:
 
 	//3Dパーティクル用
 	static void GenerateParticle3DPSO();
+
+	//CopyImage用
+	static void GenarateCopyImagePSO();
 
 private:
 
@@ -139,7 +153,8 @@ private:
 	PSOInformation modelPSO_ = {};
 	//モデル用の変数
 	PSOInformation particle3DPSO_ = {};
-
+	//CopyImage用
+	PSOInformation copyImagePSO_ = {};
 
 
 	//スプライト用
