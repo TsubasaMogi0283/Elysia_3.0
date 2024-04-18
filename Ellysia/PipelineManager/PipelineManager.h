@@ -96,10 +96,10 @@ public:
 
 
 	//コマンドに積むためのGetter(CopyImage)
-	ComPtr<ID3D12RootSignature> GetParticle3DRootSignature() {
+	ComPtr<ID3D12RootSignature> GetCopyImageRootSignature() {
 		return copyImagePSO_.rootSignature_;
 	}
-	ComPtr<ID3D12PipelineState> GetParticle3DGraphicsPipelineState() {
+	ComPtr<ID3D12PipelineState> GetCopyImageGraphicsPipelineState() {
 		return copyImagePSO_.graphicsPipelineState_;
 	}
 

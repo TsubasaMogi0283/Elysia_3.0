@@ -1175,13 +1175,25 @@ void PipelineManager::GenarateCopyImagePSO(){
 
 	//VSでもCBufferを利用することになったので設定を追加
 	D3D12_ROOT_PARAMETER rootParameters[3] = {};
-	//CBVを使う
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	////PixelShaderで使う
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	//レジスタ番号とバインド
-	//register...Shader上のResource配置情報
-	rootParameters[0].Descriptor.ShaderRegister = 0;
+
+
+	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
+	//バイリニアフィルタ
+	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	//0~1の範囲外をリピート
+	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	//比較しない
+	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	//ありったけのMipmapを使う
+	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;
+	//レジスタ番号0を使う
+	staticSamplers[0].ShaderRegister = 0;
+	//PixelShaderで使う
+	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	descriptionRootSignature_.pStaticSamplers = staticSamplers;
+	descriptionRootSignature_.NumStaticSamplers = _countof(staticSamplers);
 
 
 	//CBVを使う
@@ -1229,28 +1241,13 @@ void PipelineManager::GenarateCopyImagePSO(){
 
 
 
+	//ルートパラメータ配列へのポイント
+	descriptionRootSignature_.pParameters = rootParameters;
+	//配列の長さ
+	descriptionRootSignature_.NumParameters = _countof(rootParameters);
 
 
 
-
-
-	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
-	//バイリニアフィルタ
-	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	//0~1の範囲外をリピート
-	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	//比較しない
-	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-	//ありったけのMipmapを使う
-	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;
-	//レジスタ番号0を使う
-	staticSamplers[0].ShaderRegister = 0;
-	//PixelShaderで使う
-	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	descriptionRootSignature_.pStaticSamplers = staticSamplers;
-	descriptionRootSignature_.NumStaticSamplers = _countof(staticSamplers);
 
 
 	//シリアライズしてバイナリにする
