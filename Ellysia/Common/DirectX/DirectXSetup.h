@@ -21,7 +21,6 @@ using Microsoft::WRL::ComPtr;
 
 #include <chrono>
 
-
 struct SwapChain{
 	ComPtr<IDXGISwapChain4> m_pSwapChain;
 	ComPtr<ID3D12Resource> m_pResource[2];
@@ -155,8 +154,10 @@ public:
 	void ForSwapchain();
 
 
+private:
 
-
+	void RenderTextureBegin();
+	void RenderTextureEnd();
 
 
 public:
@@ -184,7 +185,7 @@ public:
 		return rtvDesc_;
 	}
 	
-	SwapChain GetswapChain() {
+	SwapChain GetSwapChain() {
 		return DirectXSetup::GetInstance()->swapChain;
 	}
 
@@ -230,7 +231,8 @@ private:
 	
 
 	D3D12_RESOURCE_BARRIER barrier_{};
-	
+	D3D12_RESOURCE_BARRIER renderTextureBarrier_{};
+
 
 	ComPtr<ID3D12Fence> m_fence_ = nullptr;
 
@@ -245,13 +247,15 @@ private:
 	D3D12_VIEWPORT viewport_{};
 	D3D12_RECT scissorRect_{};
 
-
+	ComPtr<ID3D12Resource> renderTextureResource =nullptr;
 
 
 
 	//FPS
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
+
+
 
 
 };

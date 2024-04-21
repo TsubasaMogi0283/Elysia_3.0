@@ -273,6 +273,9 @@
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Animation.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\PostEffect\RenderTexture\RenderTexture.cpp">
+      <Filter>Ellysia\Source File\Polygone</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -474,6 +477,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Animation.h">
       <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\PostEffect\RenderTexture\RenderTexture.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

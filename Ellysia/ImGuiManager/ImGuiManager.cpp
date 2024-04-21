@@ -28,7 +28,7 @@ void ImGuiManager::Initialize() {
 	ImGui_ImplWin32_Init(WindowsSetup::GetInstance()->GetHwnd());
 	ImGui_ImplDX12_Init(
 		DirectXSetup::GetInstance()->GetDevice().Get(),
-		DirectXSetup::GetInstance()->GetswapChain().swapChainDesc.BufferCount,
+		DirectXSetup::GetInstance()->GetSwapChain().swapChainDesc.BufferCount,
 		DirectXSetup::GetInstance()->GetRtvDesc().Format,
 		SrvManager::GetInstance()->GetSrvDescriptorHeap().Get(),
 		SrvManager::GetInstance()->GetSrvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart(),

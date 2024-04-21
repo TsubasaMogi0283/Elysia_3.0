@@ -1,5 +1,6 @@
 #include "DirectXSetup.h"
 #include <thread>
+#include <PipelineManager.h>
 
 //インスタンス
 DirectXSetup* DirectXSetup::GetInstance() {
@@ -482,12 +483,12 @@ void DirectXSetup::SetRTV() {
 	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
 	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
 
-	auto renderTextureResource = CreateRenderTextureResource(
+	DirectXSetup::GetInstance()->renderTextureResource = CreateRenderTextureResource(
 		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
 
 
 	DirectXSetup::GetInstance()->rtvHandles_[2].ptr = DirectXSetup::GetInstance()->rtvHandles_[1].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(renderTextureResource.Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[2]);
+	DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(DirectXSetup::GetInstance()->renderTextureResource.Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[2]);
 
 
 
@@ -638,6 +639,7 @@ void DirectXSetup::Initialize() {
 	GenerateScissor();
 
 
+	PipelineManager::GetInstance()->GenarateCopyImagePSO();
 
 }
 
@@ -681,6 +683,50 @@ void DirectXSetup::UpdateFPS() {
 
 }
 
+
+
+void DirectXSetup::RenderTextureBegin() {
+	////TransitionBarrierを張るコード
+	//現在のResourceStateを設定する必要がある → ResorceがどんなStateなのかを追跡する必要がある
+	//追跡する仕組みはStateTrackingという
+
+	backBufferIndex_ = DirectXSetup::GetInstance()->GetSwapChain().m_pSwapChain->GetCurrentBackBufferIndex();
+
+
+	//TransitionBarrierの設定
+	//今回のバリアはTransition
+	renderTextureBarrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにする
+	renderTextureBarrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。現在のバックバッファに対して行う
+	renderTextureBarrier_.Transition.pResource = DirectXSetup::GetInstance()->GetSwapChain().m_pResource[backBufferIndex_].Get();
+	//遷移前(現在)のResourceState
+	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//遷移後のResourceState
+	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(2, &renderTextureBarrier_);
+
+
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetCopyImageRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetCopyImageGraphicsPipelineState().Get());
+
+
+
+	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
+	//DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
+	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+
+
+	//描画(DrawCall)３頂点で１つのインスタンス。
+	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+
+
+}
+
 void DirectXSetup::BeginFrame() {
 
 
@@ -699,6 +745,74 @@ void DirectXSetup::BeginFrame() {
 	//5.CommandListの実行(キック)
 	//6.画面のスワップ(BackBufferとFrontBufferを入れ替える)
 	//7.次のフレーム用にCommandListを再準備
+
+	
+#pragma region RenderTextureBegin
+	
+	//RenderTextureBegin();
+	////TransitionBarrierを張るコード
+	//現在のResourceStateを設定する必要がある → ResorceがどんなStateなのかを追跡する必要がある
+	//追跡する仕組みはStateTrackingという
+
+	backBufferIndex_ = DirectXSetup::GetInstance()->GetSwapChain().m_pSwapChain->GetCurrentBackBufferIndex();
+
+
+	//TransitionBarrierの設定
+	//今回のバリアはTransition
+	renderTextureBarrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにする
+	renderTextureBarrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。現在のバックバッファに対して行う
+	renderTextureBarrier_.Transition.pResource = DirectXSetup::GetInstance()->renderTextureResource.Get();
+	//遷移前(現在)のResourceState
+	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//遷移後のResourceState
+	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetCopyImageRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetCopyImageGraphicsPipelineState().Get());
+
+
+
+	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
+	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+
+
+	//描画(DrawCall)３頂点で１つのインスタンス。
+	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+
+
+
+
+#pragma endregion
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -727,7 +841,10 @@ void DirectXSetup::BeginFrame() {
 	//TransitionBarrierを張る
 	DirectXSetup::GetInstance()->m_commandList_->ResourceBarrier(1, &barrier_);
 
+
+
 	
+
 }
 
 
@@ -774,14 +891,33 @@ void DirectXSetup::ForSwapchain() {
 
 }
 
+
+
+void DirectXSetup::RenderTextureEnd(){
+	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
+
+}
+
 void DirectXSetup::EndFrame() {
 	////画面表示出来るようにする
 	//ここがflameの最後
 	//画面に描く処理は「全て終わり」、画面に映すので、状態を遷移
 	//今回はRenderTargetからPresentにする
 	
+
+
+	RenderTextureEnd();
+	
+
+
 	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+
+
+
 	//TransitionBarrierを張る
 	DirectXSetup::GetInstance()->m_commandList_->ResourceBarrier(1, &barrier_);
 
@@ -835,6 +971,7 @@ void DirectXSetup::EndFrame() {
 }
 
 void DirectXSetup::Release() {
+
 	//解放処理
 	CloseHandle(fenceEvent_);
 }
