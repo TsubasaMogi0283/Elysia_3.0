@@ -20,14 +20,14 @@ void SampleScene::Initialize() {
 	
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
-	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/simpleSkin", "simpleSkin.gltf",true);
+	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "sneakWalk.gltf",true);
 
 	//後々AnimationManagerを作ってここで読み込みたい
 	//animationHandle = Animation::GetInstance()->LoadAnimationFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf");
 
 	skeleton_ = CreateSkeleton(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
 
-	
+	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	model_.reset(Model::Create(modelHandle));
 	
 	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
@@ -75,7 +75,8 @@ void SampleScene::Update(GameManager* gameManager) {
 /// </summary>
 void SampleScene::Draw() {
 	//AnimationManagerを作った方が良いかも引数を増やすの嫌だ。
-	model_->Draw(worldTransform_, camera_, ModelManager::GetInstance()->GetModelAnimation(modelHandle));
+	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
+	model_->Draw(worldTransform_, camera_, animation);
 }
 
 
