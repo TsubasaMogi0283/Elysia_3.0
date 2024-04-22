@@ -308,7 +308,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 #pragma endregion
 
 #pragma region アニメーション用
-
+	animation;
 	//Animation& animation_ = animation;
 	//animation_.nodeAnimations.erase("Armature");
 	////時刻を進める
@@ -321,17 +321,17 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 	//ModelData modelData = ModelManager::GetInstance()->GetModelData(modelHandle_);
 	////NodeAnimation& rootNodeAnimation = animation.nodeAnimations["mixamorig:Head"];
 	//NodeAnimation& rootNodeAnimation = animation_.nodeAnimations[modelData.rootNode.name];
-	////Armature
-	//rootNodeAnimation;
-	//modelData;
-
-	//指定時刻の値を取得
-	/*Vector3 translate = CalculationValue(rootNodeAnimation.translate.keyFrames, animationTime_);
-	Quaternion rotate = CalculationValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
-	Vector3 scale = CalculationValue(rootNodeAnimation.scale.keyFrames, animationTime_);
-
-	Vector3 newRotate = { rotate .x,rotate.y,rotate.z };
-	animationLocalMatrix_ = MakeAffineMatrix(scale, newRotate,translate);*/
+	//////Armature
+	////rootNodeAnimation;
+	////modelData;
+	//
+	////指定時刻の値を取得
+	//Vector3 translate = CalculationValue(rootNodeAnimation.translate.keyFrames, animationTime_);
+	//Quaternion rotate = CalculationValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
+	//Vector3 scale = CalculationValue(rootNodeAnimation.scale.keyFrames, animationTime_);
+	//
+	//Vector3 newRotate = { rotate .x,rotate.y,rotate.z };
+	//animationLocalMatrix_ = MakeAffineMatrix(scale, newRotate,translate);
 
 
 	//シェーダーに渡した方がよさそう
