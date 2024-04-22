@@ -78,13 +78,22 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 				vertex.position.x *= -1.0f;
 				vertex.normal.x *= -1.0f;
 				modelData.vertices.push_back(vertex);
-
-
-
 			}
-
-
 		}
+
+		//頂点を解析する
+		//最初に頂点数分のメモリを確保しておく
+		modelData.vertices.resize(mesh->mNumVertices);
+		for (uint32_t verticesIndex = 0; verticesIndex < mesh->mNumVertices; ++verticesIndex) {
+			aiVector3D& position = mesh->mVertices[verticesIndex];
+			aiVector3D& normal = mesh->mNormals[verticesIndex];
+			aiVector3D& texcoord = mesh->mTextureCoords[0][verticesIndex];
+			//右手から左手への変換
+			modelData.vertices[verticesIndex].position = { -position.x,position.y,position.z,1.0f };
+			modelData.vertices[verticesIndex].normal = { -normal.x,normal.y,normal.z};
+			modelData.vertices[verticesIndex].texCoord = {texcoord.x,texcoord.y};
+		}
+		//Indexの解析
 
 	}
 
