@@ -37,17 +37,16 @@ public:
 
 private:
 
-	Audio* audio_ = nullptr;
-	uint32_t audioHandle_ = 0u;
-
-	float_t pan_ = 0.0f;
-	int pitch_ = 0;
 	float cutOff_ = 1.0f;
 
 	std::unique_ptr<Model> model_ = nullptr;
 	uint32_t modelHandle = 0;
 	WorldTransform worldTransform_ = {};
 	Camera camera_ = {};
+
+	Skeleton skeleton_ = {};
+	float animationTime_ = 0;
+
 
 	const char* GroupName = "Player";
 };

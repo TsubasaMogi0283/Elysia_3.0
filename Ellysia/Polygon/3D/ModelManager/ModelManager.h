@@ -34,6 +34,10 @@ private:
 
 public:
 
+	//LoadObjとLoadglTFの関数を作った方が良いかも
+
+
+
 	/// <summary>
 	/// モデルデータの読み込み(ハンドルを登録する)
 	/// </summary>

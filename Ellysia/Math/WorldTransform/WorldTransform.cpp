@@ -78,7 +78,8 @@ void WorldTransform::Transfer() {
 	}
 	else {
 		//glTF
-		tranceformationData_->world = Multiply(animationLocalMatrix_,Multiply(rootNodeLocalMatrix_, worldMatrix_));
+		//tranceformationData_->world = Multiply(animationLocalMatrix_,Multiply(rootNodeLocalMatrix_, worldMatrix_));
+		tranceformationData_->world = worldMatrix_;
 
 	}
 

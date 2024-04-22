@@ -340,7 +340,6 @@ uint32_t Audio::LoadMP3(const WCHAR* fileName){
 	hr = MFCreateSourceReaderFromURL(fileName, nullptr, &Audio::GetInstance()->audioInformation_[audioIndex].pSourceReader_);
 	assert(SUCCEEDED(hr));
 
-	MFCreateSourceReaderFromURL(fileName, NULL, &Audio::GetInstance()->audioInformation_[audioIndex].pSourceReader_);
 
 
 	//メディアタイプの取得

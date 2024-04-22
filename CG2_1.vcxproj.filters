@@ -163,6 +163,9 @@
     <Filter Include="Text">
       <UniqueIdentifier>{86ea6656-3c90-41a3-872c-722ea8f63729}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\Animation">
+      <UniqueIdentifier>{97ce354a-4949-41c4-886a-96dc659bbfc0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -265,6 +268,12 @@
       <Filter>Project</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Animation.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Skeleton.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Joint.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -461,6 +470,18 @@
       <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Animation.h">
+      <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Transform\EulerTransform.h">
+      <Filter>Ellysia\Header File\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Transform\QuaternionTransform.h">
+      <Filter>Ellysia\Header File\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Joint.h">
+      <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Skeleton.h">
       <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
   </ItemGroup>

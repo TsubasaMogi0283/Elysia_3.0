@@ -55,7 +55,7 @@ public:
 
 
 	//アニメーション付きの描画
-	void Draw(WorldTransform& worldTransform, Camera& camera, Animation animation);
+	void Draw(WorldTransform& worldTransform, Camera& camera, Animation& animation);
 
 
 	//デストラクタ
