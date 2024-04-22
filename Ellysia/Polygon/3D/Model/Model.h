@@ -178,9 +178,10 @@ private:
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
-	std::vector<VertexData> vertices_{};
+	//std::vector<VertexData> vertices_{};
 
-
+	ComPtr<ID3D12Resource> indexResource_ = nullptr;
+	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
 	//マテリアル用のリソースを作る
 	ComPtr<ID3D12Resource> materialResource_ = nullptr;
@@ -229,6 +230,8 @@ private:
 
 	//モデルハンドル
 	uint32_t modelHandle_ = 0u;
+	ModelData modelData_ = {};
+
 	//アニメーションのローカル座標
 	//後々シェーダーで渡す
 	Matrix4x4 animationLocalMatrix_ = {};

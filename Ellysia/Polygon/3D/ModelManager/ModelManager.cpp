@@ -59,27 +59,27 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 		//TextureCoordsなのでTexCoordが無い時は止める
 		assert(mesh->HasTextureCoords(0));
 
-		//faceを解析する
-		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces;++faceIndex ) {
-			aiFace& face = mesh->mFaces[faceIndex];
-			//三角形のみサポート
-			assert(face.mNumIndices == 3);
-			//ここからFaceの中身であるVertexの解析を行っていく
-			for (uint32_t element = 0; element < face.mNumIndices; ++element) {
-				uint32_t vertexIndex = face.mIndices[element];
-				aiVector3D& position = mesh->mVertices[vertexIndex];
-				aiVector3D& normal = mesh->mNormals[vertexIndex];
-				aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
-				VertexData vertex;
-				vertex.position = { position.x,position.y,position.z,1.0f };
-				vertex.normal = { normal.x,normal.y,normal.z };
-				vertex.texCoord = { texcoord.x,texcoord.y };
-				//aiProcess_MakeLeftHandedはz*=-1で、
-				vertex.position.x *= -1.0f;
-				vertex.normal.x *= -1.0f;
-				modelData.vertices.push_back(vertex);
-			}
-		}
+		////faceを解析する
+		//for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces;++faceIndex ) {
+		//	aiFace& face = mesh->mFaces[faceIndex];
+		//	//三角形のみサポート
+		//	assert(face.mNumIndices == 3);
+		//	//ここからFaceの中身であるVertexの解析を行っていく
+		//	for (uint32_t element = 0; element < face.mNumIndices; ++element) {
+		//		uint32_t vertexIndex = face.mIndices[element];
+		//		aiVector3D& position = mesh->mVertices[vertexIndex];
+		//		aiVector3D& normal = mesh->mNormals[vertexIndex];
+		//		aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
+		//		VertexData vertex;
+		//		vertex.position = { position.x,position.y,position.z,1.0f };
+		//		vertex.normal = { normal.x,normal.y,normal.z };
+		//		vertex.texCoord = { texcoord.x,texcoord.y };
+		//		//aiProcess_MakeLeftHandedはz*=-1で、
+		//		vertex.position.x *= -1.0f;
+		//		vertex.normal.x *= -1.0f;
+		//		modelData.vertices.push_back(vertex);
+		//	}
+		//}
 
 		//頂点を解析する
 		//最初に頂点数分のメモリを確保しておく
@@ -94,6 +94,20 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			modelData.vertices[verticesIndex].texCoord = {texcoord.x,texcoord.y};
 		}
 		//Indexの解析
+		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
+			aiFace& face = mesh->mFaces[faceIndex];
+			//三角形で
+			assert(face.mNumIndices == 3);
+
+			for (uint32_t element = 0; element < face.mNumIndices; ++element) {
+				uint32_t vertexIndex = face.mIndices[element];
+				modelData.indices.push_back(vertexIndex);
+			}
+
+
+
+		}
+
 
 	}
 
