@@ -9,8 +9,7 @@ struct AnimationCurve {
 };
 
 struct NodeAnimation {
-	AnimationCurve<Vector3> scale;
-	AnimationCurve<Quaternion> rotate;
 	AnimationCurve<Vector3> translate;
-	
+	AnimationCurve<Quaternion> rotate;
+	AnimationCurve<Vector3> scale;
 };

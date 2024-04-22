@@ -20,7 +20,7 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
     //mTicksPerSecond...周波数
     //mDuration...mTicksPerSecondで指定された周波数における長さ
     animation.duration = float(animationAssimp->mDuration / animationAssimp->mTicksPerSecond);
-
+    
 
 
     //NodeAnimationを解析する

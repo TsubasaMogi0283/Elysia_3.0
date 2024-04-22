@@ -222,7 +222,7 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 
 
 
-void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation animation){
+void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& animation){
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
@@ -309,22 +309,29 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation anima
 
 #pragma region アニメーション用
 
-	//時刻を進める
-	//計測した時間を使って可変フレーム対応した方が良い
-	animationTime_ += 1.0f / 60.0f;
-	//最後までいったら最初からリピート再生
-	//リピートするかしないかの設定をフラグでやった方がよさそう
-	animationTime_ = std::fmod(animationTime_, animation.duration);
-	//rootNodeのAnimationを取得
-	ModelData modelData = ModelManager::GetInstance()->GetModelData(modelHandle_);
-	NodeAnimation& rootNodeAnimation = animation.nodeAnimations["mixamorig:Head"];
+	//Animation& animation_ = animation;
+	//animation_.nodeAnimations.erase("Armature");
+	////時刻を進める
+	////計測した時間を使って可変フレーム対応した方が良い
+	//animationTime_ += 1.0f / 60.0f;
+	////最後までいったら最初からリピート再生
+	////リピートするかしないかの設定をフラグでやった方がよさそう
+	//animationTime_ = std::fmod(animationTime_, animation_.duration);
+	////rootNodeのAnimationを取得
+	//ModelData modelData = ModelManager::GetInstance()->GetModelData(modelHandle_);
+	////NodeAnimation& rootNodeAnimation = animation.nodeAnimations["mixamorig:Head"];
+	//NodeAnimation& rootNodeAnimation = animation_.nodeAnimations[modelData.rootNode.name];
+	////Armature
+	//rootNodeAnimation;
+	//modelData;
+
 	//指定時刻の値を取得
-	Vector3 translate = CalculationValue(rootNodeAnimation.translate.keyFrames, animationTime_);
+	/*Vector3 translate = CalculationValue(rootNodeAnimation.translate.keyFrames, animationTime_);
 	Quaternion rotate = CalculationValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
 	Vector3 scale = CalculationValue(rootNodeAnimation.scale.keyFrames, animationTime_);
 
 	Vector3 newRotate = { rotate .x,rotate.y,rotate.z };
-	animationLocalMatrix_ = MakeAffineMatrix(scale, newRotate,translate);
+	animationLocalMatrix_ = MakeAffineMatrix(scale, newRotate,translate);*/
 
 
 	//シェーダーに渡した方がよさそう
