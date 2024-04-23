@@ -92,6 +92,16 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			modelData.vertices[verticesIndex].position = { -position.x,position.y,position.z,1.0f };
 			modelData.vertices[verticesIndex].normal = { -normal.x,normal.y,normal.z};
 			modelData.vertices[verticesIndex].texCoord = {texcoord.x,texcoord.y};
+
+			VertexData vertex;
+			vertex.position = { position.x,position.y,position.z,1.0f };
+			vertex.normal = { normal.x,normal.y,normal.z };
+			vertex.texCoord = { texcoord.x,texcoord.y };
+			//aiProcess_MakeLeftHandedはz*=-1で、
+			vertex.position.x *= -1.0f;
+			vertex.normal.x *= -1.0f;
+			modelData.vertices.push_back(vertex);
+
 		}
 		//Indexの解析
 		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
@@ -102,6 +112,9 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			for (uint32_t element = 0; element < face.mNumIndices; ++element) {
 				uint32_t vertexIndex = face.mIndices[element];
 				modelData.indices.push_back(vertexIndex);
+
+				
+
 			}
 
 

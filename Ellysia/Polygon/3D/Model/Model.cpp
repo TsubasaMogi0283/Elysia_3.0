@@ -35,7 +35,7 @@ Model* Model::Create(uint32_t modelHandle) {
 	model->modelData_ = ModelManager::GetInstance()->GetModelData(modelHandle);
 
 	//頂点リソースを作る
-	model->vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size());
+	model->vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size()).Get();
 
 	//読み込みのところでバッファインデックスを作った方がよさそう
 	//リソースの先頭のアドレスから使う
@@ -48,10 +48,12 @@ Model* Model::Create(uint32_t modelHandle) {
 	
 
 	//解析したデータを使ってResourceとBufferViewを作成する
-	model->indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * model->modelData_.indices.size());
+	model->indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * model->modelData_.indices.size()).Get();
 	model->indexBufferView_.BufferLocation = model->indexResource_->GetGPUVirtualAddress();
-	model->indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * model->modelData_.indices.size());
+	size_t indicesSize = model->modelData_.indices.size();
+	model->indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * indicesSize);
 	model->indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+
 
 	//Lighting
 	model->directionalLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(DirectionalLight)).Get();
@@ -81,12 +83,7 @@ Model* Model::Create(uint32_t modelHandle) {
 	model->spotLightData_.cosFallowoffStart = 0.3f;
 	model->spotLightData_.cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
 
-	//初期は白色
-	//モデル個別に色を変更できるようにこれは外に出しておく
-	model->materialColor_ = { 1.0f,1.0f,1.0f,1.0f };
-
-		
-
+	
 	return model;
 
 }
@@ -111,7 +108,7 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 	uint32_t* mappedIndex = nullptr;
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-
+	indexResource_->Unmap(0, nullptr);
 
 #pragma region マテリアル
 	////書き込むためのアドレスを取得
@@ -243,7 +240,7 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& animation){
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
-	//プログラムが安定するらしいとのこと
+	//プログラムが安定するとのこと
 
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
@@ -257,8 +254,10 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 
 	uint32_t* mappedIndex = nullptr;
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
+	ModelData modelData = modelData_;
+	modelData;
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-
+	indexResource_->Unmap(0, nullptr);
 
 #pragma region マテリアル
 	////書き込むためのアドレスを取得
