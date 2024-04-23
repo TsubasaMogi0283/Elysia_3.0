@@ -254,6 +254,12 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 
 #pragma endregion
 
+
+	uint32_t* mappedIndex = nullptr;
+	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
+	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+
+
 #pragma region マテリアル
 	////書き込むためのアドレスを取得
 	////reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
