@@ -80,12 +80,13 @@ void Ellysia::Update(){
 
 void Ellysia::Draw(){
 
-	
+	//RenderTexture
 	DirectXSetup::GetInstance()->ForRenderTargetTexture();
 
 	//ゲームシーンの描画
 	gameManager_->DrawObject3D();
 
+	//SwapChain
 	DirectXSetup::GetInstance()->ForSwapchain();
 
 	//スプライトの描画
@@ -107,6 +108,16 @@ void Ellysia::EndFrame() {
 			
 }
 #pragma endregion
+
+
+void Ellysia::Release() {
+
+	Audio::GetInstance()->Release();
+	TextureManager::GetInstance()->Release();
+	ImGuiManager::GetInstance()->Release();
+	DirectXSetup::GetInstance()->Release();
+	WindowsSetup::GetInstance()->Close();
+}
 
 
 void Ellysia::Operate(){
@@ -153,14 +164,7 @@ void Ellysia::Operate(){
 
 
 
-void Ellysia::Release() {
 
-	Audio::GetInstance()->Release();
-	TextureManager::GetInstance()->Release();
-	ImGuiManager::GetInstance()->Release();
-	DirectXSetup::GetInstance()->Release();
-	WindowsSetup::GetInstance()->Close();
-}
 
 Ellysia::~Ellysia(){
 	delete gameManager_;
