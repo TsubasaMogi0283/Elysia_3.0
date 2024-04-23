@@ -42,12 +42,6 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 	assert(scene->HasMeshes());
 
 
-	//3.実際にファイルを読み、ModelDataを構築していく
-
-	//getline...streamから1行読んでstringに格納する
-	//istringstream...文字列を分解しながら読むためのクラス、空白を区切りとして読む
-	//objファイルの先頭にはその行の意味を示す識別子(identifier/id)が置かれているので、最初にこの識別子を読み込む
-
 
 	//Meshを解析
 	//Meshは複数のFaceで構成され、そのFaceは複数の頂点で構成されている
@@ -84,24 +78,16 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 		//頂点を解析する
 		//最初に頂点数分のメモリを確保しておく
 		modelData.vertices.resize(mesh->mNumVertices);
-		for (uint32_t verticesIndex = 0; verticesIndex < mesh->mNumVertices; ++verticesIndex) {
-			aiVector3D& position = mesh->mVertices[verticesIndex];
-			aiVector3D& normal = mesh->mNormals[verticesIndex];
-			aiVector3D& texcoord = mesh->mTextureCoords[0][verticesIndex];
+		for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; ++vertexIndex) {
+			aiVector3D& position = mesh->mVertices[vertexIndex];
+			aiVector3D& normal = mesh->mNormals[vertexIndex];
+			aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
 			//右手から左手への変換
-			modelData.vertices[verticesIndex].position = { -position.x,position.y,position.z,1.0f };
-			modelData.vertices[verticesIndex].normal = { -normal.x,normal.y,normal.z};
-			modelData.vertices[verticesIndex].texCoord = {texcoord.x,texcoord.y};
+			modelData.vertices[vertexIndex].position = { -position.x,position.y,position.z,1.0f };
+			modelData.vertices[vertexIndex].normal = { -normal.x,normal.y,normal.z};
+			modelData.vertices[vertexIndex].texCoord = {texcoord.x,texcoord.y};
 
-			VertexData vertex;
-			vertex.position = { position.x,position.y,position.z,1.0f };
-			vertex.normal = { normal.x,normal.y,normal.z };
-			vertex.texCoord = { texcoord.x,texcoord.y };
-			//aiProcess_MakeLeftHandedはz*=-1で、
-			vertex.position.x *= -1.0f;
-			vertex.normal.x *= -1.0f;
 			modelData.vertices.push_back(vertex);
-
 		}
 		//Indexの解析
 		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
@@ -116,7 +102,8 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 				
 
 			}
-
+			
+			
 
 
 		}
