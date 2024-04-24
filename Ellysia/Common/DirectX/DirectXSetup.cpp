@@ -845,6 +845,7 @@ void DirectXSetup::EndFrame() {
 
 
 
+
 	////RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	////DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	////形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
