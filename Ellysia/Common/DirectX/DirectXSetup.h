@@ -156,9 +156,7 @@ public:
 
 private:
 
-	void RenderTextureBegin();
-	void RenderTextureEnd();
-
+	
 
 public:
 
