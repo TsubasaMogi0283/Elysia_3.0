@@ -785,6 +785,8 @@ void DirectXSetup::ForRenderTargetTexture() {
 
 #pragma region RenderTextureBegin
 
+	
+
 
 
 	//TransitionBarrierの設定
@@ -801,19 +803,11 @@ void DirectXSetup::ForRenderTargetTexture() {
 	//TransitionBarrierを張る
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
 
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetCopyImageRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetCopyImageGraphicsPipelineState().Get());
-
-
-
-	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
-	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	//描画(DrawCall)３頂点で１つのインスタンス。
-	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 
 
 #pragma endregion
+
+	backBufferIndex_= DirectXSetup::GetInstance()->swapChain.m_pSwapChain->GetCurrentBackBufferIndex();
 
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = DirectXSetup::GetInstance()->m_dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 	DirectXSetup::GetInstance()->m_commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, &dsvHandle);
@@ -860,11 +854,6 @@ void DirectXSetup::ForSwapchain() {
 
 
 void DirectXSetup::RenderTextureEnd(){
-	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
-
 	
 }
 
@@ -875,9 +864,18 @@ void DirectXSetup::EndFrame() {
 	//今回はRenderTargetからPresentにする
 	
 
-
-	RenderTextureEnd();
 	
+
+
+	//RenderTextureEnd
+	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
+
+
+	
+
 
 
 	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
@@ -886,13 +884,8 @@ void DirectXSetup::EndFrame() {
 	//TransitionBarrierを張る
 	DirectXSetup::GetInstance()->m_commandList_->ResourceBarrier(1, &barrier_);
 
-	// レンダーターゲットから Swapchain のバックバッファにコピー
-	DirectXSetup::GetInstance()->m_commandList_->CopyResource(
-		DirectXSetup::GetInstance()->GetSwapChain().m_pResource[backBufferIndex_].Get(),
-		renderTextureResource.Get());
-
-
-
+	
+	
 	
 
 	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
@@ -910,7 +903,7 @@ void DirectXSetup::EndFrame() {
 
 
 
-	swapChain.m_pSwapChain->Present(1, 0);
+	DirectXSetup::GetInstance()->swapChain.m_pSwapChain->Present(1, 0);
 
 	////GPUにSignalを送る
 	//GPUの実行完了が目的
