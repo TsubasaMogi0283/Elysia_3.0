@@ -832,6 +832,18 @@ void DirectXSetup::EndFrame() {
 	//今回はRenderTargetからPresentにする
 	
 
+	//DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetCopyImageRootSignature().Get());
+	//DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetCopyImageGraphicsPipelineState().Get());
+
+
+
+	////RootSignatureを設定。PSOに設定しているけど別途設定が必要
+	////DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	////形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
+	//DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	////描画(DrawCall)３頂点で１つのインスタンス。
+	//DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 
 
 	//遷移前(現在)のResourceState
