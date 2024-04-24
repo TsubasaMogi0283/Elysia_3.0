@@ -163,8 +163,19 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\AllGameScene\GameManager\GameManager.cpp" />
     <ClCompile Include="Project\AllGameScene\SampleScene2\SampleScene2.cpp" />
     <ClCompile Include="Project\AllGameScene\SampleScene\SampleScene.cpp" />
+    <ClCompile Include="Project\BackTest\BackText.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\Shader\CopyImage\CopyImage.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\CopyImage\CopyImage.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Resources\Shader\Object2D\Object2d.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -253,11 +264,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\AllGameScene\GameManager\IGameScene.h" />
     <ClInclude Include="Project\AllGameScene\SampleScene2\SampleScene2.h" />
     <ClInclude Include="Project\AllGameScene\SampleScene\SampleScene.h" />
+    <ClInclude Include="Project\BackTest\BackText.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
+    <None Include="Resources\Shader\CopyImage\CopyImage.hlsli" />
     <None Include="Resources\Shader\Object2D\Object2d.hlsli" />
     <None Include="Resources\Shader\Object3D\Object3d.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

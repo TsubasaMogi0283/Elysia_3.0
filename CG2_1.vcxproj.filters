@@ -276,6 +276,9 @@
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Joint.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
+    <ClCompile Include="Project\BackTest\BackText.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -295,6 +298,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\Object3D\Object3d.VS.hlsl">
       <Filter>Ellysia\Resource File\Object3d</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\CopyImage\CopyImage.PS.hlsl">
+      <Filter>Ellysia\Resource File</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\CopyImage\CopyImage.VS.hlsl">
+      <Filter>Ellysia\Resource File</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -484,6 +493,9 @@
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Skeleton.h">
       <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
+    <ClInclude Include="Project\BackTest\BackText.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">
@@ -503,6 +515,9 @@
     </None>
     <None Include=".gitignore">
       <Filter>Text</Filter>
+    </None>
+    <None Include="Resources\Shader\CopyImage\CopyImage.hlsli">
+      <Filter>Ellysia\Resource File</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
