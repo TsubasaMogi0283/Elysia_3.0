@@ -39,7 +39,7 @@ void SampleScene::Initialize() {
 
 	audioHandle_ = audio_->LoadWave("Resources/Audio/Sample/Game.wav");
 
-	audio_->PlayWave(audioHandle_,false);
+	//audio_->PlayWave(audioHandle_,false);
 	audio_->SetPan(audioHandle_, pan_);
 	audio_->ChangePitch(audioHandle_, pitch_);
 

@@ -363,7 +363,6 @@ void DirectXSetup::GenerateSwapChain() {
 	//60fpsそのまま映すと大変なので2枚用意して
 	//描画(フロントバッファ)と表示(バックバッファ、プライマリバッファ)に分ける。
 	//このことをダブルバッファリングという。
-	SwapChain swapChain = {};
 	HWND hwnd = WindowsSetup::GetInstance()->GetHwnd();
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	swapChainDesc.Width = WindowsSetup::GetInstance()->GetClientWidth();		//画面の幅。ウィンドウのクライアント領域を同じものにしておく
@@ -477,7 +476,7 @@ void DirectXSetup::SetRTV() {
 
 	
 
-
+	//3つ目
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };//今回は赤
 	//縦横を取得
 	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
@@ -705,7 +704,7 @@ void DirectXSetup::RenderTextureBegin() {
 	//遷移後のResourceState
 	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(2, &renderTextureBarrier_);
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetCopyImageRootSignature().Get());
@@ -866,6 +865,7 @@ void DirectXSetup::RenderTextureEnd(){
 	//TransitionBarrierを張る
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
 
+	
 }
 
 void DirectXSetup::EndFrame() {
@@ -883,10 +883,17 @@ void DirectXSetup::EndFrame() {
 	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 
-
-
 	//TransitionBarrierを張る
 	DirectXSetup::GetInstance()->m_commandList_->ResourceBarrier(1, &barrier_);
+
+	// レンダーターゲットから Swapchain のバックバッファにコピー
+	DirectXSetup::GetInstance()->m_commandList_->CopyResource(
+		DirectXSetup::GetInstance()->GetSwapChain().m_pResource[backBufferIndex_].Get(),
+		renderTextureResource.Get());
+
+
+
+	
 
 	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
 	HRESULT hr = {};

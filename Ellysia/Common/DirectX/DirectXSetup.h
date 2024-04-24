@@ -229,7 +229,7 @@ private:
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc_{};
 
 	
-
+	//バリアは2つ用意しよう
 	D3D12_RESOURCE_BARRIER barrier_{};
 	D3D12_RESOURCE_BARRIER renderTextureBarrier_{};
 
