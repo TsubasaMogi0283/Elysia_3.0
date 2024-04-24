@@ -154,6 +154,11 @@ public:
 	void ForSwapchain();
 
 
+
+	void EndRenderTexture();
+	void EndSwapchain();
+
+
 private:
 
 	

@@ -823,6 +823,14 @@ void DirectXSetup::ForSwapchain() {
 	
 }
 
+void DirectXSetup::EndRenderTexture()
+{
+}
+
+void DirectXSetup::EndSwapchain()
+{
+}
+
 
 
 void DirectXSetup::EndFrame() {
@@ -871,13 +879,23 @@ void DirectXSetup::EndFrame() {
 		renderTextureResource.Get());
 
 
+
+	//コピーが終わったら
+
 	//RenderTextureEnd
 	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
-	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	//TransitionBarrierを張る
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
 
 
+
+
+	//RenderTextureEnd
+	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
 
 
 	
