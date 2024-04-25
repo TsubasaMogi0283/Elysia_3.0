@@ -1,6 +1,7 @@
 #include "DirectXSetup.h"
 #include <thread>
 #include <PipelineManager.h>
+#include <SrvManager.h>
 
 //インスタンス
 DirectXSetup* DirectXSetup::GetInstance() {
@@ -487,14 +488,22 @@ void DirectXSetup::SetRTV() {
 
 
 	DirectXSetup::GetInstance()->rtvHandles_[2].ptr = DirectXSetup::GetInstance()->rtvHandles_[1].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
 	DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(DirectXSetup::GetInstance()->renderTextureResource.Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[2]);
 
 
+	//SRV
+	D3D12_SHADER_RESOURCE_VIEW_DESC renderTextureSrvDesc{};
+	renderTextureSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	renderTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	renderTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	renderTextureSrvDesc.Texture2D.MipLevels = 1;
 
 
+	//DirectXSetup::GetInstance()->m_device_->CreateShaderResourceView(
+	//	DirectXSetup::GetInstance()->renderTextureResource.Get(), &renderTextureSrvDesc, DirectXSetup::GetInstance()->rtvHandles_[2]);
 
-
-
+	SrvManager::GetInstance()-> CreateSRVForRenderTexture(DirectXSetup::GetInstance()->renderTextureResource.Get());
 
 
 	////FenceとEvent
@@ -638,7 +647,11 @@ void DirectXSetup::Initialize() {
 	GenerateScissor();
 
 
-	PipelineManager::GetInstance()->GenarateCopyImagePSO();
+}
+
+void DirectXSetup::Initialize2(){
+
+
 
 }
 
@@ -823,45 +836,10 @@ void DirectXSetup::ForSwapchain() {
 	
 }
 
-void DirectXSetup::EndRenderTexture()
-{
-}
-
-void DirectXSetup::EndSwapchain()
-{
-}
+void DirectXSetup::EndRenderTexture(){
 
 
-
-void DirectXSetup::EndFrame() {
-	////画面表示出来るようにする
-	//ここがflameの最後
-	//画面に描く処理は「全て終わり」、画面に映すので、状態を遷移
-	//今回はRenderTargetからPresentにする
 	
-
-	//DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetCopyImageRootSignature().Get());
-	//DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetCopyImageGraphicsPipelineState().Get());
-
-
-
-
-	////RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	////DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
-	////形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
-	//DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	////描画(DrawCall)３頂点で１つのインスタンス。
-	//DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
-
-
-	//遷移前(現在)のResourceState
-	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//遷移後のResourceState
-	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_DEST;
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
-
 
 
 	//RenderTextureEnd
@@ -872,12 +850,6 @@ void DirectXSetup::EndFrame() {
 
 
 
-
-
-	// レンダーターゲットから Swapchain のバックバッファにコピー
-	DirectXSetup::GetInstance()->GetCommandList()->CopyResource(
-		DirectXSetup::GetInstance()->GetSwapChain().m_pResource[backBufferIndex_].Get(),
-		renderTextureResource.Get());
 
 
 
@@ -899,13 +871,41 @@ void DirectXSetup::EndFrame() {
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
 
 
+}
+
+void DirectXSetup::EndSwapchain(){
 	
+	//遷移前(現在)のResourceState
+	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//遷移後のResourceState
+	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_DEST;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
+
+
 	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 
 	//TransitionBarrierを張る
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
 
+
+}
+
+
+
+void DirectXSetup::EndFrame() {
+	////画面表示出来るようにする
+	//ここがflameの最後
+	//画面に描く処理は「全て終わり」、画面に映すので、状態を遷移
+	//今回はRenderTargetからPresentにする
+	
+
+	
+
+
+	
+	
 	
 
 	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること

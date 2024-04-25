@@ -105,6 +105,13 @@ private:
 
 	static void PullResourcesFromSwapChain();
 
+
+
+
+
+
+
+
 	static void SetRTV();
 
 	static void GenarateViewport();
@@ -126,6 +133,8 @@ private:
 public:
 
 	static void Initialize();
+
+	static void Initialize2();
 
 	//Resource作成の関数化
 	ComPtr<ID3D12Resource> CreateBufferResource(size_t sizeInBytes);

@@ -86,6 +86,8 @@ void Ellysia::Draw(){
 	//ゲームシーンの描画
 	gameManager_->DrawObject3D();
 
+	DirectXSetup::GetInstance()->EndRenderTexture();
+
 	//SwapChain
 	DirectXSetup::GetInstance()->ForSwapchain();
 
@@ -103,7 +105,10 @@ void Ellysia::Draw(){
 
 void Ellysia::EndFrame() {
 
+
+
 	ImGuiManager::GetInstance()->EndFrame();
+	DirectXSetup::GetInstance()->EndSwapchain();
 	DirectXSetup::GetInstance()->EndFrame();
 			
 }
