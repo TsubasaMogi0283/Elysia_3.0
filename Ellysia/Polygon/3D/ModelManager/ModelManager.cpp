@@ -169,7 +169,7 @@ uint32_t ModelManager::LoadModelFile(const std::string& directoryPath, const std
 			return ModelManager::GetInstance()->modelInfromtion_[i].handle;
 		}
 	}
-
+	
 	modelhandle++;
 
 	//モデルの読み込み
