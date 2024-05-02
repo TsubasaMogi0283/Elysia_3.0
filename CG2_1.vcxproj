@@ -138,6 +138,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Ellysia.cpp" />
     <ClCompile Include="Ellysia\ImGuiManager\ImGuiManager.cpp" />
     <ClCompile Include="Ellysia\Input\Input.cpp" />
+    <ClCompile Include="Ellysia\LevelDataManager\LevelDataManager.cpp" />
     <ClCompile Include="Ellysia\Line\Line.cpp" />
     <ClCompile Include="Ellysia\main.cpp" />
     <ClCompile Include="Ellysia\Math\BPMCalculation\BPMSetting.cpp" />
@@ -203,6 +204,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Ellysia.h" />
     <ClInclude Include="Ellysia\ImGuiManager\ImGuiManager.h" />
     <ClInclude Include="Ellysia\Input\Input.h" />
+    <ClInclude Include="Ellysia\LevelDataManager\LevelDataManager.h" />
     <ClInclude Include="Ellysia\Lighting\PointLight.h" />
     <ClInclude Include="Ellysia\Lighting\SpotLight.h" />
     <ClInclude Include="Ellysia\Line\Line.h" />

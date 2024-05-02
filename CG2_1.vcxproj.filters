@@ -166,6 +166,12 @@
     <Filter Include="Ellysia\Header File\Animation">
       <UniqueIdentifier>{97ce354a-4949-41c4-886a-96dc659bbfc0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\LevelDataManager">
+      <UniqueIdentifier>{ffd3de7b-91c9-499f-9c3f-3c9985121ac1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\LevelDataManager">
+      <UniqueIdentifier>{a81e737e-802e-4518-ba54-9534e5f90d79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -275,6 +281,9 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Joint.cpp">
       <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\LevelDataManager\LevelDataManager.cpp">
+      <Filter>Ellysia\Source File\LevelDataManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -483,6 +492,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Skeleton.h">
       <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\LevelDataManager\LevelDataManager.h">
+      <Filter>Ellysia\Header File\LevelDataManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

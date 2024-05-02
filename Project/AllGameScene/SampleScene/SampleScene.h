@@ -10,21 +10,9 @@
 #include <memory>
 #include <Particle3D.h>
 #include <Audio.h>
+#include "../../../Ellysia/LevelDataManager/LevelDataManager.h"
 
-struct LevelData {
-	struct ObjectData {
-		//ファイル名
-		std::string fileName;
-		//Transform
-		Vector3 translation;
-		Vector3 rotation;
-		Vector3 scaling;
 
-	};
-
-	std::vector<ObjectData> objects;
-	
-};
 
 
 //StatePatternを使う時は必ず前方宣言をするように
@@ -64,4 +52,6 @@ private:
 
 
 	const char* GroupName = "Player";
+
+	LevelDataManager* levelDataManager_ = nullptr;
 };
