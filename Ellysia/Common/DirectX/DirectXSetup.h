@@ -132,9 +132,9 @@ private:
 
 public:
 
-	static void Initialize();
+	static void FirstInitialize();
 
-	static void Initialize2();
+	static void SecondInitialize();
 
 	//Resource作成の関数化
 	ComPtr<ID3D12Resource> CreateBufferResource(size_t sizeInBytes);

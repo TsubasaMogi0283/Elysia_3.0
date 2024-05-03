@@ -28,9 +28,11 @@ void Ellysia::Initialize(){
 	WindowsSetup::GetInstance()->Initialize(titleBarName,WINDOW_SIZE_WIDTH_,WINDOW_SIZE_HEIGHT_);
 	
 	//DirectX
-	DirectXSetup::GetInstance()->Initialize();
+	DirectXSetup::GetInstance()->FirstInitialize();
 	
 	SrvManager::GetInstance()->Initialize();
+
+	DirectXSetup::GetInstance()->SecondInitialize();
 
 	//ImGuiManager
 	ImGuiManager::GetInstance()->Initialize();
@@ -83,9 +85,10 @@ void Ellysia::Draw(){
 	//RenderTexture
 	DirectXSetup::GetInstance()->ForRenderTargetTexture();
 
-	//ゲームシーンの描画
+	//3Dオブジェクトの描画
 	gameManager_->DrawObject3D();
 
+	//RenderTexture
 	DirectXSetup::GetInstance()->EndRenderTexture();
 
 	//SwapChain
@@ -93,7 +96,6 @@ void Ellysia::Draw(){
 
 	//スプライトの描画
 	gameManager_->DrawSprite();
-
 
 	//ImGuiの描画
 	ImGuiManager::GetInstance()->PreDraw();	

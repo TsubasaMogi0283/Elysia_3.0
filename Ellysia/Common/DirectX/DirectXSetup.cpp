@@ -578,7 +578,7 @@ void DirectXSetup::InitializeFPS() {
 
 #pragma endregion
 
-void DirectXSetup::Initialize() {
+void DirectXSetup::FirstInitialize() {
 	//出力ウィンドウへの文字出力
 	OutputDebugStringA("Hello,DirectX!\n");
 
@@ -626,6 +626,31 @@ void DirectXSetup::Initialize() {
 	//スワップチェーンを引っ張ってくる
 	PullResourcesFromSwapChain();
 
+	////RenderTargetViewの設定
+	//SetRTV();
+	//
+	//
+	////DXCの初期化
+	//////ShaderCompile
+	////ShaderはHLSLによって記述されているが、GPUが解釈できる形ではない
+	////一度DXIL(DirectX Intermediate Language)というドライバ用の形式に変換され、
+	////ドライバがGPU用のバイナリに変更しやっと実行されるよ。手間だね。
+	//// 
+	//// DXC(DirectX Shader Compiler)がHLSLからDXILにするCompilerである
+	////
+	//
+	//
+	////ビューポートの生成
+	//GenarateViewport();
+	//
+	////シザーを生成
+	//GenerateScissor();
+
+
+}
+
+void DirectXSetup::SecondInitialize(){
+
 	//RenderTargetViewの設定
 	SetRTV();
 
@@ -638,20 +663,13 @@ void DirectXSetup::Initialize() {
 	// 
 	// DXC(DirectX Shader Compiler)がHLSLからDXILにするCompilerである
 	//
-	
+
 
 	//ビューポートの生成
 	GenarateViewport();
 
 	//シザーを生成
 	GenerateScissor();
-
-
-}
-
-void DirectXSetup::Initialize2(){
-
-
 
 }
 
@@ -717,7 +735,7 @@ void DirectXSetup::BeginFrame() {
 	//7.次のフレーム用にCommandListを再準備
 
 	
-
+#pragma region いらないかも
 
 	///////
 	////コマンドを積みこんで確定させる
@@ -743,7 +761,7 @@ void DirectXSetup::BeginFrame() {
 	//TransitionBarrierを張る
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
 
-
+#pragma endregion
 
 
 	
@@ -790,9 +808,9 @@ void DirectXSetup::ForRenderTargetTexture() {
 
 
 
-	DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);
+	//DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);
 	
-	DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
+	//DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
 
 
 
@@ -816,6 +834,34 @@ void DirectXSetup::ForRenderTargetTexture() {
 
 }
 
+
+
+void DirectXSetup::EndRenderTexture(){
+
+	//RenderTextureEnd
+	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
+
+	//コピーが終わったら
+	//RenderTextureEnd
+	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
+	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
+
+	//RenderTextureEnd
+	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
+
+
+}
+
+
+
 void DirectXSetup::ForSwapchain() {
 
 	//Begin
@@ -832,43 +878,6 @@ void DirectXSetup::ForSwapchain() {
 	DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
 
 
-
-	
-}
-
-void DirectXSetup::EndRenderTexture(){
-
-
-	
-
-
-	//RenderTextureEnd
-	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
-
-
-
-
-
-
-	//コピーが終わったら
-
-	//RenderTextureEnd
-	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
-	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
-
-
-
-
-	//RenderTextureEnd
-	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
 
 
 }
@@ -900,14 +909,6 @@ void DirectXSetup::EndFrame() {
 	//画面に描く処理は「全て終わり」、画面に映すので、状態を遷移
 	//今回はRenderTargetからPresentにする
 	
-
-	
-
-
-	
-	
-	
-
 	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
 	HRESULT hr = {};
 	hr = DirectXSetup::GetInstance()->GetCommandList()->Close();
