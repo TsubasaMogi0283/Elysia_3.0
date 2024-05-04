@@ -841,7 +841,6 @@ void PipelineManager::GenerateModelPSO() {
 	assert(PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_ != nullptr);
 
 
-
 	PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ != nullptr);
 
@@ -1414,16 +1413,17 @@ void PipelineManager::GenarateCopyImagePSO() {
 	
 	
 	//シリアライズしてバイナリにする
+	HRESULT hr_ = {};
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_, &errorBlob_);
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->copyImagePSO_.signatureBlob_, &PipelineManager::GetInstance()->copyImagePSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(errorBlob_->GetBufferPointer()));
+		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->copyImagePSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
 	//ID3D12RootSignature* rootSignature_ = nullptr;
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, signatureBlob_->GetBufferPointer(),
-		signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
+	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->copyImagePSO_.signatureBlob_->GetBufferPointer(),
+		PipelineManager::GetInstance()->copyImagePSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->copyImagePSO_.rootSignature_));
 	assert(SUCCEEDED(hr_));
 	
 	
@@ -1463,21 +1463,21 @@ void PipelineManager::GenarateCopyImagePSO() {
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 	
 	
-	//ShaderをCompileする
-	vertexShaderBlob_ = CompileShader(L"Object3d.VS.hlsl", L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
-	assert(vertexShaderBlob_ != nullptr);
+	//ShaderをCompileする"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Shader\CopyImage\CopyImage.VS.hlsl"
+	PipelineManager::GetInstance()->copyImagePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/CopyImage/CopyImage.VS.hlsl", L"vs_6_0");
+	assert(PipelineManager::GetInstance()->copyImagePSO_.vertexShaderBlob_ != nullptr);
 	
-	pixelShaderBlob_ = CompileShader(L"Object3d.PS.hlsl", L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
-	assert(pixelShaderBlob_ != nullptr);
+	PipelineManager::GetInstance()->copyImagePSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/CopyImage/CopyImage.PS.hlsl", L"ps_6_0");
+	assert(PipelineManager::GetInstance()->copyImagePSO_.pixelShaderBlob_ != nullptr);
 	
 	
 	////PSO生成
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = rootSignature_;
+	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->copyImagePSO_.rootSignature_.Get();
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
-	graphicsPipelineStateDesc.VS = { vertexShaderBlob_->GetBufferPointer(),vertexShaderBlob_->GetBufferSize() };
+	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->copyImagePSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->copyImagePSO_.vertexShaderBlob_->GetBufferSize() };
 	//vertexShaderBlob_->GetBufferSize();
-	graphicsPipelineStateDesc.PS = { pixelShaderBlob_->GetBufferPointer(),pixelShaderBlob_->GetBufferSize() };
+	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->copyImagePSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->copyImagePSO_.pixelShaderBlob_->GetBufferSize() };
 	//pixelShaderBlob_->GetBufferSize();
 	graphicsPipelineStateDesc.BlendState = blendDesc;
 	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
@@ -1498,8 +1498,8 @@ void PipelineManager::GenarateCopyImagePSO() {
 	
 	//実際に生成
 	//ID3D12PipelineState* graphicsPipelineState_ = nullptr;
-	hr_ = device_->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&graphicsPipelineState_));
+	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+		IID_PPV_ARGS(&PipelineManager::GetInstance()->copyImagePSO_.graphicsPipelineState_));
 	assert(SUCCEEDED(hr_));
 
 
