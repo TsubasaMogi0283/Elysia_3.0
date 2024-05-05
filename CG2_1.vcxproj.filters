@@ -279,6 +279,9 @@
     <ClCompile Include="Project\BackTest\BackText.cpp">
       <Filter>Project</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\RtvManager\RtvManager.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -486,6 +489,9 @@
     </ClInclude>
     <ClInclude Include="Project\BackTest\BackText.h">
       <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\RtvManager\RtvManager.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

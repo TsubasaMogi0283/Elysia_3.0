@@ -81,15 +81,8 @@ void SrvManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource*
 	srvDesc.Buffer.NumElements = numElements;
 	srvDesc.Buffer.StructureByteStride = structureByteStride;
 
-
-
-
 	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(
 		pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
-
-
-
-
 
 }
 

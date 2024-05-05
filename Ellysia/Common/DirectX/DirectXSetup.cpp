@@ -473,7 +473,7 @@ void DirectXSetup::SetRTV() {
 	DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(DirectXSetup::GetInstance()->swapChain.m_pResource[1].Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[1]);
 
 
-
+	//上の2つはSwapChain用
 
 	
 
@@ -492,16 +492,6 @@ void DirectXSetup::SetRTV() {
 	DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(DirectXSetup::GetInstance()->renderTextureResource.Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[2]);
 
 
-	//SRV
-	D3D12_SHADER_RESOURCE_VIEW_DESC renderTextureSrvDesc{};
-	renderTextureSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	renderTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	renderTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	renderTextureSrvDesc.Texture2D.MipLevels = 1;
-
-
-	//DirectXSetup::GetInstance()->m_device_->CreateShaderResourceView(
-	//	DirectXSetup::GetInstance()->renderTextureResource.Get(), &renderTextureSrvDesc, DirectXSetup::GetInstance()->rtvHandles_[2]);
 
 	SrvManager::GetInstance()-> CreateSRVForRenderTexture(DirectXSetup::GetInstance()->renderTextureResource.Get());
 
@@ -625,27 +615,6 @@ void DirectXSetup::FirstInitialize() {
 
 	//スワップチェーンを引っ張ってくる
 	PullResourcesFromSwapChain();
-
-	////RenderTargetViewの設定
-	//SetRTV();
-	//
-	//
-	////DXCの初期化
-	//////ShaderCompile
-	////ShaderはHLSLによって記述されているが、GPUが解釈できる形ではない
-	////一度DXIL(DirectX Intermediate Language)というドライバ用の形式に変換され、
-	////ドライバがGPU用のバイナリに変更しやっと実行されるよ。手間だね。
-	//// 
-	//// DXC(DirectX Shader Compiler)がHLSLからDXILにするCompilerである
-	////
-	//
-	//
-	////ビューポートの生成
-	//GenarateViewport();
-	//
-	////シザーを生成
-	//GenerateScissor();
-
 
 }
 
