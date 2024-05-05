@@ -42,7 +42,7 @@ enum BlemdMode {
 
 };
 
-class PipelineManager final{
+class PipelineManager final {
 private:
 
 	//コンストラクタ
@@ -113,7 +113,7 @@ public:
 
 
 
-	
+
 #pragma endregion
 
 public:

@@ -58,6 +58,9 @@ void Ellysia::Initialize(){
 #pragma region ゲームループ内の関数
 
 void Ellysia::BeginFrame(){
+
+	//RenderTexture
+	//DirectXSetup::GetInstance()->ForRenderTargetTexture();
 	DirectXSetup::GetInstance()->BeginFrame();
 	SrvManager::GetInstance()->PreDraw();
 	ImGuiManager::GetInstance()->BeginFrame();
@@ -82,17 +85,16 @@ void Ellysia::Update(){
 
 void Ellysia::Draw(){
 
-	//RenderTexture
-	DirectXSetup::GetInstance()->ForRenderTargetTexture();
+	
 
 	//3Dオブジェクトの描画
 	gameManager_->DrawObject3D();
 
 	//RenderTexture
-	DirectXSetup::GetInstance()->EndRenderTexture();
+	//DirectXSetup::GetInstance()->EndRenderTexture();
 
 	//SwapChain
-	DirectXSetup::GetInstance()->ForSwapchain();
+	//DirectXSetup::GetInstance()->ForSwapchain();
 
 	//スプライトの描画
 	gameManager_->DrawSprite();
@@ -110,7 +112,7 @@ void Ellysia::EndFrame() {
 
 
 	ImGuiManager::GetInstance()->EndFrame();
-	DirectXSetup::GetInstance()->EndSwapchain();
+	//DirectXSetup::GetInstance()->EndSwapchain();
 	DirectXSetup::GetInstance()->EndFrame();
 			
 }

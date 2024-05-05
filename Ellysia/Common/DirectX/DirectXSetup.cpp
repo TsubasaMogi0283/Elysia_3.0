@@ -735,7 +735,6 @@ void DirectXSetup::BeginFrame() {
 	//7.次のフレーム用にCommandListを再準備
 
 	
-#pragma region いらないかも
 
 	///////
 	////コマンドを積みこんで確定させる
@@ -761,108 +760,7 @@ void DirectXSetup::BeginFrame() {
 	//TransitionBarrierを張る
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
 
-#pragma endregion
 
-
-	
-
-}
-
-
-
-void DirectXSetup::ForRenderTargetTexture() {
-
-#pragma region RenderTextureBegin
-
-	//TransitionBarrierの設定
-	//今回のバリアはTransition
-	renderTextureBarrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	//Noneにする
-	renderTextureBarrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	renderTextureBarrier_.Transition.pResource = DirectXSetup::GetInstance()->renderTextureResource.Get();
-	//遷移前(現在)のResourceState
-	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//遷移後のResourceState
-	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
-
-
-
-#pragma endregion
-
-	backBufferIndex_= DirectXSetup::GetInstance()->swapChain.m_pSwapChain->GetCurrentBackBufferIndex();
-
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = DirectXSetup::GetInstance()->m_dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, &dsvHandle);
-
-	//指定した色で画面全体をクリアする
-	float clearColor[] = { 1.0f,0.0f,0.0f,1.0f };	//赤
-	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(rtvHandles_[backBufferIndex_], clearColor, 0, nullptr);
-
-
-
-	//RenderTarget側でDepthの設定をする
-	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
-
-
-	//DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);
-	
-	//DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
-
-
-
-
-
-	//位置が分からない
-	//DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetCopyImageRootSignature().Get());
-	//DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetCopyImageGraphicsPipelineState().Get());
-
-
-
-	////RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	////DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
-	////形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
-	//DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	////描画(DrawCall)３頂点で１つのインスタンス。
-	//DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
-
-
-
-}
-
-
-
-void DirectXSetup::EndRenderTexture(){
-
-	//RenderTextureEnd
-	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
-
-	//コピーが終わったら
-	//RenderTextureEnd
-	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
-	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
-
-	//RenderTextureEnd
-	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
-
-
-}
-
-
-
-void DirectXSetup::ForSwapchain() {
 
 	//Begin
 	//描画先のRTVとDSVを設定する
@@ -873,9 +771,90 @@ void DirectXSetup::ForSwapchain() {
 	//指定した色で画面全体をクリアする
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(rtvHandles_[backBufferIndex_], clearColor, 0, nullptr);
+	//RenderTarget側でDepthの設定をする
+	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
 
 	DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);
 	DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
+
+
+}
+
+
+
+void DirectXSetup::ForRenderTargetTexture() {
+
+#pragma region RenderTextureBegin
+	
+	//TransitionBarrierの設定
+	//今回のバリアはTransition
+	renderTextureBarrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにする
+	renderTextureBarrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。現在のバックバッファに対して行う
+	renderTextureBarrier_.Transition.pResource = DirectXSetup::GetInstance()->renderTextureResource.Get();
+	//遷移前(現在)のResourceState
+	renderTextureBarrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	//遷移後のResourceState
+	renderTextureBarrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &renderTextureBarrier_);
+
+
+
+#pragma endregion
+
+	//backBufferIndex_= DirectXSetup::GetInstance()->swapChain.m_pSwapChain->GetCurrentBackBufferIndex();
+
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = DirectXSetup::GetInstance()->m_dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+
+	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(1, &rtvHandles_[2], false, &dsvHandle);
+
+	//ビューポートの生成
+	GenarateViewport();
+
+	//シザーを生成
+	GenerateScissor();
+
+	//指定した色で画面全体をクリアする
+	float clearColor[] = { 1.0f,0.0f,0.0f,1.0f };	//赤
+	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(rtvHandles_[2], clearColor, 0, nullptr);
+
+
+
+	//RenderTarget側でDepthの設定をする
+	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+
+
+
+
+}
+
+
+
+void DirectXSetup::EndRenderTexture(){
+
+
+}
+
+
+
+void DirectXSetup::ForSwapchain() {
+
+	////Begin
+	////描画先のRTVとDSVを設定する
+	//D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = DirectXSetup::GetInstance()->m_dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+
+	////描画先のRTVを設定する
+	//DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, &dsvHandle);
+	////指定した色で画面全体をクリアする
+	//float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色
+	//DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(rtvHandles_[backBufferIndex_], clearColor, 0, nullptr);
+
+	//DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);
+	//DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
 
 
 
@@ -884,21 +863,7 @@ void DirectXSetup::ForSwapchain() {
 
 void DirectXSetup::EndSwapchain(){
 	
-	//遷移前(現在)のResourceState
-	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//遷移後のResourceState
-	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_DEST;
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
-
-
-	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
-
-
+	
 }
 
 
@@ -909,6 +874,15 @@ void DirectXSetup::EndFrame() {
 	//画面に描く処理は「全て終わり」、画面に映すので、状態を遷移
 	//今回はRenderTargetからPresentにする
 	
+
+	//遷移前(現在)のResourceState
+	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//遷移後のResourceState
+	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
+
+
 	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
 	HRESULT hr = {};
 	hr = DirectXSetup::GetInstance()->GetCommandList()->Close();
