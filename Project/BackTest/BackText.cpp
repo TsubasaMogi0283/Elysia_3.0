@@ -9,7 +9,7 @@ void BackText::Initialize(){
 	vertexResouce_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * 3);
 	
 
-	centerResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Vector3)*3);
+	centerResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Vector3));
 
 	//リソースの先頭のアドレスから使う
 	vertexBufferView_.BufferLocation = vertexResouce_->GetGPUVirtualAddress();
@@ -20,7 +20,7 @@ void BackText::Initialize(){
 	//書き込むためのアドレスを取得
 	vertexResouce_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
-	materialResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Vector4) * 3);
+	materialResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Vector4));
 
 
 	textureHandle_ = TextureManager::GetInstance()->LoadTexture("Resources/White.png");
