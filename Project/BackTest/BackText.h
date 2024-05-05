@@ -17,6 +17,7 @@ public:
 	~BackText() {};
 
 private:
+	ComPtr<ID3D12Resource> vertexResouce_ = nullptr;
 	ComPtr<ID3D12Resource> materialResource_ = nullptr;
 
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
