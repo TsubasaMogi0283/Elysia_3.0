@@ -31,11 +31,28 @@ void BackText::Update(){
 
 }
 
-void BackText::PreDraw()
-{
+void BackText::PreDraw(){
+	// レンダーターゲットをセット
+	barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier_.Transition.pResource = DirectXSetup::GetInstance()->GetRenderTextureResource().Get();
+	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
+	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(1, &DirectXSetup::GetInstance()->GetRtvHandle(2), false, &DirectXSetup::GetInstance()->GetDsvHandle());
+
+	DirectXSetup::GetInstance()->GenarateViewport();
+	DirectXSetup::GetInstance()->GenerateScissor();
+
+	const float RENDER_TARGET_CLEAR_VALUE[] = {1.0f,0.0f,0.0f,1.0f};
+	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(DirectXSetup::GetInstance()->GetRtvHandle(2), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(DirectXSetup::GetInstance()->GetDsvHandle(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
 }
 
 void BackText::Draw(){
+
+
 	//左上
 	vertexData_[0].position = {0.0f,0.0f,0.0f,1.0f};
 	vertexData_[0].texCoord = { 0.0f,1.0f};
@@ -84,6 +101,14 @@ void BackText::Draw(){
 
 }
 
-void BackText::PostDraw()
-{
+void BackText::PostDraw(){
+	
+	barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	// 全てのサブリソースを選択
+	barrier_.Transition.Subresource = 0xFFFFFFFF;
+	barrier_.Transition.pResource = DirectXSetup::GetInstance()->GetRenderTextureResource().Get();
+	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
 }

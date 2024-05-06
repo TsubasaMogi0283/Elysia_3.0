@@ -114,6 +114,8 @@ private:
 
 	static void SetRTV();
 
+
+public:
 	static void GenarateViewport();
 
 	static void GenerateScissor();
@@ -142,11 +144,11 @@ public:
 
 #pragma region whileの中身
 	//whileの中身
-	void BeginFrame();
+	void StartDraw();
 
 	
 
-	void EndFrame();
+	void EndDraw();
 
 #pragma endregion
 	
@@ -156,16 +158,6 @@ public:
 	void Release();
 #pragma endregion
 	
-
-
-
-	void ForRenderTargetTexture();
-	void ForSwapchain();
-
-
-
-	void EndRenderTexture();
-	void EndSwapchain();
 
 
 private:
@@ -201,6 +193,18 @@ public:
 		return DirectXSetup::GetInstance()->swapChain;
 	}
 
+
+	ComPtr<ID3D12Resource> GetRenderTextureResource() {
+		return renderTextureResource;
+	}
+
+	D3D12_CPU_DESCRIPTOR_HANDLE& GetDsvHandle() {
+		return dsvHandle_;
+	}
+
+	D3D12_CPU_DESCRIPTOR_HANDLE& GetRtvHandle(uint32_t number) {
+		return rtvHandles_[number];
+	}
 #pragma endregion
 
 
@@ -230,10 +234,10 @@ private:
 	ComPtr<ID3D12DescriptorHeap> m_dsvDescriptorHeap_ = nullptr;
 
 	ComPtr<ID3D12Resource> m_depthStencilResource_ = nullptr;
-
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_ = {};
 	
 	SwapChain swapChain = {};
-	
+	D3D12_RESOURCE_BARRIER barrier_{};
 
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{};
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_;
@@ -241,9 +245,6 @@ private:
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc_{};
 
 	
-	//バリアは2つ用意しよう
-	D3D12_RESOURCE_BARRIER barrier_{};
-	D3D12_RESOURCE_BARRIER renderTextureBarrier_{};
 
 
 	ComPtr<ID3D12Fence> m_fence_ = nullptr;

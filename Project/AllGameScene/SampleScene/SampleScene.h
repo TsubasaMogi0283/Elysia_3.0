@@ -10,6 +10,7 @@
 #include <memory>
 #include <Particle3D.h>
 #include <Audio.h>
+#include "../../BackTest/BackText.h"
 
 
 //StatePatternを使う時は必ず前方宣言をするように
@@ -50,4 +51,7 @@ private:
 	Camera camera_ = {};
 
 	const char* GroupName = "Player";
+
+
+	BackText* back_ = nullptr;
 };

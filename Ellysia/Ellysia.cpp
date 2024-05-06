@@ -52,6 +52,9 @@ void Ellysia::Initialize(){
 	gameManager_ = new GameManager();
 	gameManager_->Initialize();
 
+
+	back_ = new BackText();
+	back_->Initialize();
 }
 
 
@@ -61,7 +64,7 @@ void Ellysia::BeginFrame(){
 
 	//RenderTexture
 	//DirectXSetup::GetInstance()->ForRenderTargetTexture();
-	DirectXSetup::GetInstance()->BeginFrame();
+	
 	SrvManager::GetInstance()->PreDraw();
 	ImGuiManager::GetInstance()->BeginFrame();
 }
@@ -84,18 +87,21 @@ void Ellysia::Update(){
 }
 
 void Ellysia::Draw(){
-
 	
 
+	DirectXSetup::GetInstance()->StartDraw();
+	back_->PreDraw();
+
+
+	back_->Draw();
+
+
+
+	back_->PostDraw();
 	//3Dオブジェクトの描画
 	gameManager_->DrawObject3D();
-
-	//RenderTexture
-	//DirectXSetup::GetInstance()->EndRenderTexture();
-
-	//SwapChain
-	//DirectXSetup::GetInstance()->ForSwapchain();
-
+	
+	
 	//スプライトの描画
 	gameManager_->DrawSprite();
 
@@ -112,8 +118,7 @@ void Ellysia::EndFrame() {
 
 
 	ImGuiManager::GetInstance()->EndFrame();
-	//DirectXSetup::GetInstance()->EndSwapchain();
-	DirectXSetup::GetInstance()->EndFrame();
+	DirectXSetup::GetInstance()->EndDraw();
 			
 }
 #pragma endregion
@@ -176,5 +181,6 @@ void Ellysia::Operate(){
 
 
 Ellysia::~Ellysia(){
+	delete back_;
 	delete gameManager_;
 }

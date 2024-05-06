@@ -35,5 +35,8 @@ private:
 	Vector3* positiondata_ = nullptr;
 
 	uint32_t textureHandle_ = 0;
+
+
+	D3D12_RESOURCE_BARRIER barrier_{};
 };
 

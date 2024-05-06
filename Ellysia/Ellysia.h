@@ -2,6 +2,7 @@
 #include "GameManager.h"
 #include "WindowsSetup.h"
 #include "DirectXSetup.h"
+#include "../Project/BackTest/BackText.h"
 
 //Ellysia(エリシア・エレシア)
 //Aile + Sheer...「エイル・エル(フランス語で自分の名前になる)」と「シア」
@@ -56,7 +57,7 @@ private:
 
 private:
 	
-
+	BackText* back_=nullptr;
 
 	GameManager* gameManager_ = nullptr;
 
