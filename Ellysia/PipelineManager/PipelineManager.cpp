@@ -1303,7 +1303,7 @@ void PipelineManager::GenarateCopyImagePSO() {
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 
-	//ShaderをCompileする"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Shader\CopyImage\CopyImage.VS.hlsl"
+	//ShaderをCompileする
 	PipelineManager::GetInstance()->copyImagePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/FullScreen/FullScreen.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->copyImagePSO_.vertexShaderBlob_ != nullptr);
 
