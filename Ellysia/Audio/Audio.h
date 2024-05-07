@@ -36,7 +36,7 @@ using Microsoft::WRL::ComPtr;
 #include "AudioStruct.h"
 
 //LoadAudioの時に使う
-enum EffectType {
+enum AudioEffectType {
 	Filter,
 	Reverb,
 };

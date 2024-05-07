@@ -4,7 +4,7 @@
 #include <SrvManager.h>
 
 void BackText::Initialize(){
-	PipelineManager::GetInstance()->GenarateCopyImagePSO();
+	PipelineManager::GetInstance()->GenarateFullScreenPSO();
 	
 	//ここでBufferResourceを作る
 	vertexResouce_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * 3);
@@ -21,7 +21,7 @@ void BackText::Initialize(){
 	//書き込むためのアドレスを取得
 	vertexResouce_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
-	materialResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Vector4));
+	effectResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(int32_t));
 	
 	textureHandle_ = SrvManager::GetInstance()->Allocate();
 	SrvManager::GetInstance()->CreateSRVForRenderTexture(DirectXSetup::GetInstance()->GetRenderTextureResource().Get(), textureHandle_);
@@ -102,13 +102,13 @@ void BackText::Draw(){
 	//マテリアルにデータを書き込む
 	//書き込むためのアドレスを取得
 	//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	effectResource_->Map(0, nullptr, reinterpret_cast<void**>(&effectTypeData_));
 
 	//今回は赤を書き込んでみる
-	*materialData_ = color_;
+	*effectTypeData_ = effectType_;
 
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetCopyImageRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetCopyImageGraphicsPipelineState().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetFullScreenRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetFullScreenGraphicsPipelineState().Get());
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
@@ -116,9 +116,8 @@ void BackText::Draw(){
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	//マテリアルCBufferの場所を設定
-	//ここでの[0]はregisterの0ではないよ。rootParameter配列の0番目
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	//Effect
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, effectResource_->GetGPUVirtualAddress());
 
 	//Position
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, centerResource_->GetGPUVirtualAddress());

@@ -84,11 +84,6 @@ void Ellysia::Update(){
 
 void Ellysia::Draw(){
 	
-	//OMS
-	//CRTV
-	//CDSV
-	//RSSV
-	//RSSR
 	back_->PreDraw();
 	
 	////3Dオブジェクトの描画

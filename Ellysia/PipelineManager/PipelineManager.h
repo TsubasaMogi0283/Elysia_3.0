@@ -96,11 +96,11 @@ public:
 
 
 	//コマンドに積むためのGetter(CopyImage)
-	ComPtr<ID3D12RootSignature> GetCopyImageRootSignature() {
-		return copyImagePSO_.rootSignature_;
+	ComPtr<ID3D12RootSignature> GetFullScreenRootSignature() {
+		return fullScreenPSO_.rootSignature_;
 	}
-	ComPtr<ID3D12PipelineState> GetCopyImageGraphicsPipelineState() {
-		return copyImagePSO_.graphicsPipelineState_;
+	ComPtr<ID3D12PipelineState> GetFullScreenGraphicsPipelineState() {
+		return fullScreenPSO_.graphicsPipelineState_;
 	}
 
 
@@ -131,7 +131,7 @@ public:
 	static void GenerateParticle3DPSO();
 
 	//CopyImage用
-	static void GenarateCopyImagePSO();
+	static void GenarateFullScreenPSO();
 
 private:
 
@@ -154,7 +154,7 @@ private:
 	//モデル用の変数
 	PSOInformation particle3DPSO_ = {};
 	//CopyImage用
-	PSOInformation copyImagePSO_ = {};
+	PSOInformation fullScreenPSO_ = {};
 
 
 	//スプライト用

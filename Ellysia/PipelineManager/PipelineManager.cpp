@@ -1159,7 +1159,7 @@ void PipelineManager::GenerateParticle3DPSO() {
 
 }
 
-void PipelineManager::GenarateCopyImagePSO() {
+void PipelineManager::GenarateFullScreenPSO() {
 
 	//////////PSO
 	// 
@@ -1174,7 +1174,7 @@ void PipelineManager::GenarateCopyImagePSO() {
 	//今回は結果一つだけなので長さ１の配列
 	D3D12_ROOT_PARAMETER rootParameters[3] = {};
 
-	//Material
+	//Effect
 	//CBVを使う
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	////PixelShaderで使う
@@ -1196,8 +1196,7 @@ void PipelineManager::GenarateCopyImagePSO() {
 
 	//応急処置でTextureを無理矢理2番目になるようにする
 	//そろわなくなってしまう
-
-
+	//いつか直す
 
 	//Texture
 
@@ -1250,14 +1249,14 @@ void PipelineManager::GenarateCopyImagePSO() {
 	//シリアライズしてバイナリにする
 	HRESULT hr_ = {};
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->copyImagePSO_.signatureBlob_, &PipelineManager::GetInstance()->copyImagePSO_.errorBlob_);
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->fullScreenPSO_.signatureBlob_, &PipelineManager::GetInstance()->fullScreenPSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->copyImagePSO_.errorBlob_->GetBufferPointer()));
+		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->fullScreenPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->copyImagePSO_.signatureBlob_->GetBufferPointer(),
-		PipelineManager::GetInstance()->copyImagePSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->copyImagePSO_.rootSignature_));
+	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->fullScreenPSO_.signatureBlob_->GetBufferPointer(),
+		PipelineManager::GetInstance()->fullScreenPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->fullScreenPSO_.rootSignature_));
 	assert(SUCCEEDED(hr_));
 
 
@@ -1304,20 +1303,20 @@ void PipelineManager::GenarateCopyImagePSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->copyImagePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/FullScreen/FullScreen.VS.hlsl", L"vs_6_0");
-	assert(PipelineManager::GetInstance()->copyImagePSO_.vertexShaderBlob_ != nullptr);
+	PipelineManager::GetInstance()->fullScreenPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/FullScreen/FullScreen.VS.hlsl", L"vs_6_0");
+	assert(PipelineManager::GetInstance()->fullScreenPSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->copyImagePSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/FullScreen/FullScreen.PS.hlsl", L"ps_6_0");
-	assert(PipelineManager::GetInstance()->copyImagePSO_.pixelShaderBlob_ != nullptr);
+	PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/FullScreen/FullScreen.PS.hlsl", L"ps_6_0");
+	assert(PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_ != nullptr);
 
 
 	////PSO生成
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->copyImagePSO_.rootSignature_.Get();
+	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->fullScreenPSO_.rootSignature_.Get();
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
-	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->copyImagePSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->copyImagePSO_.vertexShaderBlob_->GetBufferSize() };
+	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->fullScreenPSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->fullScreenPSO_.vertexShaderBlob_->GetBufferSize() };
 	//vertexShaderBlob_->GetBufferSize();
-	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->copyImagePSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->copyImagePSO_.pixelShaderBlob_->GetBufferSize() };
+	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_->GetBufferSize() };
 	//pixelShaderBlob_->GetBufferSize();
 	graphicsPipelineStateDesc.BlendState = blendDesc;
 	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
@@ -1354,7 +1353,7 @@ void PipelineManager::GenarateCopyImagePSO() {
 	//実際に生成
 	//ID3D12PipelineState* graphicsPipelineState_ = nullptr;
 	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&PipelineManager::GetInstance()->copyImagePSO_.graphicsPipelineState_));
+		IID_PPV_ARGS(&PipelineManager::GetInstance()->fullScreenPSO_.graphicsPipelineState_));
 	assert(SUCCEEDED(hr_));
 
 
