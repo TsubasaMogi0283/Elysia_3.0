@@ -5,9 +5,10 @@
 #include "VertexData.h"
 
 enum TextureEffectType {
-	NoneEffect,
+	NoneEffect,	//エフェクトなし
 	Monochrome,	//白黒(グレースケール)
 	Sepia,		//セピア
+	Vignette,	//端が暗くなる
 };
 
 
@@ -33,7 +34,7 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
 	//Positionだけでいい
 	VertexData* vertexData_ = {};
-	int32_t effectType_ = Sepia;
+	int32_t effectType_ = Vignette;
 	int32_t* effectTypeData_ = nullptr;
 
 	ComPtr<ID3D12Resource> centerResource_ = nullptr;
