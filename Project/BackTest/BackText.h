@@ -12,6 +12,14 @@ enum TextureEffectType {
 };
 
 
+struct VignetteInformation {
+	
+	//乗
+	float pow;
+	//倍
+	float scale;
+};
+
 class BackText{
 public:
 	BackText() {};

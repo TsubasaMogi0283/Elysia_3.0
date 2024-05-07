@@ -1351,7 +1351,6 @@ void PipelineManager::GenarateFullScreenPSO() {
 
 
 	//実際に生成
-	//ID3D12PipelineState* graphicsPipelineState_ = nullptr;
 	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->fullScreenPSO_.graphicsPipelineState_));
 	assert(SUCCEEDED(hr_));
