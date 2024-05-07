@@ -2,6 +2,7 @@
 #include <thread>
 #include <PipelineManager.h>
 #include <SrvManager.h>
+#include <d3dx12.h>
 
 //インスタンス
 DirectXSetup* DirectXSetup::GetInstance() {
@@ -166,7 +167,7 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateRenderTextureResource(
 		&heapProperties,					//Heapの設定 
 		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定。特になし。
 		&resourceDesc,						//Resourceの設定
-		D3D12_RESOURCE_STATE_RENDER_TARGET,	//これから描画することを前提としたTextureなのでRenderTargetとして使うことから始める
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,	//これから描画することを前提としたTextureなのでRenderTargetとして使うことから始める
 		&clearValue,						//Clear最適値。ClearRenderTargetをこの色でClearするようにする。最適化されているので高速！
 		IID_PPV_ARGS(&resource));			//作成するResourceポインタへのポインタ
 	assert(SUCCEEDED(hr));
@@ -490,9 +491,10 @@ void DirectXSetup::SetRTV() {
 
 	DirectXSetup::GetInstance()->rtvHandles_[2].ptr = DirectXSetup::GetInstance()->rtvHandles_[1].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(DirectXSetup::GetInstance()->renderTextureResource.Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[2]);
+	DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(
+		DirectXSetup::GetInstance()->renderTextureResource.Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[2]);
 
-	SrvManager::GetInstance()-> CreateSRVForRenderTexture(DirectXSetup::GetInstance()->renderTextureResource.Get());
+	//SrvManager::GetInstance()-> CreateSRVForRenderTexture(DirectXSetup::GetInstance()->renderTextureResource.Get());
 
 
 	////FenceとEvent
@@ -685,7 +687,6 @@ void DirectXSetup::UpdateFPS() {
 
 void DirectXSetup::StartDraw() {
 
-
 	////コマンドをキックする
 	//コマンドを積む・・・CommandListに処理を追加していくこと
 	//キックする・・・CommandQueueCommandListを渡してGPUの実行を開始すること
@@ -716,7 +717,9 @@ void DirectXSetup::StartDraw() {
 	//
 	//TransitionBarrierの設定
 	//今回のバリアはTransition
-	
+	//D3D12_RESOURCE_STATE_PRESENT...見せるモード
+	//D3D12_RESOURCE_STATE_RENDER_TARGET...RTV使う用
+
 	barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	//Noneにする
 	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
@@ -729,20 +732,12 @@ void DirectXSetup::StartDraw() {
 	//TransitionBarrierを張る
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
 
-
-
-	//Begin
 	//描画先のRTVとDSVを設定する
-	
-
 	//描画先のRTVを設定する
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, &DirectXSetup::GetInstance()->dsvHandle_);
 	//指定した色で画面全体をクリアする
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(rtvHandles_[backBufferIndex_], clearColor, 0, nullptr);
-	//RenderTarget側でDepthの設定をする
-	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(DirectXSetup::GetInstance()->dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
 
 	DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);
 	DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
@@ -754,13 +749,13 @@ void DirectXSetup::StartDraw() {
 
 
 
-
 void DirectXSetup::EndDraw() {
 	////画面表示出来るようにする
 	//ここがflameの最後
 	//画面に描く処理は「全て終わり」、画面に映すので、状態を遷移
 	//今回はRenderTargetからPresentにする
 	
+
 	//遷移前(現在)のResourceState
 	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	//遷移後のResourceState

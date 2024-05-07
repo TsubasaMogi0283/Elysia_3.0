@@ -86,7 +86,7 @@ void SrvManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource*
 
 }
 
-void SrvManager::CreateSRVForRenderTexture(ID3D12Resource* pResource){
+void SrvManager::CreateSRVForRenderTexture(ID3D12Resource* pResource, uint32_t handle){
 	//SRVの設定
 	//FormatはResourceと同じにしておく
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -97,7 +97,7 @@ void SrvManager::CreateSRVForRenderTexture(ID3D12Resource* pResource){
 
 	//SRVの生成
 	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(
-		pResource, &srvDesc, GetCPUDescriptorHandle(Allocate()));
+		pResource, &srvDesc, GetCPUDescriptorHandle(handle));
 
 
 

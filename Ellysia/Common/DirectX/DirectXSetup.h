@@ -145,7 +145,6 @@ public:
 #pragma region whileの中身
 	//whileの中身
 	void StartDraw();
-
 	
 
 	void EndDraw();

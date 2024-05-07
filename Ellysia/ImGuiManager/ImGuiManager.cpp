@@ -68,7 +68,7 @@ void ImGuiManager::Draw() {
 
 
 //ここでフレームが終わる
-void ImGuiManager::EndFrame() {
+void ImGuiManager::EndDraw() {
 	//コマンドを積む
 	//実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), DirectXSetup::GetInstance()->GetCommandList().Get());

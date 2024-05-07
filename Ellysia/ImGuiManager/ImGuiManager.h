@@ -40,7 +40,7 @@ public:
 	void Draw();
 
 
-	void EndFrame();
+	void EndDraw();
 
 
 	//解放処理

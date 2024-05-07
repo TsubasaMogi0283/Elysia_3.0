@@ -10,7 +10,6 @@ public:
 
 	void Initialize();
 
-	void Update();
 
 	void PreDraw();
 
@@ -36,7 +35,6 @@ private:
 
 	uint32_t textureHandle_ = 0;
 
-
-	D3D12_RESOURCE_BARRIER barrier_{};
+	D3D12_RESOURCE_BARRIER barrier;
 };
 

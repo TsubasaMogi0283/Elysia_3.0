@@ -30,8 +30,10 @@ void Ellysia::Initialize(){
 	//DirectX
 	DirectXSetup::GetInstance()->FirstInitialize();
 	
+	//SRV初期化
 	SrvManager::GetInstance()->Initialize();
 
+	///DirectX
 	DirectXSetup::GetInstance()->SecondInitialize();
 
 	//ImGuiManager
@@ -61,10 +63,6 @@ void Ellysia::Initialize(){
 #pragma region ゲームループ内の関数
 
 void Ellysia::BeginFrame(){
-
-	//RenderTexture
-	//DirectXSetup::GetInstance()->ForRenderTargetTexture();
-	
 	SrvManager::GetInstance()->PreDraw();
 	ImGuiManager::GetInstance()->BeginFrame();
 }
@@ -74,11 +72,9 @@ void Ellysia::Update(){
 	//グローバル変数の更新
 	AdjustmentItems::GetInstance()->GetInstance()->Update();
 
-
 	//ImGuiの更新
 	ImGuiManager::GetInstance()->Update();
 
-	
 	//入力の更新
 	Input::GetInstance()->Update();
 	
@@ -88,36 +84,38 @@ void Ellysia::Update(){
 
 void Ellysia::Draw(){
 	
-
-	DirectXSetup::GetInstance()->StartDraw();
+	//OMS
+	//CRTV
+	//CDSV
+	//RSSV
+	//RSSR
 	back_->PreDraw();
-
-
-	back_->Draw();
-
-
-
-	back_->PostDraw();
-	//3Dオブジェクトの描画
+	
+	//
+	//
+	////3Dオブジェクトの描画
 	gameManager_->DrawObject3D();
-	
-	
+	//
+	back_->PostDraw();
+	//OMSet
+	//Clear
+	//RSSV
+	//RSSR
+	DirectXSetup::GetInstance()->StartDraw();
+	back_->Draw();
 	//スプライトの描画
 	gameManager_->DrawSprite();
 
 	//ImGuiの描画
 	ImGuiManager::GetInstance()->PreDraw();	
 	ImGuiManager::GetInstance()->Draw();
-	
+	ImGuiManager::GetInstance()->EndDraw();
 	
 }
 
 
 void Ellysia::EndFrame() {
-
-
-
-	ImGuiManager::GetInstance()->EndFrame();
+	//最後で切り替える
 	DirectXSetup::GetInstance()->EndDraw();
 			
 }
