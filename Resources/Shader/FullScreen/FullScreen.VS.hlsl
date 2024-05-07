@@ -1,4 +1,4 @@
-#include "CopyImage.hlsli"
+#include "FullScreen.hlsli"
 
 //三角形で覆われればOK
 static const uint32_t NUM_VERTEX = 3;

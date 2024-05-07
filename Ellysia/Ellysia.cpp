@@ -91,8 +91,6 @@ void Ellysia::Draw(){
 	//RSSR
 	back_->PreDraw();
 	
-	//
-	//
 	////3Dオブジェクトの描画
 	gameManager_->DrawObject3D();
 	//
