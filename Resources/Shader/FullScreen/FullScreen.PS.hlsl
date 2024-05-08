@@ -19,8 +19,6 @@ struct Vignette{
 ConstantBuffer<Effect> gEffect : register(b0);
 ConstantBuffer<Vignette> gVignette : register(b1);
 
-
-
 struct PixelShaderOutput{
     float32_t4 color : SV_TARGET0;
 };
@@ -32,7 +30,24 @@ struct SepiaColor{
 };
 
 
+static const float32_t2 INDEX3x3[3][3] = {
+    { { -1.0f, -1.0f }, { 0.0f, -1.0f }, { 1.0f, -1.0f } },
+    { { -1.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f } },
+    { { -1.0f, 1.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } },
+};
 
+//9個あって平均にするので1/9
+static const float32_t KERNEL3x3[3][3] ={
+    { { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f } },
+    { { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f } },
+    { { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f } },
+};
+
+
+static const int MONOCHROME = 1;
+static const int SEPIA = 2;
+static const int VIGNETTE = 3;
+static const int BOX_FILTER = 4;
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
@@ -45,18 +60,17 @@ PixelShaderOutput main(VertexShaderOutput input)
         
     float32_t value = dot(output.color.rgb, float32_t3(r, g, b));
     //モノクロ(グレースケール)
-    if (gEffect.type==1){
-       
+    if (gEffect.type == MONOCHROME){
         output.color.rgb = float32_t3(value, value, value);
     }
     //セピア
-    else if (gEffect.type==2){
+    else if (gEffect.type == SEPIA){
         SepiaColor sepiaColor = { 1.0f, 74.0f / 107.0f, 43.0f / 107.0f };
         output.color.rgb = value * float32_t3(sepiaColor.r, sepiaColor.g, sepiaColor.b);
         
     }
     //Vignette
-    else if (gEffect.type==3){
+    else if (gEffect.type == VIGNETTE){
         //周囲を0に、中心になるほど明るくなるように計算で調整
         float32_t2 current = input.texcoord * (1.0f - input.texcoord.yx);
         //currentだけで計算すると中心の最大値が0.0625で暗すぎるのでScaleで調整。
@@ -68,8 +82,26 @@ PixelShaderOutput main(VertexShaderOutput input)
         output.color.rgb *= vignette;
 
     }
+    else if (gEffect.type == BOX_FILTER){
+        //uvStepSizeの算出
+        uint32_t width, height;
+        gTexture.GetDimensions(width, height);
+        //rcp...逆数にする。正確では無いけど処理が速いよ
+        float32_t2 uvStepSIze = float32_t2(rcp(width), rcp(height));
+        output.color.rgb = float32_t3(0.0f, 0.0f, 0.0f);
+        output.color.a = 1.0f;
         
-    
+        for (int32_t x = 0; x < 3; ++x){
+            for (int32_t y = 0; y < 3; ++y){
+                float32_t2 texcoord = input.texcoord + INDEX3x3[x][y] * uvStepSIze;
+                float32_t3 fetchColor = gTexture.Sample(gSample, texcoord).rgb;
+                output.color.rgb += fetchColor * KERNEL3x3[x][y];
+
+            }
+        }
+        
+
+    }
     
     
     

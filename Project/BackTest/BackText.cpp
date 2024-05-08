@@ -7,7 +7,7 @@
 void BackText::Initialize(){
 
 	//エフェクトの種類を設定
-	effectType_ = Vignette;
+	effectType_ = BoxFilter;
 
 	PipelineManager::GetInstance()->GenarateFullScreenPSO();
 	
@@ -84,7 +84,11 @@ void BackText::PreDraw(){
 }
 
 void BackText::Draw(){
-
+#ifdef _DEBUG
+	ImGui::Begin("Effect");
+	ImGui::SliderInt("Type",&effectType_,0,6);
+	ImGui::End();
+#endif
 
 	//Vignette
 	if (effectType_ == Vignette) {

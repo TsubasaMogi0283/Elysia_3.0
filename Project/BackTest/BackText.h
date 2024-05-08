@@ -10,6 +10,9 @@ enum TextureEffectType {
 	Sepia,		//セピア
 	Vignette,	//端が暗くなる
 
+	//Smoothing(平滑化)
+	//輪郭などのくっきりしたところをぼかして滑らかな雰囲気を出すよ
+	BoxFilter,	
 
 	//合成させたやつ作りたい
 
