@@ -12,7 +12,9 @@ enum TextureEffectType {
 
 	//Smoothing(平滑化)
 	//輪郭などのくっきりしたところをぼかして滑らかな雰囲気を出すよ
-	BoxFilter,	
+	BoxFilter3x3,	
+	BoxFilter5x5
+
 
 	//合成させたやつ作りたい
 

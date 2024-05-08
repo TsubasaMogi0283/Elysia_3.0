@@ -29,7 +29,6 @@ struct SepiaColor{
     float32_t b;
 };
 
-
 static const float32_t2 INDEX3x3[3][3] = {
     { { -1.0f, -1.0f }, { 0.0f, -1.0f }, { 1.0f, -1.0f } },
     { { -1.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f } },
@@ -44,10 +43,35 @@ static const float32_t KERNEL3x3[3][3] ={
 };
 
 
+static const float32_t2 INDEX5x5[5][5] ={
+    { { -2.0f, -2.0f }, { -1.0f, -2.0f }, { 0.0f, -2.0f }, { 1.0f, -2.0f }, { 2.0f, -2.0f } },
+    { { -2.0f, -1.0f }, { -1.0f, -1.0f }, { 0.0f, -1.0f }, { 1.0f, -1.0f }, { 2.0f, -1.0f } },
+    { { -2.0f, 0.0f }, { -1.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 2.0f, 0.0f } },
+    { { -2.0f, 1.0f }, { -1.0f, 1.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f }, { 2.0f, 1.0f } },
+    { { -2.0f, 2.0f }, { -1.0f, 2.0f }, { 0.0f, 2.0f }, { 1.0f, 2.0f }, { 2.0f, 2.0f } },
+    
+};
+
+//9個あって平均にするので1/25
+static const float32_t KERNEL5x5[5][5] ={
+    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
+    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
+    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
+    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
+    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
+    
+    
+};
+
+
+
+
 static const int MONOCHROME = 1;
 static const int SEPIA = 2;
 static const int VIGNETTE = 3;
-static const int BOX_FILTER = 4;
+static const int BOX_FILTER3x3 = 4;
+static const int BOX_FILTER5x5 = 5;
+
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
@@ -67,7 +91,6 @@ PixelShaderOutput main(VertexShaderOutput input)
     else if (gEffect.type == SEPIA){
         SepiaColor sepiaColor = { 1.0f, 74.0f / 107.0f, 43.0f / 107.0f };
         output.color.rgb = value * float32_t3(sepiaColor.r, sepiaColor.g, sepiaColor.b);
-        
     }
     //Vignette
     else if (gEffect.type == VIGNETTE){
@@ -82,7 +105,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         output.color.rgb *= vignette;
 
     }
-    else if (gEffect.type == BOX_FILTER){
+    else if (gEffect.type == BOX_FILTER3x3){
         //uvStepSizeの算出
         uint32_t width, height;
         gTexture.GetDimensions(width, height);
@@ -102,7 +125,29 @@ PixelShaderOutput main(VertexShaderOutput input)
         
 
     }
-    
+    else if (gEffect.type == BOX_FILTER5x5)
+    {
+        //uvStepSizeの算出
+        uint32_t width, height;
+        gTexture.GetDimensions(width, height);
+        //rcp...逆数にする。正確では無いけど処理が速いよ
+        float32_t2 uvStepSIze = float32_t2(rcp(width), rcp(height));
+        output.color.rgb = float32_t3(0.0f, 0.0f, 0.0f);
+        output.color.a = 1.0f;
+        
+        for (int32_t x = 0; x < 5; ++x)
+        {
+            for (int32_t y = 0; y < 5; ++y)
+            {
+                float32_t2 texcoord = input.texcoord + INDEX5x5[x][y] * uvStepSIze;
+                float32_t3 fetchColor = gTexture.Sample(gSample, texcoord).rgb;
+                output.color.rgb += fetchColor * KERNEL5x5[x][y];
+
+            }
+        }
+        
+
+    }
     
     
     return output;

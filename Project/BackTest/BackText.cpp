@@ -7,8 +7,10 @@
 void BackText::Initialize(){
 
 	//エフェクトの種類を設定
-	effectType_ = BoxFilter;
+	effectType_ = BoxFilter3x3;
 
+	//エフェクトごとにhlsl分けたい
+	//いずれやる
 	PipelineManager::GetInstance()->GenarateFullScreenPSO();
 	
 	//Effect
@@ -52,6 +54,8 @@ void BackText::PreDraw(){
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
 		DirectXSetup::GetInstance()->GetRtvHandle(2), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+
+
 	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(
 		DirectXSetup::GetInstance()->GetDsvHandle(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
@@ -90,6 +94,16 @@ void BackText::Draw(){
 	ImGui::End();
 #endif
 
+	//書き込むためのアドレスを取得
+	//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
+	effectResource_->Map(0, nullptr, reinterpret_cast<void**>(&effectTypeData_));
+
+	//今回は赤を書き込んでみる
+	*effectTypeData_ = effectType_;
+
+	effectResource_->Unmap(0, nullptr);
+
+
 	//Vignette
 	if (effectType_ == Vignette) {
 #ifdef _DEBUG
@@ -109,15 +123,7 @@ void BackText::Draw(){
 		vignetteResource_->Unmap(0, nullptr);
 	}
 
-	//マテリアルにデータを書き込む
-	//書き込むためのアドレスを取得
-	//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	effectResource_->Map(0, nullptr, reinterpret_cast<void**>(&effectTypeData_));
-
-	//今回は赤を書き込んでみる
-	*effectTypeData_ = effectType_;
-
-	effectResource_->Unmap(0, nullptr);
+	
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetFullScreenRootSignature().Get());
 	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetFullScreenGraphicsPipelineState().Get());
