@@ -1,4 +1,6 @@
 #include "FullScreen.hlsli"
+#include "SmoothingIndex.hlsli"
+#include "EffectType.hlsli"
 Texture2D<float32_t4> gTexture : register(t0);
 SamplerState gSample : register(s0);
 
@@ -29,48 +31,10 @@ struct SepiaColor{
     float32_t b;
 };
 
-static const float32_t2 INDEX3x3[3][3] = {
-    { { -1.0f, -1.0f }, { 0.0f, -1.0f }, { 1.0f, -1.0f } },
-    { { -1.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f } },
-    { { -1.0f, 1.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } },
-};
-
-//9個あって平均にするので1/9
-static const float32_t KERNEL3x3[3][3] ={
-    { { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f } },
-    { { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f } },
-    { { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f } },
-};
-
-
-static const float32_t2 INDEX5x5[5][5] ={
-    { { -2.0f, -2.0f }, { -1.0f, -2.0f }, { 0.0f, -2.0f }, { 1.0f, -2.0f }, { 2.0f, -2.0f } },
-    { { -2.0f, -1.0f }, { -1.0f, -1.0f }, { 0.0f, -1.0f }, { 1.0f, -1.0f }, { 2.0f, -1.0f } },
-    { { -2.0f, 0.0f }, { -1.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 2.0f, 0.0f } },
-    { { -2.0f, 1.0f }, { -1.0f, 1.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f }, { 2.0f, 1.0f } },
-    { { -2.0f, 2.0f }, { -1.0f, 2.0f }, { 0.0f, 2.0f }, { 1.0f, 2.0f }, { 2.0f, 2.0f } },
-    
-};
-
-//9個あって平均にするので1/25
-static const float32_t KERNEL5x5[5][5] ={
-    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
-    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
-    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
-    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
-    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
-    
-    
-};
 
 
 
 
-static const int MONOCHROME = 1;
-static const int SEPIA = 2;
-static const int VIGNETTE = 3;
-static const int BOX_FILTER3x3 = 4;
-static const int BOX_FILTER5x5 = 5;
 
 
 PixelShaderOutput main(VertexShaderOutput input)
