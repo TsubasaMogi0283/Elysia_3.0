@@ -5,30 +5,25 @@
 #include "imgui.h"
 
 void BackText::Initialize(){
+
+	//エフェクトの種類を設定
+	effectType_ = Vignette;
+
 	PipelineManager::GetInstance()->GenarateFullScreenPSO();
 	
-	//ここでBufferResourceを作る
-	vertexResouce_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * 3);
-	
-
-	vignetteResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VignetteInformation));
-
-	//リソースの先頭のアドレスから使う
-	vertexBufferView_.BufferLocation = vertexResouce_->GetGPUVirtualAddress();
-	//使用するリソースのサイズは頂点３つ分のサイズ
-	vertexBufferView_.SizeInBytes = sizeof(VertexData) * 3;
-	//１頂点あたりのサイズ
-	vertexBufferView_.StrideInBytes = sizeof(VertexData);
-	//書き込むためのアドレスを取得
-	vertexResouce_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-
+	//Effect
 	effectResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(int32_t));
 	
+	//Vignette
+	vignetteResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VignetteInformation));
+	vignetteInformation_.pow = 0.8f;
+	vignetteInformation_.scale = 16.0f;
+
+	//
 	textureHandle_ = SrvManager::GetInstance()->Allocate();
 	SrvManager::GetInstance()->CreateSRVForRenderTexture(DirectXSetup::GetInstance()->GetRenderTextureResource().Get(), textureHandle_);
 
-	vignetteInformation_.pow = 0.8f;
-	vignetteInformation_.scale = 16.0f;
+	
 
 }
 
@@ -89,33 +84,26 @@ void BackText::PreDraw(){
 }
 
 void BackText::Draw(){
-#ifdef _DEBUG
-	ImGui::Begin("RenderTexture");
-	ImGui::SliderFloat("Pow",&vignetteInformation_.pow, 0.1f, 10.0f);
-	ImGui::SliderFloat("Scale", &vignetteInformation_.scale, 0.1f, 100.0f);
 
-	ImGui::End();
+
+	//Vignette
+	if (effectType_ == Vignette) {
+#ifdef _DEBUG
+
+		ImGui::Begin("RenderTexture");
+		ImGui::SliderFloat("Pow", &vignetteInformation_.pow, 0.1f, 10.0f);
+		ImGui::SliderFloat("Scale", &vignetteInformation_.scale, 0.1f, 100.0f);
+
+		ImGui::End();
 
 #endif // _DEBUG
 
-	//左上
-	vertexData_[0].position = { 0.0f,0.0f,0.0f,1.0f };
-	vertexData_[0].texCoord = { 0.0f,1.0f };
-	//右上
-	vertexData_[1].position = { 0.2f,0.0f,0.0f,1.0f };
-	vertexData_[1].texCoord = { 0.5f,0.0f };
-	//左下
-	vertexData_[2].position = { 0.0f,-0.5f,0.0f,1.0f };
-	vertexData_[2].texCoord = { 1.0f,1.0f };
-	//範囲外は危険だよ！！
+		vignetteResource_->Map(0, nullptr, reinterpret_cast<void**>(&vignetteData_));
+		vignetteData_->pow = vignetteInformation_.pow;
+		vignetteData_->scale = vignetteInformation_.scale;
 
-	vignetteResource_->Map(0, nullptr, reinterpret_cast<void**>(&vignetteData_));
-
-	vignetteData_->pow = vignetteInformation_.pow;
-	vignetteData_->scale = vignetteInformation_.scale;
-
-	vignetteResource_->Unmap(0, nullptr);
-
+		vignetteResource_->Unmap(0, nullptr);
+	}
 
 	//マテリアルにデータを書き込む
 	//書き込むためのアドレスを取得
@@ -125,11 +113,10 @@ void BackText::Draw(){
 	//今回は赤を書き込んでみる
 	*effectTypeData_ = effectType_;
 
+	effectResource_->Unmap(0, nullptr);
+
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetFullScreenRootSignature().Get());
 	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetFullScreenGraphicsPipelineState().Get());
-
-	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
 
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -138,8 +125,10 @@ void BackText::Draw(){
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, effectResource_->GetGPUVirtualAddress());
 
 	//Position
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, vignetteResource_->GetGPUVirtualAddress());
-
+	if (effectType_ == Vignette) {
+		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, vignetteResource_->GetGPUVirtualAddress());
+	}
+	
 	//Texture
 	TextureManager::GraphicsCommand(textureHandle_);
 

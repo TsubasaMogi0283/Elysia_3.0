@@ -9,6 +9,10 @@ enum TextureEffectType {
 	Monochrome,	//白黒(グレースケール)
 	Sepia,		//セピア
 	Vignette,	//端が暗くなる
+
+
+	//合成させたやつ作りたい
+
 };
 
 
@@ -36,13 +40,9 @@ public:
 	~BackText() {};
 
 private:
-	ComPtr<ID3D12Resource> vertexResouce_ = nullptr;
 	ComPtr<ID3D12Resource> effectResource_ = nullptr;
 
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
-	//Positionだけでいい
-	VertexData* vertexData_ = {};
-	int32_t effectType_ = Vignette;
+	int32_t effectType_ = NoneEffect;
 	int32_t* effectTypeData_ = nullptr;
 
 	ComPtr<ID3D12Resource> vignetteResource_ = nullptr;
