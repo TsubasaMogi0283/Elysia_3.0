@@ -2,6 +2,7 @@
 #include <PipelineManager.h>
 #include "TextureManager.h"
 #include <SrvManager.h>
+#include "imgui.h"
 
 void BackText::Initialize(){
 	PipelineManager::GetInstance()->GenarateFullScreenPSO();
@@ -10,7 +11,7 @@ void BackText::Initialize(){
 	vertexResouce_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * 3);
 	
 
-	centerResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Vector3));
+	vignetteResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VignetteInformation));
 
 	//リソースの先頭のアドレスから使う
 	vertexBufferView_.BufferLocation = vertexResouce_->GetGPUVirtualAddress();
@@ -25,6 +26,10 @@ void BackText::Initialize(){
 	
 	textureHandle_ = SrvManager::GetInstance()->Allocate();
 	SrvManager::GetInstance()->CreateSRVForRenderTexture(DirectXSetup::GetInstance()->GetRenderTextureResource().Get(), textureHandle_);
+
+	vignetteInformation_.pow = 0.8f;
+	vignetteInformation_.scale = 16.0f;
+
 }
 
 void BackText::PreDraw(){
@@ -84,7 +89,15 @@ void BackText::PreDraw(){
 }
 
 void BackText::Draw(){
-	
+#ifdef _DEBUG
+	ImGui::Begin("RenderTexture");
+	ImGui::SliderFloat("Pow",&vignetteInformation_.pow, 0.1f, 10.0f);
+	ImGui::SliderFloat("Scale", &vignetteInformation_.scale, 0.1f, 100.0f);
+
+	ImGui::End();
+
+#endif // _DEBUG
+
 	//左上
 	vertexData_[0].position = { 0.0f,0.0f,0.0f,1.0f };
 	vertexData_[0].texCoord = { 0.0f,1.0f };
@@ -96,8 +109,13 @@ void BackText::Draw(){
 	vertexData_[2].texCoord = { 1.0f,1.0f };
 	//範囲外は危険だよ！！
 
-	centerResource_->Map(0, nullptr, reinterpret_cast<void**>(&positiondata_));
-	*positiondata_ = centerPosition_;
+	vignetteResource_->Map(0, nullptr, reinterpret_cast<void**>(&vignetteData_));
+
+	vignetteData_->pow = vignetteInformation_.pow;
+	vignetteData_->scale = vignetteInformation_.scale;
+
+	vignetteResource_->Unmap(0, nullptr);
+
 
 	//マテリアルにデータを書き込む
 	//書き込むためのアドレスを取得
@@ -120,7 +138,7 @@ void BackText::Draw(){
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, effectResource_->GetGPUVirtualAddress());
 
 	//Position
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, centerResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, vignetteResource_->GetGPUVirtualAddress());
 
 	//Texture
 	TextureManager::GraphicsCommand(textureHandle_);

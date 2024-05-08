@@ -13,11 +13,11 @@ enum TextureEffectType {
 
 
 struct VignetteInformation {
-	
-	//乗
-	float pow;
 	//倍
 	float scale;
+	//乗
+	float pow;
+	
 };
 
 class BackText{
@@ -45,9 +45,9 @@ private:
 	int32_t effectType_ = Vignette;
 	int32_t* effectTypeData_ = nullptr;
 
-	ComPtr<ID3D12Resource> centerResource_ = nullptr;
-	Vector3 centerPosition_ = {};
-	Vector3* positiondata_ = nullptr;
+	ComPtr<ID3D12Resource> vignetteResource_ = nullptr;
+	VignetteInformation vignetteInformation_ = {};
+	VignetteInformation* vignetteData_ = nullptr;
 
 	uint32_t textureHandle_ = 0;
 
