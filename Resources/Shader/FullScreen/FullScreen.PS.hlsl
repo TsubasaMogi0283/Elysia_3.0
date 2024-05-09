@@ -65,8 +65,6 @@ static const float32_t KERNEL5x5[5][5] =
     { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
     { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
     { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
-    
-    
 };
 
 static const int NONE = 0;
@@ -77,7 +75,20 @@ static const int BOX_FILTER3x3 = 4;
 static const int BOX_FILTER5x5 = 5;
 
 
+//円周率
+static const float32_t PI = 3.1415926535f;
 
+float gauss(float x, float y, float sigma){
+    float exponent = -(x * x + y * y) * rcp(2.0f * sigma * sigma);
+    float denominator = 2.0f * PI * sigma * sigma;
+    //exp...ネイピア数eを求める関数
+    return exp(exponent) * rcp(denominator);
+    
+}
+
+//exp(exponent)は以下と同じ
+//const float e=2.71828182f;
+//pow(e exponent)
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
