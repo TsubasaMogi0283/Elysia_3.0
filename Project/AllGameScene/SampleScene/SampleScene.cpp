@@ -20,7 +20,8 @@ void SampleScene::Initialize() {
 	
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
-	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf",true);
+	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.obj",false);
+	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", true);
 
 	//後々AnimationManagerを作ってここで読み込みたい
 	//animationHandle = Animation::GetInstance()->LoadAnimationFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf");
@@ -32,7 +33,7 @@ void SampleScene::Initialize() {
 	
 	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
 
-	worldTransform_.Initialize(true, localMatrix);
+	worldTransform_.Initialize(false, localMatrix);
 	camera_.Initialize();
 
 	
@@ -52,7 +53,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	
 
 	Matrix4x4 localMatrix = model_->GetAnimationLocalMatrix();
-	worldTransform_.Update(localMatrix);
+	worldTransform_.Update();
 	camera_.Update();
 
 

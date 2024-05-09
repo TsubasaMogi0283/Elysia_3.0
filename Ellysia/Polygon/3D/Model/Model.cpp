@@ -357,9 +357,6 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 	//animationLocalMatrix_ = MakeAffineMatrix(scale, newRotate,translate);
 
 
-	//シェーダーに渡した方がよさそう
-	//後々やるつもり
-
 #pragma endregion
 
 	//コマンドを積む
