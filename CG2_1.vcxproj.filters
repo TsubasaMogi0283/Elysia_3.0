@@ -516,10 +516,10 @@
     <None Include="Resources\Shader\FullScreen\FullScreen.hlsli">
       <Filter>Ellysia\Resource File\FullScreen</Filter>
     </None>
-    <None Include="Resources\Shader\FullScreen\SmoothingIndex.hlsli">
+    <None Include="Resources\Shader\FullScreen\EffectType.hlsli">
       <Filter>Ellysia\Resource File\FullScreen</Filter>
     </None>
-    <None Include="Resources\Shader\FullScreen\EffectType.hlsli">
+    <None Include="Resources\Shader\FullScreen\SmoothingIndex.hlsli">
       <Filter>Ellysia\Resource File\FullScreen</Filter>
     </None>
   </ItemGroup>
