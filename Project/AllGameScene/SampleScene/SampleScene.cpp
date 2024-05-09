@@ -21,19 +21,20 @@ void SampleScene::Initialize() {
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
 	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.obj",false);
-	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", true);
+	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj", false);
+	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj", false);
 
 	//後々AnimationManagerを作ってここで読み込みたい
 	//animationHandle = Animation::GetInstance()->LoadAnimationFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf");
 
-	skeleton_ = CreateSkeleton(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
+	//skeleton_ = CreateSkeleton(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
 
-	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
+	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	model_.reset(Model::Create(modelHandle));
 	
 	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
 
-	worldTransform_.Initialize(false, localMatrix);
+	worldTransform_.Initialize(true, localMatrix);
 	camera_.Initialize();
 
 	
@@ -58,9 +59,9 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 	animationTime_ += 1.0f/60.0f;
-	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
-	ApplyAnimation(skeleton_, animation, animationTime_);
-	SkeletonUpdate(skeleton_);
+	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
+	//ApplyAnimation(skeleton_, animation, animationTime_);
+	//SkeletonUpdate(skeleton_);
 
 #ifdef _DEBUG
 	ImGui::Begin("Model");
@@ -77,8 +78,8 @@ void SampleScene::Update(GameManager* gameManager) {
 /// </summary>
 void SampleScene::Draw() {
 	//AnimationManagerを作った方が良いかも引数を増やすの嫌だ。
-	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
-	model_->Draw(worldTransform_, camera_, animation);
+	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
+	model_->Draw(worldTransform_, camera_);
 }
 
 

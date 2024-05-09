@@ -54,7 +54,7 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			modelData.vertices[verticesIndex].normal = { -normal.x,normal.y,normal.z };
 			modelData.vertices[verticesIndex].texCoord = { texcoord.x,texcoord.y };
 
-			modelData.vertices.push_back(modelData.vertices[verticesIndex]);
+			//modelData.vertices.push_back(modelData.vertices[verticesIndex]);
 
 		}
 		//Indexの解析
