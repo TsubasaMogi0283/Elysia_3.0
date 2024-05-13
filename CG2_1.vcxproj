@@ -154,6 +154,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\ModelManager.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\ReadNode.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Skeleton.cpp" />
+    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\SkinClushter.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Model\Model.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Particle3D\Particle3D.cpp" />

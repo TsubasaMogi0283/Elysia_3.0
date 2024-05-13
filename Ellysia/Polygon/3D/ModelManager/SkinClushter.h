@@ -6,6 +6,8 @@
 #include <VertexInfluence.h>
 #include <span>
 #include <WellForGPU.h>
+#include <Skeleton.h>
+#include <ModelData.h>
 
 
 struct SkinClushter {
@@ -23,4 +25,7 @@ struct SkinClushter {
 	std::span<WellForGPU> mappedPalette;
 	std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> paletteSrvHandle;
 
-};
+}; 
+
+
+SkinClushter CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelData, ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize);

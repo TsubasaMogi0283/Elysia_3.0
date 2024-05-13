@@ -222,6 +222,12 @@ private:
 	SpotLight* spotLightMapData_ = {};
 	SpotLight spotLightData_ = {};
 
+
+
+
+
+
+
 	//アニメーションを再生するときに使う時間
 	float animationTime_ = 0.0f;
 
