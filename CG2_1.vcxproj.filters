@@ -448,9 +448,6 @@
     <ClInclude Include="Ellysia\Polygon\3D\MaterialData\MaterialData.h">
       <Filter>Ellysia\Header File\Polygone\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelData\ModelData.h">
-      <Filter>Ellysia\Header File\Polygone\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\AdjustmentItems\AdjustmentItems.h">
       <Filter>Ellysia\Header File\AdjustmentItems</Filter>
     </ClInclude>
@@ -482,6 +479,15 @@
       <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Skeleton.h">
+      <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\VertexWeightData.h">
+      <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\JoinWeightData.h">
+      <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\ModelData.h">
       <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
   </ItemGroup>
