@@ -55,6 +55,7 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			modelData.vertices[verticesIndex].texCoord = { texcoord.x,texcoord.y };
 
 
+
 		}
 		//Indexの解析
 		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {

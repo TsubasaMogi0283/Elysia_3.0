@@ -48,7 +48,7 @@ Model* Model::Create(uint32_t modelHandle) {
 	
 
 	//解析したデータを使ってResourceとBufferViewを作成する
-	model->indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * model->modelData_.indices.size()).Get();
+	model->indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * ModelManager::GetInstance()->GetModelData(modelHandle).indices.size()).Get();
 	model->indexBufferView_.BufferLocation = model->indexResource_->GetGPUVirtualAddress();
 	size_t indicesSize = model->modelData_.indices.size();
 	model->indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * indicesSize);
@@ -231,7 +231,7 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 
 	//DrawCall
 	//DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
-	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.vertices.size()), 1, 0, 0, 0);
+	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 
 }
 
