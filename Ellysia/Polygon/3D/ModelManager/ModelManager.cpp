@@ -92,7 +92,7 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {
 				
 
-				jointWeightData.vertexWeights.push_back(bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId);
+				jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
 			}
 
 
