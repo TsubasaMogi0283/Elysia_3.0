@@ -22,8 +22,8 @@ ModelManager* ModelManager::GetInstance() {
 ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::string& fileName) {
 	//1.中で必要となる変数の宣言
 	ModelData modelData;
-	//assimpでobjを読む
-	//assimpを利用してしてobjファイルを読んでいく
+	//assimpでモデルを読む
+	//assimpを利用してしてモデルファイルを読んでいく
 	Assimp::Importer importer;
 	std::string filePath = directoryPath + "/" + fileName;
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
@@ -54,7 +54,6 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			modelData.vertices[verticesIndex].normal = { -normal.x,normal.y,normal.z };
 			modelData.vertices[verticesIndex].texCoord = { texcoord.x,texcoord.y };
 
-			//modelData.vertices.push_back(modelData.vertices[verticesIndex]);
 
 		}
 		//Indexの解析
@@ -102,8 +101,6 @@ uint32_t ModelManager::LoadModelFile(const std::string& directoryPath, const std
 
 	//モデルの読み込み
 	ModelData newModelData = ModelManager::GetInstance()->LoadFile(directoryPath, fileName);
-	//アニメーションの読み込み
-	//Animation newAnimation = LoadAnimationFile(directoryPath, fileName);
 
 	//新規登録
 	ModelManager::GetInstance()->modelInfromtion_[modelhandle].modelData = newModelData;
