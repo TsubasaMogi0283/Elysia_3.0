@@ -254,10 +254,9 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 
 	uint32_t* mappedIndex = nullptr;
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
-	ModelData modelData = modelData_;
-	modelData;
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
 	indexResource_->Unmap(0, nullptr);
+
 
 #pragma region マテリアル
 	////書き込むためのアドレスを取得
@@ -405,7 +404,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 
 	//DrawCall
 	//DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
-	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.vertices.size()), 1, 0, 0, 0);
+	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 
 }
 
