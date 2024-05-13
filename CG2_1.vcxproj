@@ -240,7 +240,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\NodeAnimation.h" />
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\ReadNode.h" />
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Skeleton.h" />
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\SkinClushter.h" />
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\VertexInfluence.h" />
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\VertexWeightData.h" />
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\WellForGPU.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Model\Model.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\AccelerationField.h" />

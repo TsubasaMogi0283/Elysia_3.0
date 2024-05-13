@@ -490,6 +490,15 @@
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\ModelData.h">
       <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\SkinClushter.h">
+      <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\VertexInfluence.h">
+      <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\WellForGPU.h">
+      <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">
