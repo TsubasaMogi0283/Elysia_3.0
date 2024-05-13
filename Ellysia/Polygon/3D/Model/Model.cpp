@@ -31,19 +31,28 @@ Model* Model::Create(uint32_t modelHandle) {
 	//Drawでも使いたいので取り入れる
 	model->modelHandle_ = modelHandle;
 
+	//モデルデータ
+	model->modelData_ = ModelManager::GetInstance()->GetModelData(modelHandle);
+
 	//頂点リソースを作る
-	model->vertices_ = ModelManager::GetInstance()->GetModelData(modelHandle).vertices;
-
-
-	model->vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size());
+	model->vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size()).Get();
 
 	//読み込みのところでバッファインデックスを作った方がよさそう
 	//リソースの先頭のアドレスから使う
 	model->vertexBufferView_.BufferLocation = model->vertexResource_->GetGPUVirtualAddress();
 	//使用するリソースは頂点のサイズ
-	model->vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * model->vertices_.size());
+	model->vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * model->modelData_.vertices.size());
 	//１頂点あたりのサイズ
 	model->vertexBufferView_.StrideInBytes = sizeof(VertexData);
+
+	
+
+	//解析したデータを使ってResourceとBufferViewを作成する
+	model->indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * ModelManager::GetInstance()->GetModelData(modelHandle).indices.size()).Get();
+	model->indexBufferView_.BufferLocation = model->indexResource_->GetGPUVirtualAddress();
+	size_t indicesSize = model->modelData_.indices.size();
+	model->indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * indicesSize);
+	model->indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
 
 	//Lighting
@@ -74,12 +83,7 @@ Model* Model::Create(uint32_t modelHandle) {
 	model->spotLightData_.cosFallowoffStart = 0.3f;
 	model->spotLightData_.cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
 
-	//初期は白色
-	//モデル個別に色を変更できるようにこれは外に出しておく
-	model->materialColor_ = { 1.0f,1.0f,1.0f,1.0f };
-
-		
-
+	
 	return model;
 
 }
@@ -96,10 +100,15 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
-	std::memcpy(vertexData, vertices_.data(), sizeof(VertexData) * vertices_.size());
+	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
 	vertexResource_->Unmap(0, nullptr);
 
 #pragma endregion
+
+	uint32_t* mappedIndex = nullptr;
+	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
+	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+	indexResource_->Unmap(0, nullptr);
 
 #pragma region マテリアル
 	////書き込むためのアドレスを取得
@@ -181,9 +190,13 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 	
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	//IBVを設定
+	DirectXSetup::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
+	
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	
 
 	//Material
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
@@ -217,7 +230,9 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 
 
 	//DrawCall
-	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(UINT(vertices_.size()), 1, 0, 0);
+	//DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+
 }
 
 
@@ -225,16 +240,23 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& animation){
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
-	//プログラムが安定するらしいとのこと
+	//プログラムが安定するとのこと
 
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
-	std::memcpy(vertexData, vertices_.data(), sizeof(VertexData) * vertices_.size());
+	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
 	vertexResource_->Unmap(0, nullptr);
 
 #pragma endregion
+
+
+	uint32_t* mappedIndex = nullptr;
+	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
+	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+	indexResource_->Unmap(0, nullptr);
+
 
 #pragma region マテリアル
 	////書き込むためのアドレスを取得
@@ -334,9 +356,6 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 	//animationLocalMatrix_ = MakeAffineMatrix(scale, newRotate,translate);
 
 
-	//シェーダーに渡した方がよさそう
-	//後々やるつもり
-
 #pragma endregion
 
 	//コマンドを積む
@@ -346,6 +365,8 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	//IBVを設定
+	DirectXSetup::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -382,7 +403,9 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 
 
 	//DrawCall
-	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(UINT(vertices_.size()), 1, 0, 0);
+	//DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+
 }
 
 
