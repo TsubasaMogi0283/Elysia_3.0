@@ -35,6 +35,9 @@ SkinClushter CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelD
 
 
     //influence用のResourceを確保
+    //頂点ごとにinfluence情報
+    
+
     //Influence用のVertexBufferViewを作成
     //InfluenceBindPoseMatrixの保存領域を作成
     //ModelDataのSkinCluster情報を解析してInfluenceの中身を埋める
