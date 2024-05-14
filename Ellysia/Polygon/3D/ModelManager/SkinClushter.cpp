@@ -1,9 +1,10 @@
 #include "SkinClushter.h"
 #include <SrvManager.h>
+#include <Matrix4x4Calculation.h>
+#include <algorithm>
 
-SkinClushter CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelData, 
-    ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize){
-    SkinClushter skinCluster;
+SkinCluster CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelData){
+    SkinCluster skinCluster;
     
     //palette用のResourceを確保
     //作り方は今までと大体同じだね！
@@ -12,10 +13,10 @@ SkinClushter CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelD
     skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
     //spanを使ってアクセスするようにする
     skinCluster.mappedPalette = { mappedPalette,skeleton.joints.size() };
-    uint32_t index = SrvManager::GetInstance()->Allocate();
+    uint32_t srvIndex = SrvManager::GetInstance()->Allocate();
 
-    skinCluster.paletteSrvHandle.first = SrvManager::GetInstance()->GetCPUDescriptorHandle(index);
-    skinCluster.paletteSrvHandle.second = SrvManager::GetInstance()->GetGPUDescriptorHandle(index);
+    skinCluster.paletteSrvHandle.first = SrvManager::GetInstance()->GetCPUDescriptorHandle(srvIndex);
+    skinCluster.paletteSrvHandle.second = SrvManager::GetInstance()->GetGPUDescriptorHandle(srvIndex);
 
 
     //palette用のSRVを作成
@@ -37,14 +38,71 @@ SkinClushter CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelD
 
     //influence用のResourceを確保
     //頂点ごとにinfluence情報
-    
+    skinCluster.influenceResource = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexInfluence) * modelData.vertices.size());
+    VertexInfluence* mappedInfluence = nullptr;
+    skinCluster.influenceResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedInfluence));
+    //0埋め。Weightを0にしておく
+    std::memset(mappedInfluence, 0, sizeof(VertexInfluence) * modelData.vertices.size());
+    skinCluster.mappedInfluence = { mappedInfluence,modelData.vertices.size() };
 
     //Influence用のVertexBufferViewを作成
-    //InfluenceBindPoseMatrixの保存領域を作成
-    //ModelDataのSkinCluster情報を解析してInfluenceの中身を埋める
+    skinCluster.influenceBufferView.BufferLocation = skinCluster.influenceResource->GetGPUVirtualAddress();
+    skinCluster.influenceBufferView.SizeInBytes = UINT(sizeof(VertexInfluence) * modelData.vertices.size());
+    skinCluster.influenceBufferView.StrideInBytes = sizeof(VertexInfluence);
 
+    //InfluenceBindPoseMatrixの保存領域を作成
+    skinCluster.inverseBindPoseMatrices.resize(skeleton.joints.size());
+    //std::generate(skinCluster.inverseBindPoseMatrices.begin(), skinCluster.inverseBindPoseMatrices.end(), MakeIdentity4x4());
+
+#pragma region std::generateについて
+    //std::generate...初期化するときに便利！
+    //for文と似ているのでそっちでやっても◎
+    //実際はこんな感じ
+    for (int i = 0; i < skeleton.joints.size(); ++i) {
+        skinCluster.inverseBindPoseMatrices[i] = MakeIdentity4x4();
+    }
+#pragma endregion
+
+    //ModelDataのSkinCluster情報を解析してInfluenceの中身を埋める
+    for (const auto& jointWeight : modelData.skinClusterData) {
+        //JointWeight.firstはjoint名なので、skeletonに対象となるjointが含まれているか判断
+        auto it = skeleton.jointMap.find(jointWeight.first);
+        if (it == skeleton.jointMap.end()) {
+            //その名前のJointは存在しないので次に回す
+            continue;
+        }
+        //(*it).secondにはjointのindexが入っているので、街灯のindexのinverseBindPoseMatrixを代入
+        skinCluster.inverseBindPoseMatrices[(*it).second] = jointWeight.second.inverseBindPoseMatrix;
+        for (const auto& vertexWeight : jointWeight.second.vertexWeights) {
+            //該当のvertexIndexのinfluence情報を参照しておく
+            auto& currentInfluence = skinCluster.mappedInfluence[vertexWeight.vertexIndex];
+            
+            //空いている所に入れる
+            for (uint32_t index = 0; index < NUM_MAX_INFLUENCE; ++index) {
+                //weight==0が空いている状態なので、その場所にweightとjointのindexを代入
+                if (currentInfluence.weights[index] == 0.0f) {
+                    currentInfluence.weights[index] = vertexWeight.weight;
+                    currentInfluence.jointIndices[index] = (*it).second;
+                    break;
+                }
+
+            }
+        }
+
+
+    }
 
 
 
     return skinCluster;
+}
+
+void SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton){
+    for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); ++jointIndex) {
+        assert(jointIndex < skinCluster.inverseBindPoseMatrices.size());
+        skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix = 
+            Multiply(skinCluster.inverseBindPoseMatrices[jointIndex],skeleton.joints[jointIndex].skeletonSpaceMatrix);
+        skinCluster.mappedPalette[jointIndex].skeletonSpaceIncerseTransposeMatrix = MakeTransposeMatrix(
+            Inverse(skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix));
+    }
 }

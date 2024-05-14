@@ -10,7 +10,7 @@
 #include <ModelData.h>
 
 
-struct SkinClushter {
+struct SkinCluster {
 	std::vector<Matrix4x4> inverseBindPoseMatrices;
 	
 	//Influence
@@ -27,5 +27,10 @@ struct SkinClushter {
 
 }; 
 
+//SkinClusterを作る
+SkinCluster CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelData);
 
-SkinClushter CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelData, ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize);
+//SkinClusterの更新
+void SkinClusterUpdate(SkinCluster& skinCluster,const Skeleton& skeleton);
+
+

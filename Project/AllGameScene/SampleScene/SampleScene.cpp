@@ -4,6 +4,7 @@
 #include <AdjustmentItems.h>
 
 #include "ModelManager.h"
+
 /// <summary>
 	/// コンストラクタ
 	/// </summary>
@@ -64,9 +65,14 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 	animationTime_ += 1.0f/60.0f;
-	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
-	//ApplyAnimation(skeleton_, animation, animationTime_);
-	//SkeletonUpdate(skeleton_);
+	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
+	ApplyAnimation(skeleton_, animation, animationTime_);
+	//現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
+	SkeletonUpdate(skeleton_);
+
+	//SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
+	SkinClusterUpdate(skinCluster_,skeleton_);
+
 
 #ifdef _DEBUG
 	ImGui::Begin("Model");
@@ -83,7 +89,7 @@ void SampleScene::Update(GameManager* gameManager) {
 /// </summary>
 void SampleScene::Draw() {
 	//AnimationManagerを作った方が良いかも引数を増やすの嫌だ。
-	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
+	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	model_->Draw(worldTransform_, camera_);
 }
 
