@@ -34,6 +34,7 @@ SkinClushter CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelD
 
 
 
+
     //influence用のResourceを確保
     //頂点ごとにinfluence情報
     
