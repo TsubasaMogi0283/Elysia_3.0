@@ -1,8 +1,10 @@
 #include "FullScreen.hlsli"
-
+#include "EffectType.hlsli"
+#include "SmoothingIndex.hlsli"
 Texture2D<float32_t4> gTexture : register(t0);
 SamplerState gSample : register(s0);
 
+//hlsliでは絶対に日本語を使わないでね
 
 struct Effect{
     int32_t type;
@@ -38,50 +40,6 @@ struct SepiaColor{
 };
 
 
-static const float32_t2 INDEX3x3[3][3] =
-{
-    { { -1.0f, -1.0f }, { 0.0f, -1.0f }, { 1.0f, -1.0f } },
-    { { -1.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f } },
-    { { -1.0f, 1.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } },
-};
-
-//9個あって平均にするので1/9
-static const float32_t KERNEL3x3[3][3] =
-{
-    { { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f } },
-    { { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f } },
-    { { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f } },
-};
-
-
-static const float32_t2 INDEX5x5[5][5] =
-{
-    { { -2.0f, -2.0f }, { -1.0f, -2.0f }, { 0.0f, -2.0f }, { 1.0f, -2.0f }, { 2.0f, -2.0f } },
-    { { -2.0f, -1.0f }, { -1.0f, -1.0f }, { 0.0f, -1.0f }, { 1.0f, -1.0f }, { 2.0f, -1.0f } },
-    { { -2.0f, 0.0f }, { -1.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 2.0f, 0.0f } },
-    { { -2.0f, 1.0f }, { -1.0f, 1.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f }, { 2.0f, 1.0f } },
-    { { -2.0f, 2.0f }, { -1.0f, 2.0f }, { 0.0f, 2.0f }, { 1.0f, 2.0f }, { 2.0f, 2.0f } },
-    
-};
-
-//9個あって平均にするので1/25
-static const float32_t KERNEL5x5[5][5] =
-{
-    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
-    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
-    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
-    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
-    { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },
-};
-
-static const int NONE = 0;
-static const int MONOCHROME = 1;
-static const int SEPIA = 2;
-static const int VIGNETTE = 3;
-static const int BOX_FILTER3x3 = 4;
-static const int BOX_FILTER5x5 = 5;
-static const int GaussianFilter3x3 = 6;
-static const int GaussianFilter5x5 = 7;
 
 
 //円周率
@@ -201,6 +159,48 @@ PixelShaderOutput main(VertexShaderOutput input)
                 float32_t2 texcoord = input.texcoord + INDEX3x3[rx][ry] * uvStepSIze;
                 float32_t3 fetchColor = gTexture.Sample(gSample, texcoord).rgb;
                 output.color.rgb += fetchColor * kernel3x3[rx][ry];
+
+            }
+        }
+        
+        //畳み込み後の値を正規化する。本来gauss関数は全体を合計すると(積分)1になるように設計されている。
+        //しかし、無限の範囲は足せないので、kernel値の合計であるweightは1に満たない。
+        //なので、合計が1になるように逆数を掛けて全体を底上げして調整する
+        output.color.rgb *= rcp(weight);
+
+    }
+    else if (gEffect.type == GaussianFilter5x5)
+    {
+        //kernelを求める。weightは後で使う
+        float32_t weight = 0.0f;
+        float32_t kernel5x5[5][5];
+        for (int32_t x = 0; x < 5; ++x)
+        {
+            for (int32_t y = 0; y < 5; ++y)
+            {
+                //2.0fは標準偏差。
+                kernel5x5[x][y] = gauss(INDEX5x5[x][y].x, INDEX5x5[x][y].y, gGaussianFilter.sigma);
+                weight += kernel5x5[x][y];
+            }
+        }
+        //求めたkernelを使い、BoxFilterと同じく畳み込みを行う。
+        //KERNEL3x3と定数にしていたところがkernel3x3に変わるだけ
+         //uvStepSizeの算出
+        uint32_t width, height;
+        gTexture.GetDimensions(width, height);
+        //rcp...逆数にする。正確では無いけど処理が速いよ
+        float32_t2 uvStepSIze = float32_t2(rcp(width), rcp(height));
+        output.color.rgb = float32_t3(0.0f, 0.0f, 0.0f);
+        output.color.a = 1.0f;
+        
+        
+        for (int32_t rx = 0; rx < 5; ++rx)
+        {
+            for (int32_t ry = 0; ry < 5; ++ry)
+            {
+                float32_t2 texcoord = input.texcoord + INDEX5x5[rx][ry] * uvStepSIze;
+                float32_t3 fetchColor = gTexture.Sample(gSample, texcoord).rgb;
+                output.color.rgb += fetchColor * kernel5x5[rx][ry];
 
             }
         }

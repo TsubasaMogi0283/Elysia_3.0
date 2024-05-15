@@ -1,4 +1,4 @@
-//Smoothing(BoxFilter)で使う行列をまとめたよ
+//Smoothing(BoxFilter)Matrix
 
 static const float32_t2 INDEX3x3[3][3] =
 {
@@ -7,7 +7,6 @@ static const float32_t2 INDEX3x3[3][3] =
     { { -1.0f, 1.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } },
 };
 
-//9個あって平均にするので1/9
 static const float32_t KERNEL3x3[3][3] =
 {
     { { 1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f } },
@@ -26,7 +25,6 @@ static const float32_t2 INDEX5x5[5][5] =
     
 };
 
-//9個あって平均にするので1/25
 static const float32_t KERNEL5x5[5][5] =
 {
     { { 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f, 1.0f / 25.0f } },

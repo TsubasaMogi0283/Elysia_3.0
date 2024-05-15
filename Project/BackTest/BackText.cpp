@@ -128,11 +128,12 @@ void BackText::Draw(){
 		vignetteResource_->Unmap(0, nullptr);
 	}
 	//GaussianFilter
-	if (effectType_ == GaussianFilter3x3) {
+	if (effectType_ == GaussianFilter3x3 ||
+		effectType_ == GaussianFilter5x5) {
 #ifdef _DEBUG
 
-		ImGui::Begin("GaussianFilter3x3");
-		ImGui::SliderFloat("Sigma", &gaussianFilterInformation_.sigma, 0.1f, 20.0f);
+		ImGui::Begin("GaussianFilter");
+		ImGui::SliderFloat("Sigma", &gaussianFilterInformation_.sigma, 0.1f, 100.0f);
 
 		ImGui::End();
 
@@ -163,7 +164,8 @@ void BackText::Draw(){
 	TextureManager::GraphicsCommand(textureHandle_);
 
 	//GaussianFilter
-	if (effectType_ == GaussianFilter3x3) {
+	if (effectType_ == GaussianFilter3x3 ||
+		effectType_ == GaussianFilter5x5) {
 		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, gaussianFilterResource_->GetGPUVirtualAddress());
 	}
 
