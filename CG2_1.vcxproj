@@ -274,6 +274,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
     <None Include="Resources\Shader\FullScreen\FullScreen.hlsli" />
+    <None Include="Resources\Shader\FullScreen\Kernel.hlsli" />
     <None Include="Resources\Shader\FullScreen\SmoothingIndex.hlsli" />
     <None Include="Resources\Shader\Object2D\Object2d.hlsli" />
     <None Include="Resources\Shader\Object3D\Object3d.hlsli">

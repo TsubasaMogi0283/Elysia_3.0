@@ -1,6 +1,9 @@
 #include "FullScreen.hlsli"
 #include "EffectType.hlsli"
 #include "SmoothingIndex.hlsli"
+
+
+
 Texture2D<float32_t4> gTexture : register(t0);
 SamplerState gSample : register(s0);
 
@@ -9,6 +12,28 @@ SamplerState gSample : register(s0);
 struct Effect{
     int32_t type;
 };
+
+struct EffectSelection{
+	//白黒(グレースケール)
+    int32_t isMonochrome;
+	//セピア
+    int32_t isSepia;
+	//端が暗くなる
+    int32_t isVegnette;
+		
+
+	//Smoothing(平滑化)
+	//輪郭などのくっきりしたところをぼかして滑らかな雰囲気を出すよ
+    int32_t isBoxFilter3x3;
+    int32_t isBoxFilter5x5;
+
+	//GaussianFilter
+	//BoxFilterよりこっちの方良い感じらしい
+    int32_t isGaussianFilter3x3;
+    int32_t isGaussianFilter5x5;
+
+};
+
 
 struct Vignette{
 	//倍
@@ -51,6 +76,11 @@ float gauss(float x, float y, float sigma){
     //exp...ネイピア数eを求める関数
     return exp(exponent) * rcp(denominator);
     
+}
+
+float32_t Luminance(float32_t3 v){
+    return dot(v, float32_t3(0.2125f, 0.7154f, 0.0721f));
+
 }
 
 //exp(exponent)は以下と同じ
@@ -98,6 +128,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         output.color.rgb = float32_t3(0.0f, 0.0f, 0.0f);
         output.color.a = 1.0f;
         
+        //畳み込みとkernelが重要
         for (int32_t x = 0; x < 3; ++x){
             for (int32_t y = 0; y < 3; ++y){
                 float32_t2 texcoord = input.texcoord + INDEX3x3[x][y] * uvStepSIze;

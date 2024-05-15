@@ -522,6 +522,9 @@
     <None Include="Resources\Shader\FullScreen\SmoothingIndex.hlsli">
       <Filter>Ellysia\Resource File\FullScreen</Filter>
     </None>
+    <None Include="Resources\Shader\FullScreen\Kernel.hlsli">
+      <Filter>Ellysia\Resource File\FullScreen</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Ellysia\Audio\AudioMemo.txt">

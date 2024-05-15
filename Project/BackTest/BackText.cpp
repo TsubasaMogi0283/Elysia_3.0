@@ -169,6 +169,16 @@ void BackText::Draw(){
 		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, gaussianFilterResource_->GetGPUVirtualAddress());
 	}
 
+
+
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetFullScreenRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetFullScreenGraphicsPipelineState().Get());
+
+	//Effect
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, effectResource_->GetGPUVirtualAddress());
+
+
+
 	//描画(DrawCall)３頂点で１つのインスタンス。
 	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 

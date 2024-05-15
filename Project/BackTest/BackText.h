@@ -9,7 +9,7 @@ enum TextureEffectType {
 	Monochrome,	//白黒(グレースケール)
 	Sepia,		//セピア
 	Vignette,	//端が暗くなる
-
+	
 	//Smoothing(平滑化)
 	//輪郭などのくっきりしたところをぼかして滑らかな雰囲気を出すよ
 	BoxFilter3x3,	
@@ -21,7 +21,27 @@ enum TextureEffectType {
 	GaussianFilter5x5,
 
 
-	//合成させたやつ作りたい
+
+};
+
+struct TextureEffectSelection {
+	//白黒(グレースケール)
+	bool isMonochrome;
+	//セピア
+	bool isSepia;
+	//端が暗くなる
+	bool isVegnette;
+		
+
+	//Smoothing(平滑化)
+	//輪郭などのくっきりしたところをぼかして滑らかな雰囲気を出すよ
+	bool isBoxFilter3x3;
+	bool isBoxFilter5x5;
+
+	//GaussianFilter
+	//BoxFilterよりこっちの方良い感じらしい
+	bool isGaussianFilter3x3;
+	bool isGaussianFilter5x5;
 
 };
 
