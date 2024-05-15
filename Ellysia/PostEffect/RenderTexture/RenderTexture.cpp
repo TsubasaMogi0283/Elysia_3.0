@@ -10,23 +10,6 @@ void RenderTexture::Initialize(){
 }
 
 void RenderTexture::BeginDraw(){
-	//vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-
-	//vertexData_->position = { left,bottom,0.0f,1.0f };
-	//vertexData_[LEFT_BOTTOM].texCoord = { texLeft,texBottom };
-
-	////左上
-	//vertexData_[LEFT_TOP].position = { left,top,0.0f,1.0f };
-	//vertexData_[LEFT_TOP].texCoord = { texLeft,texTop };
-
-	////右下
-	//vertexData_[RIGHT_BOTTOM].position = { right,bottom,0.0f,1.0f };
-	//vertexData_[RIGHT_BOTTOM].texCoord = { texRight,texBottom };
-
-
-	////右上
-	//vertexData_[RIGHT_TOP].position = { right,top,0.0f,1.0f };
-	//vertexData_[RIGHT_TOP].texCoord = { texRight,texTop };
 
 
 	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;

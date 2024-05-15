@@ -268,7 +268,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include=".editorconfig" />
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
-    <None Include="Resources\Shader\FullScreen\EffectType.hlsli" />
+    <None Include="Resources\Shader\FullScreen\EffectType.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
     <None Include="Resources\Shader\FullScreen\FullScreen.hlsli" />
     <None Include="Resources\Shader\FullScreen\SmoothingIndex.hlsli" />
     <None Include="Resources\Shader\Object2D\Object2d.hlsli" />

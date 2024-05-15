@@ -21,7 +21,13 @@ void BackText::Initialize(){
 	vignetteInformation_.pow = 0.8f;
 	vignetteInformation_.scale = 16.0f;
 
-	//
+	//GaussianFilter
+	gaussianFilterResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(GaussianFilterInformation));
+	gaussianFilterInformation_.sigma = 2.0f;
+
+
+
+	//Texture
 	textureHandle_ = SrvManager::GetInstance()->Allocate();
 	SrvManager::GetInstance()->CreateSRVForRenderTexture(DirectXSetup::GetInstance()->GetRenderTextureResource().Get(), textureHandle_);
 
@@ -90,15 +96,14 @@ void BackText::PreDraw(){
 void BackText::Draw(){
 #ifdef _DEBUG
 	ImGui::Begin("Effect");
-	ImGui::SliderInt("Type",&effectType_,0,6);
+	ImGui::SliderInt("Type",&effectType_,0,7);
 	ImGui::End();
 #endif
 
 	//書き込むためのアドレスを取得
 	//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
 	effectResource_->Map(0, nullptr, reinterpret_cast<void**>(&effectTypeData_));
-
-	//今回は赤を書き込んでみる
+	//選択したEffectTypeを書き込み
 	*effectTypeData_ = effectType_;
 
 	effectResource_->Unmap(0, nullptr);
@@ -108,7 +113,7 @@ void BackText::Draw(){
 	if (effectType_ == Vignette) {
 #ifdef _DEBUG
 
-		ImGui::Begin("RenderTexture");
+		ImGui::Begin("Vignette");
 		ImGui::SliderFloat("Pow", &vignetteInformation_.pow, 0.1f, 10.0f);
 		ImGui::SliderFloat("Scale", &vignetteInformation_.scale, 0.1f, 100.0f);
 
@@ -122,7 +127,22 @@ void BackText::Draw(){
 
 		vignetteResource_->Unmap(0, nullptr);
 	}
+	//GaussianFilter
+	if (effectType_ == GaussianFilter3x3) {
+#ifdef _DEBUG
 
+		ImGui::Begin("GaussianFilter3x3");
+		ImGui::SliderFloat("Sigma", &gaussianFilterInformation_.sigma, 0.1f, 20.0f);
+
+		ImGui::End();
+
+#endif // _DEBUG
+
+		gaussianFilterResource_->Map(0, nullptr, reinterpret_cast<void**>(&gaussianFilterData_));
+		gaussianFilterData_->sigma=gaussianFilterInformation_.sigma;
+		gaussianFilterResource_->Unmap(0, nullptr);
+
+	}
 	
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetFullScreenRootSignature().Get());
@@ -134,13 +154,18 @@ void BackText::Draw(){
 	//Effect
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, effectResource_->GetGPUVirtualAddress());
 
-	//Position
+	//Vignette
 	if (effectType_ == Vignette) {
 		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, vignetteResource_->GetGPUVirtualAddress());
 	}
-	
+
 	//Texture
 	TextureManager::GraphicsCommand(textureHandle_);
+
+	//GaussianFilter
+	if (effectType_ == GaussianFilter3x3) {
+		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, gaussianFilterResource_->GetGPUVirtualAddress());
+	}
 
 	//描画(DrawCall)３頂点で１つのインスタンス。
 	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);

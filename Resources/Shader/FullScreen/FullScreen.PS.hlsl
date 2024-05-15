@@ -16,9 +16,16 @@ struct Vignette{
 	
 };
 
+struct GaussianFilter{
+    //標準偏差
+    float sigma;
+};
+
 //ConstantBuffer<構造体>変数名:register(b0);
 ConstantBuffer<Effect> gEffect : register(b0);
 ConstantBuffer<Vignette> gVignette : register(b1);
+ConstantBuffer<GaussianFilter> gGaussianFilter : register(b2);
+
 
 struct PixelShaderOutput{
     float32_t4 color : SV_TARGET0;
@@ -73,6 +80,8 @@ static const int SEPIA = 2;
 static const int VIGNETTE = 3;
 static const int BOX_FILTER3x3 = 4;
 static const int BOX_FILTER5x5 = 5;
+static const int GaussianFilter3x3 = 6;
+static const int GaussianFilter5x5 = 7;
 
 
 //円周率
@@ -165,7 +174,43 @@ PixelShaderOutput main(VertexShaderOutput input)
         
 
     }
-    
+    else if (gEffect.type == GaussianFilter3x3){
+        //kernelを求める。weightは後で使う
+        float32_t weight = 0.0f;
+        float32_t kernel3x3[3][3];
+        for (int32_t x = 0; x < 3; ++x){
+            for (int32_t y = 0; y < 3; ++y){
+                //2.0fは標準偏差。
+                kernel3x3[x][y] = gauss(INDEX3x3[x][y].x, INDEX3x3[x][y].y, gGaussianFilter.sigma);
+                weight += kernel3x3[x][y];
+            }
+        }
+        //求めたkernelを使い、BoxFilterと同じく畳み込みを行う。
+        //KERNEL3x3と定数にしていたところがkernel3x3に変わるだけ
+         //uvStepSizeの算出
+        uint32_t width, height;
+        gTexture.GetDimensions(width, height);
+        //rcp...逆数にする。正確では無いけど処理が速いよ
+        float32_t2 uvStepSIze = float32_t2(rcp(width), rcp(height));
+        output.color.rgb = float32_t3(0.0f, 0.0f, 0.0f);
+        output.color.a = 1.0f;
+        
+        //for文でも同じ変数を使わないようにしよう
+        for (int32_t rx = 0; rx < 3; ++rx){
+            for (int32_t ry = 0; ry < 3; ++ry){
+                float32_t2 texcoord = input.texcoord + INDEX3x3[rx][ry] * uvStepSIze;
+                float32_t3 fetchColor = gTexture.Sample(gSample, texcoord).rgb;
+                output.color.rgb += fetchColor * kernel3x3[rx][ry];
+
+            }
+        }
+        
+        //畳み込み後の値を正規化する。本来gauss関数は全体を合計すると(積分)1になるように設計されている。
+        //しかし、無限の範囲は足せないので、kernel値の合計であるweightは1に満たない。
+        //なので、合計が1になるように逆数を掛けて全体を底上げして調整する
+        output.color.rgb *= rcp(weight);
+
+    }
     
     return output;
 }

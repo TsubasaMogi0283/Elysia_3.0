@@ -1172,12 +1172,12 @@ void PipelineManager::GenarateFullScreenPSO() {
 
 	//rootParameter生成。複数設定できるので配列。
 	//今回は結果一つだけなので長さ１の配列
-	D3D12_ROOT_PARAMETER rootParameters[3] = {};
+	D3D12_ROOT_PARAMETER rootParameters[4] = {};
 
 	//Effect
 	//CBVを使う
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	////PixelShaderで使う
+	//PixelShaderで使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	//レジスタ番号とバインド
 	//register...Shader上のResource配置情報
@@ -1186,8 +1186,9 @@ void PipelineManager::GenarateFullScreenPSO() {
 
 
 	//CBVを使う
+	//Vignette
 	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	//VertwxShaderで使う
+	//PixelShaderで使う
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	//register...Shader上のResource配置情報
 	rootParameters[1].Descriptor.ShaderRegister = 1;
@@ -1217,6 +1218,13 @@ void PipelineManager::GenarateFullScreenPSO() {
 	descriptionRootSignature_.NumParameters = _countof(rootParameters);
 
 
+	//CBVを使う
+	//GaussianFilter
+	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//PixelShaderで使う
+	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//register...Shader上のResource配置情報
+	rootParameters[3].Descriptor.ShaderRegister = 2;
 
 
 	//Sampler
