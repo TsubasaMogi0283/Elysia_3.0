@@ -166,6 +166,9 @@
     <Filter Include="Ellysia\Header File\Animation">
       <UniqueIdentifier>{97ce354a-4949-41c4-886a-96dc659bbfc0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Resource File\Object3d\SkinningObject3D">
+      <UniqueIdentifier>{787ef094-af7b-4197-b31c-b8867e74d3ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -298,6 +301,9 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\Object3D\Object3d.VS.hlsl">
       <Filter>Ellysia\Resource File\Object3d</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Object3D\SkinningObject3D.VS.hlsl">
+      <Filter>Ellysia\Resource File\Object3d\SkinningObject3D</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
