@@ -46,7 +46,6 @@ private:
 
 	Skeleton skeleton_ = {};
 	float animationTime_ = 0;
-	SkinCluster skinCluster_ = {};
 
 	const char* GroupName = "Player";
 };

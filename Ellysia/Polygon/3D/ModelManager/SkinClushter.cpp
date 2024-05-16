@@ -2,21 +2,21 @@
 #include <SrvManager.h>
 #include <Matrix4x4Calculation.h>
 #include <algorithm>
+#include <PipelineManager.h>
 
-SkinCluster CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelData){
-    SkinCluster skinCluster;
-    
+void  SkinCluster::CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelData){
+    SkinClusterStruct skinCluster;
+    skeleton_ = skeleton;
     //palette用のResourceを確保
     //作り方は今までと大体同じだね！
-    skinCluster.paletteResource = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(WellForGPU) * skeleton.joints.size());
+    skinCluster.paletteResource = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(WellForGPU) * skeleton_.joints.size());
     WellForGPU* mappedPalette = nullptr;
     skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
     //spanを使ってアクセスするようにする
-    skinCluster.mappedPalette = { mappedPalette,skeleton.joints.size() };
-    uint32_t srvIndex = SrvManager::GetInstance()->Allocate();
-
-    skinCluster.paletteSrvHandle.first = SrvManager::GetInstance()->GetCPUDescriptorHandle(srvIndex);
-    skinCluster.paletteSrvHandle.second = SrvManager::GetInstance()->GetGPUDescriptorHandle(srvIndex);
+    skinCluster.mappedPalette = { mappedPalette,skeleton_.joints.size() };
+    skinCluster.srvIndex = SrvManager::GetInstance()->Allocate();
+    skinCluster.paletteSrvHandle.first = SrvManager::GetInstance()->GetCPUDescriptorHandle(skinCluster.srvIndex);
+    skinCluster.paletteSrvHandle.second = SrvManager::GetInstance()->GetGPUDescriptorHandle(skinCluster.srvIndex);
 
 
     //palette用のSRVを作成
@@ -26,7 +26,7 @@ SkinCluster CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelDa
     paletteSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
     paletteSrvDesc.Buffer.FirstElement = 0;
     paletteSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-    paletteSrvDesc.Buffer.NumElements = UINT(skeleton.joints.size());
+    paletteSrvDesc.Buffer.NumElements = UINT(skeleton_.joints.size());
     paletteSrvDesc.Buffer.StructureByteStride = sizeof(WellForGPU);
 
     //SRVを作る
@@ -51,14 +51,14 @@ SkinCluster CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelDa
     skinCluster.influenceBufferView.StrideInBytes = sizeof(VertexInfluence);
 
     //InfluenceBindPoseMatrixの保存領域を作成
-    skinCluster.inverseBindPoseMatrices.resize(skeleton.joints.size());
+    skinCluster.inverseBindPoseMatrices.resize(skeleton_.joints.size());
     //std::generate(skinCluster.inverseBindPoseMatrices.begin(), skinCluster.inverseBindPoseMatrices.end(), MakeIdentity4x4());
 
 #pragma region std::generateについて
     //std::generate...初期化するときに便利！
     //for文と似ているのでそっちでやっても◎
     //実際はこんな感じ
-    for (int i = 0; i < skeleton.joints.size(); ++i) {
+    for (int i = 0; i < skeleton_.joints.size(); ++i) {
         skinCluster.inverseBindPoseMatrices[i] = MakeIdentity4x4();
     }
 #pragma endregion
@@ -66,8 +66,8 @@ SkinCluster CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelDa
     //ModelDataのSkinCluster情報を解析してInfluenceの中身を埋める
     for (const auto& jointWeight : modelData.skinClusterData) {
         //JointWeight.firstはjoint名なので、skeletonに対象となるjointが含まれているか判断
-        auto it = skeleton.jointMap.find(jointWeight.first);
-        if (it == skeleton.jointMap.end()) {
+        auto it = skeleton_.jointMap.find(jointWeight.first);
+        if (it == skeleton_.jointMap.end()) {
             //その名前のJointは存在しないので次に回す
             continue;
         }
@@ -94,15 +94,35 @@ SkinCluster CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelDa
 
 
 
-    return skinCluster;
+    skinClusterStruct_= skinCluster;
 }
 
-void SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton){
-    for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); ++jointIndex) {
-        assert(jointIndex < skinCluster.inverseBindPoseMatrices.size());
-        skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix = 
-            Multiply(skinCluster.inverseBindPoseMatrices[jointIndex],skeleton.joints[jointIndex].skeletonSpaceMatrix);
-        skinCluster.mappedPalette[jointIndex].skeletonSpaceIncerseTransposeMatrix = MakeTransposeMatrix(
-            Inverse(skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix));
+void SkinCluster::Update(){
+
+    for (size_t jointIndex = 0; jointIndex < skeleton_.joints.size(); ++jointIndex) {
+        assert(jointIndex < skinClusterStruct_.inverseBindPoseMatrices.size());
+        skinClusterStruct_.mappedPalette[jointIndex].skeletonSpaceMatrix =
+            Multiply(skinClusterStruct_.inverseBindPoseMatrices[jointIndex], skeleton_.joints[jointIndex].skeletonSpaceMatrix);
+        skinClusterStruct_.mappedPalette[jointIndex].skeletonSpaceIncerseTransposeMatrix = MakeTransposeMatrix(
+            Inverse(skinClusterStruct_.mappedPalette[jointIndex].skeletonSpaceMatrix));
     }
+}
+
+void SkinCluster::Draw(WorldTransform& worldTransform, Camera& camera){
+
+    //Skinning
+    DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetSkinningRootSignature().Get());
+    DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetModelGraphicsPipelineState().Get());
+
+    //WorldTransform
+    DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, worldTransform.bufferResource_->GetGPUVirtualAddress());
+
+
+    //Camera
+    DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, camera.bufferResource_->GetGPUVirtualAddress());
+
+    
+    //インスタンシングから
+    SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, skinClusterStruct_.srvIndex);
+
 }

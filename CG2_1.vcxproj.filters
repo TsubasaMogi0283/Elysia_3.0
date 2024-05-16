@@ -169,6 +169,9 @@
     <Filter Include="Ellysia\Resource File\Object3d\SkinningObject3D">
       <UniqueIdentifier>{787ef094-af7b-4197-b31c-b8867e74d3ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Source File\SrvManager">
+      <UniqueIdentifier>{4f83e7d1-c856-4e25-9517-e1f481814346}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -249,9 +252,6 @@
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\ModelManager.cpp">
       <Filter>Ellysia\Source File\ModelManager</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\SrvManager\SrvManager.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\Particle3DManager</Filter>
     </ClCompile>
@@ -270,17 +270,20 @@
     <ClCompile Include="Ellysia\Math\Collision\Collision.cpp">
       <Filter>Project</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Animation.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Skeleton.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Ellysia\Source File\ModelManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Animation.cpp">
+      <Filter>Ellysia\Source File\ModelManager</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Joint.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Ellysia\Source File\ModelManager</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\SkinClushter.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Ellysia\Source File\ModelManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\SrvManager\SrvManager.cpp">
+      <Filter>Ellysia\Source File\SrvManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

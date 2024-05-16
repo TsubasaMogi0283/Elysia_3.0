@@ -8,9 +8,11 @@
 #include <WellForGPU.h>
 #include <Skeleton.h>
 #include <ModelData.h>
+#include <WorldTransform.h>
+#include <Camera.h>
 
 
-struct SkinCluster {
+struct SkinClusterStruct {
 	std::vector<Matrix4x4> inverseBindPoseMatrices;
 	
 	//Influence
@@ -24,13 +26,40 @@ struct SkinCluster {
 	ComPtr<ID3D12Resource>paletteResource;
 	std::span<WellForGPU> mappedPalette;
 	std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> paletteSrvHandle;
-
+	uint32_t srvIndex;
 }; 
 
-//SkinClusterを作る
-SkinCluster CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelData);
 
-//SkinClusterの更新
-void SkinClusterUpdate(SkinCluster& skinCluster,const Skeleton& skeleton);
+
+class SkinCluster {
+public:
+	SkinCluster() {};
+
+	//SkinClusterを作る
+	void CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelData);
+
+	//SkinClusterの更新
+	void Update();
+
+	void Draw(WorldTransform& worldTransform,Camera& camera);
+
+	~SkinCluster() {};
+
+
+
+public:
+	SkinClusterStruct GetSkinClusterStruct() {
+		return skinClusterStruct_;
+	}
+
+private:
+
+	SkinClusterStruct skinClusterStruct_ = {};
+	Skeleton skeleton_;
+	
+
+
+};
+
 
 

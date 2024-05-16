@@ -4,9 +4,8 @@
 #include <PipelineManager.h>
 #include "DirectXSetup.h"
 #include <numbers>
+#include <SrvManager.h>
 
-
-static uint32_t modelIndex;
 
 Model::Model() {
 
@@ -21,6 +20,7 @@ Model* Model::Create(uint32_t modelHandle) {
 	PipelineManager::GetInstance()->SetModelBlendMode(1);
 	PipelineManager::GetInstance()->GenerateModelPSO();
 
+	PipelineManager::GetInstance()->GenerateSkinningPSO();
 
 
 	////マテリアル用のリソースを作る。
@@ -83,12 +83,32 @@ Model* Model::Create(uint32_t modelHandle) {
 	model->spotLightData_.cosFallowoffStart = 0.3f;
 	model->spotLightData_.cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
 
+
+
+
+	model->skinCluster_ = std::make_unique<SkinCluster>();
+	model->skinCluster_->CreateSkinClusher()
+
+
+
+
+
+
 	
 	return model;
 
 }
 
 
+
+void Model::Update(Skeleton& skeleton){
+
+
+
+
+
+
+}
 
 //描画
 void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
@@ -228,6 +248,8 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
 
 
+
+	
 
 	//DrawCall
 	//DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
@@ -400,6 +422,8 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 	//SpotLight
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
 
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetSkinningRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetModelGraphicsPipelineState().Get());
 
 
 	//DrawCall

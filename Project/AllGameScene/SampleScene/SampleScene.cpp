@@ -25,15 +25,12 @@ void SampleScene::Initialize() {
 	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.gltf",false);
 	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", false);
 
-	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/05_02", "plane.obj", false);
-
-	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj", false);
-	
 
 	//後々AnimationManagerを作ってここで読み込みたい
 	//animationHandle = Animation::GetInstance()->LoadAnimationFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf");
 
-	//skeleton_ = CreateSkeleton(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
+	//SkeletonManagerも作った方がよさそう
+	skeleton_ = CreateSkeleton(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
 
 	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	model_.reset(Model::Create(modelHandle));
@@ -71,7 +68,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	SkeletonUpdate(skeleton_);
 
 	//SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
-	SkinClusterUpdate(skinCluster_,skeleton_);
+	//Update(skinCluster_,skeleton_);
 
 
 #ifdef _DEBUG

@@ -24,6 +24,9 @@
 #include <PointLight.h>
 #include <SpotLight.h>
 
+#include "Skeleton.h"
+#include <SkinClushter.h>
+
 //ライトの種類
 enum LightingKinds {
 	None,
@@ -50,6 +53,9 @@ private:
 #pragma endregion
 
 public:
+
+	void Update(Skeleton &skeleton);
+
 	//描画
 	void Draw(WorldTransform& worldTransform, Camera& camera);
 
@@ -162,6 +168,13 @@ public:
 	}
 
 
+
+
+	void SetSkinCluster(Skeleton* skinCluster) {
+		this->skinCluster_ = skinCluster;
+	}
+
+
 private:
 	struct Material {
 		Vector4 color;
@@ -245,9 +258,9 @@ private:
 	//デフォルトはα加算
 	int32_t blendModeNumber_ = 1;
 
-
-
-
+	SkinCluster* skinCluster_ = nullptr;
+	bool isSkinning_ = false;
+	bool isAnimation_ = false;
 
 
 

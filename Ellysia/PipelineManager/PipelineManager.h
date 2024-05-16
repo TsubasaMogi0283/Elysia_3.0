@@ -70,7 +70,7 @@ public:
 		return linePSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積む専用のGetter(Sprite)
+	//コマンドに積む用のGetter(Sprite)
 	ComPtr<ID3D12RootSignature> GetSpriteRootSignature() {
 		return spritePSO_.rootSignature_;
 	}
@@ -78,7 +78,7 @@ public:
 		return spritePSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積む専用のGetter(Model)
+	//コマンドに積む用のGetter(Model)
 	ComPtr<ID3D12RootSignature> GetModelRootSignature() {
 		return modelPSO_.rootSignature_;
 	}
@@ -86,7 +86,17 @@ public:
 		return modelPSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積む専用のGetter(Particle3D)
+
+	//コマンドに積む用のGetter(Skinning)
+	ComPtr<ID3D12RootSignature> GetSkinningRootSignature() {
+		return skinningPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetSkinningGraphicsPipelineState() {
+		return skinningPSO_.graphicsPipelineState_;
+	}
+
+
+	//コマンドに積む用のGetter(Particle3D)
 	ComPtr<ID3D12RootSignature> GetParticle3DRootSignature() {
 		return particle3DPSO_.rootSignature_;
 	}
@@ -94,6 +104,9 @@ public:
 		return particle3DPSO_.graphicsPipelineState_;
 	}
 
+
+
+	
 
 	void SetSpriteBlendMode(uint32_t blendmode) {
 		selectSpriteBlendMode_ = blendmode;
@@ -115,6 +128,9 @@ public:
 
 	//モデル用
 	static void GenerateModelPSO();
+
+	//Skinning
+	static void GenerateSkinningPSO();
 
 	//3Dパーティクル用
 	static void GenerateParticle3DPSO();
@@ -139,6 +155,8 @@ private:
 	PSOInformation modelPSO_ = {};
 	//モデル用の変数
 	PSOInformation particle3DPSO_ = {};
+	//モデル用の変数
+	PSOInformation skinningPSO_ = {};
 
 
 
