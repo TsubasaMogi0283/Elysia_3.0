@@ -4,17 +4,18 @@
 #include <algorithm>
 #include <PipelineManager.h>
 #include "ModelManager.h"
+#include <cassert>
 
-void  SkinCluster::CreateSkinClusher(const SkeletonStruct& skeleton, const ModelData& modelData){
+void  SkinCluster::Create(const Skeleton& skeleton, const ModelData& modelData){
     SkinClusterStruct skinCluster;
     skeleton_ = skeleton;
     //palette用のResourceを確保
     //作り方は今までと大体同じだね！
-    skinCluster.paletteResource = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(WellForGPU) * skeleton_.joints.size());
+    skinCluster.paletteResource = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(WellForGPU) * skeleton_.joints_.size());
     WellForGPU* mappedPalette = nullptr;
     skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
     //spanを使ってアクセスするようにする
-    skinCluster.mappedPalette = { mappedPalette,skeleton_.joints.size() };
+    skinCluster.mappedPalette = { mappedPalette,skeleton.joints_.size() };
     skinCluster.srvIndex = SrvManager::GetInstance()->Allocate();
     skinCluster.paletteSrvHandle.first = SrvManager::GetInstance()->GetCPUDescriptorHandle(skinCluster.srvIndex);
     skinCluster.paletteSrvHandle.second = SrvManager::GetInstance()->GetGPUDescriptorHandle(skinCluster.srvIndex);
@@ -27,7 +28,7 @@ void  SkinCluster::CreateSkinClusher(const SkeletonStruct& skeleton, const Model
     paletteSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
     paletteSrvDesc.Buffer.FirstElement = 0;
     paletteSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-    paletteSrvDesc.Buffer.NumElements = UINT(skeleton_.joints.size());
+    paletteSrvDesc.Buffer.NumElements = UINT(skeleton_.joints_.size());
     paletteSrvDesc.Buffer.StructureByteStride = sizeof(WellForGPU);
 
     //SRVを作る
@@ -52,7 +53,7 @@ void  SkinCluster::CreateSkinClusher(const SkeletonStruct& skeleton, const Model
     skinCluster.influenceBufferView.StrideInBytes = sizeof(VertexInfluence);
 
     //InfluenceBindPoseMatrixの保存領域を作成
-    skinCluster.inverseBindPoseMatrices.resize(skeleton_.joints.size());
+    skinCluster.inverseBindPoseMatrices.resize(skeleton_.joints_.size());
     //最後の所は「関数ポインタ」
     //()を付けないでね。ここ重要。
     std::generate(skinCluster.inverseBindPoseMatrices.begin(), skinCluster.inverseBindPoseMatrices.end(), MakeIdentity4x4);
@@ -69,8 +70,8 @@ void  SkinCluster::CreateSkinClusher(const SkeletonStruct& skeleton, const Model
     //ModelDataのSkinCluster情報を解析してInfluenceの中身を埋める
     for (const auto& jointWeight : modelData.skinClusterData) {
         //JointWeight.firstはjoint名なので、skeletonに対象となるjointが含まれているか判断
-        auto it = skeleton_.jointMap.find(jointWeight.first);
-        if (it == skeleton_.jointMap.end()) {
+        auto it = skeleton_.jointMap_.find(jointWeight.first);
+        if (it == skeleton_.jointMap_.end()) {
             //その名前のJointは存在しないので次に回す
             continue;
         }
@@ -97,15 +98,14 @@ void  SkinCluster::CreateSkinClusher(const SkeletonStruct& skeleton, const Model
 
 
 
-    skinClusterStruct_= skinCluster;
 }
 
 void SkinCluster::Update(){
-    for (size_t jointIndex = 0; jointIndex < skeleton_.joints.size(); ++jointIndex) {
-        assert(jointIndex < skinClusterStruct_.inverseBindPoseMatrices.size());
-        skinClusterStruct_.mappedPalette[jointIndex].skeletonSpaceMatrix =
-            Multiply(skinClusterStruct_.inverseBindPoseMatrices[jointIndex], skeleton_.joints[jointIndex].skeletonSpaceMatrix);
-        skinClusterStruct_.mappedPalette[jointIndex].skeletonSpaceIncerseTransposeMatrix = MakeTransposeMatrix(
-            Inverse(skinClusterStruct_.mappedPalette[jointIndex].skeletonSpaceMatrix));
+    for (size_t jointIndex = 0; jointIndex < skeleton_.joints_.size(); ++jointIndex) {
+        assert(jointIndex < inverseBindPoseMatrices.size());
+        mappedPalette[jointIndex].skeletonSpaceMatrix =
+            Multiply(inverseBindPoseMatrices[jointIndex], skeleton_.joints_[jointIndex].skeletonSpaceMatrix);
+        mappedPalette[jointIndex].skeletonSpaceIncerseTransposeMatrix = MakeTransposeMatrix(
+            Inverse(mappedPalette[jointIndex].skeletonSpaceMatrix));
     }
 }

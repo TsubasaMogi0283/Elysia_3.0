@@ -34,14 +34,14 @@ struct SkinClusterStruct {
 struct SkinCluster {
 
 	//SkinClusterを作る
-	void CreateSkinClusher(const SkeletonStruct& skeleton, const ModelData& modelData);
+	void Create(const Skeleton& skeleton, const ModelData& modelData);
 
 	//SkinClusterの更新
 	void Update();
 
 	
 	SkinClusterStruct skinClusterStruct_ = {};
-	SkeletonStruct skeleton_;
+	Skeleton skeleton_;
 	
 
 
