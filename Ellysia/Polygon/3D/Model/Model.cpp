@@ -18,7 +18,8 @@ Model* Model::Create(uint32_t modelHandle) {
 
 	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
 	PipelineManager::GetInstance()->SetModelBlendMode(1);
-	PipelineManager::GetInstance()->GenerateModelPSO(false);
+	model->isSkinning_ = false;
+	PipelineManager::GetInstance()->GenerateModelPSO(model->isSkinning_);
 
 
 	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい
@@ -254,7 +255,6 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 	
 
 	//DrawCall
-	//DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 
 }

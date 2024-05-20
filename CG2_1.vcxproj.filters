@@ -279,7 +279,7 @@
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Joint.cpp">
       <Filter>Ellysia\Source File\ModelManager</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\SkinClushter.cpp">
+    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\SkinCluster.cpp">
       <Filter>Ellysia\Source File\ModelManager</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\SrvManager\SrvManager.cpp">
@@ -502,7 +502,7 @@
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\ModelData.h">
       <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\SkinClushter.h">
+    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\SkinCluster.h">
       <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\VertexInfluence.h">
