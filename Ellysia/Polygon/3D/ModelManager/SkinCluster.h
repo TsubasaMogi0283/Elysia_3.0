@@ -12,25 +12,6 @@
 #include <Camera.h>
 
 
-struct SkinClusterStruct {
-	std::vector<Matrix4x4> inverseBindPoseMatrices;
-	
-	//Influence
-	//頂点に対して影響を与えるパラメータ群
-	ComPtr<ID3D12Resource> influenceResource;
-	D3D12_VERTEX_BUFFER_VIEW influenceBufferView;
-	std::span<VertexInfluence>mappedInfluence;
-
-	//MatrixPalette
-	//Skinningを行う際に必要な行列をSkeletonの全Jointの数だけ格納した配列
-	ComPtr<ID3D12Resource>paletteResource;
-	std::span<WellForGPU> mappedPalette;
-	std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> paletteSrvHandle;
-	uint32_t srvIndex;
-}; 
-
-
-
 struct SkinCluster {
 
 	//SkinClusterを作る
@@ -40,7 +21,25 @@ struct SkinCluster {
 	void Update();
 
 	
-	SkinClusterStruct skinClusterStruct_ = {};
+	//SkinClusterStruct skinClusterStruct_ = {};
+	std::vector<Matrix4x4> inverseBindPoseMatrices;
+
+	//Influence
+	//頂点に対して影響を与えるパラメータ群
+	ComPtr<ID3D12Resource> influenceResource_;
+	D3D12_VERTEX_BUFFER_VIEW influenceBufferView_;
+	std::span<VertexInfluence>mappedInfluence_;
+
+
+
+
+	//MatrixPalette
+	//Skinningを行う際に必要な行列をSkeletonの全Jointの数だけ格納した配列
+	ComPtr<ID3D12Resource>paletteResource_;
+	std::span<WellForGPU> mappedPalette_;
+	std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> paletteSrvHandle_;
+	uint32_t srvIndex_;
+	
 	Skeleton skeleton_;
 	
 

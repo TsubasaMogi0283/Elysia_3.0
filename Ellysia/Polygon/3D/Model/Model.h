@@ -54,7 +54,7 @@ private:
 
 public:
 
-	void Update(SkeletonStruct &skeleton);
+	void Update(Skeleton &skeleton);
 
 	//描画
 	void Draw(WorldTransform& worldTransform, Camera& camera);

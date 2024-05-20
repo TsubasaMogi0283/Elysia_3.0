@@ -44,7 +44,7 @@ private:
 	WorldTransform worldTransform_ = {};
 	Camera camera_ = {};
 
-	SkeletonStruct skeleton_ = {};
+	Skeleton skeleton_ = {};
 	float animationTime_ = 0;
 
 	SkinCluster skinCluster_ = {};

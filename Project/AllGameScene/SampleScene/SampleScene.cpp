@@ -30,9 +30,9 @@ void SampleScene::Initialize() {
 	//animationHandle = Animation::GetInstance()->LoadAnimationFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf");
 
 	//SkeletonManagerも作った方がよさそう
-	skeleton_ = CreateSkeleton(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
+	skeleton_.Create(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
 
-	skinCluster_.CreateSkinClusher(skeleton_, ModelManager::GetInstance()->GetModelData(modelHandle));
+	skinCluster_.Create(skeleton_, ModelManager::GetInstance()->GetModelData(modelHandle));
 
 	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	model_.reset(Model::Create(modelHandle));
@@ -70,7 +70,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	//現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
 	//読み込むのは最初だけで良いと気づいた
-	SkeletonUpdate(skeleton_);
+	//SkeletonUpdate(skeleton_);
+	skeleton_.Update();
 
 	//SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
 	
