@@ -4,7 +4,7 @@
 #include <vector>
 #include <array>
 #include <map>
-
+#include <json.hpp>
 #include <Model.h>
 #include "WorldTransform.h"
 
@@ -17,6 +17,14 @@ public:
 	LevelDataManager() {};
 
 	~LevelDataManager();
+
+
+
+private:
+	/// <summary>
+	/// 再帰的な読み込み
+	/// </summary>
+	void RecursiveLoad(nlohmann::json& objects);
 
 public:
 
@@ -41,6 +49,10 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw(Camera& camera);
+
+
+
+
 
 private:
 	struct LevelData {

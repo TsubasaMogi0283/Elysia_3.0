@@ -37,7 +37,7 @@ void SampleScene::Initialize() {
 	camera_.translate_.z = -30.0f;
 	
 	levelDataManager_ = new LevelDataManager();
-	levelDataManager_->Load("aaa");
+	levelDataManager_->Load("Resources/LevelData/TL1Test.json");
 
 
 }

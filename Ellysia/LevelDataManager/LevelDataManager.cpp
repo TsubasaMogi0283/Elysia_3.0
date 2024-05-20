@@ -1,51 +1,14 @@
 #include "LevelDataManager.h"
 #include <cassert>
-#include <json.hpp>
+
 #include <fstream>
 
 #include "ModelManager.h"
 #include "Camera.h"
 
-
-void LevelDataManager::Load(std::string filePath){
-#pragma region 後々クラス化する
-	const std::string fullpath = "Resources/LevelData/TL1Test.json";
-	const std::string fileP = filePath;
-	fileP;
-	//ファイルストリーム
-	std::ifstream file;
-
-	//ファイルを開く
-	file.open(fullpath);
-
-	if (file.fail()) {
-		assert(0);
-	}
-
-	//JSON文字列から解凍したデータ
-	nlohmann::json deserialized;
-
-	//解凍
-	file >> deserialized;
-
-	//正しいレベルデータファイルかチェック
-	//objectかどうか
-	assert(deserialized.is_object());
-	//namaeのキーワードがあるかどうか
-	assert(deserialized.contains("name"));
-	//nameはstring型かどうか
-	assert(deserialized["name"].is_string());
-
-	//"name"を文字列として取得
-	std::string name = deserialized["name"].get<std::string>();
-	//正しいレベルデータファイルはチェック
-	assert(name.compare("scene") == 0);
-
-	//レベルデータ格納用インスlタンスを生成
-	levelData = new LevelData();
-
+void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 	//"objects"の全オブジェクトを走査
-	for (nlohmann::json& object : deserialized["objects"]) {
+	for (nlohmann::json& object : objects) {
 		//各オブジェクトに必ずtypeが入っているよ
 		assert(object.contains("type"));
 
@@ -53,7 +16,7 @@ void LevelDataManager::Load(std::string filePath){
 		std::string type = object["type"].get<std::string>();
 
 		//種類ごとの処理
-		//MESHの場合
+			//MESHの場合
 		if (type.compare("MESH") == 0) {
 			//要素追加
 			//emplace_backというとvectorだね！
@@ -91,22 +54,51 @@ void LevelDataManager::Load(std::string filePath){
 			objectData.scaling.y = (float)transform["scaling"][2];
 			objectData.scaling.z = (float)transform["scaling"][0];
 
-			//コライダーの読み込み
+			if (object.contains("children")) {
+				RecursiveLoad(object["children"]);
+			}
 
 		}
+	}
+}
 
+void LevelDataManager::Load(std::string filePath){
 
-		//再帰関数
-		//Python側でやったやつを参考にしてね
-		if (object.contains("children")) {
+	//ファイルストリーム
+	std::ifstream file;
 
-		}
+	//ファイルを開く
+	file.open(filePath);
 
-
+	if (file.fail()) {
+		assert(0);
 	}
 
+	//JSON文字列から解凍したデータ
+	nlohmann::json deserialized;
 
-	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	//解凍
+	file >> deserialized;
+
+	//正しいレベルデータファイルかチェック
+	//objectかどうか
+	assert(deserialized.is_object());
+	//namaeのキーワードがあるかどうか
+	assert(deserialized.contains("name"));
+	//nameはstring型かどうか
+	assert(deserialized["name"].is_string());
+
+	//"name"を文字列として取得
+	std::string name = deserialized["name"].get<std::string>();
+	//正しいレベルデータファイルはチェック
+	assert(name.compare("scene") == 0);
+
+	//レベルデータ格納用インスlタンスを生成
+	levelData = new LevelData();
+
+	RecursiveLoad(deserialized["objects"]);
+
+	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD3Player", "Player.obj");
 
 	for (auto& objectData : levelData->objects) {
 		//first,secondとあるからmapかも
@@ -135,14 +127,6 @@ void LevelDataManager::Load(std::string filePath){
 		worldTransforms_.push_back(worldTransform);
 	}
 
-	//Modelに入れるWorldTransformを生成する
-	/*for (auto& objectData : levelData->objects) {
-
-		
-	}*/
-
-
-#pragma endregion
 }
 
 void LevelDataManager::Configure(){
@@ -173,6 +157,8 @@ void LevelDataManager::Draw(Camera& camera){
 		count++;
 	}
 }
+
+
 
 LevelDataManager::~LevelDataManager(){
 	models_.clear();
