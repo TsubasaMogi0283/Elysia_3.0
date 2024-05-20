@@ -7,18 +7,30 @@
 #include <Node.h>
 
 struct Skeleton {
+#pragma region メンバ関数
+
+	/// <summary>
+	/// 生成
+	/// </summary>
+	/// <param name="rootNode"></param>
+	void Create(const Node& rootNode);
+
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update();
+
+#pragma endregion
+
+
+
 	//RootJointのIndex
-	int32_t root;
+	int32_t root_;
 	//Joint名とIndexとの辞書
-	std::map<std::string, int32_t>jointMap;
+	std::map<std::string, int32_t>jointMap_;
 	//所属しているジョイント
-	std::vector<Joint> joints;
+	std::vector<Joint> joints_;
+
 
 };
-
-//Nodeの階層構造からSkeletonを作る
-Skeleton CreateSkeleton(const Node& rootNode);
-
-
-//Skeletonの更新
-void SkeletonUpdate(Skeleton& skeleton);

@@ -25,7 +25,7 @@
 #include <SpotLight.h>
 
 #include "Skeleton.h"
-#include <SkinClushter.h>
+#include <SkinCluster.h>
 
 //ライトの種類
 enum LightingKinds {
@@ -54,7 +54,7 @@ private:
 
 public:
 
-	void Update(Skeleton &skeleton);
+	void Update(SkeletonStruct &skeleton);
 
 	//描画
 	void Draw(WorldTransform& worldTransform, Camera& camera);
@@ -170,9 +170,6 @@ public:
 
 
 
-	//void SetSkinCluster(Skeleton* skinCluster) {
-	//	this->skinCluster_ = skinCluster;
-	//}
 
 
 private:
@@ -239,13 +236,6 @@ private:
 
 
 
-	
-
-
-
-
-
-
 	//アニメーションを再生するときに使う時間
 	float animationTime_ = 0.0f;
 
@@ -263,7 +253,6 @@ private:
 	//デフォルトはα加算
 	int32_t blendModeNumber_ = 1;
 
-	SkinCluster* skinCluster_ = nullptr;
 	bool isSkinning_ = false;
 	bool isAnimation_ = false;
 

@@ -47,4 +47,4 @@ Quaternion CalculationValue(const std::vector<KeyFrameQuaternion>& keyFrames, fl
 /// <param name="skeleton"></param>
 /// <param name="animation"></param>
 /// <param name="animationTime"></param>
-void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);
+void ApplyAnimation(SkeletonStruct& skeleton, const Animation& animation, float animationTime);

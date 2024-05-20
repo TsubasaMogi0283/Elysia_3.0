@@ -104,7 +104,7 @@ Model* Model::Create(uint32_t modelHandle) {
 
 
 
-void Model::Update(Skeleton& skeleton){
+void Model::Update(SkeletonStruct& skeleton){
 	skeleton;
 
 

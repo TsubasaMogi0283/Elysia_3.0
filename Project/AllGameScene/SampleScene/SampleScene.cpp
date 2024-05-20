@@ -32,6 +32,8 @@ void SampleScene::Initialize() {
 	//SkeletonManagerも作った方がよさそう
 	skeleton_ = CreateSkeleton(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
 
+	skinCluster_.CreateSkinClusher(skeleton_, ModelManager::GetInstance()->GetModelData(modelHandle));
+
 	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	model_.reset(Model::Create(modelHandle));
 	
@@ -64,11 +66,15 @@ void SampleScene::Update(GameManager* gameManager) {
 	animationTime_ += 1.0f/60.0f;
 	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	ApplyAnimation(skeleton_, animation, animationTime_);
+
+
 	//現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
+	//読み込むのは最初だけで良いと気づいた
 	SkeletonUpdate(skeleton_);
 
 	//SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
-	//Update(skinCluster_,skeleton_);
+	
+	skinCluster_.Update();
 
 
 #ifdef _DEBUG
@@ -77,8 +83,10 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::End();
 
 #endif
-
-	AdjustmentItems::GetInstance()->SaveFile(GroupName);
+	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
+		AdjustmentItems::GetInstance()->SaveFile(GroupName);
+	}
+	
 }
 
 /// <summary>

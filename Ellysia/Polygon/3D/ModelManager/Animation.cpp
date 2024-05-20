@@ -121,7 +121,7 @@ Quaternion CalculationValue(const std::vector<KeyFrameQuaternion>& keyFrames, fl
     return (*keyFrames.rbegin()).value;
 }
 
-void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime){
+void ApplyAnimation(SkeletonStruct& skeleton, const Animation& animation, float animationTime){
 
     for (Joint& joint : skeleton.joints) {
         //対象のJointのAnimation

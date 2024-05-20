@@ -3,8 +3,9 @@
 #include <Matrix4x4Calculation.h>
 #include <algorithm>
 #include <PipelineManager.h>
+#include "ModelManager.h"
 
-void  SkinCluster::CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelData){
+void  SkinCluster::CreateSkinClusher(const SkeletonStruct& skeleton, const ModelData& modelData){
     SkinClusterStruct skinCluster;
     skeleton_ = skeleton;
     //palette用のResourceを確保
@@ -100,7 +101,6 @@ void  SkinCluster::CreateSkinClusher(const Skeleton& skeleton, const ModelData& 
 }
 
 void SkinCluster::Update(){
-
     for (size_t jointIndex = 0; jointIndex < skeleton_.joints.size(); ++jointIndex) {
         assert(jointIndex < skinClusterStruct_.inverseBindPoseMatrices.size());
         skinClusterStruct_.mappedPalette[jointIndex].skeletonSpaceMatrix =
@@ -108,23 +108,4 @@ void SkinCluster::Update(){
         skinClusterStruct_.mappedPalette[jointIndex].skeletonSpaceIncerseTransposeMatrix = MakeTransposeMatrix(
             Inverse(skinClusterStruct_.mappedPalette[jointIndex].skeletonSpaceMatrix));
     }
-}
-
-void SkinCluster::Draw(WorldTransform& worldTransform, Camera& camera){
-
-    //Skinning
-    DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetSkinningRootSignature().Get());
-    DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetModelGraphicsPipelineState().Get());
-
-    //WorldTransform
-    DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, worldTransform.bufferResource_->GetGPUVirtualAddress());
-
-
-    //Camera
-    DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, camera.bufferResource_->GetGPUVirtualAddress());
-
-    
-    //インスタンシングから
-    SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, skinClusterStruct_.srvIndex);
-
 }

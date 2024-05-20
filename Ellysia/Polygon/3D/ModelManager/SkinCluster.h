@@ -31,31 +31,17 @@ struct SkinClusterStruct {
 
 
 
-class SkinCluster {
-public:
-	SkinCluster() {};
+struct SkinCluster {
 
 	//SkinClusterを作る
-	void CreateSkinClusher(const Skeleton& skeleton, const ModelData& modelData);
+	void CreateSkinClusher(const SkeletonStruct& skeleton, const ModelData& modelData);
 
 	//SkinClusterの更新
 	void Update();
 
-	void Draw(WorldTransform& worldTransform,Camera& camera);
-
-	~SkinCluster() {};
-
-
-
-public:
-	SkinClusterStruct GetSkinClusterStruct() {
-		return skinClusterStruct_;
-	}
-
-private:
-
+	
 	SkinClusterStruct skinClusterStruct_ = {};
-	Skeleton skeleton_;
+	SkeletonStruct skeleton_;
 	
 
 

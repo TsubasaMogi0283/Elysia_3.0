@@ -10,7 +10,7 @@
 #include <memory>
 #include <Particle3D.h>
 #include <Audio.h>
-#include <SkinCluster.h>
+#include "SkinCluster.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -44,10 +44,10 @@ private:
 	WorldTransform worldTransform_ = {};
 	Camera camera_ = {};
 
-	Skeleton skeleton_ = {};
+	SkeletonStruct skeleton_ = {};
 	float animationTime_ = 0;
 
-	SkinClushter skinCluster_ = nullptr;
+	SkinCluster skinCluster_ = {};
 
 	const char* GroupName = "Player";
 };
