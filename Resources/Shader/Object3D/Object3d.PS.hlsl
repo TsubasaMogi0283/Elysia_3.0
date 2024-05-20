@@ -18,19 +18,19 @@
 
 //Material...色など三角形の表面の材質を決定するもの
 struct Material {
-	float32_t4 color;
-	int32_t enableLighting;
-	float32_t4x4 uvTransform;
+	float4 color;
+	int enableLighting;
+	float4x4 uvTransform;
     //光沢度
-	float32_t shininess;
+	float shininess;
 };
 
 
 struct DirectionalLight {
 	//ライトの色
-	float32_t4 color;
+	float4 color;
 	//ライトの向き
-	float32_t3 direction;
+	float3 direction;
 	//ライトの輝度
 	float intensity;
 };
@@ -106,11 +106,11 @@ struct PixelShaderOutput {
 PixelShaderOutput main(VertexShaderOutput input) {
 	PixelShaderOutput output;
 	
-    float32_t3 camera = gCamera.worldPosition;
+    float3 camera = gCamera.worldPosition;
 	
 	//Materialを拡張する
-	float4 transformedUV = mul(float32_t4(input.texcoord,0.0f, 1.0f), gMaterial.uvTransform);
-	float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
+	float4 transformedUV = mul(float4(input.texcoord,0.0f, 1.0f), gMaterial.uvTransform);
+	float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
 
     if (textureColor.a <= 0.5f){
         discard;
@@ -130,10 +130,10 @@ PixelShaderOutput main(VertexShaderOutput input) {
 
 		
 		//Cameraへの方向を算出
-        float32_t3 toEye = normalize(gCamera.worldPosition-input.worldPosition );
+        float3 toEye = normalize(gCamera.worldPosition-input.worldPosition );
 		
 		//入射光の反射ベクトルを求める
-        float32_t3 reflectLight = reflect(normalize(gDirectionalLight.direction), normalize(input.normal));
+        float3 reflectLight = reflect(normalize(gDirectionalLight.direction), normalize(input.normal));
 		
 		//内積
         //float RdotE = dot(reflectLight, toEye);
@@ -141,15 +141,15 @@ PixelShaderOutput main(VertexShaderOutput input) {
         //float specularPow = pow(saturate(RdotE), gMaterial.shininess);
 		
 		//HalfVector
-        float32_t3 halfVector = normalize(-gDirectionalLight.direction + toEye);
+        float3 halfVector = normalize(-gDirectionalLight.direction + toEye);
         float NDotH = dot(normalize(input.normal), halfVector);
         float specularPow = pow(saturate(NDotH), gMaterial.shininess);
 		
 		//拡散反射
-        float32_t3 diffuse = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
+        float3 diffuse = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
 		//鏡面反射
 		//1.0f,1.0f,1.0fの所は反射色。
-        float32_t3 specular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float32_t3(1.0f, 1.0f, 1.0f);
+        float3 specular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 		
 		
 		

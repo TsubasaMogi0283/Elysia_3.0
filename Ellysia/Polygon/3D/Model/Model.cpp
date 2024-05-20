@@ -16,11 +16,13 @@ Model* Model::Create(uint32_t modelHandle) {
 	//新たなModel型のインスタンスのメモリを確保
 	Model* model = new Model();
 
-
+	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
 	PipelineManager::GetInstance()->SetModelBlendMode(1);
-	PipelineManager::GetInstance()->GenerateModelPSO();
+	PipelineManager::GetInstance()->GenerateModelPSO(false);
 
-	PipelineManager::GetInstance()->GenerateSkinningPSO();
+
+	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい
+	//Setterでやるの面倒だと思った
 
 
 	////マテリアル用のリソースを作る。
@@ -86,8 +88,8 @@ Model* Model::Create(uint32_t modelHandle) {
 
 
 
-	model->skinCluster_ = std::make_unique<SkinCluster>();
-	model->skinCluster_->CreateSkinClusher()
+	//model->skinCluster_ = std::make_unique<SkinCluster>();
+	//model->skinCluster_->CreateSkinClusher()
 
 
 
@@ -102,7 +104,7 @@ Model* Model::Create(uint32_t modelHandle) {
 
 
 void Model::Update(Skeleton& skeleton){
-
+	skeleton;
 
 
 

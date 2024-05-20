@@ -170,9 +170,9 @@ public:
 
 
 
-	void SetSkinCluster(Skeleton* skinCluster) {
-		this->skinCluster_ = skinCluster;
-	}
+	//void SetSkinCluster(Skeleton* skinCluster) {
+	//	this->skinCluster_ = skinCluster;
+	//}
 
 
 private:
@@ -196,6 +196,9 @@ private:
 	ComPtr<ID3D12Resource> indexResource_ = nullptr;
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
+#pragma region なくしたい
+
+
 	//マテリアル用のリソースを作る
 	ComPtr<ID3D12Resource> materialResource_ = nullptr;
 	Material* materialData_ = nullptr;
@@ -215,15 +218,6 @@ private:
 	float directionalLightIntensity_ = 1.0f;
 	float shininess_ = 100.0f;
 
-
-
-
-	//PixelShaderにカメラの座標を送る為の変数
-	ComPtr<ID3D12Resource> cameraResource_ = nullptr;
-	CameraForGPU* cameraForGPU_ = {};
-
-
-
 	//PointLight
 	ComPtr<ID3D12Resource> pointLightResource_ = nullptr;
 	PointLight* pointLightMapData_ = {};
@@ -235,6 +229,17 @@ private:
 	SpotLight* spotLightMapData_ = {};
 	SpotLight spotLightData_ = {};
 
+
+
+#pragma endregion
+
+	//PixelShaderにカメラの座標を送る為の変数
+	ComPtr<ID3D12Resource> cameraResource_ = nullptr;
+	CameraForGPU* cameraForGPU_ = {};
+
+
+
+	
 
 
 

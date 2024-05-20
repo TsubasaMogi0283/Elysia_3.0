@@ -36,8 +36,6 @@ enum BlemdMode {
 	//Src*(1-Dest)+Dest*1
 	BlendModeScreen,
 
-	//利用してはいけない
-	CountOfBlendMode,
 
 
 };
@@ -127,7 +125,7 @@ public:
 	static void GenerateSpritePSO();
 
 	//モデル用
-	static void GenerateModelPSO();
+	static void GenerateModelPSO(bool isSkinning);
 
 	//Skinning
 	static void GenerateSkinningPSO();

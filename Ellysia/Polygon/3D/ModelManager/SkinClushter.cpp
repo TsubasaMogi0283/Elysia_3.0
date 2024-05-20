@@ -52,15 +52,17 @@ void  SkinCluster::CreateSkinClusher(const Skeleton& skeleton, const ModelData& 
 
     //InfluenceBindPoseMatrixの保存領域を作成
     skinCluster.inverseBindPoseMatrices.resize(skeleton_.joints.size());
-    //std::generate(skinCluster.inverseBindPoseMatrices.begin(), skinCluster.inverseBindPoseMatrices.end(), MakeIdentity4x4());
+    //最後の所は「関数ポインタ」
+    //()を付けないでね。ここ重要。
+    std::generate(skinCluster.inverseBindPoseMatrices.begin(), skinCluster.inverseBindPoseMatrices.end(), MakeIdentity4x4);
 
 #pragma region std::generateについて
-    //std::generate...初期化するときに便利！
-    //for文と似ているのでそっちでやっても◎
-    //実際はこんな感じ
-    for (int i = 0; i < skeleton_.joints.size(); ++i) {
-        skinCluster.inverseBindPoseMatrices[i] = MakeIdentity4x4();
-    }
+    ////std::generate...初期化するときに便利！
+    ////for文と似ているのでそっちでやっても◎
+    ////実際はこんな感じ
+    //for (int i = 0; i < skeleton_.joints.size(); ++i) {
+    //    skinCluster.inverseBindPoseMatrices[i] = MakeIdentity4x4();
+    //}
 #pragma endregion
 
     //ModelDataのSkinCluster情報を解析してInfluenceの中身を埋める
