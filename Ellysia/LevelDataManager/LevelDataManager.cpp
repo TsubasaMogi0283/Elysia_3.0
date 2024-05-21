@@ -23,7 +23,7 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 			levelData->objects.emplace_back(LevelData::ObjectData{});
 			//今追加した要素の参照を得る
 			LevelData::ObjectData& objectData = levelData->objects.back();
-
+			//ここでのファイルネームはオブジェクトの名前
 			if (object.contains("file_name")) {
 				//ファイル名
 				objectData.fileName = object["file_name"];
@@ -60,6 +60,7 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 
 		}
 	}
+
 }
 
 void LevelDataManager::Load(std::string filePath){
@@ -96,18 +97,21 @@ void LevelDataManager::Load(std::string filePath){
 	//レベルデータ格納用インスlタンスを生成
 	levelData = new LevelData();
 
+	//読み込み(再帰機能付き)
 	RecursiveLoad(deserialized["objects"]);
 
-	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD3Player", "Player.obj");
+	
 
 	for (auto& objectData : levelData->objects) {
 		//first,secondとあるからmapかも
 		decltype(models_)::iterator it = models_.find(objectData.fileName);
 
-
+		//"Resources/LevelData/TL1Test.json"
 		//まだ読み込みがされていない場合読み込む
 		if (it == models_.end()) {
 			Model* model = nullptr;
+			//uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/LevelData/Sphere", "Sphere.obj");
+			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData("Resources/LevelData",objectData.fileName);
 			model=Model::Create(modelHandle);
 			models_[objectData.fileName] = model;
 		}
@@ -129,14 +133,12 @@ void LevelDataManager::Load(std::string filePath){
 
 }
 
-void LevelDataManager::Configure(){
-
-}
 
 void LevelDataManager::Update(){
 	for (WorldTransform* object : worldTransforms_) {
 		object->Update();
 	}
+
 }
 
 void LevelDataManager::Draw(Camera& camera){

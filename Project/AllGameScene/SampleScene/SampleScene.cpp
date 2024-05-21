@@ -20,24 +20,20 @@ void SampleScene::Initialize() {
 	
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
-	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf",true);
+	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\LevelData\Sphere\Sphere.obj"
 
-	//後々AnimationManagerを作ってここで読み込みたい
-	//animationHandle = Animation::GetInstance()->LoadAnimationFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf");
 
-	skeleton_ = CreateSkeleton(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
+	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/LevelData/Sphere", "Sphere.obj");
 
-	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
+
 	model_.reset(Model::Create(modelHandle));
 	
-	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
-
-	worldTransform_.Initialize(true, localMatrix);
+	worldTransform_.Initialize();
 	camera_.Initialize();
 	camera_.translate_.z = -30.0f;
 	
-	levelDataManager_ = new LevelDataManager();
-	levelDataManager_->Load("Resources/LevelData/TL1Test.json");
+	//levelDataManager_ = new LevelDataManager();
+	//levelDataManager_->Load("Resources/LevelData/TL1Test.json");
 
 
 }
@@ -61,17 +57,11 @@ void SampleScene::Update(GameManager* gameManager) {
 
 #endif
 
-	levelDataManager_->Update();
+	//levelDataManager_->Update();
 
-	Matrix4x4 localMatrix = model_->GetAnimationLocalMatrix();
-	worldTransform_.Update(localMatrix);
+	worldTransform_.Update();
 	camera_.Update();
 
-
-	animationTime_ += 1.0f/60.0f;
-	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
-	ApplyAnimation(skeleton_, animation, animationTime_);
-	SkeletonUpdate(skeleton_);
 
 #ifdef _DEBUG
 	ImGui::Begin("Model");
@@ -88,7 +78,7 @@ void SampleScene::Update(GameManager* gameManager) {
 /// </summary>
 void SampleScene::Draw() {
 
-	levelDataManager_->Draw(camera_);
+	//levelDataManager_->Draw(camera_);
 
 	//AnimationManagerを作った方が良いかも引数を増やすの嫌だ。
 	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);

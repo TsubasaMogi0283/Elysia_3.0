@@ -36,11 +36,6 @@ public:
 
 
 	/// <summary>
-	/// 生成し配置する
-	/// </summary>
-	void Configure();
-
-	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update();

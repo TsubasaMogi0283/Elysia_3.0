@@ -31,6 +31,8 @@ private:
 	//モデルデータの読み込み
 	static ModelData LoadFile(const std::string& directoryPath, const std::string& fileName);
 
+	//モデルデータの読み込み(レベルデータ用)
+	static ModelData LoadFileFotLeveldata(const std::string& fileNameFolder, const std::string& fileName);
 
 public:
 
@@ -56,6 +58,13 @@ public:
 	/// <returns></returns>
 	static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName,bool isAnimationLoad);
 
+	/// <summary>
+	/// レベルデータ用のモデルデータの読み込み(ハンドルを登録する)
+	/// </summary>
+	/// <param name="directoryPath"></param>
+	/// <param name="fileName">フォルダとファイル名は統一させるように</param>
+	/// <returns></returns>
+	static uint32_t LoadModelFileForLevelData(const std::string& directoryPath, const std::string& fileName);
 
 
 
@@ -88,6 +97,11 @@ private:
 		//ファイル名など
 		std::string directoryPath;
 		std::string filePath;
+
+		//レベルデータ用
+		std::string folderName;
+
+
 	};
 
 	//数の限界があるのでarrayがいいかな

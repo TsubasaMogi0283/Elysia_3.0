@@ -44,6 +44,9 @@ public:
 	static Model* Create(uint32_t modelHandle);
 
 
+	//LevelData用
+	static Model* CreateForLevelData(uint32_t modelHandle);
+
 private:
 #pragma region モデルの読み込み関係の関数
 	

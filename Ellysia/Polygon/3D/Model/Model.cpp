@@ -84,6 +84,77 @@ Model* Model::Create(uint32_t modelHandle) {
 
 }
 
+Model* Model::CreateForLevelData(uint32_t modelHandle){
+	//新たなModel型のインスタンスのメモリを確保
+	Model* model = new Model();
+
+
+	PipelineManager::GetInstance()->SetModelBlendMode(1);
+	PipelineManager::GetInstance()->GenerateModelPSO();
+
+
+
+	////マテリアル用のリソースを作る。
+	model->materialResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Material)).Get();
+
+	//テクスチャの読み込み
+	model->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).material.textureFilePath);
+	//Drawでも使いたいので取り入れる
+	model->modelHandle_ = modelHandle;
+
+	//頂点リソースを作る
+	model->vertices_ = ModelManager::GetInstance()->GetModelData(modelHandle).vertices;
+
+
+	model->vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size());
+
+	//読み込みのところでバッファインデックスを作った方がよさそう
+	//リソースの先頭のアドレスから使う
+	model->vertexBufferView_.BufferLocation = model->vertexResource_->GetGPUVirtualAddress();
+	//使用するリソースは頂点のサイズ
+	model->vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * model->vertices_.size());
+	//１頂点あたりのサイズ
+	model->vertexBufferView_.StrideInBytes = sizeof(VertexData);
+
+
+	//Lighting
+	model->directionalLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(DirectionalLight)).Get();
+
+
+	//カメラ
+	model->cameraResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraForGPU)).Get();
+
+
+	//PointLight
+	model->pointLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(PointLight)).Get();
+	model->pointLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
+	model->pointLightData_.position = { 0.0f,0.0f,0.0f };
+	model->pointLightData_.intensity = 4.0f;
+	model->pointLightData_.radius = 5.0f;
+	model->pointLightData_.decay = 5.0f;
+
+
+	//SpotLight
+	model->spotLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SpotLight)).Get();
+	model->spotLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
+	model->spotLightData_.position = { 2.0f,1.25f,0.0f };
+	model->spotLightData_.intensity = 4.0f;
+	model->spotLightData_.direction = { -1.0f,1.0f,0.0f };
+	model->spotLightData_.distance = 7.0f;
+	model->spotLightData_.decay = 2.0f;
+	model->spotLightData_.cosFallowoffStart = 0.3f;
+	model->spotLightData_.cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
+
+	//初期は白色
+	//モデル個別に色を変更できるようにこれは外に出しておく
+	model->materialColor_ = { 1.0f,1.0f,1.0f,1.0f };
+
+
+
+	return model;
+
+}
+
 
 
 //描画
