@@ -133,6 +133,11 @@ public:
 	//CopyImage用
 	static void GenarateFullScreenPSO();
 
+	//OutLine用
+	static void GenarateOutLinePSO();
+
+
+
 private:
 
 	struct PSOInformation {
@@ -155,6 +160,8 @@ private:
 	PSOInformation particle3DPSO_ = {};
 	//CopyImage用
 	PSOInformation fullScreenPSO_ = {};
+	//CopyImage用
+	PSOInformation outLinePSO_ = {};
 
 
 	//スプライト用

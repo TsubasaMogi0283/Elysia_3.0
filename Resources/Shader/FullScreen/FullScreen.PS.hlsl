@@ -28,7 +28,9 @@ struct EffectSelection{
     int isBoxFilter5x5;
 
 	//GaussianFilter
-	//BoxFilterよりこっちの方良い感じらしい
+    //セパレートが出来るとBoxFilterよりこっちの方良い感じらしい
+    //計算する回数が断然違う！！
+    //それに綺麗にぼかすことが出来る
     int isGaussianFilter3x3;
     int isGaussianFilter5x5;
 
@@ -74,6 +76,8 @@ float gauss(float x, float y, float sigma){
     float exponent = -(x * x + y * y) * rcp(2.0f * sigma * sigma);
     float denominator = 2.0f * PI * sigma * sigma;
     //exp...ネイピア数eを求める関数
+    //精度が高く高速なので使うべき
+    //C++でもあるよ！
     return exp(exponent) * rcp(denominator);
     
 }

@@ -169,6 +169,9 @@
     <Filter Include="Ellysia\Resource File\FullScreen">
       <UniqueIdentifier>{948c1c8c-4060-41f9-bd03-0d5cbfb08e8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Resource File\LuminanceBasedOutline">
+      <UniqueIdentifier>{5cbcd479-b00c-4daf-81d2-865fc4f71c65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -282,6 +285,9 @@
     <ClCompile Include="Ellysia\RtvManager\RtvManager.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
+    <ClCompile Include="Project\OutLine\OutLine.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -307,6 +313,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\FullScreen\FullScreen.VS.hlsl">
       <Filter>Ellysia\Resource File\FullScreen</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.PS.hlsl">
+      <Filter>Ellysia\Resource File\LuminanceBasedOutline</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.VS.hlsl">
+      <Filter>Ellysia\Resource File\LuminanceBasedOutline</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -493,6 +505,9 @@
     <ClInclude Include="Ellysia\RtvManager\RtvManager.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
+    <ClInclude Include="Project\OutLine\OutLine.h">
+      <Filter>Project</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">
@@ -524,6 +539,9 @@
     </None>
     <None Include="Resources\Shader\FullScreen\Kernel.hlsli">
       <Filter>Ellysia\Resource File\FullScreen</Filter>
+    </None>
+    <None Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.hlsli">
+      <Filter>Ellysia\Resource File\LuminanceBasedOutline</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
