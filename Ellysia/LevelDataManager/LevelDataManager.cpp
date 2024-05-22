@@ -63,12 +63,13 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 
 }
 
-void LevelDataManager::Load(std::string filePath){
+void LevelDataManager::Load(const std::string& directoryPath, const std::string& fileName){
 
 	//ファイルストリーム
 	std::ifstream file;
 
 	//ファイルを開く
+	std::string filePath = directoryPath + "/" + fileName ;
 	file.open(filePath);
 
 	if (file.fail()) {
@@ -106,12 +107,10 @@ void LevelDataManager::Load(std::string filePath){
 		//first,secondとあるからmapかも
 		decltype(models_)::iterator it = models_.find(objectData.fileName);
 
-		//"Resources/LevelData/TL1Test.json"
 		//まだ読み込みがされていない場合読み込む
 		if (it == models_.end()) {
 			Model* model = nullptr;
-			//uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/LevelData/Sphere", "Sphere.obj");
-			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData("Resources/LevelData",objectData.fileName);
+			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(directoryPath,objectData.fileName);
 			model=Model::Create(modelHandle);
 			models_[objectData.fileName] = model;
 		}

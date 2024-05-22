@@ -37,7 +37,6 @@ const D3D12_RESOURCE_DESC TextureManager::GetResourceDesc(uint32_t textureHandle
 
 //初期化
 void TextureManager::Initilalize() {
-	//this->directXSetup_ = DirectXSetup::GetInstance();
 	//COMの初期化
 	//COM...ComponentObjectModel、Microsoftの提唱する設計技術の１つ
 	//		DirectX12も簡略化されたCOM(Nano-COM)という設計で作られている
@@ -114,6 +113,59 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 
 
 	return textureIndex;
+}
+
+uint32_t TextureManager::LoadTextureForLevelData(const std::string& filePath){
+	//一度読み込んだものはその値を返す
+	//新規は勿論読み込みをする
+	for (int i = 0; i < TEXTURE_MAX_AMOUNT_; i++) {
+		//同じテクスチャがあった場合そのテクスチャハンドルを返す
+		const std::string filePathTest = filePath;
+		if (TextureManager::GetInstance()->textureInformation_[i].name_ == filePathTest) {
+			return TextureManager::GetInstance()->textureInformation_[i].handle_;
+		}
+	}
+
+
+
+	//読み込むたびにインデックスが増やし重複を防ごう
+	//同じ画像しか貼れなかったのはこれが原因
+	textureIndex = SrvManager::GetInstance()->Allocate();
+
+
+
+	//読み込んだデータを配列に保存
+	//テクスチャの名前
+	TextureManager::GetInstance()->textureInformation_[textureIndex].name_ = filePath;
+	//テクスチャハンドル
+	TextureManager::GetInstance()->textureInformation_[textureIndex].handle_ = textureIndex;
+
+	//Textureを読んで転送する
+	mipImages_[textureIndex] = LoadTextureData(filePath);
+
+	const DirectX::TexMetadata& metadata = mipImages_[textureIndex].GetMetadata();
+
+	TextureManager::GetInstance()->textureInformation_[textureIndex].resource_ = CreateTextureResource(metadata);
+	UploadTextureData(TextureManager::GetInstance()->textureInformation_[textureIndex].resource_.Get(), mipImages_[textureIndex]);
+
+
+
+	//SRVの確保
+	//0番目はImGuiが使っているからダメなのでその次から
+	TextureManager::GetInstance()->textureInformation_[textureIndex].handle_ = textureIndex;
+
+	//SRVの生成
+	SrvManager::GetInstance()->CreateSRVForTexture2D(
+		TextureManager::GetInstance()->textureInformation_[textureIndex].handle_,
+		TextureManager::GetInstance()->textureInformation_[textureIndex].resource_.Get(),
+		metadata.format, UINT(metadata.mipLevels));
+
+
+	return textureIndex;
+
+
+
+	
 }
 	
 

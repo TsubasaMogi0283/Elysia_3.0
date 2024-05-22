@@ -29,10 +29,11 @@ private:
 public:
 
 	/// <summary>
-	/// 読み込み
+	/// Leveldataの読み込み
 	/// </summary>
-	/// <param name="filePath"></param>
-	void Load(std::string filePath);
+	/// <param name="directoryPath">ResourcesのLevelData</param>
+	/// <param name="fileName">jsonファイル</param>
+	void Load(const std::string& directoryPath, const std::string& fileName);
 
 
 	/// <summary>

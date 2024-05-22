@@ -23,7 +23,7 @@ void SampleScene::Initialize() {
 	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\LevelData\Sphere\Sphere.obj"
 
 
-	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/LevelData/Sphere", "Sphere.obj");
+	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/LevelData/LevelData1/Sphere" , "Sphere.obj");
 
 
 	model_.reset(Model::Create(modelHandle));
@@ -32,8 +32,8 @@ void SampleScene::Initialize() {
 	camera_.Initialize();
 	camera_.translate_.z = -30.0f;
 	
-	//levelDataManager_ = new LevelDataManager();
-	//levelDataManager_->Load("Resources/LevelData/TL1Test.json");
+	levelDataManager_ = new LevelDataManager();
+	levelDataManager_->Load("Resources/LevelData/LevelData1","TL1Test.json");
 
 
 }
@@ -57,7 +57,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 #endif
 
-	//levelDataManager_->Update();
+	levelDataManager_->Update();
 
 	worldTransform_.Update();
 	camera_.Update();
@@ -78,11 +78,11 @@ void SampleScene::Update(GameManager* gameManager) {
 /// </summary>
 void SampleScene::Draw() {
 
-	//levelDataManager_->Draw(camera_);
+	levelDataManager_->Draw(camera_);
 
 	//AnimationManagerを作った方が良いかも引数を増やすの嫌だ。
 	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
-	model_->Draw(worldTransform_, camera_, animation);
+	//model_->Draw(worldTransform_, camera_, animation);
 }
 
 

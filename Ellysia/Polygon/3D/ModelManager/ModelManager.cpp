@@ -107,24 +107,19 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 }
 
 ModelData ModelManager::LoadFileFotLeveldata(const std::string& fileNameFolder, const std::string& fileName){
-	//1.中で必要となる変数の宣言
 	ModelData modelData;
 
 
-	//assimpでobjを読む
-	//assimpを利用してしてobjファイルを読んでいく
+	//assimpを利用してしてオブジェクトファイルを読んでいく
 	Assimp::Importer importer;
 	std::string filePath = fileNameFolder + "/" + fileName + "/" + fileName + ".obj";
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
 	//メッシュがないのは対応しない
+	//後読み込みが出来なかったらここで止まる
 	assert(scene->HasMeshes());
 
 
-	//3.実際にファイルを読み、ModelDataを構築していく
-
-	//getline...streamから1行読んでstringに格納する
-	//istringstream...文字列を分解しながら読むためのクラス、空白を区切りとして読む
-	//objファイルの先頭にはその行の意味を示す識別子(identifier/id)が置かれているので、最初にこの識別子を読み込む
+	//ファイルを読み、ModelDataを構築していく
 
 
 	//Meshを解析
@@ -172,8 +167,10 @@ ModelData ModelManager::LoadFileFotLeveldata(const std::string& fileNameFolder, 
 		aiMaterial* material = scene->mMaterials[materialIndex];
 		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
 			aiString textureFilePath;
+			//画像ファイルのパスを保存
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-			modelData.material.textureFilePath = fileNameFolder + "/"  + fileNameFolder +" / " + textureFilePath.C_Str();
+			modelData.material.textureFilePath = fileNameFolder + "/"  + fileName +"/"+  textureFilePath.C_Str();
+		
 		}
 	}
 
