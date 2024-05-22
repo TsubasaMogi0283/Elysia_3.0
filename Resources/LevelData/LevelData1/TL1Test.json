@@ -3,17 +3,17 @@
     "objects": [
         {
             "type": "MESH",
-            "name": "Sphere",
+            "name": "Cube",
             "transform": {
                 "translation": [
                     0.0,
-                    4.605559825897217,
-                    2.9078798294067383
+                    0.0,
+                    0.0
                 ],
                 "rotation": [
-                    90.00000762939453,
+                    0.0,
                     -0.0,
-                    179.99998474121094
+                    0.0
                 ],
                 "scaling": [
                     1.0,
@@ -21,32 +21,19 @@
                     1.0
                 ]
             },
-            "file_name": "Sphere",
-            "collider": {
-                "type": "BOX",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    2.0,
-                    2.0,
-                    2.0
-                ]
-            }
+            "file_name": "Test"
         },
         {
             "type": "MESH",
             "name": "TD2_Enemy",
             "transform": {
                 "translation": [
-                    -4.683586120605469,
                     0.0,
+                    4.645164489746094,
                     0.0
                 ],
                 "rotation": [
-                    90.00000762939453,
+                    0.0,
                     -0.0,
                     0.0
                 ],
@@ -55,7 +42,8 @@
                     1.0,
                     1.0
                 ]
-            }
+            },
+            "file_name": "TD2_Enemy"
         }
     ]
 }
