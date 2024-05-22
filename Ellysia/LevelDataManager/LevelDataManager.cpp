@@ -162,7 +162,13 @@ void LevelDataManager::Draw(Camera& camera){
 
 
 LevelDataManager::~LevelDataManager(){
-	models_.clear();
-	worldTransforms_.clear();
+
+	//モデルのコンテナ
+	models_;
+
+	for (WorldTransform* object : worldTransforms_) {
+		delete object;
+	}
+
 	delete levelData;
 }
