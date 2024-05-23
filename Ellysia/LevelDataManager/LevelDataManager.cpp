@@ -16,7 +16,7 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 		std::string type = object["type"].get<std::string>();
 
 		//種類ごとの処理
-			//MESHの場合
+		//MESHの場合
 		if (type.compare("MESH") == 0) {
 			//要素追加
 			//emplace_backというとvectorだね！
