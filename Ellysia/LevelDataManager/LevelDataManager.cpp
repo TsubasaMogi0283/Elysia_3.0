@@ -165,7 +165,7 @@ void LevelDataManager::Draw(Camera& camera){
 LevelDataManager::~LevelDataManager(){
 
 	for (auto& pair : models_) {
-		delete pair.second;  // pair.second is the Model* pointer
+		delete pair.second;
 	}
 	models_.clear();
 
