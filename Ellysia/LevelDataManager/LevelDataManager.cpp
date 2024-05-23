@@ -164,12 +164,15 @@ void LevelDataManager::Draw(Camera& camera){
 
 LevelDataManager::~LevelDataManager(){
 
-	//モデルのコンテナ
-	models_;
+	for (auto& pair : models_) {
+		delete pair.second;  // pair.second is the Model* pointer
+	}
+	models_.clear();
 
 	for (WorldTransform* object : worldTransforms_) {
 		delete object;
 	}
+	worldTransforms_.clear();
 
 	delete levelData;
 }
