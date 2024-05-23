@@ -125,7 +125,7 @@ public:
 	static void GenerateSpritePSO();
 
 	//モデル用
-	static void GenerateModelPSO(bool isSkinning);
+	static void GenerateModelPSO(int32_t isSkinning);
 
 	//Skinning
 	static void GenerateSkinningPSO();

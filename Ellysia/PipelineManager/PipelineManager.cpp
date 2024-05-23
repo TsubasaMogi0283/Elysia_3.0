@@ -536,11 +536,11 @@ void PipelineManager::GenerateSpritePSO() {
 }
 
 //モデル用
-void PipelineManager::GenerateModelPSO(bool isSkinning) {
+void PipelineManager::GenerateModelPSO(int32_t isSkinning) {
 	
 	
 	//Skinningする場合
-	if (isSkinning == true) {
+	if (isSkinning == 1) {
 	
 
 		//PSO
@@ -1048,31 +1048,6 @@ void PipelineManager::GenerateModelPSO(bool isSkinning) {
 		//Skinningするかどうか
 
 
-
-
-
-		D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing[1] = {};
-		//0から始まる
-		descriptorRangeForInstancing[0].BaseShaderRegister = 0;
-		//数は一つ
-		descriptorRangeForInstancing[0].NumDescriptors = 1;
-		//SRVを使う
-		descriptorRangeForInstancing[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-		descriptorRangeForInstancing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-
-
-		//今回はDescriptorTableを使う
-		//Instancing
-		rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		//VertwxShaderで使う
-		rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		//register...Shader上のResource配置情報
-		rootParameters[8].Descriptor.ShaderRegister = 0;
-		//Tableの中身の配列を指定
-		rootParameters[8].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing;
-		//Tableで利用する数
-		rootParameters[8].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing);
 
 
 		//ルートパラメータ配列へのポイント

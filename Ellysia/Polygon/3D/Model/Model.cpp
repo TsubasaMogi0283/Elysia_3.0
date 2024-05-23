@@ -21,7 +21,7 @@ Model* Model::Create(uint32_t modelHandle) {
 	//Skinningするかどうか
 	model->skinningResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkinningEnable)).Get();
 	model->skinningResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->skinningData_));
-	model->isSkinning_.isSkinning = true;
+	model->isSkinning_.isSkinning = false;
 	model->skinningResource_->Unmap(0, nullptr);
 
 	PipelineManager::GetInstance()->GenerateModelPSO(model->isSkinning_.isSkinning);
@@ -264,7 +264,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& sk
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するとのこと
-
+	skinCluster;
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
@@ -426,8 +426,11 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& sk
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
 
 	//Skinningするかどうか
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(8, spotLightResource_->GetGPUVirtualAddress());
+	if (isSkinning_.isSkinning == 1) {
+		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(8, skinningResource_->GetGPUVirtualAddress());
 
+	}
+	
 
 	//DrawCall
 	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
