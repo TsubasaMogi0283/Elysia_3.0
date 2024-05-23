@@ -555,7 +555,7 @@ void PipelineManager::GenerateModelPSO(int32_t isSkinning) {
 		//今回は結果一つだけなので長さ１の配列
 		
 		//VSでもCBufferを利用することになったので設定を追加
-		D3D12_ROOT_PARAMETER rootParameters[8] = {};
+		D3D12_ROOT_PARAMETER rootParameters[9] = {};
 		//CBVを使う
 		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		////PixelShaderで使う
@@ -644,31 +644,40 @@ void PipelineManager::GenerateModelPSO(int32_t isSkinning) {
 		rootParameters[7].Descriptor.ShaderRegister = 4;
 		
 
+		//SpotLight
+		rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		//PixelShaderで使う
+		rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		//レジスタ番号2を使う
+		rootParameters[8].Descriptor.ShaderRegister = 2;
 
 
 
-		D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing[1] = {};
-		//0から始まる
-		descriptorRangeForInstancing[0].BaseShaderRegister = 0;
-		//数は一つ
-		descriptorRangeForInstancing[0].NumDescriptors = 1;
-		//SRVを使う
-		descriptorRangeForInstancing[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-		descriptorRangeForInstancing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 
 
-		//今回はDescriptorTableを使う
-		//Instancingを参考にして
-		rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		//VertwxShaderで使う
-		rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		//register...Shader上のResource配置情報
-		rootParameters[2].Descriptor.ShaderRegister = 0;
-		//Tableの中身の配列を指定
-		rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing;
-		//Tableで利用する数
-		rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing);
+		//D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing[1] = {};
+		////0から始まる
+		//descriptorRangeForInstancing[0].BaseShaderRegister = 0;
+		////数は一つ
+		//descriptorRangeForInstancing[0].NumDescriptors = 1;
+		////SRVを使う
+		//descriptorRangeForInstancing[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		//descriptorRangeForInstancing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+
+
+		////今回はDescriptorTableを使う
+		////Instancingを参考にして
+		//rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		////VertwxShaderで使う
+		//rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		////register...Shader上のResource配置情報
+		//rootParameters[2].Descriptor.ShaderRegister = 0;
+		////Tableの中身の配列を指定
+		//rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing;
+		////Tableで利用する数
+		//rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing);
 
 
 
@@ -713,7 +722,6 @@ void PipelineManager::GenerateModelPSO(int32_t isSkinning) {
 		}
 		
 		//バイナリを元に生成
-		//ID3D12RootSignature* rootSignature_ = nullptr;
 		hr = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferPointer(),
 			PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->modelPSO_.rootSignature_));
 		assert(SUCCEEDED(hr));

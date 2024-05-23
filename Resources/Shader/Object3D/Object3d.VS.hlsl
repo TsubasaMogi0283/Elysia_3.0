@@ -51,7 +51,7 @@ struct Skinned
 //CBuffer
 ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b0);
 ConstantBuffer<Camera> gCamera : register(b1);
-//ConstantBuffer<SkinningEnable> skinningEnable : register(b2);
+ConstantBuffer<SkinningEnable> skinningEnable : register(b2);
 StructuredBuffer<Well> gMatrixPalette : register(t0);
 
 Skinned Skinning(VertexShaderInput input)
@@ -81,7 +81,7 @@ Skinned Skinning(VertexShaderInput input)
 VertexShaderOutput main(VertexShaderInput input) {
 	VertexShaderOutput output;
 	
-    
+    int test=skinningEnable.isSkinning;
     
     
     //SkinnAnimation用    

@@ -21,7 +21,7 @@ Model* Model::Create(uint32_t modelHandle) {
 	//Skinningするかどうか
 	model->skinningResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkinningEnable)).Get();
 	model->skinningResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->skinningData_));
-	model->isSkinning_.isSkinning = false;
+	model->isSkinning_.isSkinning = 1;
 	model->skinningResource_->Unmap(0, nullptr);
 
 	PipelineManager::GetInstance()->GenerateModelPSO(model->isSkinning_.isSkinning);
