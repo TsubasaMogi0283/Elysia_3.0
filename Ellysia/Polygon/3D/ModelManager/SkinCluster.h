@@ -18,7 +18,7 @@ struct SkinCluster {
 	void Create(const Skeleton& skeleton, const ModelData& modelData);
 
 	//SkinClusterの更新
-	void Update();
+	void Update(const Skeleton& skeleton);
 
 	
 	//SkinClusterStruct skinClusterStruct_ = {};

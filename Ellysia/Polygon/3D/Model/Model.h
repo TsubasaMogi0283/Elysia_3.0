@@ -54,14 +54,12 @@ private:
 
 public:
 
-	void Update(Skeleton &skeleton);
-
 	//描画
 	void Draw(WorldTransform& worldTransform, Camera& camera);
 
 
 	//アニメーション付きの描画
-	void Draw(WorldTransform& worldTransform, Camera& camera, Animation& animation);
+	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster);
 
 
 	//デストラクタ
@@ -181,6 +179,9 @@ private:
 		float shininess;
 	};
 
+	struct SkinningEnable {
+		int32_t isSkinning;
+	};
 
 private:
 	//頂点リソースを作る
@@ -234,7 +235,10 @@ private:
 	ComPtr<ID3D12Resource> cameraResource_ = nullptr;
 	CameraForGPU* cameraForGPU_ = {};
 
-
+	//Skinningするかどうか
+	ComPtr<ID3D12Resource> skinningResource_ = nullptr;
+	SkinningEnable* skinningData_ = {};
+	SkinningEnable isSkinning_ = {};
 
 	//アニメーションを再生するときに使う時間
 	float animationTime_ = 0.0f;
@@ -253,7 +257,7 @@ private:
 	//デフォルトはα加算
 	int32_t blendModeNumber_ = 1;
 
-	bool isSkinning_ = false;
+
 	bool isAnimation_ = false;
 
 

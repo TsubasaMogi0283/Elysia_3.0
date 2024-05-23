@@ -19,11 +19,6 @@ struct Camera{
 };
 
 
-
-
-
-
-
 struct VertexShaderInput
 {
     float4 position : POSITION0;
@@ -42,27 +37,16 @@ struct Well
 
 
 
-
-
-
-
-
 struct Skinned
 {
     float32_t4 position;
     float32_t3 normal;
 };
 
-
-
-
 //CBuffer
 ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b0);
 ConstantBuffer<Camera> gCamera : register(b1);
 StructuredBuffer<Well> gMatrixPalette : register(t0);
-
-
-
 
 Skinned Skinning(VertexShaderInput input)
 {
@@ -87,8 +71,6 @@ Skinned Skinning(VertexShaderInput input)
     
     return skinned;
 }
-
-
 
 VertexShaderOutput main(VertexShaderInput input) {
 	VertexShaderOutput output;

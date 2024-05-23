@@ -18,8 +18,13 @@ Model* Model::Create(uint32_t modelHandle) {
 
 	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
 	PipelineManager::GetInstance()->SetModelBlendMode(1);
-	model->isSkinning_ = false;
-	PipelineManager::GetInstance()->GenerateModelPSO(model->isSkinning_);
+	//Skinningするかどうか
+	model->skinningResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkinningEnable)).Get();
+	model->skinningResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->skinningData_));
+	model->isSkinning_.isSkinning = true;
+	model->skinningResource_->Unmap(0, nullptr);
+
+	PipelineManager::GetInstance()->GenerateModelPSO(model->isSkinning_.isSkinning);
 
 
 	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい
@@ -87,31 +92,17 @@ Model* Model::Create(uint32_t modelHandle) {
 	model->spotLightData_.cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
 
 
-
-
-	//model->skinCluster_ = std::make_unique<SkinCluster>();
-	//model->skinCluster_->CreateSkinClusher()
-
-
-
-
-
-
 	
+
+
+
+
+
 	return model;
 
 }
 
 
-
-void Model::Update(Skeleton& skeleton){
-	skeleton;
-
-
-
-
-
-}
 
 //描画
 void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
@@ -206,6 +197,16 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 
 
 
+
+#pragma region Skinning
+
+
+#pragma endregion
+
+
+
+
+
 	//コマンドを積む
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetModelRootSignature().Get());
@@ -250,8 +251,6 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 	//SpotLight
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
 
-
-
 	
 
 	//DrawCall
@@ -261,7 +260,7 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 
 
 
-void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& animation){
+void Model::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster){
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するとのこと
@@ -275,11 +274,14 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 
 #pragma endregion
 
+#pragma region Index描画
 
 	uint32_t* mappedIndex = nullptr;
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
 	indexResource_->Unmap(0, nullptr);
+
+#pragma endregion
 
 
 #pragma region マテリアル
@@ -354,9 +356,8 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 #pragma endregion
 
 #pragma region アニメーション用
-	animation;
+	//animation;
 	//Animation& animation_ = animation;
-	//animation_.nodeAnimations.erase("Armature");
 	////時刻を進める
 	////計測した時間を使って可変フレーム対応した方が良い
 	//animationTime_ += 1.0f / 60.0f;
@@ -424,12 +425,11 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation& anim
 	//SpotLight
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
 
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetSkinningRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetModelGraphicsPipelineState().Get());
+	//Skinningするかどうか
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(8, spotLightResource_->GetGPUVirtualAddress());
 
 
 	//DrawCall
-	//DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 
 }
