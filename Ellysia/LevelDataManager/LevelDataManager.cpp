@@ -29,6 +29,10 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 				objectData.fileName = object["file_name"];
 			}
 
+			
+
+
+
 			//トランスフォームのパラメータ読み込み
 			nlohmann::json& transform = object["transform"];
 			//平行移動
@@ -53,6 +57,24 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 			objectData.scaling.x = (float)transform["scaling"][1];
 			objectData.scaling.y = (float)transform["scaling"][2];
 			objectData.scaling.z = (float)transform["scaling"][0];
+
+
+
+			//コライダーの読み込み
+			
+
+			nlohmann::json& collider = object["collider"];
+
+			objectData.colliderType = object["type"];
+			//中心座標
+			objectData.center.x = (float)collider["center"][1];
+			objectData.center.y = (float)collider["center"][2];
+			objectData.center.z = -(float)collider["center"][0];
+			//サイズ
+			objectData.size.x = (float)collider["size"][1];
+			objectData.size.y = (float)collider["size"][2];
+			objectData.size.z = (float)collider["size"][0];
+
 
 			if (object.contains("children")) {
 				RecursiveLoad(object["children"]);

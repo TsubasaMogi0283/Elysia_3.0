@@ -60,12 +60,17 @@ private:
 			Vector3 rotation;
 			Vector3 scaling;
 
+			//コライダー
+			std::string colliderType;
+			Vector3 center;
+			Vector3 size;
 		};
+
 
 		//オブジェクト
 		std::vector<ObjectData> objects;
 
-
+		
 
 		//ファイルパス
 		std::string filePath;
