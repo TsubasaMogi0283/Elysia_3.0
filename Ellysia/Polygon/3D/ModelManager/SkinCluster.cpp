@@ -51,6 +51,7 @@ void  SkinCluster::Create(const Skeleton& skeleton, const ModelData& modelData){
     influenceBufferView_.SizeInBytes = UINT(sizeof(VertexInfluence) * modelData.vertices.size());
     influenceBufferView_.StrideInBytes = sizeof(VertexInfluence);
 
+    influenceResource_->Unmap(0, nullptr);
     //InfluenceBindPoseMatrixの保存領域を作成
     inverseBindPoseMatrices.resize(skeleton_.joints_.size());
     //最後の所は「関数ポインタ」

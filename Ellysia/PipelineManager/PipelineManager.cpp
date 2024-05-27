@@ -537,7 +537,7 @@ void PipelineManager::GenerateSpritePSO() {
 
 //モデル用
 void PipelineManager::GenerateModelPSO(int32_t isSkinning) {
-	
+	//アニメーションする用としない用で分けた方が良い気がしてきた
 	
 	//Skinningする場合
 	if (isSkinning == 1) {
@@ -555,7 +555,7 @@ void PipelineManager::GenerateModelPSO(int32_t isSkinning) {
 		//今回は結果一つだけなので長さ１の配列
 		
 		//VSでもCBufferを利用することになったので設定を追加
-		D3D12_ROOT_PARAMETER rootParameters[9] = {};
+		D3D12_ROOT_PARAMETER rootParameters[10] = {};
 		//CBVを使う
 		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		////PixelShaderで使う
@@ -643,7 +643,7 @@ void PipelineManager::GenerateModelPSO(int32_t isSkinning) {
 		//レジスタ番号2を使う
 		rootParameters[7].Descriptor.ShaderRegister = 4;
 		
-
+		//いらない気がしてきた
 		//Skinningするかどうか
 		rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		//PixelShaderで使う
@@ -656,32 +656,28 @@ void PipelineManager::GenerateModelPSO(int32_t isSkinning) {
 
 
 
-		//D3D12_DESCRIPTOR_RANGE descriptorRangeForWell[1] = {};
-		////0から始まる
-		//descriptorRangeForWell[0].BaseShaderRegister = 0;
-		////数は一つ
-		//descriptorRangeForWell[0].NumDescriptors = 1;
-		////SRVを使う
-		//descriptorRangeForWell[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-		//descriptorRangeForWell[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-		//
-		//
-		////Well用
-		////今回はDescriptorTableを使う
-		////Instancingを参考にして
-		//rootParameters[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		////VertwxShaderで使う
-		//rootParameters[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		////register...Shader上のResource配置情報(t0)
-		//rootParameters[9].Descriptor.ShaderRegister = 0;
-		////Tableの中身の配列を指定
-		//rootParameters[9].DescriptorTable.pDescriptorRanges = descriptorRangeForWell;
-		////Tableで利用する数
-		//rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForWell);
-
-
-
-
+		D3D12_DESCRIPTOR_RANGE descriptorRangeForWell[1] = {};
+		//0から始まる
+		descriptorRangeForWell[0].BaseShaderRegister = 0;
+		//数は一つ
+		descriptorRangeForWell[0].NumDescriptors = 1;
+		//SRVを使う
+		descriptorRangeForWell[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		descriptorRangeForWell[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+		
+		
+		//Well用
+		//今回はDescriptorTableを使う
+		//Instancingを参考にして
+		rootParameters[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		//VertwxShaderで使う
+		rootParameters[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		//register...Shader上のResource配置情報(t0)
+		rootParameters[9].Descriptor.ShaderRegister = 0;
+		//Tableの中身の配列を指定
+		rootParameters[9].DescriptorTable.pDescriptorRanges = descriptorRangeForWell;
+		//Tableで利用する数
+		rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForWell);
 
 
 

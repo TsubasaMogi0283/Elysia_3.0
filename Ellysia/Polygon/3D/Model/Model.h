@@ -189,8 +189,8 @@ private:
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
-	//std::vector<VertexData> vertices_{};
 
+	//インデックス
 	ComPtr<ID3D12Resource> indexResource_ = nullptr;
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 

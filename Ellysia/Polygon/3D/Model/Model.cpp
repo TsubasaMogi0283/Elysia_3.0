@@ -261,10 +261,13 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 
 
 void Model::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster){
+	
+	skinCluster;
+	
+
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するとのこと
-	skinCluster;
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
@@ -387,8 +390,17 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& sk
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetModelRootSignature().Get());
 	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetModelGraphicsPipelineState().Get());
 
+
+	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+		//VertexDataのVBV
+		vertexBufferView_,
+
+		//InfluenceのVBV
+		skinCluster.influenceBufferView_
+	};
+
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
 	//IBVを設定
 	DirectXSetup::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
@@ -427,11 +439,12 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& sk
 	//Skinningするかどうか
 	if (isSkinning_.isSkinning == 1) {
 		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(8, skinningResource_->GetGPUVirtualAddress());
-		//Influence
-		//DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(8, skinningResource_->GetGPUVirtualAddress());
-		//paletteSrvHandle
-		//DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(8, skinningResource_->GetGPUVirtualAddress());
+		
 
+		//paletteSrvHandle
+		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(9, skinCluster.paletteSrvHandle_.second);
+		
+		
 
 	}
 	
