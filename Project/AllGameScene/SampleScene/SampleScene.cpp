@@ -96,7 +96,7 @@ void SampleScene::Update(GameManager* gameManager) {
 void SampleScene::Draw() {
 	//AnimationManagerを作った方が良いかも引数を増やすの嫌だ。
 	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
-	model_->Draw(worldTransform_, camera_);
+	model_->Draw(worldTransform_, camera_, skinCluster_);
 }
 
 

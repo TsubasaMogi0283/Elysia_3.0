@@ -37,9 +37,9 @@ struct DirectionalLight {
 
 struct PointLight{
 	//ライトの色
-    float32_t4 color;
+    float4 color;
 	//ライトの位置
-    float32_t3 position;
+    float3 position;
 	//ライトの輝度
     float intensity;
 	
@@ -53,20 +53,20 @@ struct PointLight{
 
 //カメラの位置を送る
 struct Camera{
-    float32_t3 worldPosition;
+    float3 worldPosition;
 };
 
 //
 struct SpotLight{
 	//ライトの色
-    float32_t4 color;
+    float4 color;
 	//ライトの位置
-    float32_t3 position;
+    float3 position;
 	//輝度
     float intensity;
 
 	//スポットライトの方向
-    float32_t3 direction;
+    float3 direction;
 	//ライトの届く最大距離
     float distance;
 	//減衰率
@@ -83,7 +83,7 @@ struct SpotLight{
 ////ConstantBuffer<構造体>変数名:register(b0);
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
-Texture2D<float32_t4> gTexture : register(t0);
+Texture2D<float4> gTexture : register(t0);
 SamplerState gSampler : register(s0);
 ConstantBuffer<Camera> gCamera : register(b2);
 ConstantBuffer<PointLight> gPointLight : register(b3);
@@ -98,7 +98,7 @@ ConstantBuffer<SpotLight> gSpotLight : register(b4);
 //Excelみたいだね()
 
 struct PixelShaderOutput {
-	float32_t4 color : SV_TARGET0;
+	float4 color : SV_TARGET0;
 };
 
 

@@ -644,7 +644,7 @@ void PipelineManager::GenerateModelPSO(int32_t isSkinning) {
 		rootParameters[7].Descriptor.ShaderRegister = 4;
 		
 
-		//SpotLight
+		//Skinningするかどうか
 		rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		//PixelShaderで使う
 		rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
@@ -656,28 +656,28 @@ void PipelineManager::GenerateModelPSO(int32_t isSkinning) {
 
 
 
-		//D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing[1] = {};
+		//D3D12_DESCRIPTOR_RANGE descriptorRangeForWell[1] = {};
 		////0から始まる
-		//descriptorRangeForInstancing[0].BaseShaderRegister = 0;
+		//descriptorRangeForWell[0].BaseShaderRegister = 0;
 		////数は一つ
-		//descriptorRangeForInstancing[0].NumDescriptors = 1;
+		//descriptorRangeForWell[0].NumDescriptors = 1;
 		////SRVを使う
-		//descriptorRangeForInstancing[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-		//descriptorRangeForInstancing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-
-
+		//descriptorRangeForWell[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		//descriptorRangeForWell[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+		//
+		//
+		////Well用
 		////今回はDescriptorTableを使う
 		////Instancingを参考にして
-		//rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		//rootParameters[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 		////VertwxShaderで使う
-		//rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		////register...Shader上のResource配置情報
-		//rootParameters[2].Descriptor.ShaderRegister = 0;
+		//rootParameters[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		////register...Shader上のResource配置情報(t0)
+		//rootParameters[9].Descriptor.ShaderRegister = 0;
 		////Tableの中身の配列を指定
-		//rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing;
+		//rootParameters[9].DescriptorTable.pDescriptorRanges = descriptorRangeForWell;
 		////Tableで利用する数
-		//rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing);
+		//rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForWell);
 
 
 

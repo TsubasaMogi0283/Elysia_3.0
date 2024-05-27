@@ -283,7 +283,6 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& sk
 
 #pragma endregion
 
-
 #pragma region マテリアル
 	////書き込むためのアドレスを取得
 	////reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
@@ -428,6 +427,11 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& sk
 	//Skinningするかどうか
 	if (isSkinning_.isSkinning == 1) {
 		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(8, skinningResource_->GetGPUVirtualAddress());
+		//Influence
+		//DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(8, skinningResource_->GetGPUVirtualAddress());
+		//paletteSrvHandle
+		//DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(8, skinningResource_->GetGPUVirtualAddress());
+
 
 	}
 	

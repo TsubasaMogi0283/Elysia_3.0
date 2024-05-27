@@ -28,8 +28,7 @@ struct VertexShaderInput
     int4 index : INDEX0;
 };
 
-struct SkinningEnable
-{
+struct SkinningEnable{
     int isSkinning;
 };
 
@@ -81,39 +80,39 @@ Skinned Skinning(VertexShaderInput input)
 VertexShaderOutput main(VertexShaderInput input) {
 	VertexShaderOutput output;
 	
-    int test=skinningEnable.isSkinning;
-    
+   int test=skinningEnable.isSkinning;
+   // Skinned skinned = Skinning(input);
     
     //SkinnAnimation用    
     //if (skinningEnable.isSkinning == 1){
-    //    //Skinninの計算を行って、Skinning語の頂点情報を手に入れる
-    //    //ここでの頂点もSkeletonSpace
-    //    Skinned skinned = Skinning(input);
-    //    
-    //    
-    //    float32_t4x4 world = gTransformationMatrix.world;
-    //    float32_t4x4 viewProjection = mul(gCamera.viewMatrix_, gCamera.projectionMatrix_);
-	//    
-    //    float32_t4x4 wvp = mul(world, viewProjection);
-	//    
-	//    //mul...組み込み関数
-    //    output.position = mul(skinned.position, wvp);
-    //    output.texcoord = input.texcoord;
-	//    //法線の変換にはWorldMatrixの平衡移動は不要。拡縮回転情報が必要
-	//    //左上3x3だけを取り出す
-	//    //法線と言えば正規化をなのでそれを忘れないようにする
-    //    output.normal = normalize(mul(skinned.normal, (float32_t3x3) gTransformationMatrix.worldInverseTranspose));
-	//    
-	//    //CameraWorldPosition
-    //    output.worldPosition = mul(skinned.position, gTransformationMatrix.world).xyz;
-    //    return output;
+        //Skinninの計算を行って、Skinning語の頂点情報を手に入れる
+        //ここでの頂点もSkeletonSpace
+        //Skinned skinned = Skinning(input);
+        
+        
+        //float32_t4x4 world = gTransformationMatrix.world;
+        //float32_t4x4 viewProjection = mul(gCamera.viewMatrix_, gCamera.projectionMatrix_);
+	    //
+        //float32_t4x4 wvp = mul(world, viewProjection);
+	    //
+	    ////mul...組み込み関数
+        //output.position = mul(skinned.position, wvp);
+        //output.texcoord = input.texcoord;
+	    ////法線の変換にはWorldMatrixの平衡移動は不要。拡縮回転情報が必要
+	    ////左上3x3だけを取り出す
+	    ////法線と言えば正規化をなのでそれを忘れないようにする
+        //output.normal = normalize(mul(skinned.normal, (float32_t3x3) gTransformationMatrix.worldInverseTranspose));
+	    //
+	    ////CameraWorldPosition
+        //output.worldPosition = mul(skinned.position, gTransformationMatrix.world).xyz;
+        //return output;
     //}
     //else{
         float4x4 world = gTransformationMatrix.world;
         float4x4 viewProjection = mul(gCamera.viewMatrix_, gCamera.projectionMatrix_);
-	
+	    
         float4x4 wvp = mul(world, viewProjection);
-	
+	    
 	    //mul...組み込み関数
         output.position = mul(input.position, wvp);
         output.texcoord = input.texcoord;
@@ -121,7 +120,7 @@ VertexShaderOutput main(VertexShaderInput input) {
 	    //左上3x3だけを取り出す
 	    //法線と言えば正規化をなのでそれを忘れないようにする
         output.normal = normalize(mul(input.normal, (float3x3) gTransformationMatrix.worldInverseTranspose));
-	
+	    
 	    //CameraWorldPosition
         output.worldPosition = mul(input.position, gTransformationMatrix.world).xyz;
         return output;
