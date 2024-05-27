@@ -51,6 +51,12 @@ public:
 
 
 private:
+	enum Coodinate {
+		X,
+		Y,
+		Z,
+	};
+
 	struct LevelData {
 		struct ObjectData {
 			//ファイル名

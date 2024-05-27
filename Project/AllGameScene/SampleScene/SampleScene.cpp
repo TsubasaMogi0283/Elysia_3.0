@@ -23,12 +23,13 @@ void SampleScene::Initialize() {
 	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\LevelData\Sphere\Sphere.obj"
 
 
-	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/LevelData/LevelData1/Sphere" , "Sphere.obj");
+	modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/LevelData/LevelData1/Test" , "Test.obj");
 
 
 	model_.reset(Model::Create(modelHandle));
 	
 	worldTransform_.Initialize();
+	worldTransform_.translate_.x = 10.0f;
 	camera_.Initialize();
 	camera_.translate_.z = -30.0f;
 	
@@ -52,7 +53,7 @@ void SampleScene::Update(GameManager* gameManager) {
 #ifdef _DEBUG
 	ImGui::Begin("Camera");
 	ImGui::SliderFloat3("Rotatet", &camera_.rotate_.x, -3.0f, 3.0f);
-	ImGui::SliderFloat3("Translate", &camera_.translate_.x, -100.0f, 10.0f);
+	ImGui::SliderFloat3("Translate", &camera_.translate_.x, -100.0f, 100.0f);
 	ImGui::End();
 
 #endif
@@ -82,7 +83,7 @@ void SampleScene::Draw() {
 
 	//AnimationManagerを作った方が良いかも引数を増やすの嫌だ。
 	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
-	//model_->Draw(worldTransform_, camera_, animation);
+	model_->Draw(worldTransform_, camera_);
 }
 
 

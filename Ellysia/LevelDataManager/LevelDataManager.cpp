@@ -46,17 +46,17 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 			//回転
 			//進行方向に向かって...
 			//     左回り		右回り
-			objectData.translation.x = (float)transform["translation"][1];
-			objectData.translation.y = (float)transform["translation"][2];
-			objectData.translation.z = -(float)transform["translation"][0];
+			objectData.translation.x = (float)transform["translation"][Y];
+			objectData.translation.y = (float)transform["translation"][Z];
+			objectData.translation.z = -(float)transform["translation"][X];
 			//回転角
-			objectData.rotation.x = -(float)transform["rotation"][1];
-			objectData.rotation.y = -(float)transform["rotation"][2];
-			objectData.rotation.z = (float)transform["rotation"][0];
+			objectData.rotation.x = -(float)transform["rotation"][Y];
+			objectData.rotation.y = -(float)transform["rotation"][Z];
+			objectData.rotation.z = (float)transform["rotation"][X];
 			//スケーリング
-			objectData.scaling.x = (float)transform["scaling"][1];
-			objectData.scaling.y = (float)transform["scaling"][2];
-			objectData.scaling.z = (float)transform["scaling"][0];
+			objectData.scaling.x = (float)transform["scaling"][Y];
+			objectData.scaling.y = (float)transform["scaling"][Z];
+			objectData.scaling.z = (float)transform["scaling"][X];
 
 
 
