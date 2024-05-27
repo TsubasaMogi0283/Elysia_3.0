@@ -22,8 +22,9 @@ void SampleScene::Initialize() {
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
 	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.obj",false);
-	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.gltf",false);
-	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", false);
+	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.gltf",false);
+	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", true);
+	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/simpleSkin", "simpleSkin.gltf", true);
 
 
 	//後々AnimationManagerを作ってここで読み込みたい
@@ -42,7 +43,7 @@ void SampleScene::Initialize() {
 	worldTransform_.Initialize(true, localMatrix);
 	camera_.Initialize();
 
-	//worldTransform_.rotate_.y = 3.1415f;
+	worldTransform_.rotate_.y = 3.1415f;
 }
 
 
@@ -68,6 +69,9 @@ void SampleScene::Update(GameManager* gameManager) {
 	ApplyAnimation(skeleton_, animation, animationTime_);
 
 
+
+
+
 	//現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
 	//読み込むのは最初だけで良いと気づいた
 	//SkeletonUpdate(skeleton_);
@@ -81,6 +85,7 @@ void SampleScene::Update(GameManager* gameManager) {
 #ifdef _DEBUG
 	ImGui::Begin("Model");
 	ImGui::SliderFloat3("Translate", &worldTransform_.rotate_.x, -30.0f, 30.0f);
+	ImGui::InputFloat("AnimationTime", &animationTime_);
 	ImGui::End();
 
 #endif

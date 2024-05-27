@@ -92,7 +92,7 @@ Vector3 CalculationValue(const std::vector<KeyFrameVector3>& keyFrames, float ti
         }
     }
 
-    //ここまで来た場合は一番後ろの時刻よりも後ろなので最後の値を返す琴にする
+    //ここまで来た場合は一番後ろの時刻よりも後ろなので最後の値を返すことにする
     return (*keyFrames.rbegin()).value;
 
 }
