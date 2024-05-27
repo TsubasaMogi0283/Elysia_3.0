@@ -36,18 +36,30 @@ public:
 
 
 private:
+	Camera camera_ = {};
 
-	float cutOff_ = 1.0f;
-
+	//SimpleSkin
 	std::unique_ptr<Model> model_ = nullptr;
 	uint32_t modelHandle = 0;
 	WorldTransform worldTransform_ = {};
-	Camera camera_ = {};
-
+	
 	Skeleton skeleton_ = {};
 	float animationTime_ = 0;
-
 	SkinCluster skinCluster_ = {};
+
+
+
+
+	//歩き
+	std::unique_ptr<Model> human_ = nullptr;
+	uint32_t humanModelHandle = 0;
+	WorldTransform humanWorldTransform_ = {};
+
+	Skeleton humanSkeleton_ = {};
+	float HumanAnimationTime_ = 0;
+	SkinCluster HumanSkinCluster_ = {};
+
+
 
 	const char* GroupName = "Player";
 };

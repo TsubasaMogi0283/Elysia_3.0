@@ -40,7 +40,28 @@ void SampleScene::Initialize() {
 	
 	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
 
-	worldTransform_.Initialize(true, localMatrix);
+	worldTransform_.Initialize();
+
+
+
+
+
+
+
+	
+	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", true);
+	human_.reset(Model::Create(humanModelHandle));
+	humanWorldTransform_.Initialize();
+	humanWorldTransform_.translate_.x = 2.0f;
+
+	humanSkeleton_.Create(ModelManager::GetInstance()->GetModelData(humanModelHandle).rootNode);
+	HumanAnimationTime_ = 0;
+	HumanSkinCluster_.Create(humanSkeleton_, ModelManager::GetInstance()->GetModelData(humanModelHandle));
+
+
+
+
+
 	camera_.Initialize();
 
 	worldTransform_.rotate_.y = 3.1415f;
@@ -58,13 +79,17 @@ void SampleScene::Update(GameManager* gameManager) {
 	gameManager;
 
 	
-
-	Matrix4x4 localMatrix = model_->GetAnimationLocalMatrix();
 	worldTransform_.Update();
 	camera_.Update();
 
 
 	animationTime_ += 1.0f/60.0f;
+	HumanAnimationTime_ += 1.0f / 60.0f;
+	if (animationTime_ > 10.0f && HumanAnimationTime_>10.0f) {
+		animationTime_ = 0.0f;
+		HumanAnimationTime_ = 0.0f;
+	}
+
 	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	ApplyAnimation(skeleton_, animation, animationTime_);
 
@@ -85,7 +110,7 @@ void SampleScene::Update(GameManager* gameManager) {
 #ifdef _DEBUG
 	ImGui::Begin("Model");
 	ImGui::SliderFloat3("Translate", &worldTransform_.rotate_.x, -30.0f, 30.0f);
-	ImGui::InputFloat("AnimationTime", &animationTime_);
+	ImGui::SliderFloat("AnimationTime", &animationTime_,0.0f,10.0f);
 	ImGui::End();
 
 #endif
@@ -102,6 +127,12 @@ void SampleScene::Draw() {
 	//AnimationManagerを作った方が良いかも引数を増やすの嫌だ。
 	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	model_->Draw(worldTransform_, camera_, skinCluster_);
+
+	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", true);
+	human_->Draw(humanWorldTransform_,camera_,)
+
+
+
 }
 
 
