@@ -128,8 +128,8 @@ void SampleScene::Draw() {
 	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	model_->Draw(worldTransform_, camera_, skinCluster_);
 
-	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", true);
-	human_->Draw(humanWorldTransform_,camera_,)
+
+	human_->Draw(humanWorldTransform_, camera_, HumanSkinCluster_);
 
 
 
