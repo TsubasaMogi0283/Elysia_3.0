@@ -38,7 +38,7 @@ void SampleScene::Initialize() {
 	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	model_.reset(Model::Create(modelHandle));
 	
-	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
+	//Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
 
 	worldTransform_.Initialize();
 
@@ -55,8 +55,8 @@ void SampleScene::Initialize() {
 	humanWorldTransform_.translate_.x = 2.0f;
 
 	humanSkeleton_.Create(ModelManager::GetInstance()->GetModelData(humanModelHandle).rootNode);
-	HumanAnimationTime_ = 0;
-	HumanSkinCluster_.Create(humanSkeleton_, ModelManager::GetInstance()->GetModelData(humanModelHandle));
+	humanAnimationTime_ = 0;
+	humanSkinCluster_.Create(humanSkeleton_, ModelManager::GetInstance()->GetModelData(humanModelHandle));
 
 
 
@@ -80,19 +80,25 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	
 	worldTransform_.Update();
+	humanWorldTransform_.Update();
 	camera_.Update();
 
 
 	animationTime_ += 1.0f/60.0f;
-	HumanAnimationTime_ += 1.0f / 60.0f;
-	if (animationTime_ > 10.0f && HumanAnimationTime_>10.0f) {
+	humanAnimationTime_ += 1.0f / 60.0f;
+	if (animationTime_ > 7.0f) {
 		animationTime_ = 0.0f;
-		HumanAnimationTime_ = 0.0f;
+		
+	}
+	if (humanAnimationTime_ > 2.0f) {
+		humanAnimationTime_ = 0.0f;
 	}
 
 	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	ApplyAnimation(skeleton_, animation, animationTime_);
 
+	Animation humanAnimation = ModelManager::GetInstance()->GetModelAnimation(humanModelHandle);
+	ApplyAnimation(humanSkeleton_, humanAnimation, humanAnimationTime_);
 
 
 
@@ -101,16 +107,22 @@ void SampleScene::Update(GameManager* gameManager) {
 	//読み込むのは最初だけで良いと気づいた
 	//SkeletonUpdate(skeleton_);
 	skeleton_.Update();
-
+	humanSkeleton_.Update();
 	//SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
 	
 	skinCluster_.Update(skeleton_);
-
+	humanSkinCluster_.Update(humanSkeleton_);
 
 #ifdef _DEBUG
 	ImGui::Begin("Model");
 	ImGui::SliderFloat3("Translate", &worldTransform_.rotate_.x, -30.0f, 30.0f);
 	ImGui::SliderFloat("AnimationTime", &animationTime_,0.0f,10.0f);
+	ImGui::End();
+
+
+	ImGui::Begin("Camera");
+	ImGui::SliderFloat3("Translate", &camera_.translate_.x, -100.0f, 100.0f);
+	ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
 	ImGui::End();
 
 #endif
@@ -129,7 +141,7 @@ void SampleScene::Draw() {
 	model_->Draw(worldTransform_, camera_, skinCluster_);
 
 
-	human_->Draw(humanWorldTransform_, camera_, HumanSkinCluster_);
+	human_->Draw(humanWorldTransform_, camera_, humanSkinCluster_);
 
 
 

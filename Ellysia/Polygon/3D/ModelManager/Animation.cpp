@@ -133,6 +133,7 @@ void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animat
             joint.transform.rotate = CalculationValue(rootNodeAnimation.rotate.keyFrames, animationTime);
             joint.transform.scale = CalculationValue(rootNodeAnimation.scale.keyFrames, animationTime);
         }
+
     }
 }
 

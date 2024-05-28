@@ -14,7 +14,7 @@ void  SkinCluster::Create(const Skeleton& skeleton, const ModelData& modelData){
     WellForGPU* mappedPalette = nullptr;
     paletteResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
     //spanを使ってアクセスするようにする
-    mappedPalette_ = { mappedPalette,skeleton.joints_.size() };
+    mappedPalette_ = { mappedPalette,skeleton_.joints_.size() };
     srvIndex_ = SrvManager::GetInstance()->Allocate();
     paletteSrvHandle_.first = SrvManager::GetInstance()->GetCPUDescriptorHandle(srvIndex_);
     paletteSrvHandle_.second = SrvManager::GetInstance()->GetGPUDescriptorHandle(srvIndex_);

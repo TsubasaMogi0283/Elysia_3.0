@@ -56,8 +56,8 @@ private:
 	WorldTransform humanWorldTransform_ = {};
 
 	Skeleton humanSkeleton_ = {};
-	float HumanAnimationTime_ = 0;
-	SkinCluster HumanSkinCluster_ = {};
+	float humanAnimationTime_ = 0;
+	SkinCluster humanSkinCluster_ = {};
 
 
 
