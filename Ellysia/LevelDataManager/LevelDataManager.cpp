@@ -5,6 +5,7 @@
 
 #include "ModelManager.h"
 #include "Camera.h"
+#include <numbers>
 
 void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 	//"objects"の全オブジェクトを走査
@@ -49,10 +50,13 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 			objectData.translation.x = (float)transform["translation"][Y];
 			objectData.translation.y = (float)transform["translation"][Z];
 			objectData.translation.z = -(float)transform["translation"][X];
+			const float DEREES_TO_RADIUS_ = (float)std::numbers::pi / 180.0f;
 			//回転角
-			objectData.rotation.x = -(float)transform["rotation"][Y];
-			objectData.rotation.y = -(float)transform["rotation"][Z];
-			objectData.rotation.z = (float)transform["rotation"][X];
+			//そういえばBlenderは度数法だったね
+			//エンジンでは弧度法に直そう
+			objectData.rotation.x = -(float)transform["rotation"][Y]*DEREES_TO_RADIUS_;
+			objectData.rotation.y = -(float)transform["rotation"][Z]*DEREES_TO_RADIUS_;
+			objectData.rotation.z = (float)transform["rotation"][X]* DEREES_TO_RADIUS_;
 			//スケーリング
 			objectData.scaling.x = (float)transform["scaling"][Y];
 			objectData.scaling.y = (float)transform["scaling"][Z];
