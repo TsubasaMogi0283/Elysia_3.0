@@ -39,7 +39,7 @@ private:
 	Camera camera_ = {};
 
 	//SimpleSkin
-	std::unique_ptr<Model> model_ = nullptr;
+	std::unique_ptr<Model> simpleModel_ = nullptr;
 	uint32_t modelHandle = 0;
 	WorldTransform worldTransform_ = {};
 	

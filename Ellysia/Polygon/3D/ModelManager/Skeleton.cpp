@@ -4,7 +4,7 @@
 void Skeleton::Create(const Node& rootNode){
     root_ = CreateJoint(rootNode, {}, joints_);
 
-    //名前とINdexのマッピングを行いアクセスしやすくする。
+    //名前とIndexのマッピングを行いアクセスしやすくする。
     for (const Joint& joint : joints_) {
         //emplace...push_backみたいなもの。新しく挿入する。
         jointMap_.emplace(joint.name, joint.index);
@@ -15,8 +15,13 @@ void Skeleton::Create(const Node& rootNode){
 void Skeleton::Update(){
     //全てのJointを更新。親が若いので通常ループで処理可能になっている。
     for (Joint& joint : joints_) {
-        Vector3 newRotate = { joint.transform.rotate.x,joint.transform.rotate.y,joint.transform.rotate.z };
-        joint.localMatrix = MakeAffineMatrix(joint.transform.scale, newRotate, joint.transform.translate);
+
+        Matrix4x4 scaleMatrix = MakeScaleMatrix(joint.transform.scale);
+        Matrix4x4 rotateMatrix = MakeRotateMatrix(joint.transform.rotate);
+        Matrix4x4 translateMatrix = MakeTranslateMatrix(joint.transform.translate);
+        
+
+        joint.localMatrix = Multiply(scaleMatrix,Multiply(rotateMatrix, translateMatrix));
 
         //親がいれば親の行列を掛ける
         if (joint.parent) {
