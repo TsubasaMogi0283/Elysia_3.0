@@ -77,8 +77,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	gameManager;
 
 	
-	worldTransform_.Update();
-	humanWorldTransform_.Update();
+	
 	camera_.Update();
 
 
@@ -124,6 +123,9 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::End();
 
 #endif
+
+	worldTransform_.Update();
+	humanWorldTransform_.Update();
 	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
 		AdjustmentItems::GetInstance()->SaveFile(GroupName);
 	}
