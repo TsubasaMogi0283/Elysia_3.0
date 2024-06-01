@@ -18,7 +18,7 @@ void OutLine::Initialize(){
 
 	//Texture
 	textureHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(DirectXSetup::GetInstance()->GetRenderTextureResource().Get(), textureHandle_);
+	//SrvManager::GetInstance()->CreateSRVForRenderTexture(DirectXSetup::GetInstance()->GetRenderTextureResource().Get(), textureHandle_);
 
 	
 
@@ -34,7 +34,7 @@ void OutLine::PreDraw(){
 	// Noneにしておく
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	// バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = DirectXSetup::GetInstance()->GetRenderTextureResource().Get();
+	//barrier.Transition.pResource = DirectXSetup::GetInstance()->GetRenderTextureResource().Get();
 	// 遷移前(現在)のResourceState
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	// 遷移後のResourceState
@@ -44,11 +44,11 @@ void OutLine::PreDraw(){
 
 	
 	const float RENDER_TARGET_CLEAR_VALUE[] = { 1.0f,0.0f,0.0f,1.0f };
-	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
-		1, &DirectXSetup::GetInstance()->GetRtvHandle(2), false, &DirectXSetup::GetInstance()->GetDsvHandle());
+	//DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
+	//	1, &DirectXSetup::GetInstance()->GetRtvHandle(2), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
-	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
-		DirectXSetup::GetInstance()->GetRtvHandle(2), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+	//DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
+	//	DirectXSetup::GetInstance()->GetRtvHandle(2), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(
@@ -132,7 +132,7 @@ void OutLine::PostDraw(){
 	
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = DirectXSetup::GetInstance()->GetRenderTextureResource().Get();
+	//barrier.Transition.pResource = DirectXSetup::GetInstance()->GetRenderTextureResource().Get();
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);

@@ -5,6 +5,7 @@
 #include <Input.h>
 #include <TextureManager.h>
 #include "SrvManager/SrvManager.h"
+#include "RtvManager.h"
 #include <Audio.h>
 #include <AdjustmentItems.h>
 
@@ -32,6 +33,9 @@ void Ellysia::Initialize(){
 	
 	//SRV初期化
 	SrvManager::GetInstance()->Initialize();
+
+	//RTVの初期化
+	RtvManager::GetInstance()->Initialize();
 
 	///DirectX
 	DirectXSetup::GetInstance()->SecondInitialize();

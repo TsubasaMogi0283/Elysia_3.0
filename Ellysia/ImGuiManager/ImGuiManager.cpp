@@ -2,6 +2,7 @@
 #include "WindowsSetup.h"
 #include "DirectXSetup.h"
 #include "SrvManager.h"
+#include "RtvManager.h"
 
 //コンストラクタ
 ImGuiManager::ImGuiManager() {
@@ -29,7 +30,7 @@ void ImGuiManager::Initialize() {
 	ImGui_ImplDX12_Init(
 		DirectXSetup::GetInstance()->GetDevice().Get(),
 		DirectXSetup::GetInstance()->GetSwapChain().swapChainDesc.BufferCount,
-		DirectXSetup::GetInstance()->GetRtvDesc().Format,
+		RtvManager::GetInstance()->GetRtvDesc().Format,
 		SrvManager::GetInstance()->GetSrvDescriptorHeap().Get(),
 		SrvManager::GetInstance()->GetSrvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart(),
 		SrvManager::GetInstance()->GetSrvDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());

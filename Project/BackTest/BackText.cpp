@@ -3,6 +3,7 @@
 #include "TextureManager.h"
 #include <SrvManager.h>
 #include "imgui.h"
+#include <RtvManager.h>
 
 void BackText::Initialize(){
 
@@ -29,7 +30,7 @@ void BackText::Initialize(){
 
 	//Texture
 	textureHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(DirectXSetup::GetInstance()->GetRenderTextureResource().Get(), textureHandle_);
+	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetRenderTextureResource().Get(), textureHandle_);
 
 	
 
@@ -45,7 +46,7 @@ void BackText::PreDraw(){
 	// Noneにしておく
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	// バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = DirectXSetup::GetInstance()->GetRenderTextureResource().Get();
+	barrier.Transition.pResource = RtvManager::GetInstance()->GetRenderTextureResource().Get();
 	// 遷移前(現在)のResourceState
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	// 遷移後のResourceState
@@ -56,10 +57,10 @@ void BackText::PreDraw(){
 	
 	const float RENDER_TARGET_CLEAR_VALUE[] = { 1.0f,0.0f,0.0f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
-		1, &DirectXSetup::GetInstance()->GetRtvHandle(2), false, &DirectXSetup::GetInstance()->GetDsvHandle());
+		1, &RtvManager::GetInstance()->GetRtvHandle(2), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
-		DirectXSetup::GetInstance()->GetRtvHandle(2), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+		RtvManager::GetInstance()->GetRtvHandle(2), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(
@@ -189,7 +190,7 @@ void BackText::PostDraw(){
 	
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = DirectXSetup::GetInstance()->GetRenderTextureResource().Get();
+	barrier.Transition.pResource = RtvManager::GetInstance()->GetRenderTextureResource().Get();
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);

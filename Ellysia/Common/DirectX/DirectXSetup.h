@@ -84,8 +84,7 @@ private:
 	//						Textureの中でも特に例外的な扱いが必要となっている
 	static ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(const int32_t width,const int32_t height);
 
-	static ComPtr<ID3D12Resource> CreateRenderTextureResource(uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4 clearColor);
-
+	
 #pragma region 初期化について
 	//初期化へ
 
@@ -177,33 +176,25 @@ public:
 		return DirectXSetup::GetInstance()->m_commandList_;
 	}
 	
-	ComPtr<ID3D12DescriptorHeap> GetRtvDescriptorHeap() {
-		return  m_rtvDescriptorHeap_;
-	}
+	
 	ComPtr<ID3D12DescriptorHeap> GetDsvDescriptorHeap() {
 		return  m_dsvDescriptorHeap_;
 	}
 
-	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc() {
-		return rtvDesc_;
-	}
+	
 	
 	SwapChain GetSwapChain() {
 		return DirectXSetup::GetInstance()->swapChain;
 	}
 
 
-	ComPtr<ID3D12Resource> GetRenderTextureResource() {
-		return renderTextureResource;
-	}
+	
 
 	D3D12_CPU_DESCRIPTOR_HANDLE& GetDsvHandle() {
 		return dsvHandle_;
 	}
 
-	D3D12_CPU_DESCRIPTOR_HANDLE& GetRtvHandle(uint32_t number) {
-		return rtvHandles_[number];
-	}
+	
 #pragma endregion
 
 
@@ -227,9 +218,7 @@ private:
 	UINT backBufferIndex_;
 
 
-	//ディスクリプタ
-	const uint32_t RTV_DESCRIPTOR_SIZE_ = 3;
-	ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap_ = nullptr;
+	
 	ComPtr<ID3D12DescriptorHeap> m_dsvDescriptorHeap_ = nullptr;
 
 	ComPtr<ID3D12Resource> m_depthStencilResource_ = nullptr;
@@ -238,11 +227,7 @@ private:
 	SwapChain swapChain = {};
 	D3D12_RESOURCE_BARRIER barrier_{};
 
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{};
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_;
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[3] = {};
-	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc_{};
-
+	
 	
 
 
@@ -259,8 +244,7 @@ private:
 	D3D12_VIEWPORT viewport_{};
 	D3D12_RECT scissorRect_{};
 
-	ComPtr<ID3D12Resource> renderTextureResource =nullptr;
-
+	
 
 
 	//FPS

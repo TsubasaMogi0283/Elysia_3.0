@@ -1,8 +1,11 @@
 #include "DirectXSetup.h"
 #include <thread>
+#include <d3dx12.h>
+
+
 #include <PipelineManager.h>
 #include <SrvManager.h>
-#include <d3dx12.h>
+#include "RtvManager.h"
 
 //インスタンス
 DirectXSetup* DirectXSetup::GetInstance() {
@@ -118,62 +121,6 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateDepthStencilTextureResource(const int
 
 	return resource;
 
-}
-
-ComPtr<ID3D12Resource> DirectXSetup::CreateRenderTextureResource(
-	uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4 clearColor){
-
-	D3D12_RESOURCE_DESC resourceDesc{};
-	//Textureの幅
-	resourceDesc.Width = width;
-	//Textureの高さ
-	resourceDesc.Height = height;
-	//mipmapの数
-	resourceDesc.MipLevels = 1;
-	//奥行 or 配列Textureの配列数
-	resourceDesc.DepthOrArraySize = 1;
-	//利用可能なフォーマット
-	resourceDesc.Format = format;
-	//サンプリングカウント。1固定
-	resourceDesc.SampleDesc.Count = 1;
-	//2次元
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	//RenderTargetとして利用可能にする
-	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-
-	//resourceDescとclearValueにあるFormatはしっかり統一させてね
-
-
-	//利用するHeapの設定
-	D3D12_HEAP_PROPERTIES heapProperties{};
-	//VRAM上に作る
-	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
-
-
-
-
-	//クリア設定
-	D3D12_CLEAR_VALUE clearValue{};
-	clearValue.Format = format;
-	clearValue.Color[0] = clearColor.x;
-	clearValue.Color[1] = clearColor.y;
-	clearValue.Color[2] = clearColor.z;
-	clearValue.Color[3] = clearColor.w;
-
-
-	//Resourceの作成
-	ComPtr<ID3D12Resource> resource = nullptr;
-	HRESULT hr = DirectXSetup::GetInstance()->m_device_->CreateCommittedResource(
-		&heapProperties,					//Heapの設定 
-		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定。特になし。
-		&resourceDesc,						//Resourceの設定
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,	//これから描画することを前提としたTextureなのでRenderTargetとして使うことから始める
-		&clearValue,						//Clear最適値。ClearRenderTargetをこの色でClearするようにする。最適化されているので高速！
-		IID_PPV_ARGS(&resource));			//作成するResourceポインタへのポインタ
-	assert(SUCCEEDED(hr));
-
-
-	return resource;
 }
 
 
@@ -396,13 +343,7 @@ void DirectXSetup::GenerateSwapChain() {
 void DirectXSetup::MakeDescriptorHeap() {
 	
 	
-	//復習
-	//Resourceに対して作業を行うにはViewが必要
-	//Viewは作業方法
-	//作った関数をここで使う
-	DirectXSetup::GetInstance()->m_rtvDescriptorHeap_ = GenarateDescriptorHeap(
-		D3D12_DESCRIPTOR_HEAP_TYPE_RTV, DirectXSetup::GetInstance()->RTV_DESCRIPTOR_SIZE_, false);
-
+	
 
 
 
@@ -452,26 +393,26 @@ void DirectXSetup::PullResourcesFromSwapChain() {
 
 void DirectXSetup::SetRTV() {
 	//RTVの設定
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	SwapChain swapChain = DirectXSetup::GetInstance()->swapChain;
-
-
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;				//出力結果をSRGBに変換して書き込む
-	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;			//2dテクスチャとして書き込む
-	//ディスクリプタの先頭を取得する
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
-	rtvStartHandle = DirectXSetup::GetInstance()->m_rtvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+	//D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+	//SwapChain swapChain = DirectXSetup::GetInstance()->swapChain;
+	//
+	//
+	//rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;				//出力結果をSRGBに変換して書き込む
+	//rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;			//2dテクスチャとして書き込む
+	////ディスクリプタの先頭を取得する
+	//D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
+	//rtvStartHandle = DirectXSetup::GetInstance()->m_rtvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 
 
 	//RTVを２つ作るのでディスクリプタを２つ用意
 	//PostEffectでもう一つ必要になったので3つに増やす
 	//まず1つ目を作る。１つ目は最初の所に作る。作る場所をこちらで指定してあげる必要がある
-	DirectXSetup::GetInstance()->rtvHandles_[0] = rtvStartHandle;
-	DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(DirectXSetup::GetInstance()->swapChain.m_pResource[0].Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[0]);
-	//２つ目のディスクリプタハンドルを得る(自力で)
-	DirectXSetup::GetInstance()->rtvHandles_[1].ptr = DirectXSetup::GetInstance()->rtvHandles_[0].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	//２つ目を作る
-	DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(DirectXSetup::GetInstance()->swapChain.m_pResource[1].Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[1]);
+	//DirectXSetup::GetInstance()->rtvHandles_[0] = rtvStartHandle;
+	//DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(DirectXSetup::GetInstance()->swapChain.m_pResource[0].Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[0]);
+	////２つ目のディスクリプタハンドルを得る(自力で)
+	//DirectXSetup::GetInstance()->rtvHandles_[1].ptr = DirectXSetup::GetInstance()->rtvHandles_[0].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	////２つ目を作る
+	//DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(DirectXSetup::GetInstance()->swapChain.m_pResource[1].Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[1]);
 
 
 	//上の2つはSwapChain用
@@ -479,20 +420,20 @@ void DirectXSetup::SetRTV() {
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = DirectXSetup::GetInstance()->m_dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 	DirectXSetup::GetInstance()->dsvHandle_ = dsvHandle;
 
-	//3つ目
-	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };//今回は赤
-	//縦横を取得
-	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
-	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
-
-	DirectXSetup::GetInstance()->renderTextureResource = CreateRenderTextureResource(
-		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
-
-
-	DirectXSetup::GetInstance()->rtvHandles_[2].ptr = DirectXSetup::GetInstance()->rtvHandles_[1].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-	DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(
-		DirectXSetup::GetInstance()->renderTextureResource.Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[2]);
+	////3つ目
+	//const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };//今回は赤
+	////縦横を取得
+	//uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
+	//uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
+	//
+	//DirectXSetup::GetInstance()->renderTextureResource = CreateRenderTextureResource(
+	//	width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+	//
+	//
+	//DirectXSetup::GetInstance()->rtvHandles_[2].ptr = DirectXSetup::GetInstance()->rtvHandles_[1].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	//
+	//DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(
+	//	DirectXSetup::GetInstance()->renderTextureResource.Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[2]);
 
 	//SrvManager::GetInstance()-> CreateSRVForRenderTexture(DirectXSetup::GetInstance()->renderTextureResource.Get());
 
@@ -515,8 +456,8 @@ void DirectXSetup::SetRTV() {
 	fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	assert(fenceEvent != nullptr);
 
-	DirectXSetup::GetInstance()->rtvDesc_ = rtvDesc;
-	DirectXSetup::GetInstance()->rtvStartHandle_=rtvStartHandle;
+	//DirectXSetup::GetInstance()->rtvDesc_ = rtvDesc;
+	//DirectXSetup::GetInstance()->rtvStartHandle_=rtvStartHandle;
 	DirectXSetup::GetInstance()->fenceValue_ = fenceValue;
 	DirectXSetup::GetInstance()->fenceEvent_ = fenceEvent;
 	DirectXSetup::GetInstance()->m_fence_ = fence;
@@ -734,10 +675,10 @@ void DirectXSetup::StartDraw() {
 
 	//描画先のRTVとDSVを設定する
 	//描画先のRTVを設定する
-	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, &DirectXSetup::GetInstance()->dsvHandle_);
+	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(1, &RtvManager::GetInstance()->GetRtvHandle(backBufferIndex_), false, &DirectXSetup::GetInstance()->dsvHandle_);
 	//指定した色で画面全体をクリアする
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色
-	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(rtvHandles_[backBufferIndex_], clearColor, 0, nullptr);
+	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(RtvManager::GetInstance()->GetRtvHandle(backBufferIndex_), clearColor, 0, nullptr);
 
 	DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);
 	DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
