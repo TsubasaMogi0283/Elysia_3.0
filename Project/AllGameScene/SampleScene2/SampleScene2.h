@@ -26,8 +26,14 @@ public:
 	/// 更新
 	void Update(GameManager* gameManager)override;
 
+	void PreDrawPostEffectFirst()override;
+	void PreDrawPostEffectSecond()override;
+
 	/// 描画
 	void DrawObject3D()override;
+
+
+	void DrawPostEffect()override;
 
 	/// <summary>
 	/// スプライトの描画

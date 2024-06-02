@@ -22,6 +22,11 @@ public:
 	void DrawObject3D();
 	void DrawSprite();
 
+	//PostEffect
+	void PreDrawPostEffectFirst();
+	void PreDrawPostEffectSecond();
+	void DrawPostEffect();
+	
 
 
 

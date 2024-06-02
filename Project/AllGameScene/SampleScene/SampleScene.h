@@ -22,19 +22,35 @@ public:
 	//コンストラクタ
 	SampleScene();
 
-	/// デストラクタ
-	~SampleScene();
-
+	
 	/// 初期化
 	void Initialize()override;
 
 	/// 更新
 	void Update(GameManager* gameManager)override;
 
-	/// 描画
+#pragma region 描画
+	/// <summary>
+	/// 3Dオブジェクト
+	/// </summary>
 	void DrawObject3D()override;
 
+
+	void PreDrawPostEffectFirst()override;
+	void PreDrawPostEffectSecond()override;
+	void DrawPostEffect()override;
+
+
+	/// <summary>
+	/// スプライト
+	/// </summary>
 	void DrawSprite()override;
+
+#pragma endregion
+	/// デストラクタ
+	~SampleScene();
+
+
 
 private:
 

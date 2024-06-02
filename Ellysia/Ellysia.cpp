@@ -59,8 +59,7 @@ void Ellysia::Initialize(){
 	gameManager_->Initialize();
 
 
-	back_ = new BackText();
-	back_->Initialize();
+	
 }
 
 
@@ -88,18 +87,18 @@ void Ellysia::Update(){
 
 void Ellysia::Draw(){
 	
-	back_->PreDraw();
 	
+	gameManager_->PreDrawPostEffectFirst();
 	////3Dオブジェクトの描画
 	gameManager_->DrawObject3D();
 	//
-	back_->PostDraw();
-	//OMSet
-	//Clear
-	//RSSV
-	//RSSR
+	gameManager_->PreDrawPostEffectSecond();
+
 	DirectXSetup::GetInstance()->StartDraw();
-	back_->Draw();
+	
+	gameManager_->DrawPostEffect();
+
+
 	//スプライトの描画
 	gameManager_->DrawSprite();
 
@@ -176,6 +175,6 @@ void Ellysia::Operate(){
 
 
 Ellysia::~Ellysia(){
-	delete back_;
+	
 	delete gameManager_;
 }

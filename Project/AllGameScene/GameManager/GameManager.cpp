@@ -26,6 +26,20 @@ void GameManager::DrawSprite(){
 	currentGamaScene_->DrawSprite();
 }
 
+void GameManager::PreDrawPostEffectFirst(){
+	currentGamaScene_->PreDrawPostEffectFirst();
+}
+
+void GameManager::PreDrawPostEffectSecond() {
+	currentGamaScene_->PreDrawPostEffectSecond();
+}
+
+void GameManager::DrawPostEffect(){
+	currentGamaScene_->DrawPostEffect();
+}
+
+
+
 
 
 void GameManager::ChangeScene(IGameScene* newGameScene) {

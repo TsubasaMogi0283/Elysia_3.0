@@ -48,6 +48,9 @@ void SampleScene::Initialize() {
 
 	
 	
+	back_ = new BackText();
+	back_->Initialize();
+
 }
 
 
@@ -105,11 +108,25 @@ void SampleScene::Update(GameManager* gameManager) {
 	
 }
 
+void SampleScene::PreDrawPostEffectFirst(){
+	back_->PreDraw();
+}
+
 /// <summary>
 /// 描画
 /// </summary>
 void SampleScene::DrawObject3D() {
 	model_->Draw(worldTransform_, camera_);
+}
+
+
+
+void SampleScene::PreDrawPostEffectSecond(){
+	back_->PostDraw();
+}
+
+void SampleScene::DrawPostEffect(){
+	back_->Draw();
 }
 
 void SampleScene::DrawSprite(){
@@ -123,5 +140,5 @@ void SampleScene::DrawSprite(){
 /// デストラクタ
 /// </summary>
 SampleScene::~SampleScene() {
-	
+	delete back_;
 }

@@ -31,4 +31,14 @@ public:
 	/// </summary>
 	virtual void DrawSprite() = 0;
 
+
+#pragma region PostEffect
+	virtual void PreDrawPostEffectFirst()=0;
+	virtual void PreDrawPostEffectSecond()=0;
+	virtual void DrawPostEffect() = 0;
+
+
+#pragma endregion
+
+
 };
