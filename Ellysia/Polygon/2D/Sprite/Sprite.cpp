@@ -43,7 +43,7 @@ void Sprite::CreateIndexBufferView() {
 
 
 //初期化
-void Sprite::Initialize(uint32_t textureHandle,Vector2 position) {
+void Sprite::Initialize(uint32_t textureHandle,Vector3 position) {
 	this->textureHandle_ = textureHandle;
 	this->position_ = position;
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
@@ -84,7 +84,7 @@ void Sprite::Initialize(uint32_t textureHandle,Vector2 position) {
 	
 }
 
-Sprite* Sprite::Create(uint32_t textureHandle,Vector2 position) {
+Sprite* Sprite::Create(uint32_t textureHandle,Vector3 position) {
 	Sprite* sprite = new Sprite();
 	
 	//初期化の所でやってね、Update,Drawでやるのが好ましいけど凄く重くなった。
@@ -210,7 +210,7 @@ void Sprite::Draw() {
 
 	//新しく引数作った方が良いかも
 	//3x3x3
-	Matrix4x4 worldMatrixSprite = MakeAffineMatrix({ scale_.x,scale_.y,1.0f }, { 0.0f,0.0f,rotate_ }, {position_.x,position_.y,0.0f});
+	Matrix4x4 worldMatrixSprite = MakeAffineMatrix({ scale_.x,scale_.y,1.0f }, { 0.0f,0.0f,rotate_ }, position_);
 	//遠視投影行列
 	Matrix4x4 viewMatrixSprite = MakeIdentity4x4();
 	

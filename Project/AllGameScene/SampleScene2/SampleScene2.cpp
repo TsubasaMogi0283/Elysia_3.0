@@ -41,6 +41,10 @@ void SampleScene2::PreDrawPostEffectSecond()
 {
 }
 
+void SampleScene2::DrawSpriteBack()
+{
+}
+
 void SampleScene2::DrawObject3D(){
 	
 }

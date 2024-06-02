@@ -451,15 +451,6 @@ void PipelineManager::GenerateSpritePSO() {
 
 		break;
 
-	case CountOfBlendMode:
-		//利用してはいけない,
-
-
-
-
-
-		break;
-
 
 	}
 
@@ -797,15 +788,6 @@ void PipelineManager::GenerateModelPSO() {
 		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
 		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
-
-
-
-
-
-		break;
-
-	case CountOfBlendMode:
-		//利用してはいけない,
 
 
 

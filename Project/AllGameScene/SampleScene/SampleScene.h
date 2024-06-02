@@ -30,6 +30,13 @@ public:
 	void Update(GameManager* gameManager)override;
 
 #pragma region 描画
+
+	/// <summary>
+	/// ポストエフェクト掛ける前のスプライト
+	/// </summary>
+	void DrawSpriteBack()override;
+
+
 	/// <summary>
 	/// 3Dオブジェクト
 	/// </summary>
@@ -66,8 +73,11 @@ private:
 	WorldTransform worldTransform_ = {};
 	Camera camera_ = {};
 
-	const char* GroupName = "Player";
+	std::unique_ptr<Sprite> sprite_ = nullptr;
 
+
+	const char* GroupName = "Player";
+	Vector3 position = {};
 
 	BackText* back_ = nullptr;
 };

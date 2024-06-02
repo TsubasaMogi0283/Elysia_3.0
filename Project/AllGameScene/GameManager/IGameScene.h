@@ -22,6 +22,11 @@ public:
 	virtual void Update(GameManager* gamaManager)=0;
 	
 	/// <summary>
+	/// 背景スプライト
+	/// </summary>
+	virtual void DrawSpriteBack() = 0;
+
+	/// <summary>
 	/// Object3Dの描画
 	/// </summary>
 	virtual void DrawObject3D()=0;

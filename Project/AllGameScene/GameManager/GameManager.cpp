@@ -18,6 +18,10 @@ void GameManager::Update() {
 	currentGamaScene_->Update(this);
 }
 
+void GameManager::DrawSpriteBack(){
+	currentGamaScene_->DrawSpriteBack();
+}
+
 void GameManager::DrawObject3D() {
 	currentGamaScene_->DrawObject3D();
 }

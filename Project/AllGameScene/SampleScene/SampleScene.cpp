@@ -18,16 +18,16 @@ SampleScene::SampleScene() {
 /// 初期化
 /// </summary>
 void SampleScene::Initialize() {
-	
+
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
 	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf",false);
 	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
 
 
-	
+
 	model_.reset(Model::Create(modelHandle));
-	
+
 	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
 
 	worldTransform_.Initialize();
@@ -46,7 +46,9 @@ void SampleScene::Initialize() {
 
 	audio_->SendChannels(audioHandle_, 1);
 
-	
+	uint32_t textureHandle = TextureManager::GetInstance()->LoadTexture("Resources/White.png");
+	sprite_.reset(Sprite::Create(textureHandle, { 0.0f,0.0f }));
+	sprite_->SetScale({0.5f, 0.5f});
 	
 	back_ = new BackText();
 	back_->Initialize();
@@ -79,13 +81,12 @@ void SampleScene::Update(GameManager* gameManager) {
 		audio_->ResumeWave(audioHandle_);
 	}
 
-	
 
 	Matrix4x4 localMatrix = model_->GetAnimationLocalMatrix();
 	worldTransform_.Update();
 	camera_.Update();
 
-
+	sprite_->SetPosition(position);
 #ifdef _DEBUG
 	ImGui::Begin("Audio");
 	ImGui::SliderFloat("Pan", &pan_, -1.0f, 1.0f);
@@ -94,6 +95,10 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::InputInt("Pitch", &pitch_);
 	ImGui::End();
 
+
+	ImGui::Begin("Sprite");
+	ImGui::SliderFloat3("Z",&position.x,0.0f,1280.0f);
+	ImGui::End();
 
 
 	ImGui::Begin("Model");
@@ -106,6 +111,11 @@ void SampleScene::Update(GameManager* gameManager) {
 		gameManager->ChangeScene(new SampleScene2());
 	}
 	
+}
+
+void SampleScene::DrawSpriteBack(){
+
+	sprite_->Draw();
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
@@ -130,7 +140,7 @@ void SampleScene::DrawPostEffect(){
 }
 
 void SampleScene::DrawSprite(){
-
+	
 }
 
 

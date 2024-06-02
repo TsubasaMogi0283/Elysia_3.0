@@ -29,6 +29,8 @@ public:
 	void PreDrawPostEffectFirst()override;
 	void PreDrawPostEffectSecond()override;
 
+	void DrawSpriteBack()override;
+
 	/// 描画
 	void DrawObject3D()override;
 

@@ -19,6 +19,7 @@ public:
 	void Update();
 
 	//描画
+	void DrawSpriteBack();
 	void DrawObject3D();
 	void DrawSprite();
 

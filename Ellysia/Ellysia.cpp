@@ -89,6 +89,8 @@ void Ellysia::Draw(){
 	
 	
 	gameManager_->PreDrawPostEffectFirst();
+	gameManager_->DrawSpriteBack();
+
 	////3Dオブジェクトの描画
 	gameManager_->DrawObject3D();
 	//
