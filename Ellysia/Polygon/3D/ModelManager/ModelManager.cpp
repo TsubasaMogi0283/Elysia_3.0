@@ -81,11 +81,20 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			aiVector3D scale;
 			aiVector3D translate;
 			aiQuaternion rotate;
+
 			bindPoseMatrixAssimp.Decompose(scale, rotate, translate);
-			Matrix4x4 bindPoseMatrix = MakeAffineMatrix(
-				{ scale.x,scale.y,scale.z },
-				{ rotate.x,rotate.y,rotate.z },
-				{ translate.x,translate.y,translate.z });
+
+			Vector3 scaleAfter = { scale.x,scale.y,scale.z };
+			Vector3 translateAfter = { -translate.x,translate.y,translate.z };
+			Quaternion rotateQuaternion = { rotate.x,-rotate.y,-rotate.z,rotate.w };
+
+			Matrix4x4 scaleMatrix = MakeScaleMatrix(scaleAfter);
+			Matrix4x4 rotateMatrix = MakeRotateMatrix(rotateQuaternion);
+			Matrix4x4 translateMatrix = MakeTranslateMatrix(translateAfter);
+
+
+			
+			Matrix4x4 bindPoseMatrix = Multiply(scaleMatrix, Multiply(rotateMatrix, translateMatrix));
 			jointWeightData.inverseBindPoseMatrix = Inverse(bindPoseMatrix);
 
 			//Weight情報を取り出す

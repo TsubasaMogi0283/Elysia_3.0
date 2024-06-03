@@ -103,9 +103,12 @@ void  SkinCluster::Create(const Skeleton& skeleton, const ModelData& modelData){
 void SkinCluster::Update(const Skeleton& skeleton){
     for (size_t jointIndex = 0; jointIndex < skeleton.joints_.size(); ++jointIndex) {
         assert(jointIndex < inverseBindPoseMatrices.size());
+        //inverseBindPoseMatricesに原因あり！！
         mappedPalette_[jointIndex].skeletonSpaceMatrix =
             Multiply(inverseBindPoseMatrices[jointIndex], skeleton.joints_[jointIndex].skeletonSpaceMatrix);
-        mappedPalette_[jointIndex].skeletonSpaceIncerseTransposeMatrix = MakeTransposeMatrix(
-            Inverse(mappedPalette_[jointIndex].skeletonSpaceMatrix));
+        mappedPalette_[jointIndex].skeletonSpaceIncerseTransposeMatrix = 
+            MakeTransposeMatrix(Inverse(mappedPalette_[jointIndex].skeletonSpaceMatrix));
     }
+
+
 }

@@ -22,7 +22,7 @@ struct Quaternion {
 //qv=(x,y,z)
 
 //Quaternionの積
-Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs);
+Quaternion QuaternionMultiply(const Quaternion& lhs, const Quaternion& rhs);
 
 //単位のQuaternionを返す
 Quaternion IdentityQuaternion();

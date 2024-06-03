@@ -24,20 +24,20 @@ void SampleScene::Initialize() {
 	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.obj",false);
 	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.gltf",false);
 	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", true);
-	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/simpleSkin", "simpleSkin.gltf", true);
-
-
-	//後々AnimationManagerを作ってここで読み込みたい
-	//animationHandle = Animation::GetInstance()->LoadAnimationFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf");
-
-	//SkeletonManagerも作った方がよさそう
-	skeleton_.Create(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
-
-	skinCluster_.Create(skeleton_, ModelManager::GetInstance()->GetModelData(modelHandle));
-	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
-	simpleModel_.reset(Model::Create(modelHandle));
-	//Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
-	worldTransform_.Initialize();
+	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/simpleSkin", "simpleSkin.gltf", true);
+	//
+	//
+	////後々AnimationManagerを作ってここで読み込みたい
+	////animationHandle = Animation::GetInstance()->LoadAnimationFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf");
+	//
+	////SkeletonManagerも作った方がよさそう
+	//skeleton_.Create(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
+	//
+	//skinCluster_.Create(skeleton_, ModelManager::GetInstance()->GetModelData(modelHandle));
+	////Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
+	//simpleModel_.reset(Model::Create(modelHandle));
+	////Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
+	//worldTransform_.Initialize();
 
 
 
@@ -45,10 +45,10 @@ void SampleScene::Initialize() {
 
 
 	//Walk
-	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", true);
+	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "sneakWalk.gltf", true);
 	human_.reset(Model::Create(humanModelHandle));
 	humanWorldTransform_.Initialize();
-	humanWorldTransform_.translate_.x = 2.0f;
+	humanWorldTransform_.translate_.x = 0.0f;
 
 
 	Node node = ModelManager::GetInstance()->GetModelData(humanModelHandle).rootNode;
@@ -81,7 +81,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	camera_.Update();
 
 
-	animationTime_ += 1.0f/60.0f;
+	//animationTime_ += 1.0f/60.0f;
 	humanAnimationTime_ += 1.0f / 60.0f;
 	if (animationTime_ > 7.0f) {
 		animationTime_ = 0.0f;
@@ -91,8 +91,8 @@ void SampleScene::Update(GameManager* gameManager) {
 		humanAnimationTime_ = 0.0f;
 	}
 
-	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
-	ApplyAnimation(skeleton_, animation, animationTime_);
+	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
+	//ApplyAnimation(skeleton_, animation, animationTime_);
 
 	Animation humanAnimation = ModelManager::GetInstance()->GetModelAnimation(humanModelHandle);
 	ApplyAnimation(humanSkeleton_, humanAnimation, humanAnimationTime_);
@@ -103,11 +103,11 @@ void SampleScene::Update(GameManager* gameManager) {
 	//現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
 	//読み込むのは最初だけで良いと気づいた
 	//SkeletonUpdate(skeleton_);
-	skeleton_.Update();
+	//skeleton_.Update();
 	humanSkeleton_.Update();
 	//SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
 	
-	skinCluster_.Update(skeleton_);
+	//skinCluster_.Update(skeleton_);
 	humanSkinCluster_.Update(humanSkeleton_);
 
 #ifdef _DEBUG
@@ -124,7 +124,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 #endif
 
-	worldTransform_.Update();
+	//worldTransform_.Update();
 	humanWorldTransform_.Update();
 	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
 		AdjustmentItems::GetInstance()->SaveFile(GroupName);
@@ -137,8 +137,8 @@ void SampleScene::Update(GameManager* gameManager) {
 /// </summary>
 void SampleScene::Draw() {
 	//AnimationManagerを作った方が良いかも引数を増やすの嫌だ。
-	Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
-	simpleModel_->Draw(worldTransform_, camera_, skinCluster_);
+	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
+	//simpleModel_->Draw(worldTransform_, camera_, skinCluster_);
 
 
 	human_->Draw(humanWorldTransform_, camera_, humanSkinCluster_);
