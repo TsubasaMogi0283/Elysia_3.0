@@ -1324,8 +1324,8 @@ void PipelineManager::GenerateModelPSO(int32_t isSkinning) {
 	}
 }
 
-void PipelineManager::GenerateSkinningPSO(){
-
+void PipelineManager::GenerateAnimationModelPSO(){
+	//
 
 	//PSO
 	////RootSignatureを作成
@@ -1495,15 +1495,15 @@ void PipelineManager::GenerateSkinningPSO(){
 	//シリアライズしてバイナリにする
 	HRESULT hr = {};
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->modelPSO_.signatureBlob_, &PipelineManager::GetInstance()->modelPSO_.errorBlob_);
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->animationModelPSO_.signatureBlob_, &PipelineManager::GetInstance()->animationModelPSO_.errorBlob_);
 	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->modelPSO_.errorBlob_->GetBufferPointer()));
+		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->animationModelPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 
 	//バイナリを元に生成
-	hr = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferPointer(),
-		PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->modelPSO_.rootSignature_));
+	hr = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->animationModelPSO_.signatureBlob_->GetBufferPointer(),
+		PipelineManager::GetInstance()->animationModelPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->animationModelPSO_.rootSignature_));
 	assert(SUCCEEDED(hr));
 
 
@@ -1574,7 +1574,7 @@ void PipelineManager::GenerateSkinningPSO(){
 
 	//ブレンドモードの選択
 	//switchでやった方が楽でしょう
-	switch (PipelineManager::GetInstance()->selectModelBlendMode_) {
+	switch (PipelineManager::GetInstance()->selectAnimiationModelBlendMode_) {
 
 	case BlendModeNone:
 		//ブレンド無し
@@ -1668,13 +1668,13 @@ void PipelineManager::GenerateSkinningPSO(){
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.VS.hlsl", L"vs_6_0");
-	assert(PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_ != nullptr);
+	PipelineManager::GetInstance()->animationModelPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/AnimationObject3D/AnimationObject3D.VS.hlsl", L"vs_6_0");
+	assert(PipelineManager::GetInstance()->animationModelPSO_.vertexShaderBlob_ != nullptr);
 
 
 
-	PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.PS.hlsl", L"ps_6_0");
-	assert(PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ != nullptr);
+	PipelineManager::GetInstance()->animationModelPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/AnimationObject3D/AnimationObject3D.PS.hlsl", L"ps_6_0");
+	assert(PipelineManager::GetInstance()->animationModelPSO_.pixelShaderBlob_ != nullptr);
 
 
 
@@ -1682,11 +1682,11 @@ void PipelineManager::GenerateSkinningPSO(){
 
 	////PSO生成
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->modelPSO_.rootSignature_.Get();
+	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->animationModelPSO_.rootSignature_.Get();
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
-	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_->GetBufferSize() };
+	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->animationModelPSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->animationModelPSO_.vertexShaderBlob_->GetBufferSize() };
 	//vertexShaderBlob_->GetBufferSize();
-	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_->GetBufferSize() };
+	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->animationModelPSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->animationModelPSO_.pixelShaderBlob_->GetBufferSize() };
 	//pixelShaderBlob_->GetBufferSize();
 	graphicsPipelineStateDesc.BlendState = blendDesc;
 	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
@@ -1717,7 +1717,7 @@ void PipelineManager::GenerateSkinningPSO(){
 
 	//実際に生成
 	hr = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&PipelineManager::GetInstance()->modelPSO_.graphicsPipelineState_));
+		IID_PPV_ARGS(&PipelineManager::GetInstance()->animationModelPSO_.graphicsPipelineState_));
 	assert(SUCCEEDED(hr));
 
 

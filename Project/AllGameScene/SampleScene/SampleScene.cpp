@@ -7,8 +7,8 @@
 #include "AnimationManager.h"
 
 /// <summary>
-	/// コンストラクタ
-	/// </summary>
+/// コンストラクタ
+/// </summary>
 SampleScene::SampleScene() {
 
 }
@@ -27,7 +27,7 @@ void SampleScene::Initialize() {
 	skeleton_.Create(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
 	skinCluster_.Create(skeleton_, ModelManager::GetInstance()->GetModelData(modelHandle));
 
-	simpleModel_.reset(Model::Create(modelHandle));
+	simpleModel_.reset(AnimationModel::Create(modelHandle));
 	worldTransform_.Initialize();
 
 
@@ -39,7 +39,7 @@ void SampleScene::Initialize() {
 	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf");
 	humanAnimationModel_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/human", "walk.gltf");
 
-	human_.reset(Model::Create(humanModelHandle,1));
+	human_.reset(AnimationModel::Create(humanModelHandle));
 	humanWorldTransform_.Initialize();
 	humanWorldTransform_.translate_.x = 2.0f;
 
@@ -119,7 +119,7 @@ void SampleScene::Update(GameManager* gameManager) {
 /// </summary>
 void SampleScene::Draw() {
 	//SimpleSkin
-	simpleModel_->Draw(worldTransform_, camera_);
+	simpleModel_->Draw(worldTransform_, camera_, skinCluster_);
 
 	//Walk
 	human_->Draw(humanWorldTransform_, camera_, humanSkinCluster_);

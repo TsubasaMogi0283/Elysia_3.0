@@ -86,11 +86,11 @@ public:
 
 
 	//コマンドに積む用のGetter(Skinning)
-	ComPtr<ID3D12RootSignature> GetSkinningRootSignature() {
-		return skinningPSO_.rootSignature_;
+	ComPtr<ID3D12RootSignature> GetAnimationModelRootSignature() {
+		return animationModelPSO_.rootSignature_;
 	}
-	ComPtr<ID3D12PipelineState> GetSkinningGraphicsPipelineState() {
-		return skinningPSO_.graphicsPipelineState_;
+	ComPtr<ID3D12PipelineState> GetAnimationModelGraphicsPipelineState() {
+		return animationModelPSO_.graphicsPipelineState_;
 	}
 
 
@@ -128,7 +128,7 @@ public:
 	static void GenerateModelPSO(int32_t isSkinning);
 
 	//Skinning
-	static void GenerateSkinningPSO();
+	static void GenerateAnimationModelPSO();
 
 	//3Dパーティクル用
 	static void GenerateParticle3DPSO();
@@ -156,7 +156,7 @@ private:
 	//モデル用の変数
 	PSOInformation particle3DPSO_ = {};
 	//モデル用の変数
-	PSOInformation skinningPSO_ = {};
+	PSOInformation animationModelPSO_ = {};
 
 
 
@@ -166,6 +166,8 @@ private:
 	//モデル用の
 	int32_t selectModelBlendMode_ = 1;
 
+	//モデル用の
+	int32_t selectAnimiationModelBlendMode_ = 1;
 
 
 };

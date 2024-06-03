@@ -10,7 +10,7 @@ struct Camera;
 struct SkinCluster;
 
 class AnimationModel{
-
+public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>

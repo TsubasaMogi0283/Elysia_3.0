@@ -18,7 +18,7 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 	model->skinningResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->skinningData_));
 	model->skinningResource_->Unmap(0, nullptr);
 
-	PipelineManager::GetInstance()->GenerateModelPSO(model->isSkinning_.isSkinning);
+	PipelineManager::GetInstance()->GenerateAnimationModelPSO();
 
 
 	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい
@@ -191,8 +191,8 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 
 	//コマンドを積む
 
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetModelRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetModelGraphicsPipelineState().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetAnimationModelRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetAnimationModelGraphicsPipelineState().Get());
 
 
 	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
@@ -241,16 +241,15 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
 
 	//Skinningするかどうか
-	if (isSkinning_.isSkinning == 1) {
-		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(8, skinningResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(8, skinningResource_->GetGPUVirtualAddress());
 
 
 		//paletteSrvHandle
-		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(9, skinCluster.paletteSrvHandle_.second);
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(9, skinCluster.paletteSrvHandle_.second);
 
 
 
-	}
+	
 
 
 	//DrawCall

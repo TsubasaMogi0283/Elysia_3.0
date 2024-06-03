@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include "GameManager.h"
 #include "Model.h"
+#include "AnimationModel.h"
 #include "TextureManager.h"
 #include "Camera.h"
 
@@ -39,7 +40,7 @@ private:
 	Camera camera_ = {};
 
 	//SimpleSkin
-	std::unique_ptr<Model> simpleModel_ = nullptr;
+	std::unique_ptr<AnimationModel> simpleModel_ = nullptr;
 	uint32_t modelHandle = 0;
 	uint32_t animationHande_ = 0;
 	WorldTransform worldTransform_ = {};
@@ -52,7 +53,7 @@ private:
 
 
 	//歩き
-	std::unique_ptr<Model> human_ = nullptr;
+	std::unique_ptr<AnimationModel> human_ = nullptr;
 	uint32_t humanModelHandle = 0;
 	uint32_t humanAnimationModel_ = 0;
 	WorldTransform humanWorldTransform_ = {};
