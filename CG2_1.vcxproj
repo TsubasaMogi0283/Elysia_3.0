@@ -150,6 +150,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\PipelineManager\PipelineManager.cpp" />
     <ClCompile Include="Ellysia\Polygon\2D\Sprite\Sprite.cpp" />
     <ClCompile Include="Ellysia\Polygon\2D\Triangle\Triangle.cpp" />
+    <ClCompile Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Animation.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Joint.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\ModelManager.cpp" />
@@ -240,6 +241,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\PipelineManager\PipelineManager.h" />
     <ClInclude Include="Ellysia\Polygon\2D\Sprite\Sprite.h" />
     <ClInclude Include="Ellysia\Polygon\2D\Triangle\Triangle.h" />
+    <ClInclude Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.h" />
     <ClInclude Include="Ellysia\Polygon\3D\MaterialData\MaterialData.h" />
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Animation.h" />
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Joint.h" />

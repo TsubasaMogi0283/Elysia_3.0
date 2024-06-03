@@ -175,6 +175,9 @@
     <Filter Include="Ellysia\Header File\Manager">
       <UniqueIdentifier>{3843d394-1415-4d74-a180-2e7806e3ddf5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\Polygone\3D\AnimationModel">
+      <UniqueIdentifier>{305d7fc5-1fb5-4be1-a271-b6c4eaa923b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -289,6 +292,9 @@
       <Filter>Ellysia\Source File\SrvManager</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -518,6 +524,9 @@
       <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>

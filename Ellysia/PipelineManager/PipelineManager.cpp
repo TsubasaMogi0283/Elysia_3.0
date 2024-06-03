@@ -1325,7 +1325,8 @@ void PipelineManager::GenerateModelPSO(int32_t isSkinning) {
 }
 
 void PipelineManager::GenerateSkinningPSO(){
-	//skinningPSO_
+
+
 	//PSO
 	////RootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように間レンズけるかを示したオブジェクトである
@@ -1335,87 +1336,190 @@ void PipelineManager::GenerateSkinningPSO(){
 
 
 	//rootParameter生成。複数設定できるので配列。
-	//VSでもCBufferを利用することになったので設定を追加
-	D3D12_ROOT_PARAMETER rootParameters[3] = {};
+	//今回は結果一つだけなので長さ１の配列
 
-	//WorldTransformから持ってきた
+	//VSでもCBufferを利用することになったので設定を追加
+	D3D12_ROOT_PARAMETER rootParameters[10] = {};
 	//CBVを使う
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	////PixelShaderで使う
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	//レジスタ番号とバインド
 	//register...Shader上のResource配置情報
 	rootParameters[0].Descriptor.ShaderRegister = 0;
 
-	//Cameraから持ってきた
+
 	//CBVを使う
 	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	////PixelShaderで使う
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	//レジスタ番号とバインド
-	//register...Shader上のResource配置情報
-	rootParameters[1].Descriptor.ShaderRegister = 1;
-
-
-
-	D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing[1] = {};
-	//0から始まる
-	descriptorRangeForInstancing[0].BaseShaderRegister = 0;
-	//数は一つ
-	descriptorRangeForInstancing[0].NumDescriptors = 1;
-	//SRVを使う
-	descriptorRangeForInstancing[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRangeForInstancing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-
-
-	//今回はDescriptorTableを使う
-	//Instancing
-	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	//VertwxShaderで使う
-	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	//register...Shader上のResource配置情報
-	rootParameters[2].Descriptor.ShaderRegister = 0;
-	//Tableの中身の配列を指定
-	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing;
-	//Tableで利用する数
-	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing);
-
+	rootParameters[1].Descriptor.ShaderRegister = 0;
 
 	//ルートパラメータ配列へのポイント
 	descriptionRootSignature_.pParameters = rootParameters;
 	//配列の長さ
 	descriptionRootSignature_.NumParameters = _countof(rootParameters);
 
+	//rootParameterは今後必要あるたびに追加していく
+
+	//DescriptorRangle
+	//複数枚のTexture(SRV)を扱う場合1つづつ設定すると効率低下に繋がる
+	//利用する範囲を指定して一括で設定を行う機能のこと
+	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
+	//0から始まる
+	descriptorRange[0].BaseShaderRegister = 0;
+	//数は1つ
+	descriptorRange[0].NumDescriptors = 1;
+	//SRVを使う
+	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	//Offsetを自動計算
+	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+
+	//DescriptorTableを使う
+	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	//PixelShaderを使う
+	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//Tableの中身の配列を指定
+	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange;
+	//Tableで利用する数
+	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
+
+	//CBVを使う
+	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//PixelShaderで使う
+	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//レジスタ番号1を使う
+	rootParameters[3].Descriptor.ShaderRegister = 1;
+
+
+	//CBVを使う
+	//カメラ用
+	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//VertwxShaderで使う
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	//register...Shader上のResource配置情報
+	rootParameters[4].Descriptor.ShaderRegister = 1;
+
+
+
+	//PixelShaderに送る方のカメラ
+	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//PixelShaderで使う
+	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//レジスタ番号2を使う
+	rootParameters[5].Descriptor.ShaderRegister = 2;
+
+
+	//PointLight
+	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//PixelShaderで使う
+	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//レジスタ番号2を使う
+	rootParameters[6].Descriptor.ShaderRegister = 3;
+
+
+	//SpotLight
+	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//PixelShaderで使う
+	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//レジスタ番号2を使う
+	rootParameters[7].Descriptor.ShaderRegister = 4;
+
+	//いらない気がしてきた
+	//Skinningするかどうか
+	rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//PixelShaderで使う
+	rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	//レジスタ番号2を使う
+	rootParameters[8].Descriptor.ShaderRegister = 2;
+
+
+
+
+
+
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForWell[1] = {};
+	//0から始まる
+	descriptorRangeForWell[0].BaseShaderRegister = 0;
+	//数は一つ
+	descriptorRangeForWell[0].NumDescriptors = 1;
+	//SRVを使う
+	descriptorRangeForWell[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRangeForWell[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+
+	//Well用
+	//今回はDescriptorTableを使う
+	//Instancingを参考にして
+	rootParameters[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	//VertwxShaderで使う
+	rootParameters[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	//register...Shader上のResource配置情報(t0)
+	rootParameters[9].Descriptor.ShaderRegister = 0;
+	//Tableの中身の配列を指定
+	rootParameters[9].DescriptorTable.pDescriptorRanges = descriptorRangeForWell;
+	//Tableで利用する数
+	rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForWell);
+
+
+
+
+
+
+
+
+
+
+
+	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
+	//バイリニアフィルタ
+	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	//0~1の範囲外をリピート
+	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	//比較しない
+	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	//ありったけのMipmapを使う
+	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;
+	//レジスタ番号0を使う
+	staticSamplers[0].ShaderRegister = 0;
+	//PixelShaderで使う
+	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	descriptionRootSignature_.pStaticSamplers = staticSamplers;
+	descriptionRootSignature_.NumStaticSamplers = _countof(staticSamplers);
 
 
 	//シリアライズしてバイナリにする
 	HRESULT hr = {};
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->skinningPSO_.signatureBlob_, &PipelineManager::GetInstance()->skinningPSO_.errorBlob_);
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->modelPSO_.signatureBlob_, &PipelineManager::GetInstance()->modelPSO_.errorBlob_);
 	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->skinningPSO_.errorBlob_->GetBufferPointer()));
+		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->modelPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 
 	//バイナリを元に生成
-	hr = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->skinningPSO_.signatureBlob_->GetBufferPointer(),
-		PipelineManager::GetInstance()->skinningPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->skinningPSO_.rootSignature_));
+	hr = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferPointer(),
+		PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->modelPSO_.rootSignature_));
 	assert(SUCCEEDED(hr));
 
 
-	//RasterizerStateの設定
-	D3D12_RASTERIZER_DESC rasterizerDesc{};
-	//裏面(時計回り)を表示しない
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
-	//三角形の中を塗りつぶす
-	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 
-#pragma region InputLayout
+
+
+
+
+	////InputLayout
 	//InputLayout・・VertexShaderへ渡す頂点データがどのようなものかを指定するオブジェクト
-	//Skinning用に拡張をする
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[5]={};
+
+
+
+	//余分に読み込んでしまうけどこれしか方法が無かった
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[5] = {};
 	inputElementDescs[0].SemanticName = "POSITION";
 	inputElementDescs[0].SemanticIndex = 0;
 	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -1455,26 +1559,138 @@ void PipelineManager::GenerateSkinningPSO(){
 
 
 
-#pragma endregion
+
+	////BlendStateの設定を行う
+	//BlendStateの設定
+	D3D12_BLEND_DESC blendDesc{};
+	//全ての色要素を書き込む
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+	//α
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+
+
+	//ブレンドモードの選択
+	//switchでやった方が楽でしょう
+	switch (PipelineManager::GetInstance()->selectModelBlendMode_) {
+
+	case BlendModeNone:
+		//ブレンド無し
+		blendDesc.RenderTarget[0].BlendEnable = false;
+
+		break;
+
+	case BlendModeNormal:
+		//通常ブレンド
+		blendDesc.RenderTarget[0].BlendEnable = TRUE;
+		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
+
+
+
+		break;
+
+
+	case BlendModeAdd:
+		//加算ブレンド
+		blendDesc.RenderTarget[0].BlendEnable = TRUE;
+		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+
+
+
+
+
+
+		break;
+
+
+	case BlendModeSubtract:
+		//減算ブレンド
+		blendDesc.RenderTarget[0].BlendEnable = TRUE;
+		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+
+		break;
+
+	case BlendModeMultiply:
+		//乗算ブレンド
+		blendDesc.RenderTarget[0].BlendEnable = TRUE;
+		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
+		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
+
+
+
+
+		break;
+
+	case BlendModeScreen:
+		//スクリーンブレンド
+		blendDesc.RenderTarget[0].BlendEnable = TRUE;
+		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
+		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+
+
+
+
+
+		break;
+
+
+	}
+
+
+
+
+
+
+
+	////RasterizerState
+	//RasterizerState・・・Rasterizerに対する設定
+	//					  三角形の内部をピクセルに分解して、
+	//					  PixelShaderを起動することでこの処理への設定を行う
+
+	//RasterizerStateの設定
+	D3D12_RASTERIZER_DESC rasterizerDesc{};
+	//裏面(時計回り)を表示しない
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+	//三角形の中を塗りつぶす
+	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
+
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->skinningPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/SkinningObject3D.VS.hlsl", L"vs_6_0");
-	assert(PipelineManager::GetInstance()->skinningPSO_.vertexShaderBlob_ != nullptr);
+	PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.VS.hlsl", L"vs_6_0");
+	assert(PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_ != nullptr);
 
 
 
-	//PipelineManager::GetInstance()->skinningPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.PS.hlsl", L"ps_6_0");
-	//assert(PipelineManager::GetInstance()->skinningPSO_.pixelShaderBlob_ != nullptr);
+	PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.PS.hlsl", L"ps_6_0");
+	assert(PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ != nullptr);
+
+
+
+
 
 	////PSO生成
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->skinningPSO_.rootSignature_.Get();
+	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->modelPSO_.rootSignature_.Get();
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
-	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->skinningPSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->skinningPSO_.vertexShaderBlob_->GetBufferSize() };
-	//graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->skinningPSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->skinningPSO_.pixelShaderBlob_->GetBufferSize() };
-	
-	
+	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_->GetBufferSize() };
+	//vertexShaderBlob_->GetBufferSize();
+	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_->GetBufferSize() };
+	//pixelShaderBlob_->GetBufferSize();
+	graphicsPipelineStateDesc.BlendState = blendDesc;
+	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
+
 	//書き込むRTVの情報
 	graphicsPipelineStateDesc.NumRenderTargets = 1;
 	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -1486,26 +1702,28 @@ void PipelineManager::GenerateSkinningPSO(){
 	//どのように画面に色を打ち込むのか設定
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
 
-
-	////DepthStencilStateの設定
-	//D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-	////Depthの機能を有効化する
-	//depthStencilDesc.DepthEnable = true;
-	////書き込みします
-	//depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	////比較関数はLessEqual 近ければ描画される
-	//depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	////DepthStencilの設定
-	//graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
-	//graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//DepthStencilStateの設定
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
+	//Depthの機能を有効化する
+	depthStencilDesc.DepthEnable = true;
+	//書き込みします
+	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	//比較関数はLessEqual 近ければ描画される
+	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	//DepthStencilの設定
+	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	//実際に生成
-	//ID3D12PipelineState* graphicsPipelineState_ = nullptr;
 	hr = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&PipelineManager::GetInstance()->skinningPSO_.graphicsPipelineState_));
+		IID_PPV_ARGS(&PipelineManager::GetInstance()->modelPSO_.graphicsPipelineState_));
 	assert(SUCCEEDED(hr));
+
+
+
+
+
 
 
 

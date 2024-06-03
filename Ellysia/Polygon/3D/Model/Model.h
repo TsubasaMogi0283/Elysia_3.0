@@ -54,11 +54,6 @@ public:
 	static Model* Create(uint32_t modelHandle,uint32_t isAnimation);
 
 
-private:
-#pragma region モデルの読み込み関係の関数
-	
-#pragma endregion
-
 public:
 
 	//描画
