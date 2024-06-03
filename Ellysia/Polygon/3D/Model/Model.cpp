@@ -17,11 +17,11 @@ Model* Model::Create(uint32_t modelHandle) {
 	Model* model = new Model();
 
 	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
-	PipelineManager::GetInstance()->SetModelBlendMode(1);
+	PipelineManager::GetInstance()->SetModelBlendMode(0);
 	//Skinningするかどうか
 	model->skinningResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkinningEnable)).Get();
 	model->skinningResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->skinningData_));
-	model->isSkinning_.isSkinning = 1;
+	model->isSkinning_.isSkinning = 0;
 	model->skinningResource_->Unmap(0, nullptr);
 
 	PipelineManager::GetInstance()->GenerateModelPSO(model->isSkinning_.isSkinning);
@@ -92,14 +92,93 @@ Model* Model::Create(uint32_t modelHandle) {
 	model->spotLightData_.cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
 
 
-	
+	return model;
+
+}
+
+Model* Model::Create(uint32_t modelHandle, uint32_t isAnimation){
+	//新たなModel型のインスタンスのメモリを確保
+	Model* model = new Model();
+
+	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
+	PipelineManager::GetInstance()->SetModelBlendMode(1);
+	//Skinningするかどうか
+	model->skinningResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkinningEnable)).Get();
+	model->skinningResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->skinningData_));
+	model->isSkinning_.isSkinning = isAnimation;
+	model->skinningResource_->Unmap(0, nullptr);
+
+	PipelineManager::GetInstance()->GenerateModelPSO(model->isSkinning_.isSkinning);
+
+
+	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい
+	//Setterでやるの面倒だと思った
+
+
+	////マテリアル用のリソースを作る。
+	model->materialResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Material)).Get();
+
+	//テクスチャの読み込み
+	model->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).material.textureFilePath);
+	//Drawでも使いたいので取り入れる
+	model->modelHandle_ = modelHandle;
+
+	//モデルデータ
+	model->modelData_ = ModelManager::GetInstance()->GetModelData(modelHandle);
+
+	//頂点リソースを作る
+	model->vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size()).Get();
+
+	//読み込みのところでバッファインデックスを作った方がよさそう
+	//リソースの先頭のアドレスから使う
+	model->vertexBufferView_.BufferLocation = model->vertexResource_->GetGPUVirtualAddress();
+	//使用するリソースは頂点のサイズ
+	model->vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * model->modelData_.vertices.size());
+	//１頂点あたりのサイズ
+	model->vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
 
 
+	//解析したデータを使ってResourceとBufferViewを作成する
+	model->indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * ModelManager::GetInstance()->GetModelData(modelHandle).indices.size()).Get();
+	model->indexBufferView_.BufferLocation = model->indexResource_->GetGPUVirtualAddress();
+	size_t indicesSize = model->modelData_.indices.size();
+	model->indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * indicesSize);
+	model->indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+
+
+	//Lighting
+	model->directionalLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(DirectionalLight)).Get();
+
+
+	//カメラ
+	model->cameraResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraForGPU)).Get();
+
+
+	//PointLight
+	model->pointLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(PointLight)).Get();
+	model->pointLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
+	model->pointLightData_.position = { 0.0f,0.0f,0.0f };
+	model->pointLightData_.intensity = 4.0f;
+	model->pointLightData_.radius = 5.0f;
+	model->pointLightData_.decay = 5.0f;
+
+
+	//SpotLight
+	model->spotLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SpotLight)).Get();
+	model->spotLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
+	model->spotLightData_.position = { 2.0f,1.25f,0.0f };
+	model->spotLightData_.intensity = 4.0f;
+	model->spotLightData_.direction = { -1.0f,1.0f,0.0f };
+	model->spotLightData_.distance = 7.0f;
+	model->spotLightData_.decay = 2.0f;
+	model->spotLightData_.cosFallowoffStart = 0.3f;
+	model->spotLightData_.cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
 
 
 	return model;
 
+	
 }
 
 
@@ -357,33 +436,6 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& sk
 
 #pragma endregion
 
-#pragma region アニメーション用
-	//animation;
-	//Animation& animation_ = animation;
-	////時刻を進める
-	////計測した時間を使って可変フレーム対応した方が良い
-	//animationTime_ += 1.0f / 60.0f;
-	////最後までいったら最初からリピート再生
-	////リピートするかしないかの設定をフラグでやった方がよさそう
-	//animationTime_ = std::fmod(animationTime_, animation_.duration);
-	////rootNodeのAnimationを取得
-	//ModelData modelData = ModelManager::GetInstance()->GetModelData(modelHandle_);
-	////NodeAnimation& rootNodeAnimation = animation.nodeAnimations["mixamorig:Head"];
-	//NodeAnimation& rootNodeAnimation = animation_.nodeAnimations[modelData.rootNode.name];
-	//////Armature
-	////rootNodeAnimation;
-	////modelData;
-	//
-	////指定時刻の値を取得
-	//Vector3 translate = CalculationValue(rootNodeAnimation.translate.keyFrames, animationTime_);
-	//Quaternion rotate = CalculationValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
-	//Vector3 scale = CalculationValue(rootNodeAnimation.scale.keyFrames, animationTime_);
-	//
-	//Vector3 newRotate = { rotate .x,rotate.y,rotate.z };
-	//animationLocalMatrix_ = MakeAffineMatrix(scale, newRotate,translate);
-
-
-#pragma endregion
 
 	//コマンドを積む
 

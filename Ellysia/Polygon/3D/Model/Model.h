@@ -46,6 +46,13 @@ public:
 	//通常
 	static Model* Create(uint32_t modelHandle);
 
+	/// <summary>
+	/// アニメーション付き
+	/// </summary>
+	/// <param name="modelHandle"></param>
+	/// <returns></returns>
+	static Model* Create(uint32_t modelHandle,uint32_t isAnimation);
+
 
 private:
 #pragma region モデルの読み込み関係の関数

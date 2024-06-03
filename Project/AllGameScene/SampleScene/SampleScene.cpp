@@ -39,7 +39,7 @@ void SampleScene::Initialize() {
 	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf");
 	humanAnimationModel_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/human", "walk.gltf");
 
-	human_.reset(Model::Create(humanModelHandle));
+	human_.reset(Model::Create(humanModelHandle,1));
 	humanWorldTransform_.Initialize();
 	humanWorldTransform_.translate_.x = 2.0f;
 
@@ -77,9 +77,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	animationTime_ += 1.0f/60.0f;
 	humanAnimationTime_ += 1.0f / 60.0f;
 
-	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	AnimationManager::GetInstance()->ApplyAnimation(skeleton_, animationHande_, modelHandle, animationTime_);
-
 	AnimationManager::GetInstance()->ApplyAnimation(humanSkeleton_, humanAnimationModel_, humanModelHandle, humanAnimationTime_);
 
 
@@ -120,11 +118,10 @@ void SampleScene::Update(GameManager* gameManager) {
 /// 描画
 /// </summary>
 void SampleScene::Draw() {
-	//AnimationManagerを作った方が良いかも引数を増やすの嫌だ。
-	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
-	simpleModel_->Draw(worldTransform_, camera_, skinCluster_);
+	//SimpleSkin
+	simpleModel_->Draw(worldTransform_, camera_);
 
-
+	//Walk
 	human_->Draw(humanWorldTransform_, camera_, humanSkinCluster_);
 
 
