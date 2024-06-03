@@ -11,9 +11,9 @@
 
 class ModelManager final{
 private:
-	ModelManager();
+	ModelManager()=default;
 	
-	~ModelManager();
+	~ModelManager()=default;
 
 public:
 	//シングルインスタンス
@@ -90,7 +90,8 @@ private:
 		std::string filePath;
 	};
 
-	//数の限界があるのでarrayがいいかな
+
+	//mapにしたい
 	std::array<ModelInformation, MODEL_MAX_AMOUNT_> modelInfromtion_{};
 
 };

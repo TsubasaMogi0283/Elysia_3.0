@@ -11,9 +11,6 @@
 
 static uint32_t modelhandle;
 
-//コンストラクタ
-ModelManager::ModelManager() {
-}
 ModelManager* ModelManager::GetInstance() {
 	//関数内static変数として宣言する
 	static ModelManager instance;
@@ -184,11 +181,4 @@ uint32_t ModelManager::LoadModelFile(const std::string& directoryPath, const std
 
 	//値を返す
 	return modelhandle;
-}
-
-/// <summary>
-/// デストラクタ
-/// </summary>
-ModelManager::~ModelManager() {
-
 }

@@ -172,6 +172,9 @@
     <Filter Include="Ellysia\Source File\SrvManager">
       <UniqueIdentifier>{4f83e7d1-c856-4e25-9517-e1f481814346}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\Manager">
+      <UniqueIdentifier>{3843d394-1415-4d74-a180-2e7806e3ddf5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -284,6 +287,9 @@
     </ClCompile>
     <ClCompile Include="Ellysia\SrvManager\SrvManager.cpp">
       <Filter>Ellysia\Source File\SrvManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -510,6 +516,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\WellForGPU.h">
       <Filter>Ellysia\Header File\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

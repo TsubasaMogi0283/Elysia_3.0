@@ -41,6 +41,7 @@ private:
 	//SimpleSkin
 	std::unique_ptr<Model> simpleModel_ = nullptr;
 	uint32_t modelHandle = 0;
+	uint32_t animationHande_ = 0;
 	WorldTransform worldTransform_ = {};
 	
 	Skeleton skeleton_ = {};
@@ -53,6 +54,7 @@ private:
 	//歩き
 	std::unique_ptr<Model> human_ = nullptr;
 	uint32_t humanModelHandle = 0;
+	uint32_t humanAnimationModel_ = 0;
 	WorldTransform humanWorldTransform_ = {};
 
 	Skeleton humanSkeleton_ = {};

@@ -4,6 +4,7 @@
 #include <AdjustmentItems.h>
 
 #include "ModelManager.h"
+#include "AnimationManager.h"
 
 /// <summary>
 	/// コンストラクタ
@@ -24,19 +25,16 @@ void SampleScene::Initialize() {
 	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.obj",false);
 	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.gltf",false);
 	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", true);
-	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/simpleSkin", "simpleSkin.gltf", true);
-	
+	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/simpleSkin", "simpleSkin.gltf");
 	
 	//後々AnimationManagerを作ってここで読み込みたい
-	//animationHandle = Animation::GetInstance()->LoadAnimationFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf");
+	animationHande_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/simpleSkin", "simpleSkin.gltf");
 	
 	//SkeletonManagerも作った方がよさそう
 	skeleton_.Create(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
 	
 	skinCluster_.Create(skeleton_, ModelManager::GetInstance()->GetModelData(modelHandle));
-	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
 	simpleModel_.reset(Model::Create(modelHandle));
-	//Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
 	worldTransform_.Initialize();
 
 
@@ -45,7 +43,9 @@ void SampleScene::Initialize() {
 
 	//sneakWalk
 	//Walk
-	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", true);
+	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf");
+	humanAnimationModel_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/human", "walk.gltf");
+
 	human_.reset(Model::Create(humanModelHandle));
 	humanWorldTransform_.Initialize();
 	humanWorldTransform_.translate_.x = 2.0f;
@@ -83,19 +83,11 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	animationTime_ += 1.0f/60.0f;
 	humanAnimationTime_ += 1.0f / 60.0f;
-	if (animationTime_ > 7.0f) {
-		animationTime_ = 0.0f;
-		
-	}
-	if (humanAnimationTime_ > 2.0f) {
-		humanAnimationTime_ = 0.0f;
-	}
 
 	//Animation animation = ModelManager::GetInstance()->GetModelAnimation(modelHandle);
-	//ApplyAnimation(skeleton_, animation, animationTime_);
+	AnimationManager::GetInstance()->ApplyAnimation(skeleton_, animationHande_, modelHandle, animationTime_);
 
-	Animation humanAnimation = ModelManager::GetInstance()->GetModelAnimation(humanModelHandle);
-	ApplyAnimation(humanSkeleton_, humanAnimation, humanAnimationTime_);
+	AnimationManager::GetInstance()->ApplyAnimation(humanSkeleton_, humanAnimationModel_, humanModelHandle, humanAnimationTime_);
 
 
 
