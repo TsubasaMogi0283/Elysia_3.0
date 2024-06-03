@@ -43,12 +43,12 @@ void SampleScene::Initialize() {
 
 	
 
-
+	//sneakWalk
 	//Walk
-	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "sneakWalk.gltf", true);
+	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", true);
 	human_.reset(Model::Create(humanModelHandle));
 	humanWorldTransform_.Initialize();
-	humanWorldTransform_.translate_.x = 0.0f;
+	//humanWorldTransform_.translate_.x = 2.0f;
 
 
 	Node node = ModelManager::GetInstance()->GetModelData(humanModelHandle).rootNode;
