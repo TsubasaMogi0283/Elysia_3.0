@@ -22,18 +22,11 @@ void SampleScene::Initialize() {
 	
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
-	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.obj",false);
-	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/GLTF", "GLTFPlane.gltf",false);
-	//modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf", true);
 	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/simpleSkin", "simpleSkin.gltf");
-	
-	//後々AnimationManagerを作ってここで読み込みたい
 	animationHande_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/simpleSkin", "simpleSkin.gltf");
-	
-	//SkeletonManagerも作った方がよさそう
 	skeleton_.Create(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
-	
 	skinCluster_.Create(skeleton_, ModelManager::GetInstance()->GetModelData(modelHandle));
+
 	simpleModel_.reset(Model::Create(modelHandle));
 	worldTransform_.Initialize();
 
