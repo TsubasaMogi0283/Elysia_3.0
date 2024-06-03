@@ -97,7 +97,6 @@ Vector3 CalculationValue(const std::vector<KeyFrameVector3>& keyFrames, float ti
 
 }
 
-
 Quaternion CalculationValue(const std::vector<KeyFrameQuaternion>& keyFrames, float time) {
     //特殊なケースを除外
     //キーが無いものは✕
@@ -128,6 +127,7 @@ void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animat
         //対象のJointのAnimationがあれば、値の適用を行う。下記のif文はC++17から可能になった
         
         if (auto it = animation.nodeAnimations.find(joint.name); it != animation.nodeAnimations.end()) {
+            //NodeAnimation& rootNodeAnimation=std::fmodf(animation.nodeAnimations[])
             const NodeAnimation& rootNodeAnimation = (*it).second;
             joint.transform.translate = CalculationValue(rootNodeAnimation.translate.keyFrames, animationTime);
             joint.transform.rotate = CalculationValue(rootNodeAnimation.rotate.keyFrames, animationTime);
