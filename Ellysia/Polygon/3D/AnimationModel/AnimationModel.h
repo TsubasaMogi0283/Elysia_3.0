@@ -5,6 +5,8 @@
 #include <SpotLight.h>
 #include <PointLight.h>
 #include <DirectionalLight.h>
+
+#include  "LightingType.h"
 struct WorldTransform;
 struct Camera;
 struct SkinCluster;
@@ -41,19 +43,6 @@ public:
 
 
 
-private:
-
-	//ライトの種類
-	enum LightingKinds {
-		None,
-		Directional,
-		Point,
-		Spot,
-	};
-
-
-
-
 
 private:
 
@@ -67,9 +56,6 @@ private:
 		float shininess;
 	};
 
-	struct SkinningEnable {
-		int32_t isSkinning;
-	};
 
 private:
 	//頂点リソースを作る
@@ -123,10 +109,6 @@ private:
 	ComPtr<ID3D12Resource> cameraResource_ = nullptr;
 	CameraForGPU* cameraForGPU_ = {};
 
-	//Skinningするかどうか
-	ComPtr<ID3D12Resource> skinningResource_ = nullptr;
-	SkinningEnable* skinningData_ = {};
-	SkinningEnable isSkinning_ = {};
 
 	//アニメーションを再生するときに使う時間
 	float animationTime_ = 0.0f;

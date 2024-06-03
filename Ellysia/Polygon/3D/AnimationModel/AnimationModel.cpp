@@ -13,11 +13,6 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 
 	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
 	PipelineManager::GetInstance()->SetModelBlendMode(1);
-	//Skinningするかどうか
-	model->skinningResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkinningEnable)).Get();
-	model->skinningResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->skinningData_));
-	model->skinningResource_->Unmap(0, nullptr);
-
 	PipelineManager::GetInstance()->GenerateAnimationModelPSO();
 
 
@@ -240,12 +235,9 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	//SpotLight
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
 
-	//Skinningするかどうか
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(8, skinningResource_->GetGPUVirtualAddress());
 
-
-		//paletteSrvHandle
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(9, skinCluster.paletteSrvHandle_.second);
+	//paletteSrvHandle
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(8, skinCluster.paletteSrvHandle_.second);
 
 
 

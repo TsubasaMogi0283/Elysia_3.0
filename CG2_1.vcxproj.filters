@@ -535,6 +535,9 @@
     <ClInclude Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
+    <ClInclude Include="Ellysia\Lighting\LightingType.h">
+      <Filter>Ellysia\Header File\Lighting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">

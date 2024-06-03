@@ -914,7 +914,7 @@ void PipelineManager::GenerateAnimationModelPSO(){
 	//今回は結果一つだけなので長さ１の配列
 
 	//VSでもCBufferを利用することになったので設定を追加
-	D3D12_ROOT_PARAMETER rootParameters[10] = {};
+	D3D12_ROOT_PARAMETER rootParameters[9] = {};
 	//CBVを使う
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	////PixelShaderで使う
@@ -1002,15 +1002,6 @@ void PipelineManager::GenerateAnimationModelPSO(){
 	//レジスタ番号2を使う
 	rootParameters[7].Descriptor.ShaderRegister = 4;
 
-	//いらない気がしてきた
-	//Skinningするかどうか
-	rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	//PixelShaderで使う
-	rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	//レジスタ番号2を使う
-	rootParameters[8].Descriptor.ShaderRegister = 2;
-
-
 
 
 
@@ -1028,15 +1019,15 @@ void PipelineManager::GenerateAnimationModelPSO(){
 	//Well用
 	//今回はDescriptorTableを使う
 	//Instancingを参考にして
-	rootParameters[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	//VertwxShaderで使う
-	rootParameters[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	//register...Shader上のResource配置情報(t0)
-	rootParameters[9].Descriptor.ShaderRegister = 0;
+	rootParameters[8].Descriptor.ShaderRegister = 0;
 	//Tableの中身の配列を指定
-	rootParameters[9].DescriptorTable.pDescriptorRanges = descriptorRangeForWell;
+	rootParameters[8].DescriptorTable.pDescriptorRanges = descriptorRangeForWell;
 	//Tableで利用する数
-	rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForWell);
+	rootParameters[8].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForWell);
 
 
 

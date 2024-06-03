@@ -26,14 +26,7 @@
 
 #include "Skeleton.h"
 #include <SkinCluster.h>
-
-//ライトの種類
-enum LightingKinds {
-	None,
-	Directional,
-	Point,
-	Spot,
-};
+#include "LightingType.h"
 
 class Model {
 public:
@@ -41,27 +34,26 @@ public:
 	//コンストラクタ
 	Model()=default;
 
-	//初期化
-	//Initializeも兼ねているよ
-	//通常
+	/// <summary>
+	/// 生成
+	/// </summary>
+	/// <param name="modelHandle">モデルハンドル</param>
+	/// <returns></returns>
 	static Model* Create(uint32_t modelHandle);
 
+
 	/// <summary>
-	/// アニメーション付き
+	/// 描画
 	/// </summary>
-	/// <param name="modelHandle"></param>
-	/// <returns></returns>
-	static Model* Create(uint32_t modelHandle,uint32_t isAnimation);
-
-
-public:
-
-	//描画
+	/// <param name="worldTransform">ワールドトランスフォーム</param>
+	/// <param name="camera">カメラ</param>
 	void Draw(WorldTransform& worldTransform, Camera& camera);
 
 
 
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Model()=default;
 
 
