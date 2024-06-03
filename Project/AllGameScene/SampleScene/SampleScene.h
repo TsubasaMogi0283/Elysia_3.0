@@ -49,9 +49,6 @@ private:
 	float animationTime_ = 0;
 	SkinCluster skinCluster_ = {};
 
-
-
-
 	//歩き
 	std::unique_ptr<AnimationModel> human_ = nullptr;
 	uint32_t humanModelHandle = 0;
@@ -61,6 +58,13 @@ private:
 	Skeleton humanSkeleton_ = {};
 	float humanAnimationTime_ = 0;
 	SkinCluster humanSkinCluster_ = {};
+
+
+
+
+	std::unique_ptr<Model> noneAnimationModel_ = nullptr;
+	WorldTransform noneAnimationWorldTransform_ = {};
+
 
 
 

@@ -39,7 +39,7 @@ class Model {
 public:
 
 	//コンストラクタ
-	Model();
+	Model()=default;
 
 	//初期化
 	//Initializeも兼ねているよ
@@ -60,12 +60,9 @@ public:
 	void Draw(WorldTransform& worldTransform, Camera& camera);
 
 
-	//アニメーション付きの描画
-	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster);
-
 
 	//デストラクタ
-	~Model();
+	~Model()=default;
 
 
 

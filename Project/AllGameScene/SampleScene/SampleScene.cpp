@@ -44,12 +44,20 @@ void SampleScene::Initialize() {
 	humanWorldTransform_.translate_.x = 2.0f;
 
 
-	Node node = ModelManager::GetInstance()->GetModelData(humanModelHandle).rootNode;
 	humanSkeleton_.Create(ModelManager::GetInstance()->GetModelData(humanModelHandle).rootNode);
 	humanAnimationTime_ = 0;
 	humanSkinCluster_.Create(humanSkeleton_, ModelManager::GetInstance()->GetModelData(humanModelHandle));
 
 
+
+
+
+
+	//Animation無し
+	uint32_t noneModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	noneAnimationModel_.reset(Model::Create(noneModelHandle));
+	noneAnimationWorldTransform_.Initialize();
+	noneAnimationWorldTransform_.translate_.x = -2.0f;
 
 
 
@@ -105,7 +113,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::End();
 
 #endif
-
+	noneAnimationWorldTransform_.Update();
 	worldTransform_.Update();
 	humanWorldTransform_.Update();
 	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
@@ -124,7 +132,8 @@ void SampleScene::Draw() {
 	//Walk
 	human_->Draw(humanWorldTransform_, camera_, humanSkinCluster_);
 
-
+	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
+	
 
 }
 
