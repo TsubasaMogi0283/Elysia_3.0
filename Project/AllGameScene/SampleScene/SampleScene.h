@@ -48,8 +48,6 @@ private:
 	Skeleton humanSkeleton_[WALK_HUMAN_AMOUNT_] = {};
 	float humanAnimationTime_[WALK_HUMAN_AMOUNT_] = {};
 	SkinCluster humanSkinCluster_[WALK_HUMAN_AMOUNT_] = {};
-	Vector3 rotate = {};
-	bool isPushKey_ = false;
 
 	std::unique_ptr<Model> noneAnimationModel_ = nullptr;
 	WorldTransform noneAnimationWorldTransform_ = {};

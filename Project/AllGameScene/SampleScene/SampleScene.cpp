@@ -23,10 +23,6 @@ void SampleScene::Initialize() {
 	
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
-
-	
-
-	//sneakWalk
 	//Walk
 	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf");
 	humanAnimationModel_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/human", "walk.gltf");
@@ -43,9 +39,6 @@ void SampleScene::Initialize() {
 
 	humanWorldTransform_[0].translate_.y = 0.0f;
 	
-	rotate = {};
-	isPushKey_ = false;
-
 
 
 
@@ -56,13 +49,12 @@ void SampleScene::Initialize() {
 	noneAnimationWorldTransform_.Initialize();
 	const float SPHERE_SCALE = 40.0f;
 	noneAnimationWorldTransform_.scale_ = { SPHERE_SCALE,SPHERE_SCALE,SPHERE_SCALE };
-	noneAnimationWorldTransform_.translate_.x = -2.0f;
+	noneAnimationWorldTransform_.translate_.x = 0.0f;
 	noneAnimationWorldTransform_.translate_.y = -1.0f;
 
 
 
 	camera_.Initialize();
-	camera_.rotate_.x = 1.0f;
 	
 
 
@@ -84,40 +76,9 @@ void SampleScene::Update(GameManager* gameManager) {
 	
 #pragma region アニメーションモデル
 	
-	if (isPushKey_ == true) {
-		humanAnimationTime_[0] += 1.0f / 60.0f;
+	humanAnimationTime_[0] += 1.0f / 60.0f;
 
-	}
 	
-#pragma region キーボード入力
-	const float SPEED = 0.1f;
-	Vector3 move = {};
-	if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
-		move.z = SPEED;
-		rotate.y = 0.0f;
-		isPushKey_ = true;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
-		move.z = -SPEED;
-		rotate.y = std::numbers::pi_v<float>;
-		isPushKey_ = true;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
-		move.x = SPEED;
-		rotate.y = std::numbers::pi_v<float> / 2.0f;
-		isPushKey_ = true;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
-		move.x = -SPEED;
-		rotate.y = -std::numbers::pi_v<float> / 2.0f;
-		isPushKey_ = true;
-	}
-	else {
-		isPushKey_ = false;
-	}
-
-#pragma endregion
-
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
 		AnimationManager::GetInstance()->ApplyAnimation(humanSkeleton_[i], humanAnimationModel_, humanModelHandle, humanAnimationTime_[i]);
 	}
@@ -140,15 +101,11 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		humanWorldTransform_[i].translate_=Add(humanWorldTransform_[i].translate_,move);
-		humanWorldTransform_[i].rotate_ = rotate;
 
 		humanWorldTransform_[i].Update();
 	}
 #pragma endregion
 
-	const Vector3 CAMERA_OFFSET = { 0.0f ,43.0f,-25.0f };
-	camera_.translate_ = Add(humanWorldTransform_[0].translate_, CAMERA_OFFSET);
 	camera_.Update();
 	noneAnimationWorldTransform_.Update();
 
