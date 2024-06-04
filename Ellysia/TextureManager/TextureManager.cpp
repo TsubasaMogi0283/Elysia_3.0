@@ -77,7 +77,6 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 	//.
 	//このような感じで入っている
 	//後ろのindexに対応させる
-	
 
 	//SRVの確保
 	//0番目はImGuiが使っているからダメだった
@@ -87,7 +86,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 	SrvManager::GetInstance()->CreateSRVForTexture2D(
 		TextureManager::GetInstance()->textureInformation_[textureIndex].handle_,
 		TextureManager::GetInstance()->textureInformation_[textureIndex].resource_.Get(),
-		metadata.format, UINT(metadata.mipLevels));
+		metadata.format, UINT(metadata.mipLevels),metadata.IsCubemap());
 
 
 	return textureIndex;
