@@ -13,14 +13,13 @@
 class TextureManager {
 private:
 	//コンストラクタ
-	TextureManager();
+	TextureManager()=default;
 
 	//コンストラクタ
-	~TextureManager();
+	~TextureManager()=default;
 
 public:
 	static TextureManager* GetInstance();
-
 
 	//コピーコンストラクタ禁止
 	TextureManager(const TextureManager& textureManager) = delete;
@@ -31,18 +30,12 @@ public:
 
 public:
 	
-	//初期化
-	static void Initilalize();
-
 	//統合させた関数
 	//インデックスを返すからマイナスはありえない。
 	//uintにしたほうが良いよね
 	static uint32_t LoadTexture(const std::string& filePath);
 
 	static void GraphicsCommand(uint32_t texHandle);
-
-	//解放
-	void Release();
 
 
 
@@ -71,7 +64,7 @@ private:
 	
 
 public:
-		static const int TEXTURE_MAX_AMOUNT_ = 128;
+	static const int TEXTURE_MAX_AMOUNT_ = 256;
 
 
 

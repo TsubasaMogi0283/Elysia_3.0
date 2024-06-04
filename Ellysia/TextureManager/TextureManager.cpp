@@ -12,10 +12,6 @@ static uint32_t textureIndex;
 static DirectX::ScratchImage mipImages_[TextureManager::TEXTURE_MAX_AMOUNT_];
 static D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc[TextureManager::TEXTURE_MAX_AMOUNT_];
 
-//コンストラクタ
-TextureManager::TextureManager() {
-
-}
 
 TextureManager* TextureManager::GetInstance() {
 	
@@ -32,24 +28,6 @@ const D3D12_RESOURCE_DESC TextureManager::GetResourceDesc(uint32_t textureHandle
 	resourceDesc = textureInformation_[textureHandle].resource_->GetDesc();
 
 	return resourceDesc;
-}
-
-
-//初期化
-void TextureManager::Initilalize() {
-	//this->directXSetup_ = DirectXSetup::GetInstance();
-	//COMの初期化
-	//COM...ComponentObjectModel、Microsoftの提唱する設計技術の１つ
-	//		DirectX12も簡略化されたCOM(Nano-COM)という設計で作られている
-	
-	//COMを使用して開発されたソフトウェア部品をCOMコンポーネントと呼ぶ
-	//Textureを読むにあたって、COMコンポーネントの１つを利用する
-	CoInitializeEx(0, COINIT_MULTITHREADED);
-
-	descriptorSizeSRV_ =  DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	descriptorSizeRTV_ =  DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	descriptorSizeDSV_ =  DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-	textureIndex = 0;
 }
 
 
@@ -70,7 +48,6 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 
 
 	//読み込むたびにインデックスが増やし重複を防ごう
-	//同じ画像しか貼れなかったのはこれが原因
 	textureIndex= SrvManager::GetInstance()->Allocate();
 
 
@@ -128,24 +105,56 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 //7.6の実行完了を待つ
 
 
+
+//CubeMap...箱を構成する6毎のTextureをひとまとめにしたTextureのこと
+//さいころみたいなもの
+
+
+//DSSについて
+//DSS...DirectDrawSurface
+//png,jpegだとCubemapを使えないがDSSだと出来る!!
+
+
+
+
+
 #pragma region 上のLoadTextureにまとめた
 //Textureを読み込むためのLoad関数
 //1.TextureデータそのものをCPUで読み込む
 DirectX::ScratchImage TextureManager::LoadTextureData(const std::string& filePath) {
 	
+	HRESULT hr = {};
+
 	//テクスチャファイルを読んでプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
 	std::wstring filePathW = ConvertString(filePath);
-	//ここで問題
-	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
-	assert(SUCCEEDED(hr));
+	//dssファイルの場合
+	if (filePathW.ends_with(L".dss")) {
+		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
+		assert(SUCCEEDED(hr));
+	}
+	//その他のpngやjpegなど
+	else {
+		hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+		assert(SUCCEEDED(hr));
+
+	}
 	
 	//ミップマップの作成
 	//ミップマップ...元画像より小さなテクスチャ群
 	DirectX::ScratchImage mipImages{};
-	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-	assert(SUCCEEDED(hr));
+	//圧縮フォーマットかどうかを調べる
+	if (DirectX::IsCompressed(image.GetMetadata().format)) {
+		//圧縮フォーマットならそのまま使う
+		mipImages = std::move(image);
+	}
+	else {
+		hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 4, mipImages);
+		assert(SUCCEEDED(hr));
 
+	}
+
+	
 	//ミップマップ月のデータを返す
 	return mipImages;
 }
@@ -240,18 +249,4 @@ void TextureManager::UploadTextureData(
 void TextureManager::GraphicsCommand(uint32_t texHandle) {
 	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, texHandle);
 }
-
-void TextureManager::Release() {
-	
-	
-	//ゲーム終了時にはCOMの終了処理を行っておく
-	CoUninitialize();
-}
-
-
-//コンストラクタ
-TextureManager::~TextureManager() {
-
-}
-
 
