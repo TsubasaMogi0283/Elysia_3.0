@@ -39,19 +39,8 @@ public:
 private:
 	Camera camera_ = {};
 
-	//SimpleSkin
-	static const int SIMPLE_SKIN_AMOUNT_ = 2;
-	std::unique_ptr<AnimationModel> simpleModel_[SIMPLE_SKIN_AMOUNT_] = { nullptr };
-	uint32_t modelHandle = 0;
-	uint32_t animationHande_ = {};
-	WorldTransform worldTransform_[SIMPLE_SKIN_AMOUNT_] = {};
-	
-	Skeleton skeleton_[SIMPLE_SKIN_AMOUNT_] = {};
-	float animationTime_[SIMPLE_SKIN_AMOUNT_] = {};
-	SkinCluster skinCluster_[SIMPLE_SKIN_AMOUNT_] = {};
-
 	//歩き
-	static const int WALK_HUMAN_AMOUNT_ = 2;
+	static const int WALK_HUMAN_AMOUNT_ = 1;
 	std::unique_ptr<AnimationModel> human_[WALK_HUMAN_AMOUNT_] = { nullptr };
 	uint32_t humanModelHandle = {};
 	uint32_t humanAnimationModel_ = {};
@@ -59,13 +48,8 @@ private:
 	Skeleton humanSkeleton_[WALK_HUMAN_AMOUNT_] = {};
 	float humanAnimationTime_[WALK_HUMAN_AMOUNT_] = {};
 	SkinCluster humanSkinCluster_[WALK_HUMAN_AMOUNT_] = {};
-
-	//歩き(アニメーションなし)
-	std::unique_ptr<Model> humanNoneAnimation_ = nullptr;
-	uint32_t humanNoneAnimationModelHandle_ = 0;
-	WorldTransform humanNoneAnimationWorldTransform_ = {};
-	
-
+	Vector3 rotate = {};
+	bool isPushKey_ = false;
 
 	std::unique_ptr<Model> noneAnimationModel_ = nullptr;
 	WorldTransform noneAnimationWorldTransform_ = {};
