@@ -44,10 +44,10 @@ class PipelineManager final{
 private:
 
 	//コンストラクタ
-	PipelineManager();
+	PipelineManager()=default;
 
 	//デストラクタ
-	~PipelineManager();
+	~PipelineManager()=default;
 
 public:
 	//シングルインスタンス

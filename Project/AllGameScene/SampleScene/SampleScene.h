@@ -40,26 +40,31 @@ private:
 	Camera camera_ = {};
 
 	//SimpleSkin
-	std::unique_ptr<AnimationModel> simpleModel_ = nullptr;
+	static const int SIMPLE_SKIN_AMOUNT_ = 2;
+	std::unique_ptr<AnimationModel> simpleModel_[SIMPLE_SKIN_AMOUNT_] = { nullptr };
 	uint32_t modelHandle = 0;
-	uint32_t animationHande_ = 0;
-	WorldTransform worldTransform_ = {};
+	uint32_t animationHande_ = {};
+	WorldTransform worldTransform_[SIMPLE_SKIN_AMOUNT_] = {};
 	
-	Skeleton skeleton_ = {};
-	float animationTime_ = 0;
-	SkinCluster skinCluster_ = {};
+	Skeleton skeleton_[SIMPLE_SKIN_AMOUNT_] = {};
+	float animationTime_[SIMPLE_SKIN_AMOUNT_] = {};
+	SkinCluster skinCluster_[SIMPLE_SKIN_AMOUNT_] = {};
 
 	//歩き
-	std::unique_ptr<AnimationModel> human_ = nullptr;
-	uint32_t humanModelHandle = 0;
-	uint32_t humanAnimationModel_ = 0;
-	WorldTransform humanWorldTransform_ = {};
+	static const int WALK_HUMAN_AMOUNT_ = 2;
+	std::unique_ptr<AnimationModel> human_[WALK_HUMAN_AMOUNT_] = { nullptr };
+	uint32_t humanModelHandle = {};
+	uint32_t humanAnimationModel_ = {};
+	WorldTransform humanWorldTransform_[WALK_HUMAN_AMOUNT_] = {};
+	Skeleton humanSkeleton_[WALK_HUMAN_AMOUNT_] = {};
+	float humanAnimationTime_[WALK_HUMAN_AMOUNT_] = {};
+	SkinCluster humanSkinCluster_[WALK_HUMAN_AMOUNT_] = {};
 
-	Skeleton humanSkeleton_ = {};
-	float humanAnimationTime_ = 0;
-	SkinCluster humanSkinCluster_ = {};
-
-
+	//歩き(アニメーションなし)
+	std::unique_ptr<Model> humanNoneAnimation_ = nullptr;
+	uint32_t humanNoneAnimationModelHandle_ = 0;
+	WorldTransform humanNoneAnimationWorldTransform_ = {};
+	
 
 
 	std::unique_ptr<Model> noneAnimationModel_ = nullptr;

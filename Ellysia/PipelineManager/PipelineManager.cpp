@@ -5,12 +5,6 @@
 
 
 
-//コンストラクタ
-PipelineManager::PipelineManager() {
-
-}
-
-
 
 PipelineManager* PipelineManager::GetInstance() {
 	//関数内static変数として宣言する
@@ -1557,10 +1551,5 @@ void PipelineManager::GenerateParticle3DPSO() {
 
 
 	
-
-}
-
-//デストラクタ
-PipelineManager::~PipelineManager() {
 
 }
