@@ -1,0 +1,68 @@
+#pragma once
+
+
+#include "ConvertLog.h"
+
+#include "Vector4.h"
+#include "Matrix4x4.h"
+#include "Matrix4x4Calculation.h"
+#include "Transform.h"
+#include "VertexData.h"
+#include "Material.h"
+#include "TransformationMatrix.h"
+#include "DirectionalLight.h"
+
+struct WorldTransform;
+struct Camera;
+
+
+class SkyBox {
+public:
+	
+	//コンストラクタ
+	SkyBox()=default;
+
+	//初期化
+	void Create();
+
+	
+	//描画
+	//左上、右上、左下、右下
+	void Draw(WorldTransform & worldTransform,Camera & camera);
+
+
+	//デストラクタ
+	~SkyBox()=default;
+
+
+private:
+
+	//頂点バッファビューを作成する
+	void GenerateVertexBufferView();
+
+
+
+
+
+private:
+
+
+
+	//頂点バッファビューを作成する
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferViewSphere_;
+
+	//初期化
+	//頂点データ
+	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
+	VertexData* vertexData_ = nullptr;
+	const int32_t  SURFACE_VERTEX_= 6;
+
+
+	//マテリアル用のリソースを作る
+	ComPtr<ID3D12Resource> materialResource_ = nullptr;
+	Material* materialData_ = nullptr;
+
+
+
+
+};

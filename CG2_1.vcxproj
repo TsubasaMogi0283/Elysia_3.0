@@ -160,6 +160,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Polygon\3D\Model\Model.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Particle3D\Particle3D.cpp" />
+    <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Sphere\Sphere.cpp" />
     <ClCompile Include="Ellysia\SrvManager\SrvManager.cpp" />
     <ClCompile Include="Ellysia\TextureManager\TextureManager.cpp" />
@@ -265,6 +266,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\AccelerationField.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle3D.h" />
+    <ClInclude Include="Ellysia\Polygon\3D\SkyBox\SkyBox.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Sphere\Sphere.h" />
     <ClInclude Include="Ellysia\SrvManager\SrvManager.h" />
     <ClInclude Include="Ellysia\TextureManager\TextureManager.h" />

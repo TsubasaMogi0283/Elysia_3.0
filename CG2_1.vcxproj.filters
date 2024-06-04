@@ -181,6 +181,9 @@
     <Filter Include="Ellysia\Resource File\AnimationObject3D">
       <UniqueIdentifier>{9eccab60-4ff5-457b-9904-6ce6fe4d5a63}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Source File\Polygone\3D\SkyBox">
+      <UniqueIdentifier>{cb254adb-71fc-4a38-a6a9-c42d7a59dc59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -299,6 +302,9 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.cpp">
       <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp">
+      <Filter>Ellysia\Source File\Polygone\3D\SkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -537,6 +543,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Lighting\LightingType.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\SkyBox\SkyBox.h">
+      <Filter>Ellysia\Header File\Polygone\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
