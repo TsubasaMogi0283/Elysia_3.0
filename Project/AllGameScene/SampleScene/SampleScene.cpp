@@ -89,9 +89,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	}
 	
-
-
-	//キーボード入力
+#pragma region キーボード入力
 	const float SPEED = 0.1f;
 	Vector3 move = {};
 	if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
@@ -118,8 +116,7 @@ void SampleScene::Update(GameManager* gameManager) {
 		isPushKey_ = false;
 	}
 
-
-
+#pragma endregion
 
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
 		AnimationManager::GetInstance()->ApplyAnimation(humanSkeleton_[i], humanAnimationModel_, humanModelHandle, humanAnimationTime_[i]);
