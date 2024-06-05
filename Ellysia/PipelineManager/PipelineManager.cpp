@@ -1498,10 +1498,10 @@ void PipelineManager::GenarateOutLinePSO(){
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->outLinePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/OutLine/OutLine.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->outLinePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/LuminanceBasedOutline/LuminanceBasedOutline.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->outLinePSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->outLinePSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/OutLine/OutLine.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->outLinePSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/LuminanceBasedOutline/LuminanceBasedOutline.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->outLinePSO_.pixelShaderBlob_ != nullptr);
 
 

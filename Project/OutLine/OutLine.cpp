@@ -3,6 +3,7 @@
 #include "TextureManager.h"
 #include <SrvManager.h>
 #include "imgui.h"
+#include <RtvManager.h>
 
 void OutLine::Initialize(){
 
@@ -18,7 +19,7 @@ void OutLine::Initialize(){
 
 	//Texture
 	textureHandle_ = SrvManager::GetInstance()->Allocate();
-	//SrvManager::GetInstance()->CreateSRVForRenderTexture(DirectXSetup::GetInstance()->GetRenderTextureResource().Get(), textureHandle_);
+	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetRenderTextureResource().Get(), textureHandle_);
 
 	
 

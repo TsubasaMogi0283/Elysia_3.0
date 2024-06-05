@@ -19,15 +19,15 @@ public:
 	//代入演算子を無効にする
 	RtvManager& operator=(const RtvManager& rtvHeapManager) = delete;
 
-
-
-
-
-
-
 public:
-
-
+	/// <summary>
+	/// RenderTextureを作る
+	/// </summary>
+	/// <param name="width"></param>
+	/// <param name="height"></param>
+	/// <param name="format"></param>
+	/// <param name="clearColor"></param>
+	/// <returns></returns>
 	static ComPtr<ID3D12Resource> CreateRenderTextureResource(uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4 clearColor);
 
 
@@ -46,10 +46,10 @@ public:
 
 	ComPtr<ID3D12Resource> GetRenderTextureResource() {
 		return renderTextureResource;
-		
-
 	}
-
+	ComPtr<ID3D12Resource> GetOutLineTextureResource() {
+		return renderTextureResource;
+	}
 
 public:
 	/// <summary>
@@ -63,16 +63,19 @@ public:
 private:
 
 	//ディスクリプタ
-	const uint32_t RTV_DESCRIPTOR_SIZE_ = 3;
+	static const uint32_t RTV_DESCRIPTOR_SIZE_ = 4;
 	ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap_ = nullptr;
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{};
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_;
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[3] = {};
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[RTV_DESCRIPTOR_SIZE_] = {};
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc_{};
 
 
-
+	//PostEffect
+	//いつか分解する
 	ComPtr<ID3D12Resource> renderTextureResource = nullptr;
+	//OutLine用
+	ComPtr<ID3D12Resource> outLineTextureResource = nullptr;
 
 };
 

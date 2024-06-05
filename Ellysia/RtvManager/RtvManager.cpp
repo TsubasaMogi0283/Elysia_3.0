@@ -112,6 +112,19 @@ void RtvManager::Initialize(){
 		renderTextureResource.Get(), &rtvDesc, rtvHandles_[2]);
 
 
+	//OutLine用
+	const Vector4 OUT_LINE_CLEAR_VALUE = { 1.0f,1.0f,1.0f,1.0f };
+
+	outLineTextureResource = CreateRenderTextureResource(
+		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, OUT_LINE_CLEAR_VALUE);
+
+
+	rtvHandles_[3].ptr = rtvHandles_[2].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
+		outLineTextureResource.Get(), &rtvDesc, rtvHandles_[3]);
+
+
 	rtvDesc_ = rtvDesc;
 	rtvStartHandle_=rtvStartHandle;
 }
