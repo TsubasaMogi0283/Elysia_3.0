@@ -31,7 +31,14 @@ void SampleScene::Initialize() {
 	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
 
 	worldTransform_.Initialize();
+	worldTransform_.translate_.x = -2.0f;
 	camera_.Initialize();
+
+	silverWolfTestModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/Iz7PqiFe3p/SilverWolf_From_Honkai_StarRail","SilberWolf.obj");
+	silverWolfTest_.reset(Model::Create(silverWolfTestModelHandle));
+	silverWolfTestWorldTransform_.Initialize();
+	const float SILVERWOLF_SCALE = 0.1f;
+	silverWolfTestWorldTransform_.scale_ = { SILVERWOLF_SCALE ,SILVERWOLF_SCALE ,SILVERWOLF_SCALE };
 
 
 	audio_ = Audio::GetInstance();
@@ -56,8 +63,8 @@ void SampleScene::Initialize() {
 
 	outLine_ = new LuminanceBasedOutline();
 	outLine_->Initialize();
-	depthBasedOutline_ = new DepthBasedOutline();
-	depthBasedOutline_->Initialize();
+	//depthBasedOutline_ = new DepthBasedOutline();
+	//depthBasedOutline_->Initialize();
 
 }
 
@@ -90,6 +97,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	Matrix4x4 localMatrix = model_->GetAnimationLocalMatrix();
 	worldTransform_.Update();
+	silverWolfTestWorldTransform_.Update();
 	camera_.Update();
 
 	sprite_->SetPosition(position);
@@ -99,6 +107,10 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::SliderFloat("LowPassFilter", &cutOff_, 0.0f, 1.0f);
 
 	ImGui::InputInt("Pitch", &pitch_);
+	ImGui::End();
+
+	ImGui::Begin("Camera");
+	ImGui::SliderFloat3("Position", &camera_.translate_.x, -40.0f, 20.0f);
 	ImGui::End();
 
 
@@ -126,29 +138,30 @@ void SampleScene::DrawSpriteBack(){
 
 void SampleScene::PreDrawPostEffectFirst(){
 	
-	//outLine_->PreDraw();
+	outLine_->PreDraw();
 	//back_->PreDraw();
-	depthBasedOutline_->PreDraw();
+	//depthBasedOutline_->PreDraw();
 }
 
 
 void SampleScene::DrawObject3D() {
 	model_->Draw(worldTransform_, camera_);
+	silverWolfTest_->Draw(silverWolfTestWorldTransform_,camera_);
 }
 
 
 
 void SampleScene::PreDrawPostEffectSecond(){
 	
-	//outLine_->PreDrawSecond();
+	outLine_->PreDrawSecond();
 	//back_->PostDraw();
-	depthBasedOutline_->PreDrawSecond();
+	//depthBasedOutline_->PreDrawSecond();
 }
 
 void SampleScene::DrawPostEffect(){
-	//outLine_->Draw();
+	outLine_->Draw();
 	//back_->Draw();
-	depthBasedOutline_->Draw();
+	//depthBasedOutline_->Draw();
 }
 
 void SampleScene::DrawSprite(){

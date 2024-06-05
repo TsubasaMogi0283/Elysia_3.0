@@ -72,7 +72,13 @@ private:
 	std::unique_ptr<Model> model_ = nullptr;
 	uint32_t modelHandle = 0;
 	WorldTransform worldTransform_ = {};
+	
 	Camera camera_ = {};
+	std::unique_ptr<Model> silverWolfTest_ = nullptr;
+	uint32_t silverWolfTestModelHandle = 0;
+	WorldTransform silverWolfTestWorldTransform_ = {};
+
+
 
 	std::unique_ptr<Sprite> sprite_ = nullptr;
 
