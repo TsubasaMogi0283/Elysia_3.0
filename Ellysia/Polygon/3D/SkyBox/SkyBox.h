@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include "DirectXSetup.h"
 #include "ConvertLog.h"
 
 #include "Vector4.h"

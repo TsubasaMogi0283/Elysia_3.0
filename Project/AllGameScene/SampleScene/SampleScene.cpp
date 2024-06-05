@@ -44,13 +44,13 @@ void SampleScene::Initialize() {
 
 
 	//地面
-	uint32_t noneModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
+	uint32_t noneModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/SilverWolf_From_Honkai_StarRail", "SilverWolf.gltf");
 	noneAnimationModel_.reset(Model::Create(noneModelHandle));
 	noneAnimationWorldTransform_.Initialize();
-	const float SPHERE_SCALE = 40.0f;
+	const float SPHERE_SCALE = 0.08f;
 	noneAnimationWorldTransform_.scale_ = { SPHERE_SCALE,SPHERE_SCALE,SPHERE_SCALE };
 	noneAnimationWorldTransform_.translate_.x = 0.0f;
-	noneAnimationWorldTransform_.translate_.y = -1.0f;
+	noneAnimationWorldTransform_.translate_.y = 01.0f;
 
 
 
