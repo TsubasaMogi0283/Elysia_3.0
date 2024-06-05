@@ -50,28 +50,26 @@ void SkyBox::Create() {
 	vertexData_[10].position = { -1.0f,-1.0f,1.0f,1.0f };
 	vertexData_[11].position = { 1.0f,-1.0f,1.0f,1.0f };
 
-
-
-
-
 	//後は自力で
 	//後面。
-	vertexData_[12].position = { -1.0f,1.0f,1.0f,1.0f };
-	vertexData_[13].position = { 1.0f,1.0f,1.0f,1.0f };
-	vertexData_[14].position = { -1.0f,-1.0f,1.0f,1.0f };
-	vertexData_[15].position = { 1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[12].position = { 1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[13].position = { -1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[14].position = { 1.0f,-1.0f,-1.0f,1.0f };
+	vertexData_[15].position = { -1.0f,-1.0f,-1.0f,1.0f };
 
 	//上面。
-	vertexData_[16].position = { -1.0f,1.0f,1.0f,1.0f };
-	vertexData_[17].position = { 1.0f,1.0f,1.0f,1.0f };
-	vertexData_[18].position = { -1.0f,-1.0f,1.0f,1.0f };
-	vertexData_[19].position = { 1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[16].position = { 1.0f,1.0f,1.0f,1.0f };
+	vertexData_[17].position = { -1.0f,1.0f,1.0f,1.0f };
+	vertexData_[18].position = { 1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[19].position = { -1.0f,1.0f,-1.0f,1.0f };
+
+
 
 	//下面。
-	vertexData_[21].position = { -1.0f,1.0f,1.0f,1.0f };
-	vertexData_[23].position = { 1.0f,1.0f,1.0f,1.0f };
-	vertexData_[24].position = { -1.0f,-1.0f,1.0f,1.0f };
-	vertexData_[25].position = { 1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[20].position = { 1.0f,-1.0f,-1.0f,1.0f };
+	vertexData_[21].position = { -1.0f,-1.0f,-1.0f,1.0f };
+	vertexData_[22].position = { 1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[23].position = { -1.0f,-1.0f,1.0f,1.0f };
 
 
 	////マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
