@@ -30,7 +30,10 @@ public:
 	/// <returns></returns>
 	static ComPtr<ID3D12Resource> CreateRenderTextureResource(uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4 clearColor);
 
-
+	/// <summary>
+	/// ディスクリプタヒープの取得
+	/// </summary>
+	/// <returns></returns>
 	ComPtr<ID3D12DescriptorHeap> GetRtvDescriptorHeap() {
 		return  m_rtvDescriptorHeap_;
 	}
@@ -40,16 +43,28 @@ public:
 		return rtvDesc_;
 	}
 
+	/// <summary>
+	/// ハンドルの取得
+	/// </summary>
+	/// <param name="number"></param>
+	/// <returns></returns>
 	D3D12_CPU_DESCRIPTOR_HANDLE& GetRtvHandle(uint32_t number) {
 		return rtvHandles_[number];
 	}
+
+
+#pragma region PostEffect用リソース
 
 	ComPtr<ID3D12Resource> GetRenderTextureResource() {
 		return renderTextureResource;
 	}
 	ComPtr<ID3D12Resource> GetOutLineTextureResource() {
-		return renderTextureResource;
+		return outLineTextureResource;
 	}
+
+#pragma endregion
+
+
 
 public:
 	/// <summary>

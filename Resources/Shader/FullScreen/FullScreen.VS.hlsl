@@ -2,8 +2,8 @@
 
 
 //三角形で覆われればOK
-static const uint32_t NUM_VERTEX = 3;
-static const float32_t4 POSITIONS[NUM_VERTEX] =
+static const uint NUM_VERTEX = 3;
+static const float4 POSITIONS[NUM_VERTEX] =
 {
     //左上
     { -1.0f, 1.0f, 0.0f, 1.0f },
@@ -14,7 +14,7 @@ static const float32_t4 POSITIONS[NUM_VERTEX] =
     
 };
 
-static const float32_t2 TEXCOORDS[NUM_VERTEX] =
+static const float2 TEXCOORDS[NUM_VERTEX] =
 {
     //左上
     { 0.0f, 0.0f },
@@ -24,14 +24,8 @@ static const float32_t2 TEXCOORDS[NUM_VERTEX] =
     { 0.0f, 2.0f },
 };
 
-struct CenterPosition
-{
-    float32_t4 position;
-};
 
-ConstantBuffer<CenterPosition> gPosition : register(b0);
-
-VertexShaderOutput main(uint32_t vertexId : SV_VertexID)
+VertexShaderOutput main(uint vertexId : SV_VertexID)
 {
     VertexShaderOutput output;
     

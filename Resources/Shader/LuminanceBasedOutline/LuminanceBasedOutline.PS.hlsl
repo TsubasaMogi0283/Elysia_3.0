@@ -8,14 +8,6 @@ SamplerState gSample : register(s0);
 
 //hlsliでは絶対に日本語を使わないでね
 
-struct Effect{
-    int type;
-};
-
-
-//ConstantBuffer<構造体>変数名:register(b0);
-ConstantBuffer<Effect> gEffect : register(b0);
-
 
 struct PixelShaderOutput{
     float4 color : SV_TARGET0;
@@ -24,49 +16,66 @@ struct PixelShaderOutput{
 
 
 
-//円周率
-static const float PI = 3.1415926535f;
+static const float PREWITT_HORIZONTAL_KERNEL[3][3] = {
+    { -1.0f / 6.0f, 0.0f, 1.0 / 6.0f },
+    { -1.0f / 6.0f, 0.0f, 1.0 / 6.0f },
+    { -1.0f / 6.0f, 0.0f, 1.0 / 6.0f },
+};
+static const float PREWITT_VERTICAL_KERNEL[3][3] ={
+    { -1.0f / 6.0f, -1.0f / 6.0f, -1.0 / 6.0f },
+    { 0.0f, 0.0f, 0.0f },
+    { 1.0f / 6.0f, 1.0f / 6.0f, 1.0 / 6.0f },
+};
 
-float gauss(float x, float y, float sigma){
-    float exponent = -(x * x + y * y) * rcp(2.0f * sigma * sigma);
-    float denominator = 2.0f * PI * sigma * sigma;
-    //exp...ネイピア数eを求める関数
-    return exp(exponent) * rcp(denominator);
-    
-}
+static const float2 INDEX3x3[3][3] ={
+    { { -1.0f, -1.0f }, { 0.0f, -1.0f }, { 1.0f, -1.0f } },
+    { { -1.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f } },
+    { { -1.0f, 1.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } },
+};
 
 float Luminance(float3 v){
     return dot(v, float3(0.2125f, 0.7154f, 0.0721f));
-
 }
 
-//exp(exponent)は以下と同じ
-//const float e=2.71828182f;
-//pow(e exponent)
 
-PixelShaderOutput main(VertexShaderOutput input)
-{
+
+
+PixelShaderOutput main(VertexShaderOutput input){
     PixelShaderOutput output;
-    output.color = gTexture.Sample(gSample, input.texcoord);
-        
+    
+    //畳み込み
+    float2 difference = float2(0.0f, 0.0f);
+    
+    //縦横それぞれの多々込みの結果を格納する
+    //色を高度に変換して、畳込みを行っていく。
+    //微分Filter用のkernelになっているので、やること自体は今までの畳み込みと同じ。
+    //rcp...逆数にする。正確では無いけど処理が速いよ
     //uvStepSizeの算出
     uint width, height;
     gTexture.GetDimensions(width, height);
-    //rcp...逆数にする。正確では無いけど処理が速いよ
     float2 uvStepSIze = float2(rcp(width), rcp(height));
-    output.color.rgb = float3(0.0f, 0.0f, 0.0f);
-    output.color.a = 1.0f;
-    
-    //畳み込みとkernelが重要
     for (int x = 0; x < 3; ++x){
         for (int y = 0; y < 3; ++y){
-            float2 texcoord = input.texcoord + INDEX3x3[x][y] * uvStepSIze;
-            float3 fetchColor = gTexture.Sample(gSample, texcoord).rgb;
-            output.color.rgb += fetchColor * KERNEL3x3[x][y];
-
+            float2 texCoord = input.texcoord + INDEX3x3[x][y] * uvStepSIze;
+            float3 fetchColor = gTexture.Sample(gSample, texCoord).rgb;
+            float luminance = Luminance(fetchColor);
+            difference.x += luminance * PREWITT_HORIZONTAL_KERNEL[x][y];
+            difference.y += luminance * PREWITT_VERTICAL_KERNEL[x][y];
+            
+            
         }
     }
-        
+    
+    
+    
+    //変化の長さをウェイトとして合成。
+    //ウェイトの決定方法も色々と考えられる。
+    //例えばdifference.xだけを使えば横方向のエッジが検出される
+    float weight = length(difference);
+    weight = saturate(weight);
+    
+    output.color = weight;
+    output.color.a = 1.0f;
     
     
     return output;

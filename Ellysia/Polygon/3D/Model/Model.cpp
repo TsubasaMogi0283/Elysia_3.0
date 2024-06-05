@@ -196,7 +196,7 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
 	if (textureHandle_!= 0) {
-		TextureManager::GraphicsCommand(textureHandle_ );
+		TextureManager::GraphicsCommand(2,textureHandle_ );
 	}
 	
 	//DirectionalLight
@@ -354,7 +354,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Animation anima
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
 	if (textureHandle_ != 0) {
-		TextureManager::GraphicsCommand(textureHandle_);
+		TextureManager::GraphicsCommand(2,textureHandle_);
 	}
 
 	//DirectionalLight

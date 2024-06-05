@@ -237,8 +237,8 @@ void TextureManager::UploadTextureData(
 #pragma endregion
 
 
-void TextureManager::GraphicsCommand(uint32_t texHandle) {
-	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, texHandle);
+void TextureManager::GraphicsCommand(uint32_t rootParameter, uint32_t texHandle) {
+	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(rootParameter, texHandle);
 }
 
 void TextureManager::Release() {

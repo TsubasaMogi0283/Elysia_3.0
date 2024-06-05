@@ -162,7 +162,7 @@ void BackText::Draw(){
 	}
 
 	//Texture
-	TextureManager::GraphicsCommand(textureHandle_);
+	TextureManager::GraphicsCommand(2,textureHandle_);
 
 	//GaussianFilter
 	if (effectType_ == GaussianFilter3x3 ||
@@ -170,13 +170,6 @@ void BackText::Draw(){
 		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, gaussianFilterResource_->GetGPUVirtualAddress());
 	}
 
-
-
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetFullScreenRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetFullScreenGraphicsPipelineState().Get());
-
-	//Effect
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, effectResource_->GetGPUVirtualAddress());
 
 
 

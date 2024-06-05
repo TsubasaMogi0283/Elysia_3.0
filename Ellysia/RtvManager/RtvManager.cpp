@@ -101,23 +101,25 @@ void RtvManager::Initialize(){
 	//縦横を取得
 	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
 	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
-
+	
 	renderTextureResource = CreateRenderTextureResource(
 		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
-
-
+	
+	
 	rtvHandles_[2].ptr = rtvHandles_[1].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
+	
 	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
 		renderTextureResource.Get(), &rtvDesc, rtvHandles_[2]);
 
 
+
+	//関数でまとめて簡単に生成できるようにしたい
 	//OutLine用
 	const Vector4 OUT_LINE_CLEAR_VALUE = { 1.0f,1.0f,1.0f,1.0f };
 
 	outLineTextureResource = CreateRenderTextureResource(
 		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, OUT_LINE_CLEAR_VALUE);
-
+	
 
 	rtvHandles_[3].ptr = rtvHandles_[2].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 

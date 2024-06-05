@@ -53,6 +53,9 @@ void SampleScene::Initialize() {
 	back_ = new BackText();
 	back_->Initialize();
 
+
+	outLine_ = new OutLine();
+	outLine_->Initialize();
 }
 
 
@@ -119,12 +122,11 @@ void SampleScene::DrawSpriteBack(){
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
-	back_->PreDraw();
+	//back_->PreDraw();
+	outLine_->PreDraw();
 }
 
-/// <summary>
-/// 描画
-/// </summary>
+
 void SampleScene::DrawObject3D() {
 	model_->Draw(worldTransform_, camera_);
 }
@@ -132,11 +134,13 @@ void SampleScene::DrawObject3D() {
 
 
 void SampleScene::PreDrawPostEffectSecond(){
-	back_->PostDraw();
+	//back_->PostDraw();
+	outLine_->PreDrawSecond();
 }
 
 void SampleScene::DrawPostEffect(){
-	back_->Draw();
+	//back_->Draw();
+	outLine_->Draw();
 }
 
 void SampleScene::DrawSprite(){
@@ -151,4 +155,5 @@ void SampleScene::DrawSprite(){
 /// </summary>
 SampleScene::~SampleScene() {
 	delete back_;
+	delete outLine_;
 }

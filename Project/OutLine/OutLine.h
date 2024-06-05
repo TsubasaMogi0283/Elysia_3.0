@@ -7,25 +7,34 @@
 
 class OutLine{
 public:
-	OutLine() {};
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	OutLine()=default;
 
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
-
+	/// <summary>
+	/// 描画前の処理
+	/// </summary>
 	void PreDraw();
+	void PreDrawSecond();
 
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	void PostDraw();
-
-	~OutLine() {};
+	
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~OutLine()=default;
 
 private:
-	ComPtr<ID3D12Resource> effectResource_ = nullptr;
-
-	int32_t effectType_ = 0;
-	int32_t* effectTypeData_ = nullptr;
-
 
 	uint32_t textureHandle_ = 0;
 

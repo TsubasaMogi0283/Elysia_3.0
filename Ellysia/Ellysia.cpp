@@ -87,7 +87,7 @@ void Ellysia::Update(){
 
 void Ellysia::Draw(){
 	
-	
+#pragma region PostEffect
 	gameManager_->PreDrawPostEffectFirst();
 	gameManager_->DrawSpriteBack();
 
@@ -95,6 +95,8 @@ void Ellysia::Draw(){
 	gameManager_->DrawObject3D();
 	//
 	gameManager_->PreDrawPostEffectSecond();
+
+#pragma endregion
 
 	DirectXSetup::GetInstance()->StartDraw();
 	

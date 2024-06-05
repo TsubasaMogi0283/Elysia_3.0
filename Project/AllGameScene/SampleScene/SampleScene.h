@@ -11,7 +11,7 @@
 #include <Particle3D.h>
 #include <Audio.h>
 #include "../../BackTest/BackText.h"
-
+#include "../OutLine/OutLine.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -80,4 +80,7 @@ private:
 	Vector3 position = {};
 
 	BackText* back_ = nullptr;
+
+	OutLine* outLine_ = nullptr;
+
 };

@@ -101,6 +101,20 @@ public:
 		return fullScreenPSO_.graphicsPipelineState_;
 	}
 
+	//コマンドに積むためのGetter(OutLine)
+	ComPtr<ID3D12RootSignature> GetOutLineRootSignature() {
+		return outLinePSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetOutLineGraphicsPipelineState() {
+		return outLinePSO_.graphicsPipelineState_;
+	}
+
+
+
+	
+
+
+
 
 	void SetSpriteBlendMode(uint32_t blendmode) {
 		selectSpriteBlendMode_ = blendmode;
