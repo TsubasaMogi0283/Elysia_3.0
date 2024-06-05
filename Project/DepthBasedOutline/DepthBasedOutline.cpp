@@ -9,11 +9,11 @@ void DepthBasedOutline::Initialize() {
 
 	//エフェクトごとにhlsl分けたい
 	//いずれやる
-	PipelineManager::GetInstance()->GenarateOutLinePSO();
+	PipelineManager::GetInstance()->GenarateDepthBasedOutlinePSO();
 
 	//Texture
 	textureHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetOutLineTextureResource().Get(), textureHandle_);
+	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetDepthBasedOutlineResource().Get(), textureHandle_);
 }
 
 void DepthBasedOutline::PreDraw() {
@@ -26,9 +26,7 @@ void DepthBasedOutline::PreDraw() {
 	// Noneにしておく
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	// バリアを張る対象のリソース。現在のバックバッファに対して行う
-	auto resource = RtvManager::GetInstance()->GetOutLineTextureResource().Get();
-	resource;
-	barrier.Transition.pResource = RtvManager::GetInstance()->GetOutLineTextureResource().Get();
+	barrier.Transition.pResource = RtvManager::GetInstance()->GetDepthBasedOutlineResource().Get();
 	// 遷移前(現在)のResourceState
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	// 遷移後のResourceState
@@ -36,15 +34,12 @@ void DepthBasedOutline::PreDraw() {
 	// TransitionBarrierを張る
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 
-
-	//auto handle = RtvManager::GetInstance()->GetRtvHandle(3);
-
 	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.1f,0.1f,0.7f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
-		1, &RtvManager::GetInstance()->GetRtvHandle(3), false, &DirectXSetup::GetInstance()->GetDsvHandle());
+		1, &RtvManager::GetInstance()->GetRtvHandle(4), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
-		RtvManager::GetInstance()->GetRtvHandle(3), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+		RtvManager::GetInstance()->GetRtvHandle(4), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(
@@ -78,8 +73,8 @@ void DepthBasedOutline::PreDraw() {
 
 void DepthBasedOutline::Draw() {
 
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetOutLineRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetOutLineGraphicsPipelineState().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetDepthBasedOutlineRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetDepthBasedOutlineGraphicsPipelineState().Get());
 
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -97,7 +92,7 @@ void DepthBasedOutline::PreDrawSecond() {
 
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = RtvManager::GetInstance()->GetOutLineTextureResource().Get();
+	barrier.Transition.pResource = RtvManager::GetInstance()->GetDepthBasedOutlineResource().Get();
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);

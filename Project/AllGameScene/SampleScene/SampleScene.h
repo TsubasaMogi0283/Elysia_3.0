@@ -12,6 +12,7 @@
 #include <Audio.h>
 #include "../../BackTest/BackText.h"
 #include "../LuminanceBasedOutline/LuminanceBasedOutline.h"
+#include "../../DepthBasedOutline/DepthBasedOutline.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -82,5 +83,5 @@ private:
 	BackText* back_ = nullptr;
 
 	LuminanceBasedOutline* outLine_ = nullptr;
-
+	DepthBasedOutline* depthBasedOutline_ = nullptr;
 };

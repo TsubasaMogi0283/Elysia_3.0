@@ -115,7 +115,7 @@ void RtvManager::Initialize(){
 
 	//関数でまとめて簡単に生成できるようにしたい
 	//4つ目
-	//OutLine用
+	//LuminanceBasedOutline用
 	const Vector4 OUT_LINE_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
 
 	outLineTextureResource = CreateRenderTextureResource(
@@ -126,6 +126,17 @@ void RtvManager::Initialize(){
 
 	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
 		outLineTextureResource.Get(), &rtvDesc, rtvHandles_[3]);
+
+	//5つ目
+	//DepthBasedOutline用
+	depthBasedOutlineResource_ = CreateRenderTextureResource(
+		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, OUT_LINE_CLEAR_VALUE);
+
+
+	rtvHandles_[4].ptr = rtvHandles_[3].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
+		depthBasedOutlineResource_.Get(), &rtvDesc, rtvHandles_[4]);
 
 
 

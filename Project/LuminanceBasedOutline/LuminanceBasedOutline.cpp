@@ -9,7 +9,7 @@ void LuminanceBasedOutline::Initialize(){
 
 	//エフェクトごとにhlsl分けたい
 	//いずれやる
-	PipelineManager::GetInstance()->GenarateOutLinePSO();
+	PipelineManager::GetInstance()->GenarateLuminanceBasedOutlinePSO();
 	
 	//Texture
 	textureHandle_ = SrvManager::GetInstance()->Allocate();
@@ -78,8 +78,8 @@ void LuminanceBasedOutline::PreDraw(){
 
 void LuminanceBasedOutline::Draw(){
 
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetOutLineRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetOutLineGraphicsPipelineState().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetLuminanceBasedOutlineRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetLuminanceBasedOutlineGraphicsPipelineState().Get());
 
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

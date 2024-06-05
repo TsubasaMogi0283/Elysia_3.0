@@ -56,6 +56,9 @@ void SampleScene::Initialize() {
 
 	outLine_ = new LuminanceBasedOutline();
 	outLine_->Initialize();
+	depthBasedOutline_ = new DepthBasedOutline();
+	depthBasedOutline_->Initialize();
+
 }
 
 
@@ -123,9 +126,9 @@ void SampleScene::DrawSpriteBack(){
 
 void SampleScene::PreDrawPostEffectFirst(){
 	
-	outLine_->PreDraw();
+	//outLine_->PreDraw();
 	//back_->PreDraw();
-
+	depthBasedOutline_->PreDraw();
 }
 
 
@@ -137,13 +140,15 @@ void SampleScene::DrawObject3D() {
 
 void SampleScene::PreDrawPostEffectSecond(){
 	
-	outLine_->PreDrawSecond();
+	//outLine_->PreDrawSecond();
 	//back_->PostDraw();
+	depthBasedOutline_->PreDrawSecond();
 }
 
 void SampleScene::DrawPostEffect(){
-	outLine_->Draw();
+	//outLine_->Draw();
 	//back_->Draw();
+	depthBasedOutline_->Draw();
 }
 
 void SampleScene::DrawSprite(){
@@ -159,4 +164,5 @@ void SampleScene::DrawSprite(){
 SampleScene::~SampleScene() {
 	delete back_;
 	delete outLine_;
+	delete depthBasedOutline_;
 }

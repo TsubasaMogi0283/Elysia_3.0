@@ -101,15 +101,21 @@ public:
 		return fullScreenPSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積むためのGetter(OutLine)
-	ComPtr<ID3D12RootSignature> GetOutLineRootSignature() {
-		return outLinePSO_.rootSignature_;
+	//コマンドに積むためのGetter(LuminanceBasedOutline)
+	ComPtr<ID3D12RootSignature> GetLuminanceBasedOutlineRootSignature() {
+		return luminanceBasedOutlinePSO_.rootSignature_;
 	}
-	ComPtr<ID3D12PipelineState> GetOutLineGraphicsPipelineState() {
-		return outLinePSO_.graphicsPipelineState_;
+	ComPtr<ID3D12PipelineState> GetLuminanceBasedOutlineGraphicsPipelineState() {
+		return luminanceBasedOutlinePSO_.graphicsPipelineState_;
 	}
 
-
+	//コマンドに積むためのGetter(DepthBasedOutline)
+	ComPtr<ID3D12RootSignature> GetDepthBasedOutlineRootSignature() {
+		return depthBasedOutlinePSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetDepthBasedOutlineGraphicsPipelineState() {
+		return depthBasedOutlinePSO_.graphicsPipelineState_;
+	}
 
 	
 
@@ -146,9 +152,10 @@ public:
 	static void GenarateFullScreenPSO();
 
 	//OutLine用
-	static void GenarateOutLinePSO();
+	static void GenarateLuminanceBasedOutlinePSO();
 
-
+	//DepthBasedOutline用
+	static void GenarateDepthBasedOutlinePSO();
 
 private:
 
@@ -172,8 +179,15 @@ private:
 	PSOInformation particle3DPSO_ = {};
 	//CopyImage用
 	PSOInformation fullScreenPSO_ = {};
-	//CopyImage用
-	PSOInformation outLinePSO_ = {};
+	//LuminanceBasedOutline用
+	PSOInformation luminanceBasedOutlinePSO_ = {};
+	//DepthBasedOutline用
+	PSOInformation depthBasedOutlinePSO_ = {};
+
+
+
+
+
 
 
 	//スプライト用

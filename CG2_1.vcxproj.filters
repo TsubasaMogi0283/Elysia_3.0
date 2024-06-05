@@ -172,6 +172,9 @@
     <Filter Include="Ellysia\Resource File\LuminanceBasedOutline">
       <UniqueIdentifier>{5cbcd479-b00c-4daf-81d2-865fc4f71c65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Resource File\DepthBasedOutline">
+      <UniqueIdentifier>{c2d37f14-d34f-40a3-bc66-9ee0f1b99b64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -319,6 +322,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.VS.hlsl">
       <Filter>Ellysia\Resource File\LuminanceBasedOutline</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\DepthBasedOutline\DepthBasedOutline.PS.hlsl">
+      <Filter>Ellysia\Resource File\DepthBasedOutline</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\DepthBasedOutline\DepthBasedOutline.VS.hlsl">
+      <Filter>Ellysia\Resource File\DepthBasedOutline</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -542,6 +551,9 @@
     </None>
     <None Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.hlsli">
       <Filter>Ellysia\Resource File\LuminanceBasedOutline</Filter>
+    </None>
+    <None Include="Resources\Shader\DepthBasedOutline\DepthBasedOutline.hlsli">
+      <Filter>Ellysia\Resource File\DepthBasedOutline</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
