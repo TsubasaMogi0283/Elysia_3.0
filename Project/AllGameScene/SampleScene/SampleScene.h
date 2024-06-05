@@ -81,6 +81,6 @@ private:
 
 	BackText* back_ = nullptr;
 
-	OutLine* outLine_ = nullptr;
+	LuminanceBasedOutline* outLine_ = nullptr;
 
 };

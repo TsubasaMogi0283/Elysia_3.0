@@ -163,7 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\AllGameScene\SampleScene2\SampleScene2.cpp" />
     <ClCompile Include="Project\AllGameScene\SampleScene\SampleScene.cpp" />
     <ClCompile Include="Project\BackTest\BackText.cpp" />
-    <ClCompile Include="Project\OutLine\OutLine.cpp" />
+    <ClCompile Include="Project\OutLine\LuminanceBasedOutline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\FullScreen\FullScreen.PS.hlsl">
@@ -272,7 +272,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\AllGameScene\SampleScene2\SampleScene2.h" />
     <ClInclude Include="Project\AllGameScene\SampleScene\SampleScene.h" />
     <ClInclude Include="Project\BackTest\BackText.h" />
-    <ClInclude Include="Project\OutLine\OutLine.h" />
+    <ClInclude Include="Project\OutLine\LuminanceBasedOutline.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

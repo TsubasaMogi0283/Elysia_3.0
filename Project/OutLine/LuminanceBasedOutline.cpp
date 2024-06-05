@@ -1,10 +1,10 @@
-#include "OutLine.h"
+#include "LuminanceBasedOutline.h"
 #include <PipelineManager.h>
 #include "TextureManager.h"
 #include <SrvManager.h>
 #include <RtvManager.h>
 
-void OutLine::Initialize(){
+void LuminanceBasedOutline::Initialize(){
 
 
 	//エフェクトごとにhlsl分けたい
@@ -16,7 +16,7 @@ void OutLine::Initialize(){
 	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetOutLineTextureResource().Get(), textureHandle_);
 }
 
-void OutLine::PreDraw(){
+void LuminanceBasedOutline::PreDraw(){
 	//ResourceとHandleはDirectX側で作った
 	//いずれRTV・DSVManagerを作る
 	
@@ -39,7 +39,7 @@ void OutLine::PreDraw(){
 
 	//auto handle = RtvManager::GetInstance()->GetRtvHandle(3);
 	
-	const float RENDER_TARGET_CLEAR_VALUE[] = { 1.0f,1.0f,1.0f,1.0f };
+	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.1f,0.1f,0.7f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
 		1, &RtvManager::GetInstance()->GetRtvHandle(3), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
@@ -76,7 +76,7 @@ void OutLine::PreDraw(){
 
 }
 
-void OutLine::Draw(){
+void LuminanceBasedOutline::Draw(){
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetOutLineRootSignature().Get());
 	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetOutLineGraphicsPipelineState().Get());
@@ -93,7 +93,7 @@ void OutLine::Draw(){
 	
 }
 
-void OutLine::PreDrawSecond(){
+void LuminanceBasedOutline::PreDrawSecond(){
 	
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;

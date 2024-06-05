@@ -72,9 +72,13 @@ PixelShaderOutput main(VertexShaderOutput input){
     //ウェイトの決定方法も色々と考えられる。
     //例えばdifference.xだけを使えば横方向のエッジが検出される
     float weight = length(difference);
-    weight = saturate(weight);
+    //差が小さいので大きくしている
+    //後でCBufferで値を送るつもり
+    weight = saturate(weight*6.0f);
     
-    output.color = weight;
+    //weightが大きい程暗く表示するようにしている
+    //最もシンプルな合成
+    output.color.rgb = (1.0f - weight) * gTexture.Sample(gSample,input.texcoord).rgb;
     output.color.a = 1.0f;
     
     

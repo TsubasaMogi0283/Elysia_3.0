@@ -54,7 +54,7 @@ void SampleScene::Initialize() {
 	back_->Initialize();
 
 
-	outLine_ = new OutLine();
+	outLine_ = new LuminanceBasedOutline();
 	outLine_->Initialize();
 }
 

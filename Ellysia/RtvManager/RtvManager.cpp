@@ -115,7 +115,7 @@ void RtvManager::Initialize(){
 
 	//関数でまとめて簡単に生成できるようにしたい
 	//OutLine用
-	const Vector4 OUT_LINE_CLEAR_VALUE = { 1.0f,1.0f,1.0f,1.0f };
+	const Vector4 OUT_LINE_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
 
 	outLineTextureResource = CreateRenderTextureResource(
 		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, OUT_LINE_CLEAR_VALUE);

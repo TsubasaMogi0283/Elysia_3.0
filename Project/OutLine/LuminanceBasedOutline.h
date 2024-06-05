@@ -5,12 +5,12 @@
 #include "VertexData.h"
 
 
-class OutLine{
+class LuminanceBasedOutline{
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	OutLine()=default;
+	LuminanceBasedOutline()=default;
 
 	/// <summary>
 	/// 初期化
@@ -32,7 +32,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~OutLine()=default;
+	~LuminanceBasedOutline()=default;
 
 private:
 

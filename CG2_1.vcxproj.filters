@@ -282,7 +282,7 @@
     <ClCompile Include="Ellysia\RtvManager\RtvManager.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
-    <ClCompile Include="Project\OutLine\OutLine.cpp">
+    <ClCompile Include="Project\OutLine\LuminanceBasedOutline.cpp">
       <Filter>Project</Filter>
     </ClCompile>
   </ItemGroup>
@@ -499,7 +499,7 @@
     <ClInclude Include="Ellysia\RtvManager\RtvManager.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
-    <ClInclude Include="Project\OutLine\OutLine.h">
+    <ClInclude Include="Project\OutLine\LuminanceBasedOutline.h">
       <Filter>Project</Filter>
     </ClInclude>
   </ItemGroup>
