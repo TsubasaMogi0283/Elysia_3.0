@@ -114,6 +114,7 @@ void RtvManager::Initialize(){
 
 
 	//関数でまとめて簡単に生成できるようにしたい
+	//4つ目
 	//OutLine用
 	const Vector4 OUT_LINE_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
 
@@ -125,6 +126,11 @@ void RtvManager::Initialize(){
 
 	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
 		outLineTextureResource.Get(), &rtvDesc, rtvHandles_[3]);
+
+
+
+
+
 
 
 	rtvDesc_ = rtvDesc;

@@ -122,8 +122,10 @@ void SampleScene::DrawSpriteBack(){
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
-	//back_->PreDraw();
+	
 	outLine_->PreDraw();
+	//back_->PreDraw();
+
 }
 
 
@@ -134,13 +136,14 @@ void SampleScene::DrawObject3D() {
 
 
 void SampleScene::PreDrawPostEffectSecond(){
-	//back_->PostDraw();
+	
 	outLine_->PreDrawSecond();
+	//back_->PostDraw();
 }
 
 void SampleScene::DrawPostEffect(){
-	//back_->Draw();
 	outLine_->Draw();
+	//back_->Draw();
 }
 
 void SampleScene::DrawSprite(){

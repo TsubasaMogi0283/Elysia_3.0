@@ -11,7 +11,7 @@
 #include <Particle3D.h>
 #include <Audio.h>
 #include "../../BackTest/BackText.h"
-#include "../OutLine/OutLine.h"
+#include "../LuminanceBasedOutline/LuminanceBasedOutline.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
