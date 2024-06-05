@@ -4,7 +4,11 @@
 
 
 Texture2D<float4> gTexture : register(t0);
+Texture2D<float> gDepthTexture : register(t1);
+
 SamplerState gSample : register(s0);
+SamplerState gSamplePoint : register(s1);
+
 
 //hlsliでは絶対に日本語を使わないでね
 
