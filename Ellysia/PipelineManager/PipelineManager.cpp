@@ -1537,7 +1537,7 @@ void PipelineManager::GenarateDepthBasedOutlinePSO(){
 
 	//rootParameter生成。複数設定できるので配列。
 	//今回は結果一つだけなので長さ１の配列
-	D3D12_ROOT_PARAMETER rootParameters[1] = {};
+	D3D12_ROOT_PARAMETER rootParameters[3] = {};
 
 
 
@@ -1546,23 +1546,42 @@ void PipelineManager::GenarateDepthBasedOutlinePSO(){
 	//いつか直す
 
 	//Texture
-	D3D12_DESCRIPTOR_RANGE descriptorRange[2] = {};
+	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
 	descriptorRange[0].BaseShaderRegister = 0;
 	descriptorRange[0].NumDescriptors = 1;
 	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-	//Depth
-	descriptorRange[1].BaseShaderRegister = 1;
-	descriptorRange[1].NumDescriptors = 1;
-	descriptorRange[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRange[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
+	
 
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;
 	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
+
+	//Camera
+	//CBVを使う
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	////PixelShaderで使う
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//レジスタ番号とバインド
+	//register...Shader上のResource配置情報
+	rootParameters[1].Descriptor.ShaderRegister = 0;
+
+
+
+	//Depth
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForDepth[1] = {};
+	descriptorRangeForDepth[0].BaseShaderRegister = 1;
+	descriptorRangeForDepth[0].NumDescriptors = 1;
+	descriptorRangeForDepth[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRangeForDepth[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRangeForDepth;
+	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForDepth);
+
 
 
 	//ルートパラメータ配列へのポイント
@@ -1605,7 +1624,7 @@ void PipelineManager::GenarateDepthBasedOutlinePSO(){
 	staticSamplers[1].ShaderRegister = 1;
 	//PixelShaderで使う
 	staticSamplers[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
+	staticSamplers[1].Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
 
 
 

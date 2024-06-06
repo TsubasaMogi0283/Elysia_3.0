@@ -3,6 +3,8 @@
 #include "Vector4.h"
 #include "Vector3.h"
 #include "VertexData.h"
+#include "Matrix4x4.h"
+struct Camera;
 
 
 class DepthBasedOutline{
@@ -26,7 +28,7 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void Draw(Camera& camera);
 
 
 	/// <summary>
@@ -35,14 +37,21 @@ public:
 	~DepthBasedOutline() = default;
 
 private:
+	struct CameraMatrix {
+		Matrix4x4 projectionInverse;
+	};
+
+
+
+private:
 
 	uint32_t textureHandle_ = 0;
-
+	uint32_t srvforDepthHandle_ = 0;
 	D3D12_RESOURCE_BARRIER barrier = {};
 
 
-
-
+	ComPtr<ID3D12Resource> projectionInverseResource_ = nullptr;
+	CameraMatrix* cameraMatrix_ = nullptr;
 
 };
 

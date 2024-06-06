@@ -47,6 +47,7 @@ ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResource(
 	clearValue.Color[2] = clearColor.z;
 	clearValue.Color[3] = clearColor.w;
 
+	//D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 
 	//Resourceの作成
 	ComPtr<ID3D12Resource> resource = nullptr;
@@ -54,7 +55,7 @@ ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResource(
 		&heapProperties,					//Heapの設定 
 		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定。特になし。
 		&resourceDesc,						//Resourceの設定
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,	//これから描画することを前提としたTextureなのでRenderTargetとして使うことから始める
+		D3D12_RESOURCE_STATE_RENDER_TARGET,	//これから描画することを前提としたTextureなのでRenderTargetとして使うことから始める
 		&clearValue,						//Clear最適値。ClearRenderTargetをこの色でClearするようにする。最適化されているので高速！
 		IID_PPV_ARGS(&resource));			//作成するResourceポインタへのポインタ
 	assert(SUCCEEDED(hr));

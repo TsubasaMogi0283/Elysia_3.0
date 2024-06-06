@@ -4,6 +4,9 @@
 #include <SrvManager.h>
 #include <RtvManager.h>
 
+#include "Camera.h"
+#include <Matrix4x4Calculation.h>
+
 void DepthBasedOutline::Initialize() {
 
 
@@ -11,9 +14,15 @@ void DepthBasedOutline::Initialize() {
 	//いずれやる
 	PipelineManager::GetInstance()->GenarateDepthBasedOutlinePSO();
 
+	projectionInverseResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraMatrix)).Get();
+	
+
 	//Texture
 	textureHandle_ = SrvManager::GetInstance()->Allocate();
 	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetDepthBasedOutlineResource().Get(), textureHandle_);
+	srvforDepthHandle_= SrvManager::GetInstance()->Allocate();
+	SrvManager::GetInstance()->CreateSRVForDepthTexture(srvforDepthHandle_);
+
 }
 
 void DepthBasedOutline::PreDraw() {
@@ -71,7 +80,12 @@ void DepthBasedOutline::PreDraw() {
 
 }
 
-void DepthBasedOutline::Draw() {
+void DepthBasedOutline::Draw(Camera& camera) {
+
+	projectionInverseResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraMatrix_));
+	Matrix4x4 projectionInverseMatrix4x4 = Inverse(camera.projectionMatrix_);
+	cameraMatrix_->projectionInverse = projectionInverseMatrix4x4;
+	projectionInverseResource_->Unmap(0, nullptr);
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetDepthBasedOutlineRootSignature().Get());
 	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetDepthBasedOutlineGraphicsPipelineState().Get());
@@ -82,7 +96,10 @@ void DepthBasedOutline::Draw() {
 	//Texture
 	TextureManager::GraphicsCommand(0, textureHandle_);
 
+	//Camera
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, projectionInverseResource_->GetGPUVirtualAddress());
 
+	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, srvforDepthHandle_);
 
 	//描画(DrawCall)３頂点で１つのインスタンス。
 	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);

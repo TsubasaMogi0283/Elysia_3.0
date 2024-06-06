@@ -176,7 +176,10 @@ public:
 		return DirectXSetup::GetInstance()->m_commandList_;
 	}
 	
-	
+	ComPtr<ID3D12Resource> GerDepthStencilResource() {
+		return m_depthStencilResource_;
+	}
+
 	ComPtr<ID3D12DescriptorHeap> GetDsvDescriptorHeap() {
 		return  m_dsvDescriptorHeap_;
 	}

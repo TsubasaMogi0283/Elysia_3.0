@@ -152,7 +152,7 @@ void SampleScene::PreDrawPostEffectSecond(){
 void SampleScene::DrawPostEffect(){
 	//outLine_->Draw();
 	//back_->Draw();
-	depthBasedOutline_->Draw();
+	depthBasedOutline_->Draw(camera_);
 }
 
 void SampleScene::DrawSprite(){

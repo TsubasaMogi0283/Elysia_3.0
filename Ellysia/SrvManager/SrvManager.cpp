@@ -103,6 +103,19 @@ void SrvManager::CreateSRVForRenderTexture(ID3D12Resource* pResource, uint32_t h
 
 }
 
+void SrvManager::CreateSRVForDepthTexture(uint32_t handle){
+	D3D12_SHADER_RESOURCE_VIEW_DESC depthTextureSrvDesc{};
+	//DXGI_FORMAT_D24_UNIFORM_S8_UNITのDepthを読むときはDXGI_FORMAT_R24_UNIFORM_X8_TYPELESS
+	depthTextureSrvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	depthTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	depthTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	depthTextureSrvDesc.Texture2D.MipLevels = 1;
+	ComPtr<ID3D12Resource> resource = DirectXSetup::GetInstance()->GerDepthStencilResource();
+	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(resource.Get(), &depthTextureSrvDesc, GetCPUDescriptorHandle(handle));
+
+
+}
+
 void SrvManager::PreDraw() {
 	////コマンドを積む
 	ID3D12DescriptorHeap* descriptorHeaps[] = { descriptorHeap_.Get() };

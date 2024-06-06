@@ -7,11 +7,20 @@ struct PixelShaderOutput{
     float4 color : SV_TARGET0;
 };
 
+struct Camera
+{
+	//必要なのはこの3つ
+	//ビュー行列
+    float4x4 viewMatrix_;
+	//射影行列
+    float4x4 projectionMatrix_;
+	//正射影行列
+    float4x4 orthographicMatrix_;
+};
+
 struct Material{
     float4x4 projectionInverse;
 };
-
-
 
 Texture2D<float4> gTexture : register(t0);
 Texture2D<float> gDepthTexture : register(t1);
@@ -20,7 +29,7 @@ SamplerState gSample : register(s0);
 SamplerState gSamplePoint : register(s1);
 
 
-
+ConstantBuffer<Material> gMaterial : register(b0);
 
 
 
@@ -75,8 +84,7 @@ PixelShaderOutput main(VertexShaderOutput input){
             //NDC->View。P^(-1)においてxとyはzwに影響を与えないので何でもよい。
             //なのでわざわざ行列を渡さなくてよい。
             //gMaterial.projectionInverseはCBufferを使って渡しておくこと
-            
-            float4 viewSpace = mul(float4(0.0f, 0.0f, ndcDepth, 1.0f),gMaterial.projectionInverse);
+            float4 viewSpace = mul(float4(0.0f, 0.0f, ndcDepth, 1.0f), gMaterial.projectionInverse);
             //同次座標系からデカルト座標系へ変換
             float viewZ = viewSpace.z * rcp(viewSpace.w);
             difference.x += viewZ * PREWITT_HORIZONTAL_KERNEL[x][y];
