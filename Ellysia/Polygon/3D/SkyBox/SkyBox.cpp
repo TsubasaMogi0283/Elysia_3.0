@@ -21,7 +21,7 @@ void SkyBox::Create(uint32_t textureHandle) {
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
 
-	//右面。描画インデックスは[0,1,2][2,1,3]で内側を向く
+	//右面
 	vertexData_[0].position = { 1.0f,1.0f,1.0f,1.0f };
 	vertexData_[1].position = { 1.0f,1.0f,-1.0f,1.0f };
 	vertexData_[2].position = { 1.0f,-1.0f,1.0f,1.0f };
@@ -31,23 +31,23 @@ void SkyBox::Create(uint32_t textureHandle) {
 	vertexData_[5].position = { 1.0f,-1.0f,-1.0f,1.0f };//3
 	
 
-	////左面。描画インデックスは[4,5,6][6,5,7]で内側を向く
-	vertexData_[4].position = { -1.0f,1.0f,-1.0f,1.0f };
-	vertexData_[5].position = { -1.0f,1.0f,1.0f,1.0f };
-	vertexData_[6].position = { -1.0f,-1.0f,-1.0f,1.0f };
+	//左面
+	vertexData_[6].position = { -1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[7].position = { -1.0f,1.0f,1.0f,1.0f };
+	vertexData_[8].position = { -1.0f,-1.0f,-1.0f,1.0f };
+
+	vertexData_[9].position = { -1.0f,-1.0f,-1.0f,1.0f };
+	vertexData_[10].position = { -1.0f,1.0f,1.0f,1.0f };
+	vertexData_[11].position = { -1.0f,-1.0f,1.0f,1.0f };
 
 
-	vertexData_[7].position = { -1.0f,-1.0f,1.0f,1.0f };
-	vertexData_[8].position = { -1.0f,-1.0f,1.0f,1.0f };
-	vertexData_[9].position = { -1.0f,-1.0f,1.0f,1.0f };
 
-
-
-	////前面。描画インデックスは[8,9,10][10,9,11]で内側を向く
-	//vertexData_[8].position = { -1.0f,1.0f,1.0f,1.0f };
-	//vertexData_[9].position = { 1.0f,1.0f,1.0f,1.0f };
-	//vertexData_[10].position = { -1.0f,-1.0f,1.0f,1.0f };
-	//vertexData_[11].position = { 1.0f,-1.0f,1.0f,1.0f };
+	//前面
+	vertexData_[8].position = { -1.0f,1.0f,1.0f,1.0f };
+	vertexData_[9].position = { 1.0f,1.0f,1.0f,1.0f };
+	vertexData_[10].position = { -1.0f,-1.0f,1.0f,1.0f };
+	
+	vertexData_[11].position = { 1.0f,-1.0f,1.0f,1.0f };
 
 	////後は自力で
 	////後面。
