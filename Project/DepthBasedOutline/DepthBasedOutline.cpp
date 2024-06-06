@@ -82,6 +82,8 @@ void DepthBasedOutline::Draw() {
 	//Texture
 	TextureManager::GraphicsCommand(0, textureHandle_);
 
+
+
 	//描画(DrawCall)３頂点で１つのインスタンス。
 	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 

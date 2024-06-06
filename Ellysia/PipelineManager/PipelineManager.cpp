@@ -1537,7 +1537,7 @@ void PipelineManager::GenarateDepthBasedOutlinePSO(){
 
 	//rootParameter生成。複数設定できるので配列。
 	//今回は結果一つだけなので長さ１の配列
-	D3D12_ROOT_PARAMETER rootParameters[2] = {};
+	D3D12_ROOT_PARAMETER rootParameters[1] = {};
 
 
 
@@ -1546,11 +1546,18 @@ void PipelineManager::GenarateDepthBasedOutlinePSO(){
 	//いつか直す
 
 	//Texture
-	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
+	D3D12_DESCRIPTOR_RANGE descriptorRange[2] = {};
 	descriptorRange[0].BaseShaderRegister = 0;
 	descriptorRange[0].NumDescriptors = 1;
 	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	//Depth
+	descriptorRange[1].BaseShaderRegister = 1;
+	descriptorRange[1].NumDescriptors = 1;
+	descriptorRange[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRange[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
 
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -1566,7 +1573,7 @@ void PipelineManager::GenarateDepthBasedOutlinePSO(){
 
 
 	//Sampler
-	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
+	D3D12_STATIC_SAMPLER_DESC staticSamplers[2] = {};
 	//バイリニアフィルタ
 	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 	//0~1の範囲外をリピート
@@ -1581,54 +1588,32 @@ void PipelineManager::GenarateDepthBasedOutlinePSO(){
 	staticSamplers[0].ShaderRegister = 0;
 	//PixelShaderで使う
 	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+
+	//Depth
+	//バイリニアフィルタ
+	staticSamplers[1].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	//0~1の範囲外をリピート
+	staticSamplers[1].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[1].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[1].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	//比較しない
+	staticSamplers[1].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	//ありったけのMipmapを使う
+	staticSamplers[1].MaxLOD = D3D12_FLOAT32_MAX;
+	//レジスタ番号0を使う
+	staticSamplers[1].ShaderRegister = 1;
+	//PixelShaderで使う
+	staticSamplers[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+
+
+
 	descriptionRootSignature_.pStaticSamplers = staticSamplers;
 	descriptionRootSignature_.NumStaticSamplers = _countof(staticSamplers);
 
 
 
-
-
-
-
-	////Depth用
-	////Texture
-	//D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-	//descriptorRange[0].BaseShaderRegister = 1;
-	//descriptorRange[0].NumDescriptors = 1;
-	//descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	//descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-	//rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	//rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	//rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRange;
-	//rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
-
-
-	////ルートパラメータ配列へのポイント
-	//descriptionRootSignature_.pParameters = rootParameters;
-	////配列の長さ
-	//descriptionRootSignature_.NumParameters = _countof(rootParameters);
-
-
-
-	////Sampler
-	//D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
-	////バイリニアフィルタ
-	//staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	////0~1の範囲外をリピート
-	//staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	//staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	//staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	////比較しない
-	//staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-	////ありったけのMipmapを使う
-	//staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;
-	////レジスタ番号1を使う
-	//staticSamplers[0].ShaderRegister = 1;
-	////PixelShaderで使う
-	//staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	//descriptionRootSignature_.pStaticSamplers = staticSamplers;
-	//descriptionRootSignature_.NumStaticSamplers = _countof(staticSamplers);
 
 
 

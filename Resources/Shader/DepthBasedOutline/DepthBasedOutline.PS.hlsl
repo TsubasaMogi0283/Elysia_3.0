@@ -66,6 +66,8 @@ PixelShaderOutput main(VertexShaderOutput input){
             difference.x += luminance * PREWITT_HORIZONTAL_KERNEL[x][y];
             difference.y += luminance * PREWITT_VERTICAL_KERNEL[x][y];
             
+            float32_t ndcDepth = gDepthTexture.Sample(gSa)
+            
             
         }
     }

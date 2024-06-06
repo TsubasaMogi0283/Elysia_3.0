@@ -74,11 +74,6 @@ private:
 	WorldTransform worldTransform_ = {};
 	
 	Camera camera_ = {};
-	std::unique_ptr<Model> silverWolfTest_ = nullptr;
-	uint32_t silverWolfTestModelHandle = 0;
-	WorldTransform silverWolfTestWorldTransform_ = {};
-
-
 
 	std::unique_ptr<Sprite> sprite_ = nullptr;
 
