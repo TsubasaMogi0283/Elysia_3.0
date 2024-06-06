@@ -409,8 +409,6 @@ void Audio::PlayWave(uint32_t audioHandle, bool isLoop) {
 	else{
 		buffer.LoopCount = XAUDIO2_NO_LOOP_REGION;
 	}
-
-	HRESULT hr{};
 	//Buffer登録
 	hr = audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
 	//波形データの再生
@@ -437,8 +435,6 @@ void Audio::PlayWave(uint32_t audioHandle, int32_t loopCount) {
 	//1でfalseの場合と同じ
 	buffer.LoopCount = loopCount - 1;
 
-
-	HRESULT hr{};
 	//Buffer登録
 	hr = audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
 	//波形データの再生
@@ -469,8 +465,6 @@ void Audio::PlayMP3(uint32_t audioHandle,bool isLoop){
 	}
 
 
-	HRESULT hr{};
-
 	hr = Audio::GetInstance()->audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
 
 	//波形データの再生
@@ -495,7 +489,6 @@ void Audio::PlayMP3(uint32_t audioHandle, uint32_t loopCount){
 	buffer.LoopCount = loopCount - 1;
 
 
-	HRESULT hr{};
 
 	hr = Audio::GetInstance()->audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
 

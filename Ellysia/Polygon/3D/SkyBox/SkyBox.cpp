@@ -25,40 +25,44 @@ void SkyBox::Create(uint32_t textureHandle) {
 	vertexData_[0].position = { 1.0f,1.0f,1.0f,1.0f };
 	vertexData_[1].position = { 1.0f,1.0f,-1.0f,1.0f };
 	vertexData_[2].position = { 1.0f,-1.0f,1.0f,1.0f };
-	vertexData_[3].position = { 1.0f,-1.0f,-1.0f,1.0f };
 
-	//左面。描画インデックスは[4,5,6][6,5,7]で内側を向く
-	vertexData_[4].position = { -1.0f,1.0f,-1.0f,1.0f };
-	vertexData_[5].position = { -1.0f,1.0f,1.0f,1.0f };
-	vertexData_[6].position = { -1.0f,-1.0f,-1.0f,1.0f };
-	vertexData_[7].position = { -1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[3].position = { 1.0f,-1.0f,1.0f,1.0f };//2
+	vertexData_[4].position = { 1.0f,1.0f,-1.0f,1.0f };//1
+	vertexData_[5].position = { 1.0f,-1.0f,-1.0f,1.0f };//3
+	
 
-	//前面。描画インデックスは[8,9,10][10,9,11]で内側を向く
-	vertexData_[8].position = { -1.0f,1.0f,1.0f,1.0f };
-	vertexData_[9].position = { 1.0f,1.0f,1.0f,1.0f };
-	vertexData_[10].position = { -1.0f,-1.0f,1.0f,1.0f };
-	vertexData_[11].position = { 1.0f,-1.0f,1.0f,1.0f };
+	////左面。描画インデックスは[4,5,6][6,5,7]で内側を向く
+	//vertexData_[4].position = { -1.0f,1.0f,-1.0f,1.0f };
+	//vertexData_[5].position = { -1.0f,1.0f,1.0f,1.0f };
+	//vertexData_[6].position = { -1.0f,-1.0f,-1.0f,1.0f };
+	//vertexData_[7].position = { -1.0f,-1.0f,1.0f,1.0f };
 
-	//後は自力で
-	//後面。
-	vertexData_[12].position = { 1.0f,1.0f,-1.0f,1.0f };
-	vertexData_[13].position = { -1.0f,1.0f,-1.0f,1.0f };
-	vertexData_[14].position = { 1.0f,-1.0f,-1.0f,1.0f };
-	vertexData_[15].position = { -1.0f,-1.0f,-1.0f,1.0f };
+	////前面。描画インデックスは[8,9,10][10,9,11]で内側を向く
+	//vertexData_[8].position = { -1.0f,1.0f,1.0f,1.0f };
+	//vertexData_[9].position = { 1.0f,1.0f,1.0f,1.0f };
+	//vertexData_[10].position = { -1.0f,-1.0f,1.0f,1.0f };
+	//vertexData_[11].position = { 1.0f,-1.0f,1.0f,1.0f };
 
-	//上面。
-	vertexData_[16].position = { 1.0f,1.0f,1.0f,1.0f };
-	vertexData_[17].position = { -1.0f,1.0f,1.0f,1.0f };
-	vertexData_[18].position = { 1.0f,1.0f,-1.0f,1.0f };
-	vertexData_[19].position = { -1.0f,1.0f,-1.0f,1.0f };
+	////後は自力で
+	////後面。
+	//vertexData_[12].position = { 1.0f,1.0f,-1.0f,1.0f };
+	//vertexData_[13].position = { -1.0f,1.0f,-1.0f,1.0f };
+	//vertexData_[14].position = { 1.0f,-1.0f,-1.0f,1.0f };
+	//vertexData_[15].position = { -1.0f,-1.0f,-1.0f,1.0f };
+
+	////上面。
+	//vertexData_[16].position = { 1.0f,1.0f,1.0f,1.0f };
+	//vertexData_[17].position = { -1.0f,1.0f,1.0f,1.0f };
+	//vertexData_[18].position = { 1.0f,1.0f,-1.0f,1.0f };
+	//vertexData_[19].position = { -1.0f,1.0f,-1.0f,1.0f };
 
 
 
-	//下面。
-	vertexData_[20].position = { 1.0f,-1.0f,-1.0f,1.0f };
-	vertexData_[21].position = { -1.0f,-1.0f,-1.0f,1.0f };
-	vertexData_[22].position = { 1.0f,-1.0f,1.0f,1.0f };
-	vertexData_[23].position = { -1.0f,-1.0f,1.0f,1.0f };
+	////下面。
+	//vertexData_[20].position = { 1.0f,-1.0f,-1.0f,1.0f };
+	//vertexData_[21].position = { -1.0f,-1.0f,-1.0f,1.0f };
+	//vertexData_[22].position = { 1.0f,-1.0f,1.0f,1.0f };
+	//vertexData_[23].position = { -1.0f,-1.0f,1.0f,1.0f };
 	vertexResource_->Unmap(0, nullptr);
 
 	////マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する

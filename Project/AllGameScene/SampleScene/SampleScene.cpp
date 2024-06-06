@@ -60,6 +60,9 @@ void SampleScene::Initialize() {
 	skyBox_ = std::make_unique<SkyBox>();
 	skyBox_->Create(skyBoxTextureHandle);
 	skyBoxWorldTransform_.Initialize();
+	const float SKYBOX_SCALE = 20.0f;
+	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
+
 }
 
 
@@ -107,7 +110,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 #pragma endregion
 
-	const float CAMERA_MOVE_SPEED = 0.5f;
+	const float CAMERA_MOVE_SPEED = 0.2f;
 	Vector3 move = {};
 	Vector3 rotateMove = {};
 
@@ -142,22 +145,23 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 	//回転
-	const float ROTATE_MOVE_SPEED = 0.05f;
-	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
-		rotateMove.y = 1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+	const float ROTATE_MOVE_SPEED = 0.01f;
+	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
 		rotateMove.y = -1.0f;
 	}
 	else if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
-		rotateMove.x = 1.0f;
+		rotateMove.y = 1.0f;
 	}
-	else if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
+	else if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
 		rotateMove.x = -1.0f;
 	}
+	else if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+		rotateMove.x = 1.0f;
+	}
+
 	else {
-		rotateMove.x = 0.0f;
 		rotateMove.y = 0.0f;
+		rotateMove.x = 0.0f;
 	}
 
 	camera_.translate_ = Add(camera_.translate_, { move.x* CAMERA_MOVE_SPEED,move.y* CAMERA_MOVE_SPEED,move.z*CAMERA_MOVE_SPEED });
@@ -193,7 +197,7 @@ void SampleScene::Draw() {
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
 		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
 	}
-	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
+	//noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
 	
 }
 
