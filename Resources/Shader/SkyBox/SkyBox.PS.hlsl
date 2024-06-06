@@ -16,6 +16,8 @@ ConstantBuffer<Material> gMaterial : register(b0);
 
 PixelShaderOutput main(VertexShaderOutput input){
     PixelShaderOutput output;
+    float3 test = input.texcoord;
+    
     float4 textureColor = gTexture.Sample(gSampler, input.texcoord);
     output.color = textureColor * gMaterial.color;
     return output;
