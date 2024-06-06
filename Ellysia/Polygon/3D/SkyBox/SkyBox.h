@@ -41,6 +41,25 @@ private:
 		Vector4 color;
 	};
 
+	enum VERTEX_POSITION {
+		
+		//右
+		//右上奥
+		TOP_RIGHT_BACK,
+		//右上前
+		TOP_RIGHT_FRONT,
+		//右下奥
+		BOTTOM_RIGHT_BACK,
+		//右下前
+		BOTTOM_RIGHT_FRONT,
+
+
+
+
+
+
+
+	};
 
 
 private:
@@ -55,6 +74,15 @@ private:
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
 	VertexData* vertexData_ = nullptr;
 	const int32_t  SURFACE_VERTEX_= 6;
+	uint32_t SURFACE_AMOUNT = 3;
+
+
+	//index用
+	ComPtr<ID3D12Resource> indexResource_ = nullptr;
+	//IndexBufferViewを作成
+	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
+	//インデックスデータ
+	uint32_t* indexData_ = nullptr;
 
 
 	//マテリアル用のリソースを作る
