@@ -5,25 +5,14 @@
 #include "Camera.h"
 
 #include "DirectXSetup.h"
-
-//頂点バッファビューを作成する
-void SkyBox::GenerateVertexBufferView() {
-	
-
-	//vertexResourceがnullらしい
-	//リソースの先頭のアドレスから使う
-	vertexBufferViewSphere_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-	//使用するリソースのサイズは頂点３つ分のサイズ
-	vertexBufferViewSphere_.SizeInBytes = sizeof(VertexData) * SURFACE_VERTEX_ *6;
-	//１頂点あたりのサイズ
-	vertexBufferViewSphere_.StrideInBytes = sizeof(VertexData);
-	
-
-}
+#include "PipelineManager.h"
+#include <TextureManager.h>
 
 
 //初期化
-void SkyBox::Create() {
+void SkyBox::Create(uint32_t textureHandle) {
+
+	PipelineManager::GetInstance()->GenarateSkyBoxPSO();
 
 	//ここでBufferResourceを作る
 	//頂点を6に増やす
@@ -70,14 +59,23 @@ void SkyBox::Create() {
 	vertexData_[21].position = { -1.0f,-1.0f,-1.0f,1.0f };
 	vertexData_[22].position = { 1.0f,-1.0f,1.0f,1.0f };
 	vertexData_[23].position = { -1.0f,-1.0f,1.0f,1.0f };
-
+	vertexResource_->Unmap(0, nullptr);
 
 	////マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	materialResource_= DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Material));
+	materialResource_= DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkyBoxMaterial));
+	
 
 
 	//頂点バッファビューを作成する
-	GenerateVertexBufferView();
+	//リソースの先頭のアドレスから使う
+	vertexBufferViewSphere_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+	//使用するリソースのサイズは頂点３つ分のサイズ
+	vertexBufferViewSphere_.SizeInBytes = sizeof(VertexData) * SURFACE_VERTEX_ * 6;
+	//１頂点あたりのサイズ
+	vertexBufferViewSphere_.StrideInBytes = sizeof(VertexData);
+
+	textureHandle_ = textureHandle;
+
 }
 
 
@@ -90,11 +88,13 @@ void SkyBox::Draw(WorldTransform& worldTransform, Camera& camera) {
 	//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = {1.0f,1.0f,1.0f,1.0f};
-	materialData_->enableLighting=true;
-
-	materialData_->uvTransform = MakeIdentity4x4();
-
+	materialResource_->Unmap(0, nullptr);
 	
+	
+
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetSkyBoxRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetSkyBoxGraphicsPipelineState().Get());
+
 	
 	//コマンドを積む
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
@@ -106,6 +106,13 @@ void SkyBox::Draw(WorldTransform& worldTransform, Camera& camera) {
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, worldTransform.bufferResource_->GetGPUVirtualAddress());
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, camera.bufferResource_->GetGPUVirtualAddress());
 
+	if (textureHandle_ != 0) {
+		TextureManager::GetInstance()->GraphicsCommand(textureHandle_);
+	}
+
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, materialResource_->GetGPUVirtualAddress());
+
+	
 
 	//描画(DrawCall)３頂点で１つのインスタンス。
 	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(SURFACE_VERTEX_ *6, 1, 0, 0);

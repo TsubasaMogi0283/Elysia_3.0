@@ -128,7 +128,7 @@ DirectX::ScratchImage TextureManager::LoadTextureData(const std::string& filePat
 	DirectX::ScratchImage image{};
 	std::wstring filePathW = ConvertString(filePath);
 	//dssファイルの場合
-	if (filePathW.ends_with(L".dss")) {
+	if (filePathW.ends_with(L".dds")) {
 		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
 		assert(SUCCEEDED(hr));
 	}

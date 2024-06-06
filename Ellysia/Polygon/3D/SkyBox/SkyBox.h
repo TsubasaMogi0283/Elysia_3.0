@@ -8,7 +8,6 @@
 #include "Matrix4x4Calculation.h"
 #include "Transform.h"
 #include "VertexData.h"
-#include "Material.h"
 #include "TransformationMatrix.h"
 #include "DirectionalLight.h"
 
@@ -23,7 +22,7 @@ public:
 	SkyBox()=default;
 
 	//初期化
-	void Create();
+	void Create(uint32_t textureHandle);
 
 	
 	//描画
@@ -37,10 +36,10 @@ public:
 
 private:
 
-	//頂点バッファビューを作成する
-	void GenerateVertexBufferView();
 
-
+	struct SkyBoxMaterial {
+		Vector4 color;
+	};
 
 
 
@@ -55,14 +54,14 @@ private:
 	//頂点データ
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
 	VertexData* vertexData_ = nullptr;
-	const int32_t  SURFACE_VERTEX_= 6;
+	const int32_t  SURFACE_VERTEX_= 4;
 
 
 	//マテリアル用のリソースを作る
 	ComPtr<ID3D12Resource> materialResource_ = nullptr;
-	Material* materialData_ = nullptr;
+	SkyBoxMaterial* materialData_ = nullptr;
 
 
-
+	uint32_t textureHandle_ = 0;
 
 };

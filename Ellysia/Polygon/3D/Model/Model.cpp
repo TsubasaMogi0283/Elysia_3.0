@@ -19,7 +19,7 @@ Model* Model::Create(uint32_t modelHandle) {
 	model->isSkinning_.isSkinning = 0;
 	model->skinningResource_->Unmap(0, nullptr);
 
-	PipelineManager::GetInstance()->GenerateModelPSO(model->isSkinning_.isSkinning);
+	PipelineManager::GetInstance()->GenerateModelPSO();
 
 
 	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい

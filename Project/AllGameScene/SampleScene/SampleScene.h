@@ -12,6 +12,7 @@
 #include <Particle3D.h>
 #include <Audio.h>
 #include "SkinCluster.h"
+#include "../../../Ellysia/Polygon/3D/SkyBox/SkyBox.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -52,8 +53,8 @@ private:
 	std::unique_ptr<Model> noneAnimationModel_ = nullptr;
 	WorldTransform noneAnimationWorldTransform_ = {};
 
-
-
+	std::unique_ptr<SkyBox> skyBox_ = nullptr;
+	WorldTransform skyBoxWorldTransform_ = {};
 
 	const char* GroupName = "Player";
 };

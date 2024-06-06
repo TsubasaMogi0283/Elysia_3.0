@@ -56,8 +56,10 @@ void SampleScene::Initialize() {
 
 	camera_.Initialize();
 	
-
-
+	uint32_t skyBoxTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG4/SkyBox/rostock_laage_airport_4k.dds");
+	skyBox_ = std::make_unique<SkyBox>();
+	skyBox_->Create(skyBoxTextureHandle);
+	skyBoxWorldTransform_.Initialize();
 }
 
 
@@ -101,14 +103,69 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-
 		humanWorldTransform_[i].Update();
 	}
 #pragma endregion
 
+	const float CAMERA_MOVE_SPEED = 0.5f;
+	Vector3 move = {};
+	Vector3 rotateMove = {};
+
+	//Y
+	if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
+		move.y = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
+		move.y = -1.0f;
+	}
+	//X
+	else if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
+		move.x = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
+		move.x = -1.0f;
+	}
+	//Z
+	else if (Input::GetInstance()->IsPushKey(DIK_O) == true) {
+		move.z = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_L) == true) {
+		move.z = -1.0f;
+	}
+
+
+	else {
+		move.x = 0.0f;
+		move.y = 0.0f;
+		move.z = 0.0f;
+	}
+
+
+	//回転
+	const float ROTATE_MOVE_SPEED = 0.05f;
+	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+		rotateMove.y = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+		rotateMove.y = -1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
+		rotateMove.x = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
+		rotateMove.x = -1.0f;
+	}
+	else {
+		rotateMove.x = 0.0f;
+		rotateMove.y = 0.0f;
+	}
+
+	camera_.translate_ = Add(camera_.translate_, { move.x* CAMERA_MOVE_SPEED,move.y* CAMERA_MOVE_SPEED,move.z*CAMERA_MOVE_SPEED });
+	camera_.rotate_ = Add(camera_.rotate_, { rotateMove.x * ROTATE_MOVE_SPEED,rotateMove.y * ROTATE_MOVE_SPEED,rotateMove.z * ROTATE_MOVE_SPEED });
+
 	camera_.Update();
 	noneAnimationWorldTransform_.Update();
-
+	skyBoxWorldTransform_.Update();
 #ifdef _DEBUG
 	ImGui::Begin("Camera");
 	ImGui::SliderFloat3("Translate", &camera_.translate_.x, -100.0f, 100.0f);
@@ -129,6 +186,8 @@ void SampleScene::Update(GameManager* gameManager) {
 /// 描画
 /// </summary>
 void SampleScene::Draw() {
+	
+	skyBox_->Draw(skyBoxWorldTransform_,camera_);
 	//SimpleSkin
 	//Walk
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
