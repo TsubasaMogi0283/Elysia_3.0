@@ -32,10 +32,16 @@ void SkyBox::Create(uint32_t textureHandle) {
 	
 
 	////左面。描画インデックスは[4,5,6][6,5,7]で内側を向く
-	//vertexData_[4].position = { -1.0f,1.0f,-1.0f,1.0f };
-	//vertexData_[5].position = { -1.0f,1.0f,1.0f,1.0f };
-	//vertexData_[6].position = { -1.0f,-1.0f,-1.0f,1.0f };
-	//vertexData_[7].position = { -1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[4].position = { -1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[5].position = { -1.0f,1.0f,1.0f,1.0f };
+	vertexData_[6].position = { -1.0f,-1.0f,-1.0f,1.0f };
+
+
+	vertexData_[7].position = { -1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[8].position = { -1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[9].position = { -1.0f,-1.0f,1.0f,1.0f };
+
+
 
 	////前面。描画インデックスは[8,9,10][10,9,11]で内側を向く
 	//vertexData_[8].position = { -1.0f,1.0f,1.0f,1.0f };

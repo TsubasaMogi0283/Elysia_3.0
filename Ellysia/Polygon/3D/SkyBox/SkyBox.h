@@ -54,7 +54,7 @@ private:
 	//頂点データ
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
 	VertexData* vertexData_ = nullptr;
-	const int32_t  SURFACE_VERTEX_= 4;
+	const int32_t  SURFACE_VERTEX_= 6;
 
 
 	//マテリアル用のリソースを作る
