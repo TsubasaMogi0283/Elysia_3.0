@@ -1,5 +1,15 @@
 #include "DepthBasedOutline.hlsli"
 
+//hlsliでは絶対に日本語を使わないでね
+
+
+struct PixelShaderOutput{
+    float4 color : SV_TARGET0;
+};
+
+struct Material{
+    float4x4 projectionInverse;
+};
 
 
 
@@ -10,12 +20,7 @@ SamplerState gSample : register(s0);
 SamplerState gSamplePoint : register(s1);
 
 
-//hlsliでは絶対に日本語を使わないでね
 
-
-struct PixelShaderOutput{
-    float4 color : SV_TARGET0;
-};
 
 
 
@@ -66,7 +71,16 @@ PixelShaderOutput main(VertexShaderOutput input){
             difference.x += luminance * PREWITT_HORIZONTAL_KERNEL[x][y];
             difference.y += luminance * PREWITT_VERTICAL_KERNEL[x][y];
             
-            float32_t ndcDepth = gDepthTexture.Sample(gSa)
+            float ndcDepth = gDepthTexture.Sample(gSamplePoint, texCoord);
+            //NDC->View。P^(-1)においてxとyはzwに影響を与えないので何でもよい。
+            //なのでわざわざ行列を渡さなくてよい。
+            //gMaterial.projectionInverseはCBufferを使って渡しておくこと
+            
+            float4 viewSpace = mul(float4(0.0f, 0.0f, ndcDepth, 1.0f),gMaterial.projectionInverse);
+            //同次座標系からデカルト座標系へ変換
+            float viewZ = viewSpace.z * rcp(viewSpace.w);
+            difference.x += viewZ * PREWITT_HORIZONTAL_KERNEL[x][y];
+            difference.y += viewZ * PREWITT_VERTICAL_KERNEL[x][y];
             
             
         }
@@ -80,7 +94,7 @@ PixelShaderOutput main(VertexShaderOutput input){
     float weight = length(difference);
     //差が小さいので大きくしている
     //後でCBufferで値を送るつもり
-    weight = saturate(weight*6.0f);
+    weight = saturate(weight);
     
     //weightが大きい程暗く表示するようにしている
     //最もシンプルな合成
