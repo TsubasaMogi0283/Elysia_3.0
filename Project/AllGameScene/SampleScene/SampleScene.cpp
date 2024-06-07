@@ -47,8 +47,9 @@ void SampleScene::Initialize() {
 	isPushKey_ = false;
 
 
-
-
+	howToTextureHandle_ = TextureManager::GetInstance()->LoadTexture("Resources/CG4/Test/HowToMove.png");
+	howTo_.reset(Sprite::Create(howToTextureHandle_, {0.0f,0.0f}));
+	
 
 	//地面
 	uint32_t noneModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
@@ -84,11 +85,9 @@ void SampleScene::Update(GameManager* gameManager) {
 	
 #pragma region アニメーションモデル
 	
-	if (isPushKey_ == true) {
-		humanAnimationTime_[0] += 1.0f / 60.0f;
-
-	}
 	
+	
+	isPushKey_ = false;
 #pragma region キーボード入力
 	const float SPEED = 0.1f;
 	Vector3 move = {};
@@ -112,8 +111,47 @@ void SampleScene::Update(GameManager* gameManager) {
 		rotate.y = -std::numbers::pi_v<float> / 2.0f;
 		isPushKey_ = true;
 	}
-	else {
-		isPushKey_ = false;
+
+
+	//コントローラー
+	XINPUT_STATE joyState{};
+	
+	//コントローラーがある場合
+	if (Input::GetInstance()->GetJoystickState(joyState)) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
+			move.x = SPEED;
+			rotate.y = std::numbers::pi_v<float> / 2.0f;
+			isPushKey_ = true;
+		}
+		else if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
+			move.x = -SPEED;
+			rotate.y = -std::numbers::pi_v<float> / 2.0f;
+			isPushKey_ = true;
+		}
+		else if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) {
+			move.z = SPEED;
+			rotate.y = 0.0f;
+			isPushKey_ = true;
+		}
+		else if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) {
+			move.z = -SPEED;
+			rotate.y = std::numbers::pi_v<float>;
+			isPushKey_ = true;
+		}
+
+		////スティック
+		//const float MOVE_OFFSET = 0.1f;
+		//
+		//move.x = (float)joyState.Gamepad.sThumbLX / SHRT_MAX * MOVE_OFFSET;
+		//move.z = (float)joyState.Gamepad.sThumbLY / SHRT_MAX * MOVE_OFFSET;
+		
+
+	}
+
+	//何かしらのキーが押されていたらアニメーションをするよ
+	if (isPushKey_ == true) {
+		humanAnimationTime_[0] += 1.0f / 60.0f;
+
 	}
 
 #pragma endregion
@@ -179,6 +217,9 @@ void SampleScene::Draw() {
 	}
 	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
 	
+
+
+	howTo_->Draw();
 }
 
 

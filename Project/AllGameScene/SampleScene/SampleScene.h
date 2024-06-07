@@ -54,8 +54,8 @@ private:
 	std::unique_ptr<Model> noneAnimationModel_ = nullptr;
 	WorldTransform noneAnimationWorldTransform_ = {};
 
-
-
+	std::unique_ptr<Sprite> howTo_ = nullptr;
+	uint32_t howToTextureHandle_ = 0;
 
 	const char* GroupName = "Player";
 };
