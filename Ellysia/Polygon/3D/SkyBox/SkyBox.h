@@ -74,7 +74,7 @@ private:
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
 	VertexData* vertexData_ = nullptr;
 	const int32_t  SURFACE_VERTEX_= 6;
-	uint32_t SURFACE_AMOUNT = 3;
+	uint32_t SURFACE_AMOUNT = 4;
 
 
 	//index用

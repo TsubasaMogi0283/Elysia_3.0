@@ -53,12 +53,18 @@ void SkyBox::Create(uint32_t textureHandle) {
 	vertexData_[10].position = { -1.0f,-1.0f,1.0f,1.0f };
 	vertexData_[11].position = { 1.0f,-1.0f,1.0f,1.0f };
 
-	////後は自力で
-	////後面。
+	//後は自力で
+	//後面。
 	//vertexData_[12].position = { 1.0f,1.0f,-1.0f,1.0f };
 	//vertexData_[13].position = { -1.0f,1.0f,-1.0f,1.0f };
 	//vertexData_[14].position = { 1.0f,-1.0f,-1.0f,1.0f };
 	//vertexData_[15].position = { -1.0f,-1.0f,-1.0f,1.0f };
+	//
+	vertexData_[12].position = { -1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[13].position = { 1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[14].position = { -1.0f,-1.0f,-1.0f,1.0f };
+	vertexData_[15].position = { 1.0f,-1.0f,-1.0f,1.0f };
+
 
 	////上面。
 	//vertexData_[16].position = { 1.0f,1.0f,1.0f,1.0f };
@@ -77,41 +83,52 @@ void SkyBox::Create(uint32_t textureHandle) {
 
 
 	
-	//index用のリソースを作る
-	indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * SURFACE_VERTEX_ * SURFACE_AMOUNT).Get();
+	////index用のリソースを作る
+	//indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * SURFACE_VERTEX_ * SURFACE_AMOUNT).Get();
 
-	//IndexResourceにデータを書き込む
-	//インデックスデータにデータを書き込む
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
-	indexData_[0] = TOP_RIGHT_BACK;  //0
-	indexData_[1] = TOP_RIGHT_FRONT;//1
-	indexData_[2] = BOTTOM_RIGHT_BACK;//2
-	indexData_[3] = TOP_RIGHT_FRONT;//1
-	indexData_[4] = BOTTOM_RIGHT_FRONT;//3
-	indexData_[5] = BOTTOM_RIGHT_BACK;//2
-	
-	
-	indexData_[6] = 4;
-	indexData_[7] = 5;
-	indexData_[8] = 6;
-	indexData_[9] = 5;
-	indexData_[10] = 7;
-	indexData_[11] = 6;
+	////IndexResourceにデータを書き込む
+	////インデックスデータにデータを書き込む
+	//indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
+	////右面
+	//indexData_[0] = TOP_RIGHT_BACK;  //0
+	//indexData_[1] = TOP_RIGHT_FRONT;//1
+	//indexData_[2] = BOTTOM_RIGHT_BACK;//2
+	//indexData_[3] = TOP_RIGHT_FRONT;//1
+	//indexData_[4] = BOTTOM_RIGHT_FRONT;//3
+	//indexData_[5] = BOTTOM_RIGHT_BACK;//2
+	//
+	//
+	////左面
+	//indexData_[6] = 4;
+	//indexData_[7] = 5;
+	//indexData_[8] = 6;
+	//indexData_[9] = 5;
+	//indexData_[10] = 7;
+	//indexData_[11] = 6;
 
-	indexData_[12] = 8;
-	indexData_[13] = 9;
-	indexData_[14] = 10;
-	indexData_[15] = 9;
-	indexData_[16] = 11;
-	indexData_[17] = 10;
+	////前面
+	//indexData_[12] = 8;
+	//indexData_[13] = 9;
+	//indexData_[14] = 10;
+	//indexData_[15] = 9;
+	//indexData_[16] = 11;
+	//indexData_[17] = 10;
+
+	////後面
+	//indexData_[18] = 12;
+	//indexData_[19] = 13;
+	//indexData_[20] = 14;
+	//indexData_[21] = 13;
+	//indexData_[22] = 15;
+	//indexData_[23] = 14;
 
 
-	//リソ－スの先頭のアドレスから使う
-	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
-	//使用するリソースのサイズはインデックス6つ分のサイズ
-	indexBufferView_.SizeInBytes = sizeof(uint32_t) * SURFACE_VERTEX_ * SURFACE_AMOUNT;
-	//インデックスはuint32_tとする
-	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+	////リソ－スの先頭のアドレスから使う
+	//indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
+	////使用するリソースのサイズはインデックス6つ分のサイズ
+	//indexBufferView_.SizeInBytes = sizeof(uint32_t) * SURFACE_VERTEX_ * SURFACE_AMOUNT;
+	////インデックスはuint32_tとする
+	//indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
 
 
@@ -152,7 +169,7 @@ void SkyBox::Draw(WorldTransform& worldTransform, Camera& camera) {
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferViewSphere_);
 	//IBVを設定
-	DirectXSetup::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
+	//DirectXSetup::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, worldTransform.bufferResource_->GetGPUVirtualAddress());
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, camera.bufferResource_->GetGPUVirtualAddress());
@@ -166,8 +183,8 @@ void SkyBox::Draw(WorldTransform& worldTransform, Camera& camera) {
 	
 
 	//描画
-	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(SURFACE_VERTEX_ * SURFACE_AMOUNT, 1,0, 0, 0);
-
+	//DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(SURFACE_VERTEX_ * SURFACE_AMOUNT, 1,0, 0, 0);
+	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(SURFACE_VERTEX_ * SURFACE_AMOUNT, 1, 0, 0);
 	
 
 
