@@ -4,7 +4,7 @@
 
 struct VertexShaderInput{
     float4 position : POSITION0;
-    float3 texcoord : TEXCOORD0;
+    float2 texcoord : TEXCOORD0;
 };
 
 //座標返還を行うVS

@@ -30,28 +30,53 @@ void SkyBox::Create(uint32_t textureHandle) {
 	//書き込み用のアドレスを取得
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
+	//外から見て反時計回り
+
 	//Index描画だね
 	//右面
-	vertexData_[TOP_RIGHT_BACK].position = { 1.0f,1.0f,1.0f,1.0f };
-	vertexData_[TOP_RIGHT_FRONT].position = { 1.0f,1.0f,-1.0f,1.0f };
-	vertexData_[BOTTOM_RIGHT_BACK].position = { 1.0f,-1.0f,1.0f,1.0f };
-	vertexData_[BOTTOM_RIGHT_FRONT].position = { 1.0f,-1.0f,-1.0f,1.0f };
+	//vertexData_[TOP_RIGHT_BACK].position = { 1.0f,1.0f,1.0f,1.0f };
+	//vertexData_[TOP_RIGHT_FRONT].position = { 1.0f,1.0f,-1.0f,1.0f };
+	//vertexData_[BOTTOM_RIGHT_BACK].position = { 1.0f,-1.0f,1.0f,1.0f };
+	//vertexData_[BOTTOM_RIGHT_FRONT].position = { 1.0f,-1.0f,-1.0f,1.0f };
+
+	vertexData_[0].position = { 1.0f,1.0f,1.0f,1.0f };
+	vertexData_[1].position = { 1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[2].position = { 1.0f,-1.0f,1.0f,1.0f };
+
+	vertexData_[3].position = { 1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[4].position = { 1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[5].position = { 1.0f,-1.0f,-1.0f,1.0f };
 
 
+	////左面
+	//vertexData_[4].position = { -1.0f,1.0f,-1.0f,1.0f };
+	//vertexData_[5].position = { -1.0f,1.0f,1.0f,1.0f };
+	//vertexData_[6].position = { -1.0f,-1.0f,-1.0f,1.0f };
+	//vertexData_[7].position = { -1.0f,-1.0f,1.0f,1.0f };
 
-	//左面
-	vertexData_[4].position = { -1.0f,1.0f,-1.0f,1.0f };
-	vertexData_[5].position = { -1.0f,1.0f,1.0f,1.0f };
-	vertexData_[6].position = { -1.0f,-1.0f,-1.0f,1.0f };
-	vertexData_[7].position = { -1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[6].position = { -1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[7].position = { -1.0f,1.0f,1.0f,1.0f };
+	vertexData_[8].position = { -1.0f,-1.0f,-1.0f,1.0f };
 
+	vertexData_[9].position = { -1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[10].position = { -1.0f,-1.0f,-1.0f,1.0f };
+	vertexData_[11].position = { -1.0f,1.0f,1.0f,1.0f };
 
 
 	//前面
-	vertexData_[8].position = { -1.0f,1.0f,1.0f,1.0f };
-	vertexData_[9].position = { 1.0f,1.0f,1.0f,1.0f };
-	vertexData_[10].position = { -1.0f,-1.0f,1.0f,1.0f };
-	vertexData_[11].position = { 1.0f,-1.0f,1.0f,1.0f };
+	//vertexData_[8].position = { -1.0f,1.0f,1.0f,1.0f };
+	//vertexData_[9].position = { 1.0f,1.0f,1.0f,1.0f };
+	//vertexData_[10].position = { -1.0f,-1.0f,1.0f,1.0f };
+	//vertexData_[11].position = { 1.0f,-1.0f,1.0f,1.0f };
+
+	vertexData_[12].position = { -1.0f,1.0f,1.0f,1.0f };
+	vertexData_[13].position = { 1.0f,1.0f,1.0f,1.0f };
+	vertexData_[14].position = { -1.0f,-1.0f,1.0f,1.0f };
+
+	vertexData_[15].position = { 1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[16].position = { -1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[17].position = { 1.0f,1.0f,1.0f,1.0f };
+
 
 	//後は自力で
 	//後面。
@@ -60,10 +85,27 @@ void SkyBox::Create(uint32_t textureHandle) {
 	//vertexData_[14].position = { 1.0f,-1.0f,-1.0f,1.0f };
 	//vertexData_[15].position = { -1.0f,-1.0f,-1.0f,1.0f };
 	//
-	vertexData_[12].position = { -1.0f,1.0f,-1.0f,1.0f };
-	vertexData_[13].position = { 1.0f,1.0f,-1.0f,1.0f };
-	vertexData_[14].position = { -1.0f,-1.0f,-1.0f,1.0f };
-	vertexData_[15].position = { 1.0f,-1.0f,-1.0f,1.0f };
+	//vertexData_[12].position = { -1.0f,1.0f,-1.0f,1.0f };
+	//vertexData_[13].position = { 1.0f,1.0f,-1.0f,1.0f };
+	//vertexData_[14].position = { -1.0f,-1.0f,-1.0f,1.0f };
+	//vertexData_[15].position = { 1.0f,-1.0f,-1.0f,1.0f };
+
+
+
+	vertexData_[18].position = { -1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[19].position = { 1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[20].position = { -1.0f,-1.0f,-1.0f,1.0f };
+
+
+
+	vertexData_[21].position = { -1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[22].position = { 1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[23].position = { 1.0f,-1.0f,-1.0f,1.0f };
+
+
+	//vertexData_[21].position = { 1.0f,-1.0f,-1.0f,1.0f };
+	//vertexData_[22].position = { -1.0f,-1.0f,-1.0f,1.0f };
+	//vertexData_[23].position = { 1.0f,1.0f,-1.0f,1.0f };
 
 
 	////上面。
@@ -71,6 +113,18 @@ void SkyBox::Create(uint32_t textureHandle) {
 	//vertexData_[17].position = { -1.0f,1.0f,1.0f,1.0f };
 	//vertexData_[18].position = { 1.0f,1.0f,-1.0f,1.0f };
 	//vertexData_[19].position = { -1.0f,1.0f,-1.0f,1.0f };
+
+
+
+	vertexData_[24].position = { 1.0f,1.0f,1.0f,1.0f };
+	vertexData_[25].position = { -1.0f,1.0f,1.0f,1.0f };
+	vertexData_[26].position = { -1.0f,1.0f,1.0f,1.0f };
+
+
+
+	vertexData_[27].position = { -1.0f,1.0f,1.0f,1.0f };
+	vertexData_[28].position = { 1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[29].position = { 1.0f,1.0f,1.0f,1.0f };
 
 
 
@@ -134,7 +188,7 @@ void SkyBox::Create(uint32_t textureHandle) {
 
 
 	////マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	materialResource_= DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkyBoxMaterial));
+	materialResource_= DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkyBoxMaterial)*4);
 	
 
 
