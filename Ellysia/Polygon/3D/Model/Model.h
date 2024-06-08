@@ -195,7 +195,7 @@ private:
 	Vector4 materialColor_ = { 1.0f,1.0f,1.0f,1.0f };
 	//Ligtingをするかどうか
 	//基本はtrueで
-	int32_t selectLighting_ = Directional;
+	int32_t selectLighting_ = Spot;
 
 	//DirectionalLight
 	ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
