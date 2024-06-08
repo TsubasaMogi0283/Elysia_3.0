@@ -5,6 +5,7 @@
 
 #include "ModelManager.h"
 #include "AnimationManager.h"
+#include <numbers>
 
 /// <summary>
 /// コンストラクタ
@@ -25,10 +26,10 @@ void SampleScene::Initialize() {
 
 
 	//球
-	uint32_t groundModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	uint32_t groundModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
 	ground_.reset(Model::Create(groundModelHandle));
 	groundWorldTransform_.Initialize();
-	const float SPHERE_SCALE = 1.0f;
+	const float SPHERE_SCALE = 40.0f;
 	groundWorldTransform_.scale_ = { SPHERE_SCALE,SPHERE_SCALE,SPHERE_SCALE };
 	groundWorldTransform_.translate_.x = 0.0f;
 	groundWorldTransform_.translate_.y = 0.0f;
@@ -36,6 +37,17 @@ void SampleScene::Initialize() {
 
 
 	camera_.Initialize();
+	camera_.translate_.y = 1.0f;
+	camera_.translate_.z = -15.0f;
+
+
+	lightPosition = camera_.translate_;
+
+	distance_ = 15.0f;
+	decay_ = 0.0f;
+	fallOff_ = 6.1f;
+	cosAngle_ = 0.98f;
+	intencity_ = 200.0f;
 }
 
 
@@ -50,10 +62,80 @@ void SampleScene::Update(GameManager* gameManager) {
 	gameManager;
 
 	
+	
+	
+	const float MOVE_SPEED = 0.1f ;
+	
+	Vector3 move = {};
+	
+	if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
+		move.x = 1.0f;
+		theta = 0.0f;
+		camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
+		move.x = -1.0f;
+		theta = std::numbers::pi_v<float>;
+		
+		camera_.rotate_.y = -std::numbers::pi_v<float> / 2.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
+		move.z = 1.0f;
+		theta = std::numbers::pi_v<float>/2.0f;
+		camera_.rotate_.y = 0.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
+		move.z = -1.0f;
+		theta = std::numbers::pi_v<float>*3/2.0f;
+		camera_.rotate_.y = std::numbers::pi_v<float>;
+	}
+	
+	lightDirection_.x = std::cosf(theta);
+	lightDirection_.z = std::sinf(theta);
+
+
+	camera_.translate_ = Add(camera_.translate_, { move.x * MOVE_SPEED,move.y * MOVE_SPEED,move.z * MOVE_SPEED });
+
+	lightPosition = camera_.translate_;
+	
+	lightPosition = Add(lightPosition, { move.x* MOVE_SPEED,move.y* MOVE_SPEED,move.z* MOVE_SPEED });
 	groundWorldTransform_.Update();
 	camera_.Update();
 
+
+	ground_->SetSpotLightPosition(lightPosition);
+	//輝度
+	ground_->SetSpotLightIntensity(intencity_);
+
+	//方向
+	ground_->SetSpotLightDirection(lightDirection_);
+
+
+	//届く距離
+	ground_->SetSpotLightDistance(distance_);
+
+	//減衰率
+	ground_->SetSpotLightDecay(decay_);
+	//Falloffの開始の角度の設定
+	ground_->SetCosFalloffStart(fallOff_);
+	//余弦
+	ground_->SetSpotLightCosAngle(cosAngle_);
+
+
+
+
+
+
 #ifdef _DEBUG
+
+	ImGui::Begin("Light");
+	ImGui::SliderFloat("Distance", &distance_, 0.0f, 50.0f);
+	ImGui::SliderFloat("Decay", &decay_, 0.0f, 20.0f);
+	ImGui::SliderFloat("FallOff", &fallOff_, 0.0f, 20.0f);
+	ImGui::SliderFloat("CosAngle", &cosAngle_, 0.0f, 3.0f);
+	ImGui::SliderFloat("intencity_", &intencity_, 0.0f, 400.0f);
+	ImGui::End();
+
 
 
 	ImGui::Begin("Camera");

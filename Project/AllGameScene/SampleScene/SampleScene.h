@@ -45,7 +45,15 @@ private:
 	WorldTransform groundWorldTransform_ = {};
 
 
+	Vector3 lightPosition = {};
+	Vector3 lightDirection_ = {};
 
+	float theta = 0.0f;
 
+	float decay_ = 0.0f;
+	float fallOff_ = 0.0f;
+	float cosAngle_ = 0.0f;
+	float intencity_ = 4.0f;
+	float distance_ = 10.0f;
 	const char* GroupName = "Player";
 };

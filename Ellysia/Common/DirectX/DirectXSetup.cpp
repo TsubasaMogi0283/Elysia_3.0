@@ -668,7 +668,7 @@ void DirectXSetup::BeginFrame() {
 	//描画先のRTVを設定する
 	DirectXSetup::GetInstance()->m_commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, nullptr);
 	//指定した色で画面全体をクリアする
-	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色,RGBA
+	float clearColor[] = { 0.0f,0.0f,0.0f,1.0f };	//黒,RGBA
 	DirectXSetup::GetInstance()->m_commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], clearColor, 0, nullptr);
 
 
