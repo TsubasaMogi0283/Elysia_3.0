@@ -36,8 +36,6 @@ enum BlemdMode {
 	//Src*(1-Dest)+Dest*1
 	BlendModeScreen,
 
-	//利用してはいけない
-	CountOfBlendMode,
 
 
 };
@@ -46,10 +44,10 @@ class PipelineManager final{
 private:
 
 	//コンストラクタ
-	PipelineManager();
+	PipelineManager()=default;
 
 	//デストラクタ
-	~PipelineManager();
+	~PipelineManager()=default;
 
 public:
 	//シングルインスタンス
@@ -70,7 +68,7 @@ public:
 		return linePSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積む専用のGetter(Sprite)
+	//コマンドに積む用のGetter(Sprite)
 	ComPtr<ID3D12RootSignature> GetSpriteRootSignature() {
 		return spritePSO_.rootSignature_;
 	}
@@ -78,7 +76,7 @@ public:
 		return spritePSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積む専用のGetter(Model)
+	//コマンドに積む用のGetter(Model)
 	ComPtr<ID3D12RootSignature> GetModelRootSignature() {
 		return modelPSO_.rootSignature_;
 	}
@@ -86,7 +84,17 @@ public:
 		return modelPSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積む専用のGetter(Particle3D)
+
+	//コマンドに積む用のGetter(Skinning)
+	ComPtr<ID3D12RootSignature> GetAnimationModelRootSignature() {
+		return animationModelPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetAnimationModelGraphicsPipelineState() {
+		return animationModelPSO_.graphicsPipelineState_;
+	}
+
+
+	//コマンドに積む用のGetter(Particle3D)
 	ComPtr<ID3D12RootSignature> GetParticle3DRootSignature() {
 		return particle3DPSO_.rootSignature_;
 	}
@@ -94,6 +102,9 @@ public:
 		return particle3DPSO_.graphicsPipelineState_;
 	}
 
+
+
+	
 
 	void SetSpriteBlendMode(uint32_t blendmode) {
 		selectSpriteBlendMode_ = blendmode;
@@ -114,10 +125,15 @@ public:
 	static void GenerateSpritePSO();
 
 	//モデル用
-	static void GenerateModelPSO();
+	static void GenerateModelPSO(int32_t isSkinning);
+
+	//Skinning
+	static void GenerateAnimationModelPSO();
 
 	//3Dパーティクル用
 	static void GenerateParticle3DPSO();
+
+
 
 private:
 
@@ -139,6 +155,8 @@ private:
 	PSOInformation modelPSO_ = {};
 	//モデル用の変数
 	PSOInformation particle3DPSO_ = {};
+	//モデル用の変数
+	PSOInformation animationModelPSO_ = {};
 
 
 
@@ -148,6 +166,8 @@ private:
 	//モデル用の
 	int32_t selectModelBlendMode_ = 1;
 
+	//モデル用の
+	int32_t selectAnimiationModelBlendMode_ = 1;
 
 
 };

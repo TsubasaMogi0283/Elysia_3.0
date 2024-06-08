@@ -1,28 +1,31 @@
 #include "Skeleton.h"
 #include <Matrix4x4Calculation.h>
 
-Skeleton CreateSkeleton(const Node& rootNode){
-    Skeleton skeleton = {};
-    skeleton.root = CreateJoint(rootNode, {}, skeleton.joints);
+void Skeleton::Create(const Node& rootNode){
+    root_ = CreateJoint(rootNode, {}, joints_);
 
-    //名前とINdexのマッピングを行いアクセスしやすくする。
-    for (const Joint& joint : skeleton.joints) {
+    //名前とIndexのマッピングを行いアクセスしやすくする。
+    for (const Joint& joint : joints_) {
         //emplace...push_backみたいなもの。新しく挿入する。
-        skeleton.jointMap.emplace(joint.name, joint.index);
+        jointMap_.emplace(joint.name, joint.index);
     }
 
-    return skeleton;
 }
 
-void SkeletonUpdate(Skeleton& skeleton){
+void Skeleton::Update(){
     //全てのJointを更新。親が若いので通常ループで処理可能になっている。
-    for (Joint& joint : skeleton.joints) {
-        Vector3 newRotate = { joint.transform.rotate.x,joint.transform.rotate.y,joint.transform.rotate.z };
-        joint.localMatrix = MakeAffineMatrix(joint.transform.scale, newRotate, joint.transform.translate);
+    for (Joint& joint : joints_) {
+
+        Matrix4x4 scaleMatrix = MakeScaleMatrix(joint.transform.scale);
+        Matrix4x4 rotateMatrix = MakeRotateMatrix(joint.transform.rotate);
+        Matrix4x4 translateMatrix = MakeTranslateMatrix(joint.transform.translate);
+        
+
+        joint.localMatrix = Multiply(scaleMatrix,Multiply(rotateMatrix, translateMatrix));
 
         //親がいれば親の行列を掛ける
         if (joint.parent) {
-            joint.skeletonSpaceMatrix = Multiply(joint.localMatrix, skeleton.joints[*joint.parent].skeletonSpaceMatrix);
+            joint.skeletonSpaceMatrix = Multiply(joint.localMatrix, joints_[*joint.parent].skeletonSpaceMatrix);
         }
         //親がいないのでlocalMatrixとskeletonSpaceMatrixは一致する
         else {

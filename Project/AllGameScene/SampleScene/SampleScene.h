@@ -4,13 +4,14 @@
 #include "Sprite.h"
 #include "GameManager.h"
 #include "Model.h"
+#include "AnimationModel.h"
 #include "TextureManager.h"
 #include "Camera.h"
 
 #include <memory>
 #include <Particle3D.h>
 #include <Audio.h>
-
+#include "SkinCluster.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -36,16 +37,40 @@ public:
 
 
 private:
-
-	float cutOff_ = 1.0f;
-
-	std::unique_ptr<Model> model_ = nullptr;
-	uint32_t modelHandle = 0;
-	WorldTransform worldTransform_ = {};
 	Camera camera_ = {};
 
-	Skeleton skeleton_ = {};
-	float animationTime_ = 0;
+	//SimpleSkin
+	static const int SIMPLE_SKIN_AMOUNT_ = 2;
+	std::unique_ptr<AnimationModel> simpleModel_[SIMPLE_SKIN_AMOUNT_] = { nullptr };
+	uint32_t modelHandle = 0;
+	uint32_t animationHande_ = {};
+	WorldTransform worldTransform_[SIMPLE_SKIN_AMOUNT_] = {};
+	
+	Skeleton skeleton_[SIMPLE_SKIN_AMOUNT_] = {};
+	float animationTime_[SIMPLE_SKIN_AMOUNT_] = {};
+	SkinCluster skinCluster_[SIMPLE_SKIN_AMOUNT_] = {};
+
+	//歩き
+	static const int WALK_HUMAN_AMOUNT_ = 2;
+	std::unique_ptr<AnimationModel> human_[WALK_HUMAN_AMOUNT_] = { nullptr };
+	uint32_t humanModelHandle = {};
+	uint32_t humanAnimationModel_ = {};
+	WorldTransform humanWorldTransform_[WALK_HUMAN_AMOUNT_] = {};
+	Skeleton humanSkeleton_[WALK_HUMAN_AMOUNT_] = {};
+	float humanAnimationTime_[WALK_HUMAN_AMOUNT_] = {};
+	SkinCluster humanSkinCluster_[WALK_HUMAN_AMOUNT_] = {};
+
+	//歩き(アニメーションなし)
+	std::unique_ptr<Model> humanNoneAnimation_ = nullptr;
+	uint32_t humanNoneAnimationModelHandle_ = 0;
+	WorldTransform humanNoneAnimationWorldTransform_ = {};
+	
+
+
+	std::unique_ptr<Model> noneAnimationModel_ = nullptr;
+	WorldTransform noneAnimationWorldTransform_ = {};
+
+
 
 
 	const char* GroupName = "Player";

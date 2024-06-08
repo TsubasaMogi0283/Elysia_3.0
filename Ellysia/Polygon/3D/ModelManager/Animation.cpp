@@ -92,11 +92,10 @@ Vector3 CalculationValue(const std::vector<KeyFrameVector3>& keyFrames, float ti
         }
     }
 
-    //ここまで来た場合は一番後ろの時刻よりも後ろなので最後の値を返す琴にする
+    //ここまで来た場合は一番後ろの時刻よりも後ろなので最後の値を返すことにする
     return (*keyFrames.rbegin()).value;
 
 }
-
 
 Quaternion CalculationValue(const std::vector<KeyFrameQuaternion>& keyFrames, float time) {
     //特殊なケースを除外
@@ -123,16 +122,18 @@ Quaternion CalculationValue(const std::vector<KeyFrameQuaternion>& keyFrames, fl
 
 void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime){
 
-    for (Joint& joint : skeleton.joints) {
+    for (Joint& joint : skeleton.joints_) {
         //対象のJointのAnimation
         //対象のJointのAnimationがあれば、値の適用を行う。下記のif文はC++17から可能になった
         
         if (auto it = animation.nodeAnimations.find(joint.name); it != animation.nodeAnimations.end()) {
+            //NodeAnimation& rootNodeAnimation=std::fmodf(animation.nodeAnimations[])
             const NodeAnimation& rootNodeAnimation = (*it).second;
             joint.transform.translate = CalculationValue(rootNodeAnimation.translate.keyFrames, animationTime);
             joint.transform.rotate = CalculationValue(rootNodeAnimation.rotate.keyFrames, animationTime);
             joint.transform.scale = CalculationValue(rootNodeAnimation.scale.keyFrames, animationTime);
         }
+
     }
 }
 

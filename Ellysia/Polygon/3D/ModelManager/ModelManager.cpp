@@ -7,12 +7,10 @@
 #include <assimp/postprocess.h>
 #include <ReadNode.h>
 
+#include "Matrix4x4Calculation.h"
 
 static uint32_t modelhandle;
 
-//コンストラクタ
-ModelManager::ModelManager() {
-}
 ModelManager* ModelManager::GetInstance() {
 	//関数内static変数として宣言する
 	static ModelManager instance;
@@ -67,6 +65,43 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 				modelData.indices.push_back(vertexIndex);
 			}
 		}
+
+		//SkinCluster構築用のデータ取得を追加
+		for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
+			//Jointごとの格納領域を作る
+			aiBone* bone = mesh->mBones[boneIndex];
+			std::string jointName = bone->mName.C_Str();
+			JointWeightData& jointWeightData = modelData.skinClusterData[jointName];
+
+			//InverseBindPoseMatrixの抽出
+			aiMatrix4x4 bindPoseMatrixAssimp = bone->mOffsetMatrix.Inverse();
+			aiVector3D scale;
+			aiVector3D translate;
+			aiQuaternion rotate;
+
+			bindPoseMatrixAssimp.Decompose(scale, rotate, translate);
+
+			Vector3 scaleAfter = { scale.x,scale.y,scale.z };
+			Vector3 translateAfter = { -translate.x,translate.y,translate.z };
+			Quaternion rotateQuaternion = { rotate.x,-rotate.y,-rotate.z,rotate.w };
+
+			Matrix4x4 scaleMatrix = MakeScaleMatrix(scaleAfter);
+			Matrix4x4 rotateMatrix = MakeRotateMatrix(rotateQuaternion);
+			Matrix4x4 translateMatrix = MakeTranslateMatrix(translateAfter);
+
+
+			
+			Matrix4x4 bindPoseMatrix = Multiply(scaleMatrix, Multiply(rotateMatrix, translateMatrix));
+			jointWeightData.inverseBindPoseMatrix = Inverse(bindPoseMatrix);
+
+			//Weight情報を取り出す
+			for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {
+				jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
+			}
+
+
+		}
+
 	}
 
 
@@ -146,11 +181,4 @@ uint32_t ModelManager::LoadModelFile(const std::string& directoryPath, const std
 
 	//値を返す
 	return modelhandle;
-}
-
-/// <summary>
-/// デストラクタ
-/// </summary>
-ModelManager::~ModelManager() {
-
 }

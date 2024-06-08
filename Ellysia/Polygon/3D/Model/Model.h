@@ -24,42 +24,37 @@
 #include <PointLight.h>
 #include <SpotLight.h>
 
-//ライトの種類
-enum LightingKinds {
-	None,
-	Directional,
-	Point,
-	Spot,
-};
+#include "Skeleton.h"
+#include <SkinCluster.h>
+#include "LightingType.h"
 
 class Model {
 public:
 
 	//コンストラクタ
-	Model();
+	Model()=default;
 
-	//初期化
-	//Initializeも兼ねているよ
-	//通常
+	/// <summary>
+	/// 生成
+	/// </summary>
+	/// <param name="modelHandle">モデルハンドル</param>
+	/// <returns></returns>
 	static Model* Create(uint32_t modelHandle);
 
 
-private:
-#pragma region モデルの読み込み関係の関数
-	
-#pragma endregion
-
-public:
-	//描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="worldTransform">ワールドトランスフォーム</param>
+	/// <param name="camera">カメラ</param>
 	void Draw(WorldTransform& worldTransform, Camera& camera);
 
 
-	//アニメーション付きの描画
-	void Draw(WorldTransform& worldTransform, Camera& camera, Animation& animation);
 
-
-	//デストラクタ
-	~Model();
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Model()=default;
 
 
 
@@ -162,6 +157,10 @@ public:
 	}
 
 
+
+
+
+
 private:
 	struct Material {
 		Vector4 color;
@@ -171,6 +170,9 @@ private:
 		float shininess;
 	};
 
+	struct SkinningEnable {
+		int32_t isSkinning;
+	};
 
 private:
 	//頂点リソースを作る
@@ -178,10 +180,13 @@ private:
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
-	//std::vector<VertexData> vertices_{};
 
+	//インデックス
 	ComPtr<ID3D12Resource> indexResource_ = nullptr;
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
+
+#pragma region なくしたい
+
 
 	//マテリアル用のリソースを作る
 	ComPtr<ID3D12Resource> materialResource_ = nullptr;
@@ -202,15 +207,6 @@ private:
 	float directionalLightIntensity_ = 1.0f;
 	float shininess_ = 100.0f;
 
-
-
-
-	//PixelShaderにカメラの座標を送る為の変数
-	ComPtr<ID3D12Resource> cameraResource_ = nullptr;
-	CameraForGPU* cameraForGPU_ = {};
-
-
-
 	//PointLight
 	ComPtr<ID3D12Resource> pointLightResource_ = nullptr;
 	PointLight* pointLightMapData_ = {};
@@ -221,6 +217,19 @@ private:
 	ComPtr<ID3D12Resource> spotLightResource_ = nullptr;
 	SpotLight* spotLightMapData_ = {};
 	SpotLight spotLightData_ = {};
+
+
+
+#pragma endregion
+
+	//PixelShaderにカメラの座標を送る為の変数
+	ComPtr<ID3D12Resource> cameraResource_ = nullptr;
+	CameraForGPU* cameraForGPU_ = {};
+
+	//Skinningするかどうか
+	ComPtr<ID3D12Resource> skinningResource_ = nullptr;
+	SkinningEnable* skinningData_ = {};
+	SkinningEnable isSkinning_ = {};
 
 	//アニメーションを再生するときに使う時間
 	float animationTime_ = 0.0f;
@@ -240,8 +249,7 @@ private:
 	int32_t blendModeNumber_ = 1;
 
 
-
-
+	bool isAnimation_ = false;
 
 
 

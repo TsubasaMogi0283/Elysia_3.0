@@ -13,12 +13,12 @@ int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std:
     //SkeletonのJoint列に追加
     joints.push_back(joint);
     for (const Node& child : node.children) {
-        //子Jointを作成し、そのINdexを登録
+        //子Jointを作成し、そのIndexを登録
         int32_t childIndex = CreateJoint(child, joint.index, joints);
         joints[joint.index].cheldren.push_back(childIndex);
     }
 
 
-    //自信のINdexを返す
+    //自身のIndexを返す
     return joint.index;
 }
