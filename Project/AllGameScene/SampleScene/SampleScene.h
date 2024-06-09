@@ -14,6 +14,8 @@
 #include <Audio.h>
 #include "SkinCluster.h"
 #include "../../Enemy/Enemy.h"
+#include "../../Collider/CollisionManager.h"
+#include "../../LightWeapon/LightWeapon.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -48,13 +50,18 @@ private:
 	Camera camera_ = {};
 
 
-
+	//地面
 	std::unique_ptr<Model> ground_ = nullptr;
 	WorldTransform groundWorldTransform_ = {};
 
-
+	//敵
 	std::list <Enemy*> enemys_ = {};
 	uint32_t enemyModelHandle_ = 0;
+
+	//プレイヤーのライトの判定
+	std::unique_ptr<LightWeapon> lightCollision_ = nullptr;
+	WorldTransform lightCollisionWorldTransform_ = {};
+
 
 	Vector3 lightPosition = {};
 	Vector3 lightDirection_ = {};
@@ -67,4 +74,10 @@ private:
 	float intencity_ = 4.0f;
 	float distance_ = 10.0f;
 	const char* GroupName = "Player";
+
+	std::unique_ptr<Sprite> test_ = nullptr;
+	Vector4 color_ = {};
+
+	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+
 };

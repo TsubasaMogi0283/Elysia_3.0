@@ -2,10 +2,11 @@
 #include "Vector3.h"
 #include "WorldTransform.h"
 #include "Model.h"
+#include "../Collider/Collider.h"
 
 struct Camera;
 
-class Enemy{
+class Enemy :public Collider{
 public:
 
 	/// <summary>
@@ -32,11 +33,17 @@ public:
 	/// <param name="camera"></param>
 	void Draw(Camera& camera);
 
-
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
 	~Enemy()=default;
+
+
+
+public:
+	void OnCollision()override;
+
+	Vector3 GetWorldPosition()override;
 
 
 public:
@@ -67,10 +74,18 @@ public:
 	
 
 
+	bool GetIsAlive() {
+		return isAlive_;
+	}
+
+
 
 private:
 	WorldTransform worldTransform_ = {};
 	std::unique_ptr<Model> model_ = nullptr;
 
+
+	int32_t deleteTime_ = 0;
+	bool isAlive_ = true;
 };
 

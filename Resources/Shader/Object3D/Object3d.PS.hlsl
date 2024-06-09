@@ -110,7 +110,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	
 	//Materialを拡張する
 	float4 transformedUV = mul(float4(input.texcoord,0.0f, 1.0f), gMaterial.uvTransform);
-	float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
+	float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
 
     if (textureColor.a <= 0.5f){
         discard;
@@ -153,7 +153,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
 		
 		
 		
-        if (textureColor.a <= 0.5f)
+        if (textureColor.a == 0.0f)
         {
             discard;
         }
@@ -199,7 +199,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
         float32_t3 diffusePointLight = gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * cos * gPointLight.intensity;
         float32_t3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * specularPow * float32_t3(1.0f, 1.0f, 1.0f);
 		
-        if (textureColor.a <= 0.5f)
+        if (textureColor.a == 0.0f)
         {
             discard;
         }
@@ -245,7 +245,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
         float32_t3 diffuseSpotLight = gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * cos * gSpotLight.intensity;
         float32_t3 specularSpotLight = gSpotLight.color.rgb * gSpotLight.intensity * specularPow * float32_t3(1.0f, 1.0f, 1.0f);
 		
-        if (textureColor.a <= 0.5f)
+        if (textureColor.a == 0.0f)
         {
             discard;
         }

@@ -184,6 +184,9 @@
     <Filter Include="Project\Enemy">
       <UniqueIdentifier>{bc514930-6215-4c96-9287-1ed241ffe018}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\LightWeapon">
+      <UniqueIdentifier>{874ce675-ba24-4161-a967-55c45b75ca23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -304,6 +307,12 @@
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\Enemy.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Collider\CollisionManager.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\LightWeapon\LightWeapon.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -545,6 +554,18 @@
       <Filter>Ellysia\Header File\Lighting</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\Enemy.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Collider\Collider.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Collider\CollisionConfig.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Collider\CollisionManager.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\LightWeapon\LightWeapon.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>

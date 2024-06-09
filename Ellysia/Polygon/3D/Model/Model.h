@@ -80,6 +80,9 @@ public:
 	void SetLighting(bool enableLighting) {
 		this->selectLighting_ = enableLighting;
 	}
+	void SetDirectionalKightColor(Vector4 color) {
+		this->lightColor_ = color;
+	}
 	//方向
 	void SetDirectionalLightDirection(Vector3 direction) {
 		this->lightingDirection_ = direction;

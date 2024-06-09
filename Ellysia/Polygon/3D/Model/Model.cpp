@@ -12,7 +12,7 @@ Model* Model::Create(uint32_t modelHandle) {
 	Model* model = new Model();
 
 	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
-	PipelineManager::GetInstance()->SetModelBlendMode(0);
+	PipelineManager::GetInstance()->SetModelBlendMode(1);
 	//Skinningするかどうか
 	model->skinningResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkinningEnable)).Get();
 	model->skinningResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->skinningData_));

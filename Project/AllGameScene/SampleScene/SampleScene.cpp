@@ -35,7 +35,7 @@ void SampleScene::Initialize() {
 	groundWorldTransform_.translate_.y = 0.0f;
 
 
-
+	//敵
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD2_Enemy","TD2_Enemy.obj");
 	
 	//まず一個出す
@@ -44,19 +44,35 @@ void SampleScene::Initialize() {
 	enemy->Initialize(enemyModelHandle_,position);
 	enemys_.push_back(enemy);
 
+	uint32_t textureHandle = TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
+	test_.reset(Sprite::Create(textureHandle, { 0.0f,0.0f }));
+	color_ = { 1.0f,1.0f,1.0f,1.0f };
 
 	camera_.Initialize();
 	camera_.translate_.y = 1.0f;
 	camera_.translate_.z = -15.0f;
 
+
+
 	theta = std::numbers::pi_v<float> / 2.0f;
 	lightPosition = camera_.translate_;
 
-	distance_ = 50.0f;
+	distance_ = 32.0f;
 	decay_ = 0.6f;
 	fallOff_ = 6.1f;
 	cosAngle_ = 0.98f;
 	intencity_ = 200.0f;
+
+
+	//プレイヤーのライト
+	uint32_t weaponLightModel= ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere","Sphere.obj");
+	lightCollision_ = std::make_unique<LightWeapon>();
+	lightCollision_->Initialize(weaponLightModel);
+
+
+	collisionManager_ = std::make_unique<CollisionManager>();
+
+
 }
 
 
@@ -77,6 +93,10 @@ void SampleScene::GenarateEnemy() {
 /// </summary>
 void SampleScene::Update(GameManager* gameManager) {
 	gameManager;
+
+
+
+
 
 	//1キーで出す
 	if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
@@ -149,7 +169,6 @@ void SampleScene::Update(GameManager* gameManager) {
 		//方向
 		enemy->SetSpotLightDirection(lightDirection_);
 
-
 		//届く距離
 		enemy->SetSpotLightDistance(distance_);
 
@@ -162,17 +181,47 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	}
 
+
+
+	//フレーム初めに
+	//コリジョンリストのクリア
+	collisionManager_->ClearList();
+
+	for (auto it = enemys_.begin(); it != enemys_.end();) {
+		Enemy* enemy = *it;
+		if (enemy != nullptr) {
+			collisionManager_->RegisterList(enemy);
+		}
+		it++;
+	}
+
+	//カメラ
+	camera_.Update();
+
+	
 	//敵
 	for (Enemy* enemy : enemys_) {
 		enemy->Update();
 	}
 	//地面
 	groundWorldTransform_.Update();
-	//カメラ
-	camera_.Update();
+	//ライト
+	Vector3 cameraWorldPosition = { camera_.worldMatrix_.m[3][0],camera_.worldMatrix_.m[3][1],camera_.worldMatrix_.m[3][2] };
+	lightCollision_->Update(cameraWorldPosition);
+	
+	//当たり判定
+	collisionManager_->CheckAllCollision();
 
 
+	enemys_.remove_if([](Enemy* enemy) {
+		if (enemy->GetIsAlive()==false) {
+			delete enemy;
+			return true;
+		}
+		return false;
+	}); 
 
+	test_->SetColor(color_);
 
 #ifdef _DEBUG
 
@@ -184,7 +233,9 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::SliderFloat("intencity_", &intencity_, 0.0f, 400.0f);
 	ImGui::End();
 
-
+	ImGui::Begin("Sprite");
+	ImGui::SliderFloat4("color", &color_.x, 0.0f, 1.0f);
+	ImGui::End();
 
 	ImGui::Begin("Camera");
 	ImGui::SliderFloat3("Translate", &camera_.translate_.x, -100.0f, 100.0f);
@@ -208,6 +259,9 @@ void SampleScene::Draw() {
 	for (Enemy* enemy : enemys_) {
 		enemy->Draw(camera_);
 	}
+
+	lightCollision_->Draw(camera_);
+	test_->Draw();
 	
 }
 
