@@ -36,7 +36,7 @@ void SampleScene::Initialize() {
 
 
 
-	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Enemy","enemy.obj");
+	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD2_Enemy","TD2_Enemy.obj");
 	
 	//まず一個出す
 	Enemy* enemy = new Enemy();
@@ -53,7 +53,7 @@ void SampleScene::Initialize() {
 	lightPosition = camera_.translate_;
 
 	distance_ = 50.0f;
-	decay_ = 0.0f;
+	decay_ = 0.6f;
 	fallOff_ = 6.1f;
 	cosAngle_ = 0.98f;
 	intencity_ = 200.0f;
@@ -142,6 +142,28 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	//敵
 	for (Enemy* enemy : enemys_) {
+		enemy->SetSpotLightPosition(lightPosition);
+		//輝度
+		enemy->SetSpotLightIntensity(intencity_);
+
+		//方向
+		enemy->SetSpotLightDirection(lightDirection_);
+
+
+		//届く距離
+		enemy->SetSpotLightDistance(distance_);
+
+		//減衰率
+		enemy->SetSpotLightDecay(decay_);
+		//Falloffの開始の角度の設定
+		enemy->SetCosFalloffStart(fallOff_);
+		//余弦
+		enemy->SetSpotLightCosAngle(cosAngle_);
+
+	}
+
+	//敵
+	for (Enemy* enemy : enemys_) {
 		enemy->Update();
 	}
 	//地面
@@ -197,5 +219,9 @@ void SampleScene::Draw() {
 /// デストラクタ
 /// </summary>
 SampleScene::~SampleScene() {
+	//敵
+	for (Enemy* enemy : enemys_) {
+		delete enemy;
+	}
 	
 }
