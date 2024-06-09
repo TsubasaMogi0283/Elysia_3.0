@@ -25,7 +25,7 @@ void SampleScene::Initialize() {
 
 
 
-	//球
+	//地面
 	uint32_t groundModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
 	ground_.reset(Model::Create(groundModelHandle));
 	groundWorldTransform_.Initialize();
@@ -36,14 +36,23 @@ void SampleScene::Initialize() {
 
 
 
+	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Enemy","enemy.obj");
+	
+	//まず一個出す
+	Enemy* enemy = new Enemy();
+	Vector3 position = {4.0f,1.0f,0.0f};
+	enemy->Initialize(enemyModelHandle_,position);
+	enemys_.push_back(enemy);
+
+
 	camera_.Initialize();
 	camera_.translate_.y = 1.0f;
 	camera_.translate_.z = -15.0f;
 
-
+	theta = std::numbers::pi_v<float> / 2.0f;
 	lightPosition = camera_.translate_;
 
-	distance_ = 15.0f;
+	distance_ = 50.0f;
 	decay_ = 0.0f;
 	fallOff_ = 6.1f;
 	cosAngle_ = 0.98f;
@@ -52,6 +61,14 @@ void SampleScene::Initialize() {
 
 
 
+void SampleScene::GenarateEnemy() {
+	Enemy* enemy = new Enemy();
+	Vector3 position = {};
+	enemy->Initialize(enemyModelHandle_,position);
+
+	enemys_.push_back(enemy);
+
+}
 
 
 
@@ -61,7 +78,11 @@ void SampleScene::Initialize() {
 void SampleScene::Update(GameManager* gameManager) {
 	gameManager;
 
-	
+	//1キーで出す
+	if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
+		GenarateEnemy();
+	}
+
 	
 	
 	const float MOVE_SPEED = 0.1f ;
@@ -70,24 +91,24 @@ void SampleScene::Update(GameManager* gameManager) {
 	
 	if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
 		move.x = 1.0f;
-		theta = 0.0f;
-		camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
+		//theta = 0.0f;
+		//camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
 	}
 	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
 		move.x = -1.0f;
-		theta = std::numbers::pi_v<float>;
+		//theta = std::numbers::pi_v<float>;
 		
-		camera_.rotate_.y = -std::numbers::pi_v<float> / 2.0f;
+		//camera_.rotate_.y = -std::numbers::pi_v<float> / 2.0f;
 	}
 	else if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
 		move.z = 1.0f;
-		theta = std::numbers::pi_v<float>/2.0f;
-		camera_.rotate_.y = 0.0f;
+		
+		//camera_.rotate_.y = 0.0f;
 	}
 	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
 		move.z = -1.0f;
-		theta = std::numbers::pi_v<float>*3/2.0f;
-		camera_.rotate_.y = std::numbers::pi_v<float>;
+		//theta = std::numbers::pi_v<float>*3/2.0f;
+		//camera_.rotate_.y = std::numbers::pi_v<float>;
 	}
 	
 	lightDirection_.x = std::cosf(theta);
@@ -96,12 +117,10 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	camera_.translate_ = Add(camera_.translate_, { move.x * MOVE_SPEED,move.y * MOVE_SPEED,move.z * MOVE_SPEED });
 
-	lightPosition = camera_.translate_;
-	
+	lightPosition = camera_.translate_;	
 	lightPosition = Add(lightPosition, { move.x* MOVE_SPEED,move.y* MOVE_SPEED,move.z* MOVE_SPEED });
-	groundWorldTransform_.Update();
-	camera_.Update();
 
+	
 
 	ground_->SetSpotLightPosition(lightPosition);
 	//輝度
@@ -121,7 +140,14 @@ void SampleScene::Update(GameManager* gameManager) {
 	//余弦
 	ground_->SetSpotLightCosAngle(cosAngle_);
 
-
+	//敵
+	for (Enemy* enemy : enemys_) {
+		enemy->Update();
+	}
+	//地面
+	groundWorldTransform_.Update();
+	//カメラ
+	camera_.Update();
 
 
 
@@ -129,7 +155,7 @@ void SampleScene::Update(GameManager* gameManager) {
 #ifdef _DEBUG
 
 	ImGui::Begin("Light");
-	ImGui::SliderFloat("Distance", &distance_, 0.0f, 50.0f);
+	ImGui::SliderFloat("Distance", &distance_, 0.0f, 100.0f);
 	ImGui::SliderFloat("Decay", &decay_, 0.0f, 20.0f);
 	ImGui::SliderFloat("FallOff", &fallOff_, 0.0f, 20.0f);
 	ImGui::SliderFloat("CosAngle", &cosAngle_, 0.0f, 3.0f);
@@ -154,9 +180,15 @@ void SampleScene::Update(GameManager* gameManager) {
 /// 描画
 /// </summary>
 void SampleScene::Draw() {
+	//地面
 	ground_->Draw(groundWorldTransform_,camera_);
+	//敵
+	for (Enemy* enemy : enemys_) {
+		enemy->Draw(camera_);
+	}
 	
 }
+
 
 
 

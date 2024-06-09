@@ -9,9 +9,11 @@
 #include "Camera.h"
 
 #include <memory>
+#include <list>
 #include <Particle3D.h>
 #include <Audio.h>
 #include "SkinCluster.h"
+#include "../../Enemy/Enemy.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -37,6 +39,12 @@ public:
 
 
 private:
+
+	void GenarateEnemy();
+
+
+
+private:
 	Camera camera_ = {};
 
 
@@ -44,6 +52,9 @@ private:
 	std::unique_ptr<Model> ground_ = nullptr;
 	WorldTransform groundWorldTransform_ = {};
 
+
+	std::list <Enemy*> enemys_ = {};
+	uint32_t enemyModelHandle_ = 0;
 
 	Vector3 lightPosition = {};
 	Vector3 lightDirection_ = {};
