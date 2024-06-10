@@ -3,7 +3,6 @@
 
 #include "d3dx12.h"
 #include <vector>
-
 static uint32_t descriptorSizeSRV_ = 0u;
 static uint32_t descriptorSizeRTV_ = 0u;
 static uint32_t descriptorSizeDSV_ = 0u;
@@ -65,19 +64,8 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 	const DirectX::TexMetadata& metadata = mipImages_[textureIndex].GetMetadata();
 
 	TextureManager::GetInstance()->textureInformation_[textureIndex].resource_ = CreateTextureResource(metadata);
-	UploadTextureData(TextureManager::GetInstance()->textureInformation_[textureIndex].resource_.Get(), mipImages_[textureIndex]);
-
-
-	//ShaderResourceView
-	//今のDescriptorHeapには
-	//0...ImGui
-	//1...uvChecker
-	//2...monsterBall
-	//3...NULL
-	//.
-	//.
-	//このような感じで入っている
-	//後ろのindexに対応させる
+	TextureManager::GetInstance()->textureInformation_[textureIndex].internegiateResource_ =UploadTextureData(TextureManager::GetInstance()->textureInformation_[textureIndex].resource_.Get(), mipImages_[textureIndex]).Get();
+	
 
 	//SRVの確保
 	//0番目はImGuiが使っているからダメだった
@@ -214,16 +202,13 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 //3.TextureResourceに1で読んだデータを転送する
 //書き換え
 [[nodiscard]]
-ComPtr<ID3D12Resource> TextureManager::UploadTextureData(
-	ComPtr<ID3D12Resource> texture, 
-	const DirectX::ScratchImage& mipImages) {
+ComPtr<ID3D12Resource> TextureManager::UploadTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages) {
 
 	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
 	DirectX::PrepareUpload(DirectXSetup::GetInstance()->GetDevice().Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
 	uint64_t intermidiateSize = GetRequiredIntermediateSize(texture.Get(), 0, UINT(subresources.size()));
-	ComPtr<ID3D12Resource> intermediateSizeResource = DirectXSetup::GetInstance()->CreateBufferResource(intermidiateSize).Get();
-	UpdateSubresources(DirectXSetup::GetInstance()->GetCommandList(), texture.Get(), intermediateSizeResource.Get(), 0, 0, UINT(subresources.size()), subresources.data());
-
+	ComPtr<ID3D12Resource> intermediateSizeResource = DirectXSetup::GetInstance()->CreateBufferResource(intermidiateSize);
+	UpdateSubresources(DirectXSetup::GetInstance()->GetCommandList().Get(), texture.Get(), intermediateSizeResource.Get(), 0, 0, UINT(subresources.size()), subresources.data());
 
 	//Textureへの転送後は利用できるよう、D312_RESOURCE_STATE_COPY_DESTから
 	//D3D12_RESOURCE_STATE_GENERIC_READへResourceStateを変更する
@@ -236,19 +221,6 @@ ComPtr<ID3D12Resource> TextureManager::UploadTextureData(
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 
-	//for (size_t subresourceIndex = 0; subresourceIndex < subresources.size(); ++subresourceIndex) {
-	//	D3D12_SUBRESOURCE_DATA& subresouce = subresources[subresourceIndex];
-
-	//	HRESULT hr = texture->WriteToSubresource(
-	//		UINT(subresourceIndex),
-	//		nullptr,				//全領域へコピー
-	//		subresouce.pData,			//元データアドレス
-	//		UINT(subresouce.RowPitch),	//1ラインサイズ
-	//		UINT(subresouce.SlicePitch)	//1枚サイズ
-	//	);
-
-	//	assert(SUCCEEDED(hr));
-	//}
 
 	return intermediateSizeResource;
 

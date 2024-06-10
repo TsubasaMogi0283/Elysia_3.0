@@ -57,7 +57,7 @@ private:
 
 	//3.TextureResourceに1で読んだデータを転送する
 	//void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages,ID3D12Device* device,ID3D12GraphicsCommandList* commandList);
-	static ComPtr<ID3D12Resource>UploadTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
+	static ComPtr<ID3D12Resource> UploadTextureData(ComPtr<ID3D12Resource> texture,const DirectX::ScratchImage& mipImages);
 
 
 #pragma endregion
@@ -72,7 +72,7 @@ public:
 
 		//リソース
 		ComPtr<ID3D12Resource> resource_= nullptr;
-
+		ComPtr<ID3D12Resource> internegiateResource_ = nullptr;
 		//画像読み込み
 		D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU_ = {};
 		D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU_ = {};
@@ -86,9 +86,7 @@ public:
 
 private:
 
-	//新しく構造体を作った方がよさそう
 
-	ComPtr<ID3D12Resource> textureResource_[TEXTURE_MAX_AMOUNT_] = {nullptr};
 
 	//画像読み込み
 	

@@ -47,7 +47,7 @@ void SampleScene::Initialize() {
 	uint32_t noneModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
 	noneAnimationModel_.reset(Model::Create(noneModelHandle));
 	noneAnimationWorldTransform_.Initialize();
-	const float SPHERE_SCALE = 40.0f;
+	const float SPHERE_SCALE = 80.0f;
 	noneAnimationWorldTransform_.scale_ = { SPHERE_SCALE,SPHERE_SCALE,SPHERE_SCALE };
 	noneAnimationWorldTransform_.translate_.x = 0.0f;
 	noneAnimationWorldTransform_.translate_.y = -1.0f;
@@ -55,7 +55,9 @@ void SampleScene::Initialize() {
 
 
 	camera_.Initialize();
-	
+	camera_.translate_ = { 0.0f,0.0f,0.0f };
+
+
 	uint32_t skyBoxTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG4/SkyBox/rostock_laage_airport_4k.dds");
 	skyBox_ = std::make_unique<SkyBox>();
 	skyBox_->Create(skyBoxTextureHandle);
@@ -195,7 +197,7 @@ void SampleScene::Draw() {
 	//SimpleSkin
 	//Walk
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
+		//human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
 	}
 	//noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
 	
