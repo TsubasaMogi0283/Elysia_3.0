@@ -217,24 +217,40 @@ void TextureManager::UploadTextureData(
 	const DirectX::ScratchImage& mipImages) {
 
 	//Meta情報を取得
-	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	//全MipMapについて
-	for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
-		//MipMapLevelを指定して各Imageを取得
-		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
-		//Textureに転送
+	//const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
+
+	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
+	DirectX::PrepareUpload(DirectXSetup::GetInstance()->GetDevice().Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
+
+	for (size_t subresourceIndex = 0; subresourceIndex < subresources.size(); ++subresourceIndex) {
+		D3D12_SUBRESOURCE_DATA& subresouce = subresources[subresourceIndex];
+
 		HRESULT hr = texture->WriteToSubresource(
-			UINT(mipLevel),
+			UINT(subresourceIndex),
 			nullptr,				//全領域へコピー
-			img->pixels,			//元データアドレス
-			UINT(img->rowPitch),	//1ラインサイズ
-			UINT(img->slicePitch)	//1枚サイズ
+			subresouce.pData,			//元データアドレス
+			UINT(subresouce.RowPitch),	//1ラインサイズ
+			UINT(subresouce.SlicePitch)	//1枚サイズ
 		);
 
 		assert(SUCCEEDED(hr));
 	}
 
+	////全MipMapについて
+	//for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
+	//	//MipMapLevelを指定して各Imageを取得
+	//	const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
+	//	//Textureに転送
+	//	HRESULT hr = texture->WriteToSubresource(
+	//		UINT(mipLevel),
+	//		nullptr,				//全領域へコピー
+	//		img->pixels,			//元データアドレス
+	//		UINT(img->rowPitch),	//1ラインサイズ
+	//		UINT(img->slicePitch)	//1枚サイズ
+	//	);
 
+	//	assert(SUCCEEDED(hr));
+	//}
 
 }
 

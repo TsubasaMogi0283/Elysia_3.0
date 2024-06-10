@@ -39,6 +39,7 @@ private:
 
 	struct SkyBoxMaterial {
 		Vector4 color;
+		Matrix4x4 uvTransform;
 	};
 
 	enum VERTEX_POSITION {

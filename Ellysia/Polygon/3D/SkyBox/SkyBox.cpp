@@ -196,7 +196,7 @@ void SkyBox::Create(uint32_t textureHandle) {
 
 
 	////マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	materialResource_= DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkyBoxMaterial)*4);
+	materialResource_= DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkyBoxMaterial));
 	
 
 
@@ -216,6 +216,7 @@ void SkyBox::Draw(WorldTransform& worldTransform, Camera& camera) {
 	//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = {1.0f,1.0f,1.0f,1.0f};
+	materialData_->uvTransform = MakeIdentity4x4();
 	materialResource_->Unmap(0, nullptr);
 	
 	
