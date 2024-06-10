@@ -57,7 +57,7 @@ private:
 
 	//3.TextureResourceに1で読んだデータを転送する
 	//void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages,ID3D12Device* device,ID3D12GraphicsCommandList* commandList);
-	static void UploadTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
+	static ComPtr<ID3D12Resource>UploadTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
 
 
 #pragma endregion

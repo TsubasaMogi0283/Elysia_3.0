@@ -1,7 +1,8 @@
 #include "TextureManager.h"
 #include "SrvManager.h"
 
-
+#include "d3dx12.h"
+#include <vector>
 
 static uint32_t descriptorSizeSRV_ = 0u;
 static uint32_t descriptorSizeRTV_ = 0u;
@@ -200,7 +201,7 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 		&heapProperties,					//Heapの設定
 		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定
 		&resourceDesc,						//Resourceの設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,	//初回のResourceState。データの転送を受け入れられるようにする
+		D3D12_RESOURCE_STATE_COPY_DEST,		//初回のResourceState。データの転送を受け入れられるようにする
 		nullptr,							//Clear最適値。使わないのでnullptr
 		IID_PPV_ARGS(&resource));			//作成するResourceポインタへのポインタ
 	assert(SUCCEEDED(hr));
@@ -212,45 +213,44 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 
 //3.TextureResourceに1で読んだデータを転送する
 //書き換え
-void TextureManager::UploadTextureData(
+[[nodiscard]]
+ComPtr<ID3D12Resource> TextureManager::UploadTextureData(
 	ComPtr<ID3D12Resource> texture, 
 	const DirectX::ScratchImage& mipImages) {
 
-	//Meta情報を取得
-	//const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-
 	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
 	DirectX::PrepareUpload(DirectXSetup::GetInstance()->GetDevice().Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
+	uint64_t intermidiateSize = GetRequiredIntermediateSize(texture.Get(), 0, UINT(subresources.size()));
+	ComPtr<ID3D12Resource> intermediateSizeResource = DirectXSetup::GetInstance()->CreateBufferResource(intermidiateSize).Get();
+	UpdateSubresources(DirectXSetup::GetInstance()->GetCommandList(), texture.Get(), intermediateSizeResource.Get(), 0, 0, UINT(subresources.size()), subresources.data());
 
-	for (size_t subresourceIndex = 0; subresourceIndex < subresources.size(); ++subresourceIndex) {
-		D3D12_SUBRESOURCE_DATA& subresouce = subresources[subresourceIndex];
 
-		HRESULT hr = texture->WriteToSubresource(
-			UINT(subresourceIndex),
-			nullptr,				//全領域へコピー
-			subresouce.pData,			//元データアドレス
-			UINT(subresouce.RowPitch),	//1ラインサイズ
-			UINT(subresouce.SlicePitch)	//1枚サイズ
-		);
+	//Textureへの転送後は利用できるよう、D312_RESOURCE_STATE_COPY_DESTから
+	//D3D12_RESOURCE_STATE_GENERIC_READへResourceStateを変更する
+	D3D12_RESOURCE_BARRIER barrier{};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = texture.Get();
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 
-		assert(SUCCEEDED(hr));
-	}
+	//for (size_t subresourceIndex = 0; subresourceIndex < subresources.size(); ++subresourceIndex) {
+	//	D3D12_SUBRESOURCE_DATA& subresouce = subresources[subresourceIndex];
 
-	////全MipMapについて
-	//for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
-	//	//MipMapLevelを指定して各Imageを取得
-	//	const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
-	//	//Textureに転送
 	//	HRESULT hr = texture->WriteToSubresource(
-	//		UINT(mipLevel),
+	//		UINT(subresourceIndex),
 	//		nullptr,				//全領域へコピー
-	//		img->pixels,			//元データアドレス
-	//		UINT(img->rowPitch),	//1ラインサイズ
-	//		UINT(img->slicePitch)	//1枚サイズ
+	//		subresouce.pData,			//元データアドレス
+	//		UINT(subresouce.RowPitch),	//1ラインサイズ
+	//		UINT(subresouce.SlicePitch)	//1枚サイズ
 	//	);
 
 	//	assert(SUCCEEDED(hr));
 	//}
+
+	return intermediateSizeResource;
 
 }
 
