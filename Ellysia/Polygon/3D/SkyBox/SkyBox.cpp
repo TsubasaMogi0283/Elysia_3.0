@@ -14,7 +14,7 @@ void SkyBox::Create(uint32_t textureHandle) {
 
 	PipelineManager::GetInstance()->GenarateSkyBoxPSO();
 	
-	SURFACE_AMOUNT = 3;
+	SURFACE_AMOUNT = 6;
 	//ここでBufferResourceを作る
 	//頂点を6に増やす
 	vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * SURFACE_VERTEX_* SURFACE_AMOUNT);
@@ -92,20 +92,15 @@ void SkyBox::Create(uint32_t textureHandle) {
 
 
 
-	vertexData_[18].position = { -1.0f,1.0f,-1.0f,1.0f };
-	vertexData_[19].position = { 1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[18].position = { 1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[19].position = { -1.0f,1.0f,-1.0f,1.0f };
 	vertexData_[20].position = { -1.0f,-1.0f,-1.0f,1.0f };
 
 
 
-	vertexData_[21].position = { -1.0f,1.0f,-1.0f,1.0f };
-	vertexData_[22].position = { 1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[21].position = { 1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[22].position = { -1.0f,-1.0f,-1.0f,1.0f };
 	vertexData_[23].position = { 1.0f,-1.0f,-1.0f,1.0f };
-
-
-	//vertexData_[21].position = { 1.0f,-1.0f,-1.0f,1.0f };
-	//vertexData_[22].position = { -1.0f,-1.0f,-1.0f,1.0f };
-	//vertexData_[23].position = { 1.0f,1.0f,-1.0f,1.0f };
 
 
 	////上面。
@@ -118,13 +113,13 @@ void SkyBox::Create(uint32_t textureHandle) {
 
 	vertexData_[24].position = { 1.0f,1.0f,1.0f,1.0f };
 	vertexData_[25].position = { -1.0f,1.0f,1.0f,1.0f };
-	vertexData_[26].position = { -1.0f,1.0f,1.0f,1.0f };
-
-
-
-	vertexData_[27].position = { -1.0f,1.0f,1.0f,1.0f };
-	vertexData_[28].position = { 1.0f,1.0f,-1.0f,1.0f };
-	vertexData_[29].position = { 1.0f,1.0f,1.0f,1.0f };
+	vertexData_[26].position = { -1.0f,1.0f,-1.0f,1.0f };
+	
+	
+	
+	vertexData_[27].position = { 1.0f,1.0f,1.0f,1.0f };
+	vertexData_[28].position = { -1.0f,1.0f,-1.0f,1.0f };
+	vertexData_[29].position = { 1.0f,1.0f,-1.0f,1.0f };
 
 
 
@@ -133,6 +128,19 @@ void SkyBox::Create(uint32_t textureHandle) {
 	//vertexData_[21].position = { -1.0f,-1.0f,-1.0f,1.0f };
 	//vertexData_[22].position = { 1.0f,-1.0f,1.0f,1.0f };
 	//vertexData_[23].position = { -1.0f,-1.0f,1.0f,1.0f };
+
+
+	vertexData_[30].position = { -1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[31].position = { 1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[32].position = { 1.0f,-1.0f,-1.0f,1.0f };
+
+
+
+	vertexData_[33].position = { -1.0f,-1.0f,1.0f,1.0f };
+	vertexData_[34].position = { 1.0f,-1.0f,-1.0f,1.0f };
+	vertexData_[35].position = { -1.0f,-1.0f,-1.0f,1.0f };
+
+
 	vertexResource_->Unmap(0, nullptr);
 
 
