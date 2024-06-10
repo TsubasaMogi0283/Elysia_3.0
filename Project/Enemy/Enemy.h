@@ -19,7 +19,8 @@ public:
 	/// </summary>
 	/// <param name="modelHandle"></param>
 	/// <param name="position"></param>
-	void Initialize(uint32_t modelHandle, Vector3 position);
+	/// <param name="speed"></param>
+	void Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed);
 
 	/// <summary>
 	/// 更新
@@ -45,6 +46,9 @@ public:
 
 	Vector3 GetWorldPosition()override;
 
+	void SetTranslate(Vector3 translate);
+
+	void SetSammeEnemyCollisionAfter(Vector3 position, Vector3 speed);
 
 public:
 	void SetSpotLightPosition(Vector3 position) {
@@ -83,6 +87,9 @@ public:
 private:
 	WorldTransform worldTransform_ = {};
 	std::unique_ptr<Model> model_ = nullptr;
+	Vector4 color_ = {};
+	Vector3 speed_ = {};
+
 
 
 	int32_t deleteTime_ = 0;

@@ -1,6 +1,7 @@
 #include "LightWeapon.h"
 #include "WorldTransform.h"
 #include <VectorCalculation.h>
+#include "../Collider/CollisionConfig.h"
 
 void LightWeapon::Initialize(uint32_t modelHandle){
 
@@ -16,6 +17,13 @@ void LightWeapon::Initialize(uint32_t modelHandle){
 
 	DISTANCE_OFFSET = 26.0f;
 	isCollision_ = false;
+	
+	//自分
+	SetCollisionAttribute(COLLISION_ATTRIBUTE_PLAYER);
+	//相手
+	SetCollisionMask(COLLISION_ATTRIBUTE_ENEMY);
+
+
 }
 
 
@@ -29,7 +37,7 @@ void LightWeapon::Update(Vector3 cameraPosition){
 	ImGui::SliderFloat("Distance", &DISTANCE_OFFSET, 0.0f, 50.0f);
 	ImGui::SliderFloat4("Color", &color_.x, 0.0f, 1.0f);
 	ImGui::SliderFloat4("LightColor", &lightColor_.x, 0.0f, 1.0f);
-
+	ImGui::InputFloat3("Position", &worldTransform_.translate_.x);
 	ImGui::End();
 
 #endif
@@ -40,14 +48,23 @@ void LightWeapon::Update(Vector3 cameraPosition){
 
 }
 
+void LightWeapon::OnCollision() {
+	ImGui::Begin("LightWeapon");
+	ImGui::End();
+	isCollision_ = true;
+}
+
+Vector3 LightWeapon::GetWorldPosition() {
+	Vector3 result = {};
+	result.x = worldTransform_.worldMatrix_.m[3][0];
+	result.y = worldTransform_.worldMatrix_.m[3][1];
+	result.z = worldTransform_.worldMatrix_.m[3][2];
+
+	return result;
+}
+
+
 void LightWeapon::Draw(Camera& camera){
 	model_->Draw(worldTransform_, camera);
 }
 
-void LightWeapon::OnCollision(){
-	isCollision_ = true;
-}
-
-Vector3 LightWeapon::GetWorldPosition(){
-	return Vector3();
-}

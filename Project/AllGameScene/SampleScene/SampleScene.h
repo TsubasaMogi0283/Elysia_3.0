@@ -44,7 +44,7 @@ private:
 
 	void GenarateEnemy();
 
-
+	void CheckCollision(std::list<Enemy*>& enemies);
 
 private:
 	Camera camera_ = {};
@@ -59,7 +59,7 @@ private:
 	uint32_t enemyModelHandle_ = 0;
 
 	//プレイヤーのライトの判定
-	std::unique_ptr<LightWeapon> lightCollision_ = nullptr;
+	LightWeapon* lightCollision_ = nullptr;
 	WorldTransform lightCollisionWorldTransform_ = {};
 
 

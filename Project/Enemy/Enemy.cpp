@@ -1,8 +1,9 @@
 #include "Enemy.h"
 
 #include "../Collider/CollisionConfig.h"
+#include <VectorCalculation.h>
 
-void Enemy::Initialize(uint32_t modelHandle, Vector3 position){
+void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	
 	model_.reset(Model::Create(modelHandle));
 	worldTransform_.Initialize();
@@ -13,6 +14,9 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position){
 
 	//半径
 	radius_ = 1.0f;
+	speed_ = speed;
+	//色
+	color_ = { 1.0f,1.0f,1.0f,1.0f };
 
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY);
@@ -24,6 +28,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position){
 void Enemy::Update(){
 	
 	//更新
+	worldTransform_.translate_ = Add(worldTransform_.translate_, speed_);
 	worldTransform_.Update();
 
 
@@ -44,13 +49,21 @@ void Enemy::Draw(Camera& camera){
 }
 
 void Enemy::OnCollision(){
+#ifdef _DEBUG
 	ImGui::Begin("EnemyCollision");
+	ImGui::InputFloat4("Color", &color_.x);
 	ImGui::End();
 
+#endif // _DEBUG
+	const float COLOR_CHANGE_INTERVAL = 0.005f;
+	color_.y -= COLOR_CHANGE_INTERVAL;
+	color_.z -= COLOR_CHANGE_INTERVAL;
 
-	deleteTime_ -= 1;
+	model_->SetColor(color_);
+
 	//カウントが0になったら消す
-	if (deleteTime_ < 0) {
+	if (color_.y < 0.0f &&
+		color_.z < 0.0f) {
 		isAlive_ = false;
 	}
 }
@@ -62,4 +75,15 @@ Vector3 Enemy::GetWorldPosition(){
 	result.z = worldTransform_.worldMatrix_.m[3][2];
 
 	return result;
+}
+
+void Enemy::SetTranslate(Vector3 translate){
+	this->worldTransform_.translate_.x = translate.x;
+	this->worldTransform_.translate_.y = translate.y;
+	this->worldTransform_.translate_.z = translate.z;
+
+}
+
+void Enemy::SetSammeEnemyCollisionAfter(Vector3 position, Vector3 speed){
+
 }

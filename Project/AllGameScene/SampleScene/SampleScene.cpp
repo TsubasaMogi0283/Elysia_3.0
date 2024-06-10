@@ -41,8 +41,14 @@ void SampleScene::Initialize() {
 	//まず一個出す
 	Enemy* enemy = new Enemy();
 	Vector3 position = {4.0f,1.0f,0.0f};
-	enemy->Initialize(enemyModelHandle_,position);
+	enemy->Initialize(enemyModelHandle_, position, {0.0f,0.0f,0.0f});
 	enemys_.push_back(enemy);
+
+	Enemy* enemy2 = new Enemy();
+	Vector3 position2 = { -2.0f,1.0f,0.0f };
+	enemy2->Initialize(enemyModelHandle_, position2, {0.010f,0.0f,0.0f});
+	enemys_.push_back(enemy2);
+
 
 	uint32_t textureHandle = TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 	test_.reset(Sprite::Create(textureHandle, { 0.0f,0.0f }));
@@ -66,7 +72,7 @@ void SampleScene::Initialize() {
 
 	//プレイヤーのライト
 	uint32_t weaponLightModel= ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere","Sphere.obj");
-	lightCollision_ = std::make_unique<LightWeapon>();
+	lightCollision_ =new LightWeapon();
 	lightCollision_->Initialize(weaponLightModel);
 
 
@@ -80,10 +86,51 @@ void SampleScene::Initialize() {
 void SampleScene::GenarateEnemy() {
 	Enemy* enemy = new Enemy();
 	Vector3 position = {};
-	enemy->Initialize(enemyModelHandle_,position);
+	Vector3 speed = {};
+	enemy->Initialize(enemyModelHandle_,position,speed);
 
 	enemys_.push_back(enemy);
 
+}
+
+void SampleScene::CheckCollision(std::list<Enemy*>& enemies){
+	//敵
+	for (auto it1 = enemies.begin(); it1 != enemies.end(); ++it1) {
+		for (auto it2 = std::next(it1); it2 != enemies.end(); ++it2) {
+
+			Vector3 diff = Subtract((*it1)->GetWorldPosition() , (*it2)->GetWorldPosition());
+			float distance = sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
+			float minDistance = (*it1)->GetRadius() + (*it2)->GetRadius();
+
+
+
+			ImGui::Begin("EnemyCollision");
+			ImGui::InputFloat("Distance",&distance);
+			ImGui::InputFloat("Radius", &minDistance);
+			
+			ImGui::End();
+
+
+			if (distance < minDistance) {
+				(*it2)->SetTranslate(Add((*it2)->GetWorldPosition(), {-1.0,0.0f,0.0f}));
+			}
+
+			//if (distance < minDistance) {
+			//	Vector3 correction = {};
+			//	correction.x=diff.x * (minDistance - distance);
+			//	correction.y = diff.y * (minDistance - distance);
+			//	correction.z = diff.z * (minDistance - distance);
+			//	
+
+
+			//	(*it1)->SetTranslate(Add((*it1)->GetWorldPosition(), { correction.x * 0.5f,correction.y * 0.5f,correction.z * 0.5f }));
+			//	(*it2)->SetTranslate(Add((*it2)->GetWorldPosition(), { correction.x * 0.5f,correction.y * 0.5f,correction.z * 0.5f }));
+
+			//}
+		}
+
+
+	}
 }
 
 
@@ -94,7 +141,9 @@ void SampleScene::GenarateEnemy() {
 void SampleScene::Update(GameManager* gameManager) {
 	gameManager;
 
-
+	//フレーム初めに
+	//コリジョンリストのクリア
+	collisionManager_->ClearList();
 
 
 
@@ -181,11 +230,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	}
 
+	collisionManager_->RegisterList(lightCollision_);
 
-
-	//フレーム初めに
-	//コリジョンリストのクリア
-	collisionManager_->ClearList();
 
 	for (auto it = enemys_.begin(); it != enemys_.end();) {
 		Enemy* enemy = *it;
@@ -197,20 +243,27 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	//カメラ
 	camera_.Update();
+	//敵同士
+	CheckCollision(enemys_);
 
 	
 	//敵
 	for (Enemy* enemy : enemys_) {
 		enemy->Update();
 	}
+	
+
 	//地面
 	groundWorldTransform_.Update();
 	//ライト
 	Vector3 cameraWorldPosition = { camera_.worldMatrix_.m[3][0],camera_.worldMatrix_.m[3][1],camera_.worldMatrix_.m[3][2] };
 	lightCollision_->Update(cameraWorldPosition);
 	
+
 	//当たり判定
 	collisionManager_->CheckAllCollision();
+
+
 
 
 	enemys_.remove_if([](Enemy* enemy) {
@@ -219,7 +272,7 @@ void SampleScene::Update(GameManager* gameManager) {
 			return true;
 		}
 		return false;
-	}); 
+	});
 
 	test_->SetColor(color_);
 
@@ -273,6 +326,7 @@ void SampleScene::Draw() {
 /// デストラクタ
 /// </summary>
 SampleScene::~SampleScene() {
+	delete lightCollision_;
 	//敵
 	for (Enemy* enemy : enemys_) {
 		delete enemy;
