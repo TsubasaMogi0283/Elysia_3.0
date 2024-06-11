@@ -15,6 +15,10 @@ void Dissolve::Initialize(uint32_t maskTexture){
 	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetDissolveTextureResource().Get(), srvHandle_);
 
 	
+	thresholdResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(float));
+	dissolveInformation_.threshold = 0.5f;
+	
+
 	//マスクテクスチャ
 	maskTextureHandle_ = maskTexture;
 
@@ -79,6 +83,19 @@ void Dissolve::PreDraw(){
 }
 
 void Dissolve::Draw(){
+#pragma region 閾値
+#ifdef _DEBUG
+	ImGui::Begin("Dissolve");
+	ImGui::SliderFloat("threshold", &dissolveInformation_.threshold, 0.0f, 1.0f);
+	ImGui::End();
+#endif
+
+
+	thresholdResource_->Map(0, nullptr, reinterpret_cast<void**>(&thresholdData_));
+	thresholdData_->threshold = dissolveInformation_.threshold;
+	thresholdResource_->Unmap(0, nullptr);
+#pragma endregion
+
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetDissolveRootSignature().Get());
 	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetDissolveGraphicsPipelineState().Get());
@@ -88,6 +105,8 @@ void Dissolve::Draw(){
 
 	TextureManager::GetInstance()->GraphicsCommand(0, srvHandle_);
 	TextureManager::GetInstance()->GraphicsCommand(1, maskTextureHandle_);
+
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(2, thresholdResource_->GetGPUVirtualAddress());
 
 
 	//描画(DrawCall)３頂点で１つのインスタンス。

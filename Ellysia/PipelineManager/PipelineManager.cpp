@@ -1713,7 +1713,7 @@ void PipelineManager::GenarateDissolvePSO(){
 
 	//rootParameter生成。複数設定できるので配列。
 	//今回は結果一つだけなので長さ１の配列
-	D3D12_ROOT_PARAMETER rootParameters[2] = {};
+	D3D12_ROOT_PARAMETER rootParameters[3] = {};
 
 
 
@@ -1747,6 +1747,14 @@ void PipelineManager::GenarateDissolvePSO(){
 	rootParameters[1].DescriptorTable.pDescriptorRanges = maskTextureDescriptorRange;
 	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(maskTextureDescriptorRange);
 
+
+
+	//CBVを使う
+	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//PixelShaderで使う
+	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//レジスタ番号1を使う
+	rootParameters[2].Descriptor.ShaderRegister = 0;
 
 
 	//ルートパラメータ配列へのポイント

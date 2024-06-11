@@ -20,6 +20,13 @@ public:
 	~Dissolve() {};
 
 private:
+	struct DissolveInformation {
+		float threshold;
+	};
+	ComPtr<ID3D12Resource> thresholdResource_ = nullptr;
+	DissolveInformation dissolveInformation_ = {};
+	DissolveInformation* thresholdData_ = nullptr;
+
 
 	uint32_t srvHandle_ = 0;
 	uint32_t maskTextureHandle_ = 0;
