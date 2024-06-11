@@ -127,6 +127,23 @@ void RtvManager::Initialize(){
 		outLineTextureResource.Get(), &rtvDesc, rtvHandles_[3]);
 
 
+
+	//RadialBlur
+	const Vector4 RADIAL_BLUR_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
+	radialBlurTextureResource_ = CreateRenderTextureResource(
+		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RADIAL_BLUR_CLEAR_VALUE);
+
+	rtvHandles_[4].ptr = rtvHandles_[3].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
+		radialBlurTextureResource_.Get(), &rtvDesc, rtvHandles_[4]);
+
+
+
+
+
+
+
 	rtvDesc_ = rtvDesc;
 	rtvStartHandle_=rtvStartHandle;
 }

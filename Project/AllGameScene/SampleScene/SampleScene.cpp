@@ -56,6 +56,11 @@ void SampleScene::Initialize() {
 
 	outLine_ = new LuminanceBasedOutline();
 	outLine_->Initialize();
+
+
+	radialBlur_ = new RadialBlur();
+	radialBlur_->Initialize();
+
 }
 
 
@@ -118,12 +123,13 @@ void SampleScene::Update(GameManager* gameManager) {
 
 void SampleScene::DrawSpriteBack(){
 
-	sprite_->Draw();
+	//sprite_->Draw();
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
 	//back_->PreDraw();
-	outLine_->PreDraw();
+	//outLine_->PreDraw();
+	radialBlur_->PreDraw();
 }
 
 
@@ -135,12 +141,14 @@ void SampleScene::DrawObject3D() {
 
 void SampleScene::PreDrawPostEffectSecond(){
 	//back_->PostDraw();
-	outLine_->PreDrawSecond();
+	//outLine_->PreDrawSecond();
+	radialBlur_->PreDrawSecond();
 }
 
 void SampleScene::DrawPostEffect(){
 	//back_->Draw();
-	outLine_->Draw();
+	//outLine_->Draw();
+	radialBlur_->Draw();
 }
 
 void SampleScene::DrawSprite(){
@@ -156,4 +164,5 @@ void SampleScene::DrawSprite(){
 SampleScene::~SampleScene() {
 	delete back_;
 	delete outLine_;
+	delete radialBlur_;
 }

@@ -172,6 +172,9 @@
     <Filter Include="Ellysia\Resource File\LuminanceBasedOutline">
       <UniqueIdentifier>{5cbcd479-b00c-4daf-81d2-865fc4f71c65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Resource File\RadialBlur">
+      <UniqueIdentifier>{e48a2398-c7bf-4604-8670-f417f7339b52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -285,6 +288,9 @@
     <ClCompile Include="Project\OutLine\LuminanceBasedOutline.cpp">
       <Filter>Project</Filter>
     </ClCompile>
+    <ClCompile Include="Project\RadialBlur\RadialBlur.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -316,6 +322,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.VS.hlsl">
       <Filter>Ellysia\Resource File\LuminanceBasedOutline</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\RadialBlur\RadialBlur.PS.hlsl">
+      <Filter>Ellysia\Resource File\RadialBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\RadialBlur\RadialBlur.VS.hlsl">
+      <Filter>Ellysia\Resource File\RadialBlur</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -502,6 +514,9 @@
     <ClInclude Include="Project\OutLine\LuminanceBasedOutline.h">
       <Filter>Project</Filter>
     </ClInclude>
+    <ClInclude Include="Project\RadialBlur\RadialBlur.h">
+      <Filter>Project</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">
@@ -536,6 +551,9 @@
     </None>
     <None Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.hlsli">
       <Filter>Ellysia\Resource File\LuminanceBasedOutline</Filter>
+    </None>
+    <None Include="Resources\Shader\RadialBlur\RadialBlur.hlsli">
+      <Filter>Ellysia\Resource File\RadialBlur</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -110,7 +110,15 @@ public:
 	}
 
 
+	//コマンドに積むためのGetter(RadialBlur)
+	ComPtr<ID3D12RootSignature> GetRadialBlurRootSignature() {
+		return radialBlurPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetRadialBlurGraphicsPipelineState() {
+		return radialBlurPSO_.graphicsPipelineState_;
+	}
 
+	
 	
 
 
@@ -148,6 +156,8 @@ public:
 	//OutLine用
 	static void GenarateOutLinePSO();
 
+	//RadialBlur用
+	static void GenerateRadialBlurPSO();
 
 
 private:
@@ -172,8 +182,10 @@ private:
 	PSOInformation particle3DPSO_ = {};
 	//CopyImage用
 	PSOInformation fullScreenPSO_ = {};
-	//CopyImage用
+	//OutLine用
 	PSOInformation outLinePSO_ = {};
+	//RadialBlur用
+	PSOInformation radialBlurPSO_ = {};
 
 
 	//スプライト用

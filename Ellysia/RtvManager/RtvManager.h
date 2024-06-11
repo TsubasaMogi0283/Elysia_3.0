@@ -61,6 +61,10 @@ public:
 	ComPtr<ID3D12Resource> GetOutLineTextureResource() {
 		return outLineTextureResource;
 	}
+	ComPtr<ID3D12Resource> GetRadialBlurTextureResource() {
+		return radialBlurTextureResource_;
+	}
+	
 
 #pragma endregion
 
@@ -78,7 +82,7 @@ public:
 private:
 
 	//ディスクリプタ
-	static const uint32_t RTV_DESCRIPTOR_SIZE_ = 4;
+	static const uint32_t RTV_DESCRIPTOR_SIZE_ = 5;
 	ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap_ = nullptr;
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{};
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_;
@@ -91,6 +95,8 @@ private:
 	ComPtr<ID3D12Resource> renderTextureResource = nullptr;
 	//OutLine用
 	ComPtr<ID3D12Resource> outLineTextureResource = nullptr;
+	//RadialBlur用
+	ComPtr<ID3D12Resource> radialBlurTextureResource_ = nullptr;
 
 };
 
