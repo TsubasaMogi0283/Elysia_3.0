@@ -159,6 +159,9 @@ public:
 	//RadialBlur用
 	static void GenerateRadialBlurPSO();
 
+	//Dissolve用
+	static void GenerateDissolvePSO();
+
 
 private:
 
@@ -186,6 +189,8 @@ private:
 	PSOInformation outLinePSO_ = {};
 	//RadialBlur用
 	PSOInformation radialBlurPSO_ = {};
+	//RadialBlur用
+	PSOInformation dissolvePSO_ = {};
 
 
 	//スプライト用
