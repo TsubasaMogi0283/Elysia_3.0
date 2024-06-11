@@ -140,6 +140,15 @@ void RtvManager::Initialize(){
 
 
 
+	//Dissove
+	const Vector4 DISSOLVE_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
+	dissolveTextureResource_ = CreateRenderTextureResource(
+		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DISSOLVE_CLEAR_VALUE);
+
+	rtvHandles_[5].ptr = rtvHandles_[4].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
+		dissolveTextureResource_.Get(), &rtvDesc, rtvHandles_[5]);
 
 
 

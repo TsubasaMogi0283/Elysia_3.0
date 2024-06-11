@@ -1,4 +1,4 @@
-#include "RadialBlur.hlsli"
+#include "Dissolve.hlsli"
 
 //三角形で覆われればOK
 static const uint NUM_VERTEX = 3;

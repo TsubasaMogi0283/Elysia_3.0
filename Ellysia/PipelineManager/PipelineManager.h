@@ -118,7 +118,13 @@ public:
 		return radialBlurPSO_.graphicsPipelineState_;
 	}
 
-	
+	//コマンドに積むためのGetter(Dissolve)
+	ComPtr<ID3D12RootSignature> GetDissolveRootSignature() {
+		return dissolvePSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetDissolveGraphicsPipelineState() {
+		return dissolvePSO_.graphicsPipelineState_;
+	}
 	
 
 
@@ -160,7 +166,7 @@ public:
 	static void GenerateRadialBlurPSO();
 
 	//Dissolve用
-	static void GenerateDissolvePSO();
+	static void GenarateDissolvePSO();
 
 
 private:

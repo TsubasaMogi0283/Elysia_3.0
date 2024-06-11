@@ -8,21 +8,21 @@ class Dissolve {
 public:
 	Dissolve() {};
 
-	void Initialize();
+	void Initialize(uint32_t maskTexture);
 
 
 	void PreDraw();
 
 	void Draw();
 
-	void PostDraw();
+	void PreDrawSecond();
 
 	~Dissolve() {};
 
 private:
 
-	uint32_t textureHandle_ = 0;
-
+	uint32_t srvHandle_ = 0;
+	uint32_t maskTextureHandle_ = 0;
 	D3D12_RESOURCE_BARRIER barrier = {};
 };
 

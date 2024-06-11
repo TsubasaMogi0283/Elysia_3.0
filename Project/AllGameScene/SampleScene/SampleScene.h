@@ -13,6 +13,7 @@
 #include "../../BackTest/BackText.h"
 #include "../../Project/OutLine/LuminanceBasedOutline.h"
 #include "../../Project/RadialBlur/RadialBlur.h"
+#include "../../Dissolve/Dissolve.h"
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
 
@@ -84,4 +85,6 @@ private:
 	LuminanceBasedOutline* outLine_ = nullptr;
 
 	RadialBlur* radialBlur_ = nullptr;
+
+	Dissolve* dissolve_ = nullptr;
 };

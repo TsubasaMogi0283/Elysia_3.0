@@ -1703,7 +1703,7 @@ void PipelineManager::GenerateRadialBlurPSO(){
 
 }
 
-void PipelineManager::GenerateDissolvePSO(){
+void PipelineManager::GenarateDissolvePSO(){
 	
 	///ootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
@@ -1713,7 +1713,7 @@ void PipelineManager::GenerateDissolvePSO(){
 
 	//rootParameter生成。複数設定できるので配列。
 	//今回は結果一つだけなので長さ１の配列
-	D3D12_ROOT_PARAMETER rootParameters[1] = {};
+	D3D12_ROOT_PARAMETER rootParameters[2] = {};
 
 
 
@@ -1732,6 +1732,21 @@ void PipelineManager::GenerateDissolvePSO(){
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;
 	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
+
+
+
+	//MaskTexture
+	D3D12_DESCRIPTOR_RANGE maskTextureDescriptorRange[1] = {};
+	maskTextureDescriptorRange[0].BaseShaderRegister = 1;
+	maskTextureDescriptorRange[0].NumDescriptors = 1;
+	maskTextureDescriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	maskTextureDescriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[1].DescriptorTable.pDescriptorRanges = maskTextureDescriptorRange;
+	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(maskTextureDescriptorRange);
+
 
 
 	//ルートパラメータ配列へのポイント
@@ -1757,6 +1772,7 @@ void PipelineManager::GenerateDissolvePSO(){
 	staticSamplers[0].ShaderRegister = 0;
 	//PixelShaderで使う
 	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
 	descriptionRootSignature_.pStaticSamplers = staticSamplers;
 	descriptionRootSignature_.NumStaticSamplers = _countof(staticSamplers);
 

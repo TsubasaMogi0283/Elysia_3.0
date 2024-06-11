@@ -60,7 +60,10 @@ void SampleScene::Initialize() {
 
 	radialBlur_ = new RadialBlur();
 	radialBlur_->Initialize();
-
+	
+	uint32_t maskTexture = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise0.png");
+	dissolve_ = new Dissolve();
+	dissolve_->Initialize(maskTexture);
 }
 
 
@@ -129,7 +132,8 @@ void SampleScene::DrawSpriteBack(){
 void SampleScene::PreDrawPostEffectFirst(){
 	//back_->PreDraw();
 	//outLine_->PreDraw();
-	radialBlur_->PreDraw();
+	//radialBlur_->PreDraw();
+	dissolve_->PreDraw();
 }
 
 
@@ -142,13 +146,15 @@ void SampleScene::DrawObject3D() {
 void SampleScene::PreDrawPostEffectSecond(){
 	//back_->PostDraw();
 	//outLine_->PreDrawSecond();
-	radialBlur_->PreDrawSecond();
+	//radialBlur_->PreDrawSecond();
+	dissolve_->PreDrawSecond();
 }
 
 void SampleScene::DrawPostEffect(){
 	//back_->Draw();
 	//outLine_->Draw();
-	radialBlur_->Draw();
+	//radialBlur_->Draw();
+	dissolve_->Draw();
 }
 
 void SampleScene::DrawSprite(){
@@ -165,4 +171,5 @@ SampleScene::~SampleScene() {
 	delete back_;
 	delete outLine_;
 	delete radialBlur_;
+	delete dissolve_;
 }

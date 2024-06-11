@@ -7,8 +7,6 @@
 
 void RadialBlur::Initialize(){
 
-	//エフェクトごとにhlsl分けたい
-	//いずれやる
 	PipelineManager::GetInstance()->GenerateRadialBlurPSO();
 	
 
