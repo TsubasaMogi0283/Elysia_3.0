@@ -61,7 +61,7 @@ void SampleScene::Initialize() {
 	radialBlur_ = new RadialBlur();
 	radialBlur_->Initialize();
 	
-	uint32_t maskTexture = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise0.png");
+	uint32_t maskTexture = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise1.png");
 	dissolve_ = new Dissolve();
 	dissolve_->Initialize(maskTexture);
 }
