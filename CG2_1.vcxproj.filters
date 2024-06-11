@@ -178,6 +178,9 @@
     <Filter Include="Ellysia\Resource File\Dissolve">
       <UniqueIdentifier>{9e91545b-d399-4f69-a65b-5963e25501da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Resource File\RandomEffect">
+      <UniqueIdentifier>{37a14952-1bf3-490c-8caf-e23003fcabbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -297,6 +300,9 @@
     <ClCompile Include="Project\Dissolve\Dissolve.cpp">
       <Filter>Project</Filter>
     </ClCompile>
+    <ClCompile Include="Project\RandomEffect\RandomEffect.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -340,6 +346,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\Dissolve\Dissolve.VS.hlsl">
       <Filter>Ellysia\Resource File\Dissolve</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\RandomEffect\RandomEffect.PS.hlsl">
+      <Filter>Ellysia\Resource File\RandomEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\RandomEffect\RandomEffect.VS.hlsl">
+      <Filter>Ellysia\Resource File\RandomEffect</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -532,6 +544,9 @@
     <ClInclude Include="Project\Dissolve\Dissolve.h">
       <Filter>Project</Filter>
     </ClInclude>
+    <ClInclude Include="Project\RandomEffect\RandomEffect.h">
+      <Filter>Project</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">
@@ -572,6 +587,9 @@
     </None>
     <None Include="Resources\Shader\Dissolve\Dissolve.hlsli">
       <Filter>Ellysia\Resource File\Dissolve</Filter>
+    </None>
+    <None Include="Resources\Shader\RandomEffect\RandomEffect.hlsli">
+      <Filter>Ellysia\Resource File\RandomEffect</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -125,8 +125,16 @@ public:
 	ComPtr<ID3D12PipelineState> GetDissolveGraphicsPipelineState() {
 		return dissolvePSO_.graphicsPipelineState_;
 	}
-	
+	//コマンドに積むためのGetter(RandomEffect)
+	ComPtr<ID3D12RootSignature> GetRandomEffectRootSignature() {
+		return randomEffectPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetRandomEffectGraphicsPipelineState() {
+		return randomEffectPSO_.graphicsPipelineState_;
+	}
 
+
+	
 
 
 
@@ -168,6 +176,10 @@ public:
 	//Dissolve用
 	static void GenarateDissolvePSO();
 
+	//RandomEffect用
+	static void GenarateRandomEffectPSO();
+
+
 
 private:
 
@@ -195,8 +207,11 @@ private:
 	PSOInformation outLinePSO_ = {};
 	//RadialBlur用
 	PSOInformation radialBlurPSO_ = {};
-	//RadialBlur用
+	//Dissolve用
 	PSOInformation dissolvePSO_ = {};
+	//RandomEffect用
+	PSOInformation randomEffectPSO_ = {};
+
 
 
 	//スプライト用

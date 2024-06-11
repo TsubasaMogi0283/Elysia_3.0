@@ -151,6 +151,17 @@ void RtvManager::Initialize(){
 		dissolveTextureResource_.Get(), &rtvDesc, rtvHandles_[5]);
 
 
+	//RandomEffect
+	const Vector4 RANDOM_EFFECT_VALUE = { 0.1f,0.1f,0.7f,1.0f };
+	randomEffectTextureResource_ = CreateRenderTextureResource(
+		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RANDOM_EFFECT_VALUE);
+
+	rtvHandles_[6].ptr = rtvHandles_[5].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
+		randomEffectTextureResource_.Get(), &rtvDesc, rtvHandles_[6]);
+
+
 
 
 	rtvDesc_ = rtvDesc;
