@@ -5,6 +5,7 @@
 #include <ModelManager.h>
 #include <numbers>
 #include <Matrix4x4Calculation.h>
+#include <SrvManager.h>
 
 
 AnimationModel* AnimationModel::Create(uint32_t modelHandle){
@@ -15,7 +16,7 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 	PipelineManager::GetInstance()->SetModelBlendMode(1);
 	PipelineManager::GetInstance()->GenerateAnimationModelPSO();
 
-
+	model->selectLighting_ = EnviromentMap;
 	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい
 	//Setterでやるの面倒だと思った
 
@@ -79,6 +80,7 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 	model->spotLightData_.decay = 2.0f;
 	model->spotLightData_.cosFallowoffStart = 0.3f;
 	model->spotLightData_.cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
+
 
 
 	return model;
@@ -239,7 +241,10 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	//paletteSrvHandle
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(8, skinCluster.paletteSrvHandle_.second);
 
-
+	if (eviromentTextureHandle_!=0) {
+		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(9, eviromentTextureHandle_);
+	}
+	
 
 	
 

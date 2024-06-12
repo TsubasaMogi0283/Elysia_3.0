@@ -41,10 +41,10 @@ public:
 	~AnimationModel() {};
 
 
-
-
-
-private:
+public:
+	void SetEviromentTexture(uint32_t textureHandle) {
+		this->eviromentTextureHandle_ = textureHandle;
+	}
 
 
 private:
@@ -115,6 +115,9 @@ private:
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+
+	//環境マップ
+	uint32_t eviromentTextureHandle_ = 0;
 
 	//モデルハンドル
 	uint32_t modelHandle_ = 0u;

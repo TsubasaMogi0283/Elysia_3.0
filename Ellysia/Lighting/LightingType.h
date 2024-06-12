@@ -5,4 +5,5 @@ enum LightingType {
 	Directional,
 	Point,
 	Spot,
+	EnviromentMap,
 };

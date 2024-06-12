@@ -84,6 +84,8 @@ struct SpotLight{
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 Texture2D<float4> gTexture : register(t0);
+
+
 SamplerState gSampler : register(s0);
 ConstantBuffer<Camera> gCamera : register(b2);
 ConstantBuffer<PointLight> gPointLight : register(b3);
@@ -252,7 +254,9 @@ PixelShaderOutput main(VertexShaderOutput input) {
         output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor;
         output.color.a = gMaterial.color.a * textureColor.a;
     }
-    else{
+    
+    else
+    {
 		//Lightingしない場合
         output.color = gMaterial.color * textureColor;
     }

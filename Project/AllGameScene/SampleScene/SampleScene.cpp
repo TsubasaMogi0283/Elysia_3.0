@@ -34,7 +34,7 @@ void SampleScene::Initialize() {
 		humanSkeleton_[i].Create(ModelManager::GetInstance()->GetModelData(humanModelHandle).rootNode);
 		humanSkinCluster_[i].Create(humanSkeleton_[i], ModelManager::GetInstance()->GetModelData(humanModelHandle));
 		humanWorldTransform_[i].translate_.x = 0.0f;
-
+		
 	}
 
 	humanWorldTransform_[0].translate_.y = 0.0f;
@@ -55,7 +55,7 @@ void SampleScene::Initialize() {
 
 
 	camera_.Initialize();
-	camera_.translate_ = { 0.0f,0.0f,0.0f };
+	camera_.translate_ = { 0.0f,0.0f,-10.0f };
 
 
 	uint32_t skyBoxTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG4/SkyBox/rostock_laage_airport_4k.dds");
@@ -65,6 +65,7 @@ void SampleScene::Initialize() {
 	const float SKYBOX_SCALE = 20.0f;
 	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
 
+	human_[0]->SetEviromentTexture(skyBoxTextureHandle);
 }
 
 
@@ -197,7 +198,7 @@ void SampleScene::Draw() {
 	//SimpleSkin
 	//Walk
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		//human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
+		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
 	}
 	//noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
 	
