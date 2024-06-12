@@ -31,30 +31,25 @@ SamplerState gSamplePoint : register(s1);
 
 ConstantBuffer<Material> gMaterial : register(b0);
 
-
-
-
-static const float PREWITT_HORIZONTAL_KERNEL[3][3] = {
+static const float PREWITT_HORIZONTAL_KERNEL[3][3] =
+{
     { -1.0f / 6.0f, 0.0f, 1.0 / 6.0f },
     { -1.0f / 6.0f, 0.0f, 1.0 / 6.0f },
     { -1.0f / 6.0f, 0.0f, 1.0 / 6.0f },
 };
-static const float PREWITT_VERTICAL_KERNEL[3][3] ={
+static const float PREWITT_VERTICAL_KERNEL[3][3] =
+{
     { -1.0f / 6.0f, -1.0f / 6.0f, -1.0 / 6.0f },
     { 0.0f, 0.0f, 0.0f },
     { 1.0f / 6.0f, 1.0f / 6.0f, 1.0 / 6.0f },
 };
 
-static const float2 INDEX3x3[3][3] ={
+static const float2 INDEX3x3[3][3] =
+{
     { { -1.0f, -1.0f }, { 0.0f, -1.0f }, { 1.0f, -1.0f } },
     { { -1.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f } },
     { { -1.0f, 1.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } },
 };
-
-float Luminance(float3 v){
-    return dot(v, float3(0.2125f, 0.7154f, 0.0721f));
-}
-
 
 
 
@@ -75,11 +70,6 @@ PixelShaderOutput main(VertexShaderOutput input){
     for (int x = 0; x < 3; ++x){
         for (int y = 0; y < 3; ++y){
             float2 texCoord = input.texcoord + INDEX3x3[x][y] * uvStepSIze;
-            float3 fetchColor = gTexture.Sample(gSample, texCoord).rgb;
-            float luminance = Luminance(fetchColor);
-            difference.x += luminance * PREWITT_HORIZONTAL_KERNEL[x][y];
-            difference.y += luminance * PREWITT_VERTICAL_KERNEL[x][y];
-            
             float ndcDepth = gDepthTexture.Sample(gSamplePoint, texCoord);
             //NDC->View。P^(-1)においてxとyはzwに影響を与えないので何でもよい。
             //なのでわざわざ行列を渡さなくてよい。
@@ -108,7 +98,6 @@ PixelShaderOutput main(VertexShaderOutput input){
     //最もシンプルな合成
     output.color.rgb = (1.0f - weight) * gTexture.Sample(gSample,input.texcoord).rgb;
     output.color.a = 1.0f;
-    
     
     return output;
 }

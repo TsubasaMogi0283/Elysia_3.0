@@ -37,9 +37,13 @@ void DepthBasedOutline::PreDraw() {
 	// バリアを張る対象のリソース。現在のバックバッファに対して行う
 	barrier.Transition.pResource = RtvManager::GetInstance()->GetDepthBasedOutlineResource().Get();
 	// 遷移前(現在)のResourceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_DEPTH_WRITE;
 	// 遷移後のResourceState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+
+	//D3D12_RESOURCE_STATE_DEPTH_WRITE
+	//D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+
 	// TransitionBarrierを張る
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 
@@ -112,7 +116,12 @@ void DepthBasedOutline::PreDrawSecond() {
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.pResource = RtvManager::GetInstance()->GetDepthBasedOutlineResource().Get();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_DEPTH_WRITE;
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
+
+	//D3D12_RESOURCE_STATE_DEPTH_WRITE
+	//D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+
+
 }
