@@ -73,6 +73,10 @@ public:
 
 	void Draw();
 
+
+	void Clear();
+	void SetResourceBarrier();
+
 	void PostDraw();
 
 	~BackText() {};

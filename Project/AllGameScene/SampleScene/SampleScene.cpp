@@ -50,14 +50,14 @@ void SampleScene::Initialize() {
 	sprite_.reset(Sprite::Create(textureHandle, { 0.0f,0.0f }));
 	sprite_->SetScale({0.5f, 0.5f});
 	
-	//back_ = new BackText();
-	//back_->Initialize();
+	back_ = new BackText();
+	back_->Initialize();
 
 
 	//outLine_ = new LuminanceBasedOutline();
 	//outLine_->Initialize();
-	depthBasedOutline_ = new DepthBasedOutline();
-	depthBasedOutline_->Initialize();
+	//depthBasedOutline_ = new DepthBasedOutline();
+	//depthBasedOutline_->Initialize();
 
 }
 
@@ -132,7 +132,9 @@ void SampleScene::PreDrawPostEffectFirst(){
 	
 	//outLine_->PreDraw();
 	//back_->PreDraw();
-	depthBasedOutline_->PreDraw();
+
+	//back_->SetResourceBarrier();
+	//depthBasedOutline_->PreDraw();
 }
 
 
@@ -146,13 +148,13 @@ void SampleScene::PreDrawPostEffectSecond(){
 	
 	//outLine_->PreDrawSecond();
 	//back_->PostDraw();
-	depthBasedOutline_->PreDrawSecond();
+	//depthBasedOutline_->PreDrawSecond();
 }
 
 void SampleScene::DrawPostEffect(){
 	//outLine_->Draw();
 	//back_->Draw();
-	depthBasedOutline_->Draw(camera_);
+	//depthBasedOutline_->Draw(camera_);
 }
 
 void SampleScene::DrawSprite(){
