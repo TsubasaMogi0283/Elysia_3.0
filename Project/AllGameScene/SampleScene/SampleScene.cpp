@@ -22,8 +22,8 @@ void SampleScene::Initialize() {
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
 	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf",false);
-	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
-
+	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/terrain", "terrain.obj");
+	
 
 
 	model_.reset(Model::Create(modelHandle));
