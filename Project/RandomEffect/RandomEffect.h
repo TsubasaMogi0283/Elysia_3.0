@@ -3,34 +3,52 @@
 #include "Vector4.h"
 #include "Vector3.h"
 #include "VertexData.h"
-
+#include <time.h>
+#include <random>
 
 class RandomEffect{
 public:
-	RandomEffect() {};
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	RandomEffect()=default;
 
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
-
+	/// <summary>
+	/// 描画前処理1
+	/// </summary>
 	void PreDraw();
 
-	void Draw();
-
+	/// <summary>
+	/// 描画前処理2
+	/// </summary>
 	void PreDrawSecond();
 
-	~RandomEffect() {};
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw();
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~RandomEffect()=default;
 
 private:
-	struct DissolveInformation {
-		float threshold;
+	struct RandomValue {
+		float value;
 	};
-	ComPtr<ID3D12Resource> thresholdResource_ = nullptr;
-	DissolveInformation dissolveInformation_ = {};
-	DissolveInformation* thresholdData_ = nullptr;
+	ComPtr<ID3D12Resource> randomValueResource_ = nullptr;
+	RandomValue randomValue_ = {};
+	RandomValue* randomValueData_ = nullptr;
 
 
 	uint32_t srvHandle_ = 0;
-	uint32_t maskTextureHandle_ = 0;
 	D3D12_RESOURCE_BARRIER barrier = {};
+	std::mt19937 randomEngine_ = {};
 };
 

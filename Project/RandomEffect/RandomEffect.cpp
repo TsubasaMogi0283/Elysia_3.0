@@ -5,6 +5,7 @@
 #include "imgui.h"
 #include <RtvManager.h>
 
+
 void RandomEffect::Initialize() {
 
 	PipelineManager::GetInstance()->GenarateRandomEffectPSO();
@@ -13,12 +14,17 @@ void RandomEffect::Initialize() {
 	//Texture
 	srvHandle_ = SrvManager::GetInstance()->Allocate();
 	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetRandomEffectTextureResource().Get(), srvHandle_);
+	//乱数生成の初期化
+	std::random_device rand;
+	std::mt19937 randomEngine(rand());
+	randomEngine_ = randomEngine;
 
 
-	thresholdResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(float));
-	dissolveInformation_.threshold = 0.5f;
+	randomValueResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(RandomValue));
+	std::uniform_real_distribution<float> distribute(0.0f, 1.0f);
+	randomValue_.value = distribute(randomEngine_);
 
-
+	
 
 }
 
@@ -84,14 +90,16 @@ void RandomEffect::Draw() {
 #pragma region 閾値
 #ifdef _DEBUG
 	ImGui::Begin("RandomEffect");
-	ImGui::SliderFloat("threshold", &dissolveInformation_.threshold, 0.0f, 1.0f);
+	ImGui::InputFloat("threshold", &randomValue_.value);
 	ImGui::End();
 #endif
+	randomValueResource_->Map(0,nullptr,reinterpret_cast<void**>(&randomValueData_));
+	std::uniform_real_distribution<float> distribute(0.0f, 1.0f);
+	randomValue_.value = distribute(randomEngine_);
+	randomValueData_->value = randomValue_.value;
+	randomValueResource_->Unmap(0, nullptr);
 
 
-	//thresholdResource_->Map(0, nullptr, reinterpret_cast<void**>(&thresholdData_));
-	//thresholdData_->threshold = dissolveInformation_.threshold;
-	//thresholdResource_->Unmap(0, nullptr);
 #pragma endregion
 
 
@@ -103,7 +111,7 @@ void RandomEffect::Draw() {
 
 	TextureManager::GetInstance()->GraphicsCommand(0, srvHandle_);
 
-	//DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(2, thresholdResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, randomValueResource_->GetGPUVirtualAddress());
 
 
 	//描画(DrawCall)３頂点で１つのインスタンス。

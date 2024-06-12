@@ -1910,7 +1910,7 @@ void PipelineManager::GenarateRandomEffectPSO(){
 
 	//rootParameter生成。複数設定できるので配列。
 	//今回は結果一つだけなので長さ１の配列
-	D3D12_ROOT_PARAMETER rootParameters[1] = {};
+	D3D12_ROOT_PARAMETER rootParameters[2] = {};
 
 
 
@@ -1929,26 +1929,13 @@ void PipelineManager::GenarateRandomEffectPSO(){
 
 
 
-	////MaskTexture
-	//D3D12_DESCRIPTOR_RANGE maskTextureDescriptorRange[1] = {};
-	//maskTextureDescriptorRange[0].BaseShaderRegister = 1;
-	//maskTextureDescriptorRange[0].NumDescriptors = 1;
-	//maskTextureDescriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	//maskTextureDescriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-	//rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	//rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	//rootParameters[1].DescriptorTable.pDescriptorRanges = maskTextureDescriptorRange;
-	//rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(maskTextureDescriptorRange);
-
-
-
-	////CBVを使う
-	//rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	////PixelShaderで使う
-	//rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	////レジスタ番号1を使う
-	//rootParameters[2].Descriptor.ShaderRegister = 0;
+	//CBVを使う
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//PixelShaderで使う
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//レジスタ番号1を使う
+	rootParameters[1].Descriptor.ShaderRegister = 0;
 
 
 	//ルートパラメータ配列へのポイント
