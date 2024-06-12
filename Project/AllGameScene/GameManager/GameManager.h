@@ -25,7 +25,6 @@ public:
 
 	//PostEffect
 	void PreDrawPostEffectFirst();
-	void PreDrawPostEffectSecond();
 	void DrawPostEffect();
 	
 

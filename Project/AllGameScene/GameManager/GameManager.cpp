@@ -34,9 +34,6 @@ void GameManager::PreDrawPostEffectFirst(){
 	currentGamaScene_->PreDrawPostEffectFirst();
 }
 
-void GameManager::PreDrawPostEffectSecond() {
-	currentGamaScene_->PreDrawPostEffectSecond();
-}
 
 void GameManager::DrawPostEffect(){
 	currentGamaScene_->DrawPostEffect();

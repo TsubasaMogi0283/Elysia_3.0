@@ -37,9 +37,7 @@ void SampleScene2::PreDrawPostEffectFirst()
 {
 }
 
-void SampleScene2::PreDrawPostEffectSecond()
-{
-}
+
 
 void SampleScene2::DrawSpriteBack()
 {

@@ -125,11 +125,12 @@ void SampleScene::Update(GameManager* gameManager) {
 
 void SampleScene::DrawSpriteBack(){
 
-	sprite_->Draw();
+	//sprite_->Draw();
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
-	
+	back_->PreDraw();
+
 	//outLine_->PreDraw();
 	//back_->PreDraw();
 
@@ -144,21 +145,16 @@ void SampleScene::DrawObject3D() {
 
 
 
-void SampleScene::PreDrawPostEffectSecond(){
-	
-	//outLine_->PreDrawSecond();
-	//back_->PostDraw();
-	//depthBasedOutline_->PreDrawSecond();
-}
-
 void SampleScene::DrawPostEffect(){
+	back_->Draw();
+	back_->PostDraw();
 	//outLine_->Draw();
 	//back_->Draw();
 	//depthBasedOutline_->Draw(camera_);
 }
 
 void SampleScene::DrawSprite(){
-	
+	sprite_->Draw();
 }
 
 

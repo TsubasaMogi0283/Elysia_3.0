@@ -39,7 +39,6 @@ public:
 
 #pragma region PostEffect
 	virtual void PreDrawPostEffectFirst()=0;
-	virtual void PreDrawPostEffectSecond()=0;
 	virtual void DrawPostEffect() = 0;
 
 

@@ -91,39 +91,38 @@ void Ellysia::Draw(){
 #pragma region PostEffect
 	
 	////3Dオブジェクトの描画
-	backText_->PreDraw();
+	//backText_->PreDraw();
 	
-	backText_->Clear();
 	
 	gameManager_->PreDrawPostEffectFirst();
-	//gameManager_->DrawSpriteBack();
+	//ポストエフェクト付きのスプライト
+	gameManager_->DrawSpriteBack();
 
 	
 	
 
 #pragma endregion
 
+	//3Dオブジェクトの読み込み
 	gameManager_->DrawObject3D();
 	
+	DirectXSetup::GetInstance()->StartDraw();
+
+	
+	//backText_->Draw();
+	//backText_->PostDraw();
 	gameManager_->DrawPostEffect();
 
 
 	//スプライトの描画
 	gameManager_->DrawSprite();
-
-
-	backText_->SetResourceBarrier();
-	DirectXSetup::GetInstance()->StartDraw();
-
-	backText_->Draw();
+	
 
 	//ImGuiの描画
 	ImGuiManager::GetInstance()->PreDraw();
 	ImGuiManager::GetInstance()->Draw();
 	ImGuiManager::GetInstance()->EndDraw();
 
-	backText_->PostDraw();
-	gameManager_->PreDrawPostEffectSecond();
 	DirectXSetup::GetInstance()->EndDraw();
 
 	

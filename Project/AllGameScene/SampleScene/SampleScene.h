@@ -45,7 +45,6 @@ public:
 
 
 	void PreDrawPostEffectFirst()override;
-	void PreDrawPostEffectSecond()override;
 	void DrawPostEffect()override;
 
 

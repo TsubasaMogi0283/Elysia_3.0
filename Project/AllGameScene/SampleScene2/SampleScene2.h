@@ -27,7 +27,6 @@ public:
 	void Update(GameManager* gameManager)override;
 
 	void PreDrawPostEffectFirst()override;
-	void PreDrawPostEffectSecond()override;
 
 	void DrawSpriteBack()override;
 
