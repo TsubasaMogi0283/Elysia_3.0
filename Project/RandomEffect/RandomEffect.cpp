@@ -29,23 +29,7 @@ void RandomEffect::Initialize() {
 }
 
 void RandomEffect::PreDraw() {
-	//ResourceとHandleはDirectX側で作った
-	//いずれRTV・DSVManagerを作る
-
-	// Barrierを設定する
-	// 今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	// Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	// バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = RtvManager::GetInstance()->GetRandomEffectTextureResource().Get();
-	// 遷移前(現在)のResourceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	// 遷移後のResourceState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	// TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
-
+	
 
 	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.1f,0.1f,0.7f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
@@ -87,6 +71,21 @@ void RandomEffect::PreDraw() {
 }
 
 void RandomEffect::Draw() {
+	// Barrierを設定する
+	// 今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	// Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	// バリアを張る対象のリソース。現在のバックバッファに対して行う
+	barrier.Transition.pResource = RtvManager::GetInstance()->GetRandomEffectTextureResource().Get();
+	// 遷移前(現在)のResourceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	// 遷移後のResourceState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	// TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
+
+
 #pragma region 閾値
 #ifdef _DEBUG
 	ImGui::Begin("RandomEffect");
@@ -116,16 +115,18 @@ void RandomEffect::Draw() {
 
 	//描画(DrawCall)３頂点で１つのインスタンス。
 	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+	
 
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = RtvManager::GetInstance()->GetRandomEffectTextureResource().Get();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 
 }
 
 void RandomEffect::PreDrawSecond() {
 
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = RtvManager::GetInstance()->GetRandomEffectTextureResource().Get();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
+	
 }

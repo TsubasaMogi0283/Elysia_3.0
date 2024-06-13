@@ -15,6 +15,7 @@
 #include "../../DepthBasedOutline/DepthBasedOutline.h"
 #include "../../RadialBlur/RadialBlur.h"
 #include "../../Dissolve/Dissolve.h"
+#include "../../RandomEffect/RandomEffect.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -88,4 +89,5 @@ private:
 	DepthBasedOutline* depthBasedOutline_ = nullptr;
 	RadialBlur* radialBlur_ = nullptr;
 	Dissolve* dissolve_ = nullptr;
+	RandomEffect* randomEffect_ = nullptr;
 };
