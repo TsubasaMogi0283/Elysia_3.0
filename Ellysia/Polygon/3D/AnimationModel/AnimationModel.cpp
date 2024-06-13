@@ -5,6 +5,7 @@
 #include <ModelManager.h>
 #include <numbers>
 #include <Matrix4x4Calculation.h>
+#include <SrvManager.h>
 
 
 AnimationModel* AnimationModel::Create(uint32_t modelHandle){
@@ -15,7 +16,7 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 	PipelineManager::GetInstance()->SetModelBlendMode(1);
 	PipelineManager::GetInstance()->GenerateAnimationModelPSO();
 
-
+	model->selectLighting_ = 4;
 	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい
 	//Setterでやるの面倒だと思った
 
@@ -79,6 +80,7 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 	model->spotLightData_.decay = 2.0f;
 	model->spotLightData_.cosFallowoffStart = 0.3f;
 	model->spotLightData_.cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
+
 
 
 	return model;
@@ -221,7 +223,9 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	}
 
 	//DirectionalLight
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
+	if (selectLighting_ == Directional) {
+		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
+	}
 
 	//カメラ
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource_->GetGPUVirtualAddress());
@@ -230,16 +234,21 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
 
 	//PointLight
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(6, pointLightResource_->GetGPUVirtualAddress());
-
+	if (selectLighting_ == Point) {
+		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(6, pointLightResource_->GetGPUVirtualAddress());
+	}
 	//SpotLight
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
-
+	if (selectLighting_ == Spot) {
+		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
+	}
 
 	//paletteSrvHandle
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(8, skinCluster.paletteSrvHandle_.second);
 
-
+	if (eviromentTextureHandle_!=0) {
+		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(9, eviromentTextureHandle_);
+	}
+	
 
 	
 

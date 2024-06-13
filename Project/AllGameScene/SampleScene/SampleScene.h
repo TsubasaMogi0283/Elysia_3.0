@@ -12,6 +12,7 @@
 #include <Particle3D.h>
 #include <Audio.h>
 #include "SkinCluster.h"
+#include "../../../Ellysia/Polygon/3D/SkyBox/SkyBox.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -39,19 +40,8 @@ public:
 private:
 	Camera camera_ = {};
 
-	//SimpleSkin
-	static const int SIMPLE_SKIN_AMOUNT_ = 2;
-	std::unique_ptr<AnimationModel> simpleModel_[SIMPLE_SKIN_AMOUNT_] = { nullptr };
-	uint32_t modelHandle = 0;
-	uint32_t animationHande_ = {};
-	WorldTransform worldTransform_[SIMPLE_SKIN_AMOUNT_] = {};
-	
-	Skeleton skeleton_[SIMPLE_SKIN_AMOUNT_] = {};
-	float animationTime_[SIMPLE_SKIN_AMOUNT_] = {};
-	SkinCluster skinCluster_[SIMPLE_SKIN_AMOUNT_] = {};
-
 	//歩き
-	static const int WALK_HUMAN_AMOUNT_ = 2;
+	static const int WALK_HUMAN_AMOUNT_ = 1;
 	std::unique_ptr<AnimationModel> human_[WALK_HUMAN_AMOUNT_] = { nullptr };
 	uint32_t humanModelHandle = {};
 	uint32_t humanAnimationModel_ = {};
@@ -60,18 +50,11 @@ private:
 	float humanAnimationTime_[WALK_HUMAN_AMOUNT_] = {};
 	SkinCluster humanSkinCluster_[WALK_HUMAN_AMOUNT_] = {};
 
-	//歩き(アニメーションなし)
-	std::unique_ptr<Model> humanNoneAnimation_ = nullptr;
-	uint32_t humanNoneAnimationModelHandle_ = 0;
-	WorldTransform humanNoneAnimationWorldTransform_ = {};
-	
-
-
 	std::unique_ptr<Model> noneAnimationModel_ = nullptr;
 	WorldTransform noneAnimationWorldTransform_ = {};
 
-
-
+	std::unique_ptr<SkyBox> skyBox_ = nullptr;
+	WorldTransform skyBoxWorldTransform_ = {};
 
 	const char* GroupName = "Player";
 };

@@ -5,6 +5,7 @@
 
 #include "ModelManager.h"
 #include "AnimationManager.h"
+#include <numbers>
 
 /// <summary>
 /// コンストラクタ
@@ -22,29 +23,6 @@ void SampleScene::Initialize() {
 	
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
-	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/simpleSkin", "simpleSkin.gltf");
-	
-	for (int i = 0; i < SIMPLE_SKIN_AMOUNT_; ++i) {
-		skeleton_[i].Create(ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
-		skinCluster_[i].Create(skeleton_[i], ModelManager::GetInstance()->GetModelData(modelHandle));
-		animationHande_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/simpleSkin", "simpleSkin.gltf");
-
-		simpleModel_[i].reset(AnimationModel::Create(modelHandle));
-		worldTransform_[i].Initialize();
-
-	}
-	worldTransform_[0].translate_.x=0.0f;
-	worldTransform_[0].translate_.y = 0.5f;
-	worldTransform_[0].translate_.z = 0.0f;
-	worldTransform_[1].translate_.y=-1.0f;
-	worldTransform_[1].translate_.y = -1.0f;
-	worldTransform_[1].translate_.z = -1.0f;
-
-
-
-	
-
-	//sneakWalk
 	//Walk
 	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf");
 	humanAnimationModel_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/human", "walk.gltf");
@@ -55,44 +33,40 @@ void SampleScene::Initialize() {
 		humanAnimationTime_[i] = 0;
 		humanSkeleton_[i].Create(ModelManager::GetInstance()->GetModelData(humanModelHandle).rootNode);
 		humanSkinCluster_[i].Create(humanSkeleton_[i], ModelManager::GetInstance()->GetModelData(humanModelHandle));
-		humanWorldTransform_[i].translate_.x = 2.0f;
-
+		humanWorldTransform_[i].translate_.x = 0.0f;
+		
 	}
 
-	humanWorldTransform_[0].translate_.y = 0.5f;
-	humanWorldTransform_[1].translate_.y = -2.0f;
-
+	humanWorldTransform_[0].translate_.y = 0.0f;
 	
 
 
-
-
-	//Animation無し
-
-	humanNoneAnimation_.reset(Model::Create(humanModelHandle));
-	humanNoneAnimationWorldTransform_.Initialize();
-	humanNoneAnimationWorldTransform_.translate_.x = -2.0f;
-	humanNoneAnimationWorldTransform_.translate_.y = 0.5f;
-
-
-
-
-
-	//球
+	//地面
 	uint32_t noneModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
 	noneAnimationModel_.reset(Model::Create(noneModelHandle));
 	noneAnimationWorldTransform_.Initialize();
-	const float SPHERE_SCALE = 0.5f;
+	const float SPHERE_SCALE = 1.0f;
 	noneAnimationWorldTransform_.scale_ = { SPHERE_SCALE,SPHERE_SCALE,SPHERE_SCALE };
-	noneAnimationWorldTransform_.translate_.x = -2.0f;
+	noneAnimationWorldTransform_.translate_.x = 0.0f;
 	noneAnimationWorldTransform_.translate_.y = -1.0f;
-
-
+	
 
 	camera_.Initialize();
-	for (int i = 0; i < SIMPLE_SKIN_AMOUNT_; ++i) {
-		worldTransform_[i].rotate_.y = 3.1415f;
-	}
+	camera_.translate_ = { 0.0f,0.0f,-10.0f };
+
+
+	uint32_t skyBoxTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG4/SkyBox/rostock_laage_airport_4k.dds");
+	skyBox_ = std::make_unique<SkyBox>();
+	skyBox_->Create(skyBoxTextureHandle);
+	skyBoxWorldTransform_.Initialize();
+	const float SKYBOX_SCALE = 20.0f;
+	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
+
+	human_[0]->SetEviromentTexture(skyBoxTextureHandle);
+	noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
+
+
+
 }
 
 
@@ -108,66 +82,108 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	
 	
-	camera_.Update();
-
-
-	animationTime_[0] += 1.0f / 60.0f;
-	animationTime_[1] += 2.0f / 60.0f;
-
+	
+#pragma region アニメーションモデル
 	
 	humanAnimationTime_[0] += 1.0f / 60.0f;
-	humanAnimationTime_[1] += 3.0f / 60.0f;
 
-	for (int i = 0; i < SIMPLE_SKIN_AMOUNT_; ++i) {
-		AnimationManager::GetInstance()->ApplyAnimation(skeleton_[i], animationHande_, modelHandle, animationTime_[i]);
-	};
+	
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
 		AnimationManager::GetInstance()->ApplyAnimation(humanSkeleton_[i], humanAnimationModel_, humanModelHandle, humanAnimationTime_[i]);
 	}
 	
-
-
-
 	//現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
 	//読み込むのは最初だけで良いと気づいた
-	
-	for (int i = 0; i < SIMPLE_SKIN_AMOUNT_; ++i) {
-		skeleton_[i].Update();
-	}
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
 		humanSkeleton_[i].Update();
 	}
-	
 	//SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
-	
-	for (int i = 0; i < SIMPLE_SKIN_AMOUNT_; ++i) {
-		skinCluster_[i].Update(skeleton_[i]);
-	}
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
 		humanSkinCluster_[i].Update(humanSkeleton_[i]);
 	}
+
+
+
+	
+
+
+
+
+	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
+		humanWorldTransform_[i].Update();
+	}
+#pragma endregion
+
+	const float CAMERA_MOVE_SPEED = 0.2f;
+	Vector3 move = {};
+	Vector3 rotateMove = {};
+
+	//Y
+	if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
+		move.y = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
+		move.y = -1.0f;
+	}
+	//X
+	else if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
+		move.x = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
+		move.x = -1.0f;
+	}
+	//Z
+	else if (Input::GetInstance()->IsPushKey(DIK_O) == true) {
+		move.z = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_L) == true) {
+		move.z = -1.0f;
+	}
+
+
+	else {
+		move.x = 0.0f;
+		move.y = 0.0f;
+		move.z = 0.0f;
+	}
+
+
+	//回転
+	const float ROTATE_MOVE_SPEED = 0.01f;
+	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
+		rotateMove.y = -1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
+		rotateMove.y = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+		rotateMove.x = -1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+		rotateMove.x = 1.0f;
+	}
+
+	else {
+		rotateMove.y = 0.0f;
+		rotateMove.x = 0.0f;
+	}
+
+	camera_.translate_ = Add(camera_.translate_, { move.x* CAMERA_MOVE_SPEED,move.y* CAMERA_MOVE_SPEED,move.z*CAMERA_MOVE_SPEED });
+	camera_.rotate_ = Add(camera_.rotate_, { rotateMove.x * ROTATE_MOVE_SPEED,rotateMove.y * ROTATE_MOVE_SPEED,rotateMove.z * ROTATE_MOVE_SPEED });
+
+	camera_.Update();
+	noneAnimationWorldTransform_.Update();
+	skyBoxWorldTransform_.Update();
 #ifdef _DEBUG
-	ImGui::Begin("Model");
-	ImGui::SliderFloat3("Translate", &worldTransform_[0].rotate_.x, -30.0f, 30.0f);
-	ImGui::SliderFloat("AnimationTime", &animationTime_[0], 0.0f, 10.0f);
-	ImGui::End();
-
-
 	ImGui::Begin("Camera");
 	ImGui::SliderFloat3("Translate", &camera_.translate_.x, -100.0f, 100.0f);
 	ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
 	ImGui::End();
 
 #endif
-	humanNoneAnimationWorldTransform_.Update();
 
-	noneAnimationWorldTransform_.Update();
-	for (int i = 0; i < SIMPLE_SKIN_AMOUNT_; ++i) {
-		worldTransform_[i].Update();
-	}
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		humanWorldTransform_[i].Update();
-	}
+
+	
 	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
 		AdjustmentItems::GetInstance()->SaveFile(GroupName);
 	}
@@ -178,17 +194,15 @@ void SampleScene::Update(GameManager* gameManager) {
 /// 描画
 /// </summary>
 void SampleScene::Draw() {
+	
+	skyBox_->Draw(skyBoxWorldTransform_,camera_);
 	//SimpleSkin
-	for (int i = 0; i < SIMPLE_SKIN_AMOUNT_; ++i) {
-		simpleModel_[i]->Draw(worldTransform_[i], camera_, skinCluster_[i]);
-	}
 	//Walk
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
 		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
 	}
 	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
 	
-	humanNoneAnimation_->Draw(humanNoneAnimationWorldTransform_,camera_);
 }
 
 

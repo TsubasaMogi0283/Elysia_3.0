@@ -241,9 +241,6 @@ void Sprite::Draw() {
 
 
 	//コマンドを積む
-	//パイプラインはここに引っ越したい
-
-	//参考
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetSpriteRootSignature().Get());
 	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetSpriteGraphicsPipelineState().Get());
 

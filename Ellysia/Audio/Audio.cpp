@@ -394,7 +394,9 @@ uint32_t Audio::LoadMP3(const WCHAR* fileName){
 
 //音声再生
 void Audio::PlayWave(uint32_t audioHandle, bool isLoop) {
-
+	HRESULT hr{};
+	hr = audioInformation_[audioHandle].pSourceVoice_->FlushSourceBuffers();
+	assert(SUCCEEDED(hr));
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buffer{};
 	buffer.pAudioData = audioInformation_[audioHandle].soundData_.pBuffer;
@@ -407,8 +409,6 @@ void Audio::PlayWave(uint32_t audioHandle, bool isLoop) {
 	else{
 		buffer.LoopCount = XAUDIO2_NO_LOOP_REGION;
 	}
-
-	HRESULT hr{};
 	//Buffer登録
 	hr = audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
 	//波形データの再生
@@ -421,7 +421,9 @@ void Audio::PlayWave(uint32_t audioHandle, bool isLoop) {
 
 //ループ回数設定版
 void Audio::PlayWave(uint32_t audioHandle, int32_t loopCount) {
-
+	HRESULT hr{};
+	hr = audioInformation_[audioHandle].pSourceVoice_->FlushSourceBuffers();
+	assert(SUCCEEDED(hr));
 
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buffer{};
@@ -433,8 +435,6 @@ void Audio::PlayWave(uint32_t audioHandle, int32_t loopCount) {
 	//1でfalseの場合と同じ
 	buffer.LoopCount = loopCount - 1;
 
-
-	HRESULT hr{};
 	//Buffer登録
 	hr = audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
 	//波形データの再生
@@ -448,7 +448,9 @@ void Audio::PlayWave(uint32_t audioHandle, int32_t loopCount) {
 void Audio::PlayMP3(uint32_t audioHandle,bool isLoop){
 	//MP3はループしない方が良いとのこと
 	//一応用意するけど使わないかも
-
+	HRESULT hr{};
+	hr = audioInformation_[audioHandle].pSourceVoice_->FlushSourceBuffers();
+	assert(SUCCEEDED(hr));
 
 	XAUDIO2_BUFFER buffer{};
 	buffer.pAudioData = Audio::GetInstance()->audioInformation_[audioHandle].mediaData.data();
@@ -463,8 +465,6 @@ void Audio::PlayMP3(uint32_t audioHandle,bool isLoop){
 	}
 
 
-	HRESULT hr{};
-
 	hr = Audio::GetInstance()->audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
 
 	//波形データの再生
@@ -476,7 +476,9 @@ void Audio::PlayMP3(uint32_t audioHandle, uint32_t loopCount){
 	//MP3はループしない方が良いとのこと
 	//一応用意するけど使わないかも
 
-
+	HRESULT hr{};
+	hr = audioInformation_[audioHandle].pSourceVoice_->FlushSourceBuffers();
+	assert(SUCCEEDED(hr));
 	XAUDIO2_BUFFER buffer{};
 	buffer.pAudioData = Audio::GetInstance()->audioInformation_[audioHandle].mediaData.data();
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
@@ -487,7 +489,6 @@ void Audio::PlayMP3(uint32_t audioHandle, uint32_t loopCount){
 	buffer.LoopCount = loopCount - 1;
 
 
-	HRESULT hr{};
 
 	hr = Audio::GetInstance()->audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
 

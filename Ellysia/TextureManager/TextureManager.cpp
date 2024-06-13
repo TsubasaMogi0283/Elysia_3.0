@@ -1,8 +1,8 @@
 #include "TextureManager.h"
 #include "SrvManager.h"
 
-
-
+#include "d3dx12.h"
+#include <vector>
 static uint32_t descriptorSizeSRV_ = 0u;
 static uint32_t descriptorSizeRTV_ = 0u;
 static uint32_t descriptorSizeDSV_ = 0u;
@@ -12,10 +12,6 @@ static uint32_t textureIndex;
 static DirectX::ScratchImage mipImages_[TextureManager::TEXTURE_MAX_AMOUNT_];
 static D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc[TextureManager::TEXTURE_MAX_AMOUNT_];
 
-//コンストラクタ
-TextureManager::TextureManager() {
-
-}
 
 TextureManager* TextureManager::GetInstance() {
 	
@@ -32,24 +28,6 @@ const D3D12_RESOURCE_DESC TextureManager::GetResourceDesc(uint32_t textureHandle
 	resourceDesc = textureInformation_[textureHandle].resource_->GetDesc();
 
 	return resourceDesc;
-}
-
-
-//初期化
-void TextureManager::Initilalize() {
-	//this->directXSetup_ = DirectXSetup::GetInstance();
-	//COMの初期化
-	//COM...ComponentObjectModel、Microsoftの提唱する設計技術の１つ
-	//		DirectX12も簡略化されたCOM(Nano-COM)という設計で作られている
-	
-	//COMを使用して開発されたソフトウェア部品をCOMコンポーネントと呼ぶ
-	//Textureを読むにあたって、COMコンポーネントの１つを利用する
-	CoInitializeEx(0, COINIT_MULTITHREADED);
-
-	descriptorSizeSRV_ =  DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	descriptorSizeRTV_ =  DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	descriptorSizeDSV_ =  DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-	textureIndex = 0;
 }
 
 
@@ -70,7 +48,6 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 
 
 	//読み込むたびにインデックスが増やし重複を防ごう
-	//同じ画像しか貼れなかったのはこれが原因
 	textureIndex= SrvManager::GetInstance()->Allocate();
 
 
@@ -87,30 +64,20 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 	const DirectX::TexMetadata& metadata = mipImages_[textureIndex].GetMetadata();
 
 	TextureManager::GetInstance()->textureInformation_[textureIndex].resource_ = CreateTextureResource(metadata);
-	UploadTextureData(TextureManager::GetInstance()->textureInformation_[textureIndex].resource_.Get(), mipImages_[textureIndex]);
-
-
-	//ShaderResourceView
-	//今のDescriptorHeapには
-	//0...ImGui
-	//1...uvChecker
-	//2...monsterBall
-	//3...NULL
-	//.
-	//.
-	//このような感じで入っている
-	//後ろのindexに対応させる
+	TextureManager::GetInstance()->textureInformation_[textureIndex].internegiateResource_ =UploadTextureData(TextureManager::GetInstance()->textureInformation_[textureIndex].resource_.Get(), mipImages_[textureIndex]).Get();
 	
 
 	//SRVの確保
 	//0番目はImGuiが使っているからダメだった
 	TextureManager::GetInstance()->textureInformation_[textureIndex].handle_ = textureIndex;
 
+	auto test = metadata.IsCubemap();
+	test;
 	//SRVの生成
 	SrvManager::GetInstance()->CreateSRVForTexture2D(
 		TextureManager::GetInstance()->textureInformation_[textureIndex].handle_,
 		TextureManager::GetInstance()->textureInformation_[textureIndex].resource_.Get(),
-		metadata.format, UINT(metadata.mipLevels));
+		metadata.format, UINT(metadata.mipLevels),metadata.IsCubemap());
 
 
 	return textureIndex;
@@ -128,24 +95,56 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 //7.6の実行完了を待つ
 
 
+
+//CubeMap...箱を構成する6毎のTextureをひとまとめにしたTextureのこと
+//さいころみたいなもの
+
+
+//DSSについて
+//DSS...DirectDrawSurface
+//png,jpegだとCubemapを使えないがDSSだと出来る!!
+
+
+
+
+
 #pragma region 上のLoadTextureにまとめた
 //Textureを読み込むためのLoad関数
 //1.TextureデータそのものをCPUで読み込む
 DirectX::ScratchImage TextureManager::LoadTextureData(const std::string& filePath) {
 	
+	HRESULT hr = {};
+
 	//テクスチャファイルを読んでプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
 	std::wstring filePathW = ConvertString(filePath);
-	//ここで問題
-	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
-	assert(SUCCEEDED(hr));
+	//dssファイルの場合
+	if (filePathW.ends_with(L".dds")) {
+		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
+		assert(SUCCEEDED(hr));
+	}
+	//その他のpngやjpegなど
+	else {
+		hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+		assert(SUCCEEDED(hr));
+
+	}
 	
 	//ミップマップの作成
 	//ミップマップ...元画像より小さなテクスチャ群
 	DirectX::ScratchImage mipImages{};
-	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-	assert(SUCCEEDED(hr));
+	//圧縮フォーマットかどうかを調べる
+	if (DirectX::IsCompressed(image.GetMetadata().format)) {
+		//圧縮フォーマットならそのまま使う
+		mipImages = std::move(image);
+	}
+	else {
+		hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 4, mipImages);
+		assert(SUCCEEDED(hr));
 
+	}
+
+	
 	//ミップマップ月のデータを返す
 	return mipImages;
 }
@@ -190,7 +189,7 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 		&heapProperties,					//Heapの設定
 		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定
 		&resourceDesc,						//Resourceの設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,	//初回のResourceState。データの転送を受け入れられるようにする
+		D3D12_RESOURCE_STATE_COPY_DEST,		//初回のResourceState。データの転送を受け入れられるようにする
 		nullptr,							//Clear最適値。使わないのでnullptr
 		IID_PPV_ARGS(&resource));			//作成するResourceポインタへのポインタ
 	assert(SUCCEEDED(hr));
@@ -202,29 +201,28 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 
 //3.TextureResourceに1で読んだデータを転送する
 //書き換え
-void TextureManager::UploadTextureData(
-	ComPtr<ID3D12Resource> texture, 
-	const DirectX::ScratchImage& mipImages) {
+[[nodiscard]]
+ComPtr<ID3D12Resource> TextureManager::UploadTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages) {
 
-	//Meta情報を取得
-	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	//全MipMapについて
-	for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
-		//MipMapLevelを指定して各Imageを取得
-		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
-		//Textureに転送
-		HRESULT hr = texture->WriteToSubresource(
-			UINT(mipLevel),
-			nullptr,				//全領域へコピー
-			img->pixels,			//元データアドレス
-			UINT(img->rowPitch),	//1ラインサイズ
-			UINT(img->slicePitch)	//1枚サイズ
-		);
+	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
+	DirectX::PrepareUpload(DirectXSetup::GetInstance()->GetDevice().Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
+	uint64_t intermidiateSize = GetRequiredIntermediateSize(texture.Get(), 0, UINT(subresources.size()));
+	ComPtr<ID3D12Resource> intermediateSizeResource = DirectXSetup::GetInstance()->CreateBufferResource(intermidiateSize);
+	UpdateSubresources(DirectXSetup::GetInstance()->GetCommandList().Get(), texture.Get(), intermediateSizeResource.Get(), 0, 0, UINT(subresources.size()), subresources.data());
 
-		assert(SUCCEEDED(hr));
-	}
+	//Textureへの転送後は利用できるよう、D312_RESOURCE_STATE_COPY_DESTから
+	//D3D12_RESOURCE_STATE_GENERIC_READへResourceStateを変更する
+	D3D12_RESOURCE_BARRIER barrier{};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = texture.Get();
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 
 
+	return intermediateSizeResource;
 
 }
 
@@ -240,18 +238,4 @@ void TextureManager::UploadTextureData(
 void TextureManager::GraphicsCommand(uint32_t texHandle) {
 	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, texHandle);
 }
-
-void TextureManager::Release() {
-	
-	
-	//ゲーム終了時にはCOMの終了処理を行っておく
-	CoUninitialize();
-}
-
-
-//コンストラクタ
-TextureManager::~TextureManager() {
-
-}
-
 

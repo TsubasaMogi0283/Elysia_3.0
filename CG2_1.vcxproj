@@ -160,6 +160,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Polygon\3D\Model\Model.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Particle3D\Particle3D.cpp" />
+    <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Sphere\Sphere.cpp" />
     <ClCompile Include="Ellysia\SrvManager\SrvManager.cpp" />
     <ClCompile Include="Ellysia\TextureManager\TextureManager.cpp" />
@@ -200,6 +201,22 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\SkyBox\SkyBox.PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\SkyBox\SkyBox.VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
@@ -265,6 +282,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\AccelerationField.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle3D.h" />
+    <ClInclude Include="Ellysia\Polygon\3D\SkyBox\SkyBox.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Sphere\Sphere.h" />
     <ClInclude Include="Ellysia\SrvManager\SrvManager.h" />
     <ClInclude Include="Ellysia\TextureManager\TextureManager.h" />
@@ -285,6 +303,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli" />
+    <None Include="Resources\Shader\SkyBox\SkyBox.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

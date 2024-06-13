@@ -102,6 +102,13 @@ public:
 		return particle3DPSO_.graphicsPipelineState_;
 	}
 
+	//コマンドに積む用のGetter(SkyBox)
+	ComPtr<ID3D12RootSignature> GetSkyBoxRootSignature() {
+		return skyBoxPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetSkyBoxGraphicsPipelineState() {
+		return skyBoxPSO_.graphicsPipelineState_;
+	}
 
 
 	
@@ -125,7 +132,7 @@ public:
 	static void GenerateSpritePSO();
 
 	//モデル用
-	static void GenerateModelPSO(int32_t isSkinning);
+	static void GenerateModelPSO();
 
 	//Skinning
 	static void GenerateAnimationModelPSO();
@@ -133,7 +140,8 @@ public:
 	//3Dパーティクル用
 	static void GenerateParticle3DPSO();
 
-
+	//SkyBox
+	static void GenarateSkyBoxPSO();
 
 private:
 
@@ -155,8 +163,10 @@ private:
 	PSOInformation modelPSO_ = {};
 	//モデル用の変数
 	PSOInformation particle3DPSO_ = {};
-	//モデル用の変数
+	//アニメーションモデル用の変数
 	PSOInformation animationModelPSO_ = {};
+	//スカイボックス用の変数
+	PSOInformation skyBoxPSO_ = {};
 
 
 
