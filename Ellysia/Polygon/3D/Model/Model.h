@@ -152,13 +152,9 @@ public:
 #pragma endregion
 
 
-	Matrix4x4 GetAnimationLocalMatrix() {
-		return animationLocalMatrix_;
+	void SetEviromentTexture(uint32_t textureHandle) {
+		this->eviromentTextureHandle_ = textureHandle;
 	}
-
-
-
-
 
 
 private:
@@ -170,9 +166,6 @@ private:
 		float shininess;
 	};
 
-	struct SkinningEnable {
-		int32_t isSkinning;
-	};
 
 private:
 	//頂点リソースを作る
@@ -226,10 +219,6 @@ private:
 	ComPtr<ID3D12Resource> cameraResource_ = nullptr;
 	CameraForGPU* cameraForGPU_ = {};
 
-	//Skinningするかどうか
-	ComPtr<ID3D12Resource> skinningResource_ = nullptr;
-	SkinningEnable* skinningData_ = {};
-	SkinningEnable isSkinning_ = {};
 
 	//アニメーションを再生するときに使う時間
 	float animationTime_ = 0.0f;
@@ -237,13 +226,12 @@ private:
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
+	//環境マップ
+	uint32_t eviromentTextureHandle_ = 0;
+
 	//モデルハンドル
 	uint32_t modelHandle_ = 0u;
 	ModelData modelData_ = {};
-
-	//アニメーションのローカル座標
-	//後々シェーダーで渡す
-	Matrix4x4 animationLocalMatrix_ = {};
 
 	//デフォルトはα加算
 	int32_t blendModeNumber_ = 1;

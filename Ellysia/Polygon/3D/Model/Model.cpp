@@ -13,15 +13,9 @@ Model* Model::Create(uint32_t modelHandle) {
 
 	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
 	PipelineManager::GetInstance()->SetModelBlendMode(0);
-	//Skinningするかどうか
-	model->skinningResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SkinningEnable)).Get();
-	model->skinningResource_->Map(0, nullptr, reinterpret_cast<void**>(&model->skinningData_));
-	model->isSkinning_.isSkinning = 0;
-	model->skinningResource_->Unmap(0, nullptr);
-
 	PipelineManager::GetInstance()->GenerateModelPSO();
 
-
+	model->selectLighting_ = 4;
 	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい
 	//Setterでやるの面倒だと思った
 
@@ -229,6 +223,10 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 	
 	//SpotLight
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
+
+	if (eviromentTextureHandle_ != 0) {
+		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
+	}
 
 	
 

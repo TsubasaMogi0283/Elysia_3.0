@@ -544,7 +544,7 @@ void PipelineManager::GenerateModelPSO() {
 	//今回は結果一つだけなので長さ１の配列
 
 	//VSでもCBufferを利用することになったので設定を追加
-	D3D12_ROOT_PARAMETER rootParameters[8] = {};
+	D3D12_ROOT_PARAMETER rootParameters[9] = {};
 	//CBVを使う
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	////PixelShaderで使う
@@ -633,7 +633,26 @@ void PipelineManager::GenerateModelPSO() {
 	rootParameters[7].Descriptor.ShaderRegister = 4;
 
 
-	
+	D3D12_DESCRIPTOR_RANGE enviromentDescriptorRange[1] = {};
+	//0から始まる
+	enviromentDescriptorRange[0].BaseShaderRegister = 1;
+	//数は1つ
+	enviromentDescriptorRange[0].NumDescriptors = 1;
+	//SRVを使う
+	enviromentDescriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	//Offsetを自動計算
+	enviromentDescriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+
+	//DescriptorTableを使う
+	rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	//PixelShaderを使う
+	rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//Tableの中身の配列を指定
+	rootParameters[8].DescriptorTable.pDescriptorRanges = enviromentDescriptorRange;
+	//Tableで利用する数
+	rootParameters[8].DescriptorTable.NumDescriptorRanges = _countof(enviromentDescriptorRange);
+
 
 
 	//ルートパラメータ配列へのポイント

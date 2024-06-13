@@ -260,7 +260,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
         float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
 
         output.color.rgb = enviromentColor.rgb;
-        output.color.a= 1.0f;
+        output.color.a = gMaterial.color.a;
 		
     }
     else{

@@ -41,18 +41,15 @@ void SampleScene::Initialize() {
 	
 
 
-
-
 	//地面
-	uint32_t noneModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
+	uint32_t noneModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
 	noneAnimationModel_.reset(Model::Create(noneModelHandle));
 	noneAnimationWorldTransform_.Initialize();
-	const float SPHERE_SCALE = 80.0f;
+	const float SPHERE_SCALE = 1.0f;
 	noneAnimationWorldTransform_.scale_ = { SPHERE_SCALE,SPHERE_SCALE,SPHERE_SCALE };
 	noneAnimationWorldTransform_.translate_.x = 0.0f;
 	noneAnimationWorldTransform_.translate_.y = -1.0f;
-
-
+	
 
 	camera_.Initialize();
 	camera_.translate_ = { 0.0f,0.0f,-10.0f };
@@ -66,6 +63,10 @@ void SampleScene::Initialize() {
 	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
 
 	human_[0]->SetEviromentTexture(skyBoxTextureHandle);
+	noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
+
+
+
 }
 
 
@@ -200,7 +201,7 @@ void SampleScene::Draw() {
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
 		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
 	}
-	//noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
+	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
 	
 }
 
