@@ -547,14 +547,14 @@
     <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Lighting\LightingType.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\SkyBox\SkyBox.h">
       <Filter>Ellysia\Header File\Polygone\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.h">
+      <Filter>Ellysia\Header File\Polygone\3D\AnimationModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

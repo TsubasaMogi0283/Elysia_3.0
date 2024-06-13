@@ -1066,6 +1066,9 @@ void PipelineManager::GenerateAnimationModelPSO(){
 	staticSamplers[0].ShaderRegister = 0;
 	//PixelShaderで使う
 	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+
+
 	descriptionRootSignature_.pStaticSamplers = staticSamplers;
 	descriptionRootSignature_.NumStaticSamplers = _countof(staticSamplers);
 
