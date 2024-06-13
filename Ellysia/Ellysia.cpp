@@ -41,8 +41,11 @@ void Ellysia::Initialize(){
 	SrvManager::GetInstance()->Initialize();
 
 	//ImGuiManager
+#ifdef _DEBUG
 	ImGuiManager::GetInstance()->Initialize();
 	
+#endif
+
 	//Input
 	Input::GetInstance()->Initialize();
 	
@@ -64,7 +67,9 @@ void Ellysia::Initialize(){
 void Ellysia::BeginFrame(){
 	DirectXSetup::GetInstance()->BeginFrame();
 	SrvManager::GetInstance()->PreDraw();
+#ifdef _DEBUG
 	ImGuiManager::GetInstance()->BeginFrame();
+#endif
 }
 
 void Ellysia::Update(){
@@ -74,8 +79,9 @@ void Ellysia::Update(){
 
 
 	//ImGuiの更新
+#ifdef _DEBUG
 	ImGuiManager::GetInstance()->Update();
-
+#endif
 	
 	//入力の更新
 	Input::GetInstance()->Update();
@@ -86,17 +92,20 @@ void Ellysia::Update(){
 
 void Ellysia::Draw(){
 	//ImGuiの描画
+#ifdef _DEBUG
 	ImGuiManager::GetInstance()->PreDraw();	
 	ImGuiManager::GetInstance()->Draw();
 	
+#endif
 	//ゲームシーンの描画
 	gameManager_->Draw();
 }
 
 
 void Ellysia::EndFrame() {
-
+#ifdef _DEBUG
 	ImGuiManager::GetInstance()->EndFrame();
+#endif
 	DirectXSetup::GetInstance()->EndFrame();
 			
 }
@@ -153,6 +162,7 @@ void Ellysia::Release() {
 
 	Audio::GetInstance()->Release();
 	ImGuiManager::GetInstance()->Release();
+#endif
 	DirectXSetup::GetInstance()->Release();
 	WindowsSetup::GetInstance()->Close();
 }
