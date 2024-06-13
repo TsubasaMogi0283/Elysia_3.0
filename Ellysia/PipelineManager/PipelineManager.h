@@ -44,10 +44,10 @@ class PipelineManager final {
 private:
 
 	//コンストラクタ
-	PipelineManager();
+	PipelineManager()=default;
 
 	//デストラクタ
-	~PipelineManager();
+	~PipelineManager()=default;
 
 public:
 	//シングルインスタンス
@@ -116,7 +116,28 @@ public:
 	ComPtr<ID3D12PipelineState> GetDepthBasedOutlineGraphicsPipelineState() {
 		return depthBasedOutlinePSO_.graphicsPipelineState_;
 	}
+	//コマンドに積むためのGetter(RadialBlur)
+	ComPtr<ID3D12RootSignature> GetRadialBlurRootSignature() {
+		return radialBlurPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetRadialBlurGraphicsPipelineState() {
+		return radialBlurPSO_.graphicsPipelineState_;
+	}
 
+	//コマンドに積むためのGetter(Dissolve)
+	ComPtr<ID3D12RootSignature> GetDissolveRootSignature() {
+		return dissolvePSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetDissolveGraphicsPipelineState() {
+		return dissolvePSO_.graphicsPipelineState_;
+	}
+	//コマンドに積むためのGetter(RandomEffect)
+	ComPtr<ID3D12RootSignature> GetRandomEffectRootSignature() {
+		return randomEffectPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetRandomEffectGraphicsPipelineState() {
+		return randomEffectPSO_.graphicsPipelineState_;
+	}
 	
 
 
@@ -157,6 +178,17 @@ public:
 	//DepthBasedOutline用
 	static void GenarateDepthBasedOutlinePSO();
 
+	//RadialBlur用
+	static void GenerateRadialBlurPSO();
+
+	//Dissolve用
+	static void GenarateDissolvePSO();
+
+	//RandomEffect用
+	static void GenarateRandomEffectPSO();
+
+
+
 private:
 
 	struct PSOInformation {
@@ -183,7 +215,12 @@ private:
 	PSOInformation luminanceBasedOutlinePSO_ = {};
 	//DepthBasedOutline用
 	PSOInformation depthBasedOutlinePSO_ = {};
-
+	//RadialBlur用
+	PSOInformation radialBlurPSO_ = {};
+	//Dissolve用
+	PSOInformation dissolvePSO_ = {};
+	//RandomEffect用
+	PSOInformation randomEffectPSO_ = {};
 
 
 

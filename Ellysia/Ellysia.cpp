@@ -59,8 +59,6 @@ void Ellysia::Initialize(){
 	gameManager_->Initialize();
 
 
-	backText_ = new BackText();
-	backText_->Initialize();
 }
 
 
@@ -90,10 +88,8 @@ void Ellysia::Draw(){
 	
 #pragma region PostEffect
 	
-	////3Dオブジェクトの描画
-	//backText_->PreDraw();
 	
-	
+	//PostEffectの描画前処理
 	gameManager_->PreDrawPostEffectFirst();
 	//ポストエフェクト付きのスプライト
 	gameManager_->DrawSpriteBack();
@@ -103,14 +99,12 @@ void Ellysia::Draw(){
 
 #pragma endregion
 
-	//3Dオブジェクトの読み込み
+	//3Dオブジェクトの描画
 	gameManager_->DrawObject3D();
 	
 	DirectXSetup::GetInstance()->StartDraw();
 
-	
-	//backText_->Draw();
-	//backText_->PostDraw();
+	//PostEffectの描画
 	gameManager_->DrawPostEffect();
 
 
@@ -121,18 +115,18 @@ void Ellysia::Draw(){
 	//ImGuiの描画
 	ImGuiManager::GetInstance()->PreDraw();
 	ImGuiManager::GetInstance()->Draw();
-	ImGuiManager::GetInstance()->EndDraw();
-
-	DirectXSetup::GetInstance()->EndDraw();
-
+	
 	
 	
 }
 
 
 void Ellysia::EndFrame() {
-	//最後で切り替える
 	
+	ImGuiManager::GetInstance()->EndDraw();
+	//最後で切り替える
+	DirectXSetup::GetInstance()->EndDraw();
+
 	
 }
 #pragma endregion
@@ -195,6 +189,5 @@ void Ellysia::Operate(){
 
 
 Ellysia::~Ellysia(){
-	delete backText_;
 	delete gameManager_;
 }

@@ -175,6 +175,15 @@
     <Filter Include="Ellysia\Resource File\DepthBasedOutline">
       <UniqueIdentifier>{c2d37f14-d34f-40a3-bc66-9ee0f1b99b64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Resource File\Dissolve">
+      <UniqueIdentifier>{8119c53b-f09e-447f-8ab9-087473e86a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Resource File\RadialBlur">
+      <UniqueIdentifier>{d7ba74c1-fed7-4911-b311-1673682ee5f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Resource File\RandomEffect">
+      <UniqueIdentifier>{5dcb2ae1-2dc7-4177-8ab3-4f289b702ed3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -291,6 +300,15 @@
     <ClCompile Include="Project\DepthBasedOutline\DepthBasedOutline.cpp">
       <Filter>Project</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Dissolve\Dissolve.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\RadialBlur\RadialBlur.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\RandomEffect\RandomEffect.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -328,6 +346,24 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\DepthBasedOutline\DepthBasedOutline.VS.hlsl">
       <Filter>Ellysia\Resource File\DepthBasedOutline</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Dissolve\Dissolve.PS.hlsl">
+      <Filter>Ellysia\Resource File\Dissolve</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Dissolve\Dissolve.VS.hlsl">
+      <Filter>Ellysia\Resource File\Dissolve</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\RadialBlur\RadialBlur.PS.hlsl">
+      <Filter>Ellysia\Resource File\RadialBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\RadialBlur\RadialBlur.VS.hlsl">
+      <Filter>Ellysia\Resource File\RadialBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\RandomEffect\RandomEffect.PS.hlsl">
+      <Filter>Ellysia\Resource File\RandomEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\RandomEffect\RandomEffect.VS.hlsl">
+      <Filter>Ellysia\Resource File\RandomEffect</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -517,6 +553,15 @@
     <ClInclude Include="Project\DepthBasedOutline\DepthBasedOutline.h">
       <Filter>Project</Filter>
     </ClInclude>
+    <ClInclude Include="Project\Dissolve\Dissolve.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\RadialBlur\RadialBlur.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\RandomEffect\RandomEffect.h">
+      <Filter>Project</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">
@@ -554,6 +599,15 @@
     </None>
     <None Include="Resources\Shader\DepthBasedOutline\DepthBasedOutline.hlsli">
       <Filter>Ellysia\Resource File\DepthBasedOutline</Filter>
+    </None>
+    <None Include="Resources\Shader\Dissolve\Dissolve.hlsli">
+      <Filter>Ellysia\Resource File\Dissolve</Filter>
+    </None>
+    <None Include="Resources\Shader\RadialBlur\RadialBlur.hlsli">
+      <Filter>Ellysia\Resource File\RadialBlur</Filter>
+    </None>
+    <None Include="Resources\Shader\RandomEffect\RandomEffect.hlsli">
+      <Filter>Ellysia\Resource File\RandomEffect</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

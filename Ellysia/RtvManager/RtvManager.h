@@ -61,6 +61,16 @@ public:
 	ComPtr<ID3D12Resource> GetOutLineTextureResource() {
 		return outLineTextureResource;
 	}
+	ComPtr<ID3D12Resource> GetRadialBlurTextureResource() {
+		return radialBlurTextureResource_;
+	}
+	ComPtr<ID3D12Resource> GetDissolveTextureResource() {
+		return dissolveTextureResource_;
+	}
+
+	ComPtr<ID3D12Resource> GetRandomEffectTextureResource() {
+		return randomEffectTextureResource_;
+	}
 	ComPtr<ID3D12Resource> GetDepthBasedOutlineResource() {
 		return depthBasedOutlineResource_;
 	}
@@ -96,7 +106,16 @@ private:
 	ComPtr<ID3D12Resource> outLineTextureResource = nullptr;
 	//DepthBasedOutline用
 	ComPtr<ID3D12Resource> depthBasedOutlineResource_ = nullptr;
+	//RadialBlur用
+	ComPtr<ID3D12Resource> radialBlurTextureResource_ = nullptr;
+	//Dissolve用
+	ComPtr<ID3D12Resource> dissolveTextureResource_ = nullptr;
+	//RandomEffect用
+	ComPtr<ID3D12Resource> randomEffectTextureResource_ = nullptr;
 
 
 };
+
+
+
 

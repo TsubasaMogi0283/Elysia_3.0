@@ -143,6 +143,40 @@ void RtvManager::Initialize(){
 
 
 
+	//RadialBlur
+	const Vector4 RADIAL_BLUR_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
+	radialBlurTextureResource_ = CreateRenderTextureResource(
+		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RADIAL_BLUR_CLEAR_VALUE);
+
+	rtvHandles_[5].ptr = rtvHandles_[4].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
+		radialBlurTextureResource_.Get(), &rtvDesc, rtvHandles_[5]);
+
+
+
+	//Dissove
+	const Vector4 DISSOLVE_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
+	dissolveTextureResource_ = CreateRenderTextureResource(
+		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DISSOLVE_CLEAR_VALUE);
+
+	rtvHandles_[6].ptr = rtvHandles_[5].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
+		dissolveTextureResource_.Get(), &rtvDesc, rtvHandles_[6]);
+
+
+	//RandomEffect
+	const Vector4 RANDOM_EFFECT_VALUE = { 0.1f,0.1f,0.7f,1.0f };
+	randomEffectTextureResource_ = CreateRenderTextureResource(
+		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RANDOM_EFFECT_VALUE);
+
+	rtvHandles_[7].ptr = rtvHandles_[6].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
+		randomEffectTextureResource_.Get(), &rtvDesc, rtvHandles_[7]);
+
+
 
 
 	rtvDesc_ = rtvDesc;

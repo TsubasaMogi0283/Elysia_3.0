@@ -32,6 +32,8 @@ void SampleScene::Initialize() {
 
 	worldTransform_.Initialize();
 	camera_.Initialize();
+	camera_.translate_.y = 3.0f;
+	camera_.translate_.z = -22.0f;
 
 
 	audio_ = Audio::GetInstance();
@@ -53,12 +55,15 @@ void SampleScene::Initialize() {
 	back_ = new BackText();
 	back_->Initialize();
 
+	radialBlur_ = new RadialBlur();
+	radialBlur_->Initialize();
 
 	//outLine_ = new LuminanceBasedOutline();
 	//outLine_->Initialize();
 	//depthBasedOutline_ = new DepthBasedOutline();
 	//depthBasedOutline_->Initialize();
-
+	dissolve_ = new Dissolve();
+	dissolve_->Initialize();
 }
 
 
@@ -129,8 +134,9 @@ void SampleScene::DrawSpriteBack(){
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
-	back_->PreDraw();
-
+	//back_->PreDraw();
+	radialBlur_->PreDraw();
+	dissolve_->PreDraw();
 	//outLine_->PreDraw();
 	//back_->PreDraw();
 
@@ -146,8 +152,11 @@ void SampleScene::DrawObject3D() {
 
 
 void SampleScene::DrawPostEffect(){
-	back_->Draw();
-	back_->PostDraw();
+	//back_->Draw();
+	//back_->PostDraw();
+	radialBlur_->Draw();
+	dissolve_->Draw();
+	//radialBlur_->PostDraw();
 	//outLine_->Draw();
 	//back_->Draw();
 	//depthBasedOutline_->Draw(camera_);
@@ -167,4 +176,5 @@ SampleScene::~SampleScene() {
 	delete back_;
 	delete outLine_;
 	delete depthBasedOutline_;
+	delete dissolve_;
 }
