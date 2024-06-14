@@ -64,21 +64,34 @@ struct GaussianFilterInformation {
 
 class BackText{
 public:
-	BackText() {};
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	BackText()=default;
 
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
-
+	/// <summary>
+	/// 描画前処理
+	/// </summary>
 	void PreDraw();
 
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-
-	void PostDraw();
-
-	~BackText() {};
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~BackText()=default;
 
 private:
+	//別々で分けたい
 	ComPtr<ID3D12Resource> effectResource_ = nullptr;
 
 	int32_t effectType_ = NoneEffect;
@@ -96,8 +109,7 @@ private:
 
 
 
-	uint32_t textureHandle_ = 0;
+	uint32_t srvHandle_ = 0;
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 };
-

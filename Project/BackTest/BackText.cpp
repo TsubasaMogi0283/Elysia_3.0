@@ -29,8 +29,8 @@ void BackText::Initialize(){
 
 
 	//Texture
-	textureHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetRenderTextureResource().Get(), textureHandle_);
+	srvHandle_ = SrvManager::GetInstance()->Allocate();
+	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetRenderTextureResource().Get(), srvHandle_);
 
 	
 
@@ -73,8 +73,6 @@ void BackText::PreDraw(){
 	DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect);
 
 
-	//ResourceとHandleはDirectX側で作った
-	//いずれRTV・DSVManagerを作る
 
 	
 
@@ -164,7 +162,7 @@ void BackText::Draw(){
 	}
 
 	//Texture
-	TextureManager::GraphicsCommand(2,textureHandle_);
+	TextureManager::GraphicsCommand(2,srvHandle_);
 
 	//GaussianFilter
 	if (effectType_ == GaussianFilter3x3 ||
@@ -178,18 +176,13 @@ void BackText::Draw(){
 	//描画(DrawCall)３頂点で１つのインスタンス。
 	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 
-	
-}
 
 
-void BackText::PostDraw(){
-	
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.pResource = RtvManager::GetInstance()->GetRenderTextureResource().Get();
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
-
 
 }

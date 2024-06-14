@@ -32,7 +32,7 @@ class Model {
 public:
 
 	//コンストラクタ
-	Model()=default;
+	Model() = default;
 
 	/// <summary>
 	/// 生成
@@ -54,7 +54,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Model()=default;
+	~Model() = default;
 
 
 
@@ -125,7 +125,7 @@ public:
 	void SetSpotLightIntensity(float intensity) {
 		this->spotLightData_.intensity = intensity;
 	}
-	
+
 	//方向
 	void SetSpotLightDirection(Vector3 direction) {
 		this->spotLightData_.direction = direction;
@@ -194,7 +194,7 @@ private:
 	ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
 	DirectionalLight* directionalLightData_ = nullptr;
 	//方向
-	Vector3 lightingDirection_ = {0.0f,-1.0f,0.0f};
+	Vector3 lightingDirection_ = { 0.0f,-1.0f,0.0f };
 	//Lightの色
 	Vector4 lightColor_ = { 1.0f,1.0f,1.0f,1.0f };
 	float directionalLightIntensity_ = 1.0f;

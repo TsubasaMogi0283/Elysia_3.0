@@ -17,25 +17,28 @@
 
 
 //Material...色など三角形の表面の材質を決定するもの
-struct Material {
-	float4 color;
-	int enableLighting;
-	float4x4 uvTransform;
+struct Material
+{
+    float4 color;
+    int enableLighting;
+    float4x4 uvTransform;
     //光沢度
-	float shininess;
+    float shininess;
 };
 
 
-struct DirectionalLight {
+struct DirectionalLight
+{
 	//ライトの色
-	float4 color;
+    float4 color;
 	//ライトの向き
-	float3 direction;
+    float3 direction;
 	//ライトの輝度
-	float intensity;
+    float intensity;
 };
 
-struct PointLight{
+struct PointLight
+{
 	//ライトの色
     float4 color;
 	//ライトの位置
@@ -52,12 +55,14 @@ struct PointLight{
 
 
 //カメラの位置を送る
-struct Camera{
+struct Camera
+{
     float3 worldPosition;
 };
 
 //
-struct SpotLight{
+struct SpotLight
+{
 	//ライトの色
     float4 color;
 	//ライトの位置
@@ -98,27 +103,31 @@ ConstantBuffer<SpotLight> gSpotLight : register(b4);
 //Textureの各PixelのことはTexelという
 //Excelみたいだね()
 
-struct PixelShaderOutput {
-	float4 color : SV_TARGET0;
+struct PixelShaderOutput
+{
+    float4 color : SV_TARGET0;
 };
 
 
  
-PixelShaderOutput main(VertexShaderOutput input) {
-	PixelShaderOutput output;
+PixelShaderOutput main(VertexShaderOutput input)
+{
+    PixelShaderOutput output;
 	
     float3 camera = gCamera.worldPosition;
 	
 	//Materialを拡張する
-	float4 transformedUV = mul(float4(input.texcoord,0.0f, 1.0f), gMaterial.uvTransform);
-	float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
+    float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
+    float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
 
-    if (textureColor.a <= 0.5f){
+    if (textureColor.a <= 0.5f)
+    {
         discard;
     }
 	
 	//DirectionalLightingする場合
-    if (gMaterial.enableLighting == 1){
+    if (gMaterial.enableLighting == 1)
+    {
 	
 		//このままdotだと[-1,1]になる。
 		//光が当たらないところは「当たらない」のでもっと暗くなるわけではない。そこでsaturate関数を使う
@@ -127,11 +136,11 @@ PixelShaderOutput main(VertexShaderOutput input) {
 
 		//Half Lambert
         float NdotL = dot(normalize(input.normal), -normalize(gDirectionalLight.direction));
-		float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
+        float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
 
 		
 		//Cameraへの方向を算出
-        float3 toEye = normalize(gCamera.worldPosition-input.worldPosition );
+        float3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
 		
 		//入射光の反射ベクトルを求める
         float3 reflectLight = reflect(normalize(gDirectionalLight.direction), normalize(input.normal));
@@ -162,9 +171,10 @@ PixelShaderOutput main(VertexShaderOutput input) {
         output.color.rgb = diffuse + specular;
         output.color.a = gMaterial.color.a * textureColor.a;
 
-	}
+    }
 	//PointLight
-    else if(gMaterial.enableLighting == 2){
+    else if (gMaterial.enableLighting == 2)
+    {
 		//このままdotだと[-1,1]になる。
 		//光が当たらないところは「当たらない」のでもっと暗くなるわけではない。そこでsaturate関数を使う
 		//saturate関数は値を[0,1]にclampするもの。エフェクターにもSaturationってあるよね。
@@ -208,7 +218,8 @@ PixelShaderOutput main(VertexShaderOutput input) {
         output.color.a = gMaterial.color.a * textureColor.a;
     }
 	//SpotLight
-    else if (gMaterial.enableLighting == 3){
+    else if (gMaterial.enableLighting == 3)
+    {
 		//このままdotだと[-1,1]になる。
 		//光が当たらないところは「当たらない」のでもっと暗くなるわけではない。そこでsaturate関数を使う
 		//saturate関数は値を[0,1]にclampするもの。エフェクターにもSaturationってあるよね。
@@ -263,12 +274,13 @@ PixelShaderOutput main(VertexShaderOutput input) {
         output.color.a = gMaterial.color.a;
 		
     }
-    else{
+    else
+    {
 		//Lightingしない場合
         output.color = gMaterial.color * textureColor;
     }
 
 	
 	
-	return output;
+    return output;
 }

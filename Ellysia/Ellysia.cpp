@@ -135,9 +135,9 @@ void Ellysia::Draw(){
 
 
 void Ellysia::EndFrame() {
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	ImGuiManager::GetInstance()->EndDraw();
-  #endif
+#endif
 	//最後で切り替える
 	DirectXSetup::GetInstance()->EndDraw();
 

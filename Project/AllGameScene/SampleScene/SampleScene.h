@@ -67,12 +67,6 @@ public:
 
 private:
 
-	Audio* audio_ = nullptr;
-	uint32_t audioHandle_ = 0u;
-
-	float_t pan_ = 0.0f;
-	int pitch_ = 0;
-	float cutOff_ = 1.0f;
 
 	std::unique_ptr<Model> model_ = nullptr;
 	uint32_t modelHandle = 0;

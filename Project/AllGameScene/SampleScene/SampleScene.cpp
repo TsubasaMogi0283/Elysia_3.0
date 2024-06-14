@@ -26,12 +26,9 @@ void SampleScene::Initialize() {
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
 	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf",false);
 	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/terrain", "terrain.obj");
-	
-
-
+	worldTransform_.Initialize();
 	model_.reset(Model::Create(modelHandle));
-
-	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
+	model_->SetLighting(1);
 	//Walk
 	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf");
 	humanAnimationModel_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/human", "walk.gltf");
@@ -57,11 +54,12 @@ void SampleScene::Initialize() {
 	const float SPHERE_SCALE = 1.0f;
 	noneAnimationWorldTransform_.scale_ = { SPHERE_SCALE,SPHERE_SCALE,SPHERE_SCALE };
 	noneAnimationWorldTransform_.translate_.x = 0.0f;
-	noneAnimationWorldTransform_.translate_.y = -1.0f;
+	noneAnimationWorldTransform_.translate_.y = 0.0f;
+
 	
 
 	camera_.Initialize();
-	camera_.translate_ = { 0.0f,0.0f,-10.0f };
+	camera_.translate_ = { 0.0f,1.0f,-10.0f };
 
 
 	uint32_t skyBoxTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG4/SkyBox/rostock_laage_airport_4k.dds");
@@ -71,10 +69,6 @@ void SampleScene::Initialize() {
 	const float SKYBOX_SCALE = 20.0f;
 	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
 
-	//audio_->PlayWave(audioHandle_,false);
-	audio_->SetPan(audioHandle_, pan_);
-	audio_->ChangePitch(audioHandle_, pitch_);
-	human_[0]->SetEviromentTexture(skyBoxTextureHandle);
 	noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
 
 
@@ -89,8 +83,8 @@ void SampleScene::Initialize() {
 	radialBlur_ = new RadialBlur();
 	radialBlur_->Initialize();
 
-	//outLine_ = new LuminanceBasedOutline();
-	//outLine_->Initialize();
+	outLine_ = new LuminanceBasedOutline();
+	outLine_->Initialize();
 	//depthBasedOutline_ = new DepthBasedOutline();
 	//depthBasedOutline_->Initialize();
 
@@ -138,11 +132,6 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 	sprite_->SetPosition(position);
-#ifdef _DEBUG
-	ImGui::Begin("Audio");
-	ImGui::SliderFloat("Pan", &pan_, -1.0f, 1.0f);
-	ImGui::SliderFloat("LowPassFilter", &cutOff_, 0.0f, 1.0f);
-#endif
 
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
 		humanWorldTransform_[i].Update();
@@ -214,6 +203,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	camera_.rotate_ = Add(camera_.rotate_, { rotateMove.x * ROTATE_MOVE_SPEED,rotateMove.y * ROTATE_MOVE_SPEED,rotateMove.z * ROTATE_MOVE_SPEED });
 
 	camera_.Update();
+	worldTransform_.Update();
 	noneAnimationWorldTransform_.Update();
 	skyBoxWorldTransform_.Update();
 #ifdef _DEBUG
@@ -227,6 +217,8 @@ void SampleScene::Update(GameManager* gameManager) {
 		AdjustmentItems::GetInstance()->SaveFile(GroupName);
 		gameManager->ChangeScene(new SampleScene2());
 	}
+
+
 	
 }
 
@@ -236,9 +228,12 @@ void SampleScene::DrawSpriteBack(){
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
-	radialBlur_->PreDraw();
-	dissolve_->PreDraw();
-	randomEffect_->PreDraw();
+	//radialBlur_->PreDraw();
+	//dissolve_->PreDraw();
+
+	//randomEffect_->PreDraw();
+	//back_->PreDraw();
+	//radialBlur_->PreDraw();
 }
 
 /// <summary>
@@ -250,23 +245,25 @@ void SampleScene::DrawObject3D() {
 	//SimpleSkin
 	//Walk
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
+		//human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
 	}
 	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
 	model_->Draw(worldTransform_, camera_);
 
 
-	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
-		AdjustmentItems::GetInstance()->SaveFile(GroupName);
-	}
+	
 }
 
 
 
 void SampleScene::DrawPostEffect(){
-	radialBlur_->Draw();
-	dissolve_->Draw();
-	randomEffect_->Draw();
+	//radialBlur_->Draw();
+	//dissolve_->Draw();
+	
+
+	//randomEffect_->Draw();
+	//back_->Draw();
+	//radialBlur_->Draw();
 }
 
 void SampleScene::DrawSprite(){

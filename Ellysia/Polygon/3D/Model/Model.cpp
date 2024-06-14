@@ -42,7 +42,7 @@ Model* Model::Create(uint32_t modelHandle) {
 	//１頂点あたりのサイズ
 	model->vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
-	
+
 
 	//解析したデータを使ってResourceとBufferViewを作成する
 	model->indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * ModelManager::GetInstance()->GetModelData(modelHandle).indices.size()).Get();
@@ -58,11 +58,11 @@ Model* Model::Create(uint32_t modelHandle) {
 
 	//カメラ
 	model->cameraResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraForGPU)).Get();
-	
+
 
 	//PointLight
 	model->pointLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(PointLight)).Get();
-	model->pointLightData_.color= { 1.0f,1.0f,1.0f,1.0f };
+	model->pointLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
 	model->pointLightData_.position = { 0.0f,0.0f,0.0f };
 	model->pointLightData_.intensity = 4.0f;
 	model->pointLightData_.radius = 5.0f;
@@ -86,7 +86,7 @@ Model* Model::Create(uint32_t modelHandle) {
 }
 
 //描画
-void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
+void Model::Draw(WorldTransform& worldTransform, Camera& camera) {
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
@@ -119,7 +119,7 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 #pragma endregion
 
 #pragma region DirectionalLight
-	
+
 
 	if (selectLighting_ == Directional) {
 		directionalLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
@@ -128,7 +128,7 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 		directionalLightData_->intensity = directionalLightIntensity_;
 		directionalLightResource_->Unmap(0, nullptr);
 	}
-	
+
 
 #pragma endregion
 
@@ -155,7 +155,7 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 
 		pointLightResource_->Unmap(0, nullptr);
 	}
-	
+
 
 #pragma endregion
 
@@ -172,8 +172,8 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 		spotLightMapData_->cosAngle = spotLightData_.cosAngle;
 		spotLightResource_->Unmap(0, nullptr);
 	}
-	
-	
+
+
 #pragma endregion
 
 
@@ -184,16 +184,16 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetModelRootSignature().Get());
 	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetModelGraphicsPipelineState().Get());
-	
+
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	//IBVを設定
 	DirectXSetup::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
-	
+
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	
+
 
 	//Material
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
@@ -205,22 +205,22 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
-	if (textureHandle_!= 0) {
-		TextureManager::GraphicsCommand(2,textureHandle_ );
+	if (textureHandle_ != 0) {
+		TextureManager::GraphicsCommand(2,textureHandle_);
 	}
-	
+
 	//DirectionalLight
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
 
 	//カメラ
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource_->GetGPUVirtualAddress());
-	
+
 	//PixelShaderに送る方のカメラ
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
 
 	//PointLight
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(6, pointLightResource_->GetGPUVirtualAddress());
-	
+
 	//SpotLight
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
 
@@ -229,8 +229,8 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 	}
 
 
+
 	//DrawCall
 	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 
 }
-
