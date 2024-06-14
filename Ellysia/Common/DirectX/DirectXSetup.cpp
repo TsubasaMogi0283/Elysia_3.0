@@ -391,51 +391,12 @@ void DirectXSetup::PullResourcesFromSwapChain() {
 
 }
 
-void DirectXSetup::SetRTV() {
-	//RTVの設定
-	//D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	//SwapChain swapChain = DirectXSetup::GetInstance()->swapChain;
-	//
-	//
-	//rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;				//出力結果をSRGBに変換して書き込む
-	//rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;			//2dテクスチャとして書き込む
-	////ディスクリプタの先頭を取得する
-	//D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
-	//rtvStartHandle = DirectXSetup::GetInstance()->m_rtvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-
-
-	//RTVを２つ作るのでディスクリプタを２つ用意
-	//PostEffectでもう一つ必要になったので3つに増やす
-	//まず1つ目を作る。１つ目は最初の所に作る。作る場所をこちらで指定してあげる必要がある
-	//DirectXSetup::GetInstance()->rtvHandles_[0] = rtvStartHandle;
-	//DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(DirectXSetup::GetInstance()->swapChain.m_pResource[0].Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[0]);
-	////２つ目のディスクリプタハンドルを得る(自力で)
-	//DirectXSetup::GetInstance()->rtvHandles_[1].ptr = DirectXSetup::GetInstance()->rtvHandles_[0].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	////２つ目を作る
-	//DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(DirectXSetup::GetInstance()->swapChain.m_pResource[1].Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[1]);
-
+void DirectXSetup::GenarateFence() {
 
 	//上の2つはSwapChain用
 
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = DirectXSetup::GetInstance()->m_dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 	DirectXSetup::GetInstance()->dsvHandle_ = dsvHandle;
-
-	////3つ目
-	//const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };//今回は赤
-	////縦横を取得
-	//uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
-	//uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
-	//
-	//DirectXSetup::GetInstance()->renderTextureResource = CreateRenderTextureResource(
-	//	width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
-	//
-	//
-	//DirectXSetup::GetInstance()->rtvHandles_[2].ptr = DirectXSetup::GetInstance()->rtvHandles_[1].ptr + DirectXSetup::GetInstance()->m_device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	//
-	//DirectXSetup::GetInstance()->m_device_->CreateRenderTargetView(
-	//	DirectXSetup::GetInstance()->renderTextureResource.Get(), &rtvDesc, DirectXSetup::GetInstance()->rtvHandles_[2]);
-
-	//SrvManager::GetInstance()-> CreateSRVForRenderTexture(DirectXSetup::GetInstance()->renderTextureResource.Get());
 
 
 	////FenceとEvent
@@ -499,6 +460,53 @@ void DirectXSetup::GenarateScissor(uint32_t right, uint32_t bottom) {
 	//シザーを生成
 	DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect);
 	
+
+}
+
+void DirectXSetup::SetResourceBarrier(ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState){
+	D3D12_RESOURCE_BARRIER barrier{};
+
+	////TransitionBarrierを張るコード
+	//現在のResourceStateを設定する必要がある → ResorceがどんなStateなのかを追跡する必要がある
+	//追跡する仕組みはStateTrackingという
+	
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにする
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。現在のバックバッファに対して行う
+	barrier.Transition.pResource = resource.Get();
+	//遷移前(現在)のResourceState
+	barrier.Transition.StateBefore = beforeState;
+	//遷移後のResourceState
+	barrier.Transition.StateAfter = afterState;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
+
+
+}
+
+void DirectXSetup::SetResourceBarrierForSwapChain(D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState){
+	D3D12_RESOURCE_BARRIER barrier{};
+
+	//TransitionBarrierを張るコード
+	//現在のResourceStateを設定する必要がある → ResorceがどんなStateなのかを追跡する必要がある
+	//追跡する仕組みはStateTrackingという
+	
+	//コマンドを積みこんで確定させる
+	//これから書き込むバックバッファのインデックスを取得
+	DirectXSetup::GetInstance()->backBufferIndex_ = DirectXSetup::GetInstance()->swapChain.m_pSwapChain->GetCurrentBackBufferIndex();
+
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneにする
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。現在のバックバッファに対して行う
+	barrier.Transition.pResource = DirectXSetup::GetInstance()->swapChain.m_pResource[DirectXSetup::GetInstance()->backBufferIndex_].Get();
+	//遷移前(現在)のResourceState
+	barrier.Transition.StateBefore = beforeState;
+	//遷移後のResourceState
+	barrier.Transition.StateAfter = afterState;
+	//TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 
 }
 
@@ -567,7 +575,7 @@ void DirectXSetup::FirstInitialize() {
 void DirectXSetup::SecondInitialize(){
 
 	//RenderTargetViewの設定
-	SetRTV();
+	GenarateFence();
 
 
 	//DXCの初期化
@@ -647,33 +655,14 @@ void DirectXSetup::StartDraw() {
 	//7.次のフレーム用にCommandListを再準備
 
 	
-	UINT backBufferIndex_;
-	///////
-	////コマンドを積みこんで確定させる
-	//LoadCommand()
-	//これから書き込むバックバッファのインデックスを取得
-	backBufferIndex_ = DirectXSetup::GetInstance()->swapChain.m_pSwapChain->GetCurrentBackBufferIndex();
-
-	////TransitionBarrierを張るコード
-	//現在のResourceStateを設定する必要がある → ResorceがどんなStateなのかを追跡する必要がある
-	//追跡する仕組みはStateTrackingという
-	//
+	
+	//スワップチェーンのバリアを張る
 	//TransitionBarrierの設定
 	//今回のバリアはTransition
 	//D3D12_RESOURCE_STATE_PRESENT...見せるモード
 	//D3D12_RESOURCE_STATE_RENDER_TARGET...RTV使う用
+	SetResourceBarrierForSwapChain(D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-	barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	//Noneにする
-	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier_.Transition.pResource = DirectXSetup::GetInstance()->swapChain.m_pResource[backBufferIndex_].Get();
-	//遷移前(現在)のResourceState
-	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	//遷移後のResourceState
-	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
 
 	//描画先のRTVとDSVを設定する
 	//描画先のRTVを設定する
@@ -707,12 +696,15 @@ void DirectXSetup::EndDraw() {
 	//今回はRenderTargetからPresentにする
 	
 
-	//遷移前(現在)のResourceState
-	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//遷移後のResourceState
-	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-	//TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
+	////遷移前(現在)のResourceState
+	//barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	////遷移後のResourceState
+	//barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	////TransitionBarrierを張る
+	//DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
+
+	SetResourceBarrierForSwapChain(D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+
 
 
 	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること

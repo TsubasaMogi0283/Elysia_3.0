@@ -232,13 +232,12 @@ void SampleScene::DrawSpriteBack(){
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
-	//radialBlur_->PreDraw();
-	dissolve_->PreDraw();
+	//dissolve_->PreDraw();
 
 	//randomEffect_->PreDraw();
 	//back_->PreDraw();
 	//radialBlur_->PreDraw();
-	//outLine_->PreDraw();
+	outLine_->PreDraw();
 }
 
 /// <summary>
@@ -263,13 +262,13 @@ void SampleScene::DrawObject3D() {
 
 void SampleScene::DrawPostEffect(){
 	//radialBlur_->Draw();
-	dissolve_->Draw();
+	//dissolve_->Draw();
 	
 
 	//randomEffect_->Draw();
 	//back_->Draw();
 	//radialBlur_->Draw();
-	//outLine_->Draw();
+	outLine_->Draw();
 }
 
 void SampleScene::DrawSprite(){

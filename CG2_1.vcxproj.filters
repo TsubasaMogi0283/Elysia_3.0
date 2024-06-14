@@ -163,12 +163,6 @@
     <Filter Include="Text">
       <UniqueIdentifier>{86ea6656-3c90-41a3-872c-722ea8f63729}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Header File\Animation">
-      <UniqueIdentifier>{97ce354a-4949-41c4-886a-96dc659bbfc0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ellysia\Resource File\Object3d\SkinningObject3D">
-      <UniqueIdentifier>{787ef094-af7b-4197-b31c-b8867e74d3ce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Source File\SrvManager">
       <UniqueIdentifier>{4f83e7d1-c856-4e25-9517-e1f481814346}</UniqueIdentifier>
     </Filter>
@@ -186,6 +180,9 @@
     </Filter>
     <Filter Include="Ellysia\Resource File\SkyBox">
       <UniqueIdentifier>{44244ac2-4549-4851-b772-2c4eb7d15eb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\AnimationManager">
+      <UniqueIdentifier>{97ce354a-4949-41c4-886a-96dc659bbfc0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -308,6 +305,27 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\RtvManager\RtvManager.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\BackTest\BackText.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\DepthBasedOutline\DepthBasedOutline.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Dissolve\Dissolve.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\LuminanceBasedOutline\LuminanceBasedOutline.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\RadialBlur\RadialBlur.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\RandomEffect\RandomEffect.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -544,9 +562,6 @@
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\WellForGPU.h">
       <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Lighting\LightingType.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
     </ClInclude>
@@ -555,6 +570,30 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.h">
       <Filter>Ellysia\Header File\Polygone\3D\AnimationModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\RtvManager\RtvManager.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\BackTest\BackText.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\DepthBasedOutline\DepthBasedOutline.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Dissolve\Dissolve.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\LuminanceBasedOutline\LuminanceBasedOutline.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\RadialBlur\RadialBlur.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\RandomEffect\RandomEffect.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h">
+      <Filter>Ellysia\Header File\AnimationManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

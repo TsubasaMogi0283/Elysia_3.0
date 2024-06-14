@@ -47,19 +47,12 @@ void RadialBlur::PreDraw(){
 
 void RadialBlur::Draw(){
 
-	// Barrierを設定する
-	// 今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	// Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	// バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = RtvManager::GetInstance()->GetRadialBlurTextureResource().Get();
-	// 遷移前(現在)のResourceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	// 遷移後のResourceState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	// TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
+
+
+	//ResourceBarrierを張る
+	DirectXSetup::GetInstance()->SetResourceBarrier(
+		RtvManager::GetInstance()->GetRadialBlurTextureResource().Get(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetRadialBlurRootSignature().Get());
@@ -80,12 +73,19 @@ void RadialBlur::Draw(){
 	
 
 
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	/*barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.pResource = RtvManager::GetInstance()->GetRadialBlurTextureResource().Get();
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
+	*/
+	//ResourceBarrierを張る
+	DirectXSetup::GetInstance()->SetResourceBarrier(
+		RtvManager::GetInstance()->GetRadialBlurTextureResource().Get(),
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+
 }
 
 void RadialBlur::PostDraw(){

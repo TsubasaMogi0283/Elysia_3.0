@@ -123,6 +123,9 @@ private:
 	/// </summary>
 	static void GenarateDescriptorHeap();
 
+	/// <summary>
+	/// スワップチェーンを引っ張ってくる
+	/// </summary>
 	static void PullResourcesFromSwapChain();
 
 
@@ -132,7 +135,7 @@ private:
 
 
 
-	static void SetRTV();
+	static void GenarateFence();
 
 
 public:
@@ -152,6 +155,11 @@ public:
 	static void GenarateScissor(uint32_t right, uint32_t bottom);
 
 
+
+	static void SetResourceBarrier(ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
+	static void SetResourceBarrierForSwapChain(D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
+
+
 #pragma endregion
 
 private:
@@ -169,7 +177,11 @@ public:
 
 	static void SecondInitialize();
 
-	//Resource作成の関数化
+	/// <summary>
+	/// Resource作成の関数化
+	/// </summary>
+	/// <param name="sizeInBytes"></param>
+	/// <returns></returns>
 	ComPtr<ID3D12Resource> CreateBufferResource(size_t sizeInBytes);
 
 	ComPtr<ID3D12Resource> GerDepthStencilResource() {
@@ -187,15 +199,10 @@ public:
 #pragma endregion
 
 
-#pragma region 解放処理
-	//解放
+	/// <summary>
+	/// 解放
+	/// </summary>
 	void Release();
-#pragma endregion
-
-
-
-private:
-
 
 
 public:
@@ -271,7 +278,7 @@ private:
 
 	//SwapChain
 	SwapChain swapChain = {};
-	
+	UINT backBufferIndex_ = {};
 	D3D12_RESOURCE_BARRIER barrier_{};
 
 	//Fence
