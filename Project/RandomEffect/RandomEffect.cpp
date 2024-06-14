@@ -43,28 +43,14 @@ void RandomEffect::PreDraw() {
 		DirectXSetup::GetInstance()->GetDsvHandle(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 
-	D3D12_VIEWPORT viewport{};
-	//クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = float(WindowsSetup::GetInstance()->GetClientWidth());
-	viewport.Height = float(WindowsSetup::GetInstance()->GetClientHeight());
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
+	uint32_t width = WindowsSetup::GetInstance()->GetClientWidth();
+	uint32_t height = WindowsSetup::GetInstance()->GetClientHeight();
 
-	DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport);
-
+	//ビューポート
+	DirectXSetup::GetInstance()->GenarateViewport(width, height);
 
 	//シザー矩形 
-	D3D12_RECT scissorRect{};
-	//基本的にビューポートと同じ矩形が構成されるようにする
-	scissorRect.left = 0;
-	scissorRect.right = WindowsSetup::GetInstance()->GetClientWidth();
-	scissorRect.top = 0;
-	scissorRect.bottom = WindowsSetup::GetInstance()->GetClientHeight();
-
-	DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect);
-
+	DirectXSetup::GetInstance()->GenarateScissor(width, height);
 
 
 

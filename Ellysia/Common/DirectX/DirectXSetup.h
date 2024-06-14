@@ -88,19 +88,40 @@ private:
 #pragma region 初期化について
 	//初期化へ
 
+	/// <summary>
+	/// DXGIFactoryの生成
+	/// </summary>
 	static void GenerateDXGIFactory();
 
+	/// <summary>
+	/// アダプターの生成
+	/// </summary>
 	static void SelectAdapter();
 
+	/// <summary>
+	/// デバイスの生成
+	/// </summary>
 	static void GenerateD3D12Device();
 
+	/// <summary>
+	/// エラーが起こったら止める
+	/// </summary>
 	static void StopErrorWarning();
 
+	/// <summary>
+	/// コマンドの生成
+	/// </summary>
 	static void GenerateCommand();
 
+	/// <summary>
+	/// スワップチェーンの生成
+	/// </summary>
 	static void GenerateSwapChain();
 
-	static void MakeDescriptorHeap();
+	/// <summary>
+	/// ディスクリプタヒープの生成
+	/// </summary>
+	static void GenarateDescriptorHeap();
 
 	static void PullResourcesFromSwapChain();
 
@@ -115,9 +136,20 @@ private:
 
 
 public:
-	static void GenarateViewport();
+	/// <summary>
+	/// ビューポートの生成
+	/// </summary>
+	/// <param name="width">横幅</param>
+	/// <param name="height">縦幅</param>
+	static void GenarateViewport(uint32_t width, uint32_t height);
 
-	static void GenerateScissor();
+	
+	/// <summary>
+	/// シザーの生成
+	/// </summary>
+	/// <param name="right">横幅</param>
+	/// <param name="bottom">立幅</param>
+	static void GenarateScissor(uint32_t right, uint32_t bottom);
 
 
 #pragma endregion

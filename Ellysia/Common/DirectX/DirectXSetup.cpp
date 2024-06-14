@@ -340,7 +340,7 @@ void DirectXSetup::GenerateSwapChain() {
 
 }
 
-void DirectXSetup::MakeDescriptorHeap() {
+void DirectXSetup::GenarateDescriptorHeap() {
 	
 	
 	
@@ -467,14 +467,12 @@ void DirectXSetup::SetRTV() {
 
 
 
-void DirectXSetup::GenarateViewport() {
-	////ViewportとScissor
+void DirectXSetup::GenarateViewport(uint32_t width, uint32_t height) {
 	//ビューポート
-	
 	D3D12_VIEWPORT viewport{};
 	//クライアント領域のサイズと一緒にして画面全体に表示
-	viewport.Width = float(WindowsSetup::GetInstance()->GetClientWidth());
-	viewport.Height = float(WindowsSetup::GetInstance()->GetClientHeight());
+	viewport.Width = float(width);
+	viewport.Height = float(height);
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
@@ -483,25 +481,24 @@ void DirectXSetup::GenarateViewport() {
 	DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport);
 
 
-	//シザーを生成
-	GenerateScissor();
 	
-
-	//DirectXSetup::GetInstance()->viewport_ = viewport;
 
 }
 
-void DirectXSetup::GenerateScissor() {
+void DirectXSetup::GenarateScissor(uint32_t right, uint32_t bottom) {
 	//シザー矩形 
 	D3D12_RECT scissorRect{};
 	//基本的にビューポートと同じ矩形が構成されるようにする
 	scissorRect.left = 0;
-	scissorRect.right = WindowsSetup::GetInstance()->GetClientWidth();
+	scissorRect.right = right;
 	scissorRect.top = 0;
-	scissorRect.bottom = WindowsSetup::GetInstance()->GetClientHeight();
+	scissorRect.bottom = bottom;
 
+	
+
+	//シザーを生成
 	DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect);
-	//DirectXSetup::GetInstance()->scissorRect_ = scissorRect;
+	
 
 }
 
@@ -560,7 +557,7 @@ void DirectXSetup::FirstInitialize() {
 	//3.引っ張ってきたResourceに対してDescriptor上にRTVを作る
 
 	////DescriptorHeap(RTV用)を生成する
-	MakeDescriptorHeap();
+	GenarateDescriptorHeap();
 
 	//スワップチェーンを引っ張ってくる
 	PullResourcesFromSwapChain();
@@ -685,15 +682,17 @@ void DirectXSetup::StartDraw() {
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(RtvManager::GetInstance()->GetRtvHandle(backBufferIndex_), clearColor, 0, nullptr);
 
-	//ビューポートの生成
-	GenarateViewport();
-	//DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);
 
+	uint32_t width = WindowsSetup::GetInstance()->GetClientWidth();
+	uint32_t height = WindowsSetup::GetInstance()->GetClientHeight();
+
+	//ビューポートの生成
+	GenarateViewport(width, height);
+	
 
 	//シザーを生成
-	GenerateScissor();
-	//DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
-
+	GenarateScissor(width, height);
+	
 
 }
 
