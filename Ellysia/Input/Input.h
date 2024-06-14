@@ -27,10 +27,10 @@ class Input {
 private:
 
 	//コンストラクタ
-	Input();
+	Input()=default;
 	
 	//デストラクタ
-	~Input();
+	~Input()=default;
 
 public:
 	//シングルインスタンスにするための関数
@@ -47,8 +47,14 @@ public:
 
 public:
 
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
 
@@ -89,8 +95,11 @@ public:
 
 #pragma endregion
 	
-
-	
+	/// <summary>
+	/// カーソルの表示・非表示
+	/// </summary>
+	/// <param name="isDisplay"></param>
+	void SetIsDisplayCursor(bool isDisplay);
 
 	
 

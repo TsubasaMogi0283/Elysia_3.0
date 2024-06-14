@@ -1,9 +1,5 @@
 #include "Input.h"
 
-//コンストラクタ
-Input::Input() {
-
-}
 
 //シングルインスタンス
 Input* Input::GetInstance() {
@@ -131,6 +127,10 @@ bool Input::IsPushRight(XINPUT_STATE& state) {
 	return false;
 }
 
+void Input::SetIsDisplayCursor(bool isDisplay){
+	ShowCursor(isDisplay);
+}
+
 
 #pragma endregion
 
@@ -156,9 +156,5 @@ void Input::Update() {
 
 	mouseDevice_->GetDeviceState(sizeof(DIMOUSESTATE), &currentMouse_);
 	
-
-}
-
-Input::~Input() {
 
 }
