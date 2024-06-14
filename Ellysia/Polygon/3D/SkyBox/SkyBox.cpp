@@ -238,7 +238,7 @@ void SkyBox::Draw(WorldTransform& worldTransform, Camera& camera) {
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, camera.bufferResource_->GetGPUVirtualAddress());
 
 	if (textureHandle_ != 0) {
-		TextureManager::GetInstance()->GraphicsCommand(textureHandle_);
+		TextureManager::GetInstance()->GraphicsCommand(2,textureHandle_);
 	}
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, materialResource_->GetGPUVirtualAddress());

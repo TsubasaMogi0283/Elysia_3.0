@@ -82,7 +82,6 @@ private:
 
 	std::unique_ptr<Sprite> sprite_ = nullptr;
 
-	Camera camera_ = {};
 
 	//歩き
 	static const int WALK_HUMAN_AMOUNT_ = 1;

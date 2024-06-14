@@ -5,7 +5,7 @@
 #include <Input.h>
 #include <TextureManager.h>
 #include "SrvManager/SrvManager.h"
-#include "RtvManager.h"
+#include "../RtvManager/RtvManager.h"
 #include <Audio.h>
 #include <AdjustmentItems.h>
 
@@ -149,10 +149,12 @@ void Ellysia::EndFrame() {
 void Ellysia::Release() {
 
 	Audio::GetInstance()->Release();
-	TextureManager::GetInstance()->Release();
+#ifdef _DEBUG
 	ImGuiManager::GetInstance()->Release();
+#endif
 	DirectXSetup::GetInstance()->Release();
 	WindowsSetup::GetInstance()->Close();
+
 }
 
 
@@ -201,14 +203,6 @@ void Ellysia::Operate(){
 }
 
 
-
-
-	Audio::GetInstance()->Release();
-	ImGuiManager::GetInstance()->Release();
-#endif
-	DirectXSetup::GetInstance()->Release();
-	WindowsSetup::GetInstance()->Close();
-}
 
 Ellysia::~Ellysia(){
 	delete gameManager_;

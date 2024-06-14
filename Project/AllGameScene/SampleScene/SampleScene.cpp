@@ -142,7 +142,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::Begin("Audio");
 	ImGui::SliderFloat("Pan", &pan_, -1.0f, 1.0f);
 	ImGui::SliderFloat("LowPassFilter", &cutOff_, 0.0f, 1.0f);
-
+#endif
 
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
 		humanWorldTransform_[i].Update();
@@ -241,21 +241,10 @@ void SampleScene::PreDrawPostEffectFirst(){
 	randomEffect_->PreDraw();
 }
 
-
-void SampleScene::DrawObject3D() {
-	model_->Draw(worldTransform_, camera_);
-
-	
-	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
-		AdjustmentItems::GetInstance()->SaveFile(GroupName);
-	}
-	
-}
-
 /// <summary>
 /// 描画
 /// </summary>
-void SampleScene::Draw() {
+void SampleScene::DrawObject3D() {
 	
 	skyBox_->Draw(skyBoxWorldTransform_,camera_);
 	//SimpleSkin
@@ -264,7 +253,12 @@ void SampleScene::Draw() {
 		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
 	}
 	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
-	
+	model_->Draw(worldTransform_, camera_);
+
+
+	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
+		AdjustmentItems::GetInstance()->SaveFile(GroupName);
+	}
 }
 
 
