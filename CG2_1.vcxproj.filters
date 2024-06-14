@@ -47,9 +47,6 @@
     <Filter Include="Ellysia\Source File\Audio">
       <UniqueIdentifier>{4e9ce233-b84c-4858-95a3-08d752302d12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Source File\Pipeline">
-      <UniqueIdentifier>{dd9a03be-6394-4e47-b16e-f7b88147685e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Source File\Camera">
       <UniqueIdentifier>{87a8506f-b468-4ee9-a25f-edaaa2092b76}</UniqueIdentifier>
     </Filter>
@@ -98,9 +95,6 @@
     </Filter>
     <Filter Include="Ellysia\Header File\Audio">
       <UniqueIdentifier>{38c8c39f-90cc-4b8a-99bb-e3a6cf511aa2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ellysia\Header File\Pipeline">
-      <UniqueIdentifier>{960690e0-f2d3-4f0a-a7e9-81f206ff3f49}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ellysia\Header File\TextureManager">
       <UniqueIdentifier>{923fe313-40bb-48ce-aa0b-eb17ee0b5333}</UniqueIdentifier>
@@ -184,6 +178,27 @@
     <Filter Include="Ellysia\Header File\AnimationManager">
       <UniqueIdentifier>{97ce354a-4949-41c4-886a-96dc659bbfc0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Source File\Polygone\3D\AnimationModel">
+      <UniqueIdentifier>{2e92d4d2-e932-4495-aace-3da469cbd20c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\AnimationModelManager">
+      <UniqueIdentifier>{854ee5dc-7df8-4ce1-a244-9ca2a7c26822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\RtvManager">
+      <UniqueIdentifier>{a8d41418-a4c6-479a-8902-f0aa74ad56df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\RtvManager">
+      <UniqueIdentifier>{5c6d6480-09d2-4a8a-9315-62d96b957ce3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Manager\Pipeline">
+      <UniqueIdentifier>{960690e0-f2d3-4f0a-a7e9-81f206ff3f49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager">
+      <UniqueIdentifier>{8809c26d-403e-422c-baa3-edea3d495fdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager\Pipeline">
+      <UniqueIdentifier>{249441d7-ac06-46bc-84f0-500c7b9095a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -227,9 +242,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\Model\Model.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\PipelineManager\PipelineManager.cpp">
-      <Filter>Ellysia\Source File\Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Ellysia.cpp">
       <Filter>Ellysia\Source File</Filter>
@@ -297,17 +309,8 @@
     <ClCompile Include="Ellysia\SrvManager\SrvManager.cpp">
       <Filter>Ellysia\Source File\SrvManager</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\SkyBox</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\RtvManager\RtvManager.cpp">
-      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Project\BackTest\BackText.cpp">
       <Filter>Ellysia\Source File</Filter>
@@ -326,6 +329,18 @@
     </ClCompile>
     <ClCompile Include="Project\RandomEffect\RandomEffect.cpp">
       <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.cpp">
+      <Filter>Ellysia\Source File\Polygone\3D\AnimationModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp">
+      <Filter>Ellysia\Source File\AnimationModelManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\RtvManager\RtvManager.cpp">
+      <Filter>Ellysia\Source File\RtvManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\PipelineManager\PipelineManager.cpp">
+      <Filter>Ellysia\Source File\Manager\Pipeline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -423,9 +438,6 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Camera\Camera.h">
       <Filter>Ellysia\Header File\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\PipelineManager\PipelineManager.h">
-      <Filter>Ellysia\Header File\Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle.h">
       <Filter>Ellysia\Header File\Polygone\3D\Particle</Filter>
@@ -571,9 +583,6 @@
     <ClInclude Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.h">
       <Filter>Ellysia\Header File\Polygone\3D\AnimationModel</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\RtvManager\RtvManager.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Project\BackTest\BackText.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
@@ -594,6 +603,12 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h">
       <Filter>Ellysia\Header File\AnimationManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\RtvManager\RtvManager.h">
+      <Filter>Ellysia\Header File\RtvManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\PipelineManager\PipelineManager.h">
+      <Filter>Ellysia\Header File\Manager\Pipeline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
