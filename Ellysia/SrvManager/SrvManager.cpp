@@ -92,9 +92,38 @@ void SrvManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource*
 	srvDesc.Buffer.NumElements = numElements;
 	srvDesc.Buffer.StructureByteStride = structureByteStride;
 
-
 	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(
 		pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
+
+}
+
+void SrvManager::CreateSRVForRenderTexture(ID3D12Resource* pResource, uint32_t handle){
+	//SRVの設定
+	//FormatはResourceと同じにしておく
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	//SRVの生成
+	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(
+		pResource, &srvDesc, GetCPUDescriptorHandle(handle));
+
+
+
+}
+
+void SrvManager::CreateSRVForDepthTexture(uint32_t handle){
+	D3D12_SHADER_RESOURCE_VIEW_DESC depthTextureSrvDesc{};
+	//DXGI_FORMAT_D24_UNIFORM_S8_UNITのDepthを読むときはDXGI_FORMAT_R24_UNIFORM_X8_TYPELESS
+	depthTextureSrvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	depthTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	depthTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	depthTextureSrvDesc.Texture2D.MipLevels = 1;
+	ComPtr<ID3D12Resource> resource = DirectXSetup::GetInstance()->GerDepthStencilResource();
+	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(resource.Get(), &depthTextureSrvDesc, GetCPUDescriptorHandle(handle));
+
 
 }
 

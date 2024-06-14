@@ -56,9 +56,7 @@ private:
 
 private:
 	
-
-
+	
 	GameManager* gameManager_ = nullptr;
-
 
 };

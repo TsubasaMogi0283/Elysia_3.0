@@ -294,7 +294,7 @@ void Particle3D::Draw(uint32_t textureHandle,Camera& camera){
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
 	if (textureHandle_!= 0) {
-		TextureManager::GraphicsCommand(textureHandle );
+		TextureManager::GraphicsCommand(2,textureHandle );
 	}
 	
 	//DirectionalLight

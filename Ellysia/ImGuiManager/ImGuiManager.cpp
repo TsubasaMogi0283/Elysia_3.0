@@ -2,6 +2,7 @@
 #include "WindowsSetup.h"
 #include "DirectXSetup.h"
 #include "SrvManager.h"
+#include "RtvManager.h"
 
 //コンストラクタ
 ImGuiManager::ImGuiManager() {
@@ -28,8 +29,8 @@ void ImGuiManager::Initialize() {
 	ImGui_ImplWin32_Init(WindowsSetup::GetInstance()->GetHwnd());
 	ImGui_ImplDX12_Init(
 		DirectXSetup::GetInstance()->GetDevice().Get(),
-		DirectXSetup::GetInstance()->GetswapChain().swapChainDesc.BufferCount,
-		DirectXSetup::GetInstance()->GetRtvDesc().Format,
+		DirectXSetup::GetInstance()->GetSwapChain().swapChainDesc.BufferCount,
+		RtvManager::GetInstance()->GetRtvDesc().Format,
 		SrvManager::GetInstance()->GetSrvDescriptorHeap().Get(),
 		SrvManager::GetInstance()->GetSrvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart(),
 		SrvManager::GetInstance()->GetSrvDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
@@ -68,7 +69,7 @@ void ImGuiManager::Draw() {
 
 
 //ここでフレームが終わる
-void ImGuiManager::EndFrame() {
+void ImGuiManager::EndDraw() {
 	//コマンドを積む
 	//実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), DirectXSetup::GetInstance()->GetCommandList().Get());

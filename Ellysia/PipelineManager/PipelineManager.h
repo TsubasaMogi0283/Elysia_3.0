@@ -40,7 +40,7 @@ enum BlemdMode {
 
 };
 
-class PipelineManager final{
+class PipelineManager final {
 private:
 
 	//コンストラクタ
@@ -68,7 +68,7 @@ public:
 		return linePSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積む用のGetter(Sprite)
+	//コマンドに積むためのGetter(Sprite)
 	ComPtr<ID3D12RootSignature> GetSpriteRootSignature() {
 		return spritePSO_.rootSignature_;
 	}
@@ -76,7 +76,7 @@ public:
 		return spritePSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積む用のGetter(Model)
+	//コマンドに積むためのGetter(Model)
 	ComPtr<ID3D12RootSignature> GetModelRootSignature() {
 		return modelPSO_.rootSignature_;
 	}
@@ -93,8 +93,7 @@ public:
 		return animationModelPSO_.graphicsPipelineState_;
 	}
 
-
-	//コマンドに積む用のGetter(Particle3D)
+  //コマンドに積むためのGetter(Particle3D)
 	ComPtr<ID3D12RootSignature> GetParticle3DRootSignature() {
 		return particle3DPSO_.rootSignature_;
 	}
@@ -113,12 +112,64 @@ public:
 
 	
 
+	//コマンドに積むためのGetter(CopyImage)
+	ComPtr<ID3D12RootSignature> GetFullScreenRootSignature() {
+		return fullScreenPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetFullScreenGraphicsPipelineState() {
+		return fullScreenPSO_.graphicsPipelineState_;
+	}
+
+	//コマンドに積むためのGetter(LuminanceBasedOutline)
+	ComPtr<ID3D12RootSignature> GetLuminanceBasedOutlineRootSignature() {
+		return luminanceBasedOutlinePSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetLuminanceBasedOutlineGraphicsPipelineState() {
+		return luminanceBasedOutlinePSO_.graphicsPipelineState_;
+	}
+
+	//コマンドに積むためのGetter(DepthBasedOutline)
+	ComPtr<ID3D12RootSignature> GetDepthBasedOutlineRootSignature() {
+		return depthBasedOutlinePSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetDepthBasedOutlineGraphicsPipelineState() {
+		return depthBasedOutlinePSO_.graphicsPipelineState_;
+	}
+	//コマンドに積むためのGetter(RadialBlur)
+	ComPtr<ID3D12RootSignature> GetRadialBlurRootSignature() {
+		return radialBlurPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetRadialBlurGraphicsPipelineState() {
+		return radialBlurPSO_.graphicsPipelineState_;
+	}
+
+	//コマンドに積むためのGetter(Dissolve)
+	ComPtr<ID3D12RootSignature> GetDissolveRootSignature() {
+		return dissolvePSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetDissolveGraphicsPipelineState() {
+		return dissolvePSO_.graphicsPipelineState_;
+	}
+	//コマンドに積むためのGetter(RandomEffect)
+	ComPtr<ID3D12RootSignature> GetRandomEffectRootSignature() {
+		return randomEffectPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetRandomEffectGraphicsPipelineState() {
+		return randomEffectPSO_.graphicsPipelineState_;
+	}
+	
+
+
+
+
 	void SetSpriteBlendMode(uint32_t blendmode) {
 		selectSpriteBlendMode_ = blendmode;
 	}
 	void SetModelBlendMode(uint32_t blendmode) {
 		selectModelBlendMode_ = blendmode;
 	}
+
+
 
 
 #pragma endregion
@@ -139,6 +190,25 @@ public:
 
 	//3Dパーティクル用
 	static void GenerateParticle3DPSO();
+
+	//CopyImage用
+	static void GenarateFullScreenPSO();
+
+	//OutLine用
+	static void GenarateLuminanceBasedOutlinePSO();
+
+	//DepthBasedOutline用
+	static void GenarateDepthBasedOutlinePSO();
+
+	//RadialBlur用
+	static void GenerateRadialBlurPSO();
+
+	//Dissolve用
+	static void GenarateDissolvePSO();
+
+	//RandomEffect用
+	static void GenarateRandomEffectPSO();
+
 
 	//SkyBox
 	static void GenarateSkyBoxPSO();
@@ -163,6 +233,19 @@ private:
 	PSOInformation modelPSO_ = {};
 	//モデル用の変数
 	PSOInformation particle3DPSO_ = {};
+	//CopyImage用
+	PSOInformation fullScreenPSO_ = {};
+	//LuminanceBasedOutline用
+	PSOInformation luminanceBasedOutlinePSO_ = {};
+	//DepthBasedOutline用
+	PSOInformation depthBasedOutlinePSO_ = {};
+	//RadialBlur用
+	PSOInformation radialBlurPSO_ = {};
+	//Dissolve用
+	PSOInformation dissolvePSO_ = {};
+	//RandomEffect用
+	PSOInformation randomEffectPSO_ = {};
+
 	//アニメーションモデル用の変数
 	PSOInformation animationModelPSO_ = {};
 	//スカイボックス用の変数

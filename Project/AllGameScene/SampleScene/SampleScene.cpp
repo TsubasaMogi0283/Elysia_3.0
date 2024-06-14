@@ -2,6 +2,7 @@
 #include <imgui.h>
 #include <Input.h>
 #include <AdjustmentItems.h>
+#include "SampleScene2/SampleScene2.h"
 
 #include "ModelManager.h"
 #include "AnimationManager.h"
@@ -20,9 +21,17 @@ SampleScene::SampleScene() {
 /// 初期化
 /// </summary>
 void SampleScene::Initialize() {
-	
+
 	//GLTF2.0
 	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
+	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf",false);
+	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/terrain", "terrain.obj");
+	
+
+
+	model_.reset(Model::Create(modelHandle));
+
+	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
 	//Walk
 	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf");
 	humanAnimationModel_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/human", "walk.gltf");
@@ -62,11 +71,36 @@ void SampleScene::Initialize() {
 	const float SKYBOX_SCALE = 20.0f;
 	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
 
+	//audio_->PlayWave(audioHandle_,false);
+	audio_->SetPan(audioHandle_, pan_);
+	audio_->ChangePitch(audioHandle_, pitch_);
 	human_[0]->SetEviromentTexture(skyBoxTextureHandle);
 	noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
 
 
 
+	uint32_t textureHandle = TextureManager::GetInstance()->LoadTexture("Resources/White.png");
+	sprite_.reset(Sprite::Create(textureHandle, { 0.0f,0.0f }));
+	sprite_->SetScale({0.5f, 0.5f});
+	
+	back_ = new BackText();
+	back_->Initialize();
+
+	radialBlur_ = new RadialBlur();
+	radialBlur_->Initialize();
+
+	//outLine_ = new LuminanceBasedOutline();
+	//outLine_->Initialize();
+	//depthBasedOutline_ = new DepthBasedOutline();
+	//depthBasedOutline_->Initialize();
+
+
+	uint32_t dissolveTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise0.png");
+	dissolve_ = new Dissolve();
+	dissolve_->Initialize(dissolveTextureHandle);
+
+	randomEffect_ = new RandomEffect();
+	randomEffect_->Initialize();
 }
 
 
@@ -103,10 +137,11 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 
 
-
-	
-
-
+	sprite_->SetPosition(position);
+#ifdef _DEBUG
+	ImGui::Begin("Audio");
+	ImGui::SliderFloat("Pan", &pan_, -1.0f, 1.0f);
+	ImGui::SliderFloat("LowPassFilter", &cutOff_, 0.0f, 1.0f);
 
 
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
@@ -114,6 +149,14 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 #pragma endregion
 
+	ImGui::Begin("Camera");
+	ImGui::SliderFloat3("Position", &camera_.translate_.x, -40.0f, 20.0f);
+	ImGui::End();
+
+
+	ImGui::Begin("Sprite");
+	ImGui::SliderFloat3("Z",&position.x,0.0f,1280.0f);
+	ImGui::End();
 	const float CAMERA_MOVE_SPEED = 0.2f;
 	Vector3 move = {};
 	Vector3 rotateMove = {};
@@ -146,7 +189,6 @@ void SampleScene::Update(GameManager* gameManager) {
 		move.y = 0.0f;
 		move.z = 0.0f;
 	}
-
 
 	//回転
 	const float ROTATE_MOVE_SPEED = 0.01f;
@@ -181,7 +223,27 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::End();
 
 #endif
+	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
+		AdjustmentItems::GetInstance()->SaveFile(GroupName);
+		gameManager->ChangeScene(new SampleScene2());
+	}
+	
+}
 
+void SampleScene::DrawSpriteBack(){
+
+	//sprite_->Draw();
+}
+
+void SampleScene::PreDrawPostEffectFirst(){
+	radialBlur_->PreDraw();
+	dissolve_->PreDraw();
+	randomEffect_->PreDraw();
+}
+
+
+void SampleScene::DrawObject3D() {
+	model_->Draw(worldTransform_, camera_);
 
 	
 	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
@@ -207,10 +269,26 @@ void SampleScene::Draw() {
 
 
 
+void SampleScene::DrawPostEffect(){
+	radialBlur_->Draw();
+	dissolve_->Draw();
+	randomEffect_->Draw();
+}
+
+void SampleScene::DrawSprite(){
+	sprite_->Draw();
+}
+
+
+
 
 /// <summary>
 /// デストラクタ
 /// </summary>
 SampleScene::~SampleScene() {
-	
+	delete back_;
+	delete outLine_;
+	delete depthBasedOutline_;
+	delete dissolve_;
+	delete randomEffect_;
 }

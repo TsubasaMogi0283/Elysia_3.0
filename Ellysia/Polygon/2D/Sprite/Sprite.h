@@ -23,7 +23,7 @@ public:
 	Sprite();
 
 	
-	static Sprite* Create(uint32_t textureHandle,Vector2 position);
+	static Sprite* Create(uint32_t textureHandle,Vector3 position);
 
 
 	//描画
@@ -69,10 +69,10 @@ public:
 
 
 	//位置
-	void SetPosition(Vector2 position) {
+	void SetPosition(Vector3 position) {
 		this->position_ = position;
 	}
-	const Vector2 GetPosition() {
+	const Vector3 GetPosition() {
 		return position_;
 	}
 
@@ -143,7 +143,7 @@ public:
 
 private:
 	//初期化
-	void Initialize(uint32_t textureHandle,Vector2 position);
+	void Initialize(uint32_t textureHandle,Vector3 position);
 	
 	//Vertex
 	void CreateVertexBufferView();
@@ -237,7 +237,7 @@ private:
 	float rotate_ = 0.0f;
 	//T
 	Vector2 originPosition_ = { 0.0f,0.0f };
-	Vector2 position_ = { 0.0f,0.0f };
+	Vector3 position_ = { 0.0f,0.0f,0.0f };
 
 	//アンカーポイント
 	Vector2 anchorPoint_ = { 0.0f,0.0f };

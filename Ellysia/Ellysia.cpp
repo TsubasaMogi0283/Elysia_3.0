@@ -5,6 +5,7 @@
 #include <Input.h>
 #include <TextureManager.h>
 #include "SrvManager/SrvManager.h"
+#include "RtvManager.h"
 #include <Audio.h>
 #include <AdjustmentItems.h>
 
@@ -36,9 +37,16 @@ void Ellysia::Initialize(){
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 
 	//DirectX
-	DirectXSetup::GetInstance()->Initialize();
+	DirectXSetup::GetInstance()->FirstInitialize();
 	
+	//SRV初期化
 	SrvManager::GetInstance()->Initialize();
+
+	//RTVの初期化
+	RtvManager::GetInstance()->Initialize();
+
+	///DirectX
+	DirectXSetup::GetInstance()->SecondInitialize();
 
 	//ImGuiManager
 #ifdef _DEBUG
@@ -59,13 +67,13 @@ void Ellysia::Initialize(){
 	gameManager_ = new GameManager();
 	gameManager_->Initialize();
 
+
 }
 
 
 #pragma region ゲームループ内の関数
 
 void Ellysia::BeginFrame(){
-	DirectXSetup::GetInstance()->BeginFrame();
 	SrvManager::GetInstance()->PreDraw();
 #ifdef _DEBUG
 	ImGuiManager::GetInstance()->BeginFrame();
@@ -76,7 +84,6 @@ void Ellysia::Update(){
 	//JSON用
 	//グローバル変数の更新
 	AdjustmentItems::GetInstance()->GetInstance()->Update();
-
 
 	//ImGuiの更新
 #ifdef _DEBUG
@@ -91,25 +98,62 @@ void Ellysia::Update(){
 }
 
 void Ellysia::Draw(){
+	
+#pragma region PostEffect
+	
+	
+	//PostEffectの描画前処理
+	gameManager_->PreDrawPostEffectFirst();
+	//ポストエフェクト付きのスプライト
+	gameManager_->DrawSpriteBack();
+
+	
+	
+
+#pragma endregion
+
+	//3Dオブジェクトの描画
+	gameManager_->DrawObject3D();
+	
+	DirectXSetup::GetInstance()->StartDraw();
+
+	//PostEffectの描画
+	gameManager_->DrawPostEffect();
+
+
+	//スプライトの描画
+	gameManager_->DrawSprite();
+	
+
 	//ImGuiの描画
-#ifdef _DEBUG
+  #ifdef _DEBUG
 	ImGuiManager::GetInstance()->PreDraw();	
 	ImGuiManager::GetInstance()->Draw();
 	
 #endif
-	//ゲームシーンの描画
-	gameManager_->Draw();
 }
 
 
 void Ellysia::EndFrame() {
-#ifdef _DEBUG
-	ImGuiManager::GetInstance()->EndFrame();
-#endif
-	DirectXSetup::GetInstance()->EndFrame();
-			
+	#ifdef _DEBUG
+	ImGuiManager::GetInstance()->EndDraw();
+  #endif
+	//最後で切り替える
+	DirectXSetup::GetInstance()->EndDraw();
+
+	
 }
 #pragma endregion
+
+
+void Ellysia::Release() {
+
+	Audio::GetInstance()->Release();
+	TextureManager::GetInstance()->Release();
+	ImGuiManager::GetInstance()->Release();
+	DirectXSetup::GetInstance()->Release();
+	WindowsSetup::GetInstance()->Close();
+}
 
 
 void Ellysia::Operate(){
@@ -158,7 +202,6 @@ void Ellysia::Operate(){
 
 
 
-void Ellysia::Release() {
 
 	Audio::GetInstance()->Release();
 	ImGuiManager::GetInstance()->Release();

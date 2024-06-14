@@ -35,7 +35,7 @@ public:
 	//uintにしたほうが良いよね
 	static uint32_t LoadTexture(const std::string& filePath);
 
-	static void GraphicsCommand(uint32_t texHandle);
+	static void GraphicsCommand(uint32_t rootParameter, uint32_t texHandle);
 
 
 

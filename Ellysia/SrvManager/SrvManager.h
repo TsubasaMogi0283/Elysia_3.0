@@ -34,6 +34,11 @@ public:
 
 	void CreateSRVForTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, DXGI_FORMAT format, UINT mipLevels,bool isCubeMap);
 	void CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride);
+	void CreateSRVForRenderTexture(ID3D12Resource* pResource,uint32_t handle);
+	void CreateSRVForDepthTexture(uint32_t handle);
+
+
+
 
 	void SetGraphicsRootDescriptorTable(UINT rootParameterIndex, uint32_t srvIndex);
 	

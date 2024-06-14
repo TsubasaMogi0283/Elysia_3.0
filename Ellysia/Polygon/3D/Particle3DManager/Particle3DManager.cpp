@@ -343,7 +343,7 @@ void Particle3DManager::Draw(Camera& camera) {
 
 		//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
 		if (particleGroup.textureSrvindex != 0) {
-			TextureManager::GraphicsCommand(particleGroup.textureSrvindex);
+			TextureManager::GraphicsCommand(2,particleGroup.textureSrvindex);
 		}
 
 		//DirectionalLight

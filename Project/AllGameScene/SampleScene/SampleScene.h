@@ -11,6 +11,12 @@
 #include <memory>
 #include <Particle3D.h>
 #include <Audio.h>
+#include "../../BackTest/BackText.h"
+#include "../LuminanceBasedOutline/LuminanceBasedOutline.h"
+#include "../../DepthBasedOutline/DepthBasedOutline.h"
+#include "../../RadialBlur/RadialBlur.h"
+#include "../../Dissolve/Dissolve.h"
+#include "../../RandomEffect/RandomEffect.h"
 #include "SkinCluster.h"
 #include "../../../Ellysia/Polygon/3D/SkyBox/SkyBox.h"
 
@@ -23,21 +29,59 @@ public:
 	//コンストラクタ
 	SampleScene();
 
-	/// デストラクタ
-	~SampleScene();
-
+	
 	/// 初期化
 	void Initialize()override;
 
 	/// 更新
 	void Update(GameManager* gameManager)override;
 
-	/// 描画
-	void Draw()override;
+#pragma region 描画
+
+	/// <summary>
+	/// ポストエフェクト掛ける前のスプライト
+	/// </summary>
+	void DrawSpriteBack()override;
+
+
+	/// <summary>
+	/// 3Dオブジェクト
+	/// </summary>
+	void DrawObject3D()override;
+
+
+	void PreDrawPostEffectFirst()override;
+	void DrawPostEffect()override;
+
+
+	/// <summary>
+	/// スプライト
+	/// </summary>
+	void DrawSprite()override;
+
+#pragma endregion
+	/// デストラクタ
+	~SampleScene();
 
 
 
 private:
+
+	Audio* audio_ = nullptr;
+	uint32_t audioHandle_ = 0u;
+
+	float_t pan_ = 0.0f;
+	int pitch_ = 0;
+	float cutOff_ = 1.0f;
+
+	std::unique_ptr<Model> model_ = nullptr;
+	uint32_t modelHandle = 0;
+	WorldTransform worldTransform_ = {};
+	
+	Camera camera_ = {};
+
+	std::unique_ptr<Sprite> sprite_ = nullptr;
+
 	Camera camera_ = {};
 
 	//歩き
@@ -57,4 +101,13 @@ private:
 	WorldTransform skyBoxWorldTransform_ = {};
 
 	const char* GroupName = "Player";
+	Vector3 position = {};
+
+	BackText* back_ = nullptr;
+
+	LuminanceBasedOutline* outLine_ = nullptr;
+	DepthBasedOutline* depthBasedOutline_ = nullptr;
+	RadialBlur* radialBlur_ = nullptr;
+	Dissolve* dissolve_ = nullptr;
+	RandomEffect* randomEffect_ = nullptr;
 };

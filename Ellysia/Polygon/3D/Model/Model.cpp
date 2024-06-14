@@ -206,7 +206,7 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
 	if (textureHandle_!= 0) {
-		TextureManager::GraphicsCommand(textureHandle_ );
+		TextureManager::GraphicsCommand(2,textureHandle_ );
 	}
 	
 	//DirectionalLight
@@ -228,7 +228,6 @@ void Model::Draw(WorldTransform& worldTransform,Camera& camera) {
 		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
 	}
 
-	
 
 	//DrawCall
 	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);

@@ -26,10 +26,21 @@ public:
 	/// 更新
 	void Update(GameManager* gameManager)override;
 
-	/// 描画
-	void Draw()override;
+	void PreDrawPostEffectFirst()override;
 
-	
+	void DrawSpriteBack()override;
+
+	/// 描画
+	void DrawObject3D()override;
+
+
+	void DrawPostEffect()override;
+
+	/// <summary>
+	/// スプライトの描画
+	/// </summary>
+	void DrawSprite()override;
+
 	/// デストラクタ
 	~SampleScene2();
 

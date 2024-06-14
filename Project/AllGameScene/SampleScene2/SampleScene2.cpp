@@ -33,7 +33,25 @@ void SampleScene2::Update(GameManager* gameManager){
 
 }
 
-void SampleScene2::Draw(){
+void SampleScene2::PreDrawPostEffectFirst()
+{
+}
+
+
+
+void SampleScene2::DrawSpriteBack()
+{
+}
+
+void SampleScene2::DrawObject3D(){
+	
+}
+
+void SampleScene2::DrawPostEffect()
+{
+}
+
+void SampleScene2::DrawSprite(){
 	sprite_->Draw();
 	spriteUV_->Draw();
 	howToSprite_->Draw();

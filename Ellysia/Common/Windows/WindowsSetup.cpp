@@ -55,7 +55,7 @@ void  WindowsSetup::RegisterWindowsClass() {
 
 	//クライアント領域サイズ
 	//ウィンドウサイズを表す構造体にクライアント領域を入れる
-	RECT wrc_ = { 0,0,clientWidth_ ,clientHeight_ };
+	RECT wrc_ = { 0,0,LONG(clientWidth_) ,LONG(clientHeight_) };
 	// クライアント領域を元に実際のサイズにwrcを変更
 	AdjustWindowRect(&wrc_, WS_OVERLAPPEDWINDOW, false);
 	// ウィンドウ生成

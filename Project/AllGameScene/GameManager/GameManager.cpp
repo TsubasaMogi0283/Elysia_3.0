@@ -18,9 +18,28 @@ void GameManager::Update() {
 	currentGamaScene_->Update(this);
 }
 
-void GameManager::Draw() {
-	currentGamaScene_->Draw();
+void GameManager::DrawSpriteBack(){
+	currentGamaScene_->DrawSpriteBack();
 }
+
+void GameManager::DrawObject3D() {
+	currentGamaScene_->DrawObject3D();
+}
+
+void GameManager::DrawSprite(){
+	currentGamaScene_->DrawSprite();
+}
+
+void GameManager::PreDrawPostEffectFirst(){
+	currentGamaScene_->PreDrawPostEffectFirst();
+}
+
+
+void GameManager::DrawPostEffect(){
+	currentGamaScene_->DrawPostEffect();
+}
+
+
 
 
 
