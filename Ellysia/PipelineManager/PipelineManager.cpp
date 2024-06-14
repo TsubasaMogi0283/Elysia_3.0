@@ -882,7 +882,7 @@ void PipelineManager::GenerateAnimationModelPSO() {
 	//今回は結果一つだけなので長さ１の配列
 
 	//VSでもCBufferを利用することになったので設定を追加
-	D3D12_ROOT_PARAMETER rootParameters[10] = {};
+	D3D12_ROOT_PARAMETER rootParameters[9] = {};
 	//CBVを使う
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	////PixelShaderで使う
@@ -971,35 +971,6 @@ void PipelineManager::GenerateAnimationModelPSO() {
 	rootParameters[7].Descriptor.ShaderRegister = 4;
 
 
-
-
-
-	D3D12_DESCRIPTOR_RANGE descriptorRangeForWell[1] = {};
-	//0から始まる
-	descriptorRangeForWell[0].BaseShaderRegister = 0;
-	//数は一つ
-	descriptorRangeForWell[0].NumDescriptors = 1;
-	//SRVを使う
-	descriptorRangeForWell[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRangeForWell[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-
-	//Well用
-	//今回はDescriptorTableを使う
-	//Instancingを参考にして
-	rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	//VertwxShaderで使う
-	rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	//register...Shader上のResource配置情報(t0)
-	rootParameters[8].Descriptor.ShaderRegister = 0;
-	//Tableの中身の配列を指定
-	rootParameters[8].DescriptorTable.pDescriptorRanges = descriptorRangeForWell;
-	//Tableで利用する数
-	rootParameters[8].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForWell);
-
-
-
-
 	D3D12_DESCRIPTOR_RANGE enviromentDescriptorRange[1] = {};
 	//0から始まる
 	enviromentDescriptorRange[0].BaseShaderRegister = 1;
@@ -1012,13 +983,28 @@ void PipelineManager::GenerateAnimationModelPSO() {
 
 
 	//DescriptorTableを使う
-	rootParameters[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	//PixelShaderを使う
-	rootParameters[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	//Tableの中身の配列を指定
-	rootParameters[9].DescriptorTable.pDescriptorRanges = enviromentDescriptorRange;
+	rootParameters[8].DescriptorTable.pDescriptorRanges = enviromentDescriptorRange;
 	//Tableで利用する数
-	rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(enviromentDescriptorRange);
+	rootParameters[8].DescriptorTable.NumDescriptorRanges = _countof(enviromentDescriptorRange);
+
+
+
+	//ルートパラメータ配列へのポイント
+	descriptionRootSignature_.pParameters = rootParameters;
+	//配列の長さ
+	descriptionRootSignature_.NumParameters = _countof(rootParameters);
+
+
+
+
+
+
+
+
 
 
 
@@ -1041,9 +1027,6 @@ void PipelineManager::GenerateAnimationModelPSO() {
 	staticSamplers[0].ShaderRegister = 0;
 	//PixelShaderで使う
 	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
-
-
 	descriptionRootSignature_.pStaticSamplers = staticSamplers;
 	descriptionRootSignature_.NumStaticSamplers = _countof(staticSamplers);
 
@@ -1051,15 +1034,16 @@ void PipelineManager::GenerateAnimationModelPSO() {
 	//シリアライズしてバイナリにする
 	HRESULT hr = {};
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->animationModelPSO_.signatureBlob_, &PipelineManager::GetInstance()->animationModelPSO_.errorBlob_);
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->modelPSO_.signatureBlob_, &PipelineManager::GetInstance()->modelPSO_.errorBlob_);
 	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->animationModelPSO_.errorBlob_->GetBufferPointer()));
+		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->modelPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 
 	//バイナリを元に生成
-	hr = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->animationModelPSO_.signatureBlob_->GetBufferPointer(),
-		PipelineManager::GetInstance()->animationModelPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->animationModelPSO_.rootSignature_));
+	//ID3D12RootSignature* rootSignature_ = nullptr;
+	hr = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferPointer(),
+		PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->modelPSO_.rootSignature_));
 	assert(SUCCEEDED(hr));
 
 
@@ -1075,7 +1059,7 @@ void PipelineManager::GenerateAnimationModelPSO() {
 
 
 	//余分に読み込んでしまうけどこれしか方法が無かった
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[5] = {};
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
 	inputElementDescs[0].SemanticName = "POSITION";
 	inputElementDescs[0].SemanticIndex = 0;
 	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -1090,19 +1074,6 @@ void PipelineManager::GenerateAnimationModelPSO() {
 	inputElementDescs[2].SemanticIndex = 0;
 	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-	inputElementDescs[3].SemanticName = "WEIGHT";
-	inputElementDescs[3].SemanticIndex = 0;
-	inputElementDescs[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;	//float32_t4
-	inputElementDescs[3].InputSlot = 1;								//1番目のslotのVBVのことだと伝える
-	inputElementDescs[3].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-
-	inputElementDescs[4].SemanticName = "INDEX";
-	inputElementDescs[4].SemanticIndex = 0;
-	inputElementDescs[4].Format = DXGI_FORMAT_R32G32B32A32_SINT;	//int32_t4
-	inputElementDescs[4].InputSlot = 1;								//1番目のslotのVBVのことだと伝える
-	inputElementDescs[4].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
 
 
@@ -1130,7 +1101,7 @@ void PipelineManager::GenerateAnimationModelPSO() {
 
 	//ブレンドモードの選択
 	//switchでやった方が楽でしょう
-	switch (PipelineManager::GetInstance()->selectAnimiationModelBlendMode_) {
+	switch (PipelineManager::GetInstance()->selectModelBlendMode_) {
 
 	case BlendModeNone:
 		//ブレンド無し
@@ -1224,13 +1195,13 @@ void PipelineManager::GenerateAnimationModelPSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->animationModelPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/AnimationObject3D/AnimationObject3D.VS.hlsl", L"vs_6_0");
-	assert(PipelineManager::GetInstance()->animationModelPSO_.vertexShaderBlob_ != nullptr);
+	PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.VS.hlsl", L"vs_6_0");
+	assert(PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_ != nullptr);
 
 
 
-	PipelineManager::GetInstance()->animationModelPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/AnimationObject3D/AnimationObject3D.PS.hlsl", L"ps_6_0");
-	assert(PipelineManager::GetInstance()->animationModelPSO_.pixelShaderBlob_ != nullptr);
+	PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.PS.hlsl", L"ps_6_0");
+	assert(PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ != nullptr);
 
 
 
@@ -1238,11 +1209,11 @@ void PipelineManager::GenerateAnimationModelPSO() {
 
 	////PSO生成
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->animationModelPSO_.rootSignature_.Get();
+	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->modelPSO_.rootSignature_.Get();
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
-	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->animationModelPSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->animationModelPSO_.vertexShaderBlob_->GetBufferSize() };
+	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_->GetBufferSize() };
 	//vertexShaderBlob_->GetBufferSize();
-	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->animationModelPSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->animationModelPSO_.pixelShaderBlob_->GetBufferSize() };
+	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_->GetBufferSize() };
 	//pixelShaderBlob_->GetBufferSize();
 	graphicsPipelineStateDesc.BlendState = blendDesc;
 	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
@@ -1273,13 +1244,8 @@ void PipelineManager::GenerateAnimationModelPSO() {
 
 	//実際に生成
 	hr = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&PipelineManager::GetInstance()->animationModelPSO_.graphicsPipelineState_));
+		IID_PPV_ARGS(&PipelineManager::GetInstance()->modelPSO_.graphicsPipelineState_));
 	assert(SUCCEEDED(hr));
-
-
-
-
-
 
 
 
