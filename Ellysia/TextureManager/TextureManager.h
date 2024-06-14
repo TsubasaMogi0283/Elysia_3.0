@@ -13,14 +13,13 @@
 class TextureManager {
 private:
 	//コンストラクタ
-	TextureManager();
+	TextureManager()=default;
 
 	//コンストラクタ
-	~TextureManager();
+	~TextureManager()=default;
 
 public:
 	static TextureManager* GetInstance();
-
 
 	//コピーコンストラクタ禁止
 	TextureManager(const TextureManager& textureManager) = delete;
@@ -31,18 +30,12 @@ public:
 
 public:
 	
-	//初期化
-	static void Initilalize();
-
 	//統合させた関数
 	//インデックスを返すからマイナスはありえない。
 	//uintにしたほうが良いよね
 	static uint32_t LoadTexture(const std::string& filePath);
 
 	static void GraphicsCommand(uint32_t rootParameter, uint32_t texHandle);
-
-	//解放
-	void Release();
 
 
 
@@ -64,14 +57,14 @@ private:
 
 	//3.TextureResourceに1で読んだデータを転送する
 	//void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages,ID3D12Device* device,ID3D12GraphicsCommandList* commandList);
-	static void UploadTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
+	static ComPtr<ID3D12Resource> UploadTextureData(ComPtr<ID3D12Resource> texture,const DirectX::ScratchImage& mipImages);
 
 
 #pragma endregion
 	
 
 public:
-		static const int TEXTURE_MAX_AMOUNT_ = 128;
+	static const int TEXTURE_MAX_AMOUNT_ = 256;
 
 
 
@@ -79,7 +72,7 @@ public:
 
 		//リソース
 		ComPtr<ID3D12Resource> resource_= nullptr;
-
+		ComPtr<ID3D12Resource> internegiateResource_ = nullptr;
 		//画像読み込み
 		D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU_ = {};
 		D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU_ = {};
@@ -93,9 +86,7 @@ public:
 
 private:
 
-	//新しく構造体を作った方がよさそう
 
-	ComPtr<ID3D12Resource> textureResource_[TEXTURE_MAX_AMOUNT_] = {nullptr};
 
 	//画像読み込み
 	

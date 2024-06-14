@@ -1,7 +1,11 @@
 #pragma once
-#include "NodeAnimation.h"
+
 #include <map>
 #include <string>
+
+#include "NodeAnimation.h"
+#include "Joint.h"
+#include "Skeleton.h"
 
 struct Animation {
 	//アニメーション全体の尺
@@ -35,3 +39,12 @@ Vector3 CalculationValue(const std::vector<KeyFrameVector3>& keyFrames, float ti
 /// <param name="time"></param>
 /// <returns></returns>
 Quaternion CalculationValue(const std::vector<KeyFrameQuaternion>& keyFrames, float time);
+
+
+/// <summary>
+/// Animationを適用する
+/// </summary>
+/// <param name="skeleton"></param>
+/// <param name="animation"></param>
+/// <param name="animationTime"></param>
+void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);

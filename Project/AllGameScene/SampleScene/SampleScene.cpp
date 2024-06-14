@@ -5,9 +5,12 @@
 #include "SampleScene2/SampleScene2.h"
 
 #include "ModelManager.h"
+#include "AnimationManager.h"
+#include <numbers>
+
 /// <summary>
-	/// コンストラクタ
-	/// </summary>
+/// コンストラクタ
+/// </summary>
 SampleScene::SampleScene() {
 
 }
@@ -29,24 +32,52 @@ void SampleScene::Initialize() {
 	model_.reset(Model::Create(modelHandle));
 
 	Matrix4x4 localMatrix = ModelManager::GetInstance()->GetModelData(modelHandle).rootNode.localMatrix;
+	//Walk
+	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf");
+	humanAnimationModel_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/human", "walk.gltf");
 
-	worldTransform_.Initialize();
+	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
+		human_[i].reset(AnimationModel::Create(humanModelHandle));
+		humanWorldTransform_[i].Initialize();
+		humanAnimationTime_[i] = 0;
+		humanSkeleton_[i].Create(ModelManager::GetInstance()->GetModelData(humanModelHandle).rootNode);
+		humanSkinCluster_[i].Create(humanSkeleton_[i], ModelManager::GetInstance()->GetModelData(humanModelHandle));
+		humanWorldTransform_[i].translate_.x = 0.0f;
+		
+	}
+
+	humanWorldTransform_[0].translate_.y = 0.0f;
+	
+
+
+	//地面
+	uint32_t noneModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	noneAnimationModel_.reset(Model::Create(noneModelHandle));
+	noneAnimationWorldTransform_.Initialize();
+	const float SPHERE_SCALE = 1.0f;
+	noneAnimationWorldTransform_.scale_ = { SPHERE_SCALE,SPHERE_SCALE,SPHERE_SCALE };
+	noneAnimationWorldTransform_.translate_.x = 0.0f;
+	noneAnimationWorldTransform_.translate_.y = -1.0f;
+	
+
 	camera_.Initialize();
-	camera_.translate_.y = 3.0f;
-	camera_.translate_.z = -22.0f;
+	camera_.translate_ = { 0.0f,0.0f,-10.0f };
 
 
-	audio_ = Audio::GetInstance();
-	//audioHandle_ = audio_->LoadMP3(L"Resources/Audio/Sample/WIP.mp3");
-
-	audioHandle_ = audio_->LoadWave("Resources/Audio/Sample/Game.wav");
+	uint32_t skyBoxTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG4/SkyBox/rostock_laage_airport_4k.dds");
+	skyBox_ = std::make_unique<SkyBox>();
+	skyBox_->Create(skyBoxTextureHandle);
+	skyBoxWorldTransform_.Initialize();
+	const float SKYBOX_SCALE = 20.0f;
+	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
 
 	//audio_->PlayWave(audioHandle_,false);
 	audio_->SetPan(audioHandle_, pan_);
 	audio_->ChangePitch(audioHandle_, pitch_);
+	human_[0]->SetEviromentTexture(skyBoxTextureHandle);
+	noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
 
 
-	audio_->SendChannels(audioHandle_, 1);
 
 	uint32_t textureHandle = TextureManager::GetInstance()->LoadTexture("Resources/White.png");
 	sprite_.reset(Sprite::Create(textureHandle, { 0.0f,0.0f }));
@@ -83,25 +114,28 @@ void SampleScene::Initialize() {
 void SampleScene::Update(GameManager* gameManager) {
 	gameManager;
 
-	audio_->SetLowPassFilter(audioHandle_, cutOff_);
-	audio_->ChangePitch(audioHandle_, pitch_);
-	audio_->SetPan(audioHandle_, pan_);
+	
+	
+	
+#pragma region アニメーションモデル
+	
+	humanAnimationTime_[0] += 1.0f / 60.0f;
 
-	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
-		audio_->ExitLoop(audioHandle_);
+	
+	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
+		AnimationManager::GetInstance()->ApplyAnimation(humanSkeleton_[i], humanAnimationModel_, humanModelHandle, humanAnimationTime_[i]);
+	}
+	
+	//現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
+	//読み込むのは最初だけで良いと気づいた
+	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
+		humanSkeleton_[i].Update();
+	}
+	//SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
+	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
+		humanSkinCluster_[i].Update(humanSkeleton_[i]);
 	}
 
-	if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
-		audio_->PauseWave(audioHandle_);
-	}
-	if (Input::GetInstance()->IsTriggerKey(DIK_2) == true) {
-		audio_->ResumeWave(audioHandle_);
-	}
-
-
-	Matrix4x4 localMatrix = model_->GetAnimationLocalMatrix();
-	worldTransform_.Update();
-	camera_.Update();
 
 	sprite_->SetPosition(position);
 #ifdef _DEBUG
@@ -109,8 +143,11 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::SliderFloat("Pan", &pan_, -1.0f, 1.0f);
 	ImGui::SliderFloat("LowPassFilter", &cutOff_, 0.0f, 1.0f);
 
-	ImGui::InputInt("Pitch", &pitch_);
-	ImGui::End();
+
+	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
+		humanWorldTransform_[i].Update();
+	}
+#pragma endregion
 
 	ImGui::Begin("Camera");
 	ImGui::SliderFloat3("Position", &camera_.translate_.x, -40.0f, 20.0f);
@@ -120,10 +157,69 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::Begin("Sprite");
 	ImGui::SliderFloat3("Z",&position.x,0.0f,1280.0f);
 	ImGui::End();
+	const float CAMERA_MOVE_SPEED = 0.2f;
+	Vector3 move = {};
+	Vector3 rotateMove = {};
+
+	//Y
+	if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
+		move.y = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
+		move.y = -1.0f;
+	}
+	//X
+	else if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
+		move.x = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
+		move.x = -1.0f;
+	}
+	//Z
+	else if (Input::GetInstance()->IsPushKey(DIK_O) == true) {
+		move.z = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_L) == true) {
+		move.z = -1.0f;
+	}
 
 
-	ImGui::Begin("Model");
-	ImGui::SliderFloat3("Translate", &worldTransform_.rotate_.x, -30.0f, 30.0f);
+	else {
+		move.x = 0.0f;
+		move.y = 0.0f;
+		move.z = 0.0f;
+	}
+
+	//回転
+	const float ROTATE_MOVE_SPEED = 0.01f;
+	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
+		rotateMove.y = -1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
+		rotateMove.y = 1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+		rotateMove.x = -1.0f;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+		rotateMove.x = 1.0f;
+	}
+
+	else {
+		rotateMove.y = 0.0f;
+		rotateMove.x = 0.0f;
+	}
+
+	camera_.translate_ = Add(camera_.translate_, { move.x* CAMERA_MOVE_SPEED,move.y* CAMERA_MOVE_SPEED,move.z*CAMERA_MOVE_SPEED });
+	camera_.rotate_ = Add(camera_.rotate_, { rotateMove.x * ROTATE_MOVE_SPEED,rotateMove.y * ROTATE_MOVE_SPEED,rotateMove.z * ROTATE_MOVE_SPEED });
+
+	camera_.Update();
+	noneAnimationWorldTransform_.Update();
+	skyBoxWorldTransform_.Update();
+#ifdef _DEBUG
+	ImGui::Begin("Camera");
+	ImGui::SliderFloat3("Translate", &camera_.translate_.x, -100.0f, 100.0f);
+	ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
 	ImGui::End();
 
 #endif
@@ -148,6 +244,27 @@ void SampleScene::PreDrawPostEffectFirst(){
 
 void SampleScene::DrawObject3D() {
 	model_->Draw(worldTransform_, camera_);
+
+	
+	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
+		AdjustmentItems::GetInstance()->SaveFile(GroupName);
+	}
+	
+}
+
+/// <summary>
+/// 描画
+/// </summary>
+void SampleScene::Draw() {
+	
+	skyBox_->Draw(skyBoxWorldTransform_,camera_);
+	//SimpleSkin
+	//Walk
+	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
+		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
+	}
+	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
+	
 }
 
 

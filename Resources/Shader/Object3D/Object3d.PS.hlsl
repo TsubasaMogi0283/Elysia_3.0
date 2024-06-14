@@ -18,28 +18,28 @@
 
 //Material...色など三角形の表面の材質を決定するもの
 struct Material {
-	float32_t4 color;
-	int32_t enableLighting;
-	float32_t4x4 uvTransform;
+	float4 color;
+	int enableLighting;
+	float4x4 uvTransform;
     //光沢度
-	float32_t shininess;
+	float shininess;
 };
 
 
 struct DirectionalLight {
 	//ライトの色
-	float32_t4 color;
+	float4 color;
 	//ライトの向き
-	float32_t3 direction;
+	float3 direction;
 	//ライトの輝度
 	float intensity;
 };
 
 struct PointLight{
 	//ライトの色
-    float32_t4 color;
+    float4 color;
 	//ライトの位置
-    float32_t3 position;
+    float3 position;
 	//ライトの輝度
     float intensity;
 	
@@ -53,20 +53,20 @@ struct PointLight{
 
 //カメラの位置を送る
 struct Camera{
-    float32_t3 worldPosition;
+    float3 worldPosition;
 };
 
 //
 struct SpotLight{
 	//ライトの色
-    float32_t4 color;
+    float4 color;
 	//ライトの位置
-    float32_t3 position;
+    float3 position;
 	//輝度
     float intensity;
 
 	//スポットライトの方向
-    float32_t3 direction;
+    float3 direction;
 	//ライトの届く最大距離
     float distance;
 	//減衰率
@@ -83,7 +83,9 @@ struct SpotLight{
 ////ConstantBuffer<構造体>変数名:register(b0);
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
-Texture2D<float32_t4> gTexture : register(t0);
+Texture2D<float4> gTexture : register(t0);
+TextureCube<float4> gEnviromentTexture : register(t1);
+
 SamplerState gSampler : register(s0);
 ConstantBuffer<Camera> gCamera : register(b2);
 ConstantBuffer<PointLight> gPointLight : register(b3);
@@ -98,7 +100,7 @@ ConstantBuffer<SpotLight> gSpotLight : register(b4);
 //Excelみたいだね()
 
 struct PixelShaderOutput {
-	float32_t4 color : SV_TARGET0;
+	float4 color : SV_TARGET0;
 };
 
 
@@ -106,11 +108,11 @@ struct PixelShaderOutput {
 PixelShaderOutput main(VertexShaderOutput input) {
 	PixelShaderOutput output;
 	
-    float32_t3 camera = gCamera.worldPosition;
+    float3 camera = gCamera.worldPosition;
 	
 	//Materialを拡張する
-	float4 transformedUV = mul(float32_t4(input.texcoord,0.0f, 1.0f), gMaterial.uvTransform);
-	float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
+	float4 transformedUV = mul(float4(input.texcoord,0.0f, 1.0f), gMaterial.uvTransform);
+	float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
 
     if (textureColor.a <= 0.5f){
         discard;
@@ -130,10 +132,10 @@ PixelShaderOutput main(VertexShaderOutput input) {
 
 		
 		//Cameraへの方向を算出
-        float32_t3 toEye = normalize(gCamera.worldPosition-input.worldPosition );
+        float3 toEye = normalize(gCamera.worldPosition-input.worldPosition );
 		
 		//入射光の反射ベクトルを求める
-        float32_t3 reflectLight = reflect(normalize(gDirectionalLight.direction), normalize(input.normal));
+        float3 reflectLight = reflect(normalize(gDirectionalLight.direction), normalize(input.normal));
 		
 		//内積
         //float RdotE = dot(reflectLight, toEye);
@@ -141,15 +143,15 @@ PixelShaderOutput main(VertexShaderOutput input) {
         //float specularPow = pow(saturate(RdotE), gMaterial.shininess);
 		
 		//HalfVector
-        float32_t3 halfVector = normalize(-gDirectionalLight.direction + toEye);
+        float3 halfVector = normalize(-gDirectionalLight.direction + toEye);
         float NDotH = dot(normalize(input.normal), halfVector);
         float specularPow = pow(saturate(NDotH), gMaterial.shininess);
 		
 		//拡散反射
-        float32_t3 diffuse = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
+        float3 diffuse = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
 		//鏡面反射
 		//1.0f,1.0f,1.0fの所は反射色。
-        float32_t3 specular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float32_t3(1.0f, 1.0f, 1.0f);
+        float3 specular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 		
 		
 		
@@ -169,25 +171,25 @@ PixelShaderOutput main(VertexShaderOutput input) {
 		//saturate関数は値を[0,1]にclampするもの。エフェクターにもSaturationってあるよね。
 	
 		//点光源
-        float32_t3 pointLightDirection = normalize(input.worldPosition - gPointLight.position);
+        float3 pointLightDirection = normalize(input.worldPosition - gPointLight.position);
 		
 		
 		//Half Lambert
-        float32_t NdotL = dot(normalize(input.normal), -pointLightDirection);
-        float32_t cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
+        float NdotL = dot(normalize(input.normal), -pointLightDirection);
+        float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
 		
 		//Cameraへの方向を算出
-        float32_t3 toEye = normalize(gCamera.worldPosition - normalize(input.worldPosition));
+        float3 toEye = normalize(gCamera.worldPosition - normalize(input.worldPosition));
 		//入射光の反射ベクトルを求める
-        float32_t3 reflectLight = reflect(gPointLight.position, normalize(input.normal));
+        float3 reflectLight = reflect(gPointLight.position, normalize(input.normal));
 		
 		//ポイントライトへの距離
-        float32_t distance = length(gPointLight.position - input.worldPosition);
+        float distance = length(gPointLight.position - input.worldPosition);
 		//指数によるコントロール
-        float32_t factor = pow(saturate(-distance / gPointLight.radius + 1.0f), gPointLight.decay);
+        float factor = pow(saturate(-distance / gPointLight.radius + 1.0f), gPointLight.decay);
 		
 		//HalfVector
-        float32_t3 halfVector = normalize(-gPointLight.position + toEye);
+        float3 halfVector = normalize(-gPointLight.position + toEye);
         float NDotH = dot(normalize(input.normal), halfVector);
         float specularPow = pow(saturate(NDotH), gMaterial.shininess);
 		////内積
@@ -196,8 +198,8 @@ PixelShaderOutput main(VertexShaderOutput input) {
         //float specularPow = pow(saturate(RdotE), gMaterial.shininess);
 		
 		
-        float32_t3 diffusePointLight = gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * cos * gPointLight.intensity;
-        float32_t3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * specularPow * float32_t3(1.0f, 1.0f, 1.0f);
+        float3 diffusePointLight = gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * cos * gPointLight.intensity;
+        float3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 		
         if (textureColor.a <= 0.5f)
         {
@@ -213,37 +215,37 @@ PixelShaderOutput main(VertexShaderOutput input) {
 		//saturate関数は値を[0,1]にclampするもの。エフェクターにもSaturationってあるよね。
 	
 		//入射光の計算
-        float32_t3 spotLightDirectionOnSurface = normalize(input.worldPosition - gSpotLight.position);
+        float3 spotLightDirectionOnSurface = normalize(input.worldPosition - gSpotLight.position);
 		
 		
 		//Half Lambert
-        float32_t NdotL = dot(normalize(input.normal), -spotLightDirectionOnSurface);
-        float32_t cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
+        float NdotL = dot(normalize(input.normal), -spotLightDirectionOnSurface);
+        float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
 		
 		//Cameraへの方向を算出
-        float32_t3 toEye = normalize(gCamera.worldPosition - normalize(input.worldPosition));
+        float3 toEye = normalize(gCamera.worldPosition - normalize(input.worldPosition));
 		//入射光の反射ベクトルを求める
-        float32_t3 reflectLight = reflect(gSpotLight.position, normalize(input.normal));
+        float3 reflectLight = reflect(gSpotLight.position, normalize(input.normal));
 		
 		//ポイントライトへの距離
-        float32_t distance = length(gSpotLight.position - input.worldPosition);
+        float distance = length(gSpotLight.position - input.worldPosition);
 		//指数によるコントロール
-        float32_t attenuationFactor = pow(saturate(-distance / gSpotLight.distance + 1.0f), gSpotLight.decay);
+        float attenuationFactor = pow(saturate(-distance / gSpotLight.distance + 1.0f), gSpotLight.decay);
 		
 		//HalfVector
-        float32_t3 halfVector = normalize(-gSpotLight.position + toEye);
+        float3 halfVector = normalize(-gSpotLight.position + toEye);
         float NDotH = dot(normalize(input.normal), halfVector);
         float specularPow = pow(saturate(NDotH), gMaterial.shininess);
 		
 		
 		//角度が大きくなるほど光の強さは弱くなるよ
 		//こういった指向性のある光源の、角度に応じた光の減衰はFalloffと呼ばれるよ
-        float32_t cosAngle = dot(spotLightDirectionOnSurface, gSpotLight.direction);
-        float32_t falloffFactor = saturate((cosAngle - gSpotLight.cosAngle) / (gSpotLight.cosFallowoffStart - gSpotLight.cosAngle));
+        float cosAngle = dot(spotLightDirectionOnSurface, gSpotLight.direction);
+        float falloffFactor = saturate((cosAngle - gSpotLight.cosAngle) / (gSpotLight.cosFallowoffStart - gSpotLight.cosAngle));
 		
 		
-        float32_t3 diffuseSpotLight = gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * cos * gSpotLight.intensity;
-        float32_t3 specularSpotLight = gSpotLight.color.rgb * gSpotLight.intensity * specularPow * float32_t3(1.0f, 1.0f, 1.0f);
+        float3 diffuseSpotLight = gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * cos * gSpotLight.intensity;
+        float3 specularSpotLight = gSpotLight.color.rgb * gSpotLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 		
         if (textureColor.a <= 0.5f)
         {
@@ -252,7 +254,18 @@ PixelShaderOutput main(VertexShaderOutput input) {
         output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor;
         output.color.a = gMaterial.color.a * textureColor.a;
     }
-    else{
+    else if (gMaterial.enableLighting == 4)
+    {
+        float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
+        float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+        float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
+
+        output.color.rgb = enviromentColor.rgb;
+        output.color.a = gMaterial.color.a;
+		
+    }
+    else
+    {
 		//Lightingしない場合
         output.color = gMaterial.color * textureColor;
     }

@@ -27,7 +27,6 @@ public:
 
 
 	//描画
-	//左上、右上、左下、右下
 	void Draw();
 
 
@@ -181,7 +180,7 @@ private:
 
 
 	//頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
 
 	
 

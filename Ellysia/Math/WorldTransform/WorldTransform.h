@@ -22,24 +22,12 @@ public:
 	//初期化
 	void Initialize();
 
-	/// <summary>
-	/// glTFを使う時
-	/// </summary>
-	void Initialize(bool isUseGLTF,Matrix4x4 matrix4x4);
-
 	//行列を計算・転送する
 	void Update();
-
-	void Update(Matrix4x4 animationLocalMatrix);
 
 	//ペアレントの設定
 	void SetParent(const WorldTransform* parent) {
 		parent = parent_;
-	}
-
-	//glTF用
-	void  SetRootNodeLocalMatrix(Matrix4x4 matrix4x4) {
-		this->rootNodeLocalMatrix_ = matrix4x4;
 	}
 
 
@@ -54,9 +42,6 @@ private:
 
 
 public:
-	//glTFを使うか
-	//基本はobjなのでfalseにしておく
-	bool isUseGLTF_ = false;
 
 	//スケール
 	Vector3 scale_ = { 1.0f, 1.0f, 1.0f };
@@ -65,10 +50,6 @@ public:
 	//座標
 	Vector3 translate_ = { 0.0f, 0.0f, 0.0f };
 
-	//glTFからローカル行列を受け取る
-	Matrix4x4 rootNodeLocalMatrix_ = {};
-
-	Matrix4x4 animationLocalMatrix_ = {};
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> bufferResource_;

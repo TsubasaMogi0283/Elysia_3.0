@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include "GameManager.h"
 #include "Model.h"
+#include "AnimationModel.h"
 #include "TextureManager.h"
 #include "Camera.h"
 
@@ -16,6 +17,8 @@
 #include "../../RadialBlur/RadialBlur.h"
 #include "../../Dissolve/Dissolve.h"
 #include "../../RandomEffect/RandomEffect.h"
+#include "SkinCluster.h"
+#include "../../../Ellysia/Polygon/3D/SkyBox/SkyBox.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -79,6 +82,23 @@ private:
 
 	std::unique_ptr<Sprite> sprite_ = nullptr;
 
+	Camera camera_ = {};
+
+	//歩き
+	static const int WALK_HUMAN_AMOUNT_ = 1;
+	std::unique_ptr<AnimationModel> human_[WALK_HUMAN_AMOUNT_] = { nullptr };
+	uint32_t humanModelHandle = {};
+	uint32_t humanAnimationModel_ = {};
+	WorldTransform humanWorldTransform_[WALK_HUMAN_AMOUNT_] = {};
+	Skeleton humanSkeleton_[WALK_HUMAN_AMOUNT_] = {};
+	float humanAnimationTime_[WALK_HUMAN_AMOUNT_] = {};
+	SkinCluster humanSkinCluster_[WALK_HUMAN_AMOUNT_] = {};
+
+	std::unique_ptr<Model> noneAnimationModel_ = nullptr;
+	WorldTransform noneAnimationWorldTransform_ = {};
+
+	std::unique_ptr<SkyBox> skyBox_ = nullptr;
+	WorldTransform skyBoxWorldTransform_ = {};
 
 	const char* GroupName = "Player";
 	Vector3 position = {};

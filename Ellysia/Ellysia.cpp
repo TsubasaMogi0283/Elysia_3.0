@@ -28,6 +28,14 @@ void Ellysia::Initialize(){
 	//ウィンドウ
 	WindowsSetup::GetInstance()->Initialize(titleBarName,WINDOW_SIZE_WIDTH_,WINDOW_SIZE_HEIGHT_);
 	
+	//COMの初期化
+	//COM...ComponentObjectModel、Microsoftの提唱する設計技術の１つ
+	//		DirectX12も簡略化されたCOM(Nano-COM)という設計で作られている
+
+	//COMを使用して開発されたソフトウェア部品をCOMコンポーネントと呼ぶ
+	//Textureを読むにあたって、COMコンポーネントの１つを利用する
+	CoInitializeEx(0, COINIT_MULTITHREADED);
+
 	//DirectX
 	DirectXSetup::GetInstance()->FirstInitialize();
 	
@@ -41,13 +49,14 @@ void Ellysia::Initialize(){
 	DirectXSetup::GetInstance()->SecondInitialize();
 
 	//ImGuiManager
+#ifdef _DEBUG
 	ImGuiManager::GetInstance()->Initialize();
 	
+#endif
+
 	//Input
 	Input::GetInstance()->Initialize();
 	
-	//TextureManager
-	TextureManager::GetInstance()->Initilalize();
 	
 	//Audio
 	Audio::GetInstance()->Initialize();
@@ -66,7 +75,9 @@ void Ellysia::Initialize(){
 
 void Ellysia::BeginFrame(){
 	SrvManager::GetInstance()->PreDraw();
+#ifdef _DEBUG
 	ImGuiManager::GetInstance()->BeginFrame();
+#endif
 }
 
 void Ellysia::Update(){
@@ -75,8 +86,10 @@ void Ellysia::Update(){
 	AdjustmentItems::GetInstance()->GetInstance()->Update();
 
 	//ImGuiの更新
+#ifdef _DEBUG
 	ImGuiManager::GetInstance()->Update();
-
+#endif
+	
 	//入力の更新
 	Input::GetInstance()->Update();
 	
@@ -113,17 +126,18 @@ void Ellysia::Draw(){
 	
 
 	//ImGuiの描画
-	ImGuiManager::GetInstance()->PreDraw();
+  #ifdef _DEBUG
+	ImGuiManager::GetInstance()->PreDraw();	
 	ImGuiManager::GetInstance()->Draw();
 	
-	
-	
+#endif
 }
 
 
 void Ellysia::EndFrame() {
-	
+	#ifdef _DEBUG
 	ImGuiManager::GetInstance()->EndDraw();
+  #endif
 	//最後で切り替える
 	DirectXSetup::GetInstance()->EndDraw();
 
@@ -181,12 +195,20 @@ void Ellysia::Operate(){
 	//解放
 	Release();
 
+	//ゲーム終了時にはCOMの終了処理を行っておく
+	CoUninitialize();
 
 }
 
 
 
 
+	Audio::GetInstance()->Release();
+	ImGuiManager::GetInstance()->Release();
+#endif
+	DirectXSetup::GetInstance()->Release();
+	WindowsSetup::GetInstance()->Close();
+}
 
 Ellysia::~Ellysia(){
 	delete gameManager_;

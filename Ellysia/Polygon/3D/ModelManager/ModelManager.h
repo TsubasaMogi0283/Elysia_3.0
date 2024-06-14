@@ -11,9 +11,9 @@
 
 class ModelManager final{
 private:
-	ModelManager();
+	ModelManager()=default;
 	
-	~ModelManager();
+	~ModelManager()=default;
 
 public:
 	//シングルインスタンス
@@ -33,6 +33,10 @@ private:
 
 
 public:
+
+	//LoadObjとLoadglTFの関数を作った方が良いかも
+
+
 
 	/// <summary>
 	/// モデルデータの読み込み(ハンドルを登録する)
@@ -86,7 +90,8 @@ private:
 		std::string filePath;
 	};
 
-	//数の限界があるのでarrayがいいかな
+
+	//mapにしたい
 	std::array<ModelInformation, MODEL_MAX_AMOUNT_> modelInfromtion_{};
 
 };

@@ -6,7 +6,7 @@
 #include "VectorCalculation.h"
 
 
-Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {
+Quaternion QuaternionMultiply(const Quaternion& lhs, const Quaternion& rhs) {
     Quaternion result = {};
     Quaternion q = lhs;
     Quaternion r = rhs;
@@ -161,7 +161,7 @@ Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion) {
     Quaternion conjugate = Conjugate(quaternion);
 
     Quaternion preResult = {};
-    preResult = Multiply(quaternion, Multiply(convertQ, conjugate));
+    preResult = QuaternionMultiply(quaternion, QuaternionMultiply(convertQ, conjugate));
 
     Vector3 result = { preResult.x,preResult.y,preResult.z };
     return result;

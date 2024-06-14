@@ -84,7 +84,16 @@ public:
 		return modelPSO_.graphicsPipelineState_;
 	}
 
-	//コマンドに積むためのGetter(Particle3D)
+
+	//コマンドに積む用のGetter(Skinning)
+	ComPtr<ID3D12RootSignature> GetAnimationModelRootSignature() {
+		return animationModelPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetAnimationModelGraphicsPipelineState() {
+		return animationModelPSO_.graphicsPipelineState_;
+	}
+
+  //コマンドに積むためのGetter(Particle3D)
 	ComPtr<ID3D12RootSignature> GetParticle3DRootSignature() {
 		return particle3DPSO_.rootSignature_;
 	}
@@ -92,6 +101,16 @@ public:
 		return particle3DPSO_.graphicsPipelineState_;
 	}
 
+	//コマンドに積む用のGetter(SkyBox)
+	ComPtr<ID3D12RootSignature> GetSkyBoxRootSignature() {
+		return skyBoxPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetSkyBoxGraphicsPipelineState() {
+		return skyBoxPSO_.graphicsPipelineState_;
+	}
+
+
+	
 
 	//コマンドに積むためのGetter(CopyImage)
 	ComPtr<ID3D12RootSignature> GetFullScreenRootSignature() {
@@ -166,6 +185,9 @@ public:
 	//モデル用
 	static void GenerateModelPSO();
 
+	//Skinning
+	static void GenerateAnimationModelPSO();
+
 	//3Dパーティクル用
 	static void GenerateParticle3DPSO();
 
@@ -188,6 +210,8 @@ public:
 	static void GenarateRandomEffectPSO();
 
 
+	//SkyBox
+	static void GenarateSkyBoxPSO();
 
 private:
 
@@ -222,8 +246,10 @@ private:
 	//RandomEffect用
 	PSOInformation randomEffectPSO_ = {};
 
-
-
+	//アニメーションモデル用の変数
+	PSOInformation animationModelPSO_ = {};
+	//スカイボックス用の変数
+	PSOInformation skyBoxPSO_ = {};
 
 
 
@@ -233,6 +259,8 @@ private:
 	//モデル用の
 	int32_t selectModelBlendMode_ = 1;
 
+	//モデル用の
+	int32_t selectAnimiationModelBlendMode_ = 1;
 
 
 };
