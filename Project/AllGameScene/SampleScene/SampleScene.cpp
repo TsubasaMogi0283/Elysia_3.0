@@ -138,6 +138,8 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 #pragma endregion
 
+
+#ifdef _DEBUG
 	ImGui::Begin("Camera");
 	ImGui::SliderFloat3("Position", &camera_.translate_.x, -40.0f, 20.0f);
 	ImGui::End();
@@ -146,6 +148,8 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::Begin("Sprite");
 	ImGui::SliderFloat3("Z",&position.x,0.0f,1280.0f);
 	ImGui::End();
+	
+#endif
 	const float CAMERA_MOVE_SPEED = 0.2f;
 	Vector3 move = {};
 	Vector3 rotateMove = {};
