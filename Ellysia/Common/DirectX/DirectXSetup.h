@@ -239,7 +239,7 @@ private:
 
 	//SwapChain
 	SwapChain swapChain = {};
-	UINT backBufferIndex_;
+	
 	D3D12_RESOURCE_BARRIER barrier_{};
 
 	//Fence
@@ -249,9 +249,6 @@ private:
 
 
 	ComPtr<ID3D12Debug1> debugController_ = nullptr;
-
-	D3D12_VIEWPORT viewport_{};
-	D3D12_RECT scissorRect_{};
 
 
 

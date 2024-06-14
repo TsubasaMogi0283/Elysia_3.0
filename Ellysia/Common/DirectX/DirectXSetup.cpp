@@ -480,7 +480,14 @@ void DirectXSetup::GenarateViewport() {
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	
-	DirectXSetup::GetInstance()->viewport_ = viewport;
+	DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport);
+
+
+	//シザーを生成
+	GenerateScissor();
+	
+
+	//DirectXSetup::GetInstance()->viewport_ = viewport;
 
 }
 
@@ -493,8 +500,8 @@ void DirectXSetup::GenerateScissor() {
 	scissorRect.top = 0;
 	scissorRect.bottom = WindowsSetup::GetInstance()->GetClientHeight();
 
-
-	DirectXSetup::GetInstance()->scissorRect_ = scissorRect;
+	DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect);
+	//DirectXSetup::GetInstance()->scissorRect_ = scissorRect;
 
 }
 
@@ -576,11 +583,9 @@ void DirectXSetup::SecondInitialize(){
 	//
 
 
-	//ビューポートの生成
-	GenarateViewport();
+	
 
-	//シザーを生成
-	GenerateScissor();
+	
 
 }
 
@@ -645,7 +650,7 @@ void DirectXSetup::StartDraw() {
 	//7.次のフレーム用にCommandListを再準備
 
 	
-
+	UINT backBufferIndex_;
 	///////
 	////コマンドを積みこんで確定させる
 	//LoadCommand()
@@ -680,8 +685,14 @@ void DirectXSetup::StartDraw() {
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(RtvManager::GetInstance()->GetRtvHandle(backBufferIndex_), clearColor, 0, nullptr);
 
-	DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);
-	DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
+	//ビューポートの生成
+	GenarateViewport();
+	//DirectXSetup::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);
+
+
+	//シザーを生成
+	GenerateScissor();
+	//DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
 
 
 }
