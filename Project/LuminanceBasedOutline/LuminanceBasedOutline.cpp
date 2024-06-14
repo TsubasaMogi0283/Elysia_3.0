@@ -12,30 +12,12 @@ void LuminanceBasedOutline::Initialize(){
 	PipelineManager::GetInstance()->GenarateLuminanceBasedOutlinePSO();
 	
 	//Texture
-	textureHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetOutLineTextureResource().Get(), textureHandle_);
+	srvHandle_ = SrvManager::GetInstance()->Allocate();
+	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetOutLineTextureResource().Get(), srvHandle_);
 }
 
 void LuminanceBasedOutline::PreDraw(){
-	//ResourceとHandleはDirectX側で作った
-	//いずれRTV・DSVManagerを作る
 	
-	// Barrierを設定する
-	// 今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	// Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	// バリアを張る対象のリソース。現在のバックバッファに対して行う
-	auto resource = RtvManager::GetInstance()->GetOutLineTextureResource().Get();
-	resource;
-	barrier.Transition.pResource = RtvManager::GetInstance()->GetOutLineTextureResource().Get();
-	// 遷移前(現在)のResourceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	// 遷移後のResourceState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	// TransitionBarrierを張る
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
-
 
 	//auto handle = RtvManager::GetInstance()->GetRtvHandle(3);
 	
@@ -78,6 +60,27 @@ void LuminanceBasedOutline::PreDraw(){
 
 void LuminanceBasedOutline::Draw(){
 
+
+	//ResourceとHandleはDirectX側で作った
+	//いずれRTV・DSVManagerを作る
+
+	// Barrierを設定する
+	// 今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	// Noneにしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	// バリアを張る対象のリソース。現在のバックバッファに対して行う
+	auto resource = RtvManager::GetInstance()->GetOutLineTextureResource().Get();
+	resource;
+	barrier.Transition.pResource = RtvManager::GetInstance()->GetOutLineTextureResource().Get();
+	// 遷移前(現在)のResourceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	// 遷移後のResourceState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	// TransitionBarrierを張る
+	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
+
+
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetLuminanceBasedOutlineRootSignature().Get());
 	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetLuminanceBasedOutlineGraphicsPipelineState().Get());
 
@@ -85,20 +88,17 @@ void LuminanceBasedOutline::Draw(){
 	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//Texture
-	TextureManager::GraphicsCommand(0,textureHandle_);
+	TextureManager::GraphicsCommand(0,srvHandle_);
 
 	//描画(DrawCall)３頂点で１つのインスタンス。
 	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
-
-	
-}
-
-void LuminanceBasedOutline::PreDrawSecond(){
 	
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.pResource = RtvManager::GetInstance()->GetOutLineTextureResource().Get();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	// 遷移前(現在)のResourceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	// 遷移後のResourceState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 }

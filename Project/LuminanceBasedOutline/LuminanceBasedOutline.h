@@ -21,7 +21,6 @@ public:
 	/// 描画前の処理
 	/// </summary>
 	void PreDraw();
-	void PreDrawSecond();
 
 	/// <summary>
 	/// 描画
@@ -36,7 +35,7 @@ public:
 
 private:
 
-	uint32_t textureHandle_ = 0;
+	uint32_t srvHandle_ = 0;
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 };
