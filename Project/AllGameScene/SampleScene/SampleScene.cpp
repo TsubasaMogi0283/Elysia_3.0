@@ -70,7 +70,7 @@ void SampleScene::Initialize() {
 	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
 
 	noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
-
+	//human_[0]->SetEviromentTexture(skyBoxTextureHandle);
 
 
 	uint32_t textureHandle = TextureManager::GetInstance()->LoadTexture("Resources/White.png");
@@ -233,10 +233,10 @@ void SampleScene::DrawSpriteBack(){
 
 void SampleScene::PreDrawPostEffectFirst(){
 	//radialBlur_->PreDraw();
-	dissolve_->PreDraw();
+	//dissolve_->PreDraw();
 
 	//randomEffect_->PreDraw();
-	//back_->PreDraw();
+	back_->PreDraw();
 	//radialBlur_->PreDraw();
 	//outLine_->PreDraw();
 }
@@ -250,7 +250,7 @@ void SampleScene::DrawObject3D() {
 	//SimpleSkin
 	//Walk
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		//human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
+		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
 	}
 	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
 	model_->Draw(worldTransform_, camera_);
@@ -263,11 +263,11 @@ void SampleScene::DrawObject3D() {
 
 void SampleScene::DrawPostEffect(){
 	//radialBlur_->Draw();
-	dissolve_->Draw();
+	//dissolve_->Draw();
 	
 
 	//randomEffect_->Draw();
-	//back_->Draw();
+	back_->Draw();
 	//radialBlur_->Draw();
 	//outLine_->Draw();
 }

@@ -16,7 +16,7 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 	PipelineManager::GetInstance()->SetModelBlendMode(1);
 	PipelineManager::GetInstance()->GenerateAnimationModelPSO();
 
-	model->selectLighting_ = 4;
+	model->selectLighting_ = 1;
 	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい
 	//Setterでやるの面倒だと思った
 
