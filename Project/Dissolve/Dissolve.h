@@ -15,7 +15,6 @@ public:
 
 	void Draw();
 
-	void PreDrawSecond();
 
 	~Dissolve() {};
 

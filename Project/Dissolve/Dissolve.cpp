@@ -119,8 +119,3 @@ void Dissolve::Draw(){
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 }
-
-void Dissolve::PreDrawSecond(){
-	
-	
-}
