@@ -73,7 +73,6 @@ void BackText::PreDraw(){
 	DirectXSetup::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect);
 
 
-
 	
 
 }
