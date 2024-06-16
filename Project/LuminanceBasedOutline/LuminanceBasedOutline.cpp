@@ -2,7 +2,7 @@
 #include <PipelineManager.h>
 #include "TextureManager.h"
 #include <SrvManager.h>
-#include "../RtvManager/RtvManager.h"
+#include "RtvManager.h"
 
 void LuminanceBasedOutline::Initialize(){
 

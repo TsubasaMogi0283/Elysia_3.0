@@ -235,9 +235,9 @@ void SampleScene::PreDrawPostEffectFirst(){
 	//dissolve_->PreDraw();
 
 	//randomEffect_->PreDraw();
-	//back_->PreDraw();
+	back_->PreDraw();
 	//radialBlur_->PreDraw();
-	outLine_->PreDraw();
+	//outLine_->PreDraw();
 }
 
 /// <summary>
@@ -266,9 +266,9 @@ void SampleScene::DrawPostEffect(){
 	
 
 	//randomEffect_->Draw();
-	//back_->Draw();
+	back_->Draw();
 	//radialBlur_->Draw();
-	outLine_->Draw();
+	//outLine_->Draw();
 }
 
 void SampleScene::DrawSprite(){

@@ -53,6 +53,9 @@ public:
 	}
 
 
+	
+
+	
 #pragma region PostEffect用リソース
 
 	ComPtr<ID3D12Resource> GetRenderTextureResource() {
@@ -78,13 +81,18 @@ public:
 #pragma endregion
 
 
-
 public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize();
 
+	/// <summary>
+	/// RTV作成
+	/// </summary>
+	/// <param name="resource"></param>
+	/// <param name="clearColor"></param>
+	void GenarateRenderTargetView(ComPtr<ID3D12Resource> resource, Vector4 clearColor);
 
 
 
@@ -92,6 +100,8 @@ private:
 
 	//ディスクリプタ
 	static const uint32_t RTV_DESCRIPTOR_SIZE_ = 10;
+	//インデックス
+	uint32_t index_ = 0;
 	ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap_ = nullptr;
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{};
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_;

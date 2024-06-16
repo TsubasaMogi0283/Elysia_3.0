@@ -3,7 +3,7 @@
 #include "TextureManager.h"
 #include <SrvManager.h>
 #include "imgui.h"
-#include "../RtvManager/RtvManager.h"
+#include "RtvManager.h"
 
 void Dissolve::Initialize(uint32_t maskTexture){
 

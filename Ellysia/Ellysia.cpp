@@ -4,8 +4,8 @@
 #include "ImGuiManager.h"
 #include <Input.h>
 #include <TextureManager.h>
-#include "SrvManager/SrvManager.h"
-#include "../RtvManager/RtvManager.h"
+#include "SrvManager.h"
+#include "RtvManager.h"
 #include <Audio.h>
 #include <AdjustmentItems.h>
 
@@ -155,6 +155,9 @@ void Ellysia::Release() {
 	DirectXSetup::GetInstance()->Release();
 	WindowsSetup::GetInstance()->Close();
 
+	//ゲーム終了時にはCOMの終了処理を行っておく
+	CoUninitialize();
+
 }
 
 
@@ -197,8 +200,7 @@ void Ellysia::Operate(){
 	//解放
 	Release();
 
-	//ゲーム終了時にはCOMの終了処理を行っておく
-	CoUninitialize();
+	
 
 }
 

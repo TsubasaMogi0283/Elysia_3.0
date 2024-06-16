@@ -109,6 +109,10 @@ private:
 
 
 
+	//RTV
+	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
+
+
 	uint32_t srvHandle_ = 0;
 
 	D3D12_RESOURCE_BARRIER barrier = {};

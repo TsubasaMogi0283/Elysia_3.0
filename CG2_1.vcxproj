@@ -73,7 +73,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Polygon\3D\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Polygon\3D\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Manager\RtvManager</AdditionalIncludeDirectories>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -101,7 +101,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Polygon\3D\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Polygon\3D\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Manager\RtvManager</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MaxSpeed</Optimization>
@@ -123,7 +123,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">
     <ClCompile>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;USE_IMGUI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Polygon\3D\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Polygon\3D\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Manager\RtvManager</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -142,6 +142,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\main.cpp" />
     <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp" />
     <ClCompile Include="Ellysia\Manager\PipelineManager\PipelineManager.cpp" />
+    <ClCompile Include="Ellysia\Manager\RtvManager\RtvManager.cpp" />
+    <ClCompile Include="Ellysia\Manager\SrvManager\SrvManager.cpp" />
     <ClCompile Include="Ellysia\Math\BPMCalculation\BPMSetting.cpp" />
     <ClCompile Include="Ellysia\Math\Collision\Collision.cpp" />
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp" />
@@ -162,8 +164,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Polygon\3D\Particle3D\Particle3D.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Sphere\Sphere.cpp" />
-    <ClCompile Include="Ellysia\RtvManager\RtvManager.cpp" />
-    <ClCompile Include="Ellysia\SrvManager\SrvManager.cpp" />
     <ClCompile Include="Ellysia\TextureManager\TextureManager.cpp" />
     <ClCompile Include="Project\AllGameScene\GameManager\GameManager.cpp" />
     <ClCompile Include="Project\AllGameScene\SampleScene2\SampleScene2.cpp" />
@@ -246,6 +246,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Line\Line.h" />
     <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h" />
     <ClInclude Include="Ellysia\Manager\PipelineManager\PipelineManager.h" />
+    <ClInclude Include="Ellysia\Manager\RtvManager\RtvManager.h" />
+    <ClInclude Include="Ellysia\Manager\SrvManager\SrvManager.h" />
     <ClInclude Include="Ellysia\Math\BPMCalculation\BPMSetting.h" />
     <ClInclude Include="Ellysia\Math\Collision\Collision.h" />
     <ClInclude Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.h" />
@@ -291,8 +293,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle3D.h" />
     <ClInclude Include="Ellysia\Polygon\3D\SkyBox\SkyBox.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Sphere\Sphere.h" />
-    <ClInclude Include="Ellysia\RtvManager\RtvManager.h" />
-    <ClInclude Include="Ellysia\SrvManager\SrvManager.h" />
     <ClInclude Include="Ellysia\TextureManager\TextureManager.h" />
     <ClInclude Include="External\nlohmann\json.hpp" />
     <ClInclude Include="External\nlohmann\json_fwd.hpp" />

@@ -184,12 +184,6 @@
     <Filter Include="Ellysia\Source File\AnimationModelManager">
       <UniqueIdentifier>{854ee5dc-7df8-4ce1-a244-9ca2a7c26822}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Header File\RtvManager">
-      <UniqueIdentifier>{a8d41418-a4c6-479a-8902-f0aa74ad56df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ellysia\Source File\RtvManager">
-      <UniqueIdentifier>{5c6d6480-09d2-4a8a-9315-62d96b957ce3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Header File\Manager\Pipeline">
       <UniqueIdentifier>{960690e0-f2d3-4f0a-a7e9-81f206ff3f49}</UniqueIdentifier>
     </Filter>
@@ -198,6 +192,24 @@
     </Filter>
     <Filter Include="Ellysia\Source File\Manager\Pipeline">
       <UniqueIdentifier>{249441d7-ac06-46bc-84f0-500c7b9095a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Manager\SRV">
+      <UniqueIdentifier>{7769c9a0-c850-4598-990d-dccb23b095ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Manager\RTV">
+      <UniqueIdentifier>{b9da9b7d-b86e-46bc-a22d-f7db0c37aa66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager\SRV">
+      <UniqueIdentifier>{7b4dbcbf-dff4-482d-b198-c08e182da004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager\RTV">
+      <UniqueIdentifier>{46b132e8-4eaa-443c-aae1-601116305520}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Polygone\PostEffect">
+      <UniqueIdentifier>{ef5cb602-2042-45a3-9f69-6683bdec740b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Polygone\PostEffect">
+      <UniqueIdentifier>{6b7ed0e5-1697-4c65-b662-96b18d9e16f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -306,9 +318,6 @@
     <ClCompile Include="Ellysia\Polygon\3D\ModelManager\SkinCluster.cpp">
       <Filter>Ellysia\Source File\ModelManager</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\SrvManager\SrvManager.cpp">
-      <Filter>Ellysia\Source File\SrvManager</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\SkyBox</Filter>
     </ClCompile>
@@ -336,11 +345,14 @@
     <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp">
       <Filter>Ellysia\Source File\AnimationModelManager</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\RtvManager\RtvManager.cpp">
-      <Filter>Ellysia\Source File\RtvManager</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Manager\PipelineManager\PipelineManager.cpp">
       <Filter>Ellysia\Source File\Manager\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\SrvManager\SrvManager.cpp">
+      <Filter>Ellysia\Source File\Manager\SRV</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\RtvManager\RtvManager.cpp">
+      <Filter>Ellysia\Source File\Manager\RTV</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -499,9 +511,6 @@
     <ClInclude Include="Ellysia\Polygon\3D\ModelManager\ModelManager.h">
       <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\SrvManager\SrvManager.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.h">
       <Filter>Ellysia\Header File\Polygone\3D\Particle3DManager</Filter>
     </ClInclude>
@@ -604,11 +613,14 @@
     <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h">
       <Filter>Ellysia\Header File\AnimationManager</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\RtvManager\RtvManager.h">
-      <Filter>Ellysia\Header File\RtvManager</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Manager\PipelineManager\PipelineManager.h">
       <Filter>Ellysia\Header File\Manager\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\SrvManager\SrvManager.h">
+      <Filter>Ellysia\Header File\Manager\SRV</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\RtvManager\RtvManager.h">
+      <Filter>Ellysia\Header File\Manager\RTV</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

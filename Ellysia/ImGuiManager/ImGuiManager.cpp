@@ -2,7 +2,7 @@
 #include "WindowsSetup.h"
 #include "DirectXSetup.h"
 #include "SrvManager.h"
-#include "../RtvManager/RtvManager.h"
+#include "RtvManager.h"
 //コンストラクタ
 ImGuiManager::ImGuiManager() {
 	

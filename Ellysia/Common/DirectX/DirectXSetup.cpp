@@ -695,14 +695,6 @@ void DirectXSetup::EndDraw() {
 	//画面に描く処理は「全て終わり」、画面に映すので、状態を遷移
 	//今回はRenderTargetからPresentにする
 	
-
-	////遷移前(現在)のResourceState
-	//barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	////遷移後のResourceState
-	//barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-	////TransitionBarrierを張る
-	//DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier_);
-
 	SetResourceBarrierForSwapChain(D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 
 
