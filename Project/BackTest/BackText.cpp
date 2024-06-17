@@ -3,7 +3,7 @@
 #include "TextureManager.h"
 #include <SrvManager.h>
 #include "imgui.h"
-#include "../RtvManager/RtvManager.h"
+#include "RtvManager.h"
 
 void BackText::Initialize(){
 
@@ -27,11 +27,18 @@ void BackText::Initialize(){
 	gaussianFilterInformation_.sigma = 2.0f;
 
 
+	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
+	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
+	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };
+	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, RENDER_TARGET_CLEAR_VALUE);
+
 
 	//Texture
 	srvHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetRenderTextureResource().Get(), srvHandle_);
+	SrvManager::GetInstance()->CreateSRVForRenderTexture(rtvResource_.Get(), srvHandle_);
 
+	
 	
 
 }
@@ -64,7 +71,7 @@ void BackText::Draw(){
 
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(
-		RtvManager::GetInstance()->GetRenderTextureResource().Get(), 
+		rtvResource_.Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
 
@@ -153,7 +160,7 @@ void BackText::Draw(){
 
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(
-		RtvManager::GetInstance()->GetRenderTextureResource().Get(),
+		rtvResource_.Get(),
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 }

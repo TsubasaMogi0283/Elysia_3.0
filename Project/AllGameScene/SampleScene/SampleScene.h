@@ -97,6 +97,7 @@ private:
 	Vector3 position = {};
 
 	BackText* back_ = nullptr;
+	
 
 	LuminanceBasedOutline* outLine_ = nullptr;
 	DepthBasedOutline* depthBasedOutline_ = nullptr;

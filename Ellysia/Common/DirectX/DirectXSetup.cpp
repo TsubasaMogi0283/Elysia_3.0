@@ -387,7 +387,7 @@ void DirectXSetup::PullResourcesFromSwapChain() {
 	hr = DirectXSetup::GetInstance()->swapChain.m_pSwapChain->GetBuffer(1, IID_PPV_ARGS(& DirectXSetup::GetInstance()->swapChain.m_pResource[1]));
 	assert(SUCCEEDED(hr));
 
-
+	
 
 }
 
@@ -573,6 +573,12 @@ void DirectXSetup::FirstInitialize() {
 }
 
 void DirectXSetup::SecondInitialize(){
+
+	//スワップチェーン1枚目
+	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[0].Get(), { 0.1f,0.25f,0.5f,1.0f });
+	//スワップチェーン2枚目
+	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[1].Get(), { 0.1f,0.25f,0.5f,1.0f });
+
 
 	//RenderTargetViewの設定
 	GenarateFence();

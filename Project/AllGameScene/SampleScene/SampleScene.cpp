@@ -95,6 +95,9 @@ void SampleScene::Initialize() {
 
 	randomEffect_ = new RandomEffect();
 	randomEffect_->Initialize();
+
+	
+
 }
 
 

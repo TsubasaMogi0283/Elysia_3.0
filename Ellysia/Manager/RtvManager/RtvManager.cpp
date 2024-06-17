@@ -124,43 +124,6 @@ void RtvManager::Initialize(){
 
 
 
-
-
-	//SwapChain用
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
-	rtvStartHandle = m_rtvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-	rtvHandles_[0] = rtvStartHandle;
-	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[0].Get(), &rtvDesc, rtvHandles_[0]);
-	
-	//GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[0].Get(), { 0.1f,0.25f,0.5f,1.0f });
-	
-	//２つ目のディスクリプタハンドルを得る(自力で)
-	rtvHandles_[1].ptr = rtvHandles_[0].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	//２つ目を作る
-	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[1].Get(), &rtvDesc, rtvHandles_[1]);
-
-	//GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[0].Get(), { 0.1f,0.25f,0.5f,1.0f });
-
-
-	
-	
-	//3つ目
-	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };//今回は赤
-	//縦横を取得
-	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
-	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
-	
-	renderTextureResource = CreateRenderTextureResource(
-		width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
-	
-	
-	rtvHandles_[2].ptr = rtvHandles_[1].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	
-	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
-		renderTextureResource.Get(), &rtvDesc, rtvHandles_[2]);
-
-
-
 	////縦横を取得
 	//uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
 	//uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
