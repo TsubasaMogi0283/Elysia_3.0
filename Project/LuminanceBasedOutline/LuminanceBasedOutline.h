@@ -36,7 +36,7 @@ public:
 private:
 
 	uint32_t srvHandle_ = 0;
-
+	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
 	D3D12_RESOURCE_BARRIER barrier = {};
 };
 

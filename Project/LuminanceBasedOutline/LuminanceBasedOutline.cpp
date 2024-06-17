@@ -11,9 +11,17 @@ void LuminanceBasedOutline::Initialize(){
 	//いずれやる
 	PipelineManager::GetInstance()->GenarateLuminanceBasedOutlinePSO();
 	
+
+	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
+	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
+	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
+	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, RENDER_TARGET_CLEAR_VALUE);
+
+
 	//Texture
 	srvHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetOutLineTextureResource().Get(), srvHandle_);
+	SrvManager::GetInstance()->CreateSRVForRenderTexture(rtvResource_.Get(), srvHandle_);
 }
 
 void LuminanceBasedOutline::PreDraw(){
@@ -47,7 +55,7 @@ void LuminanceBasedOutline::PreDraw(){
 void LuminanceBasedOutline::Draw(){
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(
-		RtvManager::GetInstance()->GetOutLineTextureResource().Get(),
+		rtvResource_.Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
 
@@ -66,7 +74,7 @@ void LuminanceBasedOutline::Draw(){
 	
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(
-		RtvManager::GetInstance()->GetOutLineTextureResource().Get(),
+		rtvResource_.Get(),
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 }
