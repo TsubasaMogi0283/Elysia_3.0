@@ -16,13 +16,14 @@ public:
 
 	void Draw();
 
-	void PostDraw();
 
 	~RadialBlur() {};
 
 private:
 	uint32_t textureHandle_ = 0;
 
+	//RTV
+	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
 	D3D12_RESOURCE_BARRIER barrier = {};
 };
 

@@ -10,9 +10,17 @@ void RadialBlur::Initialize(){
 	PipelineManager::GetInstance()->GenerateRadialBlurPSO();
 	
 
+	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
+	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
+	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
+	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+	uint32_t rtvHandle = RtvManager::GetInstance()->Allocate();
+	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle);
+
+
 	//Texture
 	textureHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetRadialBlurTextureResource().Get(), textureHandle_);
+	SrvManager::GetInstance()->CreateSRVForRenderTexture(rtvResource_.Get(), textureHandle_);
 
 	
 
@@ -51,7 +59,7 @@ void RadialBlur::Draw(){
 
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(
-		RtvManager::GetInstance()->GetRadialBlurTextureResource().Get(),
+		rtvResource_.Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
 
@@ -82,13 +90,8 @@ void RadialBlur::Draw(){
 	*/
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(
-		RtvManager::GetInstance()->GetRadialBlurTextureResource().Get(),
+		rtvResource_.Get(),
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 
-}
-
-void RadialBlur::PostDraw(){
-	
-	
 }

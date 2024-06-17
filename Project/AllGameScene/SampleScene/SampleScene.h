@@ -96,12 +96,12 @@ private:
 	const char* GroupName = "Player";
 	Vector3 position = {};
 
-	BackText* back_ = nullptr;
+	std::unique_ptr<BackText> back_ = nullptr;
 	
 
-	LuminanceBasedOutline* outLine_ = nullptr;
-	DepthBasedOutline* depthBasedOutline_ = nullptr;
-	RadialBlur* radialBlur_ = nullptr;
-	Dissolve* dissolve_ = nullptr;
-	RandomEffect* randomEffect_ = nullptr;
+	std::unique_ptr<LuminanceBasedOutline> outLine_ = nullptr;
+	std::unique_ptr<DepthBasedOutline> depthBasedOutline_ = nullptr;
+	std::unique_ptr<RadialBlur> radialBlur_ = nullptr;
+	std::unique_ptr<Dissolve> dissolve_ = nullptr;
+	std::unique_ptr<RandomEffect> randomEffect_ = nullptr;
 };

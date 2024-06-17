@@ -87,12 +87,14 @@ public:
 	/// </summary>
 	void Initialize();
 
+
+	uint32_t Allocate();
+
 	/// <summary>
 	/// RTV作成
 	/// </summary>
 	/// <param name="resource"></param>
-	/// <param name="clearColor"></param>
-	void GenarateRenderTargetView(ComPtr<ID3D12Resource> resource, Vector4 clearColor);
+	void GenarateRenderTargetView(ComPtr<ID3D12Resource> resource,uint32_t handle);
 
 
 

@@ -199,9 +199,6 @@
     <Filter Include="Ellysia\Header File\Manager\RTV">
       <UniqueIdentifier>{b9da9b7d-b86e-46bc-a22d-f7db0c37aa66}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Source File\Manager\SRV">
-      <UniqueIdentifier>{7b4dbcbf-dff4-482d-b198-c08e182da004}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Source File\Manager\RTV">
       <UniqueIdentifier>{46b132e8-4eaa-443c-aae1-601116305520}</UniqueIdentifier>
     </Filter>
@@ -210,6 +207,9 @@
     </Filter>
     <Filter Include="Ellysia\Header File\Polygone\PostEffect">
       <UniqueIdentifier>{6b7ed0e5-1697-4c65-b662-96b18d9e16f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager\SRV">
+      <UniqueIdentifier>{7b4dbcbf-dff4-482d-b198-c08e182da004}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

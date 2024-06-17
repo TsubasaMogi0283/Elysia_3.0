@@ -31,7 +31,8 @@ void BackText::Initialize(){
 	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
-	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, RENDER_TARGET_CLEAR_VALUE);
+	rtvhandle_ = RtvManager::GetInstance()->Allocate();
+	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvhandle_);
 
 
 	//Texture
@@ -47,10 +48,10 @@ void BackText::PreDraw(){
 	
 	const float RENDER_TARGET_CLEAR_VALUE[] = { 1.0f,0.0f,0.0f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
-		1, &RtvManager::GetInstance()->GetRtvHandle(2), false, &DirectXSetup::GetInstance()->GetDsvHandle());
+		1, &RtvManager::GetInstance()->GetRtvHandle(rtvhandle_), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
-		RtvManager::GetInstance()->GetRtvHandle(2), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+		RtvManager::GetInstance()->GetRtvHandle(rtvhandle_), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(

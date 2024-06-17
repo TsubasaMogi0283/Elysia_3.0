@@ -77,23 +77,23 @@ void SampleScene::Initialize() {
 	sprite_.reset(Sprite::Create(textureHandle, { 0.0f,0.0f }));
 	sprite_->SetScale({0.5f, 0.5f});
 	
-	back_ = new BackText();
+	back_ = std::make_unique< BackText>();
 	back_->Initialize();
 
-	radialBlur_ = new RadialBlur();
+	radialBlur_ = std::make_unique < RadialBlur>();
 	radialBlur_->Initialize();
 
-	outLine_ = new LuminanceBasedOutline();
+	outLine_ = std::make_unique < LuminanceBasedOutline>();
 	outLine_->Initialize();
 	//depthBasedOutline_ = new DepthBasedOutline();
 	//depthBasedOutline_->Initialize();
 
 
 	uint32_t dissolveTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise0.png");
-	dissolve_ = new Dissolve();
+	dissolve_ = std::make_unique <Dissolve>();
 	dissolve_->Initialize(dissolveTextureHandle);
 
-	randomEffect_ = new RandomEffect();
+	randomEffect_ = std::make_unique < RandomEffect>();
 	randomEffect_->Initialize();
 
 	
@@ -238,9 +238,9 @@ void SampleScene::PreDrawPostEffectFirst(){
 	//dissolve_->PreDraw();
 
 	//randomEffect_->PreDraw();
-	//back_->PreDraw();
+	back_->PreDraw();
 	//radialBlur_->PreDraw();
-	outLine_->PreDraw();
+	//outLine_->PreDraw();
 }
 
 /// <summary>
@@ -269,9 +269,9 @@ void SampleScene::DrawPostEffect(){
 	
 
 	//randomEffect_->Draw();
-	//back_->Draw();
+	back_->Draw();
 	//radialBlur_->Draw();
-	outLine_->Draw();
+	//outLine_->Draw();
 }
 
 void SampleScene::DrawSprite(){
@@ -285,9 +285,4 @@ void SampleScene::DrawSprite(){
 /// デストラクタ
 /// </summary>
 SampleScene::~SampleScene() {
-	delete back_;
-	delete outLine_;
-	delete depthBasedOutline_;
-	delete dissolve_;
-	delete randomEffect_;
 }

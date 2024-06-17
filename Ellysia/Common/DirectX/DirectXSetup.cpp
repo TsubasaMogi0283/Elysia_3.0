@@ -575,9 +575,13 @@ void DirectXSetup::FirstInitialize() {
 void DirectXSetup::SecondInitialize(){
 
 	//スワップチェーン1枚目
-	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[0].Get(), { 0.1f,0.25f,0.5f,1.0f });
+	uint32_t rtvHandle[2] = {};
+	rtvHandle[0] = RtvManager::GetInstance()->Allocate();
+	rtvHandle[1] = RtvManager::GetInstance()->Allocate();
+
+	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[0].Get(), rtvHandle[0]);
 	//スワップチェーン2枚目
-	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[1].Get(), { 0.1f,0.25f,0.5f,1.0f });
+	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[1].Get(), rtvHandle[1]);
 
 
 	//RenderTargetViewの設定

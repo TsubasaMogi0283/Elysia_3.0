@@ -64,7 +64,24 @@ ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResource(
 	return resource;
 }
 
-void RtvManager::GenarateRenderTargetView(ComPtr<ID3D12Resource> resource, Vector4 clearColor){
+
+uint32_t RtvManager::Allocate(){
+	//上限だったらasset
+	assert(index_ < RTV_DESCRIPTOR_SIZE_);
+
+	//return する番号を一旦記録しておく
+	int index = index_;
+	
+	//次のために番号を1進める
+	index_++;
+
+	//上で記録した番号をreturn
+	return index;
+
+
+}
+
+void RtvManager::GenarateRenderTargetView(ComPtr<ID3D12Resource> resource,uint32_t handle){
 	//RTVの設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;				//出力結果をSRGBに変換して書き込む
@@ -72,22 +89,17 @@ void RtvManager::GenarateRenderTargetView(ComPtr<ID3D12Resource> resource, Vecto
 	
 	//縦横を取得
 	
-	//resource = CreateRenderTextureResource(
-	//	width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, clearColor);
-
-	clearColor;
-	//上限だったらasset
-	assert(index_ < RTV_DESCRIPTOR_SIZE_);
+	
 	//0の時だけ少し違うのでそれ専用の
-	if (index_ == 0) {
+	if (handle == 0) {
 		//ディスクリプタの先頭を取得する
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
 		rtvStartHandle = m_rtvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-		rtvHandles_[0] = rtvStartHandle;
+		rtvHandles_[handle] = rtvStartHandle;
 	}
 	else {
 		//ハンドルを計算
-		rtvHandles_[index_].ptr = rtvHandles_[index_ - 1].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);;
+		rtvHandles_[handle].ptr = rtvHandles_[handle - 1].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);;
 
 	}
 
@@ -95,10 +107,8 @@ void RtvManager::GenarateRenderTargetView(ComPtr<ID3D12Resource> resource, Vecto
 	
 	//RTVの作成(本体)
 	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
-		resource.Get(), &rtvDesc, rtvHandles_[index_]);
+		resource.Get(), &rtvDesc, rtvHandles_[handle]);
 
-	//indexを増やす
-	index_++;
 
 }
 
@@ -121,35 +131,6 @@ void RtvManager::Initialize(){
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;			//2dテクスチャとして書き込む
 	
 
-
-
-
-	////縦横を取得
-	//uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
-	//uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
-	//
-	//
-	//
-	////関数でまとめて簡単に生成できるようにしたい
-	////4つ目
-	////LuminanceBasedOutline用
-	//const Vector4 OUT_LINE_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
-	//
-	//outLineTextureResource = CreateRenderTextureResource(
-	//	width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, OUT_LINE_CLEAR_VALUE);
-	//
-	//
-	//rtvHandles_[3].ptr = rtvHandles_[2].ptr + DirectXSetup::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	//
-	//DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(
-	//	outLineTextureResource.Get(), &rtvDesc, rtvHandles_[3]);
-	//
-	//
-	//
-	//
-	//
-	//
-	//
 	////5つ目
 	////DepthBasedOutline用
 	//depthBasedOutlineResource_ = CreateRenderTextureResource(
@@ -204,4 +185,6 @@ void RtvManager::Initialize(){
 	rtvDesc_ = rtvDesc;
 	//rtvStartHandle_=rtvStartHandle;
 }
+
+
 
