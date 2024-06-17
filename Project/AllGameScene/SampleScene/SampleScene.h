@@ -99,6 +99,9 @@ private:
 	std::unique_ptr<BackText> back_ = nullptr;
 	
 
+	std::unique_ptr<BackText> back1_ = nullptr;
+
+
 	std::unique_ptr<LuminanceBasedOutline> outLine_ = nullptr;
 	std::unique_ptr<DepthBasedOutline> depthBasedOutline_ = nullptr;
 	std::unique_ptr<RadialBlur> radialBlur_ = nullptr;

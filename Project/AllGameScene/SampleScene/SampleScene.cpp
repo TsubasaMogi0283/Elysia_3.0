@@ -80,6 +80,10 @@ void SampleScene::Initialize() {
 	back_ = std::make_unique< BackText>();
 	back_->Initialize();
 
+	back1_= std::make_unique< BackText>();
+	back1_->Initialize();
+
+
 	radialBlur_ = std::make_unique < RadialBlur>();
 	radialBlur_->Initialize();
 

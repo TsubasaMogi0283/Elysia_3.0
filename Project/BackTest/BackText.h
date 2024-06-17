@@ -108,10 +108,9 @@ private:
 	GaussianFilterInformation* gaussianFilterData_ = nullptr;
 
 
-
+	uint32_t rtvHandle_=0;
 	//RTV
 	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
-	uint32_t rtvhandle_ = 0;
 
 	uint32_t srvHandle_ = 0;
 

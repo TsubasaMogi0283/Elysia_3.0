@@ -108,8 +108,17 @@ private:
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{};
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_;
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[RTV_DESCRIPTOR_SIZE_] = {};
-	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc_{};
 
+
+	struct RTVInformation {
+		//RtvHandle
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ = {};
+		//index
+		uint32_t index_ = 0;
+
+	};
+
+	std::array<RTVInformation, RTV_DESCRIPTOR_SIZE_ > rtvHandles_{};
 
 	//PostEffect
 	//いつか分解する
