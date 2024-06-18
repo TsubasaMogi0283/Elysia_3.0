@@ -19,6 +19,16 @@ void Dissolve::Initialize(uint32_t maskTexture){
 	dissolveInformation_.threshold = 0.5f;
 	
 
+
+	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
+	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
+	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
+	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+	const std::string postEffectName = "Dissolve";
+	rtvHandle_ = RtvManager::GetInstance()->Allocate(postEffectName);
+	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);
+
+
 	//マスクテクスチャ
 	maskTextureHandle_ = maskTexture;
 
@@ -28,10 +38,10 @@ void Dissolve::PreDraw(){
 	
 	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.1f,0.1f,0.7f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
-		1, &RtvManager::GetInstance()->GetRtvHandle(5), false, &DirectXSetup::GetInstance()->GetDsvHandle());
+		1, &RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
-		RtvManager::GetInstance()->GetRtvHandle(5), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+		RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(
@@ -54,7 +64,7 @@ void Dissolve::Draw(){
 
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(
-		RtvManager::GetInstance()->GetDissolveTextureResource().Get(),
+		rtvResource_,
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
 
@@ -91,7 +101,7 @@ void Dissolve::Draw(){
 
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(
-		RtvManager::GetInstance()->GetDissolveTextureResource().Get(),
+		rtvResource_,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 

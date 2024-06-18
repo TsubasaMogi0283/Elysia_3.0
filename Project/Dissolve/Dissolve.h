@@ -26,6 +26,11 @@ private:
 	DissolveInformation dissolveInformation_ = {};
 	DissolveInformation* thresholdData_ = nullptr;
 
+	//RTV
+	//RTV
+	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
+	uint32_t rtvHandle_ = 0;
+
 
 	uint32_t srvHandle_ = 0;
 	uint32_t maskTextureHandle_ = 0;

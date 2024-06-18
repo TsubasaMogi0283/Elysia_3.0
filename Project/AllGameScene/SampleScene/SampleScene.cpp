@@ -91,9 +91,9 @@ void SampleScene::Initialize() {
 	////depthBasedOutline_->Initialize();
 	//
 	//
-	//uint32_t dissolveTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise0.png");
-	//dissolve_ = std::make_unique <Dissolve>();
-	//dissolve_->Initialize(dissolveTextureHandle);
+	uint32_t dissolveTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise0.png");
+	dissolve_ = std::make_unique <Dissolve>();
+	dissolve_->Initialize(dissolveTextureHandle);
 	//
 	//randomEffect_ = std::make_unique < RandomEffect>();
 	//randomEffect_->Initialize();
@@ -237,13 +237,12 @@ void SampleScene::DrawSpriteBack(){
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
-	//dissolve_->PreDraw();
-
 	//randomEffect_->PreDraw();
 	
 	//back_->PreDraw();
 	//radialBlur_->PreDraw();
-	outLine_->PreDraw();
+	//outLine_->PreDraw();
+	dissolve_->PreDraw();
 }
 
 /// <summary>
@@ -268,14 +267,15 @@ void SampleScene::DrawObject3D() {
 
 void SampleScene::DrawPostEffect(){
 	//radialBlur_->Draw();
-	//dissolve_->Draw();
+	
 	
 
 	//randomEffect_->Draw();
 	
 	//back_->Draw();
 	//radialBlur_->Draw();
-	outLine_->Draw();
+	//outLine_->Draw();
+	dissolve_->Draw();
 }
 
 void SampleScene::DrawSprite(){

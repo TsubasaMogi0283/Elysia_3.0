@@ -29,7 +29,6 @@ void LuminanceBasedOutline::Initialize(){
 void LuminanceBasedOutline::PreDraw(){
 	
 
-	//auto handle = RtvManager::GetInstance()->GetRtvHandle(3);
 	
 	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.1f,0.1f,0.7f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
