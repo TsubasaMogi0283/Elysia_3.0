@@ -16,7 +16,8 @@ void LuminanceBasedOutline::Initialize(){
 	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
-	uint32_t rtvHandle = RtvManager::GetInstance()->Allocate();
+	const std::string postEffectName = "LuminanceBasedOutLine";
+	uint32_t rtvHandle = RtvManager::GetInstance()->Allocate(postEffectName);
 	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle);
 
 

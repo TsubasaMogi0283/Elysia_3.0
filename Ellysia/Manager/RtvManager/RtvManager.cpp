@@ -1,6 +1,9 @@
 #include "RtvManager.h"
 #include "WindowsSetup.h"
 
+
+D3D12_CPU_DESCRIPTOR_HANDLE RtvManager::rtvHandles_[RtvManager::RTV_DESCRIPTOR_SIZE_] = {};
+
 RtvManager* RtvManager::GetInstance(){
     static RtvManager instance;
     return &instance;
@@ -65,15 +68,31 @@ ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResource(
 }
 
 
-uint32_t RtvManager::Allocate(){
+uint32_t RtvManager::Allocate(std::string name){
 	//上限だったらasset
 	assert(index_ < RTV_DESCRIPTOR_SIZE_);
 
+	//既存だったらindexを返す
+	for (uint32_t i = 0; i < RTV_DESCRIPTOR_SIZE_; ++i) {
+		if (RtvManager::GetInstance()->rtvInformation_[i].name_ == name) {
+			uint32_t index = RtvManager::GetInstance()->rtvInformation_[i].index_;
+			return index;
+		}
+
+	}
+
+	
+	
 	//return する番号を一旦記録しておく
 	int index = index_;
 	
 	//次のために番号を1進める
 	index_++;
+
+	RtvManager::GetInstance()->rtvInformation_[index].name_ = name;
+	RtvManager::GetInstance()->rtvInformation_[index].index_ =index;
+
+
 
 	//上で記録した番号をreturn
 	return index;
@@ -87,15 +106,15 @@ void RtvManager::GenarateRenderTargetView(ComPtr<ID3D12Resource> resource,uint32
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;				//出力結果をSRGBに変換して書き込む
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 	
-	//縦横を取得
 	
-	
-	//0の時だけ少し違うのでそれ専用の
+	//handleはAllowcateで返された値を使ってね
+
+	//0の時だけ少し違うので専用のものを作成
 	if (handle == 0) {
 		//ディスクリプタの先頭を取得する
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
 		rtvStartHandle = m_rtvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-		rtvHandles_[handle] = rtvStartHandle;
+		rtvHandles_[0] = rtvStartHandle;
 	}
 	else {
 		//ハンドルを計算
@@ -103,7 +122,6 @@ void RtvManager::GenarateRenderTargetView(ComPtr<ID3D12Resource> resource,uint32
 
 	}
 
-	
 	
 	//RTVの作成(本体)
 	DirectXSetup::GetInstance()->GetDevice()->CreateRenderTargetView(

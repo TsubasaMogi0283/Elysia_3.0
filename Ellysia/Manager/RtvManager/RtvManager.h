@@ -1,5 +1,7 @@
 #pragma once
 #include "DirectXSetup.h"
+#include <array>
+#include <string>
 
 class RtvManager{
 private:
@@ -43,11 +45,11 @@ public:
 		return rtvDesc_;
 	}
 
-	/// <summary>
-	/// ハンドルの取得
-	/// </summary>
-	/// <param name="number"></param>
-	/// <returns></returns>
+	// <summary>
+	// ハンドルの取得
+	// </summary>
+	// <param name="number"></param>
+	// <returns></returns>
 	D3D12_CPU_DESCRIPTOR_HANDLE& GetRtvHandle(uint32_t number) {
 		return rtvHandles_[number];
 	}
@@ -88,7 +90,7 @@ public:
 	void Initialize();
 
 
-	uint32_t Allocate();
+	uint32_t Allocate(std::string name);
 
 	/// <summary>
 	/// RTV作成
@@ -107,18 +109,18 @@ private:
 	ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap_ = nullptr;
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{};
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_;
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[RTV_DESCRIPTOR_SIZE_] = {};
+	static D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[RTV_DESCRIPTOR_SIZE_];
 
 
 	struct RTVInformation {
-		//RtvHandle
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_ = {};
+		//PostEffect名
+		std::string name_;
 		//index
 		uint32_t index_ = 0;
 
 	};
 
-	std::array<RTVInformation, RTV_DESCRIPTOR_SIZE_ > rtvHandles_{};
+	std::array<RTVInformation, RTV_DESCRIPTOR_SIZE_ > rtvInformation_{};
 
 	//PostEffect
 	//いつか分解する

@@ -572,16 +572,25 @@ void DirectXSetup::FirstInitialize() {
 
 }
 
-void DirectXSetup::SecondInitialize(){
+void DirectXSetup::SecondInitialize() {
 
-	//スワップチェーン1枚目
-	uint32_t rtvHandle[2] = {};
-	rtvHandle[0] = RtvManager::GetInstance()->Allocate();
-	rtvHandle[1] = RtvManager::GetInstance()->Allocate();
 
-	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[0].Get(), rtvHandle[0]);
+	DirectXSetup::GetInstance()->swapChainName[0] = "SwapChainNumber1";
+	DirectXSetup::GetInstance()->swapChainName[1] = "SwapChainNumber2";
+
+
+	DirectXSetup::GetInstance()->rtvHandle[0] = RtvManager::GetInstance()->Allocate(DirectXSetup::GetInstance()->swapChainName[0]);
+	DirectXSetup::GetInstance()->rtvHandle[1] = RtvManager::GetInstance()->Allocate(DirectXSetup::GetInstance()->swapChainName[1]);
+
+	uint32_t rtvHandle1 = DirectXSetup::GetInstance()->rtvHandle[0];
+	uint32_t rtvHandle2 = DirectXSetup::GetInstance()->rtvHandle[1];
+
+	rtvHandle1;
+	rtvHandle2;
+
+	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[0].Get(), DirectXSetup::GetInstance()->rtvHandle[0]);
 	//スワップチェーン2枚目
-	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[1].Get(), rtvHandle[1]);
+	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[1].Get(), DirectXSetup::GetInstance()->rtvHandle[1]);
 
 
 	//RenderTargetViewの設定

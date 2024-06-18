@@ -281,6 +281,12 @@ private:
 	UINT backBufferIndex_ = {};
 	D3D12_RESOURCE_BARRIER barrier_{};
 
+
+	//スワップチェーン1枚目
+	uint32_t rtvHandle[2] = {};
+	std::string swapChainName[2] = {};
+
+	
 	//Fence
 	ComPtr<ID3D12Fence> m_fence_ = nullptr;
 	uint64_t fenceValue_ = 0;
