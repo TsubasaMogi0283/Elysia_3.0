@@ -17,10 +17,8 @@ void Dissolve::Initialize(uint32_t maskTexture){
 	
 
 
-	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
-	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
-	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
 	const std::string postEffectName = "Dissolve";
 	rtvHandle_ = RtvManager::GetInstance()->Allocate(postEffectName);
 	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);

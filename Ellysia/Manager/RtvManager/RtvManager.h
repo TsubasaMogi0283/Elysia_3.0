@@ -25,12 +25,10 @@ public:
 	/// <summary>
 	/// RenderTextureを作る
 	/// </summary>
-	/// <param name="width"></param>
-	/// <param name="height"></param>
 	/// <param name="format"></param>
 	/// <param name="clearColor"></param>
 	/// <returns></returns>
-	static ComPtr<ID3D12Resource> CreateRenderTextureResource(uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4 clearColor);
+	static ComPtr<ID3D12Resource> CreateRenderTextureResource(DXGI_FORMAT format, const Vector4 clearColor);
 
 	/// <summary>
 	/// ディスクリプタヒープの取得

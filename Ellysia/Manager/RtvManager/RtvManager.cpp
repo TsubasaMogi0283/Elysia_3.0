@@ -10,8 +10,10 @@ RtvManager* RtvManager::GetInstance(){
 }
 
 
-ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResource(
-	uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4 clearColor) {
+ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResource(DXGI_FORMAT format, const Vector4 clearColor) {
+
+	uint32_t width = WindowsSetup::GetInstance()->GetClientWidth();
+	uint32_t height= WindowsSetup::GetInstance()->GetClientHeight();
 
 	D3D12_RESOURCE_DESC resourceDesc{};
 	//Textureの幅
