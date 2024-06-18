@@ -85,5 +85,6 @@ void Enemy::SetTranslate(Vector3 translate){
 }
 
 void Enemy::SetSammeEnemyCollisionAfter(Vector3 position, Vector3 speed){
-
+	position;
+	speed;
 }

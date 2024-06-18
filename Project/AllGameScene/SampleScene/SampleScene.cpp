@@ -21,7 +21,8 @@ SampleScene::SampleScene() {
 /// </summary>
 void SampleScene::Initialize() {
 	
-
+	player_ = std::make_unique<Player>();
+	player_->Initialize();
 
 
 
@@ -158,27 +159,18 @@ void SampleScene::Update(GameManager* gameManager) {
 	
 	Vector3 move = {};
 	
-	if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
-		move.x = 1.0f;
-		//theta = 0.0f;
-		//camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
-		move.x = -1.0f;
-		//theta = std::numbers::pi_v<float>;
-		
-		//camera_.rotate_.y = -std::numbers::pi_v<float> / 2.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
-		move.z = 1.0f;
-		
-		//camera_.rotate_.y = 0.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
-		move.z = -1.0f;
-		//theta = std::numbers::pi_v<float>*3/2.0f;
-		//camera_.rotate_.y = std::numbers::pi_v<float>;
-	}
+	//if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
+	//	move.x = 1.0f;
+	//}
+	//else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
+	//	move.x = -1.0f;
+	//}
+	//else if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
+	//	move.z = 1.0f;
+	//}
+	//else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
+	//	move.z = -1.0f;
+	//}
 	
 	lightDirection_.x = std::cosf(theta);
 	lightDirection_.z = std::sinf(theta);
@@ -252,6 +244,8 @@ void SampleScene::Update(GameManager* gameManager) {
 		enemy->Update();
 	}
 	
+	//プレイヤーの更新
+	player_->Update();
 
 	//地面
 	groundWorldTransform_.Update();
@@ -306,6 +300,9 @@ void SampleScene::Update(GameManager* gameManager) {
 /// 描画
 /// </summary>
 void SampleScene::Draw() {
+	//プレイヤー
+	player_->Draw(camera_);
+
 	//地面
 	ground_->Draw(groundWorldTransform_,camera_);
 	//敵

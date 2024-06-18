@@ -16,6 +16,7 @@
 #include "../../Enemy/Enemy.h"
 #include "../../Collider/CollisionManager.h"
 #include "../../LightWeapon/LightWeapon.h"
+#include "../../Player/Player.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -49,6 +50,8 @@ private:
 private:
 	Camera camera_ = {};
 
+	//プレイヤー
+	std::unique_ptr<Player>player_ = nullptr;
 
 	//地面
 	std::unique_ptr<Model> ground_ = nullptr;
