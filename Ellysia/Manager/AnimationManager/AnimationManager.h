@@ -70,18 +70,21 @@ public:
 	/// <returns></returns>
 	static uint32_t LoadFile(const std::string& directoryPath, const std::string& fileName);
 
-
+	/// <summary>
+	/// アニメーションの計算
+	/// </summary>
+	/// <param name="skeleton"></param>
+	/// <param name="animationHandle"></param>
+	/// <param name="modelHandle"></param>
+	/// <param name="animationTime"></param>
 	static void ApplyAnimation(Skeleton& skeleton,uint32_t animationHandle,uint32_t modelHandle, float animationTime);
 
+
 private:
-	//読み込みの最大数
-	static const uint32_t ANIMATION_MAX_AMOUNT_ = 512;
-
-
 	struct AnimationInformation {
 		//モデルデータ
 		Animation animationData;
-		
+
 		//ハンドル
 		uint32_t handle;
 
@@ -90,7 +93,13 @@ private:
 		std::string fileName;
 	};
 
-	static uint32_t handle_;
+
+private:
+	//読み込みの最大数
+	static const uint32_t ANIMATION_MAX_AMOUNT_ = 512;
+
+	//このクラスに入っているアニメーションの数
+	uint32_t index_=0;
 
 	//mapにしたい
 	std::array<AnimationInformation, ANIMATION_MAX_AMOUNT_> animationInfromtion_;

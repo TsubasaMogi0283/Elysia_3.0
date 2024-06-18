@@ -157,14 +157,8 @@
     <Filter Include="Ellysia\Resource File\SkyBox">
       <UniqueIdentifier>{44244ac2-4549-4851-b772-2c4eb7d15eb5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Header File\AnimationManager">
-      <UniqueIdentifier>{97ce354a-4949-41c4-886a-96dc659bbfc0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Source File\Polygone\3D\AnimationModel">
       <UniqueIdentifier>{2e92d4d2-e932-4495-aace-3da469cbd20c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ellysia\Source File\AnimationModelManager">
-      <UniqueIdentifier>{854ee5dc-7df8-4ce1-a244-9ca2a7c26822}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ellysia\Header File\Manager\Pipeline">
       <UniqueIdentifier>{960690e0-f2d3-4f0a-a7e9-81f206ff3f49}</UniqueIdentifier>
@@ -210,6 +204,12 @@
     </Filter>
     <Filter Include="Ellysia\Source File\Manager\ImGui">
       <UniqueIdentifier>{00ad347e-53a6-4856-9344-67a497557e0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Manager\Animation">
+      <UniqueIdentifier>{97ce354a-4949-41c4-886a-96dc659bbfc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager\Animation">
+      <UniqueIdentifier>{854ee5dc-7df8-4ce1-a244-9ca2a7c26822}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -301,7 +301,7 @@
       <Filter>Ellysia\Source File\Polygone\3D\AnimationModel</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp">
-      <Filter>Ellysia\Source File\AnimationModelManager</Filter>
+      <Filter>Ellysia\Source File\Manager\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\PipelineManager\PipelineManager.cpp">
       <Filter>Ellysia\Source File\Manager\Pipeline</Filter>
@@ -542,7 +542,7 @@
       <Filter>Ellysia\Header File\Polygone\3D\AnimationModel</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h">
-      <Filter>Ellysia\Header File\AnimationManager</Filter>
+      <Filter>Ellysia\Header File\Manager\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\PipelineManager\PipelineManager.h">
       <Filter>Ellysia\Header File\Manager\Pipeline</Filter>

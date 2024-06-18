@@ -9,7 +9,6 @@
 #include "ModelManager.h"
 
 
-uint32_t AnimationManager::handle_ = 0;
 
 
 AnimationManager* AnimationManager::GetInstance(){
@@ -148,15 +147,15 @@ uint32_t AnimationManager::LoadFile(const std::string& directoryPath, const std:
 
 
 
-    handle_++;
+    AnimationManager::GetInstance()->index_++;
 
-    AnimationManager::GetInstance()->animationInfromtion_[handle_].animationData = animation;
-    AnimationManager::GetInstance()->animationInfromtion_[handle_].directoryPath = directoryPath;
-    AnimationManager::GetInstance()->animationInfromtion_[handle_].fileName = fileName;
-    AnimationManager::GetInstance()->animationInfromtion_[handle_].handle = handle_;
+    AnimationManager::GetInstance()->animationInfromtion_[AnimationManager::GetInstance()->index_].animationData = animation;
+    AnimationManager::GetInstance()->animationInfromtion_[AnimationManager::GetInstance()->index_].directoryPath = directoryPath;
+    AnimationManager::GetInstance()->animationInfromtion_[AnimationManager::GetInstance()->index_].fileName = fileName;
+    AnimationManager::GetInstance()->animationInfromtion_[AnimationManager::GetInstance()->index_].handle = AnimationManager::GetInstance()->index_;
 
 
-    return handle_;
+    return AnimationManager::GetInstance()->index_;
 
 
 }

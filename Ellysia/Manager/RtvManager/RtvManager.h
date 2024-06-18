@@ -57,7 +57,11 @@ public:
 	/// </summary>
 	void Initialize();
 
-
+	/// <summary>
+	/// nameによって返すindexが変わる
+	/// </summary>
+	/// <param name="name"></param>
+	/// <returns></returns>
 	uint32_t Allocate(std::string name);
 
 	/// <summary>
