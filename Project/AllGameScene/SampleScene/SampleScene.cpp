@@ -7,6 +7,7 @@
 #include "ModelManager.h"
 #include "AnimationManager.h"
 #include <numbers>
+#include <TextureManager.h>
 
 /// <summary>
 /// コンストラクタ
@@ -239,11 +240,11 @@ void SampleScene::DrawSpriteBack(){
 void SampleScene::PreDrawPostEffectFirst(){
 	
 	
-	//back_->PreDraw();
+	back_->PreDraw();
 	//radialBlur_->PreDraw();
 	//outLine_->PreDraw();
 	//dissolve_->PreDraw();
-	randomEffect_->PreDraw();
+	//randomEffect_->PreDraw();
 }
 
 /// <summary>
@@ -269,11 +270,11 @@ void SampleScene::DrawObject3D() {
 void SampleScene::DrawPostEffect(){
 	
 	
-	//back_->Draw();
+	back_->Draw();
 	//radialBlur_->Draw();
 	//outLine_->Draw();
 	//dissolve_->Draw();
-	randomEffect_->Draw();
+	//randomEffect_->Draw();
 }
 
 void SampleScene::DrawSprite(){

@@ -11,12 +11,12 @@
 #include <memory>
 #include <Particle3D.h>
 #include <Audio.h>
-#include "../../BackTest/BackText.h"
-#include "../LuminanceBasedOutline/LuminanceBasedOutline.h"
-#include "../../DepthBasedOutline/DepthBasedOutline.h"
-#include "../../RadialBlur/RadialBlur.h"
-#include "../../Dissolve/Dissolve.h"
-#include "../../RandomEffect/RandomEffect.h"
+#include "BackText.h"
+#include "LuminanceBasedOutline.h"
+#include "DepthBasedOutline.h"
+#include "RadialBlur.h"
+#include "Dissolve.h"
+#include "RandomEffect.h"
 #include "SkinCluster.h"
 #include "../../../Ellysia/Polygon/3D/SkyBox/SkyBox.h"
 

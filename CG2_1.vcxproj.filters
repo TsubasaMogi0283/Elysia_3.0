@@ -14,9 +14,6 @@
     <Filter Include="Ellysia\Source File\Math">
       <UniqueIdentifier>{06a9a389-3fa9-4add-ab75-e624db9a3dd9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Source File\ImGui">
-      <UniqueIdentifier>{00ad347e-53a6-4856-9344-67a497557e0a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Source File\ConvertFunction">
       <UniqueIdentifier>{5f4a72fc-e562-4946-a2ac-4329dcdc39c7}</UniqueIdentifier>
     </Filter>
@@ -41,9 +38,6 @@
     <Filter Include="Ellysia\Source File\Input">
       <UniqueIdentifier>{8654ad5d-6e38-43c8-90ef-8d93aa2c6272}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Source File\TextureManager">
-      <UniqueIdentifier>{7cee7120-9bf3-4b3b-a93a-30c9b8710e6d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Source File\Audio">
       <UniqueIdentifier>{4e9ce233-b84c-4858-95a3-08d752302d12}</UniqueIdentifier>
     </Filter>
@@ -65,9 +59,6 @@
     </Filter>
     <Filter Include="Ellysia\Header File\Math\Matrix">
       <UniqueIdentifier>{979fd626-d0ee-4f17-8e46-8c4d9e8a2bb9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ellysia\Header File\ImGui">
-      <UniqueIdentifier>{14d4744c-9636-4620-8765-10b4ee6446ea}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ellysia\Header File\ConvertFunction">
       <UniqueIdentifier>{88525f3c-706e-4397-b214-f9c6099be35f}</UniqueIdentifier>
@@ -95,9 +86,6 @@
     </Filter>
     <Filter Include="Ellysia\Header File\Audio">
       <UniqueIdentifier>{38c8c39f-90cc-4b8a-99bb-e3a6cf511aa2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ellysia\Header File\TextureManager">
-      <UniqueIdentifier>{923fe313-40bb-48ce-aa0b-eb17ee0b5333}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ellysia\Header File\Camera">
       <UniqueIdentifier>{21e76dcb-803b-4fd7-91bd-042fb6766ede}</UniqueIdentifier>
@@ -133,9 +121,6 @@
     <Filter Include="Project\GameScene\Sample2">
       <UniqueIdentifier>{c0575fdd-b572-4e5a-8413-fa3cf96d3880}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Source File\ModelManager">
-      <UniqueIdentifier>{2747883a-dcbe-4951-b835-e69a4e599a81}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Header File\Lighting">
       <UniqueIdentifier>{6894304a-98cd-4168-b852-c62f99047467}</UniqueIdentifier>
     </Filter>
@@ -150,9 +135,6 @@
     </Filter>
     <Filter Include="Ellysia\Header File\AdjustmentItems">
       <UniqueIdentifier>{790ca7fe-3aed-4cdc-bdf7-edc3fdacdae6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ellysia\Header File\ModelManager">
-      <UniqueIdentifier>{3d3be091-044e-42b8-93ea-7d8380a25a1b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Text">
       <UniqueIdentifier>{86ea6656-3c90-41a3-872c-722ea8f63729}</UniqueIdentifier>
@@ -211,13 +193,28 @@
     <Filter Include="Ellysia\Source File\Manager\SRV">
       <UniqueIdentifier>{7b4dbcbf-dff4-482d-b198-c08e182da004}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Source File\Manager\Model">
+      <UniqueIdentifier>{2747883a-dcbe-4951-b835-e69a4e599a81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Manager\Model">
+      <UniqueIdentifier>{3d3be091-044e-42b8-93ea-7d8380a25a1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Manager\Texture">
+      <UniqueIdentifier>{923fe313-40bb-48ce-aa0b-eb17ee0b5333}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager\Texture">
+      <UniqueIdentifier>{7cee7120-9bf3-4b3b-a93a-30c9b8710e6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Manager\ImGui">
+      <UniqueIdentifier>{14d4744c-9636-4620-8765-10b4ee6446ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager\ImGui">
+      <UniqueIdentifier>{00ad347e-53a6-4856-9344-67a497557e0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
       <Filter>Ellysia\Source File\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\ImGuiManager\ImGuiManager.cpp">
-      <Filter>Ellysia\Source File\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Math\Vector\Calculation\VectorCalculation.cpp">
       <Filter>Ellysia\Source File\Math</Filter>
@@ -233,9 +230,6 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\GameManager\GameManager.cpp">
       <Filter>Project\GameManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\TextureManager\TextureManager.cpp">
-      <Filter>Ellysia\Source File\TextureManager</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Audio\Audio.cpp">
       <Filter>Ellysia\Source File\Audio</Filter>
@@ -285,9 +279,6 @@
     <ClCompile Include="Ellysia\Math\WorldTransform\WorldTransform.cpp">
       <Filter>Ellysia\Source File\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\ModelManager.cpp">
-      <Filter>Ellysia\Source File\ModelManager</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\Particle3DManager</Filter>
     </ClCompile>
@@ -300,44 +291,11 @@
     <ClCompile Include="Ellysia\AdjustmentItems\AdjustmentItems.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\ReadNode.cpp">
-      <Filter>Ellysia\Source File\ModelManager</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Math\Collision\Collision.cpp">
       <Filter>Project</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Skeleton.cpp">
-      <Filter>Ellysia\Source File\ModelManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Animation.cpp">
-      <Filter>Ellysia\Source File\ModelManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\Joint.cpp">
-      <Filter>Ellysia\Source File\ModelManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\3D\ModelManager\SkinCluster.cpp">
-      <Filter>Ellysia\Source File\ModelManager</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\SkyBox</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\BackTest\BackText.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\DepthBasedOutline\DepthBasedOutline.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Dissolve\Dissolve.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\LuminanceBasedOutline\LuminanceBasedOutline.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\RadialBlur\RadialBlur.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\RandomEffect\RandomEffect.cpp">
-      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\AnimationModel</Filter>
@@ -353,6 +311,48 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\RtvManager\RtvManager.cpp">
       <Filter>Ellysia\Source File\Manager\RTV</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\PostEffect\DepthBasedOutline\DepthBasedOutline.cpp">
+      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\PostEffect\BackTest\BackText.cpp">
+      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\PostEffect\Dissolve\Dissolve.cpp">
+      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\PostEffect\LuminanceBasedOutline\LuminanceBasedOutline.cpp">
+      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\PostEffect\RadialBlur\RadialBlur.cpp">
+      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\PostEffect\RandomEffect\RandomEffect.cpp">
+      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\TextureManager\TextureManager.cpp">
+      <Filter>Ellysia\Source File\Manager\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\ModelManager\Animation.cpp">
+      <Filter>Ellysia\Source File\Manager\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\ModelManager\Joint.cpp">
+      <Filter>Ellysia\Source File\Manager\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\ModelManager\ModelManager.cpp">
+      <Filter>Ellysia\Source File\Manager\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\ModelManager\ReadNode.cpp">
+      <Filter>Ellysia\Source File\Manager\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\ModelManager\SkinCluster.cpp">
+      <Filter>Ellysia\Source File\Manager\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\ModelManager\Skeleton.cpp">
+      <Filter>Ellysia\Source File\Manager\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\ImGuiManager\ImGuiManager.cpp">
+      <Filter>Ellysia\Source File\Manager\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -397,9 +397,6 @@
     <ClInclude Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.h">
       <Filter>Ellysia\Header File\Math\Matrix</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\ImGuiManager\ImGuiManager.h">
-      <Filter>Ellysia\Header File\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Math\Vector\Transform.h">
       <Filter>Ellysia\Header File\Math\Vector</Filter>
     </ClInclude>
@@ -413,9 +410,6 @@
       <Filter>Ellysia\Header File\Math\Vector</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Vector\Material.h">
-      <Filter>Ellysia\Header File\Math\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Math\Vector\DirectionalLight.h">
       <Filter>Ellysia\Header File\Math\Vector</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Common\DirectX\DirectXSetup.h">
@@ -432,9 +426,6 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\GameManager\IGameScene.h">
       <Filter>Project\GameScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\TextureManager\TextureManager.h">
-      <Filter>Ellysia\Header File\TextureManager</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Math\BPMCalculation\BPMSetting.h">
       <Filter>Ellysia\Header File\Math</Filter>
@@ -508,9 +499,6 @@
     <ClInclude Include="Ellysia\Lighting\SpotLight.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\ModelManager.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.h">
       <Filter>Ellysia\Header File\Polygone\3D\Particle3DManager</Filter>
     </ClInclude>
@@ -535,53 +523,14 @@
     <ClInclude Include="Ellysia\AdjustmentItems\AdjustmentItems.h">
       <Filter>Ellysia\Header File\AdjustmentItems</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Node.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\ReadNode.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Math\Collision\Collision.h">
       <Filter>Project</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\KeyFrame.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\NodeAnimation.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Animation.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Transform\EulerTransform.h">
       <Filter>Ellysia\Header File\Math</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Transform\QuaternionTransform.h">
       <Filter>Ellysia\Header File\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Joint.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\Skeleton.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\VertexWeightData.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\JoinWeightData.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\ModelData.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\SkinCluster.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\VertexInfluence.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\ModelManager\WellForGPU.h">
-      <Filter>Ellysia\Header File\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Lighting\LightingType.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
@@ -591,24 +540,6 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.h">
       <Filter>Ellysia\Header File\Polygone\3D\AnimationModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\BackTest\BackText.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\DepthBasedOutline\DepthBasedOutline.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Dissolve\Dissolve.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\LuminanceBasedOutline\LuminanceBasedOutline.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\RadialBlur\RadialBlur.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\RandomEffect\RandomEffect.h">
-      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h">
       <Filter>Ellysia\Header File\AnimationManager</Filter>
@@ -621,6 +552,75 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\RtvManager\RtvManager.h">
       <Filter>Ellysia\Header File\Manager\RTV</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\PostEffect\DepthBasedOutline\DepthBasedOutline.h">
+      <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\PostEffect\BackTest\BackText.h">
+      <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\PostEffect\RandomEffect\RandomEffect.h">
+      <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\PostEffect\Dissolve\Dissolve.h">
+      <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\PostEffect\LuminanceBasedOutline\LuminanceBasedOutline.h">
+      <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\PostEffect\RadialBlur\RadialBlur.h">
+      <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\TextureManager\TextureManager.h">
+      <Filter>Ellysia\Header File\Manager\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\Animation.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\Joint.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\JoinWeightData.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\KeyFrame.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\ModelData.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\ModelManager.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\NodeAnimation.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\Node.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\ReadNode.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\Skeleton.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\SkinCluster.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\VertexInfluence.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\VertexWeightData.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ModelManager\WellForGPU.h">
+      <Filter>Ellysia\Header File\Manager\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\ImGuiManager\ImGuiManager.h">
+      <Filter>Ellysia\Header File\Manager\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Lighting\DirectionalLight.h">
+      <Filter>Ellysia\Header File\Lighting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
