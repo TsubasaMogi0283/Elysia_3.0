@@ -80,12 +80,10 @@ void SampleScene::Initialize() {
 	back_ = std::make_unique< BackText>();
 	back_->Initialize();
 
-	back1_= std::make_unique< BackText>();
-	back1_->Initialize();
 	
-	//
-	//radialBlur_ = std::make_unique < RadialBlur>();
-	//radialBlur_->Initialize();
+	
+	radialBlur_ = std::make_unique < RadialBlur>();
+	radialBlur_->Initialize();
 	//
 	//outLine_ = std::make_unique < LuminanceBasedOutline>();
 	//outLine_->Initialize();
@@ -242,9 +240,9 @@ void SampleScene::PreDrawPostEffectFirst(){
 	//dissolve_->PreDraw();
 
 	//randomEffect_->PreDraw();
-	back_->PreDraw();
-	back1_->PreDraw();
-	//radialBlur_->PreDraw();
+	
+	//back_->PreDraw();
+	radialBlur_->PreDraw();
 	//outLine_->PreDraw();
 }
 
@@ -274,9 +272,9 @@ void SampleScene::DrawPostEffect(){
 	
 
 	//randomEffect_->Draw();
-	back_->Draw();
-	back1_->Draw();
-	//radialBlur_->Draw();
+	
+	//back_->Draw();
+	radialBlur_->Draw();
 	//outLine_->Draw();
 }
 

@@ -99,7 +99,6 @@ private:
 	std::unique_ptr<BackText> back_ = nullptr;
 	
 
-	std::unique_ptr<BackText> back1_ = nullptr;
 
 
 	std::unique_ptr<LuminanceBasedOutline> outLine_ = nullptr;

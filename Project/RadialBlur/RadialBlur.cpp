@@ -15,8 +15,8 @@ void RadialBlur::Initialize(){
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
 	const std::string postEffectName = "RadialBlur";
-	uint32_t rtvHandle = RtvManager::GetInstance()->Allocate(postEffectName);
-	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle);
+	rtvHandle_ = RtvManager::GetInstance()->Allocate(postEffectName);
+	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);
 
 
 	//Texture
@@ -31,10 +31,10 @@ void RadialBlur::PreDraw(){
 	
 	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.1f,0.1f,0.7f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
-		1, &RtvManager::GetInstance()->GetRtvHandle(5), false, &DirectXSetup::GetInstance()->GetDsvHandle());
+		1, &RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
-		RtvManager::GetInstance()->GetRtvHandle(5), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+		RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(
