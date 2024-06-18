@@ -24,11 +24,6 @@ public:
 	void PreDraw();
 
 	/// <summary>
-	/// 描画前処理2
-	/// </summary>
-	void PreDrawSecond();
-
-	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw();
@@ -45,6 +40,12 @@ private:
 	ComPtr<ID3D12Resource> randomValueResource_ = nullptr;
 	RandomValue randomValue_ = {};
 	RandomValue* randomValueData_ = nullptr;
+
+
+	//RTV
+	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
+	uint32_t rtvHandle_ = 0;
+
 
 
 	uint32_t srvHandle_ = 0;

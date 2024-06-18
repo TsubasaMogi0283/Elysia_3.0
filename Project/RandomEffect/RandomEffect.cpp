@@ -11,9 +11,20 @@ void RandomEffect::Initialize() {
 	PipelineManager::GetInstance()->GenarateRandomEffectPSO();
 
 
+
+
+	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
+	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
+	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
+	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+	const std::string postEffectName = "RandomEffect";
+	rtvHandle_ = RtvManager::GetInstance()->Allocate(postEffectName);
+	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);
+
+
 	//Texture
 	srvHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetRandomEffectTextureResource().Get(), srvHandle_);
+	SrvManager::GetInstance()->CreateSRVForRenderTexture(rtvResource_.Get(), srvHandle_);
 	//乱数生成の初期化
 	std::random_device rand;
 	std::mt19937 randomEngine(rand());
@@ -33,10 +44,10 @@ void RandomEffect::PreDraw() {
 
 	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.1f,0.1f,0.7f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
-		1, &RtvManager::GetInstance()->GetRtvHandle(6), false, &DirectXSetup::GetInstance()->GetDsvHandle());
+		1, &RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
-		RtvManager::GetInstance()->GetRtvHandle(6), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+		RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(
@@ -60,7 +71,7 @@ void RandomEffect::Draw() {
 
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(
-		RtvManager::GetInstance()->GetRandomEffectTextureResource().Get(),
+		rtvResource_,
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
 
@@ -99,13 +110,8 @@ void RandomEffect::Draw() {
 
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(
-		RtvManager::GetInstance()->GetRandomEffectTextureResource().Get(),
+		rtvResource_,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 
-}
-
-void RandomEffect::PreDrawSecond() {
-
-	
 }

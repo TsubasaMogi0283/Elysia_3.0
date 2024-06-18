@@ -10,10 +10,7 @@ void Dissolve::Initialize(uint32_t maskTexture){
 	PipelineManager::GetInstance()->GenarateDissolvePSO();
 
 
-	//Texture
-	srvHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetDissolveTextureResource().Get(), srvHandle_);
-
+	
 	
 	thresholdResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(float));
 	dissolveInformation_.threshold = 0.5f;
@@ -27,6 +24,11 @@ void Dissolve::Initialize(uint32_t maskTexture){
 	const std::string postEffectName = "Dissolve";
 	rtvHandle_ = RtvManager::GetInstance()->Allocate(postEffectName);
 	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);
+
+	//Texture
+	srvHandle_ = SrvManager::GetInstance()->Allocate();
+	SrvManager::GetInstance()->CreateSRVForRenderTexture(rtvResource_.Get(), srvHandle_);
+
 
 
 	//マスクテクスチャ

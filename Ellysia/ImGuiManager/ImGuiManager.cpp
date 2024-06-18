@@ -29,7 +29,7 @@ void ImGuiManager::Initialize() {
 	ImGui_ImplDX12_Init(
 		DirectXSetup::GetInstance()->GetDevice().Get(),
 		DirectXSetup::GetInstance()->GetSwapChain().swapChainDesc.BufferCount,
-		RtvManager::GetInstance()->GetRtvDesc().Format,
+		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 		SrvManager::GetInstance()->GetSrvDescriptorHeap().Get(),
 		SrvManager::GetInstance()->GetSrvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart(),
 		SrvManager::GetInstance()->GetSrvDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());

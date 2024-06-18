@@ -95,8 +95,8 @@ void SampleScene::Initialize() {
 	dissolve_ = std::make_unique <Dissolve>();
 	dissolve_->Initialize(dissolveTextureHandle);
 	//
-	//randomEffect_ = std::make_unique < RandomEffect>();
-	//randomEffect_->Initialize();
+	randomEffect_ = std::make_unique < RandomEffect>();
+	randomEffect_->Initialize();
 
 	
 
@@ -237,12 +237,13 @@ void SampleScene::DrawSpriteBack(){
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
-	//randomEffect_->PreDraw();
+	
 	
 	//back_->PreDraw();
 	//radialBlur_->PreDraw();
 	//outLine_->PreDraw();
-	dissolve_->PreDraw();
+	//dissolve_->PreDraw();
+	randomEffect_->PreDraw();
 }
 
 /// <summary>
@@ -266,16 +267,13 @@ void SampleScene::DrawObject3D() {
 
 
 void SampleScene::DrawPostEffect(){
-	//radialBlur_->Draw();
 	
-	
-
-	//randomEffect_->Draw();
 	
 	//back_->Draw();
 	//radialBlur_->Draw();
 	//outLine_->Draw();
-	dissolve_->Draw();
+	//dissolve_->Draw();
+	randomEffect_->Draw();
 }
 
 void SampleScene::DrawSprite(){

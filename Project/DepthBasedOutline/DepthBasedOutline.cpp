@@ -16,9 +16,18 @@ void DepthBasedOutline::Initialize() {
 	projectionInverseResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraMatrix)).Get();
 	
 
+	uint32_t width = (WindowsSetup::GetInstance()->GetClientWidth());
+	uint32_t height = (WindowsSetup::GetInstance()->GetClientHeight());
+	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
+	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(width, height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+	const std::string postEffectName = "RadialBlur";
+	rtvHandle_ = RtvManager::GetInstance()->Allocate(postEffectName);
+	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);
+
+
 	//Texture
 	textureHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(RtvManager::GetInstance()->GetDepthBasedOutlineResource().Get(), textureHandle_);
+	SrvManager::GetInstance()->CreateSRVForRenderTexture(rtvResource_.Get(), textureHandle_);
 	srvforDepthHandle_= SrvManager::GetInstance()->Allocate();
 	SrvManager::GetInstance()->CreateSRVForDepthTexture(srvforDepthHandle_);
 
@@ -34,7 +43,7 @@ void DepthBasedOutline::PreDraw() {
 	// Noneにしておく
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	// バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = RtvManager::GetInstance()->GetDepthBasedOutlineResource().Get();
+	barrier.Transition.pResource = rtvResource_.Get();
 	// 遷移前(現在)のResourceState
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_DEPTH_WRITE;
 	// 遷移後のResourceState
@@ -100,7 +109,7 @@ void DepthBasedOutline::PreDrawSecond() {
 
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = RtvManager::GetInstance()->GetDepthBasedOutlineResource().Get();
+	barrier.Transition.pResource = rtvResource_.Get();
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_DEPTH_WRITE;
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);

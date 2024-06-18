@@ -49,6 +49,10 @@ private:
 	uint32_t srvforDepthHandle_ = 0;
 	D3D12_RESOURCE_BARRIER barrier = {};
 
+	//RTV
+	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
+	uint32_t rtvHandle_ = 0;
+
 
 	ComPtr<ID3D12Resource> projectionInverseResource_ = nullptr;
 	CameraMatrix* cameraMatrix_ = nullptr;

@@ -41,10 +41,6 @@ public:
 	}
 
 
-	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc() {
-		return rtvDesc_;
-	}
-
 	// <summary>
 	// ハンドルの取得
 	// </summary>
@@ -55,32 +51,6 @@ public:
 	}
 
 
-	
-
-	
-#pragma region PostEffect用リソース
-
-	ComPtr<ID3D12Resource> GetRenderTextureResource() {
-		return renderTextureResource;
-	}
-	ComPtr<ID3D12Resource> GetOutLineTextureResource() {
-		return outLineTextureResource;
-	}
-	ComPtr<ID3D12Resource> GetRadialBlurTextureResource() {
-		return radialBlurTextureResource_;
-	}
-	ComPtr<ID3D12Resource> GetDissolveTextureResource() {
-		return dissolveTextureResource_;
-	}
-
-	ComPtr<ID3D12Resource> GetRandomEffectTextureResource() {
-		return randomEffectTextureResource_;
-	}
-	ComPtr<ID3D12Resource> GetDepthBasedOutlineResource() {
-		return depthBasedOutlineResource_;
-	}
-
-#pragma endregion
 
 
 public:
@@ -107,7 +77,6 @@ private:
 	//インデックス
 	uint32_t index_ = 0;
 	ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap_ = nullptr;
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{};
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_;
 	static D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[RTV_DESCRIPTOR_SIZE_];
 
@@ -121,20 +90,6 @@ private:
 	};
 
 	std::array<RTVInformation, RTV_DESCRIPTOR_SIZE_ > rtvInformation_{};
-
-	//PostEffect
-	//いつか分解する
-	ComPtr<ID3D12Resource> renderTextureResource = nullptr;
-	//LuminanceBasedOutline用
-	ComPtr<ID3D12Resource> outLineTextureResource = nullptr;
-	//DepthBasedOutline用
-	ComPtr<ID3D12Resource> depthBasedOutlineResource_ = nullptr;
-	//RadialBlur用
-	ComPtr<ID3D12Resource> radialBlurTextureResource_ = nullptr;
-	//Dissolve用
-	ComPtr<ID3D12Resource> dissolveTextureResource_ = nullptr;
-	//RandomEffect用
-	ComPtr<ID3D12Resource> randomEffectTextureResource_ = nullptr;
 
 
 };
