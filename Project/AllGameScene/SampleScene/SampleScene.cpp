@@ -84,9 +84,9 @@ void SampleScene::Initialize() {
 	
 	radialBlur_ = std::make_unique < RadialBlur>();
 	radialBlur_->Initialize();
-	//
-	//outLine_ = std::make_unique < LuminanceBasedOutline>();
-	//outLine_->Initialize();
+	
+	outLine_ = std::make_unique < LuminanceBasedOutline>();
+	outLine_->Initialize();
 	////depthBasedOutline_ = new DepthBasedOutline();
 	////depthBasedOutline_->Initialize();
 	//
@@ -242,8 +242,8 @@ void SampleScene::PreDrawPostEffectFirst(){
 	//randomEffect_->PreDraw();
 	
 	//back_->PreDraw();
-	radialBlur_->PreDraw();
-	//outLine_->PreDraw();
+	//radialBlur_->PreDraw();
+	outLine_->PreDraw();
 }
 
 /// <summary>
@@ -274,8 +274,8 @@ void SampleScene::DrawPostEffect(){
 	//randomEffect_->Draw();
 	
 	//back_->Draw();
-	radialBlur_->Draw();
-	//outLine_->Draw();
+	//radialBlur_->Draw();
+	outLine_->Draw();
 }
 
 void SampleScene::DrawSprite(){
