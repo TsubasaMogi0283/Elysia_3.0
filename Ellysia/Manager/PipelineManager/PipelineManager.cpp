@@ -2063,8 +2063,8 @@ void PipelineManager::GenarateDepthBasedOutlinePSO() {
 
 
 	//Depth
-	//バイリニアフィルタ
-	staticSamplers[1].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	//ポイントフィルタ
+	staticSamplers[1].Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
 	//0~1の範囲外をリピート
 	staticSamplers[1].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	staticSamplers[1].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -2077,7 +2077,6 @@ void PipelineManager::GenarateDepthBasedOutlinePSO() {
 	staticSamplers[1].ShaderRegister = 1;
 	//PixelShaderで使う
 	staticSamplers[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	staticSamplers[1].Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
 
 
 

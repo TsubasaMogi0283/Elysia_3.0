@@ -18,7 +18,7 @@ void DepthBasedOutline::Initialize() {
 
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
-	const std::string postEffectName = "RadialBlur";
+	const std::string postEffectName = "DepthBasedOutLine";
 	rtvHandle_ = RtvManager::GetInstance()->Allocate(postEffectName);
 	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);
 
@@ -32,33 +32,30 @@ void DepthBasedOutline::Initialize() {
 }
 
 void DepthBasedOutline::PreDraw() {
-	//ResourceとHandleはDirectX側で作った
-	//いずれRTV・DSVManagerを作る
 
-	// Barrierを設定する
-	// 今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	// Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	// バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = rtvResource_.Get();
-	// 遷移前(現在)のResourceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_DEPTH_WRITE;
-	// 遷移後のResourceState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	DirectXSetup::GetInstance()->SetResourceBarrier(
+		rtvResource_.Get(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_DEPTH_WRITE);
 
-	//D3D12_RESOURCE_STATE_DEPTH_WRITE
-	//D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+
+	//ResourceBarrierを張る
+	DirectXSetup::GetInstance()->SetResourceBarrier(
+		rtvResource_.Get(),
+		D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
+
+	
+
 
 	// TransitionBarrierを張る
 	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 
 	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.1f,0.1f,0.7f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
-		1, &RtvManager::GetInstance()->GetRtvHandle(4), false, &DirectXSetup::GetInstance()->GetDsvHandle());
+		1, &RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
-		RtvManager::GetInstance()->GetRtvHandle(4), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+		RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(
@@ -101,19 +98,15 @@ void DepthBasedOutline::Draw(Camera& camera) {
 	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 
 
-}
+	//ResourceBarrierを張る
+	DirectXSetup::GetInstance()->SetResourceBarrier(
+		rtvResource_.Get(),
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_DEPTH_WRITE);
 
-void DepthBasedOutline::PreDrawSecond() {
 
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = rtvResource_.Get();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_DEPTH_WRITE;
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
-
-	//D3D12_RESOURCE_STATE_DEPTH_WRITE
-	//D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-
+	//ResourceBarrierを張る
+	DirectXSetup::GetInstance()->SetResourceBarrier(
+		rtvResource_.Get(),
+		D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 }

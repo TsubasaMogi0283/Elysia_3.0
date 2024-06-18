@@ -88,10 +88,10 @@ void SampleScene::Initialize() {
 	
 	outLine_ = std::make_unique < LuminanceBasedOutline>();
 	outLine_->Initialize();
-	////depthBasedOutline_ = new DepthBasedOutline();
-	////depthBasedOutline_->Initialize();
-	//
-	//
+	depthBasedOutline_ = std::make_unique<DepthBasedOutline>();
+	depthBasedOutline_->Initialize();
+	
+	
 	uint32_t dissolveTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise0.png");
 	dissolve_ = std::make_unique <Dissolve>();
 	dissolve_->Initialize(dissolveTextureHandle);
@@ -245,6 +245,8 @@ void SampleScene::PreDrawPostEffectFirst(){
 	//outLine_->PreDraw();
 	//dissolve_->PreDraw();
 	//randomEffect_->PreDraw();
+
+	//depthBasedOutline_->PreDraw();
 }
 
 /// <summary>
@@ -275,6 +277,7 @@ void SampleScene::DrawPostEffect(){
 	//outLine_->Draw();
 	//dissolve_->Draw();
 	//randomEffect_->Draw();
+	//depthBasedOutline_->Draw(camera_);
 }
 
 void SampleScene::DrawSprite(){

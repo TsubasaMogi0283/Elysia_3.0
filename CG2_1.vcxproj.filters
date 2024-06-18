@@ -211,6 +211,24 @@
     <Filter Include="Ellysia\Source File\Manager\Animation">
       <UniqueIdentifier>{854ee5dc-7df8-4ce1-a244-9ca2a7c26822}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Resource File\DepthBasedOutLine">
+      <UniqueIdentifier>{93e38bdd-1750-4952-9dae-c784ea89cc51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Resource File\Dissolve">
+      <UniqueIdentifier>{10327663-f5e8-4a84-9868-6aa21b3359b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Resource File\FullScreen">
+      <UniqueIdentifier>{7861ced3-2a88-4ca5-a1e3-103885d8bccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Resource File\LuminanceBasedOutline">
+      <UniqueIdentifier>{78a63350-fe4d-4afd-b19b-0fef1f5f2beb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Resource File\RadialBlur">
+      <UniqueIdentifier>{9091124b-25b9-4f0e-b379-f66d6a2590a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Resource File\RandomEffect">
+      <UniqueIdentifier>{7b981246-9015-4976-adde-0ee45c53d6d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -385,6 +403,42 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\SkyBox\SkyBox.PS.hlsl">
       <Filter>Ellysia\Resource File\SkyBox</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\DepthBasedOutline\DepthBasedOutline.PS.hlsl">
+      <Filter>Ellysia\Resource File\DepthBasedOutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\DepthBasedOutline\DepthBasedOutline.VS.hlsl">
+      <Filter>Ellysia\Resource File\DepthBasedOutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Dissolve\Dissolve.PS.hlsl">
+      <Filter>Ellysia\Resource File\Dissolve</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Dissolve\Dissolve.VS.hlsl">
+      <Filter>Ellysia\Resource File\Dissolve</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\FullScreen\FullScreen.PS.hlsl">
+      <Filter>Ellysia\Resource File\FullScreen</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\FullScreen\FullScreen.VS.hlsl">
+      <Filter>Ellysia\Resource File\FullScreen</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.PS.hlsl">
+      <Filter>Ellysia\Resource File\LuminanceBasedOutline</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.VS.hlsl">
+      <Filter>Ellysia\Resource File\LuminanceBasedOutline</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\RadialBlur\RadialBlur.PS.hlsl">
+      <Filter>Ellysia\Resource File\RadialBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\RadialBlur\RadialBlur.VS.hlsl">
+      <Filter>Ellysia\Resource File\RadialBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\RandomEffect\RandomEffect.PS.hlsl">
+      <Filter>Ellysia\Resource File\RandomEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\RandomEffect\RandomEffect.VS.hlsl">
+      <Filter>Ellysia\Resource File\RandomEffect</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -647,6 +701,33 @@
     </None>
     <None Include="Resources\Shader\SkyBox\SkyBox.hlsli">
       <Filter>Ellysia\Resource File\SkyBox</Filter>
+    </None>
+    <None Include="Resources\Shader\DepthBasedOutline\DepthBasedOutline.hlsli">
+      <Filter>Ellysia\Resource File\DepthBasedOutLine</Filter>
+    </None>
+    <None Include="Resources\Shader\Dissolve\Dissolve.hlsli">
+      <Filter>Ellysia\Resource File\Dissolve</Filter>
+    </None>
+    <None Include="Resources\Shader\FullScreen\EffectType.hlsli">
+      <Filter>Ellysia\Resource File\FullScreen</Filter>
+    </None>
+    <None Include="Resources\Shader\FullScreen\FullScreen.hlsli">
+      <Filter>Ellysia\Resource File\FullScreen</Filter>
+    </None>
+    <None Include="Resources\Shader\FullScreen\Kernel.hlsli">
+      <Filter>Ellysia\Resource File\FullScreen</Filter>
+    </None>
+    <None Include="Resources\Shader\FullScreen\SmoothingIndex.hlsli">
+      <Filter>Ellysia\Resource File\FullScreen</Filter>
+    </None>
+    <None Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.hlsli">
+      <Filter>Ellysia\Resource File\LuminanceBasedOutline</Filter>
+    </None>
+    <None Include="Resources\Shader\RadialBlur\RadialBlur.hlsli">
+      <Filter>Ellysia\Resource File\RadialBlur</Filter>
+    </None>
+    <None Include="Resources\Shader\RandomEffect\RandomEffect.hlsli">
+      <Filter>Ellysia\Resource File\RandomEffect</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

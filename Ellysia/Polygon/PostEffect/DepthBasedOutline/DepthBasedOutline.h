@@ -23,7 +23,6 @@ public:
 	/// 描画前の処理
 	/// </summary>
 	void PreDraw();
-	void PreDrawSecond();
 
 	/// <summary>
 	/// 描画

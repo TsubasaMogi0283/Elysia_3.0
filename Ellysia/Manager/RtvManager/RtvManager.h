@@ -30,6 +30,16 @@ public:
 	/// <returns></returns>
 	static ComPtr<ID3D12Resource> CreateRenderTextureResource(DXGI_FORMAT format, const Vector4 clearColor);
 
+
+	/// <summary>
+	/// RenderTextureを作る(Depth版)
+	/// </summary>
+	/// <param name="format"></param>
+	/// <param name="clearColor"></param>
+	/// <returns></returns>
+	static ComPtr<ID3D12Resource> CreateRenderTextureResourceForDepth(DXGI_FORMAT format, const Vector4 clearColor);
+
+
 	/// <summary>
 	/// ディスクリプタヒープの取得
 	/// </summary>

@@ -7,9 +7,7 @@ struct PixelShaderOutput{
     float4 color : SV_TARGET0;
 };
 
-struct Camera
-{
-	//必要なのはこの3つ
+struct Camera{
 	//ビュー行列
     float4x4 viewMatrix_;
 	//射影行列

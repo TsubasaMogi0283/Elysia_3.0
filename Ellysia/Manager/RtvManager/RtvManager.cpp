@@ -52,7 +52,6 @@ ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResource(DXGI_FORMAT forma
 	clearValue.Color[2] = clearColor.z;
 	clearValue.Color[3] = clearColor.w;
 
-	//D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 
 	//Resourceの作成
 	ComPtr<ID3D12Resource> resource = nullptr;
@@ -61,6 +60,64 @@ ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResource(DXGI_FORMAT forma
 		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定。特になし。
 		&resourceDesc,						//Resourceの設定
 		D3D12_RESOURCE_STATE_RENDER_TARGET,	//これから描画することを前提としたTextureなのでRenderTargetとして使うことから始める
+		&clearValue,						//Clear最適値。ClearRenderTargetをこの色でClearするようにする。最適化されているので高速！
+		IID_PPV_ARGS(&resource));			//作成するResourceポインタへのポインタ
+	assert(SUCCEEDED(hr));
+
+
+	return resource;
+}
+
+ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResourceForDepth(DXGI_FORMAT format, const Vector4 clearColor){
+
+	uint32_t width = WindowsSetup::GetInstance()->GetClientWidth();
+	uint32_t height = WindowsSetup::GetInstance()->GetClientHeight();
+
+	D3D12_RESOURCE_DESC resourceDesc{};
+	//Textureの幅
+	resourceDesc.Width = width;
+	//Textureの高さ
+	resourceDesc.Height = height;
+	//mipmapの数
+	resourceDesc.MipLevels = 1;
+	//奥行 or 配列Textureの配列数
+	resourceDesc.DepthOrArraySize = 1;
+	//利用可能なフォーマット
+	resourceDesc.Format = format;
+	//サンプリングカウント。1固定
+	resourceDesc.SampleDesc.Count = 1;
+	//2次元
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	//RenderTargetとして利用可能にする
+	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+
+	//resourceDescとclearValueにあるFormatはしっかり統一させてね
+
+
+	//利用するHeapの設定
+	D3D12_HEAP_PROPERTIES heapProperties{};
+	//VRAM上に作る
+	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+
+
+
+	//クリア設定
+	D3D12_CLEAR_VALUE clearValue{};
+	clearValue.Format = format;
+	clearValue.Color[0] = clearColor.x;
+	clearValue.Color[1] = clearColor.y;
+	clearValue.Color[2] = clearColor.z;
+	clearValue.Color[3] = clearColor.w;
+
+
+	//Resourceの作成
+	ComPtr<ID3D12Resource> resource = nullptr;
+	HRESULT hr = DirectXSetup::GetInstance()->GetDevice()->CreateCommittedResource(
+		&heapProperties,					//Heapの設定 
+		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定。特になし。
+		&resourceDesc,						//Resourceの設定
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,	//これから描画することを前提としたTextureなのでRenderTargetとして使うことから始める
 		&clearValue,						//Clear最適値。ClearRenderTargetをこの色でClearするようにする。最適化されているので高速！
 		IID_PPV_ARGS(&resource));			//作成するResourceポインタへのポインタ
 	assert(SUCCEEDED(hr));
