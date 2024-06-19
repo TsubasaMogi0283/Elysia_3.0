@@ -98,8 +98,8 @@ private:
 
 	//SpotLight
 	ComPtr<ID3D12Resource> spotLightResource_ = nullptr;
-	SpotLight* spotLightMapData_ = {};
-	SpotLight spotLightData_ = {};
+	SpotLightData* spotLightMapData_ = {};
+	SpotLightData spotLightData_ = {};
 
 
 

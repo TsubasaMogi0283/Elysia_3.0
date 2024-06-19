@@ -55,6 +55,15 @@ public:
 	/// <param name="pointLight"></param>
 	void Draw(WorldTransform& worldTransform, Camera& camera, PointLight& pointLight);
 
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="worldTransform"></param>
+	/// <param name="camera"></param>
+	/// <param name="pointLight"></param>
+	void Draw(WorldTransform& worldTransform, Camera& camera, SpotLight& pointLight);
+
+
 
 	/// <summary>
 	/// デストラクタ
@@ -88,46 +97,6 @@ public:
 #pragma endregion
 
 
-#pragma region SpotLightの設定
-	//色
-	void SetSpotLightColor(Vector4 color) {
-		this->spotLightData_.color = color;
-	}
-
-	//位置
-	void SetSpotLightPosition(Vector3 position) {
-		this->spotLightData_.position = position;
-	}
-
-	//輝度
-	void SetSpotLightIntensity(float intensity) {
-		this->spotLightData_.intensity = intensity;
-	}
-
-	//方向
-	void SetSpotLightDirection(Vector3 direction) {
-		this->spotLightData_.direction = direction;
-	}
-
-	//届く距離
-	void SetSpotLightDistance(float distance) {
-		this->spotLightData_.distance = distance;
-	}
-
-	//減衰率
-	void SetSpotLightDecay(float decay) {
-		this->spotLightData_.decay = decay;
-	}
-	//Falloffの開始の角度の設定
-	void SetCosFalloffStart(float cos) {
-		this->spotLightData_.cosFallowoffStart = cos;
-	}
-	//余弦
-	void SetSpotLightCosAngle(float cosAngle) {
-		this->spotLightData_.cosAngle = cosAngle;
-	}
-
-#pragma endregion
 
 
 	void SetEviromentTexture(uint32_t textureHandle) {
@@ -169,13 +138,6 @@ private:
 	int32_t selectLighting_ = Directional;
 
 	float shininess_ = 100.0f;
-
-
-	//SpotLight
-	ComPtr<ID3D12Resource> spotLightResource_ = nullptr;
-	SpotLight* spotLightMapData_ = {};
-	SpotLight spotLightData_ = {};
-
 
 
 #pragma endregion

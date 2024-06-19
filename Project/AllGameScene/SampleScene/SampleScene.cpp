@@ -100,7 +100,7 @@ void SampleScene::Initialize() {
 
 	directionalLight_.Initialize();
 	pointLight_.Initialize();
-
+	spotLight_.Initialize();
 }
 
 
@@ -214,6 +214,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	directionalLight_.Update();
 	pointLight_.Update();
+	spotLight_.Update();
 	camera_.Update();
 	worldTransform_.Update();
 	noneAnimationWorldTransform_.Update();
@@ -239,6 +240,15 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::SliderFloat3("Position", &pointLight_.position_.x, -10.0f, 10.0f);
 	ImGui::SliderFloat("Radius", &pointLight_.radius_, 0.0f, 10.0f);
 	ImGui::End();
+
+	ImGui::Begin("SpotLight");
+	ImGui::SliderFloat4("Color", &spotLight_.color_.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("Decay", &spotLight_.decay_, 0.0f, 10.0f);
+	ImGui::SliderFloat("intensity", &spotLight_.intensity_, 0.0f, 10.0f);
+	ImGui::SliderFloat3("Position", &spotLight_.position_.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("Radius", &spotLight_.cosAngle_, 0.0f, 10.0f);
+	ImGui::End();
+
 
 #endif
 	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
@@ -282,8 +292,8 @@ void SampleScene::DrawObject3D() {
 
 
 
-	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_, pointLight_);
-	model_->Draw(worldTransform_, camera_, pointLight_);
+	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_, spotLight_);
+	model_->Draw(worldTransform_, camera_, spotLight_);
 
 
 	

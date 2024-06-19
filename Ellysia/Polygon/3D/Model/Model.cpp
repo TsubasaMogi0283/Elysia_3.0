@@ -14,7 +14,7 @@ Model* Model::Create(uint32_t modelHandle) {
 	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
 	PipelineManager::GetInstance()->SetModelBlendMode(1);
 	PipelineManager::GetInstance()->GenerateModelPSO();
-	model->selectLighting_ = Point;
+	model->selectLighting_ = Spot;
 	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい
 	//Setterでやるの面倒だと思った
 
@@ -57,17 +57,7 @@ Model* Model::Create(uint32_t modelHandle) {
 
 
 
-	//SpotLight
-	model->spotLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SpotLight)).Get();
-	model->spotLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
-	model->spotLightData_.position = { 2.0f,1.25f,0.0f };
-	model->spotLightData_.intensity = 4.0f;
-	model->spotLightData_.direction = { -1.0f,1.0f,0.0f };
-	model->spotLightData_.distance = 7.0f;
-	model->spotLightData_.decay = 2.0f;
-	model->spotLightData_.cosFallowoffStart = 0.3f;
-	model->spotLightData_.cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
-
+	
 
 	return model;
 
@@ -242,8 +232,93 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, PointLight& poi
 		TextureManager::GraphicsCommand(2, textureHandle_);
 	}
 
-	//DirectionalLight
-	//DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLight.bufferResource_->GetGPUVirtualAddress());
+	//カメラ
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource_->GetGPUVirtualAddress());
+
+	//PixelShaderに送る方のカメラ
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
+	//PointLight
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(6, pointLight.bufferResource_->GetGPUVirtualAddress());
+	//DrawCall
+	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+
+}
+
+void Model::Draw(WorldTransform& worldTransform, Camera& camera, SpotLight& pointLight){
+	//資料にはなかったけどUnMapはあった方がいいらしい
+	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
+	//プログラムが安定するらしいとのこと
+
+#pragma region 頂点バッファ
+	//頂点バッファにデータを書き込む
+	VertexData* vertexData = nullptr;
+	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
+	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
+	vertexResource_->Unmap(0, nullptr);
+
+#pragma endregion
+
+	uint32_t* mappedIndex = nullptr;
+	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
+	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+	indexResource_->Unmap(0, nullptr);
+
+#pragma region マテリアル
+	////書き込むためのアドレスを取得
+	////reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
+	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	materialData_->color = materialColor_;
+	materialData_->lightingKinds = selectLighting_;
+	materialData_->shininess = shininess_;
+	materialData_->uvTransform = MakeIdentity4x4();
+
+	materialResource_->Unmap(0, nullptr);
+
+#pragma endregion
+
+#pragma region PixelShaderに送る方のカメラ
+	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+	Vector3 cameraWorldPosition = {};
+	cameraWorldPosition.x = camera.worldMatrix_.m[3][0];
+	cameraWorldPosition.y = camera.worldMatrix_.m[3][1];
+	cameraWorldPosition.z = camera.worldMatrix_.m[3][2];
+
+	cameraForGPU_->worldPosition = cameraWorldPosition;
+	cameraResource_->Unmap(0, nullptr);
+#pragma endregion
+
+
+
+
+
+	//コマンドを積む
+
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetModelRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetModelGraphicsPipelineState().Get());
+
+	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
+	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	//IBVを設定
+	DirectXSetup::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
+
+	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
+	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+
+	//Material
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+
+
+	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
+	//コマンド送ってGPUで計算
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform.bufferResource_->GetGPUVirtualAddress());
+
+
+	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
+	if (textureHandle_ != 0) {
+		TextureManager::GraphicsCommand(2, textureHandle_);
+	}
 
 	//カメラ
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource_->GetGPUVirtualAddress());
@@ -251,17 +326,8 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, PointLight& poi
 	//PixelShaderに送る方のカメラ
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
 
-	//PointLight
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(6, pointLight.bufferResource_->GetGPUVirtualAddress());
-
 	//SpotLight
-	//DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLightResource_->GetGPUVirtualAddress());
-
-	if (eviromentTextureHandle_ != 0) {
-		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
-	}
-
-
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, pointLight.bufferResource_->GetGPUVirtualAddress());
 
 	//DrawCall
 	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);

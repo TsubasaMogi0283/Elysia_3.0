@@ -95,6 +95,7 @@ private:
 
 	DirectionalLight directionalLight_ = {};
 	PointLight pointLight_ = {};
+	SpotLight spotLight_ = {};
 
 	const char* GroupName = "Player";
 	Vector3 position = {};

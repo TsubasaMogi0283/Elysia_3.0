@@ -139,6 +139,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Input\Input.cpp" />
     <ClCompile Include="Ellysia\Lighting\DirectionalLight.cpp" />
     <ClCompile Include="Ellysia\Lighting\PointLight.cpp" />
+    <ClCompile Include="Ellysia\Lighting\SpotLight.cpp" />
     <ClCompile Include="Ellysia\Line\Line.cpp" />
     <ClCompile Include="Ellysia\main.cpp" />
     <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp" />

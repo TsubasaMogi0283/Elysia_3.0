@@ -37,19 +37,18 @@ public:
 
 public:
 	//色
-	Vector4 color_;
+	Vector4 color_= { 1.0f,1.0f,1.0f,1.0f };
 	//位置
-	Vector3 position_;
+	Vector3 position_ = {0.0f,0.0f,0.0f};
 	//輝度
-	float intensity_;
+	float intensity_=4.0f;
 	//ライトに届く最大距離
-	float radius_;
+	float radius_=5.0f;
 	//減衰率
-	float decay_;
-	
+	float decay_=5.0f;
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> bufferResource_;
+	ComPtr<ID3D12Resource> bufferResource_=nullptr;
 	//書き込みデータ
 	PointLightData* pointLightdata_ = nullptr;
 

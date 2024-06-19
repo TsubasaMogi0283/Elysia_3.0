@@ -29,14 +29,14 @@ public:
 
 public:
 	//ライトの色
-	Vector4 color_;
+	Vector4 color_ = {1.0f,1.0f,1.0f,1.0f};
 	//ライトの向き
-	Vector3 direction_;
+	Vector3 direction_ = {0.0f,-1.0f,0.0f};
 	//輝度
-	float intensity_;
+	float intensity_=5.0f;
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> bufferResource_;
+	ComPtr<ID3D12Resource> bufferResource_=nullptr;
 	//書き込みデータ
 	DirectionalLightData* directionalLight_ = nullptr;
 

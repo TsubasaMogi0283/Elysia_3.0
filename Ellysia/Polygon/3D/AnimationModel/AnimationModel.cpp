@@ -71,7 +71,7 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 
 
 	//SpotLight
-	model->spotLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SpotLight)).Get();
+	model->spotLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SpotLightData)).Get();
 	model->spotLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
 	model->spotLightData_.position = { 2.0f,1.25f,0.0f };
 	model->spotLightData_.intensity = 4.0f;
