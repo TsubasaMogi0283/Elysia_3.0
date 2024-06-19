@@ -157,16 +157,15 @@ void SampleScene::Update(GameManager* gameManager) {
 	collisionManager_->ClearList();
 
 
-
+#ifdef _DEBUG
 	//1キーで出す
 	if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
 		GenarateEnemy();
 	}
 
+#endif
 	
 	
-	
-	Vector3 move = {};
 	
 	lightDirection_.x = std::cosf(theta);
 	lightDirection_.z = std::sinf(theta);
@@ -217,7 +216,6 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	collisionManager_->RegisterList(lightCollision_);
 
-
 	for (auto it = enemys_.begin(); it != enemys_.end();) {
 		Enemy* enemy = *it;
 		if (enemy != nullptr) {
@@ -226,25 +224,30 @@ void SampleScene::Update(GameManager* gameManager) {
 		it++;
 	}
 
+
+
 	//カメラ
 	camera_.Update();
-	//敵同士
-	CheckCollision(enemys_);
-
 	
+	
+
 	//敵
 	for (Enemy* enemy : enemys_) {
 		enemy->Update();
 	}
-	
+	//敵同士
+	CheckCollision(enemys_);
+
+
 	//プレイヤーの更新
 	player_->Update();
 
 	//地面
 	groundWorldTransform_.Update();
 	//ライト
-	Vector3 cameraWorldPosition = { camera_.worldMatrix_.m[3][0],camera_.worldMatrix_.m[3][1],camera_.worldMatrix_.m[3][2] };
-	lightCollision_->Update(cameraWorldPosition);
+	Vector3 CAMERA_POSITION_OFFSET = { 0.0f,0.0f,0.0f };
+	Vector3 cameraPosition = Add(camera_.GetWorldPosition(), CAMERA_POSITION_OFFSET);
+	lightCollision_->Update(cameraPosition);
 	
 
 	//当たり判定
@@ -252,7 +255,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 
-
+	//敵がが生存していなかったら消す
 	enemys_.remove_if([](Enemy* enemy) {
 		if (enemy->GetIsAlive()==false) {
 			delete enemy;

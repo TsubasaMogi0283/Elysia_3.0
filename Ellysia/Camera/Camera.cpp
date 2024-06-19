@@ -65,7 +65,5 @@ Vector3 Camera::GetWorldPosition(){
 	result.x = worldMatrix_.m[3][0];
 	result.y = worldMatrix_.m[3][1];
 	result.z = worldMatrix_.m[3][2];
-
-
 	return result;;
 }
