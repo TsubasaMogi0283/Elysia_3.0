@@ -49,7 +49,7 @@ void SampleScene::Initialize() {
 
 	Enemy* enemy2 = new Enemy();
 	Vector3 position2 = { -2.0f,1.0f,0.0f };
-	enemy2->Initialize(enemyModelHandle_, position2, {0.010f,0.0f,0.0f});
+	enemy2->Initialize(enemyModelHandle_, position2, {0.0f,0.0f,0.0f});
 	enemys_.push_back(enemy2);
 
 

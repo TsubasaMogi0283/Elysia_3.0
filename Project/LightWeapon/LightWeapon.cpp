@@ -49,8 +49,13 @@ void LightWeapon::Update(Vector3 cameraPosition){
 }
 
 void LightWeapon::OnCollision() {
+#ifdef _DEBUG
 	ImGui::Begin("LightWeapon");
 	ImGui::End();
+#endif // _DEBUG
+
+
+	
 	isCollision_ = true;
 }
 
