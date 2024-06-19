@@ -169,11 +169,29 @@ void SampleScene::Update(GameManager* gameManager) {
 	
 	lightDirection_.x = std::cosf(theta);
 	lightDirection_.z = std::sinf(theta);
-
-
-
-	lightPosition = camera_.translate_;	
+	lightPosition = player_->GetWorldPosition();
 	
+
+
+
+	player_->SetSpotLightPosition(lightPosition);
+	//輝度
+	player_->SetSpotLightIntensity(intencity_);
+
+	//方向
+	player_->SetSpotLightDirection(lightDirection_);
+
+	//届く距離
+	player_->SetSpotLightDistance(distance_);
+
+	//減衰率
+	player_->SetSpotLightDecay(decay_);
+	//Falloffの開始の角度の設定
+	player_->SetCosFalloffStart(fallOff_);
+	//余弦
+	player_->SetSpotLightCosAngle(cosAngle_);
+
+
 
 	ground_->SetSpotLightPosition(lightPosition);
 	//輝度
@@ -181,7 +199,6 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	//方向
 	ground_->SetSpotLightDirection(lightDirection_);
-
 
 	//届く距離
 	ground_->SetSpotLightDistance(distance_);
@@ -227,6 +244,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 	//カメラ
+	//Vector3 CAMERA_POSITION_OFFSET = { 0.0f,0.0f,-50.0f };
+	//camera_.translate_ = Add(player_->GetWorldPosition(), CAMERA_POSITION_OFFSET);
 	camera_.Update();
 	
 	
@@ -245,9 +264,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	//地面
 	groundWorldTransform_.Update();
 	//ライト
-	Vector3 CAMERA_POSITION_OFFSET = { 0.0f,0.0f,0.0f };
-	Vector3 cameraPosition = Add(camera_.GetWorldPosition(), CAMERA_POSITION_OFFSET);
-	lightCollision_->Update(cameraPosition);
+	lightCollision_->Update(player_->GetWorldPosition());
 	
 
 	//当たり判定
