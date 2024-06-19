@@ -54,7 +54,7 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 
 
 	//Lighting
-	model->directionalLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(DirectionalLight)).Get();
+	model->directionalLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(DirectionalLightData)).Get();
 
 
 	//カメラ
@@ -62,7 +62,7 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 
 
 	//PointLight
-	model->pointLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(PointLight)).Get();
+	model->pointLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(PointLightData)).Get();
 	model->pointLightData_.color = { 1.0f,1.0f,1.0f,1.0f };
 	model->pointLightData_.position = { 0.0f,0.0f,0.0f };
 	model->pointLightData_.intensity = 4.0f;

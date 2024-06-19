@@ -29,7 +29,6 @@ void SampleScene::Initialize() {
 	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/terrain", "terrain.obj");
 	worldTransform_.Initialize();
 	model_.reset(Model::Create(modelHandle));
-	model_->SetLighting(1);
 	//Walk
 	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf");
 	humanAnimationModel_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/human", "walk.gltf");
@@ -99,7 +98,8 @@ void SampleScene::Initialize() {
 	randomEffect_ = std::make_unique < RandomEffect>();
 	randomEffect_->Initialize();
 
-	
+	directionalLight_.Initialize();
+	pointLight_.Initialize();
 
 }
 
@@ -212,6 +212,8 @@ void SampleScene::Update(GameManager* gameManager) {
 	camera_.translate_ = Add(camera_.translate_, { move.x* CAMERA_MOVE_SPEED,move.y* CAMERA_MOVE_SPEED,move.z*CAMERA_MOVE_SPEED });
 	camera_.rotate_ = Add(camera_.rotate_, { rotateMove.x * ROTATE_MOVE_SPEED,rotateMove.y * ROTATE_MOVE_SPEED,rotateMove.z * ROTATE_MOVE_SPEED });
 
+	directionalLight_.Update();
+	pointLight_.Update();
 	camera_.Update();
 	worldTransform_.Update();
 	noneAnimationWorldTransform_.Update();
@@ -220,6 +222,22 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::Begin("Camera");
 	ImGui::SliderFloat3("Translate", &camera_.translate_.x, -100.0f, 100.0f);
 	ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
+	ImGui::End();
+
+	ImGui::Begin("DirectionalLight");
+	ImGui::SliderFloat4("Color", &directionalLight_.color_.x, 0.0f, 1.0f);
+	ImGui::SliderFloat3("Direction", &directionalLight_.direction_.x, -1.0f, 1.0f);
+	ImGui::SliderFloat("intensity", &directionalLight_.intensity_, 0.0f, 1.0f);
+	ImGui::End();
+
+
+
+	ImGui::Begin("PointLight");
+	ImGui::SliderFloat4("Color", &pointLight_.color_.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("Decay", &pointLight_.decay_, 0.0f, 10.0f);
+	ImGui::SliderFloat("intensity", &pointLight_.intensity_, 0.0f, 10.0f);
+	ImGui::SliderFloat3("Position", &pointLight_.position_.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("Radius", &pointLight_.radius_, 0.0f, 10.0f);
 	ImGui::End();
 
 #endif
@@ -260,8 +278,12 @@ void SampleScene::DrawObject3D() {
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
 		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
 	}
-	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_);
-	model_->Draw(worldTransform_, camera_);
+
+
+
+
+	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_, pointLight_);
+	model_->Draw(worldTransform_, camera_, pointLight_);
 
 
 	

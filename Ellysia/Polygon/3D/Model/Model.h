@@ -24,8 +24,6 @@
 #include <PointLight.h>
 #include <SpotLight.h>
 
-#include "Skeleton.h"
-#include <SkinCluster.h>
 #include "LightingType.h"
 
 class Model {
@@ -41,14 +39,21 @@ public:
 	/// <returns></returns>
 	static Model* Create(uint32_t modelHandle);
 
-
 	/// <summary>
 	/// 描画
 	/// </summary>
 	/// <param name="worldTransform">ワールドトランスフォーム</param>
 	/// <param name="camera">カメラ</param>
-	void Draw(WorldTransform& worldTransform, Camera& camera);
+	/// <param name="directionalLight">平行光源</param>
+	void Draw(WorldTransform& worldTransform, Camera& camera, DirectionalLight& directionalLight);
 
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="worldTransform"></param>
+	/// <param name="camera"></param>
+	/// <param name="pointLight"></param>
+	void Draw(WorldTransform& worldTransform, Camera& camera, PointLight& pointLight);
 
 
 	/// <summary>
@@ -80,35 +85,8 @@ public:
 	void SetLighting(bool enableLighting) {
 		this->selectLighting_ = enableLighting;
 	}
-	//方向
-	void SetDirectionalLightDirection(Vector3 direction) {
-		this->lightingDirection_ = direction;
-	}
-	//Intensity
-	void SetDirectionalLightIntensity(float intensity) {
-		this->directionalLightIntensity_ = intensity;
-	}
-
 #pragma endregion
 
-#pragma region PointLightの設定
-	void SetPointLightColor(Vector4 color) {
-		this->pointLightData_.color = color;
-	}
-	void SetPointLightPosition(Vector3 position) {
-		this->pointLightData_.position = position;
-	}
-	void SetPointLightIntensity(float intensity) {
-		this->pointLightData_.intensity = intensity;
-	}
-	void SetPointLightRadius(float radius) {
-		this->pointLightData_.radius = radius;
-	}
-	void SetPointLightDecay(float decay) {
-		this->pointLightData_.decay = decay;
-	}
-
-#pragma endregion
 
 #pragma region SpotLightの設定
 	//色
@@ -190,20 +168,7 @@ private:
 	//基本はtrueで
 	int32_t selectLighting_ = Directional;
 
-	//DirectionalLight
-	ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
-	DirectionalLight* directionalLightData_ = nullptr;
-	//方向
-	Vector3 lightingDirection_ = { 0.0f,-1.0f,0.0f };
-	//Lightの色
-	Vector4 lightColor_ = { 1.0f,1.0f,1.0f,1.0f };
-	float directionalLightIntensity_ = 1.0f;
 	float shininess_ = 100.0f;
-
-	//PointLight
-	ComPtr<ID3D12Resource> pointLightResource_ = nullptr;
-	PointLight* pointLightMapData_ = {};
-	PointLight pointLightData_ = {};
 
 
 	//SpotLight

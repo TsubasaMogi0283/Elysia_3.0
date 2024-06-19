@@ -185,7 +185,7 @@ private:
 
 	//Lighting用
 	ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
-	DirectionalLight* directionalLightData_ = nullptr;
+	DirectionalLightData* directionalLightData_ = nullptr;
 	//色
 	Vector4 directionalLightColor_ = { 1.0f,1.0f,1.0f,1.0f };
 	float directionalLightIntensity_ = 3.0f;

@@ -93,6 +93,9 @@ private:
 	std::unique_ptr<SkyBox> skyBox_ = nullptr;
 	WorldTransform skyBoxWorldTransform_ = {};
 
+	DirectionalLight directionalLight_ = {};
+	PointLight pointLight_ = {};
+
 	const char* GroupName = "Player";
 	Vector3 position = {};
 

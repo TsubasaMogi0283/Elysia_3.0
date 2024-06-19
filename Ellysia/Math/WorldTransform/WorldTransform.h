@@ -17,7 +17,6 @@ struct WorldTransformData {
 //Transformationクラスのものをこっちに移動させた方が良いかも
 struct WorldTransform {
 public:
-#pragma region メンバ関数
 
 	//初期化
 	void Initialize();
@@ -35,10 +34,6 @@ private:
 	//転送
 	void Transfer();
 
-
-#pragma endregion
-
-#pragma region メンバ変数
 
 
 public:
@@ -64,7 +59,6 @@ public:
 	//親となるワールド変換へのポインタ
 	const WorldTransform* parent_ = nullptr;
 
-#pragma endregion
 
 };
 

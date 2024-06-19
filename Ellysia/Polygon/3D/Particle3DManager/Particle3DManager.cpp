@@ -57,7 +57,7 @@ void Particle3DManager::Initialize(){
 
 
 
-	directionalLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(DirectionalLight)).Get();
+	directionalLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(DirectionalLightData)).Get();
 
 
 #pragma region 頂点データ
@@ -311,7 +311,7 @@ void Particle3DManager::Draw(Camera& camera) {
 #pragma endregion
 
 #pragma region DirectionalLight
-		DirectionalLight* directionalLightData_ = nullptr;
+		DirectionalLightData* directionalLightData_ = nullptr;
 		directionalLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
 		directionalLightData_->color = directionalLightColor_;
 		directionalLightData_->direction = lightingDirection_;

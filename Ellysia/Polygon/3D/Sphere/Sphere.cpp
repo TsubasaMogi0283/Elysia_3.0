@@ -94,7 +94,7 @@ void Sphere::Initialize() {
 	materialResourceSphere_=CreateBufferResource(sizeof(Material));
 
 	//Lighting
-	directionalLightResource_ = CreateBufferResource(sizeof(DirectionalLight));
+	directionalLightResource_ = CreateBufferResource(sizeof(DirectionalLightData));
 	directionalLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
 	directionalLightData_->color={ 1.0f,1.0f,1.0f,1.0f };
 	directionalLightData_->direction = { 0.0f,-1.0f,0.0f };

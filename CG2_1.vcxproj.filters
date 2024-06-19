@@ -372,6 +372,12 @@
     <ClCompile Include="Ellysia\Manager\ImGuiManager\ImGuiManager.cpp">
       <Filter>Ellysia\Source File\Manager\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\Lighting\DirectionalLight.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Lighting\PointLight.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">

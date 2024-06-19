@@ -82,7 +82,7 @@ Particle3D* Particle3D::Create(uint32_t modelHandle) {
 	particle3D->instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
 
 	//Lighting
-	particle3D->directionalLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(DirectionalLight)).Get();
+	particle3D->directionalLightResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(DirectionalLightData)).Get();
 	
 
 

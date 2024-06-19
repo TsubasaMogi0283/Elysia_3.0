@@ -95,7 +95,7 @@ private:
 
 	//Lighting用
 	ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
-	DirectionalLight* directionalLightData_ = nullptr;
+	DirectionalLightData* directionalLightData_ = nullptr;
 
 
 

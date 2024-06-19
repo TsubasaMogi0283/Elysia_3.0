@@ -82,7 +82,7 @@ private:
 
 	//DirectionalLight
 	ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
-	DirectionalLight* directionalLightData_ = nullptr;
+	DirectionalLightData* directionalLightData_ = nullptr;
 	//方向
 	Vector3 lightingDirection_ = { 0.0f,-1.0f,0.0f };
 	//Lightの色
@@ -92,8 +92,8 @@ private:
 
 	//PointLight
 	ComPtr<ID3D12Resource> pointLightResource_ = nullptr;
-	PointLight* pointLightMapData_ = {};
-	PointLight pointLightData_ = {};
+	PointLightData* pointLightMapData_ = {};
+	PointLightData pointLightData_ = {};
 
 
 	//SpotLight
