@@ -64,9 +64,6 @@ public:
 	Vector3 GetWorldPosition();
 
 
-	void SetSpotLightPosition(Vector3 position) {
-		model_->SetSpotLightPosition(position);
-	}
 	void SetSpotLightIntensity(float intencity) {
 		model_->SetSpotLightIntensity(intencity);
 	}

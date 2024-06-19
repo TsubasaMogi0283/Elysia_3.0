@@ -64,8 +64,12 @@ void SampleScene::Initialize() {
 	camera_.Initialize();
 	camera_.translate_.y = 1.0f;
 	camera_.translate_.z = -15.0f;
+	cameraPosition_ = camera_ .translate_;
 
+	CAMERA_POSITION_OFFSET = {0.0f,1.0f,1.0f};
 
+	thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
+	cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
 	//マジでSetterでわざわざやるの面倒！
 	//直したい
 	theta = std::numbers::pi_v<float> / 2.0f;
@@ -158,8 +162,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 #ifdef _DEBUG
-	//1キーで出す
-	if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
+	//Gキーで出す
+	if (Input::GetInstance()->IsTriggerKey(DIK_G) == true) {
 		GenarateEnemy();
 	}
 
@@ -174,7 +178,6 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 
-	player_->SetSpotLightPosition(lightPosition);
 	//輝度
 	player_->SetSpotLightIntensity(intencity_);
 
@@ -243,9 +246,43 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 
-	//カメラ
-	//Vector3 CAMERA_POSITION_OFFSET = { 0.0f,0.0f,-50.0f };
-	//camera_.translate_ = Add(player_->GetWorldPosition(), CAMERA_POSITION_OFFSET);
+	if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
+		viewOfPoint_ = FirstPerson;
+	}
+	else if (Input::GetInstance()->IsTriggerKey(DIK_3) == true) {
+		viewOfPoint_ = ThirdPersonBack;
+	}
+
+
+	if (viewOfPoint_ == FirstPerson) {
+
+		//カメラ
+		#ifdef _DEBUG
+			ImGui::Begin("Camera");
+			ImGui::SliderFloat3("Pos", &CAMERA_POSITION_OFFSET.x, -30.0f, 30.0f);
+			ImGui::End();
+		#endif // _DEBUG
+
+		camera_.rotate_ = { 0.0f,0.0f,0.0f };
+		camera_.translate_ = Add(player_->GetWorldPosition(), CAMERA_POSITION_OFFSET);
+
+	}
+	else if (viewOfPoint_ == ThirdPersonBack) {
+
+		#ifdef _DEBUG
+			ImGui::Begin("Camera");
+			ImGui::SliderFloat3("Pos", &cameraThirdPersonViewOfPointPosition_.x, -70.0f, 40.0f);
+			ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
+
+			ImGui::End();
+		#endif // _DEBUG
+
+		camera_.rotate_ = thirdPersonViewOfPointRotate_;
+		camera_.translate_ = Add(player_->GetWorldPosition(), cameraThirdPersonViewOfPointPosition_);
+	}
+
+
+
 	camera_.Update();
 	
 	
@@ -292,11 +329,6 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::SliderFloat("intencity_", &intencity_, 0.0f, 400.0f);
 	ImGui::End();
 
-
-	ImGui::Begin("Camera");
-	ImGui::SliderFloat3("Translate", &camera_.translate_.x, -100.0f, 100.0f);
-	ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
-	ImGui::End();
 
 #endif
 	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {

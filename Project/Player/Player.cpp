@@ -34,11 +34,17 @@ void Player::Update(){
 
 #pragma endregion
 
+	
+
 
 	worldTransform_.translate_ = Add(worldTransform_.translate_, { move.x * MOVE_SPEED,move.y * MOVE_SPEED,move.z * MOVE_SPEED });
 
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
+
+
+	model_->SetSpotLightPosition(GetWorldPosition());
+
 }
 
 void Player::Draw(Camera& camera){

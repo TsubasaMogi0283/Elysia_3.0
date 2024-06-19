@@ -53,6 +53,11 @@ private:
 
 private:
 	Camera camera_ = {};
+	Vector3 cameraPosition_ = {};
+	Vector3 CAMERA_POSITION_OFFSET = { 0.0f,1.0f,0.0f };
+	
+	Vector3 cameraThirdPersonViewOfPointPosition_ = {};
+	Vector3 thirdPersonViewOfPointRotate_ = {};
 
 	//プレイヤー
 	std::unique_ptr<Player>player_ = nullptr;
