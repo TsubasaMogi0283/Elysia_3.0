@@ -34,6 +34,13 @@ public:
 
 	//転送する
 	void Transfer();
+public:
+	/// <summary>
+	/// ワールド座標の取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
 
 public:
 	//リソース

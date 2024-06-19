@@ -48,6 +48,10 @@ private:
 	void CheckCollision(std::list<Enemy*>& enemies);
 
 private:
+
+	
+
+private:
 	Camera camera_ = {};
 
 	//プレイヤー
@@ -70,7 +74,6 @@ private:
 	Vector3 lightDirection_ = {};
 
 	float theta = 0.0f;
-
 	float decay_ = 0.0f;
 	float fallOff_ = 0.0f;
 	float cosAngle_ = 0.0f;
@@ -78,8 +81,9 @@ private:
 	float distance_ = 10.0f;
 	const char* GroupName = "Player";
 
-	std::unique_ptr<Sprite> test_ = nullptr;
-	Vector4 color_ = {};
+	uint32_t viewOfPoint_ = 0;
+
+
 
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 

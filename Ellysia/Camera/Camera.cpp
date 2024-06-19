@@ -59,3 +59,13 @@ void Camera::Transfer() {
 	cameraMatrixData_->orthographicMatrix_ = orthographicMatrix_;
 	bufferResource_->Unmap(0, nullptr);
 }
+
+Vector3 Camera::GetWorldPosition(){
+	Vector3 result = {};
+	result.x = worldMatrix_.m[3][0];
+	result.y = worldMatrix_.m[3][1];
+	result.z = worldMatrix_.m[3][2];
+
+
+	return result;;
+}

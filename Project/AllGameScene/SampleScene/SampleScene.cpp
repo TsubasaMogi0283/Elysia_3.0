@@ -21,9 +21,11 @@ SampleScene::SampleScene() {
 /// </summary>
 void SampleScene::Initialize() {
 	
+	//プレイヤーの初期化
 	player_ = std::make_unique<Player>();
 	player_->Initialize();
-
+	//初期は1人称視点
+	viewOfPoint_ = FirstPerson;
 
 
 	//地面
@@ -36,7 +38,7 @@ void SampleScene::Initialize() {
 	groundWorldTransform_.translate_.y = 0.0f;
 
 
-	//敵
+#pragma region 敵
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD2_Enemy","TD2_Enemy.obj");
 	
 	//まず一個出す
@@ -51,16 +53,21 @@ void SampleScene::Initialize() {
 	enemys_.push_back(enemy2);
 
 
-	uint32_t textureHandle = TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
-	test_.reset(Sprite::Create(textureHandle, { 0.0f,0.0f }));
-	color_ = { 1.0f,1.0f,1.0f,1.0f };
 
+#pragma endregion
+
+
+
+
+
+	//カメラ
 	camera_.Initialize();
 	camera_.translate_.y = 1.0f;
 	camera_.translate_.z = -15.0f;
 
 
-
+	//マジでSetterでわざわざやるの面倒！
+	//直したい
 	theta = std::numbers::pi_v<float> / 2.0f;
 	lightPosition = camera_.translate_;
 
@@ -104,13 +111,16 @@ void SampleScene::CheckCollision(std::list<Enemy*>& enemies){
 			float minDistance = (*it1)->GetRadius() + (*it2)->GetRadius();
 
 
-
+#ifdef _DEBUG
 			ImGui::Begin("EnemyCollision");
-			ImGui::InputFloat("Distance",&distance);
+			ImGui::InputFloat("Distance", &distance);
 			ImGui::InputFloat("Radius", &minDistance);
-			
+
 			ImGui::End();
 
+#endif // DEBUG
+
+			
 
 			if (distance < minDistance) {
 				(*it2)->SetTranslate(Add((*it2)->GetWorldPosition(), {-1.0,0.0f,0.0f}));
@@ -155,32 +165,15 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	
 	
-	const float MOVE_SPEED = 0.1f ;
 	
 	Vector3 move = {};
-	
-	//if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
-	//	move.x = 1.0f;
-	//}
-	//else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
-	//	move.x = -1.0f;
-	//}
-	//else if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
-	//	move.z = 1.0f;
-	//}
-	//else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
-	//	move.z = -1.0f;
-	//}
 	
 	lightDirection_.x = std::cosf(theta);
 	lightDirection_.z = std::sinf(theta);
 
 
-	camera_.translate_ = Add(camera_.translate_, { move.x * MOVE_SPEED,move.y * MOVE_SPEED,move.z * MOVE_SPEED });
 
 	lightPosition = camera_.translate_;	
-	lightPosition = Add(lightPosition, { move.x* MOVE_SPEED,move.y* MOVE_SPEED,move.z* MOVE_SPEED });
-
 	
 
 	ground_->SetSpotLightPosition(lightPosition);
@@ -268,7 +261,6 @@ void SampleScene::Update(GameManager* gameManager) {
 		return false;
 	});
 
-	test_->SetColor(color_);
 
 #ifdef _DEBUG
 
@@ -280,9 +272,6 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::SliderFloat("intencity_", &intencity_, 0.0f, 400.0f);
 	ImGui::End();
 
-	ImGui::Begin("Sprite");
-	ImGui::SliderFloat4("color", &color_.x, 0.0f, 1.0f);
-	ImGui::End();
 
 	ImGui::Begin("Camera");
 	ImGui::SliderFloat3("Translate", &camera_.translate_.x, -100.0f, 100.0f);
@@ -311,7 +300,6 @@ void SampleScene::Draw() {
 	}
 
 	lightCollision_->Draw(camera_);
-	test_->Draw();
 	
 }
 

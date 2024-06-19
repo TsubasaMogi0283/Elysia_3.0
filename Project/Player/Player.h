@@ -5,6 +5,19 @@
 struct Camera;
 class SampleScene;
 
+
+enum PlayerViewOfPoint {
+	//未定
+	NonePerson = 0,
+	//1人称視点
+	FirstPerson = 1,
+	//3人称後方
+	ThirdPersonBack = 2,
+	//3人称後方
+	ThirdPersonFront = 3,
+
+};
+
 class Player{
 public:
 	/// <summary>
@@ -43,6 +56,20 @@ public:
 	void SetPointOfView(uint32_t pointOfView) {
 		this->pointOfView_ = pointOfView;
 	}
+
+	/// <summary>
+	/// ワールド座標を所得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
+
+
+public:
+	
+
+
+
 
 
 
