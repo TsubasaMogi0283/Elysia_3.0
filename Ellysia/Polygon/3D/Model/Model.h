@@ -84,7 +84,10 @@ public:
 
 
 
-
+	/// <summary>
+	/// 環境マップテクスチャの設定
+	/// </summary>
+	/// <param name="textureHandle"></param>
 	void SetEviromentTexture(uint32_t textureHandle) {
 		this->eviromentTextureHandle_ = textureHandle;
 	}

@@ -43,7 +43,12 @@ void SampleScene::Initialize() {
 		
 	}
 	humanMaterial_.Initialize();
-	humanMaterial_.lightingKinds_ = Directional;
+	humanMaterial_.lightingKinds_ = Spot;
+
+	sphereMaterial.Initialize();
+	sphereMaterial.lightingKinds_ = Spot;
+	sphereMaterial.isEnviromentMap_ = true;
+
 	humanWorldTransform_[0].translate_.y = 0.0f;
 	
 
@@ -70,9 +75,9 @@ void SampleScene::Initialize() {
 	const float SKYBOX_SCALE = 20.0f;
 	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
 
-	noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
+	//noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
 	//human_[0]->SetEviromentTexture(skyBoxTextureHandle);
-
+	noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
 
 	uint32_t textureHandle = TextureManager::GetInstance()->LoadTexture("Resources/White.png");
 	sprite_.reset(Sprite::Create(textureHandle, { 0.0f,0.0f }));
@@ -215,6 +220,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 	humanMaterial_.Update();
+	sphereMaterial.Update();
 
 	directionalLight_.Update();
 	pointLight_.Update();
@@ -256,10 +262,16 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::End();
 	
 
-	ImGui::Begin("Material");
+	ImGui::Begin("HumanMaterial");
 	ImGui::SliderFloat4("Color", &humanMaterial_.color_.x, 0.0f, 1.0f);
 	ImGui::SliderFloat("Shininess", &humanMaterial_.shininess_, 0.0f, 200.0f);
 	ImGui::End();
+
+	ImGui::Begin("SphereMaterial");
+	ImGui::SliderFloat4("Color", &sphereMaterial.color_.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("Shininess", &sphereMaterial.shininess_, 0.0f, 200.0f);
+	ImGui::End();
+
 
 
 #endif
@@ -298,14 +310,14 @@ void SampleScene::DrawObject3D() {
 	//SimpleSkin
 	//Walk
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i],humanMaterial_, directionalLight_);
+		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i],humanMaterial_, spotLight_);
 	}
 
 
 
 
-	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_, humanMaterial_, directionalLight_);
-	model_->Draw(worldTransform_, camera_, humanMaterial_, directionalLight_);
+	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_, sphereMaterial, spotLight_);
+	model_->Draw(worldTransform_, camera_, humanMaterial_, spotLight_);
 
 
 	

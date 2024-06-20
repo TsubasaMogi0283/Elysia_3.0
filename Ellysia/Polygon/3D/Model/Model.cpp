@@ -133,6 +133,9 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 	//PixelShaderに送る方のカメラ
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
 
+	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0) {
+		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
+	}
 
 
 	//DrawCall
@@ -211,6 +214,11 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
 	//PointLight
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(6, pointLight.bufferResource_->GetGPUVirtualAddress());
+	
+	if (material.isEnviromentMap_ == true&&eviromentTextureHandle_ != 0) {
+		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
+	}
+
 	//DrawCall
 	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 
@@ -288,6 +296,11 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 
 	//SpotLight
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, pointLight.bufferResource_->GetGPUVirtualAddress());
+
+	if (material.isEnviromentMap_ ==true&&eviromentTextureHandle_ != 0) {
+		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
+	}
+
 
 	//DrawCall
 	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);

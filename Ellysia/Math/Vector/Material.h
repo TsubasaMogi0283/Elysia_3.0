@@ -12,6 +12,7 @@ struct MaterialData {
 	float padding[3];
 	Matrix4x4 uvTransform;
 	float shininess;
+	bool isEnviromentMap;
 };
 
 //モデル用のマテリアルの設定
@@ -37,6 +38,8 @@ public:
 	Matrix4x4 uvTransform_ = {};
 	//輝度
 	float shininess_=100.0f;
+	//環境マップ
+	bool isEnviromentMap_ = false;
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> bufferResource_ = nullptr;

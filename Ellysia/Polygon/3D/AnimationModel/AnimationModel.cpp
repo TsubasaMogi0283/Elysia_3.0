@@ -148,6 +148,7 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	//paletteSrvHandle
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(8, skinCluster.paletteSrvHandle_.second);
 
+
 	//DrawCall
 	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 

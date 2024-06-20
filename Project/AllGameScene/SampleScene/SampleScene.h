@@ -102,6 +102,7 @@ private:
 	SpotLight spotLight_ = {};
 
 	Material humanMaterial_ = {};
+	Material sphereMaterial = {};
 
 	const char* GroupName = "Player";
 	Vector3 position = {};

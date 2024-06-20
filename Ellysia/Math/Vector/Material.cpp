@@ -11,7 +11,7 @@ void Material::Initialize(){
 	//輝度
 	//かなり大きくしないと変になる。
 	shininess_=1000.0f;
-
+	isEnviromentMap_ = false;
 	//定数バッファ
 	bufferResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
 
@@ -23,5 +23,6 @@ void Material::Update(){
 	materialData_->lightingKinds = lightingKinds_;
 	materialData_->uvTransform = uvTransform_;
 	materialData_->shininess = shininess_;
+	materialData_->isEnviromentMap = isEnviromentMap_;
 	bufferResource_->Unmap(0, nullptr);
 }

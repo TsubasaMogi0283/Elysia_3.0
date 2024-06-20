@@ -24,6 +24,7 @@ struct Material
     float4x4 uvTransform;
     //光沢度
     float shininess;
+    bool isEnviromentMap;
 };
 
 
@@ -146,11 +147,6 @@ PixelShaderOutput main(VertexShaderOutput input)
 		//入射光の反射ベクトルを求める
         float3 reflectLight = reflect(normalize(gDirectionalLight.direction), normalize(input.normal));
 		
-		//内積
-        //float RdotE = dot(reflectLight, toEye);
-		//反射強度
-        //float specularPow = pow(saturate(RdotE), gMaterial.shininess);
-		
 		//HalfVector
         float3 halfVector = normalize(-gDirectionalLight.direction + toEye);
         float NDotH = dot(normalize(input.normal), halfVector);
@@ -162,16 +158,24 @@ PixelShaderOutput main(VertexShaderOutput input)
 		//1.0f,1.0f,1.0fの所は反射色。
         float3 specular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 		
-		
-		
-        if (textureColor.a <= 0.5f)
-        {
-            discard;
-        }
-		//diffuse + specular +
-        output.color.rgb = diffuse + specular;
-        output.color.a = gMaterial.color.a * textureColor.a;
+        
+        //通常はこっち
+        if (gMaterial.isEnviromentMap ==false){
+            output.color.rgb = diffuse + specular;
+            output.color.a = gMaterial.color.a * textureColor.a;
 
+        }
+		//環境マップ
+        if (gMaterial.isEnviromentMap ==true){
+            float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
+            float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+            float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
+
+            output.color.rgb = (enviromentColor.rgb) * (diffuse + specular);
+            output.color.a = gMaterial.color.a * textureColor.a;
+		
+        }
+		
     }
 	//PointLight
     else if (gMaterial.enableLighting == 2)
@@ -202,21 +206,31 @@ PixelShaderOutput main(VertexShaderOutput input)
         float3 halfVector = normalize(-gPointLight.position + toEye);
         float NDotH = dot(normalize(input.normal), halfVector);
         float specularPow = pow(saturate(NDotH), gMaterial.shininess);
-		////内積
-        //float RdotE = dot(reflectLight, toEye);
-		////反射強度
-        //float specularPow = pow(saturate(RdotE), gMaterial.shininess);
-		
-		
+        
+        
         float3 diffusePointLight = gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * cos * gPointLight.intensity;
         float3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 		
-        if (textureColor.a <= 0.5f)
+         //通常はこっち
+        if (gMaterial.isEnviromentMap == false)
         {
-            discard;
+            output.color.rgb = (diffusePointLight + specularPointLight) * factor;
+            output.color.a = gMaterial.color.a * textureColor.a;
+
         }
-        output.color.rgb = (diffusePointLight + specularPointLight) * factor;
-        output.color.a = gMaterial.color.a * textureColor.a;
+		//環境マップ
+        if (gMaterial.isEnviromentMap == true)
+        {
+            float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
+            float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+            float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
+
+            output.color.rgb = (enviromentColor.rgb) * ((diffusePointLight + specularPointLight) * factor);
+            output.color.a = gMaterial.color.a * textureColor.a;
+		
+        }
+        
+        
     }
 	//SpotLight
     else if (gMaterial.enableLighting == 3)
@@ -258,12 +272,28 @@ PixelShaderOutput main(VertexShaderOutput input)
         float3 diffuseSpotLight = gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * cos * gSpotLight.intensity;
         float3 specularSpotLight = gSpotLight.color.rgb * gSpotLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 		
-        if (textureColor.a <= 0.5f)
-        {
-            discard;
-        }
         output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor;
         output.color.a = gMaterial.color.a * textureColor.a;
+        
+        //通常はこっち
+        if (gMaterial.isEnviromentMap == false)
+        {
+            output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor;
+            output.color.a = gMaterial.color.a * textureColor.a;
+
+        }
+		//環境マップ
+        if (gMaterial.isEnviromentMap == true)
+        {
+            float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
+            float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+            float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
+
+            output.color.rgb = (enviromentColor.rgb) * ((diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor);
+            output.color.a = gMaterial.color.a * textureColor.a;
+		
+        }
+        
     }
     else if (gMaterial.enableLighting == 4)
     {
