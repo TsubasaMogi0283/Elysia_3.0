@@ -127,6 +127,24 @@ bool Input::IsPushRight(XINPUT_STATE& state) {
 	return false;
 }
 
+void Input::SetVibration(float leftMotor, float rightMotor){
+	XINPUT_VIBRATION vibration;
+	ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
+	//0から65535まで
+	const float MAX_SIZE = 65535.0f;
+	vibration.wLeftMotorSpeed = WORD(leftMotor* MAX_SIZE);
+	vibration.wRightMotorSpeed = WORD(rightMotor* MAX_SIZE);
+	XInputSetState(0, &vibration);
+}
+
+void Input::StopVibration(){
+	XINPUT_VIBRATION vibration;
+	ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
+	vibration.wLeftMotorSpeed = WORD(0.0f);
+	vibration.wRightMotorSpeed = WORD(0.0f);
+	XInputSetState(0, &vibration);
+}
+
 void Input::SetIsDisplayCursor(bool isDisplay){
 	ShowCursor(isDisplay);
 }

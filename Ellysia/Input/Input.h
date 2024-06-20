@@ -90,8 +90,8 @@ public:
 	bool IsPushLeft(XINPUT_STATE& state);
 	bool IsPushRight(XINPUT_STATE& state);
 
-
-
+	void SetVibration(float leftMotor,float rightMotor);
+	void StopVibration();
 
 #pragma endregion
 	

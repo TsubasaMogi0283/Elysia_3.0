@@ -220,6 +220,19 @@ void SampleScene::Update(GameManager* gameManager) {
 	camera_.rotate_ = Add(camera_.rotate_, { rotateMove.x * ROTATE_MOVE_SPEED,rotateMove.y * ROTATE_MOVE_SPEED,rotateMove.z * ROTATE_MOVE_SPEED });
 
 
+	//コントローラー
+	XINPUT_STATE joyState{};
+
+	//コントローラーがある場合
+	if (Input::GetInstance()->IsPushKey(DIK_V)==true) {
+		Input::GetInstance()->SetVibration(1.0f, 1.0f);
+	}
+	else {
+		Input::GetInstance()->StopVibration();
+	}
+
+
+
 	humanMaterial_.Update();
 	sphereMaterial.Update();
 
