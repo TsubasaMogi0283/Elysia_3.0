@@ -191,7 +191,7 @@ private:
 	float directionalLightIntensity_ = 3.0f;
 
 	//基本はtrueで
-	bool isEnableLighting_ = true;
+	bool isEnableLighting_ = 1;
 	//方向
 	Vector3 lightingDirection_ = {0.0f,-1.0f,0.0f};
 

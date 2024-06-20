@@ -19,19 +19,31 @@
 
 class Sprite {
 public:
-	//コンストラクタ
-	Sprite();
 
-	
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	Sprite()=default;
+
+	/// <summary>
+	/// 生成
+	/// </summary>
+	/// <param name="textureHandle"></param>
+	/// <param name="position"></param>
+	/// <returns></returns>
 	static Sprite* Create(uint32_t textureHandle,Vector3 position);
 
 
-	//描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
 
-	//デストラクタ
-	~Sprite();
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Sprite()=default;
 
 
 	

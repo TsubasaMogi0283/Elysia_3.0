@@ -134,7 +134,7 @@ private:
 	//色関係のメンバ変数
 	Vector4 materialColor_ = { 1.0f,1.0f,1.0f,1.0f };
 	//基本はtrueで
-	bool isEnableLighting_ = true;
+	bool isEnableLighting_ = 1;
 
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 

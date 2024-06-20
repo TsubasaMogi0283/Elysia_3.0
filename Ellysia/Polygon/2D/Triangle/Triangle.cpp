@@ -86,7 +86,7 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 
 	materialData_->color = color;
-	materialData_->enableLighting = false;
+	materialData_->lightingKinds = 0;
 	materialData_->uvTransform = MakeIdentity4x4();
 	
 	//materialResource_ = CreateBufferResource(directXSetup_->GetDevice(), sizeof(Vector4));

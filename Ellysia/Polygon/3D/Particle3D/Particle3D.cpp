@@ -251,7 +251,7 @@ void Particle3D::Draw(uint32_t textureHandle,Camera& camera){
 	Material* materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = materialColor_;
-	materialData_->enableLighting = isEnableLighting_;
+	materialData_->lightingKinds = isEnableLighting_;
 
 	materialData_->uvTransform = MakeIdentity4x4();
 

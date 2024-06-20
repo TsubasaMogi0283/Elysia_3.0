@@ -273,7 +273,7 @@ void Sphere::Draw(SphereShape sphereCondtion, Transform transform,Matrix4x4 view
 	//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
 	materialResourceSphere_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = color;
-	materialData_->enableLighting=true;
+	materialData_->lightingKinds=0;
 
 	materialData_->uvTransform = MakeIdentity4x4();
 

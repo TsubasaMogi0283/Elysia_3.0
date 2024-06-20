@@ -8,15 +8,6 @@
 
 
 
-
-
-//コンストラクタ
-Sprite::Sprite(){
-
-}
-
-
-
 //Vertex
 void Sprite::CreateVertexBufferView() {
 	//リソースの先頭のアドレスから使う
@@ -98,11 +89,6 @@ Sprite* Sprite::Create(uint32_t textureHandle,Vector3 position) {
 }
 //描画
 void Sprite::Draw() {
-	
-	//参考
-	//assert(device_ != nullptr);
-
-
 	//非表示にするかどうか
 	if (isInvisible_ == true) {
 		return;
@@ -116,7 +102,7 @@ void Sprite::Draw() {
 	//左上が(0,0)右下が(1,1)で画像全体を指定することが出来る
 	//U(x)V(y)
 
-	//今回は「Sprite」なので2枚必要
+	//今回は「Sprite」なので三角形が2枚必要
 	//-------------
 	//|\		  |
 	//|  \		  |
@@ -210,18 +196,19 @@ void Sprite::Draw() {
 
 	//新しく引数作った方が良いかも
 	//3x3x3
-	Matrix4x4 worldMatrixSprite = MakeAffineMatrix({ scale_.x,scale_.y,1.0f }, { 0.0f,0.0f,rotate_ }, position_);
+	Matrix4x4 worldMatrix = MakeAffineMatrix({ scale_.x,scale_.y,1.0f }, { 0.0f,0.0f,rotate_ }, position_);
 	//遠視投影行列
-	Matrix4x4 viewMatrixSprite = MakeIdentity4x4();
+	Matrix4x4 viewMatrix = MakeIdentity4x4();
 	
-	Matrix4x4 projectionMatrixSprite = MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 	
 	//WVP行列を作成
-	Matrix4x4 worldViewProjectionMatrixSprite = Multiply(worldMatrixSprite, Multiply(viewMatrixSprite, projectionMatrixSprite));
+	Matrix4x4 worldViewProjectionMatrixSprite = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 
 	transformationMatrixData_->WVP = worldViewProjectionMatrixSprite;
 	transformationMatrixData_->World = MakeIdentity4x4();
 
+	transformationMatrixResource_->Unmap(0, nullptr);
 
 
 	//マテリアルにデータを書き込む
@@ -230,9 +217,8 @@ void Sprite::Draw() {
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = color_;
 	//ライティングしない
-	materialData_->enableLighting = false;
-	//materialDataSprite_->uvTransform = MakeIdentity4x4();
-	
+	materialData_->lightingKinds = 0;
+	materialData_->shininess = 0.0f;
 
 	Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransformSprite_.scale);
 	uvTransformMatrix = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransformSprite_.rotate.z));
@@ -257,9 +243,6 @@ void Sprite::Draw() {
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
 	
-	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
-	//directXSetup_->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureIndex());
-	
 	
 	if (textureHandle_ != 0) {
 		TextureManager::GraphicsCommand(2,textureHandle_);
@@ -270,12 +253,5 @@ void Sprite::Draw() {
 	//描画(DrawCall)6個のインデックスを使用し1つのインスタンスを描画。
 	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
-
-}
-
-
-
-//デストラクタ
-Sprite::~Sprite() {
 
 }
