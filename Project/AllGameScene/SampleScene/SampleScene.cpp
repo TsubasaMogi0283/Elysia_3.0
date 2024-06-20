@@ -247,8 +247,11 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::SliderFloat("intensity", &spotLight_.intensity_, 0.0f, 10.0f);
 	ImGui::SliderFloat3("Position", &spotLight_.position_.x, -10.0f, 10.0f);
 	ImGui::SliderFloat("Radius", &spotLight_.cosAngle_, 0.0f, 10.0f);
+	ImGui::SliderFloat("CosFallowStart", &spotLight_.cosFallowoffStart_, 0.0f, 10.0f);
+	ImGui::SliderFloat("Distance", &spotLight_.distance_, 0.0f, 10.0f);
+	
 	ImGui::End();
-
+	
 
 #endif
 	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
@@ -286,7 +289,7 @@ void SampleScene::DrawObject3D() {
 	//SimpleSkin
 	//Walk
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i]);
+		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i], spotLight_);
 	}
 
 

@@ -26,14 +26,34 @@ public:
 	static AnimationModel* Create(uint32_t modelHandle);
 
 
+
 	/// <summary>
-	/// 描画
+	/// 描画(平行光源)
 	/// </summary>
 	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="skinCluster"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster);
+	/// <param name="directionalLight"></param>
+	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster,DirectionalLight& directionalLight);
 
+	/// <summary>
+	/// 描画(点光源)
+	/// </summary>
+	/// <param name="worldTransform"></param>
+	/// <param name="camera"></param>
+	/// <param name="skinCluster"></param>
+	/// <param name="pointLight"></param>
+	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, PointLight& pointLight);
+
+
+	/// <summary>
+	/// 描画(スポットライト)
+	/// </summary>
+	/// <param name="worldTransform"></param>
+	/// <param name="camera"></param>
+	/// <param name="skinCluster"></param>
+	/// <param name="spotLight"></param>
+	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ
@@ -80,27 +100,7 @@ private:
 	//基本はtrueで
 	int32_t selectLighting_ = Directional;
 
-	//DirectionalLight
-	ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
-	DirectionalLightData* directionalLightData_ = nullptr;
-	//方向
-	Vector3 lightingDirection_ = { 0.0f,-1.0f,0.0f };
-	//Lightの色
-	Vector4 lightColor_ = { 1.0f,1.0f,1.0f,1.0f };
-	float directionalLightIntensity_ = 1.0f;
 	float shininess_ = 100.0f;
-
-	//PointLight
-	ComPtr<ID3D12Resource> pointLightResource_ = nullptr;
-	PointLightData* pointLightMapData_ = {};
-	PointLightData pointLightData_ = {};
-
-
-	//SpotLight
-	ComPtr<ID3D12Resource> spotLightResource_ = nullptr;
-	SpotLightData* spotLightMapData_ = {};
-	SpotLightData spotLightData_ = {};
-
 
 
 #pragma endregion

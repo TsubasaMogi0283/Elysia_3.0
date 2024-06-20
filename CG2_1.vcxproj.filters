@@ -139,9 +139,6 @@
     <Filter Include="Text">
       <UniqueIdentifier>{86ea6656-3c90-41a3-872c-722ea8f63729}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Source File\SrvManager">
-      <UniqueIdentifier>{4f83e7d1-c856-4e25-9517-e1f481814346}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Header File\Manager">
       <UniqueIdentifier>{3843d394-1415-4d74-a180-2e7806e3ddf5}</UniqueIdentifier>
     </Filter>
@@ -229,6 +226,12 @@
     <Filter Include="Ellysia\Resource File\RandomEffect">
       <UniqueIdentifier>{7b981246-9015-4976-adde-0ee45c53d6d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Source File\AdjustmentItems">
+      <UniqueIdentifier>{12e16608-40ac-4915-8d0c-9b46fdd3dd26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Lighting">
+      <UniqueIdentifier>{18d4b0dd-38f4-4c8c-b471-c9aa09e3199c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -306,9 +309,6 @@
     <ClCompile Include="Ellysia\Math\Quaternion\Quaternion.cpp">
       <Filter>Ellysia\Source File\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\AdjustmentItems\AdjustmentItems.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Math\Collision\Collision.cpp">
       <Filter>Project</Filter>
     </ClCompile>
@@ -372,14 +372,17 @@
     <ClCompile Include="Ellysia\Manager\ImGuiManager\ImGuiManager.cpp">
       <Filter>Ellysia\Source File\Manager\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\AdjustmentItems\AdjustmentItems.cpp">
+      <Filter>Ellysia\Source File\AdjustmentItems</Filter>
+    </ClCompile>
     <ClCompile Include="Ellysia\Lighting\DirectionalLight.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Ellysia\Source File\Lighting</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Lighting\PointLight.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Ellysia\Source File\Lighting</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Lighting\SpotLight.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Ellysia\Source File\Lighting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
