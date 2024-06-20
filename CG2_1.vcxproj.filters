@@ -384,6 +384,9 @@
     <ClCompile Include="Ellysia\Lighting\SpotLight.cpp">
       <Filter>Ellysia\Source File\Lighting</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\Math\Vector\Material.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -582,9 +585,6 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Shape\SphereShape.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\MaterialData\MaterialData.h">
-      <Filter>Ellysia\Header File\Polygone\3D</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\AdjustmentItems\AdjustmentItems.h">
       <Filter>Ellysia\Header File\AdjustmentItems</Filter>

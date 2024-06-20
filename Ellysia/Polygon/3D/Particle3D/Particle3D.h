@@ -13,7 +13,6 @@
 #include <Material.h>
 #include <TransformationMatrix.h>
 #include <DirectionalLight.h>
-#include "MaterialData.h"
 #include "ModelData.h"
 
 
@@ -47,7 +46,7 @@ class Particle3D {
 public:
 
 	//コンストラクタ
-	Particle3D();
+	Particle3D()=default;
 
 	//初期化
 	static Particle3D* Create(uint32_t modelHandle);
@@ -77,7 +76,7 @@ public:
 
 
 	//デストラクタ
-	~Particle3D();
+	~Particle3D()=default;
 
 
 
@@ -206,7 +205,7 @@ private:
 	//描画すべきインスタンス数
 	uint32_t numInstance_ = 0;
 
-	int InstancingIndex_;
+	int InstancingIndex_=0;
 
 	//パーティクル
 	std::list<Particle>particles_;

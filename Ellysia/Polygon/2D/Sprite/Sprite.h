@@ -177,7 +177,7 @@ private:
 
 	//マテリアル用のリソースを作る
 	ComPtr<ID3D12Resource> materialResource_ = nullptr;
-	Material* materialData_ = nullptr;
+	MaterialData* materialData_ = nullptr;
 	
 
 

@@ -7,24 +7,25 @@
 #include <memory>
 #include <DirectXTex.h>
 #include <d3dx12.h>
+#include "DirectXSetup.h"
 
 #include "Matrix4x4.h"
 #include "Vector4.h"
 #include "TransformationMatrix.h"
 #include "Matrix4x4Calculation.h"
 #include "VertexData.h"
-
-
-#include "MaterialData.h"
 #include "ModelData.h"
-#include "DirectionalLight.h"
-#include "WorldTransform.h"
-#include "Camera.h"
 #include "ModelManager.h"
-#include <PointLight.h>
-#include <SpotLight.h>
 
 #include "LightingType.h"
+
+struct WorldTransform;
+struct Camera;
+struct CameraForGPU;
+struct Material;
+struct DirectionalLight;
+struct PointLight;
+struct SpotLight;
 
 class Model {
 public:
@@ -45,7 +46,7 @@ public:
 	/// <param name="worldTransform">ワールドトランスフォーム</param>
 	/// <param name="camera">カメラ</param>
 	/// <param name="directionalLight">平行光源</param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, DirectionalLight& directionalLight);
+	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight);
 
 	/// <summary>
 	/// 描画
@@ -53,7 +54,7 @@ public:
 	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="pointLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, PointLight& pointLight);
+	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight);
 
 	/// <summary>
 	/// 描画
@@ -61,7 +62,7 @@ public:
 	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="pointLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, SpotLight& pointLight);
+	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& pointLight);
 
 
 
@@ -75,26 +76,11 @@ public:
 
 public:
 
-	//透明度の変更
-	void SetColor(Vector4 color) {
-		this->materialColor_ = color;
-	}
-
-	void SetTransparency(float transparency) {
-		this->materialColor_.w = transparency;
-	}
-
 
 	//アクセッサのまとめ
 	void SetBlendMode(int32_t blendmode) {
 		blendModeNumber_ = blendmode;
 	}
-
-#pragma region Lightingの設定
-	void SetLighting(bool enableLighting) {
-		this->selectLighting_ = enableLighting;
-	}
-#pragma endregion
 
 
 
@@ -105,14 +91,6 @@ public:
 
 
 private:
-	struct Material {
-		Vector4 color;
-		int32_t lightingKinds;
-		float padding[3];
-		Matrix4x4 uvTransform;
-		float shininess;
-	};
-
 
 private:
 	//頂点リソースを作る
@@ -125,22 +103,6 @@ private:
 	ComPtr<ID3D12Resource> indexResource_ = nullptr;
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
-#pragma region なくしたい
-
-
-	//マテリアル用のリソースを作る
-	ComPtr<ID3D12Resource> materialResource_ = nullptr;
-	Material* materialData_ = nullptr;
-	//色関係のメンバ変数
-	Vector4 materialColor_ = { 1.0f,1.0f,1.0f,1.0f };
-	//Ligtingをするかどうか
-	//基本はtrueで
-	int32_t selectLighting_ = Directional;
-
-	float shininess_ = 100.0f;
-
-
-#pragma endregion
 
 	//PixelShaderにカメラの座標を送る為の変数
 	ComPtr<ID3D12Resource> cameraResource_ = nullptr;

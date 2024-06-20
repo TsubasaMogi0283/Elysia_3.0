@@ -42,7 +42,8 @@ void SampleScene::Initialize() {
 		humanWorldTransform_[i].translate_.x = 0.0f;
 		
 	}
-
+	humanMaterial_.Initialize();
+	humanMaterial_.lightingKinds_ = Directional;
 	humanWorldTransform_[0].translate_.y = 0.0f;
 	
 
@@ -212,6 +213,9 @@ void SampleScene::Update(GameManager* gameManager) {
 	camera_.translate_ = Add(camera_.translate_, { move.x* CAMERA_MOVE_SPEED,move.y* CAMERA_MOVE_SPEED,move.z*CAMERA_MOVE_SPEED });
 	camera_.rotate_ = Add(camera_.rotate_, { rotateMove.x * ROTATE_MOVE_SPEED,rotateMove.y * ROTATE_MOVE_SPEED,rotateMove.z * ROTATE_MOVE_SPEED });
 
+
+	humanMaterial_.Update();
+
 	directionalLight_.Update();
 	pointLight_.Update();
 	spotLight_.Update();
@@ -249,9 +253,14 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::SliderFloat("Radius", &spotLight_.cosAngle_, 0.0f, 10.0f);
 	ImGui::SliderFloat("CosFallowStart", &spotLight_.cosFallowoffStart_, 0.0f, 10.0f);
 	ImGui::SliderFloat("Distance", &spotLight_.distance_, 0.0f, 10.0f);
-	
 	ImGui::End();
 	
+
+	ImGui::Begin("Material");
+	ImGui::SliderFloat4("Color", &humanMaterial_.color_.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("Shininess", &humanMaterial_.shininess_, 0.0f, 200.0f);
+	ImGui::End();
+
 
 #endif
 	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
@@ -289,14 +298,14 @@ void SampleScene::DrawObject3D() {
 	//SimpleSkin
 	//Walk
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i], spotLight_);
+		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i],humanMaterial_, directionalLight_);
 	}
 
 
 
 
-	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_, spotLight_);
-	model_->Draw(worldTransform_, camera_, spotLight_);
+	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_, humanMaterial_, directionalLight_);
+	model_->Draw(worldTransform_, camera_, humanMaterial_, directionalLight_);
 
 
 	

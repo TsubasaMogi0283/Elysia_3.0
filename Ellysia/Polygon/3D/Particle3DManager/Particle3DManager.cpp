@@ -43,7 +43,7 @@ void Particle3DManager::Initialize(){
 
     
     vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * vertices_.size()).Get();
-	materialResource_= DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Material)).Get();
+	materialResource_= DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData)).Get();
 
     //読み込みのところでバッファインデックスを作った方がよさそう
     //vertexResourceがnullらしい
@@ -299,7 +299,7 @@ void Particle3DManager::Draw(Camera& camera) {
 #pragma region マテリアルにデータを書き込む
 		//書き込むためのアドレスを取得
 		//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-		Material* materialData_ = nullptr;
+		MaterialData* materialData_ = nullptr;
 		materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 		materialData_->color = materialColor_;
 		materialData_->lightingKinds = isEnableLighting_;

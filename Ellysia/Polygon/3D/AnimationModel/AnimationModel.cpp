@@ -5,7 +5,15 @@
 #include <ModelManager.h>
 #include <numbers>
 #include <Matrix4x4Calculation.h>
+
+
 #include <SrvManager.h>
+#include "WorldTransform.h"
+#include "Material.h"
+#include <Camera.h>
+#include <SpotLight.h>
+#include <PointLight.h>
+#include <DirectionalLight.h>
 
 
 AnimationModel* AnimationModel::Create(uint32_t modelHandle){
@@ -16,16 +24,8 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 	PipelineManager::GetInstance()->SetModelBlendMode(1);
 	PipelineManager::GetInstance()->GenerateAnimationModelPSO();
 
-	model->selectLighting_ = Spot;
-	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい
-	//Setterでやるの面倒だと思った
-
-
-	////マテリアル用のリソースを作る。
-	model->materialResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Material)).Get();
-
 	//テクスチャの読み込み
-	model->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).material.textureFilePath);
+	model->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
 	//Drawでも使いたいので取り入れる
 	model->modelHandle_ = modelHandle;
 
@@ -62,7 +62,7 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 	
 }
 
-void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, DirectionalLight& directionalLight){
+void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, DirectionalLight& directionalLight){
 
 
 	//資料にはなかったけどUnMapはあった方がいいらしい
@@ -86,18 +86,6 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 
 #pragma endregion
 
-#pragma region マテリアル
-	////書き込むためのアドレスを取得
-	////reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	materialData_->color = materialColor_;
-	materialData_->lightingKinds = selectLighting_;
-	materialData_->shininess = shininess_;
-	materialData_->uvTransform = MakeIdentity4x4();
-
-	materialResource_->Unmap(0, nullptr);
-
-#pragma endregion
 
 
 #pragma region PixelShaderに送る方のカメラ
@@ -135,7 +123,7 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 
 
 	//Material
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
@@ -165,7 +153,7 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 
 }
 
-void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, PointLight& pointLight){
+void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, PointLight& pointLight){
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するとのこと
@@ -186,20 +174,6 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	indexResource_->Unmap(0, nullptr);
 
 #pragma endregion
-
-#pragma region マテリアル
-	////書き込むためのアドレスを取得
-	////reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	materialData_->color = materialColor_;
-	materialData_->lightingKinds = selectLighting_;
-	materialData_->shininess = shininess_;
-	materialData_->uvTransform = MakeIdentity4x4();
-
-	materialResource_->Unmap(0, nullptr);
-
-#pragma endregion
-
 
 #pragma region PixelShaderに送る方のカメラ
 	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
@@ -235,7 +209,7 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 
 
 	//Material
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
@@ -272,7 +246,7 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 }
 
-void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, SpotLight& spotLight){
+void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, SpotLight& spotLight){
 	// 資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するとのこと
@@ -291,19 +265,6 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
 	indexResource_->Unmap(0, nullptr);
-
-#pragma endregion
-
-#pragma region マテリアル
-	////書き込むためのアドレスを取得
-	////reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	materialData_->color = materialColor_;
-	materialData_->lightingKinds = selectLighting_;
-	materialData_->shininess = shininess_;
-	materialData_->uvTransform = MakeIdentity4x4();
-
-	materialResource_->Unmap(0, nullptr);
 
 #pragma endregion
 
@@ -342,7 +303,7 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 
 
 	//Material
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった

@@ -6,6 +6,12 @@
 #include <numbers>
 #include <SrvManager.h>
 
+#include "WorldTransform.h"
+#include "Camera.h"
+#include "Material.h"
+#include "DirectionalLight.h"
+#include <PointLight.h>
+#include <SpotLight.h>
 
 Model* Model::Create(uint32_t modelHandle) {
 	//新たなModel型のインスタンスのメモリを確保
@@ -14,16 +20,8 @@ Model* Model::Create(uint32_t modelHandle) {
 	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
 	PipelineManager::GetInstance()->SetModelBlendMode(1);
 	PipelineManager::GetInstance()->GenerateModelPSO();
-	model->selectLighting_ = Spot;
-	//Material,DirectionalLight,PointLight,SpotLightをWorldTransformみたいにしたい
-	//Setterでやるの面倒だと思った
-
-
-	////マテリアル用のリソースを作る。
-	model->materialResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Material)).Get();
-
 	//テクスチャの読み込み
-	model->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).material.textureFilePath);
+	model->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
 	//Drawでも使いたいので取り入れる
 	model->modelHandle_ = modelHandle;
 
@@ -33,7 +31,6 @@ Model* Model::Create(uint32_t modelHandle) {
 	//頂点リソースを作る
 	model->vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size()).Get();
 
-	//読み込みのところでバッファインデックスを作った方がよさそう
 	//リソースの先頭のアドレスから使う
 	model->vertexBufferView_.BufferLocation = model->vertexResource_->GetGPUVirtualAddress();
 	//使用するリソースは頂点のサイズ
@@ -64,7 +61,7 @@ Model* Model::Create(uint32_t modelHandle) {
 }
 
 //描画
-void Model::Draw(WorldTransform& worldTransform, Camera& camera, DirectionalLight& directionalLight) {
+void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight) {
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
@@ -82,19 +79,6 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, DirectionalLigh
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
 	indexResource_->Unmap(0, nullptr);
-
-#pragma region マテリアル
-	////書き込むためのアドレスを取得
-	////reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	materialData_->color = materialColor_;
-	materialData_->lightingKinds = selectLighting_;
-	materialData_->shininess = shininess_;
-	materialData_->uvTransform = MakeIdentity4x4();
-
-	materialResource_->Unmap(0, nullptr);
-
-#pragma endregion
 
 #pragma region PixelShaderに送る方のカメラ
 	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
@@ -127,7 +111,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, DirectionalLigh
 
 
 	//Material
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
@@ -156,7 +140,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, DirectionalLigh
 
 }
 
-void Model::Draw(WorldTransform& worldTransform, Camera& camera, PointLight& pointLight){
+void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight){
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
@@ -175,18 +159,6 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, PointLight& poi
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
 	indexResource_->Unmap(0, nullptr);
 
-#pragma region マテリアル
-	////書き込むためのアドレスを取得
-	////reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	materialData_->color = materialColor_;
-	materialData_->lightingKinds = selectLighting_;
-	materialData_->shininess = shininess_;
-	materialData_->uvTransform = MakeIdentity4x4();
-
-	materialResource_->Unmap(0, nullptr);
-
-#pragma endregion
 
 #pragma region PixelShaderに送る方のカメラ
 	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
@@ -219,7 +191,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, PointLight& poi
 
 
 	//Material
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
@@ -244,7 +216,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, PointLight& poi
 
 }
 
-void Model::Draw(WorldTransform& worldTransform, Camera& camera, SpotLight& pointLight){
+void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& pointLight){
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
@@ -263,18 +235,6 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, SpotLight& poin
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
 	indexResource_->Unmap(0, nullptr);
 
-#pragma region マテリアル
-	////書き込むためのアドレスを取得
-	////reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	materialData_->color = materialColor_;
-	materialData_->lightingKinds = selectLighting_;
-	materialData_->shininess = shininess_;
-	materialData_->uvTransform = MakeIdentity4x4();
-
-	materialResource_->Unmap(0, nullptr);
-
-#pragma endregion
 
 #pragma region PixelShaderに送る方のカメラ
 	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
@@ -307,7 +267,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, SpotLight& poin
 
 
 	//Material
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった

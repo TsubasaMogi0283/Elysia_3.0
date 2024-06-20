@@ -19,7 +19,7 @@ void Triangle::Initialize() {
 	//頂点を6に増やす
 	vertexResouce_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * 6);
 	////マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	materialResource_=DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Material));
+	materialResource_=DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
 
 	
 

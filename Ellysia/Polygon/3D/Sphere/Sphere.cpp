@@ -91,7 +91,7 @@ void Sphere::Initialize() {
 	//頂点を6に増やす
 	vertexResourceSphere_ = CreateBufferResource(sizeof(VertexData) * SUBDIVISION_ *SUBDIVISION_ * 6);
 	////マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	materialResourceSphere_=CreateBufferResource(sizeof(Material));
+	materialResourceSphere_=CreateBufferResource(sizeof(MaterialData));
 
 	//Lighting
 	directionalLightResource_ = CreateBufferResource(sizeof(DirectionalLightData));

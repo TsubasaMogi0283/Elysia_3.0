@@ -1,15 +1,20 @@
 #pragma once
 #include <cstdint>
 #include <ModelData.h>
-#include <Camera.h>
-#include <SpotLight.h>
-#include <PointLight.h>
-#include <DirectionalLight.h>
+
 
 #include  "LightingType.h"
+#include <Material.h>
 struct WorldTransform;
 struct Camera;
+struct CameraForGPU;
 struct SkinCluster;
+
+struct DirectionalLight;
+struct PointLight;
+struct SpotLight;
+struct Material;
+
 
 class AnimationModel{
 public:
@@ -34,7 +39,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="skinCluster"></param>
 	/// <param name="directionalLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster,DirectionalLight& directionalLight);
+	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, DirectionalLight& directionalLight);
 
 	/// <summary>
 	/// 描画(点光源)
@@ -43,7 +48,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="skinCluster"></param>
 	/// <param name="pointLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, PointLight& pointLight);
+	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, PointLight& pointLight);
 
 
 	/// <summary>
@@ -53,7 +58,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="skinCluster"></param>
 	/// <param name="spotLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, SpotLight& spotLight);
+	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ
@@ -67,15 +72,6 @@ public:
 	}
 
 
-private:
-	struct Material {
-		Vector4 color;
-		int32_t lightingKinds;
-		float padding[3];
-		Matrix4x4 uvTransform;
-		float shininess;
-	};
-
 
 private:
 	//頂点リソースを作る
@@ -88,22 +84,6 @@ private:
 	ComPtr<ID3D12Resource> indexResource_ = nullptr;
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
-#pragma region なくしたい
-
-
-	//マテリアル用のリソースを作る
-	ComPtr<ID3D12Resource> materialResource_ = nullptr;
-	Material* materialData_ = nullptr;
-	//色関係のメンバ変数
-	Vector4 materialColor_ = { 1.0f,1.0f,1.0f,1.0f };
-	//Ligtingをするかどうか
-	//基本はtrueで
-	int32_t selectLighting_ = Directional;
-
-	float shininess_ = 100.0f;
-
-
-#pragma endregion
 
 	//PixelShaderにカメラの座標を送る為の変数
 	ComPtr<ID3D12Resource> cameraResource_ = nullptr;

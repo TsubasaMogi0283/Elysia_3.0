@@ -5,7 +5,6 @@
 #include <random>
 
 #include "DirectXSetup.h"
-#include "MaterialData.h"
 #include <Particle.h>
 #include "VertexData.h"
 #include <Camera.h>
@@ -26,7 +25,7 @@ struct ParticleEmitterStruct {
 
 struct ParticleGrounp {
 	//マテリアルデータ
-	MaterialData materialData;
+	std::string textureFilePath;
 	//テクスチャ用SRVインデックス
 	uint32_t textureSrvindex;
 

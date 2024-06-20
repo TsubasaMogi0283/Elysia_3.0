@@ -52,7 +52,7 @@ void Sprite::Initialize(uint32_t textureHandle,Vector3 position) {
 	//index用のリソースを作る
 	indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * 6).Get();
 	////マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	materialResource_=DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Material));
+	materialResource_=DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
 	//Sprite用のTransformationMatrix用のリソースを作る。
 	//Matrix4x4 1つ分サイズを用意する
 	transformationMatrixResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(TransformationMatrix)).Get();

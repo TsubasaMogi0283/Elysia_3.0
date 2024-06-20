@@ -112,7 +112,7 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
 			aiString textureFilePath;
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-			modelData.material.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
+			modelData.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
 		}
 	}
 	//ノードの読み込み

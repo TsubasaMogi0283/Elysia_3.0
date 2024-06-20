@@ -86,7 +86,7 @@ private:
 
 	//マテリアル用のリソースを作る
 	ComPtr<ID3D12Resource> materialResourceSphere_ = nullptr;
-	Material* materialData_ = nullptr;
+	MaterialData* materialData_ = nullptr;
 
 	//球を描画するとき用のTransformationMatrix用のリソースを作る。
 	//Matrix4x4 1つ分サイズを用意する

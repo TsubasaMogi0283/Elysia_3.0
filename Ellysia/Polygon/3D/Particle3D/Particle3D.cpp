@@ -12,9 +12,6 @@ static uint32_t modelIndex;
 static uint32_t descriptorSizeSRV_ = 0u;
 
 
-Particle3D::Particle3D() {
-
-}
 
 //RandomParticle用
 ///パーティクルだけはvoid型で初期化する
@@ -40,11 +37,11 @@ Particle3D* Particle3D::Create(uint32_t modelHandle) {
 #pragma endregion
 
 	////マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	particle3D->materialResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(Material)).Get();
+	particle3D->materialResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData)).Get();
 
 
 	//テクスチャの読み込み
-	particle3D->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).material.textureFilePath);
+	particle3D->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
 
 
 
@@ -248,7 +245,7 @@ void Particle3D::Draw(uint32_t textureHandle,Camera& camera){
 #pragma region マテリアルにデータを書き込む
 	//書き込むためのアドレスを取得
 	//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	Material* materialData_ = nullptr;
+	MaterialData* materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = materialColor_;
 	materialData_->lightingKinds = isEnableLighting_;
@@ -309,13 +306,3 @@ void Particle3D::Draw(uint32_t textureHandle,Camera& camera){
 	//DrawCall
 	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0, 0);
 }
-
-
-//デストラクタ
-Particle3D::~Particle3D() {
-
-}
-
-
-
-	

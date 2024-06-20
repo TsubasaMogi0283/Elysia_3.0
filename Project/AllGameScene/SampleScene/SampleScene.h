@@ -19,6 +19,10 @@
 #include "RandomEffect.h"
 #include "SkinCluster.h"
 #include "../../../Ellysia/Polygon/3D/SkyBox/SkyBox.h"
+#include "Material.h"
+#include "SpotLight.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -96,6 +100,8 @@ private:
 	DirectionalLight directionalLight_ = {};
 	PointLight pointLight_ = {};
 	SpotLight spotLight_ = {};
+
+	Material humanMaterial_ = {};
 
 	const char* GroupName = "Player";
 	Vector3 position = {};
