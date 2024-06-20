@@ -48,7 +48,7 @@ void SampleScene::Initialize() {
 
 	sphereMaterial.Initialize();
 	sphereMaterial.lightingKinds_ = Point;
-	sphereMaterial.isEnviromentMap_ =true;
+	sphereMaterial.isEnviromentMap_ = true;
 
 	humanWorldTransform_[0].translate_.y = 0.0f;
 	

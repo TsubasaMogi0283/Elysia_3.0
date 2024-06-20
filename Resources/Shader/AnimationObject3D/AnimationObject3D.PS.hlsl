@@ -266,12 +266,26 @@ PixelShaderOutput main(VertexShaderOutput input)
         float3 diffuseSpotLight = gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * cos * gSpotLight.intensity;
         float3 specularSpotLight = gSpotLight.color.rgb * gSpotLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 		
-        if (textureColor.a <= 0.5f)
+        
+        //通常はこっち
+        if (gMaterial.isEnviromentMap == false)
         {
-            discard;
+            output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor;
+            output.color.a = gMaterial.color.a * textureColor.a;
+
         }
-        output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor;
-        output.color.a = gMaterial.color.a * textureColor.a;
+		//環境マップ
+        if (gMaterial.isEnviromentMap == true)
+        {
+            float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
+            float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+            float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
+
+            output.color.rgb = (enviromentColor.rgb) * ((diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor);
+            output.color.a = gMaterial.color.a * textureColor.a;
+		
+        }
+        
     }
     else if (gMaterial.enableLighting == 4)
     {
