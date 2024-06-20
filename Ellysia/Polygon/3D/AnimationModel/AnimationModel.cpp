@@ -149,6 +149,11 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(8, skinCluster.paletteSrvHandle_.second);
 
 
+	if (material.isEnviromentMap_==true && eviromentTextureHandle_ != 0) {
+		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(9, eviromentTextureHandle_);
+	}
+
+
 	//DrawCall
 	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 
@@ -239,6 +244,12 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	//paletteSrvHandle
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(8, skinCluster.paletteSrvHandle_.second);
 
+
+	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0) {
+
+
+		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(9, eviromentTextureHandle_);
+	}
 
 
 
@@ -334,6 +345,10 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(8, skinCluster.paletteSrvHandle_.second);
 
 
+
+	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0) {
+		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(9, eviromentTextureHandle_);
+	}
 
 
 

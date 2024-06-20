@@ -43,11 +43,12 @@ void SampleScene::Initialize() {
 		
 	}
 	humanMaterial_.Initialize();
-	humanMaterial_.lightingKinds_ = Spot;
+	humanMaterial_.lightingKinds_ = Point;
+	humanMaterial_.isEnviromentMap_ = true;
 
 	sphereMaterial.Initialize();
-	sphereMaterial.lightingKinds_ = Spot;
-	sphereMaterial.isEnviromentMap_ = true;
+	sphereMaterial.lightingKinds_ = Point;
+	sphereMaterial.isEnviromentMap_ =true;
 
 	humanWorldTransform_[0].translate_.y = 0.0f;
 	
@@ -76,7 +77,7 @@ void SampleScene::Initialize() {
 	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
 
 	//noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
-	//human_[0]->SetEviromentTexture(skyBoxTextureHandle);
+	human_[0]->SetEviromentTexture(skyBoxTextureHandle);
 	noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
 
 	uint32_t textureHandle = TextureManager::GetInstance()->LoadTexture("Resources/White.png");
@@ -310,14 +311,14 @@ void SampleScene::DrawObject3D() {
 	//SimpleSkin
 	//Walk
 	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i],humanMaterial_, spotLight_);
+		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i],humanMaterial_, pointLight_);
 	}
 
 
 
 
-	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_, sphereMaterial, spotLight_);
-	model_->Draw(worldTransform_, camera_, humanMaterial_, spotLight_);
+	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_, sphereMaterial, pointLight_);
+	//model_->Draw(worldTransform_, camera_, humanMaterial_, pointLight_);
 
 
 	

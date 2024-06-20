@@ -24,6 +24,8 @@ struct Material
     float4x4 uvTransform;
     //光沢度
     float shininess;
+    //環境マップ
+    bool isEnviromentMap;
 };
 
 
@@ -126,14 +128,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     }
 	
 	//DirectionalLightingする場合
-    if (gMaterial.enableLighting == 1)
-    {
-	
-		//このままdotだと[-1,1]になる。
-		//光が当たらないところは「当たらない」のでもっと暗くなるわけではない。そこでsaturate関数を使う
-		//saturate関数は値を[0,1]にclampするもの。エフェクターにもSaturationってあるよね。
-	
-
+    if (gMaterial.enableLighting == 1){
 		//Half Lambert
         float NdotL = dot(normalize(input.normal), -normalize(gDirectionalLight.direction));
         float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
@@ -145,10 +140,6 @@ PixelShaderOutput main(VertexShaderOutput input)
 		//入射光の反射ベクトルを求める
         float3 reflectLight = reflect(normalize(gDirectionalLight.direction), normalize(input.normal));
 		
-		//内積
-        //float RdotE = dot(reflectLight, toEye);
-		//反射強度
-        //float specularPow = pow(saturate(RdotE), gMaterial.shininess);
 		
 		//HalfVector
         float3 halfVector = normalize(-gDirectionalLight.direction + toEye);
@@ -162,20 +153,28 @@ PixelShaderOutput main(VertexShaderOutput input)
         float3 specular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 		
 		
-		
-        if (textureColor.a <= 0.5f)
+		//通常はこっち
+        if (gMaterial.isEnviromentMap == false)
         {
-            discard;
-        }
-		//diffuse + specular +
-        output.color.rgb = diffuse + specular;
-        output.color.a = gMaterial.color.a * textureColor.a;
+            output.color.rgb = diffuse + specular;
+            output.color.a = gMaterial.color.a * textureColor.a;
 
+        }
+		//環境マップ
+        if (gMaterial.isEnviromentMap == true)
+        {
+            float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
+            float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+            float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
+
+            output.color.rgb = (enviromentColor.rgb) * (diffuse + specular);
+            output.color.a = gMaterial.color.a * textureColor.a;
+		
+        }
     }
 	//PointLight
     else if (gMaterial.enableLighting == 2)
     {
-		//このままdotだと[-1,1]になる。
 		//光が当たらないところは「当たらない」のでもっと暗くなるわけではない。そこでsaturate関数を使う
 		//saturate関数は値を[0,1]にclampするもの。エフェクターにもSaturationってあるよね。
 	
@@ -201,26 +200,36 @@ PixelShaderOutput main(VertexShaderOutput input)
         float3 halfVector = normalize(-gPointLight.position + toEye);
         float NDotH = dot(normalize(input.normal), halfVector);
         float specularPow = pow(saturate(NDotH), gMaterial.shininess);
-		////内積
-        //float RdotE = dot(reflectLight, toEye);
-		////反射強度
-        //float specularPow = pow(saturate(RdotE), gMaterial.shininess);
 		
 		
         float3 diffusePointLight = gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * cos * gPointLight.intensity;
         float3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 		
-        if (textureColor.a <= 0.5f)
+        
+         //通常はこっち
+        if (gMaterial.isEnviromentMap == false)
         {
-            discard;
+            output.color.rgb = (diffusePointLight + specularPointLight) * factor;
+            output.color.a = gMaterial.color.a * textureColor.a;
+
         }
-        output.color.rgb = (diffusePointLight + specularPointLight) * factor;
-        output.color.a = gMaterial.color.a * textureColor.a;
+		//環境マップ
+        if (gMaterial.isEnviromentMap == true)
+        {
+            float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
+            float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+            float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
+
+            output.color.rgb = (enviromentColor.rgb) * ((diffusePointLight + specularPointLight) * factor);
+            output.color.a = gMaterial.color.a * textureColor.a;
+		
+        }
+        
+        
     }
 	//SpotLight
     else if (gMaterial.enableLighting == 3)
     {
-		//このままdotだと[-1,1]になる。
 		//光が当たらないところは「当たらない」のでもっと暗くなるわけではない。そこでsaturate関数を使う
 		//saturate関数は値を[0,1]にclampするもの。エフェクターにもSaturationってあるよね。
 	
