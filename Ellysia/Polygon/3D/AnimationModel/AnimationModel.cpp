@@ -63,7 +63,8 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 }
 
 void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, DirectionalLight& directionalLight){
-
+	//Materialのライティングの設定が平行光源ではない場合止める
+	assert(material.lightingKinds_ == Directional);
 
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
@@ -160,6 +161,10 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 }
 
 void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, PointLight& pointLight){
+	
+	//Materialのライティングの設定が点光源ではない場合止める
+	assert(material.lightingKinds_ == Point);
+
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するとのこと
@@ -259,6 +264,10 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 }
 
 void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, SpotLight& spotLight){
+	
+	//Materialのライティングの設定がスポットライトではない場合止める
+	assert(material.lightingKinds_ == Spot);
+	
 	// 資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するとのこと
