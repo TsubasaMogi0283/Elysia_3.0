@@ -95,7 +95,7 @@ void BackText::Draw(){
 
 
 	//Vignette
-	if (effectType_ == Vignette) {
+	if (effectType_ == VignetteEffect) {
 #ifdef _DEBUG
 
 		ImGui::Begin("Vignette");
@@ -141,7 +141,7 @@ void BackText::Draw(){
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, effectResource_->GetGPUVirtualAddress());
 
 	//Vignette
-	if (effectType_ == Vignette) {
+	if (effectType_ == VignetteEffect) {
 		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, vignetteResource_->GetGPUVirtualAddress());
 	}
 

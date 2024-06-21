@@ -1,4 +1,4 @@
-#include "GrayScale.h"
+#include "SepiaScale.h"
 
 #include <PipelineManager.h>
 #include "TextureManager.h"
@@ -8,16 +8,16 @@
 
 
 
-void GrayScale::Initialize() {
+void SepiaScale::Initialize() {
 
 	//エフェクトごとにhlsl分けたい
 	//いずれやる
-	PipelineManager::GetInstance()->GenarateGrayScalePSO();
+	PipelineManager::GetInstance()->GenarateSepiaScalePSO();
 
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
 
-	const std::string postEffectName = "GrayScale";
+	const std::string postEffectName = "SepiaScale";
 	rtvHandle_ = RtvManager::GetInstance()->Allocate(postEffectName);
 
 	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);
@@ -32,7 +32,7 @@ void GrayScale::Initialize() {
 
 }
 
-void GrayScale::PreDraw() {
+void SepiaScale::PreDraw() {
 
 	const float RENDER_TARGET_CLEAR_VALUE[] = { 1.0f,0.0f,0.0f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
@@ -56,7 +56,7 @@ void GrayScale::PreDraw() {
 
 }
 
-void GrayScale::Draw() {
+void SepiaScale::Draw() {
 
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(
@@ -65,8 +65,8 @@ void GrayScale::Draw() {
 
 
 
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetGrayScaleRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetGrayScaleGraphicsPipelineState().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetSepiaScaleRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetSepiaScaleGraphicsPipelineState().Get());
 
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

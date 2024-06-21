@@ -238,6 +238,12 @@
     <Filter Include="Ellysia\Resource File\PostEffect\GrayScale">
       <UniqueIdentifier>{09f77f84-4dfe-4a08-8be9-17894e87123e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Resource File\PostEffect\SepiaScale">
+      <UniqueIdentifier>{bb9d0593-1d3e-49a3-80c4-4af268ff488a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Resource File\PostEffect\Vignette">
+      <UniqueIdentifier>{3e054879-47a6-4d80-8db0-b71b096e8249}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -396,6 +402,12 @@
     <ClCompile Include="Ellysia\Polygon\PostEffect\GrayScale\GrayScale.cpp">
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\PostEffect\SepiaScale\SepiaScale.cpp">
+      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\PostEffect\Vignette\Vignette.cpp">
+      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -469,6 +481,18 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\GrayScale\GrayScale.VS.hlsl">
       <Filter>Ellysia\Resource File\PostEffect\GrayScale</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\SepiaScale\SepiaScale.PS.hlsl">
+      <Filter>Ellysia\Resource File\PostEffect\SepiaScale</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\SepiaScale\SepiaScale.VS.hlsl">
+      <Filter>Ellysia\Resource File\PostEffect\SepiaScale</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Vignette\Vignette.PS.hlsl">
+      <Filter>Ellysia\Resource File\PostEffect\Vignette</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Vignette\Vignette.VS.hlsl">
+      <Filter>Ellysia\Resource File\PostEffect\Vignette</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -706,6 +730,12 @@
     <ClInclude Include="Ellysia\Polygon\PostEffect\GrayScale\GrayScale.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\PostEffect\SepiaScale\SepiaScale.h">
+      <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\PostEffect\Vignette\Vignette.h">
+      <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">
@@ -761,6 +791,12 @@
     </None>
     <None Include="Resources\Shader\GrayScale\GrayScale.hlsli">
       <Filter>Ellysia\Resource File\PostEffect\GrayScale</Filter>
+    </None>
+    <None Include="Resources\Shader\SepiaScale\SepiaScale.hlsli">
+      <Filter>Ellysia\Resource File\PostEffect\SepiaScale</Filter>
+    </None>
+    <None Include="Resources\Shader\Vignette\Vignette.hlsli">
+      <Filter>Ellysia\Resource File\PostEffect\Vignette</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-#include "FullScreen.hlsli"
+#include "SepiaScale.hlsli"
 
 
 //三角形で覆われればOK
@@ -29,6 +29,7 @@ VertexShaderOutput main(uint vertexId : SV_VertexID)
 {
     VertexShaderOutput output;
     
+    //float32_t3 damyPosition = gPosition.position;
     output.position = POSITIONS[vertexId];
     output.texcoord = TEXCOORDS[vertexId];
     return output;

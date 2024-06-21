@@ -85,7 +85,7 @@ public:
 private:
 
 	//ディスクリプタ
-	static const uint32_t RTV_DESCRIPTOR_SIZE_ = 10;
+	static const uint32_t RTV_DESCRIPTOR_SIZE_ = 30;
 	//インデックス
 	uint32_t index_ = 0;
 	ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap_ = nullptr;

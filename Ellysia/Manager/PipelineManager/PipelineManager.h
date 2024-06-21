@@ -127,6 +127,21 @@ public:
 	ComPtr<ID3D12PipelineState> GetGrayScaleGraphicsPipelineState() {
 		return grayScalePSO_.graphicsPipelineState_;
 	}
+	//コマンドに積むためのGetter(SepiaScale)
+	ComPtr<ID3D12RootSignature> GetSepiaScaleRootSignature() {
+		return sepiaScalePSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetSepiaScaleGraphicsPipelineState() {
+		return sepiaScalePSO_.graphicsPipelineState_;
+	}
+
+	//コマンドに積むためのGetter(Vignette)
+	ComPtr<ID3D12RootSignature> GetVignetteRootSignature() {
+		return vignettePSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetVignetteGraphicsPipelineState() {
+		return vignettePSO_.graphicsPipelineState_;
+	}
 
 
 	//コマンドに積むためのGetter(LuminanceBasedOutline)
@@ -206,6 +221,11 @@ public:
 	//GrayScale用
 	static void GenarateGrayScalePSO();
 
+	//SepiaScale用
+	static void GenarateSepiaScalePSO();
+
+	//Vignette用
+	static void GenarateVignettePSO();
 
 	//OutLine用
 	static void GenarateLuminanceBasedOutlinePSO();
@@ -246,10 +266,15 @@ private:
 	PSOInformation modelPSO_ = {};
 	//モデル用の変数
 	PSOInformation particle3DPSO_ = {};
+
 	//CopyImage用
 	PSOInformation fullScreenPSO_ = {};
 	//GrayScale用
 	PSOInformation grayScalePSO_ = {};
+	//SepiaScale用
+	PSOInformation sepiaScalePSO_ = {};
+	//Vignette用
+	PSOInformation vignettePSO_ = {};
 	//LuminanceBasedOutline用
 	PSOInformation luminanceBasedOutlinePSO_ = {};
 	//DepthBasedOutline用

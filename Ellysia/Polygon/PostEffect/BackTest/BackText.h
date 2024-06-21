@@ -8,7 +8,7 @@ enum TextureEffectType {
 	NoneEffect,	//エフェクトなし
 	Monochrome,	//白黒(グレースケール)
 	Sepia,		//セピア
-	Vignette,	//端が暗くなる
+	VignetteEffect,	//端が暗くなる
 	
 	//Smoothing(平滑化)
 	//輪郭などのくっきりしたところをぼかして滑らかな雰囲気を出すよ

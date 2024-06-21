@@ -90,6 +90,12 @@ void SampleScene::Initialize() {
 	grayScale_ = std::make_unique<GrayScale>();
 	grayScale_->Initialize();
 	
+	sepiaScale_ = std::make_unique<SepiaScale>();
+	sepiaScale_->Initialize();
+
+	vignette_ = std::make_unique<Vignette>();
+	vignette_->Initialize();
+
 	radialBlur_ = std::make_unique < RadialBlur>();
 	radialBlur_->Initialize();
 	
@@ -308,7 +314,10 @@ void SampleScene::PreDrawPostEffectFirst(){
 	
 	
 	//back_->PreDraw();
-	grayScale_->PreDraw();
+	//grayScale_->PreDraw();
+	//sepiaScale_->PreDraw();
+	vignette_->PreDraw();
+	
 	//radialBlur_->PreDraw();
 	//outLine_->PreDraw();
 	//dissolve_->PreDraw();
@@ -345,7 +354,9 @@ void SampleScene::DrawPostEffect(){
 	
 	
 	//back_->Draw();
-	grayScale_->Draw();
+	//grayScale_->Draw();
+	//sepiaScale_->Draw();
+	vignette_->Draw();
 	//radialBlur_->Draw();
 	//outLine_->Draw();
 	//dissolve_->Draw();
