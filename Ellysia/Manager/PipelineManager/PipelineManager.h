@@ -120,6 +120,15 @@ public:
 		return fullScreenPSO_.graphicsPipelineState_;
 	}
 
+	//コマンドに積むためのGetter(GrayScale)
+	ComPtr<ID3D12RootSignature> GetGrayScaleRootSignature() {
+		return grayScalePSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetGrayScaleGraphicsPipelineState() {
+		return grayScalePSO_.graphicsPipelineState_;
+	}
+
+
 	//コマンドに積むためのGetter(LuminanceBasedOutline)
 	ComPtr<ID3D12RootSignature> GetLuminanceBasedOutlineRootSignature() {
 		return luminanceBasedOutlinePSO_.rootSignature_;
@@ -194,6 +203,10 @@ public:
 	//CopyImage用
 	static void GenarateFullScreenPSO();
 
+	//GrayScale用
+	static void GenarateGrayScalePSO();
+
+
 	//OutLine用
 	static void GenarateLuminanceBasedOutlinePSO();
 
@@ -235,6 +248,8 @@ private:
 	PSOInformation particle3DPSO_ = {};
 	//CopyImage用
 	PSOInformation fullScreenPSO_ = {};
+	//GrayScale用
+	PSOInformation grayScalePSO_ = {};
 	//LuminanceBasedOutline用
 	PSOInformation luminanceBasedOutlinePSO_ = {};
 	//DepthBasedOutline用

@@ -87,7 +87,8 @@ void SampleScene::Initialize() {
 	back_ = std::make_unique< BackText>();
 	back_->Initialize();
 
-	
+	grayScale_ = std::make_unique<GrayScale>();
+	grayScale_->Initialize();
 	
 	radialBlur_ = std::make_unique < RadialBlur>();
 	radialBlur_->Initialize();
@@ -306,7 +307,8 @@ void SampleScene::DrawSpriteBack(){
 void SampleScene::PreDrawPostEffectFirst(){
 	
 	
-	back_->PreDraw();
+	//back_->PreDraw();
+	grayScale_->PreDraw();
 	//radialBlur_->PreDraw();
 	//outLine_->PreDraw();
 	//dissolve_->PreDraw();
@@ -342,7 +344,8 @@ void SampleScene::DrawObject3D() {
 void SampleScene::DrawPostEffect(){
 	
 	
-	back_->Draw();
+	//back_->Draw();
+	grayScale_->Draw();
 	//radialBlur_->Draw();
 	//outLine_->Draw();
 	//dissolve_->Draw();

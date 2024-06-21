@@ -23,6 +23,7 @@
 #include "SpotLight.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include <GrayScale.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -111,7 +112,7 @@ private:
 	
 
 
-
+	std::unique_ptr<GrayScale> grayScale_ = nullptr;
 	std::unique_ptr<LuminanceBasedOutline> outLine_ = nullptr;
 	std::unique_ptr<DepthBasedOutline> depthBasedOutline_ = nullptr;
 	std::unique_ptr<RadialBlur> radialBlur_ = nullptr;
