@@ -73,7 +73,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Manager\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\Manager\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\Manager\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Manager\RtvManager;$(ProjectDir)Ellysia\Polygon\PostEffect\BackTest;$(ProjectDir)Ellysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Ellysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Ellysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Ellysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Ellysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Ellysia\Polygon\PostEffect\Vignette</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Manager\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\Manager\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\Manager\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Manager\RtvManager;$(ProjectDir)Ellysia\Polygon\PostEffect\BackTest;$(ProjectDir)Ellysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Ellysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Ellysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Ellysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Ellysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Ellysia\Polygon\PostEffect\Vignette;$(ProjectDir)Ellysia\Polygon\PostEffect\BoxFilter;$(ProjectDir)Ellysia\Polygon\PostEffect\GaussianFilter</AdditionalIncludeDirectories>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -101,7 +101,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Manager\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\Manager\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\Manager\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Manager\RtvManager;$(ProjectDir)Ellysia\Polygon\PostEffect\BackTest;$(ProjectDir)Ellysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Ellysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Ellysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Ellysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Ellysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Ellysia\Polygon\PostEffect\Vignette</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Manager\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\Manager\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\Manager\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Manager\RtvManager;$(ProjectDir)Ellysia\Polygon\PostEffect\BackTest;$(ProjectDir)Ellysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Ellysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Ellysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Ellysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Ellysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Ellysia\Polygon\PostEffect\Vignette;$(ProjectDir)Ellysia\Polygon\PostEffect\BoxFilter;$(ProjectDir)Ellysia\Polygon\PostEffect\GaussianFilter</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MaxSpeed</Optimization>
@@ -123,7 +123,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">
     <ClCompile>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;USE_IMGUI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Manager\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\Manager\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\Manager\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Manager\RtvManager;$(ProjectDir)Ellysia\Polygon\PostEffect\BackTest;$(ProjectDir)Ellysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Ellysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Ellysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Ellysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Ellysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Ellysia\Polygon\PostEffect\Vignette</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Manager\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\Manager\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\Manager\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Manager\RtvManager;$(ProjectDir)Ellysia\Polygon\PostEffect\BackTest;$(ProjectDir)Ellysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Ellysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Ellysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Ellysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Ellysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Ellysia\Polygon\PostEffect\Vignette;$(ProjectDir)Ellysia\Polygon\PostEffect\BoxFilter;$(ProjectDir)Ellysia\Polygon\PostEffect\GaussianFilter</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -170,8 +170,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Sphere\Sphere.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\BackTest\BackText.cpp" />
+    <ClCompile Include="Ellysia\Polygon\PostEffect\BoxFilter\BoxFilter.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\DepthBasedOutline\DepthBasedOutline.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\Dissolve\Dissolve.cpp" />
+    <ClCompile Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\GrayScale\GrayScale.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\LuminanceBasedOutline\LuminanceBasedOutline.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\RadialBlur\RadialBlur.cpp" />
@@ -189,6 +191,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\Shader\AnimationObject3D\AnimationObject3D.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\BoxFilter\BoxFilter.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\BoxFilter\BoxFilter.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -219,6 +231,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\Shader\FullScreen\FullScreen.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GaussianFilter\GaussianFilter.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GaussianFilter\GaussianFilter.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -391,8 +413,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\3D\SkyBox\SkyBox.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Sphere\Sphere.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\BackTest\BackText.h" />
+    <ClInclude Include="Ellysia\Polygon\PostEffect\BoxFilter\BoxFilter.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\DepthBasedOutline\DepthBasedOutline.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\Dissolve\Dissolve.h" />
+    <ClInclude Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\GrayScale\GrayScale.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\LuminanceBasedOutline\LuminanceBasedOutline.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\RadialBlur\RadialBlur.h" />
@@ -411,12 +435,17 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="Resources\Shader\AnimationObject3D\AnimationObject3D.hlsli" />
+    <None Include="Resources\Shader\BoxFilter\BoxFilter.hlsli" />
+    <None Include="Resources\Shader\BoxFilter\SmoothingIndex.hlsli" />
     <None Include="Resources\Shader\DepthBasedOutline\DepthBasedOutline.hlsli" />
     <None Include="Resources\Shader\Dissolve\Dissolve.hlsli" />
     <None Include="Resources\Shader\FullScreen\EffectType.hlsli" />
     <None Include="Resources\Shader\FullScreen\FullScreen.hlsli" />
     <None Include="Resources\Shader\FullScreen\Kernel.hlsli" />
     <None Include="Resources\Shader\FullScreen\SmoothingIndex.hlsli" />
+    <None Include="Resources\Shader\GaussianFilter\GaussianFilter.hlsli" />
+    <None Include="Resources\Shader\GaussianFilter\Kernel.hlsli" />
+    <None Include="Resources\Shader\GaussianFilter\SmoothingIndex.hlsli" />
     <None Include="Resources\Shader\GrayScale\GrayScale.hlsli" />
     <None Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.hlsli" />
     <None Include="Resources\Shader\Object2D\Object2d.hlsli" />

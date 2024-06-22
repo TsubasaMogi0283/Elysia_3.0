@@ -142,7 +142,21 @@ public:
 	ComPtr<ID3D12PipelineState> GetVignetteGraphicsPipelineState() {
 		return vignettePSO_.graphicsPipelineState_;
 	}
-
+	//コマンドに積むためのGetter(BoxFilter)
+	ComPtr<ID3D12RootSignature> GetBoxFilterRootSignature() {
+		return boxFilterPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetBoxFilterGraphicsPipelineState() {
+		return boxFilterPSO_.graphicsPipelineState_;
+	}
+	//コマンドに積むためのGetter(GaussianFilter)
+	ComPtr<ID3D12RootSignature> GetGaussianFilterRootSignature() {
+		return gaussianFilterPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetGaussianFilterGraphicsPipelineState() {
+		return gaussianFilterPSO_.graphicsPipelineState_;
+	}
+	
 
 	//コマンドに積むためのGetter(LuminanceBasedOutline)
 	ComPtr<ID3D12RootSignature> GetLuminanceBasedOutlineRootSignature() {
@@ -227,6 +241,12 @@ public:
 	//Vignette用
 	static void GenarateVignettePSO();
 
+	//BoxFilter用
+	static void GenarateBoxFilterPSO();
+
+	//GaussianFilter
+	static void GenarateGaussianFilterPSO();
+
 	//OutLine用
 	static void GenarateLuminanceBasedOutlinePSO();
 
@@ -275,6 +295,10 @@ private:
 	PSOInformation sepiaScalePSO_ = {};
 	//Vignette用
 	PSOInformation vignettePSO_ = {};
+	//BoxFilter用
+	PSOInformation boxFilterPSO_ = {};
+	//GaussianFilter用
+	PSOInformation gaussianFilterPSO_ = {};
 	//LuminanceBasedOutline用
 	PSOInformation luminanceBasedOutlinePSO_ = {};
 	//DepthBasedOutline用

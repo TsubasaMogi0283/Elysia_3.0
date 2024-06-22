@@ -26,6 +26,8 @@
 #include <GrayScale.h>
 #include <SepiaScale.h>
 #include <Vignette.h>
+#include <BoxFilter.h>
+#include <GaussianFilter.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -116,7 +118,8 @@ private:
 	std::unique_ptr<GrayScale> grayScale_ = nullptr;
 	std::unique_ptr<SepiaScale> sepiaScale_ = nullptr;
 	std::unique_ptr<Vignette> vignette_ = nullptr;
-
+	std::unique_ptr<BoxFilter> boxFilter_ = nullptr;
+	std::unique_ptr<GaussianFilter> gaussianFilter_ = nullptr;
 
 	std::unique_ptr<LuminanceBasedOutline> outLine_ = nullptr;
 	std::unique_ptr<DepthBasedOutline> depthBasedOutline_ = nullptr;

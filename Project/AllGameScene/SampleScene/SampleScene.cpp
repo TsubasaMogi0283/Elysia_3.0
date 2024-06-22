@@ -96,6 +96,12 @@ void SampleScene::Initialize() {
 	vignette_ = std::make_unique<Vignette>();
 	vignette_->Initialize();
 
+	boxFilter_ = std::make_unique<BoxFilter>();
+	boxFilter_->Initialize();
+
+	gaussianFilter_ = std::make_unique<GaussianFilter>();
+	gaussianFilter_->Initialize();
+
 	radialBlur_ = std::make_unique < RadialBlur>();
 	radialBlur_->Initialize();
 	
@@ -316,8 +322,9 @@ void SampleScene::PreDrawPostEffectFirst(){
 	//back_->PreDraw();
 	//grayScale_->PreDraw();
 	//sepiaScale_->PreDraw();
-	vignette_->PreDraw();
-	
+	//vignette_->PreDraw();
+	//boxFilter_->PreDraw();
+	gaussianFilter_->PreDraw();
 	//radialBlur_->PreDraw();
 	//outLine_->PreDraw();
 	//dissolve_->PreDraw();
@@ -356,7 +363,9 @@ void SampleScene::DrawPostEffect(){
 	//back_->Draw();
 	//grayScale_->Draw();
 	//sepiaScale_->Draw();
-	vignette_->Draw();
+	//vignette_->Draw();
+	//boxFilter_->Draw();
+	gaussianFilter_->Draw();
 	//radialBlur_->Draw();
 	//outLine_->Draw();
 	//dissolve_->Draw();

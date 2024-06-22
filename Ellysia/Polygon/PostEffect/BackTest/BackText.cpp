@@ -10,7 +10,7 @@
 void BackText::Initialize(){
 
 	//エフェクトの種類を設定
-	effectType_ = BoxFilter3x3;
+	effectType_ = NoneEffect;
 
 	//エフェクトごとにhlsl分けたい
 	//いずれやる
@@ -113,8 +113,8 @@ void BackText::Draw(){
 		vignetteResource_->Unmap(0, nullptr);
 	}
 	//GaussianFilter
-	if (effectType_ == GaussianFilter3x3 ||
-		effectType_ == GaussianFilter5x5) {
+	if (effectType_ == GaussianFilter3x3a ||
+		effectType_ == GaussianFilter5x5a) {
 #ifdef _DEBUG
 
 		ImGui::Begin("GaussianFilter");
@@ -149,8 +149,8 @@ void BackText::Draw(){
 	TextureManager::GraphicsCommand(2,srvHandle_);
 
 	//GaussianFilter
-	if (effectType_ == GaussianFilter3x3 ||
-		effectType_ == GaussianFilter5x5) {
+	if (effectType_ == GaussianFilter3x3a ||
+		effectType_ == GaussianFilter5x5a) {
 		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, gaussianFilterResource_->GetGPUVirtualAddress());
 	}
 

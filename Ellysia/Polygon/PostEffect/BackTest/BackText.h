@@ -12,13 +12,13 @@ enum TextureEffectType {
 	
 	//Smoothing(平滑化)
 	//輪郭などのくっきりしたところをぼかして滑らかな雰囲気を出すよ
-	BoxFilter3x3,	
-	BoxFilter5x5,
+	BoxFilter3x3a,	
+	BoxFilter5x5a,
 
 	//GaussianFilter
 	//BoxFilterよりこっちの方良い感じらしい
-	GaussianFilter3x3,
-	GaussianFilter5x5,
+	GaussianFilter3x3a,
+	GaussianFilter5x5a,
 
 
 

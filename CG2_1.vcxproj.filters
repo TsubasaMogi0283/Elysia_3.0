@@ -244,6 +244,12 @@
     <Filter Include="Ellysia\Resource File\PostEffect\Vignette">
       <UniqueIdentifier>{3e054879-47a6-4d80-8db0-b71b096e8249}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Resource File\PostEffect\BoxFilter">
+      <UniqueIdentifier>{4446064b-c2c3-4fbe-8b31-67a8815a462f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Resource File\PostEffect\GaussianFilter">
+      <UniqueIdentifier>{96657abe-adba-4189-ab80-75a7fbfba290}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -408,6 +414,12 @@
     <ClCompile Include="Ellysia\Polygon\PostEffect\Vignette\Vignette.cpp">
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\PostEffect\BoxFilter\BoxFilter.cpp">
+      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.cpp">
+      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -493,6 +505,18 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\Vignette\Vignette.VS.hlsl">
       <Filter>Ellysia\Resource File\PostEffect\Vignette</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\BoxFilter\BoxFilter.PS.hlsl">
+      <Filter>Ellysia\Resource File\PostEffect\BoxFilter</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\BoxFilter\BoxFilter.VS.hlsl">
+      <Filter>Ellysia\Resource File\PostEffect\BoxFilter</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GaussianFilter\GaussianFilter.PS.hlsl">
+      <Filter>Ellysia\Resource File\PostEffect\GaussianFilter</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GaussianFilter\GaussianFilter.VS.hlsl">
+      <Filter>Ellysia\Resource File\PostEffect\GaussianFilter</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -736,6 +760,12 @@
     <ClInclude Include="Ellysia\Polygon\PostEffect\Vignette\Vignette.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\PostEffect\BoxFilter\BoxFilter.h">
+      <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.h">
+      <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">
@@ -774,9 +804,6 @@
     <None Include="Resources\Shader\FullScreen\FullScreen.hlsli">
       <Filter>Ellysia\Resource File\PostEffect\FullScreen</Filter>
     </None>
-    <None Include="Resources\Shader\FullScreen\Kernel.hlsli">
-      <Filter>Ellysia\Resource File\PostEffect\FullScreen</Filter>
-    </None>
     <None Include="Resources\Shader\FullScreen\SmoothingIndex.hlsli">
       <Filter>Ellysia\Resource File\PostEffect\FullScreen</Filter>
     </None>
@@ -797,6 +824,24 @@
     </None>
     <None Include="Resources\Shader\Vignette\Vignette.hlsli">
       <Filter>Ellysia\Resource File\PostEffect\Vignette</Filter>
+    </None>
+    <None Include="Resources\Shader\BoxFilter\BoxFilter.hlsli">
+      <Filter>Ellysia\Resource File\PostEffect\BoxFilter</Filter>
+    </None>
+    <None Include="Resources\Shader\BoxFilter\SmoothingIndex.hlsli">
+      <Filter>Ellysia\Resource File\PostEffect\BoxFilter</Filter>
+    </None>
+    <None Include="Resources\Shader\FullScreen\Kernel.hlsli">
+      <Filter>Ellysia\Resource File\PostEffect\FullScreen</Filter>
+    </None>
+    <None Include="Resources\Shader\GaussianFilter\GaussianFilter.hlsli">
+      <Filter>Ellysia\Resource File\PostEffect\GaussianFilter</Filter>
+    </None>
+    <None Include="Resources\Shader\GaussianFilter\Kernel.hlsli">
+      <Filter>Ellysia\Resource File\PostEffect\GaussianFilter</Filter>
+    </None>
+    <None Include="Resources\Shader\GaussianFilter\SmoothingIndex.hlsli">
+      <Filter>Ellysia\Resource File\PostEffect\GaussianFilter</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
