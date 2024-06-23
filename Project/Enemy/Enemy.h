@@ -4,7 +4,7 @@
 #include "Model.h"
 #include "../Collider/Collider.h"
 #include "Material.h"
-
+#include <memory>
 struct Camera;
 struct SpotLight;
 

@@ -98,6 +98,7 @@ void SampleScene::Initialize() {
 	back_->Initialize();
 
 	material_.Initialize();
+	material_.lightingKinds_ = Spot;
 	spotLight_.Initialize();
 }
 
@@ -353,4 +354,10 @@ void SampleScene::DrawSprite(){
 /// デストラクタ
 /// </summary>
 SampleScene::~SampleScene() {
+	//敵
+	for (Enemy* enemy : enemys_) {
+		delete enemy;
+	}
+
+	delete lightCollision_;
 }
