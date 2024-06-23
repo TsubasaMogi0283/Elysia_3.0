@@ -250,6 +250,24 @@
     <Filter Include="Ellysia\Resource File\PostEffect\GaussianFilter">
       <UniqueIdentifier>{96657abe-adba-4189-ab80-75a7fbfba290}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Enemy">
+      <UniqueIdentifier>{50da64de-7949-4d78-9976-41a9e659d7be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Collision">
+      <UniqueIdentifier>{c1aa45b5-8f1f-4832-9f1f-70cd41ad017e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Player">
+      <UniqueIdentifier>{64043a22-c8f5-4bb5-9fd8-8f56b10eb819}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Player\LightWeapon">
+      <UniqueIdentifier>{d4541ffb-27ab-4165-84e8-d544c34cb2a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Item">
+      <UniqueIdentifier>{617e81c9-f892-40bf-92da-38799fc0e39e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Item\Key">
+      <UniqueIdentifier>{fc1d294f-567f-4707-a4fc-9052cbc0f915}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -326,9 +344,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Math\Quaternion\Quaternion.cpp">
       <Filter>Ellysia\Source File\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Math\Collision\Collision.cpp">
-      <Filter>Project</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\SkyBox</Filter>
@@ -421,16 +436,22 @@
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\Enemy.cpp">
-      <Filter>Project</Filter>
+      <Filter>Project\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Project\LightWeapon\LightWeapon.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Player\Player.cpp">
-      <Filter>Project</Filter>
+    <ClCompile Include="Ellysia\Math\Collision\Collision.cpp">
+      <Filter>Project\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Project\Collider\CollisionManager.cpp">
-      <Filter>Project</Filter>
+      <Filter>Project\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\Player.cpp">
+      <Filter>Project\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\LightWeapon\LightWeapon.cpp">
+      <Filter>Project\Player\LightWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Key\Key.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -664,9 +685,6 @@
     <ClInclude Include="Ellysia\AdjustmentItems\AdjustmentItems.h">
       <Filter>Ellysia\Header File\AdjustmentItems</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\Collision\Collision.h">
-      <Filter>Project</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Math\Transform\EulerTransform.h">
       <Filter>Ellysia\Header File\Math</Filter>
     </ClInclude>
@@ -779,22 +797,28 @@
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\Enemy.h">
-      <Filter>Project</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\LightWeapon\LightWeapon.h">
-      <Filter>Project</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Player\Player.h">
-      <Filter>Project</Filter>
+      <Filter>Project\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Project\Collider\Collider.h">
-      <Filter>Project</Filter>
+      <Filter>Project\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Collision\Collision.h">
+      <Filter>Project\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Project\Collider\CollisionConfig.h">
-      <Filter>Project</Filter>
+      <Filter>Project\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Project\Collider\CollisionManager.h">
-      <Filter>Project</Filter>
+      <Filter>Project\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\Player.h">
+      <Filter>Project\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\LightWeapon\LightWeapon.h">
+      <Filter>Project\Player\LightWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Key\Key.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

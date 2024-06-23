@@ -12,7 +12,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	worldTransform_.translate_ = position;
 
 	material_.Initialize();
-
+	material_.lightingKinds_ = Spot;
 	deleteTime_ = 180;
 	isAlive_ = true;
 
@@ -35,7 +35,7 @@ void Enemy::Update(){
 	worldTransform_.translate_ = Add(worldTransform_.translate_, speed_);
 	worldTransform_.Update();
 
-
+	material_.Update();
 #ifdef _DEBUG
 	ImGui::Begin("Enemy");
 	ImGui::InputInt("AliveTive", &deleteTime_);
@@ -66,7 +66,7 @@ void Enemy::OnCollision() {
 
 
 	material_.color_ = color_;
-	material_.Update();
+	
 }
 
 Vector3 Enemy::GetWorldPosition() {

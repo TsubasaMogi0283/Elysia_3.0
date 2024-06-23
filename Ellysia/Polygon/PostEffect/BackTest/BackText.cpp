@@ -29,8 +29,8 @@ void BackText::Initialize(){
 	gaussianFilterInformation_.sigma = 2.0f;
 
 
-	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.0f,0.0f,0.0f,1.0f };
-	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+	renderTargetClearValue_ = { 0.0f,0.0f,0.0f,1.0f };
+	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, renderTargetClearValue_);
 	
 	const std::string postEffectName = "BackText";
 	rtvHandle_= RtvManager::GetInstance()->Allocate(postEffectName);
@@ -49,7 +49,7 @@ void BackText::Initialize(){
 
 void BackText::PreDraw(){
 	
-	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.0f,0.0f,0.0f,1.0f };
+	const float RENDER_TARGET_CLEAR_VALUE[] = { renderTargetClearValue_.x,renderTargetClearValue_.y,renderTargetClearValue_.z,renderTargetClearValue_.w };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
 		1, &RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 

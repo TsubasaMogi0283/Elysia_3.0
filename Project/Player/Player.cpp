@@ -10,6 +10,11 @@ void Player::Initialize(){
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
 	model_.reset(Model::Create(modelHandle));
 
+	//持っている鍵の数
+	haveKeyQuantity_ = 0;
+
+	//半径
+	radius_ = 1.0f;
 
 	worldTransform_.Initialize();
 
@@ -52,22 +57,23 @@ void Player::Update(){
 }
 
 void Player::Draw(Camera& camera, Material& material, SpotLight& spotLight){
-
 	
-
-	//1人称だったらモデルは表示させない
-	//自分の目から自分の全身が見えるのはおかしいからね
-	if (pointOfView_ !=FirstPerson) {
-		model_->Draw(worldTransform_, camera,material,spotLight);
-	}
+	
+	model_->Draw(worldTransform_, camera,material,spotLight);
+	
 	
 }
 
-Vector3 Player::GetWorldPosition(){
+Vector3 Player::GetWorldPosition()const {
 	Vector3 result = {};
 	result.x = worldTransform_.worldMatrix_.m[3][0];
 	result.y = worldTransform_.worldMatrix_.m[3][1];
 	result.z = worldTransform_.worldMatrix_.m[3][2];
 
 	return result;
+}
+
+void Player::AddHaveKeyQuantity(){
+	haveKeyQuantity_++;
+
 }

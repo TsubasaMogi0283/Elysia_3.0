@@ -57,17 +57,36 @@ public:
 	/// 1人称だったらモデルは表示させない
 	/// </summary>
 	/// <param name="pointOfView"></param>
-	void SetPointOfView(uint32_t pointOfView) {
+	void SetPointOfView(uint32_t pointOfView){
 		this->pointOfView_ = pointOfView;
 	}
+
+	//Getterは後ろにconst を付ける方が良いらしい
+	//オブジェクトの状態を変更しない読み取り専用だから
+
 
 	/// <summary>
 	/// ワールド座標を所得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition()const;
+
+	/// <summary>
+	/// 半径を取得
+	/// </summary>
+	/// <returns></returns>
+	float GetRadius() const {
+		return radius_;
+	}
+
+	/// <summary>
+	/// 持っている鍵の数を増やす
+	/// </summary>
+	void AddHaveKeyQuantity();
 
 
+
+	
 public:
 	
 
@@ -86,6 +105,11 @@ private:
 	uint32_t pointOfView_ = 0;
 
 
+	float radius_ = 0.0f;
+
+	//持っている鍵の数
+	//可算なのでQuantity
+	uint32_t haveKeyQuantity_ = 0;
 
 
 };

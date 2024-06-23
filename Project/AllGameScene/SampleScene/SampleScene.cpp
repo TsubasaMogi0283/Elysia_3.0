@@ -40,6 +40,15 @@ void SampleScene::Initialize() {
 	groundWorldTransform_.translate_.x = 0.0f;
 	groundWorldTransform_.translate_.y = 0.0f;
 
+#pragma region 鍵
+	Key* key1 = new Key();
+	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","Cube.obj");
+	Vector3 keyPosition = { -5.0f,1.0f,1.0f };
+	key1->Initialize(keyModelHandle,keyPosition );
+	keyes_.push_back(key1);
+
+#pragma endregion
+
 
 #pragma region 敵
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD2_Enemy", "TD2_Enemy.obj");
@@ -65,14 +74,17 @@ void SampleScene::Initialize() {
 	camera_.Initialize();
 	camera_.translate_.y = 1.0f;
 	camera_.translate_.z = -15.0f;
+	camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
 	cameraPosition_ = camera_.translate_;
 
 	CAMERA_POSITION_OFFSET = { 0.0f,1.0f,1.0f };
 
 	thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
 	cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
-	//マジでSetterでわざわざやるの面倒！
-	//直したい
+
+	firstPersonRotate_ = 0.0f;
+
+
 	theta = std::numbers::pi_v<float> / 2.0f;
 	lightPosition = camera_.translate_;
 
@@ -99,7 +111,10 @@ void SampleScene::Initialize() {
 
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
+	//material_.lightingKinds_ = Directional;
+
 	spotLight_.Initialize();
+	directionalLight_.Initialize();
 }
 
 
@@ -156,6 +171,47 @@ void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
 	}
 }
 
+void SampleScene::KeyCollision(){
+
+	//リストにする必要性が感じられないので後で配列に直すかも
+	//鍵
+	for (Key* key : keyes_) {
+
+
+		if (key->GetIsPickUp() == false) {
+			//判定は円で良いかも
+			Vector3 distance = {};
+			distance.x = std::powf((player_->GetWorldPosition().x - key->GetWorldPosition().x), 2.0f);
+			distance.z = std::powf((player_->GetWorldPosition().z - key->GetWorldPosition().z), 2.0f);
+
+			float colissionDistance = sqrtf(distance.x + distance.y + distance.z);
+			if (colissionDistance > player_->GetRadius() + key->GetRadius()) {
+				return;
+			}
+
+			if (colissionDistance <= player_->GetRadius() + key->GetRadius()) {
+
+#ifdef _DEBUG
+				ImGui::Begin("KeyCollision");
+				ImGui::End();
+#endif // _DEBUG
+
+				if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
+					player_->AddHaveKeyQuantity();
+				}
+
+
+			}
+		}
+
+		
+
+	}
+	
+
+
+}
+
 
 
 
@@ -177,14 +233,24 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 
 #endif
-
-
+	firstPersonRotate_ = theta;
+	//+が左回り
+	const float ROTATE_OFFSET = 0.025f;
+	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
+		theta += ROTATE_OFFSET;
+		
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
+		theta -= ROTATE_OFFSET;
+		
+	}
 
 	lightDirection_.x = std::cosf(theta);
 	lightDirection_.z = std::sinf(theta);
-	lightPosition = player_->GetWorldPosition();
+	const float LIGHT_HEIGHT = 0.5f;
+	lightPosition = Add(player_->GetWorldPosition(), {0.0f, LIGHT_HEIGHT,0.0f});
 
-
+	spotLight_.position_ = lightPosition;
 	spotLight_.intensity_ = intencity_;
 	spotLight_.direction_ = lightDirection_;
 	spotLight_.distance_ = distance_;
@@ -225,7 +291,11 @@ void SampleScene::Update(GameManager* gameManager) {
 		ImGui::End();
 #endif // _DEBUG
 
-		camera_.rotate_ = { 0.0f,0.0f,0.0f };
+		camera_.rotate_.x = 0.0f;
+		camera_.rotate_.z = 0.0f;
+
+		//回り方が少し違うので注意
+		camera_.rotate_.y = -(firstPersonRotate_)+std::numbers::pi_v<float>/2.0f;
 		camera_.translate_ = Add(player_->GetWorldPosition(), CAMERA_POSITION_OFFSET);
 
 	}
@@ -253,20 +323,36 @@ void SampleScene::Update(GameManager* gameManager) {
 	for (Enemy* enemy : enemys_) {
 		enemy->Update();
 	}
+
 	//敵同士
 	CheckCollision(enemys_);
+
+
+	//鍵
+	for (Key* key : keyes_) {
+		key->Update();
+	}
 
 
 	//プレイヤーの更新
 	player_->Update();
 
+	KeyCollision();
+	//
+	keyes_.remove_if([](Key* key) {
+		if (key->GetIsPickUp() == true) {
+			delete key;
+			return true;
+		}
+		return false;
+	});
 	//地面
 	groundWorldTransform_.Update();
 
 
 	material_.Update();
 	spotLight_.Update();
-	
+	directionalLight_.Update();
 	//ライト
 	lightCollision_->Update(player_->GetWorldPosition());
 	
@@ -287,6 +373,13 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 #ifdef _DEBUG
+	ImGui::Begin("Camera");
+	ImGui::InputFloat3("Rotate", &camera_.rotate_.x);
+	ImGui::InputFloat("Theta", &theta);
+	ImGui::InputFloat("FirstRotate", &firstPersonRotate_);
+	
+	ImGui::End();
+
 
 	ImGui::Begin("Light");
 	ImGui::SliderFloat("Distance", &distance_, 0.0f, 100.0f);
@@ -322,13 +415,23 @@ void SampleScene::PreDrawPostEffectFirst(){
 void SampleScene::DrawObject3D() {
 	
 	//プレイヤー
-	player_->Draw(camera_,material_,spotLight_);
+	//1人称だったらモデルは表示させない
+	//自分の目から自分の全身が見えるのはおかしいからね
+	if (viewOfPoint_ != FirstPerson) {
+		player_->Draw(camera_, material_, spotLight_);
 
+	}
+	
 	//地面
 	ground_->Draw(groundWorldTransform_, camera_,material_, spotLight_);
 	//敵
 	for (Enemy* enemy : enemys_) {
 		enemy->Draw(camera_,spotLight_);
+	}
+
+	//鍵
+	for (Key* key : keyes_) {
+		key->Draw(camera_, spotLight_);
 	}
 
 	lightCollision_->Draw(camera_, material_, spotLight_);
@@ -358,6 +461,11 @@ SampleScene::~SampleScene() {
 	for (Enemy* enemy : enemys_) {
 		delete enemy;
 	}
+
+	for (Key* key : keyes_) {
+		delete  key;
+	}
+
 
 	delete lightCollision_;
 }

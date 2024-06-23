@@ -32,6 +32,7 @@
 #include <Enemy/Enemy.h>
 #include <LightWeapon/LightWeapon.h>
 #include <Collider/CollisionManager.h>
+#include <Key/Key.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -83,6 +84,10 @@ private:
 
 	void CheckCollision(std::list<Enemy*>& enemies);
 
+	/// <summary>
+	/// 鍵の取得の処理
+	/// </summary>
+	void KeyCollision();
 
 
 private:
@@ -94,7 +99,7 @@ private:
 	
 	Camera camera_ = {};
 
-
+	DirectionalLight directionalLight_ = {};
 	SpotLight spotLight_ = {};
 
 	Material material_ = {};
@@ -112,12 +117,18 @@ private:
 	Vector3 cameraThirdPersonViewOfPointPosition_ = {};
 	Vector3 thirdPersonViewOfPointRotate_ = {};
 
+	//1人称
+	float firstPersonRotate_ = {};
+
 	//プレイヤー
 	std::unique_ptr<Player>player_ = nullptr;
 
 	//地面
 	std::unique_ptr<Model> ground_ = nullptr;
 	WorldTransform groundWorldTransform_ = {};
+
+	//鍵
+	std::list<Key*> keyes_ = {};
 
 	//敵
 	std::list <Enemy*> enemys_ = {};
