@@ -23,107 +23,137 @@ SampleScene::SampleScene() {
 /// </summary>
 void SampleScene::Initialize() {
 
-	//GLTF2.0
-	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
-	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf",false);
-	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/terrain", "terrain.obj");
-	worldTransform_.Initialize();
-	model_.reset(Model::Create(modelHandle));
-	//Walk
-	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf");
-	humanAnimationModel_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/human", "walk.gltf");
 
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		human_[i].reset(AnimationModel::Create(humanModelHandle));
-		humanWorldTransform_[i].Initialize();
-		humanAnimationTime_[i] = 0;
-		humanSkeleton_[i].Create(ModelManager::GetInstance()->GetModelData(humanModelHandle).rootNode);
-		humanSkinCluster_[i].Create(humanSkeleton_[i], ModelManager::GetInstance()->GetModelData(humanModelHandle));
-		humanWorldTransform_[i].translate_.x = 0.0f;
-		
-	}
-	humanMaterial_.Initialize();
-	humanMaterial_.lightingKinds_ = Point;
-	humanMaterial_.isEnviromentMap_ = true;
-
-	sphereMaterial.Initialize();
-	sphereMaterial.lightingKinds_ = Point;
-	sphereMaterial.isEnviromentMap_ = true;
-
-	humanWorldTransform_[0].translate_.y = 0.0f;
-	
+	//プレイヤーの初期化
+	player_ = std::make_unique<Player>();
+	player_->Initialize();
+	//初期は1人称視点
+	viewOfPoint_ = FirstPerson;
 
 
 	//地面
-	uint32_t noneModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
-	noneAnimationModel_.reset(Model::Create(noneModelHandle));
-	noneAnimationWorldTransform_.Initialize();
-	const float SPHERE_SCALE = 1.0f;
-	noneAnimationWorldTransform_.scale_ = { SPHERE_SCALE,SPHERE_SCALE,SPHERE_SCALE };
-	noneAnimationWorldTransform_.translate_.x = 0.0f;
-	noneAnimationWorldTransform_.translate_.y = 0.0f;
+	uint32_t groundModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
+	ground_.reset(Model::Create(groundModelHandle));
+	groundWorldTransform_.Initialize();
+	const float SPHERE_SCALE = 40.0f;
+	groundWorldTransform_.scale_ = { SPHERE_SCALE,SPHERE_SCALE,SPHERE_SCALE };
+	groundWorldTransform_.translate_.x = 0.0f;
+	groundWorldTransform_.translate_.y = 0.0f;
 
-	
 
+#pragma region 敵
+	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD2_Enemy", "TD2_Enemy.obj");
+
+	//まず一個出す
+	Enemy* enemy = new Enemy();
+	enemy->Initialize(enemyModelHandle_, { 4.0f,1.0f,0.0f }, { 0.0f,0.0f,0.0f });
+	enemys_.push_back(enemy);
+
+	Enemy* enemy2 = new Enemy();
+	enemy2->Initialize(enemyModelHandle_, { -2.0f,1.0f,0.0f }, { 0.0f,0.0f,0.0f });
+	enemys_.push_back(enemy2);
+
+
+
+#pragma endregion
+
+
+
+
+
+	//カメラ
 	camera_.Initialize();
-	camera_.translate_ = { 0.0f,1.0f,-10.0f };
+	camera_.translate_.y = 1.0f;
+	camera_.translate_.z = -15.0f;
+	cameraPosition_ = camera_.translate_;
+
+	CAMERA_POSITION_OFFSET = { 0.0f,1.0f,1.0f };
+
+	thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
+	cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
+	//マジでSetterでわざわざやるの面倒！
+	//直したい
+	theta = std::numbers::pi_v<float> / 2.0f;
+	lightPosition = camera_.translate_;
+
+	distance_ = 32.0f;
+	decay_ = 0.6f;
+	fallOff_ = 6.1f;
+	cosAngle_ = 0.98f;
+	intencity_ = 200.0f;
 
 
-	uint32_t skyBoxTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG4/SkyBox/rostock_laage_airport_4k.dds");
-	skyBox_ = std::make_unique<SkyBox>();
-	skyBox_->Create(skyBoxTextureHandle);
-	skyBoxWorldTransform_.Initialize();
-	const float SKYBOX_SCALE = 20.0f;
-	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
+	//プレイヤーのライト
+	uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	lightCollision_ = new LightWeapon();
+	lightCollision_->Initialize(weaponLightModel);
 
-	//noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
-	human_[0]->SetEviromentTexture(skyBoxTextureHandle);
-	noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
 
-	uint32_t textureHandle = TextureManager::GetInstance()->LoadTexture("Resources/White.png");
-	sprite_.reset(Sprite::Create(textureHandle, { 0.0f,0.0f }));
-	sprite_->SetScale({0.5f, 0.5f});
-	
+	collisionManager_ = std::make_unique<CollisionManager>();
+
+
+
+
 	back_ = std::make_unique< BackText>();
 	back_->Initialize();
 
-	grayScale_ = std::make_unique<GrayScale>();
-	grayScale_->Initialize();
-	
-	sepiaScale_ = std::make_unique<SepiaScale>();
-	sepiaScale_->Initialize();
-
-	vignette_ = std::make_unique<Vignette>();
-	vignette_->Initialize();
-
-	boxFilter_ = std::make_unique<BoxFilter>();
-	boxFilter_->Initialize();
-
-	gaussianFilter_ = std::make_unique<GaussianFilter>();
-	gaussianFilter_->Initialize();
-
-	radialBlur_ = std::make_unique < RadialBlur>();
-	radialBlur_->Initialize();
-	
-	outLine_ = std::make_unique < LuminanceBasedOutline>();
-	outLine_->Initialize();
-	depthBasedOutline_ = std::make_unique<DepthBasedOutline>();
-	depthBasedOutline_->Initialize();
-	
-	
-	uint32_t dissolveTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise0.png");
-	dissolve_ = std::make_unique <Dissolve>();
-	dissolve_->Initialize(dissolveTextureHandle);
-	//
-	randomEffect_ = std::make_unique < RandomEffect>();
-	randomEffect_->Initialize();
-
-	directionalLight_.Initialize();
-	pointLight_.Initialize();
+	material_.Initialize();
 	spotLight_.Initialize();
 }
 
 
+
+void SampleScene::GenarateEnemy() {
+	Enemy* enemy = new Enemy();
+	Vector3 speed = {};
+	enemy->Initialize(enemyModelHandle_, {0.0f,0.0f,0.0f}, speed);
+
+	enemys_.push_back(enemy);
+
+}
+
+void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
+	//敵
+	for (auto it1 = enemies.begin(); it1 != enemies.end(); ++it1) {
+		for (auto it2 = std::next(it1); it2 != enemies.end(); ++it2) {
+
+			Vector3 diff = Subtract((*it1)->GetWorldPosition(), (*it2)->GetWorldPosition());
+			float distance = sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
+			float minDistance = (*it1)->GetRadius() + (*it2)->GetRadius();
+
+
+#ifdef _DEBUG
+			ImGui::Begin("EnemyCollision");
+			ImGui::InputFloat("Distance", &distance);
+			ImGui::InputFloat("Radius", &minDistance);
+
+			ImGui::End();
+
+#endif // DEBUG
+
+
+
+			if (distance < minDistance) {
+				(*it2)->SetTranslate(Add((*it2)->GetWorldPosition(), { -1.0,0.0f,0.0f }));
+			}
+
+			//if (distance < minDistance) {
+			//	Vector3 correction = {};
+			//	correction.x=diff.x * (minDistance - distance);
+			//	correction.y = diff.y * (minDistance - distance);
+			//	correction.z = diff.z * (minDistance - distance);
+			//	
+
+
+			//	(*it1)->SetTranslate(Add((*it1)->GetWorldPosition(), { correction.x * 0.5f,correction.y * 0.5f,correction.z * 0.5f }));
+			//	(*it2)->SetTranslate(Add((*it2)->GetWorldPosition(), { correction.x * 0.5f,correction.y * 0.5f,correction.z * 0.5f }));
+
+			//}
+		}
+
+
+	}
+}
 
 
 
@@ -134,179 +164,142 @@ void SampleScene::Initialize() {
 void SampleScene::Update(GameManager* gameManager) {
 	gameManager;
 
-	
-	
-	
-#pragma region アニメーションモデル
-	
-	humanAnimationTime_[0] += 1.0f / 60.0f;
-
-	
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		AnimationManager::GetInstance()->ApplyAnimation(humanSkeleton_[i], humanAnimationModel_, humanModelHandle, humanAnimationTime_[i]);
-	}
-	
-	//現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
-	//読み込むのは最初だけで良いと気づいた
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		humanSkeleton_[i].Update();
-	}
-	//SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		humanSkinCluster_[i].Update(humanSkeleton_[i]);
-	}
-
-
-	sprite_->SetPosition(position);
-
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		humanWorldTransform_[i].Update();
-	}
-#pragma endregion
+	//フレーム初めに
+	//コリジョンリストのクリア
+	collisionManager_->ClearList();
 
 
 #ifdef _DEBUG
-	ImGui::Begin("Camera");
-	ImGui::SliderFloat3("Position", &camera_.translate_.x, -40.0f, 20.0f);
-	ImGui::End();
+	//Gキーで出す
+	if (Input::GetInstance()->IsTriggerKey(DIK_G) == true) {
+		GenarateEnemy();
+	}
 
-
-	ImGui::Begin("Sprite");
-	ImGui::SliderFloat3("Z",&position.x,0.0f,1280.0f);
-	ImGui::End();
-	
 #endif
-	const float CAMERA_MOVE_SPEED = 0.2f;
-	Vector3 move = {};
-	Vector3 rotateMove = {};
-
-	//Y
-	if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
-		move.y = 1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
-		move.y = -1.0f;
-	}
-	//X
-	else if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
-		move.x = 1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
-		move.x = -1.0f;
-	}
-	//Z
-	else if (Input::GetInstance()->IsPushKey(DIK_O) == true) {
-		move.z = 1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_L) == true) {
-		move.z = -1.0f;
-	}
 
 
-	else {
-		move.x = 0.0f;
-		move.y = 0.0f;
-		move.z = 0.0f;
-	}
 
-	//回転
-	const float ROTATE_MOVE_SPEED = 0.01f;
-	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
-		rotateMove.y = -1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
-		rotateMove.y = 1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
-		rotateMove.x = -1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
-		rotateMove.x = 1.0f;
-	}
-
-	else {
-		rotateMove.y = 0.0f;
-		rotateMove.x = 0.0f;
-	}
-
-	camera_.translate_ = Add(camera_.translate_, { move.x* CAMERA_MOVE_SPEED,move.y* CAMERA_MOVE_SPEED,move.z*CAMERA_MOVE_SPEED });
-	camera_.rotate_ = Add(camera_.rotate_, { rotateMove.x * ROTATE_MOVE_SPEED,rotateMove.y * ROTATE_MOVE_SPEED,rotateMove.z * ROTATE_MOVE_SPEED });
+	lightDirection_.x = std::cosf(theta);
+	lightDirection_.z = std::sinf(theta);
+	lightPosition = player_->GetWorldPosition();
 
 
-	//コントローラー
-	XINPUT_STATE joyState{};
+	spotLight_.intensity_ = intencity_;
+	spotLight_.direction_ = lightDirection_;
+	spotLight_.distance_ = distance_;
+	spotLight_.decay_ = decay_;
+	spotLight_.cosFallowoffStart_ = fallOff_;
+	spotLight_.cosAngle_ = cosAngle_;
 
-	//コントローラーがある場合
-	if (Input::GetInstance()->IsPushKey(DIK_V)==true) {
-		Input::GetInstance()->SetVibration(1.0f, 1.0f);
-	}
-	else {
-		Input::GetInstance()->StopVibration();
+
+
+
+	collisionManager_->RegisterList(lightCollision_);
+
+	for (auto it = enemys_.begin(); it != enemys_.end();) {
+		Enemy* enemy = *it;
+		if (enemy != nullptr) {
+			collisionManager_->RegisterList(enemy);
+		}
+		it++;
 	}
 
 
 
-	humanMaterial_.Update();
-	sphereMaterial.Update();
+	if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
+		viewOfPoint_ = FirstPerson;
+	}
+	else if (Input::GetInstance()->IsTriggerKey(DIK_3) == true) {
+		viewOfPoint_ = ThirdPersonBack;
+	}
 
-	directionalLight_.Update();
-	pointLight_.Update();
-	spotLight_.Update();
-	camera_.Update();
-	worldTransform_.Update();
-	noneAnimationWorldTransform_.Update();
-	skyBoxWorldTransform_.Update();
+
+
+	if (viewOfPoint_ == FirstPerson) {
+
+		//カメラ
 #ifdef _DEBUG
-	ImGui::Begin("Camera");
-	ImGui::SliderFloat3("Translate", &camera_.translate_.x, -100.0f, 100.0f);
-	ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
-	ImGui::End();
+		ImGui::Begin("Camera");
+		ImGui::SliderFloat3("Pos", &CAMERA_POSITION_OFFSET.x, -30.0f, 30.0f);
+		ImGui::End();
+#endif // _DEBUG
 
-	ImGui::Begin("DirectionalLight");
-	ImGui::SliderFloat4("Color", &directionalLight_.color_.x, 0.0f, 1.0f);
-	ImGui::SliderFloat3("Direction", &directionalLight_.direction_.x, -1.0f, 1.0f);
-	ImGui::SliderFloat("intensity", &directionalLight_.intensity_, 0.0f, 1.0f);
-	ImGui::End();
+		camera_.rotate_ = { 0.0f,0.0f,0.0f };
+		camera_.translate_ = Add(player_->GetWorldPosition(), CAMERA_POSITION_OFFSET);
+
+	}
+	else if (viewOfPoint_ == ThirdPersonBack) {
+
+#ifdef _DEBUG
+		ImGui::Begin("Camera");
+		ImGui::SliderFloat3("Pos", &cameraThirdPersonViewOfPointPosition_.x, -70.0f, 40.0f);
+		ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
+
+		ImGui::End();
+#endif // _DEBUG
+
+		camera_.rotate_ = thirdPersonViewOfPointRotate_;
+		camera_.translate_ = Add(player_->GetWorldPosition(), cameraThirdPersonViewOfPointPosition_);
+	}
 
 
 
-	ImGui::Begin("PointLight");
-	ImGui::SliderFloat4("Color", &pointLight_.color_.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("Decay", &pointLight_.decay_, 0.0f, 10.0f);
-	ImGui::SliderFloat("intensity", &pointLight_.intensity_, 0.0f, 10.0f);
-	ImGui::SliderFloat3("Position", &pointLight_.position_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("Radius", &pointLight_.radius_, 0.0f, 10.0f);
-	ImGui::End();
+	camera_.Update();
 
-	ImGui::Begin("SpotLight");
-	ImGui::SliderFloat4("Color", &spotLight_.color_.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("Decay", &spotLight_.decay_, 0.0f, 10.0f);
-	ImGui::SliderFloat("intensity", &spotLight_.intensity_, 0.0f, 10.0f);
-	ImGui::SliderFloat3("Position", &spotLight_.position_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("Radius", &spotLight_.cosAngle_, 0.0f, 10.0f);
-	ImGui::SliderFloat("CosFallowStart", &spotLight_.cosFallowoffStart_, 0.0f, 10.0f);
-	ImGui::SliderFloat("Distance", &spotLight_.distance_, 0.0f, 10.0f);
-	ImGui::End();
+
+
+	//敵
+	for (Enemy* enemy : enemys_) {
+		enemy->Update();
+	}
+	//敵同士
+	CheckCollision(enemys_);
+
+
+	//プレイヤーの更新
+	player_->Update();
+
+	//地面
+	groundWorldTransform_.Update();
+
+
+	material_.Update();
+	spotLight_.Update();
+	
+	//ライト
+	lightCollision_->Update(player_->GetWorldPosition());
 	
 
-	ImGui::Begin("HumanMaterial");
-	ImGui::SliderFloat4("Color", &humanMaterial_.color_.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("Shininess", &humanMaterial_.shininess_, 0.0f, 200.0f);
-	ImGui::End();
+	//当たり判定
+	collisionManager_->CheckAllCollision();
 
-	ImGui::Begin("SphereMaterial");
-	ImGui::SliderFloat4("Color", &sphereMaterial.color_.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("Shininess", &sphereMaterial.shininess_, 0.0f, 200.0f);
-	ImGui::End();
 
+
+	//敵がが生存していなかったら消す
+	enemys_.remove_if([](Enemy* enemy) {
+		if (enemy->GetIsAlive() == false) {
+			delete enemy;
+			return true;
+		}
+		return false;
+	});
+
+
+#ifdef _DEBUG
+
+	ImGui::Begin("Light");
+	ImGui::SliderFloat("Distance", &distance_, 0.0f, 100.0f);
+	ImGui::SliderFloat("Decay", &decay_, 0.0f, 20.0f);
+	ImGui::SliderFloat("FallOff", &fallOff_, 0.0f, 20.0f);
+	ImGui::SliderFloat("CosAngle", &cosAngle_, 0.0f, 3.0f);
+	ImGui::SliderFloat("intencity_", &intencity_, 0.0f, 400.0f);
+	ImGui::End();
 
 
 #endif
 	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
 		AdjustmentItems::GetInstance()->SaveFile(GroupName);
-		gameManager->ChangeScene(new SampleScene2());
 	}
-
 
 	
 }
@@ -319,18 +312,7 @@ void SampleScene::DrawSpriteBack(){
 void SampleScene::PreDrawPostEffectFirst(){
 	
 	
-	//back_->PreDraw();
-	//grayScale_->PreDraw();
-	//sepiaScale_->PreDraw();
-	//vignette_->PreDraw();
-	//boxFilter_->PreDraw();
-	gaussianFilter_->PreDraw();
-	//radialBlur_->PreDraw();
-	//outLine_->PreDraw();
-	//dissolve_->PreDraw();
-	//randomEffect_->PreDraw();
-
-	//depthBasedOutline_->PreDraw();
+	back_->PreDraw();
 }
 
 /// <summary>
@@ -338,19 +320,17 @@ void SampleScene::PreDrawPostEffectFirst(){
 /// </summary>
 void SampleScene::DrawObject3D() {
 	
-	skyBox_->Draw(skyBoxWorldTransform_,camera_);
-	//SimpleSkin
-	//Walk
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i],humanMaterial_, pointLight_);
+	//プレイヤー
+	player_->Draw(camera_,material_,spotLight_);
+
+	//地面
+	ground_->Draw(groundWorldTransform_, camera_,material_, spotLight_);
+	//敵
+	for (Enemy* enemy : enemys_) {
+		enemy->Draw(camera_,spotLight_);
 	}
 
-
-
-
-	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_, sphereMaterial, pointLight_);
-	//model_->Draw(worldTransform_, camera_, humanMaterial_, pointLight_);
-
+	lightCollision_->Draw(camera_, material_, spotLight_);
 
 	
 }
@@ -360,21 +340,10 @@ void SampleScene::DrawObject3D() {
 void SampleScene::DrawPostEffect(){
 	
 	
-	//back_->Draw();
-	//grayScale_->Draw();
-	//sepiaScale_->Draw();
-	//vignette_->Draw();
-	//boxFilter_->Draw();
-	gaussianFilter_->Draw();
-	//radialBlur_->Draw();
-	//outLine_->Draw();
-	//dissolve_->Draw();
-	//randomEffect_->Draw();
-	//depthBasedOutline_->Draw(camera_);
+	back_->Draw();
 }
 
 void SampleScene::DrawSprite(){
-	sprite_->Draw();
 }
 
 

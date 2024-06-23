@@ -28,6 +28,10 @@
 #include <Vignette.h>
 #include <BoxFilter.h>
 #include <GaussianFilter.h>
+#include <Player/Player.h>
+#include <Enemy/Enemy.h>
+#include <LightWeapon/LightWeapon.h>
+#include <Collider/CollisionManager.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -73,6 +77,13 @@ public:
 	~SampleScene();
 
 
+private:
+
+	void GenarateEnemy();
+
+	void CheckCollision(std::list<Enemy*>& enemies);
+
+
 
 private:
 
@@ -83,47 +94,55 @@ private:
 	
 	Camera camera_ = {};
 
-	std::unique_ptr<Sprite> sprite_ = nullptr;
 
-
-	//歩き
-	static const int WALK_HUMAN_AMOUNT_ = 1;
-	std::unique_ptr<AnimationModel> human_[WALK_HUMAN_AMOUNT_] = { nullptr };
-	uint32_t humanModelHandle = {};
-	uint32_t humanAnimationModel_ = {};
-	WorldTransform humanWorldTransform_[WALK_HUMAN_AMOUNT_] = {};
-	Skeleton humanSkeleton_[WALK_HUMAN_AMOUNT_] = {};
-	float humanAnimationTime_[WALK_HUMAN_AMOUNT_] = {};
-	SkinCluster humanSkinCluster_[WALK_HUMAN_AMOUNT_] = {};
-
-	std::unique_ptr<Model> noneAnimationModel_ = nullptr;
-	WorldTransform noneAnimationWorldTransform_ = {};
-
-	std::unique_ptr<SkyBox> skyBox_ = nullptr;
-	WorldTransform skyBoxWorldTransform_ = {};
-
-	DirectionalLight directionalLight_ = {};
-	PointLight pointLight_ = {};
 	SpotLight spotLight_ = {};
 
-	Material humanMaterial_ = {};
-	Material sphereMaterial = {};
+	Material material_ = {};
 
 	const char* GroupName = "Player";
 	Vector3 position = {};
 
 	std::unique_ptr<BackText> back_ = nullptr;
-	
 
-	std::unique_ptr<GrayScale> grayScale_ = nullptr;
-	std::unique_ptr<SepiaScale> sepiaScale_ = nullptr;
-	std::unique_ptr<Vignette> vignette_ = nullptr;
-	std::unique_ptr<BoxFilter> boxFilter_ = nullptr;
-	std::unique_ptr<GaussianFilter> gaussianFilter_ = nullptr;
 
-	std::unique_ptr<LuminanceBasedOutline> outLine_ = nullptr;
-	std::unique_ptr<DepthBasedOutline> depthBasedOutline_ = nullptr;
-	std::unique_ptr<RadialBlur> radialBlur_ = nullptr;
-	std::unique_ptr<Dissolve> dissolve_ = nullptr;
-	std::unique_ptr<RandomEffect> randomEffect_ = nullptr;
+
+	Vector3 cameraPosition_ = {};
+	Vector3 CAMERA_POSITION_OFFSET = { 0.0f,1.0f,0.0f };
+
+	Vector3 cameraThirdPersonViewOfPointPosition_ = {};
+	Vector3 thirdPersonViewOfPointRotate_ = {};
+
+	//プレイヤー
+	std::unique_ptr<Player>player_ = nullptr;
+
+	//地面
+	std::unique_ptr<Model> ground_ = nullptr;
+	WorldTransform groundWorldTransform_ = {};
+
+	//敵
+	std::list <Enemy*> enemys_ = {};
+	uint32_t enemyModelHandle_ = 0;
+
+	//プレイヤーのライトの判定
+	LightWeapon* lightCollision_ = nullptr;
+	WorldTransform lightCollisionWorldTransform_ = {};
+
+
+	Vector3 lightPosition = {};
+	Vector3 lightDirection_ = {};
+
+	float theta = 0.0f;
+	float decay_ = 0.0f;
+	float fallOff_ = 0.0f;
+	float cosAngle_ = 0.0f;
+	float intencity_ = 4.0f;
+	float distance_ = 10.0f;
+
+	uint32_t viewOfPoint_ = 0;
+
+
+
+	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+
+
 };

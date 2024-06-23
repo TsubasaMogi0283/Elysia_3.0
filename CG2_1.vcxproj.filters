@@ -420,6 +420,18 @@
     <ClCompile Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.cpp">
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Enemy\Enemy.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\LightWeapon\LightWeapon.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\Player.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Collider\CollisionManager.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -765,6 +777,24 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\Enemy.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\LightWeapon\LightWeapon.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\Player.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Collider\Collider.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Collider\CollisionConfig.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Collider\CollisionManager.h">
+      <Filter>Project</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
