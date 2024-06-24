@@ -35,6 +35,7 @@
 #include <Key/Key.h>
 #include <Stage/Ground/Ground.h>
 #include <Key/KeyManager.h>
+#include <Light/FlashLight/FlashLight.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -107,7 +108,8 @@ private:
 	//平行光源
 	DirectionalLight directionalLight_ = {};
 	//スポットライト
-	SpotLight spotLight_ = {};
+	//SpotLight spotLight_ = {};
+	std::unique_ptr<FlashLight> flashLight_ = nullptr;
 	//マテリアル
 	Material material_ = {};
 
@@ -144,21 +146,10 @@ private:
 	LightWeapon* lightCollision_ = nullptr;
 	WorldTransform lightCollisionWorldTransform_ = {};
 
-
-	Vector3 lightPosition = {};
-	Vector3 lightDirection_ = {};
+	uint32_t viewOfPoint_ = 0;
 
 	float theta_ = 0.0f;
 	float originPhi_ = 0.0f;
-	float decay_ = 0.0f;
-	float fallOff_ = 0.0f;
-	float cosAngle_ = 0.0f;
-	float intencity_ = 4.0f;
-	float distance_ = 10.0f;
-
-	uint32_t viewOfPoint_ = 0;
-
-
 
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 

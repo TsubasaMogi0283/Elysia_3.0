@@ -14,7 +14,8 @@ void Key::Initialize(uint32_t& modelhandle, Vector3& position){
 	worldTransform_.scale_ = { SCALE ,SCALE ,SCALE };
 
 	//半径
-	radius_ = 1.0f;
+	//と言っても少しだけ大きくして取りやすくする
+	radius_ = SCALE*2.0f;
 
 	//取得されたかどうかのフラグ
 	isPickUp_ = false;

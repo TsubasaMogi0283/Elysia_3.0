@@ -3,7 +3,7 @@
 
 void KeyManager::Initialize(uint32_t modelHandle){
 	Key* key1 = new Key();
-	Vector3 keyPosition = { -5.0f,1.0f,1.0f };
+	Vector3 keyPosition = { -5.0f,0.0f,1.0f };
 	key1->Initialize(modelHandle, keyPosition);
 	keyes_.push_back(key1);
 

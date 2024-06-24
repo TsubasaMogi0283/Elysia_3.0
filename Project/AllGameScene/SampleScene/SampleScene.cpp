@@ -37,30 +37,10 @@ void SampleScene::Initialize() {
 	ground_->Initialize(groundModelHandle);
 
 #pragma region 鍵
-	//Key* key1 = new Key();
 	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","Cube.obj");
-	//Vector3 keyPosition = { -5.0f,1.0f,1.0f };
-	//key1->Initialize(keyModelHandle,keyPosition );
-	//keyes_.push_back(key1);
 
 	keyManager_ = std::make_unique<KeyManager>();
 	keyManager_->Initialize(keyModelHandle);
-
-	//uint32_t keySpriteHandle = TextureManager::GetInstance()->LoadTexture("Resources/Item/KeyList.png");
-	//Vector3 keySpritePosition = { 0.0f,0.0f,0.0f };
-	//keySprite_.reset(Sprite::Create(keySpriteHandle, keySpritePosition));
-
-	//uint32_t keyNumberQuantity[NUMBER_QUANTITY_] = {};
-	//for (uint32_t i = 0; i < NUMBER_QUANTITY_; ++i) {
-	//	//数を文字列に変換した方が賢いよね！
-	//	//すっきり！
-	//	const std::string number = std::to_string(i);
-	//	const std::string filePath= "Resources/Number/"+ number+".png";
-	//	keyNumberQuantity[i] = TextureManager::GetInstance()->LoadTexture(filePath);
-	//	const Vector3 numberPosition = { 64.0f * 2.0f,0.0f,0.0f };
-	//	keyNumber[i].reset(Sprite::Create(keyNumberQuantity[i], numberPosition));
-	//}
-
 
 #pragma endregion
 
@@ -106,15 +86,6 @@ void SampleScene::Initialize() {
 
 
 
-	theta_ = std::numbers::pi_v<float> / 2.0f;
-	originPhi_ = 0.0f;
-	lightPosition = camera_.translate_;
-
-	distance_ = 20.0f;
-	decay_ = 0.6f;
-	fallOff_ = 6.1f;
-	cosAngle_ = 0.98f;
-	intencity_ = 200.0f;
 
 
 	//プレイヤーのライト
@@ -135,7 +106,11 @@ void SampleScene::Initialize() {
 	material_.lightingKinds_ = Spot;
 	//material_.lightingKinds_ = Directional;
 
-	spotLight_.Initialize();
+	//懐中電灯
+	flashLight_ = std::make_unique<FlashLight>();
+	flashLight_->Initialize();
+
+	//spotLight_.Initialize();
 	directionalLight_.Initialize();
 }
 
@@ -293,44 +268,16 @@ void SampleScene::Update(GameManager* gameManager) {
 #pragma endregion
 
 	
-	//ライトの方向ベクトル
-	Vector3 direction = {};
-	direction.x = std::cosf(theta_);
-	direction.z = std::sinf(theta_);
-
 	//数学とプログラムで回る向きが違うことに煩わしさを感じます・・
 	//無理矢理直して楽になろう！！
 	float phi = -originPhi_;
 
-	//Yを求めたい
-	Vector3 directionForY = {};
-	//上のdirectionから長さを求めてからatan2でyを出す
-	float lengthXZ = sqrtf(std::powf(direction.x, 2.0f) + std::powf(direction.z, 2.0f));
-
-
-	
-
-
-	lightDirection_.x = direction.x;
-	lightDirection_.y = lengthXZ * std::tanf(phi);
-	lightDirection_.z = direction.z;
-
-
-
-
-
-
-	const float LIGHT_HEIGHT = 0.5f;
-	lightPosition = Add(player_->GetWorldPosition(), {0.0f, LIGHT_HEIGHT,0.0f});
-
-	spotLight_.position_ = lightPosition;
-	spotLight_.intensity_ = intencity_;
-	spotLight_.direction_ = lightDirection_;
-	spotLight_.distance_ = distance_;
-	spotLight_.decay_ = decay_;
-	spotLight_.cosFallowoffStart_ = fallOff_;
-	spotLight_.cosAngle_ = cosAngle_;
-
+	//懐中電灯
+	Vector3 playerPosition = player_->GetWorldPosition();
+	flashLight_->SetPlayerPosition(playerPosition);
+	flashLight_->SetTheta(theta_);
+	flashLight_->SetPhi(phi);
+	flashLight_->Update();
 
 
 
@@ -407,9 +354,9 @@ void SampleScene::Update(GameManager* gameManager) {
 	keyManager_->Update();
 
 	//鍵の取得処理
-	uint32_t keyQuantity_ = keyManager_->GetKeyQuantity();
+	uint32_t keyQuantity = keyManager_->GetKeyQuantity();
 	//鍵が0より多ければ通る
-	if (keyQuantity_ > 0) {
+	if (keyQuantity > 0) {
 		KeyCollision();
 	}
 	
@@ -419,12 +366,12 @@ void SampleScene::Update(GameManager* gameManager) {
 	ground_->Update();
 	
 	//ライト
-	lightCollision_->Update(player_->GetWorldPosition(), lightDirection_);
+	Vector3 lightDirection = flashLight_->GetDirection();
+	lightCollision_->Update(player_->GetWorldPosition(), lightDirection);
 
 
 	//更新
 	material_.Update();
-	spotLight_.Update();
 	directionalLight_.Update();
 	
 	//当たり判定
@@ -453,14 +400,6 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::End();
 
 
-	ImGui::Begin("Light");
-	ImGui::SliderFloat("Distance", &distance_, 0.0f, 100.0f);
-	ImGui::SliderFloat("Decay", &decay_, 0.0f, 20.0f);
-	ImGui::SliderFloat("FallOff", &fallOff_, 0.0f, 20.0f);
-	ImGui::SliderFloat("CosAngle", &cosAngle_, 0.0f, 3.0f);
-	ImGui::SliderFloat("intencity_", &intencity_, 0.0f, 400.0f);
-	ImGui::End();
-
 
 #endif
 
@@ -481,33 +420,35 @@ void SampleScene::PreDrawPostEffectFirst(){
 
 void SampleScene::DrawObject3D() {
 	
+	SpotLight spotLight = flashLight_->GetSpotLight();
+
 	//プレイヤー
 	//1人称だったらモデルは表示させない
 	//自分の目から自分の全身が見えるのはおかしいからね
 	if (viewOfPoint_ != FirstPerson) {
-		player_->Draw(camera_, material_, spotLight_);
+		player_->Draw(camera_, material_, spotLight);
 
 	}
 	
 	//地面
-	ground_->Draw(camera_, spotLight_);
+	ground_->Draw(camera_, spotLight);
 	//敵
 	for (Enemy* enemy : enemys_) {
-		enemy->Draw(camera_,spotLight_);
+		enemy->Draw(camera_,spotLight);
 	}
 
 	
 
-	lightCollision_->Draw(camera_, spotLight_);
+	lightCollision_->Draw(camera_, spotLight);
 
-	debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight_);
+	debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight);
 	
 
 	//鍵
 	//for (Key* key : keyes_) {
 	//	key->Draw(camera_, spotLight_);
 	//}
-	keyManager_->DrawObject3D(camera_, spotLight_);
+	keyManager_->DrawObject3D(camera_, spotLight);
 
 }
 
