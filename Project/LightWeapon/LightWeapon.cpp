@@ -71,7 +71,7 @@ void LightWeapon::Update(Vector3 playerPosition, Vector3 direction){
 	newTranslate.y = distanceOffset_ * direction.y;
 	newTranslate.z = distanceOffset_ * direction.z;
 
-	
+	//加算
 	worldTransform_.translate_ = Add(playerPosition, newTranslate);
 	
 	//更新
@@ -82,7 +82,6 @@ void LightWeapon::Update(Vector3 playerPosition, Vector3 direction){
 
 
 void LightWeapon::Draw(Camera& camera, SpotLight& spotLight){
-	
 	model_->Draw(worldTransform_, camera,material_,spotLight);
 }
 

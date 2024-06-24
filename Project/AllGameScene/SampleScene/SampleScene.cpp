@@ -37,29 +37,29 @@ void SampleScene::Initialize() {
 	ground_->Initialize(groundModelHandle);
 
 #pragma region 鍵
-	Key* key1 = new Key();
+	//Key* key1 = new Key();
 	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","Cube.obj");
-	Vector3 keyPosition = { -5.0f,1.0f,1.0f };
-	key1->Initialize(keyModelHandle,keyPosition );
-	keyes_.push_back(key1);
+	//Vector3 keyPosition = { -5.0f,1.0f,1.0f };
+	//key1->Initialize(keyModelHandle,keyPosition );
+	//keyes_.push_back(key1);
 
-	//keyManager_ = std::make_unique<KeyManager>();
-	//keyManager_->Initialize(keyModelHandle);
+	keyManager_ = std::make_unique<KeyManager>();
+	keyManager_->Initialize(keyModelHandle);
 
-	uint32_t keySpriteHandle = TextureManager::GetInstance()->LoadTexture("Resources/Item/KeyList.png");
-	Vector3 keySpritePosition = { 0.0f,0.0f,0.0f };
-	keySprite_.reset(Sprite::Create(keySpriteHandle, keySpritePosition));
+	//uint32_t keySpriteHandle = TextureManager::GetInstance()->LoadTexture("Resources/Item/KeyList.png");
+	//Vector3 keySpritePosition = { 0.0f,0.0f,0.0f };
+	//keySprite_.reset(Sprite::Create(keySpriteHandle, keySpritePosition));
 
-	uint32_t keyNumberQuantity[NUMBER_QUANTITY_] = {};
-	for (uint32_t i = 0; i < NUMBER_QUANTITY_; ++i) {
-		//数を文字列に変換した方が賢いよね！
-		//すっきり！
-		const std::string number = std::to_string(i);
-		const std::string filePath= "Resources/Number/"+ number+".png";
-		keyNumberQuantity[i] = TextureManager::GetInstance()->LoadTexture(filePath);
-		const Vector3 numberPosition = { 64.0f * 2.0f,0.0f,0.0f };
-		keyNumber[i].reset(Sprite::Create(keyNumberQuantity[i], numberPosition));
-	}
+	//uint32_t keyNumberQuantity[NUMBER_QUANTITY_] = {};
+	//for (uint32_t i = 0; i < NUMBER_QUANTITY_; ++i) {
+	//	//数を文字列に変換した方が賢いよね！
+	//	//すっきり！
+	//	const std::string number = std::to_string(i);
+	//	const std::string filePath= "Resources/Number/"+ number+".png";
+	//	keyNumberQuantity[i] = TextureManager::GetInstance()->LoadTexture(filePath);
+	//	const Vector3 numberPosition = { 64.0f * 2.0f,0.0f,0.0f };
+	//	keyNumber[i].reset(Sprite::Create(keyNumberQuantity[i], numberPosition));
+	//}
 
 
 #pragma endregion
@@ -195,9 +195,9 @@ void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
 
 void SampleScene::KeyCollision(){
 
-	//リストにする必要性が感じられないので後で配列に直すかも
 	//鍵
-	for (Key* key : keyes_) {
+	auto keyes = keyManager_->GetKeyes();
+	for (Key* key : keyes) {
 
 		//勿論取得されていない時だけ受け付ける
 		if (key->GetIsPickUp() == false) {
@@ -317,12 +317,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 
-#ifdef _DEBUG
-	ImGui::Begin("LightDirection");
-	ImGui::InputFloat("Length", &lengthXZ);
-	ImGui::InputFloat3("Directiona", &lightDirection_.x);
-	ImGui::End();
-#endif // _DEBUG
+
 
 
 	const float LIGHT_HEIGHT = 0.5f;
@@ -363,15 +358,10 @@ void SampleScene::Update(GameManager* gameManager) {
 	//1人称
 	if (viewOfPoint_ == FirstPerson) {
 
-		//カメラ
-#ifdef _DEBUG
-		ImGui::Begin("Camera");
-		ImGui::SliderFloat3("Pos", &CAMERA_POSITION_OFFSET.x, -30.0f, 30.0f);
-		ImGui::End();
-#endif 
+		
 		
 		//回り方が少し違うので注意
-		//何か嫌だね()
+		//何か嫌だね
 		camera_.rotate_.x = -phi;
 		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float>/2.0f;
 		camera_.rotate_.z = 0.0f;
@@ -393,7 +383,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 
 
-
+	//カメラの更新
 	camera_.Update();
 
 
@@ -408,31 +398,22 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	debugTowerWorldTransform_.Update();
 	
-	//鍵
-	for (Key* key : keyes_) {
-		key->Update();
-	}
-
+	
 
 	//プレイヤーの更新
 	player_->Update();
 
+	//鍵
+	keyManager_->Update();
 
 	//鍵の取得処理
-	keyQuantity_ = uint32_t(keyes_.size());
+	uint32_t keyQuantity_ = keyManager_->GetKeyQuantity();
 	//鍵が0より多ければ通る
 	if (keyQuantity_ > 0) {
 		KeyCollision();
 	}
 	
-	//鍵が取得されたら消す
-	keyes_.remove_if([](Key* key) {
-		if (key->GetIsPickUp() == true) {
-			delete key;
-			return true;
-		}
-		return false;
-	});
+
 
 	//地面
 	ground_->Update();
@@ -461,9 +442,11 @@ void SampleScene::Update(GameManager* gameManager) {
 	});
 
 
+
 #ifdef _DEBUG
 	ImGui::Begin("Camera");
 	ImGui::InputFloat3("Rotate", &camera_.rotate_.x);
+	ImGui::SliderFloat3("PosOffset", &CAMERA_POSITION_OFFSET.x, -30.0f, 30.0f);
 	ImGui::InputFloat("Theta", &theta_);
 	ImGui::InputFloat("Phi", &phi);
 	
@@ -495,9 +478,7 @@ void SampleScene::PreDrawPostEffectFirst(){
 	back_->PreDraw();
 }
 
-/// <summary>
-/// 描画
-/// </summary>
+
 void SampleScene::DrawObject3D() {
 	
 	//プレイヤー
@@ -515,15 +496,18 @@ void SampleScene::DrawObject3D() {
 		enemy->Draw(camera_,spotLight_);
 	}
 
-	//鍵
-	for (Key* key : keyes_) {
-		key->Draw(camera_, spotLight_);
-	}
+	
 
 	lightCollision_->Draw(camera_, spotLight_);
 
 	debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight_);
 	
+
+	//鍵
+	//for (Key* key : keyes_) {
+	//	key->Draw(camera_, spotLight_);
+	//}
+	keyManager_->DrawObject3D(camera_, spotLight_);
 
 }
 
@@ -536,12 +520,8 @@ void SampleScene::DrawPostEffect(){
 
 void SampleScene::DrawSprite(){
 	//鍵
-	keySprite_->Draw();
-	
-
 	uint32_t keyQuantity = player_->GetHavingKey();
-	keyNumber[keyQuantity]->Draw();
-	
+	keyManager_->DrawSprite(keyQuantity);
 
 
 }
@@ -558,10 +538,7 @@ SampleScene::~SampleScene() {
 		delete enemy;
 	}
 
-	for (Key* key : keyes_) {
-		delete  key;
-	}
-
+	
 
 	delete lightCollision_;
 }

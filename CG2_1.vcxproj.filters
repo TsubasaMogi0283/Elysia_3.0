@@ -277,6 +277,12 @@
     <Filter Include="Project\Item\Key\KeyManager">
       <UniqueIdentifier>{f292f7df-b6ad-4cbe-93cb-c6b80da6c1c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Light">
+      <UniqueIdentifier>{49355256-8b6e-46a4-a9ea-39d8676cbf2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Light\FlashLight">
+      <UniqueIdentifier>{d8dbaa74-8099-4ee9-a61b-20473f2f96ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -467,6 +473,9 @@
     </ClCompile>
     <ClCompile Include="Project\Key\KeyManager.cpp">
       <Filter>Project\Item\Key\KeyManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Light\FlashLight\FlashLight.cpp">
+      <Filter>Project\Light\FlashLight</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -840,6 +849,9 @@
     </ClInclude>
     <ClInclude Include="Project\Key\KeyManager.h">
       <Filter>Project\Item\Key\KeyManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Light\FlashLight\FlashLight.h">
+      <Filter>Project\Light\FlashLight</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

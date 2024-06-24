@@ -94,31 +94,30 @@ private:
 
 private:
 
-
-	std::unique_ptr<Model> model_ = nullptr;
-	uint32_t modelHandle = 0;
-	WorldTransform worldTransform_ = {};
-	
+	//カメラ
 	Camera camera_ = {};
-
-	DirectionalLight directionalLight_ = {};
-	SpotLight spotLight_ = {};
-
-	Material material_ = {};
-
-	const char* GroupName = "Player";
-	Vector3 position = {};
-
-	std::unique_ptr<BackText> back_ = nullptr;
-
-
-
 	Vector3 cameraPosition_ = {};
 	Vector3 CAMERA_POSITION_OFFSET = { 0.0f,1.0f,0.0f };
 
 	Vector3 cameraThirdPersonViewOfPointPosition_ = {};
 	Vector3 thirdPersonViewOfPointRotate_ = {};
 
+
+
+	//平行光源
+	DirectionalLight directionalLight_ = {};
+	//スポットライト
+	SpotLight spotLight_ = {};
+	//マテリアル
+	Material material_ = {};
+
+	//ポストエフェクト
+	//今は使わない
+	std::unique_ptr<BackText> back_ = nullptr;
+
+
+
+	
 
 	//プレイヤー
 	std::unique_ptr<Player>player_ = nullptr;
@@ -128,11 +127,11 @@ private:
 
 	//鍵
 	std::unique_ptr<KeyManager> keyManager_ = {};
-	std::list<Key*> keyes_ = {};
-	std::unique_ptr<Sprite> keySprite_ = nullptr;
-
-	static const uint32_t NUMBER_QUANTITY_ = 10;
-	std::unique_ptr<Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
+	//std::list<Key*> keyes_ = {};
+	//std::unique_ptr<Sprite> keySprite_ = nullptr;
+	//
+	//static const uint32_t NUMBER_QUANTITY_ = 10;
+	//std::unique_ptr<Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
 
 	uint32_t keyQuantity_ = 0;
 
@@ -176,6 +175,4 @@ private:
 	WorldTransform debugTowerWorldTransform_ = {};
 
 #pragma endregion
-
-
 };

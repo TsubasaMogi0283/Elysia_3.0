@@ -7,10 +7,12 @@ void Key::Initialize(uint32_t& modelhandle, Vector3& position){
 	//モデルの生成
 	model_.reset(Model::Create(modelhandle));
 	
+	const float SCALE = 0.5f;
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	worldTransform_.translate_ = position;
-	
+	worldTransform_.scale_ = { SCALE ,SCALE ,SCALE };
+
 	//半径
 	radius_ = 1.0f;
 
@@ -20,7 +22,7 @@ void Key::Initialize(uint32_t& modelhandle, Vector3& position){
 	//マテリアルの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
-
+	material_.color_ = { 1.0f,1.0f,0.0f,1.0f };
 }
 
 void Key::Update(){
