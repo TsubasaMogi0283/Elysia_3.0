@@ -186,6 +186,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Collider\CollisionManager.cpp" />
     <ClCompile Include="Project\Enemy\Enemy.cpp" />
     <ClCompile Include="Project\Key\Key.cpp" />
+    <ClCompile Include="Project\Key\KeyManager.cpp" />
     <ClCompile Include="Project\LightWeapon\LightWeapon.cpp" />
     <ClCompile Include="Project\Player\Player.cpp" />
     <ClCompile Include="Project\Stage\Ground\Ground.cpp" />
@@ -440,6 +441,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Collider\CollisionManager.h" />
     <ClInclude Include="Project\Enemy\Enemy.h" />
     <ClInclude Include="Project\Key\Key.h" />
+    <ClInclude Include="Project\Key\KeyManager.h" />
     <ClInclude Include="Project\LightWeapon\LightWeapon.h" />
     <ClInclude Include="Project\Player\Player.h" />
     <ClInclude Include="Project\Stage\Ground\Ground.h" />

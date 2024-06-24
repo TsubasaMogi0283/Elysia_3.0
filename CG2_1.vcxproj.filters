@@ -274,6 +274,9 @@
     <Filter Include="Project\Stage\Ground">
       <UniqueIdentifier>{3c3cdb90-3b57-4d02-8386-26dafe74497f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Item\Key\KeyManager">
+      <UniqueIdentifier>{f292f7df-b6ad-4cbe-93cb-c6b80da6c1c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -461,6 +464,9 @@
     </ClCompile>
     <ClCompile Include="Project\Key\Key.cpp">
       <Filter>Project\Item\Key</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Key\KeyManager.cpp">
+      <Filter>Project\Item\Key\KeyManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -831,6 +837,9 @@
     </ClInclude>
     <ClInclude Include="Project\Stage\Ground\Ground.h">
       <Filter>Project\Stage\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Key\KeyManager.h">
+      <Filter>Project\Item\Key\KeyManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

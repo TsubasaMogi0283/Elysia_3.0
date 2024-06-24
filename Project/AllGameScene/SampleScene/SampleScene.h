@@ -34,6 +34,7 @@
 #include <Collider/CollisionManager.h>
 #include <Key/Key.h>
 #include <Stage/Ground/Ground.h>
+#include <Key/KeyManager.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -126,7 +127,14 @@ private:
 	std::unique_ptr<Ground> ground_ = nullptr;
 
 	//鍵
+	std::unique_ptr<KeyManager> keyManager_ = {};
 	std::list<Key*> keyes_ = {};
+	std::unique_ptr<Sprite> keySprite_ = nullptr;
+
+	static const uint32_t NUMBER_QUANTITY_ = 10;
+	std::unique_ptr<Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
+
+	uint32_t keyQuantity_ = 0;
 
 	
 	//敵
@@ -162,10 +170,6 @@ private:
 
 
 #pragma region デバッグ用のオブジェクト
-
-	//スカイボックス
-	std::unique_ptr<SkyBox> skyBox_ = nullptr;
-	WorldTransform skyBoxWorldTransform_ = {};
 
 
 	std::unique_ptr<Model> debugTower_ = nullptr;

@@ -85,6 +85,16 @@ public:
 	inline void AddHaveKeyQuantity() {
 		haveKeyQuantity_++;
 	}
+
+
+	/// <summary>
+	/// 今鍵を何個持っているか
+	/// </summary>
+	/// <returns></returns>
+	inline uint32_t GetHavingKey() {
+		return haveKeyQuantity_;
+	}
+
 public:
 	
 

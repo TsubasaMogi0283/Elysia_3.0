@@ -43,6 +43,25 @@ void SampleScene::Initialize() {
 	key1->Initialize(keyModelHandle,keyPosition );
 	keyes_.push_back(key1);
 
+	//keyManager_ = std::make_unique<KeyManager>();
+	//keyManager_->Initialize(keyModelHandle);
+
+	uint32_t keySpriteHandle = TextureManager::GetInstance()->LoadTexture("Resources/Item/KeyList.png");
+	Vector3 keySpritePosition = { 0.0f,0.0f,0.0f };
+	keySprite_.reset(Sprite::Create(keySpriteHandle, keySpritePosition));
+
+	uint32_t keyNumberQuantity[NUMBER_QUANTITY_] = {};
+	for (uint32_t i = 0; i < NUMBER_QUANTITY_; ++i) {
+		//数を文字列に変換した方が賢いよね！
+		//すっきり！
+		const std::string number = std::to_string(i);
+		const std::string filePath= "Resources/Number/"+ number+".png";
+		keyNumberQuantity[i] = TextureManager::GetInstance()->LoadTexture(filePath);
+		const Vector3 numberPosition = { 64.0f * 2.0f,0.0f,0.0f };
+		keyNumber[i].reset(Sprite::Create(keyNumberQuantity[i], numberPosition));
+	}
+
+
 #pragma endregion
 
 
@@ -63,14 +82,6 @@ void SampleScene::Initialize() {
 #pragma endregion
 
 
-#ifdef _DEBUG
-	uint32_t skyBoxTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG4/SkyBox/rostock_laage_airport_4k.dds");
-	skyBox_ = std::make_unique<SkyBox>();
-	skyBox_->Create(skyBoxTextureHandle);
-	skyBoxWorldTransform_.Initialize();
-	const float SKYBOX_SCALE = 20.0f;
-	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
-#endif // _DEBUG
 
 	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
 	debugTower_.reset(Model::Create(debugTowerModelhandle));
@@ -395,10 +406,6 @@ void SampleScene::Update(GameManager* gameManager) {
 	//敵同士
 	CheckCollision(enemys_);
 
-#ifdef _DEBUG
-	skyBoxWorldTransform_.Update();
-	
-#endif // _DEBUG
 	debugTowerWorldTransform_.Update();
 	
 	//鍵
@@ -412,9 +419,9 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 	//鍵の取得処理
-	size_t keyQuantity = keyes_.size();
+	keyQuantity_ = uint32_t(keyes_.size());
 	//鍵が0より多ければ通る
-	if (uint32_t(keyQuantity) > 0) {
+	if (keyQuantity_ > 0) {
 		KeyCollision();
 	}
 	
@@ -515,11 +522,6 @@ void SampleScene::DrawObject3D() {
 
 	lightCollision_->Draw(camera_, spotLight_);
 
-#ifdef _DEBUG
-	skyBox_->Draw(skyBoxWorldTransform_, camera_);
-	
-
-#endif // DEBUG
 	debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight_);
 	
 
@@ -533,6 +535,15 @@ void SampleScene::DrawPostEffect(){
 }
 
 void SampleScene::DrawSprite(){
+	//鍵
+	keySprite_->Draw();
+	
+
+	uint32_t keyQuantity = player_->GetHavingKey();
+	keyNumber[keyQuantity]->Draw();
+	
+
+
 }
 
 
