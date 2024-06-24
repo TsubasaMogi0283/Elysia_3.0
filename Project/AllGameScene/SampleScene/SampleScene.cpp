@@ -97,7 +97,7 @@ void SampleScene::Initialize() {
 	collisionManager_ = std::make_unique<CollisionManager>();
 
 
-
+	theta_ = std::numbers::pi_v<float>;
 
 	back_ = std::make_unique< BackText>();
 	back_->Initialize();
@@ -110,7 +110,6 @@ void SampleScene::Initialize() {
 	flashLight_ = std::make_unique<FlashLight>();
 	flashLight_->Initialize();
 
-	//spotLight_.Initialize();
 	directionalLight_.Initialize();
 }
 
