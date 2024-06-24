@@ -143,6 +143,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Line\Line.cpp" />
     <ClCompile Include="Ellysia\main.cpp" />
     <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp" />
+    <ClCompile Include="Ellysia\Manager\AudioManager\AudioManager.cpp" />
     <ClCompile Include="Ellysia\Manager\ImGuiManager\ImGuiManager.cpp" />
     <ClCompile Include="Ellysia\Manager\ModelManager\Animation.cpp" />
     <ClCompile Include="Ellysia\Manager\ModelManager\Joint.cpp" />
@@ -364,6 +365,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Lighting\SpotLight.h" />
     <ClInclude Include="Ellysia\Line\Line.h" />
     <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h" />
+    <ClInclude Include="Ellysia\Manager\AudioManager\AudioManager.h" />
     <ClInclude Include="Ellysia\Manager\ImGuiManager\ImGuiManager.h" />
     <ClInclude Include="Ellysia\Manager\ModelManager\Animation.h" />
     <ClInclude Include="Ellysia\Manager\ModelManager\Joint.h" />

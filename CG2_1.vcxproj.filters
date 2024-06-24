@@ -250,6 +250,9 @@
     <Filter Include="Ellysia\Resource File\PostEffect\GaussianFilter">
       <UniqueIdentifier>{96657abe-adba-4189-ab80-75a7fbfba290}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\Manager\Audio">
+      <UniqueIdentifier>{aceb4eec-b4a1-4f7f-8fd6-3aaf632000b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -419,6 +422,9 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.cpp">
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\AudioManager\AudioManager.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -765,6 +771,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\AudioManager\AudioManager.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
