@@ -17,7 +17,7 @@ void Player::Initialize(){
 	radius_ = 1.0f;
 
 	worldTransform_.Initialize();
-
+	worldTransform_.translate_.z = -16.0f;
 }
 
 void Player::Update(){
@@ -52,6 +52,7 @@ void Player::Update(){
 	int keyQuantity = haveKeyQuantity_;
 	ImGui::Begin("Player");
 	ImGui::InputInt("KeyQuantity", &keyQuantity);
+	ImGui::InputFloat3("Transrate", &worldTransform_.translate_.x);
 	ImGui::End();
 
 #endif

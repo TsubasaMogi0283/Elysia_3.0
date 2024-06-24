@@ -71,9 +71,13 @@ public:
 
 
 private:
+	//モデル
+	std::unique_ptr<Model> model_ = nullptr;
+	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
+	//マテリアル
 	Material material_ = {};
-	std::unique_ptr<Model> model_ = nullptr;;
+	
 
 	//取得されたか
 	bool isPickUp_ = false;

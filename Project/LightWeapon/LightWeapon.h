@@ -3,9 +3,9 @@
 #include "Model.h"
 #include "../Collider/Collider.h"
 #include "WorldTransform.h"
+#include "Material.h"
 struct Camera;
 struct SpotLight;
-struct Material;
 
 class LightWeapon:public Collider{
 public:
@@ -23,16 +23,15 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	/// <param name="cameraPosition"></param>
-	void Update(Vector3 cameraPosition);
+	/// <param name="playerPosition"></param>
+	void Update(Vector3 playerPosition);
 
 	/// <summary>
 	/// 描画
 	/// </summary>
 	/// <param name="camera"></param>
-	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void Draw(Camera& camera,Material& material,SpotLight& spotLight);
+	void Draw(Camera& camera,SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ
@@ -41,20 +40,25 @@ public:
 
 
 public:
+	//衝突判定
 	void OnCollision()override;
-
+	//ワールド座標を取得
 	Vector3 GetWorldPosition()override;
 
 
 
 private:
+	//モデル
 	std::unique_ptr<Model> model_ = nullptr;
+	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
+	//マテリアル
+	Material material_ = {};
 
-	Vector4 color_ = {};
-	Vector4 lightColor_ = {};
-	float DISTANCE_OFFSET = 32.0f;
+	//プレイヤーとの距離
+	float distanceOffset_ = 32.0f;
 
+	//衝突
 	bool isCollision_ = false;
 
 };

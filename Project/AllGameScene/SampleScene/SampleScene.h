@@ -33,6 +33,7 @@
 #include <LightWeapon/LightWeapon.h>
 #include <Collider/CollisionManager.h>
 #include <Key/Key.h>
+#include <Stage/Ground/Ground.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -124,12 +125,12 @@ private:
 	std::unique_ptr<Player>player_ = nullptr;
 
 	//地面
-	std::unique_ptr<Model> ground_ = nullptr;
-	WorldTransform groundWorldTransform_ = {};
+	std::unique_ptr<Ground> ground_ = nullptr;
 
 	//鍵
 	std::list<Key*> keyes_ = {};
 
+	
 	//敵
 	std::list <Enemy*> enemys_ = {};
 	uint32_t enemyModelHandle_ = 0;
@@ -154,6 +155,24 @@ private:
 
 
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+
+
+
+
+
+
+
+#pragma region デバッグ用のオブジェクト
+
+	//スカイボックス
+	std::unique_ptr<SkyBox> skyBox_ = nullptr;
+	WorldTransform skyBoxWorldTransform_ = {};
+
+
+	std::unique_ptr<Model> debugTower_ = nullptr;
+	WorldTransform debugTowerWorldTransform_ = {};
+
+#pragma endregion
 
 
 };

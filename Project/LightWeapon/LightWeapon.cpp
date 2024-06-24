@@ -2,21 +2,28 @@
 
 #include <VectorCalculation.h>
 #include "../Collider/CollisionConfig.h"
-#include "Material.h"
+
 #include "SpotLight.h"
 #include "Camera.h"
 
 void LightWeapon::Initialize(uint32_t modelHandle){
-
+	//モデル
 	model_.reset(Model::Create(modelHandle));
-	color_ = { 1.0f,1.0f,1.0f,1.0f };
-	lightColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	const float SCALE = 1.0f;
 	worldTransform_.scale_ = { SCALE ,SCALE ,SCALE };
+	//マテリアルの初期化
+	material_.Initialize();
+	material_.lightingKinds_ = None;
+	
+	
+	
+	
 	radius_ = 1.0f * SCALE;
 
-	DISTANCE_OFFSET = 15.0f;
+	distanceOffset_ = 15.0f;
+	//衝突
 	isCollision_ = false;
 	
 	//自分
@@ -28,33 +35,13 @@ void LightWeapon::Initialize(uint32_t modelHandle){
 }
 
 
-void LightWeapon::Update(Vector3 cameraPosition){
-
-#ifdef _DEBUG
-
-
-	ImGui::Begin("LightWeapon");
-	ImGui::SliderFloat("Distance", &DISTANCE_OFFSET, 0.0f, 50.0f);
-	ImGui::SliderFloat4("Color", &color_.x, 0.0f, 1.0f);
-	ImGui::SliderFloat4("LightColor", &lightColor_.x, 0.0f, 1.0f);
-	ImGui::End();
-
-#endif
-
-	worldTransform_.translate_ = Add(cameraPosition, { 0.0f,0.0f,DISTANCE_OFFSET });
-	
-	worldTransform_.Update();
-
-}
-
 void LightWeapon::OnCollision() {
 #ifdef _DEBUG
 	ImGui::Begin("LightWeapon");
 	ImGui::End();
-#endif // _DEBUG
+#endif
 
-
-	
+	//衝突した
 	isCollision_ = true;
 }
 
@@ -68,7 +55,26 @@ Vector3 LightWeapon::GetWorldPosition() {
 }
 
 
-void LightWeapon::Draw(Camera& camera, Material& material, SpotLight& spotLight){
-	model_->Draw(worldTransform_, camera,material,spotLight);
+void LightWeapon::Update(Vector3 playerPosition){
+
+#ifdef _DEBUG
+	ImGui::Begin("LightWeapon");
+	ImGui::SliderFloat("Distance", &distanceOffset_, 0.0f, 50.0f);
+	ImGui::End();
+
+#endif
+	//座標
+	worldTransform_.translate_ = Add(playerPosition, { 0.0f,0.0f,distanceOffset_ });
+	
+	//更新
+	worldTransform_.Update();
+	material_.Update();
+}
+
+
+
+void LightWeapon::Draw(Camera& camera, SpotLight& spotLight){
+	
+	model_->Draw(worldTransform_, camera,material_,spotLight);
 }
 

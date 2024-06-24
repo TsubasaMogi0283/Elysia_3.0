@@ -24,9 +24,6 @@ void Key::Initialize(uint32_t& modelhandle, Vector3& position){
 }
 
 void Key::Update(){
-
-
-
 	//更新
 	worldTransform_.Update();
 	material_.Update();

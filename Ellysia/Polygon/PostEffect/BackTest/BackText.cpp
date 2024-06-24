@@ -29,7 +29,7 @@ void BackText::Initialize(){
 	gaussianFilterInformation_.sigma = 2.0f;
 
 
-	renderTargetClearValue_ = { 0.0f,0.0f,0.0f,1.0f };
+	renderTargetClearValue_ = { 0.0f,0.1f,0.5f,1.0f };
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, renderTargetClearValue_);
 	
 	const std::string postEffectName = "BackText";

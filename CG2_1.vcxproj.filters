@@ -456,11 +456,11 @@
     <ClCompile Include="Project\LightWeapon\LightWeapon.cpp">
       <Filter>Project\Player\LightWeapon</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Key\Key.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Stage\Ground\Ground.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Project\Stage\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Key\Key.cpp">
+      <Filter>Project\Item\Key</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -827,10 +827,10 @@
       <Filter>Project\Player\LightWeapon</Filter>
     </ClInclude>
     <ClInclude Include="Project\Key\Key.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Project\Item\Key</Filter>
     </ClInclude>
     <ClInclude Include="Project\Stage\Ground\Ground.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Project\Stage\Ground</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

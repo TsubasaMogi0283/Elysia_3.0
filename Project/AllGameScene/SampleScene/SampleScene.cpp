@@ -33,12 +33,8 @@ void SampleScene::Initialize() {
 
 	//地面
 	uint32_t groundModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
-	ground_.reset(Model::Create(groundModelHandle));
-	groundWorldTransform_.Initialize();
-	const float SPHERE_SCALE = 40.0f;
-	groundWorldTransform_.scale_ = { SPHERE_SCALE,SPHERE_SCALE,SPHERE_SCALE };
-	groundWorldTransform_.translate_.x = 0.0f;
-	groundWorldTransform_.translate_.y = 0.0f;
+	ground_ = std::make_unique<Ground>();
+	ground_->Initialize(groundModelHandle);
 
 #pragma region 鍵
 	Key* key1 = new Key();
@@ -67,8 +63,22 @@ void SampleScene::Initialize() {
 #pragma endregion
 
 
+#ifdef _DEBUG
+	uint32_t skyBoxTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG4/SkyBox/rostock_laage_airport_4k.dds");
+	skyBox_ = std::make_unique<SkyBox>();
+	skyBox_->Create(skyBoxTextureHandle);
+	skyBoxWorldTransform_.Initialize();
+	const float SKYBOX_SCALE = 20.0f;
+	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
+
+	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
+	debugTower_.reset(Model::Create(debugTowerModelhandle));
+	debugTowerWorldTransform_.Initialize();
+
+#endif // _DEBUG
 
 
+	
 
 	//カメラ
 	camera_.Initialize();
@@ -294,9 +304,29 @@ void SampleScene::Update(GameManager* gameManager) {
 		ImGui::Begin("Camera");
 		ImGui::SliderFloat3("Pos", &CAMERA_POSITION_OFFSET.x, -30.0f, 30.0f);
 		ImGui::End();
-#endif // _DEBUG
+#endif 
+		
+		//上を向く
+		//x軸は右回り
+		
+		const float CAMERA_ROTATE_AMOUNT = ROTATE_OFFSET;
+		if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+			camera_.rotate_.x -= CAMERA_ROTATE_AMOUNT;
+		}
+		//下を向く
+		if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+			camera_.rotate_.x += CAMERA_ROTATE_AMOUNT;
+		}
 
-		camera_.rotate_.x = 0.0f;
+		//±π/4位に制限を掛けておきたい
+		//それ以下以上だと首が大変なことになっているように見えるから
+		if (camera_.rotate_.x > std::numbers::pi_v<float> / 6.0f) {
+			camera_.rotate_.x = std::numbers::pi_v<float> / 6.0f;
+		}
+		if (camera_.rotate_.x < -std::numbers::pi_v<float> / 6.0f) {
+			camera_.rotate_.x = -std::numbers::pi_v<float> / 6.0f;
+		}
+
 		camera_.rotate_.z = 0.0f;
 
 		//回り方が少し違うので注意
@@ -312,7 +342,7 @@ void SampleScene::Update(GameManager* gameManager) {
 		ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
 
 		ImGui::End();
-#endif // _DEBUG
+#endif 
 
 		camera_.rotate_ = thirdPersonViewOfPointRotate_;
 		camera_.translate_ = Add(player_->GetWorldPosition(), cameraThirdPersonViewOfPointPosition_);
@@ -332,7 +362,12 @@ void SampleScene::Update(GameManager* gameManager) {
 	//敵同士
 	CheckCollision(enemys_);
 
+#ifdef _DEBUG
+	skyBoxWorldTransform_.Update();
+	debugTowerWorldTransform_.Update();
+#endif // _DEBUG
 
+	
 	//鍵
 	for (Key* key : keyes_) {
 		key->Update();
@@ -358,14 +393,15 @@ void SampleScene::Update(GameManager* gameManager) {
 		}
 		return false;
 	});
-	//地面
 
-	groundWorldTransform_.Update();
+	//地面
+	ground_->Update();
+	
 	//ライト
 	lightCollision_->Update(player_->GetWorldPosition());
 
 
-
+	//更新
 	material_.Update();
 	spotLight_.Update();
 	directionalLight_.Update();
@@ -433,7 +469,7 @@ void SampleScene::DrawObject3D() {
 	}
 	
 	//地面
-	ground_->Draw(groundWorldTransform_, camera_,material_, spotLight_);
+	ground_->Draw(camera_, spotLight_);
 	//敵
 	for (Enemy* enemy : enemys_) {
 		enemy->Draw(camera_,spotLight_);
@@ -444,15 +480,21 @@ void SampleScene::DrawObject3D() {
 		key->Draw(camera_, spotLight_);
 	}
 
-	lightCollision_->Draw(camera_, material_, spotLight_);
+	lightCollision_->Draw(camera_, spotLight_);
+
+#ifdef _DEBUG
+	skyBox_->Draw(skyBoxWorldTransform_, camera_);
+	debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight_);
+
+#endif // DEBUG
 
 	
+
 }
 
 
 
 void SampleScene::DrawPostEffect(){
-	
 	
 	back_->Draw();
 }
