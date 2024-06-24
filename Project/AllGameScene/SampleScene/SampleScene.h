@@ -7,6 +7,7 @@
 #include "AnimationModel.h"
 #include "TextureManager.h"
 #include "Camera.h"
+#include "Audio.h"
 
 #include <memory>
 #include <Particle3D.h>
@@ -112,9 +113,12 @@ private:
 	const char* GroupName = "Player";
 	Vector3 position = {};
 
+
+	std::unique_ptr<Audio> audio_ = nullptr;
+
+
 	std::unique_ptr<BackText> back_ = nullptr;
 	
-
 	std::unique_ptr<GrayScale> grayScale_ = nullptr;
 	std::unique_ptr<SepiaScale> sepiaScale_ = nullptr;
 	std::unique_ptr<Vignette> vignette_ = nullptr;

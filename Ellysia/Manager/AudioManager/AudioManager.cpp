@@ -14,7 +14,7 @@ void AudioManager::CreateSubmixVoice(uint32_t channel) {
 
 
 	HRESULT hr = {};
-	hr = Audio::GetInstance()->xAudio2_->CreateSubmixVoice(&Audio::GetInstance()->submixVoice_[channel], channels, sampleRate);
+	hr = AudioManager::GetInstance()->xAudio2_->CreateSubmixVoice(&AudioManager::GetInstance()->submixVoice_[channel], channels, sampleRate);
 	assert(SUCCEEDED(hr));
 
 }
@@ -36,14 +36,14 @@ void AudioManager::Initialize() {
 	assert(SUCCEEDED(hr));
 
 	//スピーカ構成を取得
-	masterVoice_->GetChannelMask(&dwChannelMask_);
+	masterVoice_->GetChannelMask(&panData_.dwChannelMask_);
 
 
 
 
 	//一度全部0に初期化
 	for (int i = 0; i < 8; i++) {
-		outputMatrix_[i] = 0;
+		panData_.outputMatrix_[i] = 0;
 	}
 
 	//サブミックスボイス(DTMでのバス)をここで作る
@@ -380,30 +380,44 @@ uint32_t AudioManager::LoadMP3(const WCHAR* fileName) {
 	return audioIndex;
 }
 
-//音声再生
-void Audio::PlayWave(uint32_t audioHandle, bool isLoop) {
-	HRESULT hr{};
-	hr = audioInformation_[audioHandle].pSourceVoice_->FlushSourceBuffers();
-	assert(SUCCEEDED(hr));
-	//再生する波形データの設定
-	XAUDIO2_BUFFER buffer{};
-	buffer.pAudioData = audioInformation_[audioHandle].soundData_.pBuffer;
-	buffer.AudioBytes = audioInformation_[audioHandle].soundData_.bufferSize;
-	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	if (isLoop == true) {
-		//ずっとループさせたいならLoopCountにXAUDIO2_LOOP_INFINITEをいれよう
-		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
-	}
-	else {
-		buffer.LoopCount = XAUDIO2_NO_LOOP_REGION;
-	}
-	//Buffer登録
-	hr = audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
-	//波形データの再生
-	hr = audioInformation_[audioHandle].pSourceVoice_->Start(0);
 
 
 
-	assert(SUCCEEDED(hr));
+
+//音声データの開放
+//後ろにあるReleaseで使っているよ
+void AudioManager::SoundUnload(uint32_t soundDataHandle) {
+	//バッファのメモリを解放
+	delete[] AudioManager::GetInstance()->audioInformation_[soundDataHandle].soundData_.pBuffer;
+	AudioManager::GetInstance()->audioInformation_[soundDataHandle].soundData_.pBuffer = 0;
+	AudioManager::GetInstance()->audioInformation_[soundDataHandle].soundData_.bufferSize = 0;
+	AudioManager::GetInstance()->audioInformation_[soundDataHandle].soundData_.wfex = {};
+
 }
+
+//解放
+void AudioManager::Release() {
+	//解放
+	for (int i = 0; i < SOUND_DATE_MAX_; i++) {
+		//中身が入っていたらしっかり解放
+		if (audioInformation_[i].pSourceReader_ != nullptr) {
+			audioInformation_[i].pSourceReader_->Release();
+		}
+		if (audioInformation_[i].pSourceVoice_ != nullptr) {
+			audioInformation_[i].pSourceVoice_->DestroyVoice();
+		}
+	}
+
+
+	//XAudio2解放
+	xAudio2_.Reset();
+
+	for (int i = 0; i < SOUND_DATE_MAX_; i++) {
+		SoundUnload(i);
+	}
+
+
+	MFShutdown();
+}
+
 

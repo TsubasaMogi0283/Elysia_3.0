@@ -8,6 +8,7 @@
 #include "AnimationManager.h"
 #include <numbers>
 #include <TextureManager.h>
+#include <AudioManager.h>
 
 /// <summary>
 /// コンストラクタ
@@ -121,6 +122,11 @@ void SampleScene::Initialize() {
 	directionalLight_.Initialize();
 	pointLight_.Initialize();
 	spotLight_.Initialize();
+
+
+	audio_ = std::make_unique<Audio>();
+	uint32_t audioHandle = AudioManager::GetInstance()->LoadWave("Resources/Audio/Sample/Win.wav");
+	audio_->PlayWave(audioHandle, true);
 }
 
 

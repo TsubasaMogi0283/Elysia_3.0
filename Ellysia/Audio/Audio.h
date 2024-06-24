@@ -36,43 +36,24 @@ using Microsoft::WRL::ComPtr;
 #include "AudioStruct.h"
 
 //LoadAudioの時に使う
-enum AudioEffectType {
-	Filter,
-	Reverb,
-};
+//enum AudioEffectType {
+//	Filter,
+//	Reverb,
+//};
 
 
-class Audio final {
+class Audio {
 private:
 	//コンストラクタ
-	Audio();
+	Audio()=default;
 
 	//デストラクタ
-	~Audio();
-public:
-	//インスタンスの取得
-	static Audio* GetInstance();
+	~Audio()=default;
 
-	//コピーコンストラクタ禁止
-	Audio(const Audio& obj) = delete;
 
-	//代入演算子を無効にする
-	Audio& operator=(const Audio& obj) = delete;
 
 public:
-
-	//初期化
-	void Initialize();
-
 #pragma region 基本セット
-
-	//読み込み
-	static uint32_t LoadWave(const char* fileName);
-
-	//エフェクト版の読み込み
-	static uint32_t LoadWave(const char* fileName, uint32_t effectType);
-
-	static uint32_t LoadMP3(const WCHAR* fileName);
 
 
 	//音声再生
@@ -85,14 +66,14 @@ public:
 	/// </summary>
 	/// <param name="audioHandle"></param>
 	/// <param name="isLoop"></param>
-	void PlayMP3(uint32_t audioHandle,bool isLoop);
+	//void PlayMP3(uint32_t audioHandle,bool isLoop);
 
 	/// <summary>
 	/// MP3再生(ループ回数設定版)
 	/// </summary>
 	/// <param name="audioHandle"></param>
 	/// <param name="loopCount"></param>
-	void PlayMP3(uint32_t audioHandle, uint32_t loopCount);
+	//void PlayMP3(uint32_t audioHandle, uint32_t loopCount);
 
 
 	/// <summary>
@@ -258,7 +239,6 @@ public:
 #pragma endregion
 
 
-	static void CreateSubmixVoice(uint32_t channel);
 
 	void SendChannels(uint32_t audioHandle,uint32_t channelNumber);
 
@@ -272,45 +252,9 @@ public:
 	void OnEffect(uint32_t audioHandle);
 
 
-	//解放
-	void Release();
 
 private:
-	//音声データの開放
-	void SoundUnload(uint32_t soundDataHandle);
 
-
-private:
-	//IXAudio2はCOMオブジェクトなのでComPtr管理
-	ComPtr<IXAudio2> xAudio2_ = nullptr;
-	//マスターボイス
-	//最終的にここでまとめるよ(スピーカーみたいな感じだね)
-	IXAudio2MasteringVoice* masterVoice_ = nullptr;
-	
-
-	//Panに必要な変数
-	DWORD dwChannelMask_ = {};
-	float outputMatrix_[8] = {};
-	float left_ = 0.0f;
-	float right_ = 0.0f;
-
-
-
-	//Reverb
-	IUnknown* pXAPO_ = nullptr;
-
-
-
-
-	//構造体版
-	//Texturemanagerとだいたい同じ感じにした
-	//音声データの最大数
-	static const int SOUND_DATE_MAX_ = 256;
-	std::array<AudioInformation, SOUND_DATE_MAX_> audioInformation_{};
-
-	//サブミックス(バス)
-	static const int SUBMIXVOICE_AMOUNT_ = 64;
-	std::array<IXAudio2SubmixVoice*, SUBMIXVOICE_AMOUNT_> submixVoice_{};
 
 
 private:

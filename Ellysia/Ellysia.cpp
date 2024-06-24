@@ -8,6 +8,7 @@
 #include "RtvManager.h"
 #include <Audio.h>
 #include <AdjustmentItems.h>
+#include <AudioManager.h>
 
 
 //インスタンス
@@ -59,7 +60,8 @@ void Ellysia::Initialize(){
 	
 	
 	//Audio
-	Audio::GetInstance()->Initialize();
+	AudioManager::GetInstance()->Initialize();;
+	//Audio::GetInstance()->Initialize();
 
 	AdjustmentItems::GetInstance()->LoadFile();
 
@@ -148,7 +150,8 @@ void Ellysia::EndFrame() {
 
 void Ellysia::Release() {
 
-	Audio::GetInstance()->Release();
+	//Audio::GetInstance()->Release();
+	AudioManager::GetInstance()->Release();
 #ifdef _DEBUG
 	ImGuiManager::GetInstance()->Release();
 #endif

@@ -40,6 +40,13 @@ enum AudioEffectType {
 	Reverb,
 };
 
+struct PanData {
+	DWORD dwChannelMask_ = {};
+	float outputMatrix_[8] = {};
+	float left_ = 0.0f;
+	float right_ = 0.0f;
+
+};
 
 class AudioManager final{
 private:
@@ -95,12 +102,53 @@ public:
 
 
 
+public:
+
+	//解放
+	void Release();
+
+private:
+	//音声データの開放
+	void SoundUnload(uint32_t soundDataHandle);
+
+
 
 
 public:
-	inline AudioInformation GetAudioInformation(uint32_t handle) {
-		this->audioInformation_[handle];
+
+	inline IXAudio2MasteringVoice* GetMasterVoice() {
+		return masterVoice_;
 	}
+
+
+	/// <summary>
+	/// audioデータを取得
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
+	inline AudioInformation GetAudioInformation(uint32_t handle) {
+		return audioInformation_[handle];
+	}
+
+	/// <summary>
+	/// サブミックスボイスを取得
+	/// </summary>
+	/// <param name="channel"></param>
+	/// <returns></returns>
+	inline IXAudio2SubmixVoice* GetSubmixVoice(uint32_t channel) {
+		return submixVoice_[channel];
+	}
+
+
+
+	inline PanData GetPanData() {
+		return panData_;
+	}
+
+
+
+	
+
 
 private:
 	//IXAudio2はCOMオブジェクトなのでComPtr管理
@@ -109,19 +157,13 @@ private:
 	//最終的にここでまとめるよ(スピーカーみたいな感じだね)
 	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 
-
-	//Panに必要な変数
-	DWORD dwChannelMask_ = {};
-	float outputMatrix_[8] = {};
-	float left_ = 0.0f;
-	float right_ = 0.0f;
-
-
+	PanData panData_ = {};
 
 	//Reverb
 	IUnknown* pXAPO_ = nullptr;
 
 
+	static uint32_t audioIndex;
 
 
 	//構造体版
