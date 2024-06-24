@@ -57,7 +57,7 @@ public:
 	/// 1人称だったらモデルは表示させない
 	/// </summary>
 	/// <param name="pointOfView"></param>
-	void SetPointOfView(uint32_t pointOfView){
+	inline void SetPointOfView(uint32_t pointOfView){
 		this->pointOfView_ = pointOfView;
 	}
 
@@ -75,18 +75,16 @@ public:
 	/// 半径を取得
 	/// </summary>
 	/// <returns></returns>
-	float GetRadius() const {
+	inline float GetRadius() const {
 		return radius_;
 	}
 
 	/// <summary>
 	/// 持っている鍵の数を増やす
 	/// </summary>
-	void AddHaveKeyQuantity();
-
-
-
-	
+	inline void AddHaveKeyQuantity() {
+		haveKeyQuantity_++;
+	}
 public:
 	
 

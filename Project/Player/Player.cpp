@@ -86,7 +86,4 @@ Vector3 Player::GetWorldPosition()const {
 	return result;
 }
 
-void Player::AddHaveKeyQuantity(){
-	haveKeyQuantity_++;
 
-}

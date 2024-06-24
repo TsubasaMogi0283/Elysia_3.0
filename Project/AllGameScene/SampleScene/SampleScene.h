@@ -144,6 +144,7 @@ private:
 	Vector3 lightDirection_ = {};
 
 	float theta = 0.0f;
+	float phi_ = 0.0f;
 	float decay_ = 0.0f;
 	float fallOff_ = 0.0f;
 	float cosAngle_ = 0.0f;

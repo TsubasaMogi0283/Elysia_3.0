@@ -96,6 +96,7 @@ void SampleScene::Initialize() {
 
 
 	theta = std::numbers::pi_v<float> / 2.0f;
+	phi_ = 0.0f;
 	lightPosition = camera_.translate_;
 
 	distance_ = 20.0f;
