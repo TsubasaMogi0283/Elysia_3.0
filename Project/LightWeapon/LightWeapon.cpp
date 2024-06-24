@@ -16,7 +16,7 @@ void LightWeapon::Initialize(uint32_t modelHandle){
 	worldTransform_.scale_ = { SCALE ,SCALE ,SCALE };
 	radius_ = 1.0f * SCALE;
 
-	DISTANCE_OFFSET = 26.0f;
+	DISTANCE_OFFSET = 15.0f;
 	isCollision_ = false;
 	
 	//自分

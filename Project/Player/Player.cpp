@@ -43,6 +43,19 @@ void Player::Update(){
 
 #pragma endregion
 
+
+
+
+
+#ifdef _DEBUG
+	//ImGuiにInputUintが内の不便・・
+	int keyQuantity = haveKeyQuantity_;
+	ImGui::Begin("Player");
+	ImGui::InputInt("KeyQuantity", &keyQuantity);
+	ImGui::End();
+
+#endif
+
 	
 
 
@@ -52,7 +65,6 @@ void Player::Update(){
 	worldTransform_.Update();
 
 
-	//model_->SetSpotLightPosition(GetWorldPosition());
 
 }
 

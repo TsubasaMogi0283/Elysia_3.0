@@ -11,7 +11,11 @@ void Key::Initialize(uint32_t& modelhandle, Vector3& position){
 	worldTransform_.Initialize();
 	worldTransform_.translate_ = position;
 	
+	//半径
 	radius_ = 1.0f;
+
+	//取得されたかどうかのフラグ
+	isPickUp_ = false;
 
 	//マテリアルの初期化
 	material_.Initialize();
@@ -30,6 +34,10 @@ void Key::Update(){
 
 void Key::Draw(Camera& camera, SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera, material_, spotLight);
+}
+
+void Key::PickedUp(){
+	isPickUp_ = true;
 }
 
 Vector3 Key::GetWorldPosition()const{

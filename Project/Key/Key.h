@@ -39,6 +39,12 @@ public:
 	~Key() = default;
 
 public:
+	/// <summary>
+	/// 鍵がプレイヤーに取得される
+	/// </summary>
+	void PickedUp();
+
+public:
 
 	/// <summary>
 	/// ワールド座標を取得する
@@ -46,13 +52,23 @@ public:
 	/// <returns></returns>
 	Vector3 GetWorldPosition()const;
 
+	/// <summary>
+	/// 半径の取得
+	/// </summary>
+	/// <returns></returns>
 	float GetRadius()const {
 		return radius_;
 	}
 
+	/// <summary>
+	/// 取得したかどうか
+	/// </summary>
+	/// <returns></returns>
 	bool GetIsPickUp()const {
 		return isPickUp_;
 	}
+
+
 
 private:
 	WorldTransform worldTransform_ = {};

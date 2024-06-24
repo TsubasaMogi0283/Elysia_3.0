@@ -77,7 +77,7 @@ void SampleScene::Initialize() {
 	camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
 	cameraPosition_ = camera_.translate_;
 
-	CAMERA_POSITION_OFFSET = { 0.0f,1.0f,1.0f };
+	CAMERA_POSITION_OFFSET = { 0.0f,1.5f,1.0f };
 
 	thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
 	cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
@@ -88,7 +88,7 @@ void SampleScene::Initialize() {
 	theta = std::numbers::pi_v<float> / 2.0f;
 	lightPosition = camera_.translate_;
 
-	distance_ = 32.0f;
+	distance_ = 20.0f;
 	decay_ = 0.6f;
 	fallOff_ = 6.1f;
 	cosAngle_ = 0.98f;
@@ -177,7 +177,7 @@ void SampleScene::KeyCollision(){
 	//鍵
 	for (Key* key : keyes_) {
 
-
+		//勿論取得されていない時だけ受け付ける
 		if (key->GetIsPickUp() == false) {
 			//判定は円で良いかも
 			Vector3 distance = {};
@@ -189,15 +189,20 @@ void SampleScene::KeyCollision(){
 				return;
 			}
 
+			//範囲内にいれば入力を受け付ける
 			if (colissionDistance <= player_->GetRadius() + key->GetRadius()) {
 
 #ifdef _DEBUG
 				ImGui::Begin("KeyCollision");
 				ImGui::End();
-#endif // _DEBUG
+#endif 
 
+				//
 				if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
+					//プレイヤーの持っているか鍵の数が増える
 					player_->AddHaveKeyQuantity();
+					//鍵が取得される
+					key->PickedUp();
 				}
 
 
@@ -337,8 +342,15 @@ void SampleScene::Update(GameManager* gameManager) {
 	//プレイヤーの更新
 	player_->Update();
 
-	KeyCollision();
-	//
+
+	//鍵の取得処理
+	size_t keyQuantity = keyes_.size();
+	//鍵が0より多ければ通る
+	if (uint32_t(keyQuantity) > 0) {
+		KeyCollision();
+	}
+	
+	//鍵が取得されたら消す
 	keyes_.remove_if([](Key* key) {
 		if (key->GetIsPickUp() == true) {
 			delete key;
@@ -347,22 +359,23 @@ void SampleScene::Update(GameManager* gameManager) {
 		return false;
 	});
 	//地面
+
 	groundWorldTransform_.Update();
+	//ライト
+	lightCollision_->Update(player_->GetWorldPosition());
+
 
 
 	material_.Update();
 	spotLight_.Update();
 	directionalLight_.Update();
-	//ライト
-	lightCollision_->Update(player_->GetWorldPosition());
 	
-
 	//当たり判定
 	collisionManager_->CheckAllCollision();
 
 
 
-	//敵がが生存していなかったら消す
+	//敵が生存していなかったら消す
 	enemys_.remove_if([](Enemy* enemy) {
 		if (enemy->GetIsAlive() == false) {
 			delete enemy;
@@ -391,9 +404,6 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 #endif
-	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
-		AdjustmentItems::GetInstance()->SaveFile(GroupName);
-	}
 
 	
 }

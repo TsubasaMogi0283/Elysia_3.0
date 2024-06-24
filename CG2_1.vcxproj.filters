@@ -268,6 +268,12 @@
     <Filter Include="Project\Item\Key">
       <UniqueIdentifier>{fc1d294f-567f-4707-a4fc-9052cbc0f915}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Stage">
+      <UniqueIdentifier>{3ee82dd3-28aa-419b-817b-b4293c945d9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Stage\Ground">
+      <UniqueIdentifier>{3c3cdb90-3b57-4d02-8386-26dafe74497f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -451,6 +457,9 @@
       <Filter>Project\Player\LightWeapon</Filter>
     </ClCompile>
     <ClCompile Include="Project\Key\Key.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Stage\Ground\Ground.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -818,6 +827,9 @@
       <Filter>Project\Player\LightWeapon</Filter>
     </ClInclude>
     <ClInclude Include="Project\Key\Key.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Stage\Ground\Ground.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
