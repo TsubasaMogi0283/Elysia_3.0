@@ -55,7 +55,7 @@ Vector3 LightWeapon::GetWorldPosition() {
 }
 
 
-void LightWeapon::Update(Vector3 playerPosition){
+void LightWeapon::Update(Vector3 playerPosition, Vector3 direction){
 
 #ifdef _DEBUG
 	ImGui::Begin("LightWeapon");
@@ -63,8 +63,16 @@ void LightWeapon::Update(Vector3 playerPosition){
 	ImGui::End();
 
 #endif
+
+
 	//座標
-	worldTransform_.translate_ = Add(playerPosition, { 0.0f,0.0f,distanceOffset_ });
+	Vector3 newTranslate = {};
+	newTranslate.x = distanceOffset_ * direction.x;
+	newTranslate.y = distanceOffset_ * direction.y;
+	newTranslate.z = distanceOffset_ * direction.z;
+
+	
+	worldTransform_.translate_ = Add(playerPosition, newTranslate);
 	
 	//更新
 	worldTransform_.Update();

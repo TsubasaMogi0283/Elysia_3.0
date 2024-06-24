@@ -118,8 +118,6 @@ private:
 	Vector3 cameraThirdPersonViewOfPointPosition_ = {};
 	Vector3 thirdPersonViewOfPointRotate_ = {};
 
-	//1人称
-	float firstPersonRotate_ = {};
 
 	//プレイヤー
 	std::unique_ptr<Player>player_ = nullptr;
@@ -143,8 +141,8 @@ private:
 	Vector3 lightPosition = {};
 	Vector3 lightDirection_ = {};
 
-	float theta = 0.0f;
-	float phi_ = 0.0f;
+	float theta_ = 0.0f;
+	float originPhi_ = 0.0f;
 	float decay_ = 0.0f;
 	float fallOff_ = 0.0f;
 	float cosAngle_ = 0.0f;

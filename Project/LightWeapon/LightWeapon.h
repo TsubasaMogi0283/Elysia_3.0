@@ -24,7 +24,8 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="playerPosition"></param>
-	void Update(Vector3 playerPosition);
+	/// <param name="direction"></param>
+	void Update(Vector3 playerPosition,Vector3 direction);
 
 	/// <summary>
 	/// 描画
@@ -44,7 +45,6 @@ public:
 	void OnCollision()override;
 	//ワールド座標を取得
 	Vector3 GetWorldPosition()override;
-
 
 
 private:

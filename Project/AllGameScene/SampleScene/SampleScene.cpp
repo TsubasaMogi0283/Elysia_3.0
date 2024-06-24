@@ -70,12 +70,13 @@ void SampleScene::Initialize() {
 	skyBoxWorldTransform_.Initialize();
 	const float SKYBOX_SCALE = 20.0f;
 	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
+#endif // _DEBUG
 
 	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
 	debugTower_.reset(Model::Create(debugTowerModelhandle));
 	debugTowerWorldTransform_.Initialize();
 
-#endif // _DEBUG
+
 
 
 	
@@ -87,16 +88,15 @@ void SampleScene::Initialize() {
 	camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
 	cameraPosition_ = camera_.translate_;
 
-	CAMERA_POSITION_OFFSET = { 0.0f,1.5f,1.0f };
+	CAMERA_POSITION_OFFSET = { 0.0f,1.5f,0.0f };
 
 	thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
 	cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
 
-	firstPersonRotate_ = 0.0f;
 
 
-	theta = std::numbers::pi_v<float> / 2.0f;
-	phi_ = 0.0f;
+	theta_ = std::numbers::pi_v<float> / 2.0f;
+	originPhi_ = 0.0f;
 	lightPosition = camera_.translate_;
 
 	distance_ = 20.0f;
@@ -249,20 +249,71 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 
 #endif
-	firstPersonRotate_ = theta;
+
+#pragma region 回転
 	//+が左回り
 	const float ROTATE_OFFSET = 0.025f;
 	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
-		theta += ROTATE_OFFSET;
+		theta_ += ROTATE_OFFSET;
 		
 	}
 	if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
-		theta -= ROTATE_OFFSET;
+		theta_ -= ROTATE_OFFSET;
 		
 	}
 
-	lightDirection_.x = std::cosf(theta);
-	lightDirection_.z = std::sinf(theta);
+	const float CAMERA_ROTATE_AMOUNT = ROTATE_OFFSET;
+	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+		originPhi_ -= CAMERA_ROTATE_AMOUNT;
+	}
+	//下を向く
+	if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+		originPhi_ += CAMERA_ROTATE_AMOUNT;
+	}
+	//±π/6くらいに制限を掛けておきたい
+	//それ以下以上だと首が大変なことになっているように見えるからね
+	if (originPhi_ > std::numbers::pi_v<float> / 6.0f) {
+		originPhi_ = std::numbers::pi_v<float> / 6.0f;
+	}
+	if (originPhi_ < -std::numbers::pi_v<float> / 6.0f) {
+		originPhi_ = -std::numbers::pi_v<float> / 6.0f;
+	}
+
+#pragma endregion
+
+	
+	//ライトの方向ベクトル
+	Vector3 direction = {};
+	direction.x = std::cosf(theta_);
+	direction.z = std::sinf(theta_);
+
+	//数学とプログラムで回る向きが違うことに煩わしさを感じます・・
+	//無理矢理直して楽になろう！！
+	float phi = -originPhi_;
+
+	//Yを求めたい
+	Vector3 directionForY = {};
+	//上のdirectionから長さを求めてからatan2でyを出す
+	float lengthXZ = sqrtf(std::powf(direction.x, 2.0f) + std::powf(direction.z, 2.0f));
+
+
+	
+
+
+	lightDirection_.x = direction.x;
+	lightDirection_.y = lengthXZ * std::tanf(phi);
+	lightDirection_.z = direction.z;
+
+
+
+#ifdef _DEBUG
+	ImGui::Begin("LightDirection");
+	ImGui::InputFloat("Length", &lengthXZ);
+	ImGui::InputFloat3("Directiona", &lightDirection_.x);
+	ImGui::End();
+#endif // _DEBUG
+
+
 	const float LIGHT_HEIGHT = 0.5f;
 	lightPosition = Add(player_->GetWorldPosition(), {0.0f, LIGHT_HEIGHT,0.0f});
 
@@ -288,16 +339,17 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 
 
-
+	//1人称視点へ変更
 	if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
 		viewOfPoint_ = FirstPerson;
 	}
+	//3人称視点へ変更
 	else if (Input::GetInstance()->IsTriggerKey(DIK_3) == true) {
 		viewOfPoint_ = ThirdPersonBack;
 	}
 
 
-
+	//1人称
 	if (viewOfPoint_ == FirstPerson) {
 
 		//カメラ
@@ -307,31 +359,11 @@ void SampleScene::Update(GameManager* gameManager) {
 		ImGui::End();
 #endif 
 		
-		//上を向く
-		//x軸は右回り
-		
-		const float CAMERA_ROTATE_AMOUNT = ROTATE_OFFSET;
-		if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
-			camera_.rotate_.x -= CAMERA_ROTATE_AMOUNT;
-		}
-		//下を向く
-		if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
-			camera_.rotate_.x += CAMERA_ROTATE_AMOUNT;
-		}
-
-		//±π/4位に制限を掛けておきたい
-		//それ以下以上だと首が大変なことになっているように見えるから
-		if (camera_.rotate_.x > std::numbers::pi_v<float> / 6.0f) {
-			camera_.rotate_.x = std::numbers::pi_v<float> / 6.0f;
-		}
-		if (camera_.rotate_.x < -std::numbers::pi_v<float> / 6.0f) {
-			camera_.rotate_.x = -std::numbers::pi_v<float> / 6.0f;
-		}
-
-		camera_.rotate_.z = 0.0f;
-
 		//回り方が少し違うので注意
-		camera_.rotate_.y = -(firstPersonRotate_)+std::numbers::pi_v<float>/2.0f;
+		//何か嫌だね()
+		camera_.rotate_.x = -phi;
+		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float>/2.0f;
+		camera_.rotate_.z = 0.0f;
 		camera_.translate_ = Add(player_->GetWorldPosition(), CAMERA_POSITION_OFFSET);
 
 	}
@@ -365,9 +397,9 @@ void SampleScene::Update(GameManager* gameManager) {
 
 #ifdef _DEBUG
 	skyBoxWorldTransform_.Update();
-	debugTowerWorldTransform_.Update();
+	
 #endif // _DEBUG
-
+	debugTowerWorldTransform_.Update();
 	
 	//鍵
 	for (Key* key : keyes_) {
@@ -399,7 +431,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	ground_->Update();
 	
 	//ライト
-	lightCollision_->Update(player_->GetWorldPosition());
+	lightCollision_->Update(player_->GetWorldPosition(), lightDirection_);
 
 
 	//更新
@@ -425,8 +457,8 @@ void SampleScene::Update(GameManager* gameManager) {
 #ifdef _DEBUG
 	ImGui::Begin("Camera");
 	ImGui::InputFloat3("Rotate", &camera_.rotate_.x);
-	ImGui::InputFloat("Theta", &theta);
-	ImGui::InputFloat("FirstRotate", &firstPersonRotate_);
+	ImGui::InputFloat("Theta", &theta_);
+	ImGui::InputFloat("Phi", &phi);
 	
 	ImGui::End();
 
@@ -485,10 +517,10 @@ void SampleScene::DrawObject3D() {
 
 #ifdef _DEBUG
 	skyBox_->Draw(skyBoxWorldTransform_, camera_);
-	debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight_);
+	
 
 #endif // DEBUG
-
+	debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight_);
 	
 
 }
