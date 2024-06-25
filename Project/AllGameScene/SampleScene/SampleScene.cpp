@@ -121,6 +121,11 @@ void SampleScene::Initialize() {
 	directionalLight_.Initialize();
 	pointLight_.Initialize();
 	spotLight_.Initialize();
+
+
+	audio_ = Audio::GetInstance();
+	audioHandle_ = Audio::GetInstance()->LoadMP3(L"Resources/Audio/Sample/WIP.mp3");
+	audio_->PlayMP3(audioHandle_, true);
 }
 
 

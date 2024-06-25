@@ -114,6 +114,8 @@ private:
 
 	std::unique_ptr<BackText> back_ = nullptr;
 	
+	Audio* audio_ = nullptr;
+	uint32_t audioHandle_ = 0;
 
 	std::unique_ptr<GrayScale> grayScale_ = nullptr;
 	std::unique_ptr<SepiaScale> sepiaScale_ = nullptr;
