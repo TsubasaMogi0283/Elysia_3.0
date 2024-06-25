@@ -50,16 +50,6 @@ void SampleScene::Initialize() {
 	enemyManager_ = std::make_unique<EnemyManager>();
 	enemyManager_->Initialize(enemyModelHandle_);
 
-	////まず一個出す
-	//Enemy* enemy = new Enemy();
-	//enemy->Initialize(enemyModelHandle_, { 4.0f,1.0f,0.0f }, { 0.0f,0.0f,0.0f });
-	//enemys_.push_back(enemy);
-	//
-	//Enemy* enemy2 = new Enemy();
-	//enemy2->Initialize(enemyModelHandle_, { -2.0f,1.0f,0.0f }, { 0.0f,0.0f,0.0f });
-	//enemys_.push_back(enemy2);
-
-
 
 #pragma endregion
 
@@ -81,7 +71,7 @@ void SampleScene::Initialize() {
 	camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
 	cameraPosition_ = camera_.translate_;
 
-	CAMERA_POSITION_OFFSET = { 0.0f,1.5f,0.0f };
+	CAMERA_POSITION_OFFSET = { 0.0f,3.0f,0.0f };
 
 	thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
 	cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
@@ -99,7 +89,7 @@ void SampleScene::Initialize() {
 	collisionManager_ = std::make_unique<CollisionManager>();
 
 
-	theta_ = std::numbers::pi_v<float>;
+	theta_ = std::numbers::pi_v<float>/2.0f;
 
 	back_ = std::make_unique< BackText>();
 	back_->Initialize();
@@ -226,12 +216,41 @@ void SampleScene::Update(GameManager* gameManager) {
 	const float ROTATE_OFFSET = 0.025f;
 	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
 		theta_ += ROTATE_OFFSET;
+		isRotateKey_ = true;
 		
 	}
 	if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
 		theta_ -= ROTATE_OFFSET;
+		isRotateKey_ = true;
 		
 	}
+
+	//コントローラーがある場合
+	XINPUT_STATE joyState{};
+	isRotateKey_ = false;
+	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+		if (isRotateKey_ == false) {
+			//やっぱりこっちも逆だね☆
+			float rotateMove = (float)joyState.Gamepad.sThumbLX / SHRT_MAX * ROTATE_OFFSET;
+			
+			
+			//何か勝手に動いちゃうので制限を掛ける
+			const float MOVE_LIMITATION = 0.01f;
+			if (rotateMove < MOVE_LIMITATION && rotateMove > -MOVE_LIMITATION) {
+				rotateMove = 0.0f;
+			}
+			theta_ -= rotateMove;
+			
+
+			
+
+		}
+
+
+	}
+
+
+
 
 	const float CAMERA_ROTATE_AMOUNT = ROTATE_OFFSET;
 	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
@@ -241,6 +260,29 @@ void SampleScene::Update(GameManager* gameManager) {
 	if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
 		originPhi_ += CAMERA_ROTATE_AMOUNT;
 	}
+
+	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+		if (isRotateXKey_ == false) {
+			float rotateMove = (float)joyState.Gamepad.sThumbLY / SHRT_MAX * ROTATE_OFFSET;
+
+
+			//勝手に動いちゃうので制限を掛ける
+			const float MOVE_LIMITATION = 0.01f;
+			if (rotateMove < MOVE_LIMITATION && rotateMove > -MOVE_LIMITATION) {
+				rotateMove = 0.0f;
+			}
+			originPhi_ -= rotateMove;
+
+
+
+
+		}
+
+
+	}
+
+
+
 	//±π/6くらいに制限を掛けておきたい
 	//それ以下以上だと首が大変なことになっているように見えるからね
 	if (originPhi_ > std::numbers::pi_v<float> / 6.0f) {
@@ -288,6 +330,9 @@ void SampleScene::Update(GameManager* gameManager) {
 		viewOfPoint_ = ThirdPersonBack;
 	}
 
+	//コントローラーだと
+	//十字ボタンが良いかも
+	//マイクラはそれだったから
 
 	//1人称
 	if (viewOfPoint_ == FirstPerson) {

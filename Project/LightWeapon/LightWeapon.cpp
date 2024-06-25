@@ -22,7 +22,7 @@ void LightWeapon::Initialize(uint32_t modelHandle){
 	
 	radius_ = 1.0f * SCALE;
 
-	distanceOffset_ = 15.0f;
+	distanceOffset_ = 25.0f;
 	//衝突
 	isCollision_ = false;
 	
@@ -68,7 +68,7 @@ void LightWeapon::Update(Vector3 playerPosition, Vector3 direction){
 	//座標
 	Vector3 newTranslate = {};
 	newTranslate.x = distanceOffset_ * direction.x;
-	newTranslate.y = distanceOffset_ * direction.y;
+	newTranslate.y = distanceOffset_ * direction.y+3.0f;
 	newTranslate.z = distanceOffset_ * direction.z;
 
 	//加算

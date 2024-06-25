@@ -103,6 +103,8 @@ private:
 	Vector3 cameraThirdPersonViewOfPointPosition_ = {};
 	Vector3 thirdPersonViewOfPointRotate_ = {};
 
+	bool isRotateKey_ = false;
+	bool isRotateXKey_ = false;
 
 
 	//平行光源

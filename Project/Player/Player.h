@@ -120,5 +120,10 @@ private:
 	uint32_t haveKeyQuantity_ = 0;
 
 
+
+	//
+	bool isPressKey_ = false;
+
+
 };
 

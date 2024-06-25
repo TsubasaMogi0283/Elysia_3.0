@@ -15,7 +15,7 @@ void Key::Initialize(uint32_t& modelhandle, Vector3& position){
 
 	//半径
 	//と言っても少しだけ大きくして取りやすくする
-	radius_ = SCALE*2.0f;
+	radius_ = SCALE*4.0f;
 
 	//取得されたかどうかのフラグ
 	isPickUp_ = false;

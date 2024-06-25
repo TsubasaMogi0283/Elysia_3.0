@@ -9,7 +9,7 @@ void FlashLight::Initialize(){
 	spotLight_.Initialize();
 
 	spotLight_.position_ = lightPosition;
-	spotLight_.distance_ = 20.0f;
+	spotLight_.distance_ = 35.0f;
 	spotLight_.decay_ = 0.6f;
 	spotLight_.cosFallowoffStart_ = 6.1f;
 	spotLight_.cosAngle_ = 0.98f;
@@ -52,7 +52,7 @@ void FlashLight::Update(){
 
 
 
-	const float LIGHT_HEIGHT = 0.5f;
+	const float LIGHT_HEIGHT = 1.0f;
 	lightPosition = Add(playerPosition_, { 0.0f, LIGHT_HEIGHT,0.0f });
 
 	spotLight_.position_ = lightPosition;
