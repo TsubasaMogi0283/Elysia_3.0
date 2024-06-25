@@ -7,7 +7,7 @@ void Key::Initialize(uint32_t& modelhandle, Vector3& position){
 	//モデルの生成
 	model_.reset(Model::Create(modelhandle));
 	
-	const float SCALE = 0.5f;
+	const float SCALE = 0.4f;
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	worldTransform_.translate_ = position;

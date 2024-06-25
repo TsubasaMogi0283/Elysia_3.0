@@ -3,13 +3,13 @@
 
 void KeyManager::Initialize(uint32_t modelHandle){
 	Key* key1 = new Key();
-	Vector3 keyPosition = { -5.0f,1.0f,1.0f };
+	Vector3 keyPosition = { -10.0f,0.5f,1.0f };
 	key1->Initialize(modelHandle, keyPosition);
 	keyes_.push_back(key1);
 
 
 	Key* key2 = new Key();
-	Vector3 keyPosition2 = { 5.0f,1.0f,10.0f };
+	Vector3 keyPosition2 = { 5.0f,0.5f,10.0f };
 	key2->Initialize(modelHandle, keyPosition2);
 	keyes_.push_back(key2);
 
