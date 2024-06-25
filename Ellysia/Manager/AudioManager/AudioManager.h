@@ -40,14 +40,6 @@ enum AudioEffectType {
 	Reverb,
 };
 
-struct PanData {
-	DWORD dwChannelMask_ = {};
-	float outputMatrix_[8] = {};
-	float left_ = 0.0f;
-	float right_ = 0.0f;
-
-};
-
 class AudioManager final{
 private:
 	/// <summary>
@@ -83,6 +75,8 @@ public:
 private:
 	static void CreateSubmixVoice(uint32_t channel);
 
+	//音声データの開放
+	void SoundUnload(uint32_t soundDataHandle);
 
 public:
 	/// <summary>
@@ -90,6 +84,8 @@ public:
 	/// </summary>
 	void Initialize();
 
+	//解放
+	void Release();
 
 public:
 	//読み込み
@@ -98,20 +94,8 @@ public:
 	//エフェクト版の読み込み
 	static uint32_t LoadWave(const char* fileName, uint32_t effectType);
 
+	//MP3の読み込み
 	static uint32_t LoadMP3(const WCHAR* fileName);
-
-
-
-public:
-
-	//解放
-	void Release();
-
-private:
-	//音声データの開放
-	void SoundUnload(uint32_t soundDataHandle);
-
-
 
 
 public:
@@ -141,8 +125,8 @@ public:
 
 
 
-	inline PanData GetPanData() {
-		return panData_;
+	inline DWORD GetDwChannelMask() {
+		return dwChannelMask_;
 	}
 
 
@@ -157,8 +141,8 @@ private:
 	//最終的にここでまとめるよ(スピーカーみたいな感じだね)
 	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 
-	PanData panData_ = {};
-
+	DWORD dwChannelMask_ = {};
+	
 	//Reverb
 	IUnknown* pXAPO_ = nullptr;
 

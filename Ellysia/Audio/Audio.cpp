@@ -4,6 +4,7 @@
 #include <imgui.h>
 
 #include "AudioManager.h"
+#include <AudioScale.h>
 
 
 
@@ -69,7 +70,36 @@ void Audio::PlayWave(uint32_t audioHandle, int32_t loopCount) {
 	assert(SUCCEEDED(hr));
 }
 
-//void Audio::PlayMP3(uint32_t audioHandle,bool isLoop){
+void Audio::PlayMP3(uint32_t audioHandle,bool isLoop){
+	//MP3はループしない方が良いとのこと
+	//一応用意するけど使わないかも
+	HRESULT hr{};
+	auto audioInformation = AudioManager::GetInstance()->GetAudioInformation(audioHandle);
+	hr = audioInformation.pSourceVoice_->FlushSourceBuffers();
+	assert(SUCCEEDED(hr));
+
+	XAUDIO2_BUFFER buffer{};
+	buffer.pAudioData = audioInformation.mediaData.data();
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	buffer.AudioBytes = sizeof(BYTE) * static_cast<UINT32>(audioInformation.mediaData.size());
+	if (isLoop == true) {
+		//ずっとループさせたいならLoopCountにXAUDIO2_LOOP_INFINITEをいれよう
+		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+	}
+	else{
+		buffer.LoopCount = XAUDIO2_NO_LOOP_REGION;
+	}
+
+
+	hr = audioInformation.pSourceVoice_->SubmitSourceBuffer(&buffer);
+
+	//波形データの再生
+	hr = audioInformation.pSourceVoice_->Start(0);
+	assert(SUCCEEDED(hr));
+}
+
+
+//void Audio::PlayMP3(uint32_t audioHandle, bool isLoop) {
 //	//MP3はループしない方が良いとのこと
 //	//一応用意するけど使わないかも
 //	HRESULT hr{};
@@ -84,7 +114,7 @@ void Audio::PlayWave(uint32_t audioHandle, int32_t loopCount) {
 //		//ずっとループさせたいならLoopCountにXAUDIO2_LOOP_INFINITEをいれよう
 //		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 //	}
-//	else{
+//	else {
 //		buffer.LoopCount = XAUDIO2_NO_LOOP_REGION;
 //	}
 //
@@ -95,31 +125,33 @@ void Audio::PlayWave(uint32_t audioHandle, int32_t loopCount) {
 //	hr = audioInformation_[audioHandle].pSourceVoice_->Start(0);
 //	assert(SUCCEEDED(hr));
 //}
-//
-//void Audio::PlayMP3(uint32_t audioHandle, uint32_t loopCount){
-//	//MP3はループしない方が良いとのこと
-//	//一応用意するけど使わないかも
-//
-//	HRESULT hr{};
-//	hr = audioInformation_[audioHandle].pSourceVoice_->FlushSourceBuffers();
-//	assert(SUCCEEDED(hr));
-//	XAUDIO2_BUFFER buffer{};
-//	buffer.pAudioData = Audio::GetInstance()->audioInformation_[audioHandle].mediaData.data();
-//	buffer.Flags = XAUDIO2_END_OF_STREAM;
-//	buffer.AudioBytes = sizeof(BYTE) * static_cast<UINT32>(Audio::GetInstance()->audioInformation_[audioHandle].mediaData.size());
-//	//ここでループ回数を設定
-//	//1回多くなっているので-1してあげた方が良いかも
-//	//1でfalseの場合と同じ
-//	buffer.LoopCount = loopCount - 1;
-//
-//
-//
-//	hr = Audio::GetInstance()->audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
-//
-//	//波形データの再生
-//	hr = audioInformation_[audioHandle].pSourceVoice_->Start(0);
-//	assert(SUCCEEDED(hr));
-//}
+
+
+void Audio::PlayMP3(uint32_t audioHandle, uint32_t loopCount){
+	//MP3はループしない方が良いとのこと
+	//一応用意するけど使わないかも
+
+	HRESULT hr{};
+	AudioInformation audioInformation = AudioManager::GetInstance()->GetAudioInformation(audioHandle);
+	hr = audioInformation.pSourceVoice_->FlushSourceBuffers();
+	assert(SUCCEEDED(hr));
+	XAUDIO2_BUFFER buffer{};
+	buffer.pAudioData = audioInformation.mediaData.data();
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	buffer.AudioBytes = sizeof(BYTE) * static_cast<UINT32>(audioInformation.mediaData.size());
+	//ここでループ回数を設定
+	//1回多くなっているので-1してあげた方が良いかも
+	//1でfalseの場合と同じ
+	buffer.LoopCount = loopCount - 1;
+
+
+
+	hr =audioInformation.pSourceVoice_->SubmitSourceBuffer(&buffer);
+
+	//波形データの再生
+	hr = audioInformation.pSourceVoice_->Start(0);
+	assert(SUCCEEDED(hr));
+}
 
 void Audio::PauseWave(uint32_t audioHandle) {
 	HRESULT hr{};
@@ -361,48 +393,49 @@ void Audio::StretchAndPitch(uint32_t audioHandle, float timeRatio, float pitchRa
 void Audio::SetPan(uint32_t audioHandle, float_t pan) {
 
 	//左右のスピーカー間の目的のパンに基づき送信レベルを計算
-	PanData panData = AudioManager::GetInstance()->GetPanData();
-	panData.left_ = 0.5f - pan / 2.0f;
-	panData.right_ = 0.5f + pan / 2.0f;
-	switch (panData.dwChannelMask_)
+	DWORD dwChannelMask = AudioManager::GetInstance()->GetDwChannelMask();
+	AudioInformation audioInformation = AudioManager::GetInstance()->GetAudioInformation(audioHandle);
+	audioInformation.left_ = 0.5f - pan / 2.0f;
+	audioInformation.right_ = 0.5f + pan / 2.0f;
+	switch (dwChannelMask)
 	{
 	case SPEAKER_MONO:
-		panData.outputMatrix_[0] = 1.0f;
+		audioInformation.outputMatrix_[0] = 1.0f;
 		break;
 	case SPEAKER_STEREO:
 	case SPEAKER_2POINT1:
 	case SPEAKER_SURROUND:
-		panData.outputMatrix_[1] = panData.left_;
-		panData.outputMatrix_[2] = panData.right_;
+		audioInformation.outputMatrix_[1] = audioInformation.left_;
+		audioInformation.outputMatrix_[2] = audioInformation.right_;
 
 		break;
 	case SPEAKER_QUAD:
-		panData.outputMatrix_[0] = panData.left_;
-		panData.outputMatrix_[1] = panData.right_;
-		panData.outputMatrix_[2] = panData.left_;
-		panData.outputMatrix_[3] = panData.right_;
+		audioInformation.outputMatrix_[0] = audioInformation.left_;
+		audioInformation.outputMatrix_[1] = audioInformation.right_;
+		audioInformation.outputMatrix_[2] = audioInformation.left_;
+		audioInformation.outputMatrix_[3] = audioInformation.right_;
 		break;
 	case SPEAKER_4POINT1:
-		panData.outputMatrix_[0] = panData.left_;
-		panData.outputMatrix_[1] = panData.right_;
-		panData.outputMatrix_[3] = panData.left_;
-		panData.outputMatrix_[4] = panData.right_;
+		audioInformation.outputMatrix_[0] = audioInformation.left_;
+		audioInformation.outputMatrix_[1] = audioInformation.right_;
+		audioInformation.outputMatrix_[3] = audioInformation.left_;
+		audioInformation.outputMatrix_[4] = audioInformation.right_;
 		break;
 	case SPEAKER_5POINT1:
 	case SPEAKER_7POINT1:
 	case SPEAKER_5POINT1_SURROUND:
-		panData.outputMatrix_[0] = panData.left_;
-		panData.outputMatrix_[1] = panData.right_;
-		panData.outputMatrix_[4] = panData.left_;
-		panData.outputMatrix_[5] = panData.right_;
+		audioInformation.outputMatrix_[0] = audioInformation.left_;
+		audioInformation.outputMatrix_[1] = audioInformation.right_;
+		audioInformation.outputMatrix_[4] = audioInformation.left_;
+		audioInformation.outputMatrix_[5] = audioInformation.right_;
 		break;
 	case SPEAKER_7POINT1_SURROUND:
-		panData.outputMatrix_[0] = panData.left_;
-		panData.outputMatrix_[1] = panData.right_;
-		panData.outputMatrix_[4] = panData.left_;
-		panData.outputMatrix_[5] = panData.right_;
-		panData.outputMatrix_[6] = panData.left_;
-		panData.outputMatrix_[7] = panData.right_;
+		audioInformation.outputMatrix_[0] = audioInformation.left_;
+		audioInformation.outputMatrix_[1] = audioInformation.right_;
+		audioInformation.outputMatrix_[4] = audioInformation.left_;
+		audioInformation.outputMatrix_[5] = audioInformation.right_;
+		audioInformation.outputMatrix_[6] = audioInformation.left_;
+		audioInformation.outputMatrix_[7] = audioInformation.right_;
 		break;
 	}
 
@@ -428,7 +461,7 @@ void Audio::SetPan(uint32_t audioHandle, float_t pan) {
 #pragma endregion
 
 	XAUDIO2_VOICE_DETAILS voiceDetails;
-	AudioInformation audioInformation = AudioManager::GetInstance()->GetAudioInformation(audioHandle);
+	
 	audioInformation.pSourceVoice_->GetVoiceDetails(&voiceDetails);
 
 	XAUDIO2_VOICE_DETAILS masterVoiiceDetails;
@@ -438,7 +471,7 @@ void Audio::SetPan(uint32_t audioHandle, float_t pan) {
 	audioInformation.pSourceVoice_->SetOutputMatrix(
 		NULL, voiceDetails.InputChannels,
 		masterVoiiceDetails.InputChannels,
-		panData.outputMatrix_);
+		audioInformation.outputMatrix_);
 
 }
 

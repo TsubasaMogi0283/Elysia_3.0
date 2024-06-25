@@ -775,6 +775,9 @@
     <ClInclude Include="Ellysia\Manager\AudioManager\AudioManager.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
+    <ClInclude Include="Ellysia\Audio\AudioScale.h">
+      <Filter>Ellysia\Header File\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">

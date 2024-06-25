@@ -350,6 +350,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClInclude Include="Ellysia\AdjustmentItems\AdjustmentItems.h" />
     <ClInclude Include="Ellysia\Audio\Audio.h" />
+    <ClInclude Include="Ellysia\Audio\AudioScale.h" />
     <ClInclude Include="Ellysia\Audio\AudioStruct.h" />
     <ClInclude Include="Ellysia\Camera\Camera.h" />
     <ClInclude Include="Ellysia\Common\DirectX\DirectXSetup.h" />

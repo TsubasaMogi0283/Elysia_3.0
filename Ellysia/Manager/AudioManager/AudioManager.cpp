@@ -1,10 +1,13 @@
 #include "AudioManager.h"
 
+
+uint32_t AudioManager::audioIndex = 0;
+
+
 AudioManager* AudioManager::GetInstance(){
     static AudioManager instance;
     return &instance;
 }
-
 
 
 void AudioManager::CreateSubmixVoice(uint32_t channel) {
@@ -36,19 +39,15 @@ void AudioManager::Initialize() {
 	assert(SUCCEEDED(hr));
 
 	//スピーカ構成を取得
-	masterVoice_->GetChannelMask(&panData_.dwChannelMask_);
+	masterVoice_->GetChannelMask(&dwChannelMask_);
 
 
 
 
-	//一度全部0に初期化
-	for (int i = 0; i < 8; i++) {
-		panData_.outputMatrix_[i] = 0;
-	}
 
 	//サブミックスボイス(DTMでのバス)をここで作る
-	//64くらいあれば十分でしょう。多すぎてもメモリの無駄になってしまうし
 	//FLStudioと同じように128あれば良いなと思ったが
+	//64くらいあれば十分でしょう。多すぎてもメモリの無駄になってしまうし
 	for (int i = 1; i < SUBMIXVOICE_AMOUNT_; ++i) {
 
 		CreateSubmixVoice(i);
@@ -77,12 +76,14 @@ uint32_t AudioManager::LoadWave(const char* fileName) {
 			return AudioManager::GetInstance()->audioInformation_[i].audioHandle_;
 		}
 	}
-	//audioHandle_++;
+	//indexを足していく
+	int index = audioIndex;
 	audioIndex++;
+	
 
 	//記録
-	AudioManager::GetInstance()->audioInformation_[audioIndex].name_ = fileName;
-	AudioManager::GetInstance()->audioInformation_[audioIndex].audioHandle_ = audioIndex;
+	AudioManager::GetInstance()->audioInformation_[index].name_ = fileName;
+	AudioManager::GetInstance()->audioInformation_[index].audioHandle_ = index;
 
 
 #pragma region １,ファイルオープン
@@ -157,28 +158,28 @@ uint32_t AudioManager::LoadWave(const char* fileName) {
 
 #pragma region 読み込んだ音声データを返す
 
-	AudioManager::GetInstance()->audioInformation_[audioIndex].soundData_.wfex = format.fmt;
-	AudioManager::GetInstance()->audioInformation_[audioIndex].soundData_.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
-	AudioManager::GetInstance()->audioInformation_[audioIndex].soundData_.bufferSize = data.size;
+	AudioManager::GetInstance()->audioInformation_[index].soundData_.wfex = format.fmt;
+	AudioManager::GetInstance()->audioInformation_[index].soundData_.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
+	AudioManager::GetInstance()->audioInformation_[index].soundData_.bufferSize = data.size;
 
 
 	//波形フォーマットを基にSourceVoiceの生成
 	HRESULT hr{};
 	hr = AudioManager::GetInstance()->xAudio2_->CreateSourceVoice(
-		&AudioManager::GetInstance()->audioInformation_[audioIndex].pSourceVoice_,
-		&AudioManager::GetInstance()->audioInformation_[audioIndex].soundData_.wfex);
+		&AudioManager::GetInstance()->audioInformation_[index].pSourceVoice_,
+		&AudioManager::GetInstance()->audioInformation_[index].soundData_.wfex);
 	assert(SUCCEEDED(hr));
 
 
 	//フィルターを使う場合
 	//後でFilterを使う場合のロードを作りたい
 	hr = AudioManager::GetInstance()->xAudio2_->CreateSourceVoice(
-		&AudioManager::GetInstance()->audioInformation_[audioIndex].pSourceVoice_,
-		&AudioManager::GetInstance()->audioInformation_[audioIndex].soundData_.wfex, XAUDIO2_VOICE_USEFILTER, 16.0f);
+		&AudioManager::GetInstance()->audioInformation_[index].pSourceVoice_,
+		&AudioManager::GetInstance()->audioInformation_[index].soundData_.wfex, XAUDIO2_VOICE_USEFILTER, 16.0f);
 
 	assert(SUCCEEDED(hr));
 
-	return audioIndex;
+	return index;
 
 #pragma endregion
 
@@ -316,18 +317,38 @@ uint32_t AudioManager::LoadMP3(const WCHAR* fileName) {
 		}
 	}
 
+	//一度読み込んだものは２度読み込まず返すだけ
+//	for (int i = 0; i < SOUND_DATE_MAX_; i++) {
+//		if (Audio::GetInstance()->audioInformation_[i].mp3FileName_ == fileName) {
+//			return Audio::GetInstance()->audioInformation_[i].audioHandle_;
+//		}
+//	}
+
+
+	int index = audioIndex;
 	audioIndex++;
 
 	//記録
-	AudioManager::GetInstance()->audioInformation_[audioIndex].mp3FileName_ = fileName;
-	AudioManager::GetInstance()->audioInformation_[audioIndex].audioHandle_ = audioIndex;
+	AudioManager::GetInstance()->audioInformation_[index].mp3FileName_ = fileName;
+	AudioManager::GetInstance()->audioInformation_[index].audioHandle_ = index;
 
 	HRESULT hr = {};
 
 	//ソースリーダーの作成
-	hr = MFCreateSourceReaderFromURL(fileName, nullptr, &AudioManager::GetInstance()->audioInformation_[audioIndex].pSourceReader_);
+	hr = MFCreateSourceReaderFromURL(fileName, nullptr, &AudioManager::GetInstance()->audioInformation_[index].pSourceReader_);
 	assert(SUCCEEDED(hr));
-
+	//audioIndex++;
+	//
+	//	//記録
+	//	Audio::GetInstance()->audioInformation_[audioIndex].mp3FileName_ = fileName;
+	//	Audio::GetInstance()->audioInformation_[audioIndex].audioHandle_ = audioIndex;
+	//
+	//	HRESULT hr = {};
+	//
+	//	//ソースリーダーの作成
+	//	hr = MFCreateSourceReaderFromURL(fileName, nullptr, &Audio::GetInstance()->audioInformation_[audioIndex].pSourceReader_);
+	//	assert(SUCCEEDED(hr));
+	//
 
 
 	//メディアタイプの取得
@@ -335,11 +356,11 @@ uint32_t AudioManager::LoadMP3(const WCHAR* fileName) {
 	MFCreateMediaType(&pMFMediaType);
 	pMFMediaType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
 	pMFMediaType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
-	AudioManager::GetInstance()->audioInformation_[audioIndex].pSourceReader_->SetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), nullptr, pMFMediaType);
+	AudioManager::GetInstance()->audioInformation_[index].pSourceReader_->SetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), nullptr, pMFMediaType);
 
 	pMFMediaType->Release();
 	pMFMediaType = nullptr;
-	AudioManager::GetInstance()->audioInformation_[audioIndex].pSourceReader_->GetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), &pMFMediaType);
+	AudioManager::GetInstance()->audioInformation_[index].pSourceReader_->GetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), &pMFMediaType);
 
 	//オーディオデータ形式の作成
 	WAVEFORMATEX* waveFormat{};
@@ -347,11 +368,31 @@ uint32_t AudioManager::LoadMP3(const WCHAR* fileName) {
 
 
 
+	//
+	//
+	//	//メディアタイプの取得
+	//	IMFMediaType* pMFMediaType{ nullptr };
+	//	MFCreateMediaType(&pMFMediaType);
+	//	pMFMediaType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+	//	pMFMediaType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
+	//	Audio::GetInstance()->audioInformation_[audioIndex].pSourceReader_->SetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), nullptr, pMFMediaType);
+	//
+	//	pMFMediaType->Release();
+	//	pMFMediaType = nullptr;
+	//	Audio::GetInstance()->audioInformation_[audioIndex].pSourceReader_->GetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), &pMFMediaType);
+	//
+	//	//オーディオデータ形式の作成
+	//	WAVEFORMATEX* waveFormat{};
+	//	MFCreateWaveFormatExFromMFMediaType(pMFMediaType, &waveFormat, nullptr);
+	//
+	//
+	//
+
 	while (true)
 	{
 		IMFSample* pMFSample{ nullptr };
 		DWORD dwStreamFlags{ 0 };
-		AudioManager::GetInstance()->audioInformation_[audioIndex].pSourceReader_->ReadSample(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), 0, nullptr, &dwStreamFlags, nullptr, &pMFSample);
+		AudioManager::GetInstance()->audioInformation_[index].pSourceReader_->ReadSample(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), 0, nullptr, &dwStreamFlags, nullptr, &pMFSample);
 
 		if (dwStreamFlags & MF_SOURCE_READERF_ENDOFSTREAM)
 		{
@@ -365,8 +406,8 @@ uint32_t AudioManager::LoadMP3(const WCHAR* fileName) {
 		DWORD cbCurrentLength{ 0 };
 		pMFMediaBuffer->Lock(&pBuffer, nullptr, &cbCurrentLength);
 
-		AudioManager::GetInstance()->audioInformation_[audioIndex].mediaData.resize(AudioManager::GetInstance()->audioInformation_[audioIndex].mediaData.size() + cbCurrentLength);
-		memcpy(AudioManager::GetInstance()->audioInformation_[audioIndex].mediaData.data() + AudioManager::GetInstance()->audioInformation_[audioIndex].mediaData.size() - cbCurrentLength, pBuffer, cbCurrentLength);
+		AudioManager::GetInstance()->audioInformation_[index].mediaData.resize(AudioManager::GetInstance()->audioInformation_[index].mediaData.size() + cbCurrentLength);
+		memcpy(AudioManager::GetInstance()->audioInformation_[index].mediaData.data() + AudioManager::GetInstance()->audioInformation_[index].mediaData.size() - cbCurrentLength, pBuffer, cbCurrentLength);
 
 		pMFMediaBuffer->Unlock();
 
@@ -374,11 +415,69 @@ uint32_t AudioManager::LoadMP3(const WCHAR* fileName) {
 		pMFSample->Release();
 	}
 
-	AudioManager::GetInstance()->xAudio2_->CreateSourceVoice(&AudioManager::GetInstance()->audioInformation_[audioIndex].pSourceVoice_, waveFormat);
+
+	//	while (true)
+	//	{
+	//		IMFSample* pMFSample{ nullptr };
+	//		DWORD dwStreamFlags{ 0 };
+	//		Audio::GetInstance()->audioInformation_[audioIndex].pSourceReader_->ReadSample(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), 0, nullptr, &dwStreamFlags, nullptr, &pMFSample);
+	//
+	//		if (dwStreamFlags & MF_SOURCE_READERF_ENDOFSTREAM)
+	//		{
+	//			break;
+	//		}
+	//
+	//		IMFMediaBuffer* pMFMediaBuffer{ nullptr };
+	//		pMFSample->ConvertToContiguousBuffer(&pMFMediaBuffer);
+	//
+	//		BYTE* pBuffer{ nullptr };
+	//		DWORD cbCurrentLength{ 0 };
+	//		pMFMediaBuffer->Lock(&pBuffer, nullptr, &cbCurrentLength);
+	//
+	//		Audio::GetInstance()->audioInformation_[audioIndex].mediaData.resize(Audio::GetInstance()->audioInformation_[audioIndex].mediaData.size() + cbCurrentLength);
+	//		memcpy(Audio::GetInstance()->audioInformation_[audioIndex].mediaData.data() + Audio::GetInstance()->audioInformation_[audioIndex].mediaData.size() - cbCurrentLength, pBuffer, cbCurrentLength);
+	//
+	//		pMFMediaBuffer->Unlock();
+	//
+	//		pMFMediaBuffer->Release();
+	//		pMFSample->Release();
+	//	}
 
 
-	return audioIndex;
+	AudioManager::GetInstance()->xAudio2_->CreateSourceVoice(&AudioManager::GetInstance()->audioInformation_[index].pSourceVoice_, waveFormat);
+
+
+	return index;
+
+
+	
+	
+	
+	//
+	//	Audio::GetInstance()->xAudio2_->CreateSourceVoice(&Audio::GetInstance()->audioInformation_[audioIndex].pSourceVoice_, waveFormat);
+	//
+	//
+	//	return audioIndex;
 }
+
+
+
+
+
+
+
+//uint32_t Audio::LoadMP3(const WCHAR* fileName) {
+//	//効果音系にはMP3は良いけど
+//	//ループにはおすすめできないらしい。末端に無音が入るため。
+//
+//
+//
+//
+//
+//	
+//
+//	
+//}
 
 
 

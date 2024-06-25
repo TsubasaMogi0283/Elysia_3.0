@@ -113,8 +113,14 @@ private:
 	const char* GroupName = "Player";
 	Vector3 position = {};
 
-
+	float pan_ = 0.0f;
+	uint32_t audioHandle_ = 0;
 	std::unique_ptr<Audio> audio_ = nullptr;
+
+	float pan1_ = 0.0f;
+	uint32_t audioHandle1_ = 0;
+	std::unique_ptr<Audio> audio1_ = nullptr;
+
 
 
 	std::unique_ptr<BackText> back_ = nullptr;

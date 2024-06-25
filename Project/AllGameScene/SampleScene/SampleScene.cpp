@@ -125,8 +125,23 @@ void SampleScene::Initialize() {
 
 
 	audio_ = std::make_unique<Audio>();
-	uint32_t audioHandle = AudioManager::GetInstance()->LoadWave("Resources/Audio/Sample/Win.wav");
-	audio_->PlayWave(audioHandle, true);
+	audioHandle_ = AudioManager::GetInstance()->LoadWave("Resources/Audio/Sample/Win.wav");
+	audio_->PlayWave(audioHandle_, true);
+	auto infoWav= AudioManager::GetInstance()->GetAudioInformation(audioHandle_);
+	infoWav;
+
+	pan1_ = 0.0f;
+	audio1_ = std::make_unique<Audio>();
+	audioHandle1_ = AudioManager::GetInstance()->LoadMP3(L"Resources/Audio/Sample/WIP.mp3");
+
+	auto info = AudioManager::GetInstance()->GetAudioInformation(audioHandle1_);
+	info;
+	auto name = AudioManager::GetInstance()->GetAudioInformation(audioHandle1_).mp3FileName_;
+	name;
+
+	audio1_->PlayMP3(audioHandle1_, true);
+
+
 }
 
 
@@ -140,7 +155,16 @@ void SampleScene::Initialize() {
 void SampleScene::Update(GameManager* gameManager) {
 	gameManager;
 
-	
+	audio_->SetPan(audioHandle_, pan_);
+	//audio1_->SetPan(audioHandle1_, pan1_);
+
+#ifdef _DEBUG
+	ImGui::Begin("Audio");
+	ImGui::SliderFloat("Pan",&pan_,-1.0f,1.0f);
+	ImGui::SliderFloat("Pan1", &pan1_, -1.0f, 1.0f);
+
+	ImGui::End();
+#endif
 	
 	
 #pragma region アニメーションモデル
