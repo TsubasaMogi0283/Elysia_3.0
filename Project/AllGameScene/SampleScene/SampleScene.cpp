@@ -47,15 +47,17 @@ void SampleScene::Initialize() {
 
 #pragma region 敵
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD2_Enemy", "TD2_Enemy.obj");
+	enemyManager_ = std::make_unique<EnemyManager>();
+	enemyManager_->Initialize(enemyModelHandle_);
 
-	//まず一個出す
-	Enemy* enemy = new Enemy();
-	enemy->Initialize(enemyModelHandle_, { 4.0f,1.0f,0.0f }, { 0.0f,0.0f,0.0f });
-	enemys_.push_back(enemy);
-
-	Enemy* enemy2 = new Enemy();
-	enemy2->Initialize(enemyModelHandle_, { -2.0f,1.0f,0.0f }, { 0.0f,0.0f,0.0f });
-	enemys_.push_back(enemy2);
+	////まず一個出す
+	//Enemy* enemy = new Enemy();
+	//enemy->Initialize(enemyModelHandle_, { 4.0f,1.0f,0.0f }, { 0.0f,0.0f,0.0f });
+	//enemys_.push_back(enemy);
+	//
+	//Enemy* enemy2 = new Enemy();
+	//enemy2->Initialize(enemyModelHandle_, { -2.0f,1.0f,0.0f }, { 0.0f,0.0f,0.0f });
+	//enemys_.push_back(enemy2);
 
 
 
@@ -115,14 +117,6 @@ void SampleScene::Initialize() {
 
 
 
-void SampleScene::GenarateEnemy() {
-	Enemy* enemy = new Enemy();
-	Vector3 speed = {};
-	enemy->Initialize(enemyModelHandle_, {0.0f,0.0f,0.0f}, speed);
-
-	enemys_.push_back(enemy);
-
-}
 
 void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
 	//敵
@@ -181,9 +175,7 @@ void SampleScene::KeyCollision(){
 			distance.z = std::powf((player_->GetWorldPosition().z - key->GetWorldPosition().z), 2.0f);
 
 			float colissionDistance = sqrtf(distance.x + distance.y + distance.z);
-			if (colissionDistance > player_->GetRadius() + key->GetRadius()) {
-				return;
-			}
+			
 
 			//範囲内にいれば入力を受け付ける
 			if (colissionDistance <= player_->GetRadius() + key->GetRadius()) {
@@ -227,13 +219,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	collisionManager_->ClearList();
 
 
-#ifdef _DEBUG
-	//Gキーで出す
-	if (Input::GetInstance()->IsTriggerKey(DIK_G) == true) {
-		GenarateEnemy();
-	}
 
-#endif
 
 #pragma region 回転
 	//+が左回り
@@ -282,7 +268,9 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	collisionManager_->RegisterList(lightCollision_);
 
-	for (auto it = enemys_.begin(); it != enemys_.end();) {
+	auto enemyes = enemyManager_->GetEnemyes();
+
+	for (auto it = enemyes.begin(); it != enemyes.end();) {
 		Enemy* enemy = *it;
 		if (enemy != nullptr) {
 			collisionManager_->RegisterList(enemy);
@@ -335,12 +323,12 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 	//敵
-	for (Enemy* enemy : enemys_) {
-		enemy->Update();
-	}
+	enemyManager_->Update();
 
 	//敵同士
-	CheckCollision(enemys_);
+	CheckCollision(enemyes);
+
+
 
 	debugTowerWorldTransform_.Update();
 	
@@ -378,15 +366,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 
-	//敵が生存していなかったら消す
-	enemys_.remove_if([](Enemy* enemy) {
-		if (enemy->GetIsAlive() == false) {
-			delete enemy;
-			return true;
-		}
-		return false;
-	});
-
+	enemyManager_->DeleteEnemy();
 
 
 #ifdef _DEBUG
@@ -419,6 +399,7 @@ void SampleScene::PreDrawPostEffectFirst(){
 
 void SampleScene::DrawObject3D() {
 	
+	//懐中電灯を取得
 	SpotLight spotLight = flashLight_->GetSpotLight();
 
 	//プレイヤー
@@ -432,9 +413,7 @@ void SampleScene::DrawObject3D() {
 	//地面
 	ground_->Draw(camera_, spotLight);
 	//敵
-	for (Enemy* enemy : enemys_) {
-		enemy->Draw(camera_,spotLight);
-	}
+	enemyManager_->Draw(camera_, spotLight);
 
 	
 
@@ -444,9 +423,6 @@ void SampleScene::DrawObject3D() {
 	
 
 	//鍵
-	//for (Key* key : keyes_) {
-	//	key->Draw(camera_, spotLight_);
-	//}
 	keyManager_->DrawObject3D(camera_, spotLight);
 
 }
@@ -473,12 +449,6 @@ void SampleScene::DrawSprite(){
 /// デストラクタ
 /// </summary>
 SampleScene::~SampleScene() {
-	//敵
-	for (Enemy* enemy : enemys_) {
-		delete enemy;
-	}
-
 	
-
 	delete lightCollision_;
 }

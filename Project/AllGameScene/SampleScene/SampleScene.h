@@ -36,6 +36,7 @@
 #include <Stage/Ground/Ground.h>
 #include <Key/KeyManager.h>
 #include <Light/FlashLight/FlashLight.h>
+#include <Enemy/EnemyManager.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -83,8 +84,7 @@ public:
 
 private:
 
-	void GenarateEnemy();
-
+	
 	void CheckCollision(std::list<Enemy*>& enemies);
 
 	/// <summary>
@@ -129,17 +129,11 @@ private:
 
 	//鍵
 	std::unique_ptr<KeyManager> keyManager_ = {};
-	//std::list<Key*> keyes_ = {};
-	//std::unique_ptr<Sprite> keySprite_ = nullptr;
-	//
-	//static const uint32_t NUMBER_QUANTITY_ = 10;
-	//std::unique_ptr<Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
-
 	uint32_t keyQuantity_ = 0;
 
 	
 	//敵
-	std::list <Enemy*> enemys_ = {};
+	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
 	uint32_t enemyModelHandle_ = 0;
 
 	//プレイヤーのライトの判定
