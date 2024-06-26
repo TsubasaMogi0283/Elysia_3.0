@@ -300,19 +300,24 @@ void SampleScene::Update(GameManager* gameManager) {
 	isPlayerMoveKey_ = false;
 	//移動
 	if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
-		playerDirection_.x = 1.0f;
+		playerDirection_.x = std::cosf(theta_- std::numbers::pi_v<float> / 2.0f);
+		playerDirection_.z = std::sinf(theta_- std::numbers::pi_v<float> / 2.0f);
+
 		isPlayerMoveKey_ = true;
 	}
-	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
-		playerDirection_.x = -1.0f;
+	if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
+		playerDirection_.x = std::cosf(theta_+ std::numbers::pi_v<float> / 2.0f);
+		playerDirection_.z = std::sinf(theta_+ std::numbers::pi_v<float> / 2.0f);
 		isPlayerMoveKey_ = true;
 	}
-	else if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
-		playerDirection_.z = 1.0f;
+	if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
+		playerDirection_.x = std::cosf(theta_);
+		playerDirection_.z = std::sinf(theta_);
 		isPlayerMoveKey_ = true;
 	}
-	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
-		playerDirection_.z = -1.0f;
+	if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
+		playerDirection_.x = -std::cosf(theta_);
+		playerDirection_.z = -std::sinf(theta_);
 		isPlayerMoveKey_ = true;
 	}
 
@@ -337,6 +342,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 	}
+
+
 	//プレイヤーの動く方向を入れる
 	player_->SetMoveDirection(playerDirection_);
 

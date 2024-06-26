@@ -34,7 +34,7 @@ void Player::Update(){
 	ImGui::Begin("Player");
 	ImGui::InputInt("KeyQuantity", &keyQuantity);
 	ImGui::InputFloat3("Transrate", &worldTransform_.translate_.x);
-	ImGui::InputFloat3("Move", &moveDirection_.x);
+	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
 	ImGui::End();
 
 #endif
