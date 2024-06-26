@@ -95,33 +95,36 @@ public:
 		return haveKeyQuantity_;
 	}
 
-public:
-	
-
-
-
-
-
+	/// <summary>
+	/// 動く方向の設定
+	/// </summary>
+	/// <param name="move"></param>
+	inline void SetMoveDirection(Vector3 moveDirection) {
+		this->moveDirection_ = moveDirection;
+	}
 
 
 private:
+	//モデル
 	std::unique_ptr<Model> model_ = nullptr;
 
+	//ワールドトランスフォーム
 	WorldTransform worldTransform_{};
 
 	//カメラ視点
 	uint32_t pointOfView_ = 0;
 
-
+	//半径
 	float radius_ = 0.0f;
 
 	//持っている鍵の数
 	//可算なのでQuantity
 	uint32_t haveKeyQuantity_ = 0;
 
+	//動く方向
+	Vector3 moveDirection_ = {};
 
-
-	//
+	
 	bool isPressKey_ = false;
 
 

@@ -23,57 +23,7 @@ void Player::Initialize(){
 
 void Player::Update(){
 
-#pragma region キーボード
-	XINPUT_STATE joyState{};
-	const float MOVE_SPEED = 0.1f;
-	Vector3 move = {};
-	isPressKey_ = false;
-	//移動
-	if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
-		move.x = 1.0f;
-		isPressKey_ = true;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
-		move.x = -1.0f;
-		isPressKey_ = true;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
-		move.z = 1.0f;
-		isPressKey_ = true;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
-		move.z = -1.0f;
-		isPressKey_ = true;
-	}
 	
-	
-#pragma endregion
-
-
-
-
-	//コントローラー
-	
-	//コントローラーがある場合
-	if (Input::GetInstance()->GetJoystickState(joyState)==true) {
-		if (isPressKey_ == false) {
-			move.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 1.0f;
-			move.z += (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 1.0f;
-
-			//何か勝手に動いちゃうので制限を掛ける
-			const float MOVE_LIMITATION = 0.07f;
-			if (move.x < MOVE_LIMITATION && move.x > -MOVE_LIMITATION) {
-				move.x = 0.0f;
-			}
-			if (move.z < MOVE_LIMITATION && move.z > -MOVE_LIMITATION) {
-				move.z = 0.0f;
-			}
-
-		}
-		
-
-	}
-
 
 
 
@@ -84,15 +34,16 @@ void Player::Update(){
 	ImGui::Begin("Player");
 	ImGui::InputInt("KeyQuantity", &keyQuantity);
 	ImGui::InputFloat3("Transrate", &worldTransform_.translate_.x);
-	ImGui::InputFloat3("Move", &move.x);
+	ImGui::InputFloat3("Move", &moveDirection_.x);
 	ImGui::End();
 
 #endif
 
 	
 
-
-	worldTransform_.translate_ = Add(worldTransform_.translate_, { move.x * MOVE_SPEED,move.y * MOVE_SPEED,move.z * MOVE_SPEED });
+	const float MOVE_SPEED = 0.1f;
+	//加算
+	worldTransform_.translate_ = Add(worldTransform_.translate_, { moveDirection_.x * MOVE_SPEED,moveDirection_.y * MOVE_SPEED,moveDirection_.z * MOVE_SPEED });
 
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
@@ -103,10 +54,7 @@ void Player::Update(){
 
 void Player::Draw(Camera& camera, Material& material, SpotLight& spotLight){
 	
-	
 	model_->Draw(worldTransform_, camera,material,spotLight);
-	
-	
 }
 
 Vector3 Player::GetWorldPosition()const {

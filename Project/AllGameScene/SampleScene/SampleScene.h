@@ -103,7 +103,7 @@ private:
 	Vector3 cameraThirdPersonViewOfPointPosition_ = {};
 	Vector3 thirdPersonViewOfPointRotate_ = {};
 
-	bool isRotateKey_ = false;
+	bool isRotateYKey_ = false;
 	bool isRotateXKey_ = false;
 
 
@@ -125,6 +125,8 @@ private:
 
 	//プレイヤー
 	std::unique_ptr<Player>player_ = nullptr;
+	Vector3 playerDirection_ = {0.0f,0.0f,0.0f};
+	bool isPlayerMoveKey_ = false;
 
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;

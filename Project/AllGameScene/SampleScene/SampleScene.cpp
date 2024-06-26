@@ -24,12 +24,15 @@ SampleScene::SampleScene() {
 void SampleScene::Initialize() {
 
 
-	//プレイヤーの初期化
+#pragma region プレイヤー
 	player_ = std::make_unique<Player>();
 	player_->Initialize();
+	playerDirection_ = { 0.0f,0.0f,0.0f };
+	isPlayerMoveKey_ = false;
 	//初期は1人称視点
 	viewOfPoint_ = FirstPerson;
 
+#pragma endregion
 
 	//地面
 	uint32_t groundModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
@@ -53,17 +56,17 @@ void SampleScene::Initialize() {
 
 #pragma endregion
 
-
+#pragma region ライト確認用のタワー
 
 	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
 	debugTower_.reset(Model::Create(debugTowerModelhandle));
 	debugTowerWorldTransform_.Initialize();
 
-
+#pragma endregion
 
 
 	
-
+#pragma region カメラ
 	//カメラ
 	camera_.Initialize();
 	camera_.translate_.y = 1.0f;
@@ -77,7 +80,7 @@ void SampleScene::Initialize() {
 	cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
 
 
-
+#pragma endregion
 
 
 	//プレイヤーのライト
@@ -209,76 +212,71 @@ void SampleScene::Update(GameManager* gameManager) {
 	collisionManager_->ClearList();
 
 
-
+	//操作は全部ゲームシーンで統一させたい
+	//コマンドパターンですっきりさせても良さそう
+	XINPUT_STATE joyState{};
 
 #pragma region 回転
+
+#pragma region 横旋回
+
 	//+が左回り
 	const float ROTATE_OFFSET = 0.025f;
 	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
 		theta_ += ROTATE_OFFSET;
-		isRotateKey_ = true;
-		
+		isRotateYKey_ = true;
 	}
 	if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
 		theta_ -= ROTATE_OFFSET;
-		isRotateKey_ = true;
-		
+		isRotateYKey_ = true;
 	}
 
 	//コントローラーがある場合
-	XINPUT_STATE joyState{};
-	isRotateKey_ = false;
+	
+	isRotateYKey_ = false;
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-		if (isRotateKey_ == false) {
+		if (isRotateYKey_ == false) {
 			//やっぱりこっちも逆だね☆
 			float rotateMove = (float)joyState.Gamepad.sThumbLX / SHRT_MAX * ROTATE_OFFSET;
 			
-			
-			//何か勝手に動いちゃうので制限を掛ける
-			const float MOVE_LIMITATION = 0.01f;
-			if (rotateMove < MOVE_LIMITATION && rotateMove > -MOVE_LIMITATION) {
-				rotateMove = 0.0f;
-			}
-			theta_ -= rotateMove;
-			
-
-			
-
-		}
-
-
-	}
-
-
-
-
-	const float CAMERA_ROTATE_AMOUNT = ROTATE_OFFSET;
-	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
-		originPhi_ -= CAMERA_ROTATE_AMOUNT;
-	}
-	//下を向く
-	if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
-		originPhi_ += CAMERA_ROTATE_AMOUNT;
-	}
-
-	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-		if (isRotateXKey_ == false) {
-			float rotateMove = (float)joyState.Gamepad.sThumbLY / SHRT_MAX * ROTATE_OFFSET;
-
-
 			//勝手に動いちゃうので制限を掛ける
 			const float MOVE_LIMITATION = 0.01f;
 			if (rotateMove < MOVE_LIMITATION && rotateMove > -MOVE_LIMITATION) {
 				rotateMove = 0.0f;
 			}
-			originPhi_ -= rotateMove;
-
-
-
-
+			theta_ -= rotateMove;
 		}
 
 
+	}
+#pragma endregion
+
+#pragma region X軸に旋回
+
+	isRotateXKey_ = false;
+	//上を向く
+	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+		originPhi_ -= ROTATE_OFFSET;
+		isRotateXKey_ = true;
+	}
+	//下を向く
+	if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+		originPhi_ += ROTATE_OFFSET;
+		isRotateXKey_ = true;
+	}
+
+	//コントローラがある場合
+	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+		if (isRotateXKey_ == false) {
+			float rotateMove = (float)joyState.Gamepad.sThumbLY / SHRT_MAX * ROTATE_OFFSET;
+
+			//勝手に動くので制限を掛ける
+			const float MOVE_LIMITATION = 0.01f;
+			if (rotateMove < MOVE_LIMITATION && rotateMove > -MOVE_LIMITATION) {
+				rotateMove = 0.0f;
+			}
+			originPhi_ -= rotateMove;
+		}
 	}
 
 
@@ -293,6 +291,57 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 
 #pragma endregion
+
+#pragma endregion
+
+#pragma region プレイヤーの移動
+
+	playerDirection_ = { 0.0f,0.0f,0.0f };
+	isPlayerMoveKey_ = false;
+	//移動
+	if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
+		playerDirection_.x = 1.0f;
+		isPlayerMoveKey_ = true;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
+		playerDirection_.x = -1.0f;
+		isPlayerMoveKey_ = true;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
+		playerDirection_.z = 1.0f;
+		isPlayerMoveKey_ = true;
+	}
+	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
+		playerDirection_.z = -1.0f;
+		isPlayerMoveKey_ = true;
+	}
+
+
+
+	//コントローラーがある場合
+	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+		if (isPlayerMoveKey_ == false) {
+			playerDirection_.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 1.0f;
+			playerDirection_.z += (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 1.0f;
+
+			//何か勝手に動いちゃうので制限を掛ける
+			const float MOVE_LIMITATION = 0.07f;
+			if (playerDirection_.x < MOVE_LIMITATION && playerDirection_.x > -MOVE_LIMITATION) {
+				playerDirection_.x = 0.0f;
+			}
+			if (playerDirection_.z < MOVE_LIMITATION && playerDirection_.z > -MOVE_LIMITATION) {
+				playerDirection_.z = 0.0f;
+			}
+
+		}
+
+
+	}
+	//プレイヤーの動く方向を入れる
+	player_->SetMoveDirection(playerDirection_);
+
+#pragma endregion
+
 
 	
 	//数学とプログラムで回る向きが違うことに煩わしさを感じます・・
@@ -310,8 +359,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	collisionManager_->RegisterList(lightCollision_);
 
-	auto enemyes = enemyManager_->GetEnemyes();
 
+	auto enemyes = enemyManager_->GetEnemyes();
 	for (auto it = enemyes.begin(); it != enemyes.end();) {
 		Enemy* enemy = *it;
 		if (enemy != nullptr) {
@@ -337,8 +386,6 @@ void SampleScene::Update(GameManager* gameManager) {
 	//1人称
 	if (viewOfPoint_ == FirstPerson) {
 
-		
-		
 		//回り方が少し違うので注意
 		//何か嫌だね
 		camera_.rotate_.x = -phi;
@@ -349,13 +396,6 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 	else if (viewOfPoint_ == ThirdPersonBack) {
 
-#ifdef _DEBUG
-		ImGui::Begin("Camera");
-		ImGui::SliderFloat3("Pos", &cameraThirdPersonViewOfPointPosition_.x, -70.0f, 40.0f);
-		ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
-
-		ImGui::End();
-#endif 
 
 		camera_.rotate_ = thirdPersonViewOfPointRotate_;
 		camera_.translate_ = Add(player_->GetWorldPosition(), cameraThirdPersonViewOfPointPosition_);
@@ -374,7 +414,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	CheckCollision(enemyes);
 
 
-
+	//ライト確認用のタワー
 	debugTowerWorldTransform_.Update();
 	
 	
@@ -401,16 +441,14 @@ void SampleScene::Update(GameManager* gameManager) {
 	Vector3 lightDirection = flashLight_->GetDirection();
 	lightCollision_->Update(player_->GetWorldPosition(), lightDirection);
 
-
 	//更新
 	material_.Update();
 	directionalLight_.Update();
 	
 	//当たり判定
 	collisionManager_->CheckAllCollision();
-
-
-
+	
+	//敵を消す
 	enemyManager_->DeleteEnemy();
 
 
@@ -420,10 +458,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::SliderFloat3("PosOffset", &CAMERA_POSITION_OFFSET.x, -30.0f, 30.0f);
 	ImGui::InputFloat("Theta", &theta_);
 	ImGui::InputFloat("Phi", &phi);
-	
 	ImGui::End();
-
-
 
 #endif
 
