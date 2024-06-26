@@ -6,19 +6,23 @@
 #include "RtvManager.h"
 
 void Dissolve::Initialize(uint32_t maskTexture){
-
+	//パイプライン
 	PipelineManager::GetInstance()->GenarateDissolvePSO();
 
 
 	
-	
-	thresholdResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(float));
-	dissolveInformation_.threshold = 0.5f;
-	
+	//PixelShaderに送る値の初期化
+	dissolveResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(DissolveData));
+	dessolveValue_.isUseEdge = true;
+	dessolveValue_.edgeThinkness = 0.04f;
+	dessolveValue_.edgeColor = { 1.0f,1.0f,1.0f };
+	dessolveValue_.threshold = 0.5f;
 
 
-	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
-	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+
+	//Resourceを作る
+	renderTargetClearColor = { 0.0f,1.0f,0.0f,1.0f };
+	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, renderTargetClearColor);
 	const std::string postEffectName = "Dissolve";
 	rtvHandle_ = RtvManager::GetInstance()->Allocate(postEffectName);
 	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);
@@ -36,12 +40,12 @@ void Dissolve::Initialize(uint32_t maskTexture){
 
 void Dissolve::PreDraw(){
 	
-	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.1f,0.1f,0.7f,1.0f };
+	const float CLEAR_COLOR[] = { renderTargetClearColor.x,renderTargetClearColor.y,renderTargetClearColor.z,renderTargetClearColor.w };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
 		1, &RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
-		RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+		RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), CLEAR_COLOR, 0, nullptr);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(
@@ -72,14 +76,22 @@ void Dissolve::Draw(){
 #pragma region 閾値
 #ifdef _DEBUG
 	ImGui::Begin("Dissolve");
-	ImGui::SliderFloat("threshold", &dissolveInformation_.threshold, 0.0f, 1.0f);
+	ImGui::Checkbox("IsUseEdge", &dessolveValue_.isUseEdge);
+	ImGui::SliderFloat("Thinkness", &dessolveValue_.edgeThinkness, 0.0f, 1.0f);
+	ImGui::SliderFloat3("EdgeColor", &dessolveValue_.edgeColor.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("Threshold", &dessolveValue_.threshold, 0.0f, 1.0f);
+
 	ImGui::End();
 #endif
 
 
-	thresholdResource_->Map(0, nullptr, reinterpret_cast<void**>(&thresholdData_));
-	thresholdData_->threshold = dissolveInformation_.threshold;
-	thresholdResource_->Unmap(0, nullptr);
+	dissolveResource_->Map(0, nullptr, reinterpret_cast<void**>(&dissolveData_));
+	dissolveData_->isUseEdge = dessolveValue_.isUseEdge;
+	dissolveData_->edgeThinkness = dessolveValue_.edgeThinkness;
+	dissolveData_->edgeColor = dessolveValue_.edgeColor;
+	dissolveData_->threshold = dessolveValue_.threshold;
+
+	dissolveResource_->Unmap(0, nullptr);
 #pragma endregion
 
 
@@ -92,7 +104,7 @@ void Dissolve::Draw(){
 	TextureManager::GetInstance()->GraphicsCommand(0, srvHandle_);
 	TextureManager::GetInstance()->GraphicsCommand(1, maskTextureHandle_);
 
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(2, thresholdResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(2, dissolveResource_->GetGPUVirtualAddress());
 
 
 	//描画(DrawCall)３頂点で１つのインスタンス。

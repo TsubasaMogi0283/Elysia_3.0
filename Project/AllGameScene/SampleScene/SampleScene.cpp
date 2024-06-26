@@ -324,10 +324,10 @@ void SampleScene::PreDrawPostEffectFirst(){
 	//sepiaScale_->PreDraw();
 	//vignette_->PreDraw();
 	//boxFilter_->PreDraw();
-	gaussianFilter_->PreDraw();
+	//gaussianFilter_->PreDraw();
 	//radialBlur_->PreDraw();
 	//outLine_->PreDraw();
-	//dissolve_->PreDraw();
+	dissolve_->PreDraw();
 	//randomEffect_->PreDraw();
 
 	//depthBasedOutline_->PreDraw();
@@ -365,10 +365,10 @@ void SampleScene::DrawPostEffect(){
 	//sepiaScale_->Draw();
 	//vignette_->Draw();
 	//boxFilter_->Draw();
-	gaussianFilter_->Draw();
+	//gaussianFilter_->Draw();
 	//radialBlur_->Draw();
 	//outLine_->Draw();
-	//dissolve_->Draw();
+	dissolve_->Draw();
 	//randomEffect_->Draw();
 	//depthBasedOutline_->Draw(camera_);
 }
