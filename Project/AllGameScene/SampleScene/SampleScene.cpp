@@ -222,11 +222,11 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	//+が左回り
 	const float ROTATE_OFFSET = 0.025f;
-	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
+	if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
 		theta_ += ROTATE_OFFSET;
 		isRotateYKey_ = true;
 	}
-	if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
+	if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
 		theta_ -= ROTATE_OFFSET;
 		isRotateYKey_ = true;
 	}
@@ -237,7 +237,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 		if (isRotateYKey_ == false) {
 			//やっぱりこっちも逆じゃんね☆
-			float rotateMove = (float)joyState.Gamepad.sThumbLX / SHRT_MAX * ROTATE_OFFSET;
+			float rotateMove = (float)joyState.Gamepad.sThumbRX / SHRT_MAX * ROTATE_OFFSET;
 			
 			//勝手に動いちゃうので制限を掛ける
 			const float MOVE_LIMITATION = 0.01f;
@@ -249,18 +249,28 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 	}
+
+	//2πより大きくなったら0にまた戻す
+	if (theta_ > 2.0f * std::numbers::pi_v<float>) {
+		theta_ = 0.0f;
+	}
+	//-2πより大きくなったら0にまた戻す
+	if (theta_ < -2.0f * std::numbers::pi_v<float>) {
+		theta_ = 0.0f;
+	}
+
 #pragma endregion
 
 #pragma region X軸に旋回
 
 	isRotateXKey_ = false;
 	//上を向く
-	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+	if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
 		originPhi_ -= ROTATE_OFFSET;
 		isRotateXKey_ = true;
 	}
 	//下を向く
-	if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+	if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
 		originPhi_ += ROTATE_OFFSET;
 		isRotateXKey_ = true;
 	}
@@ -268,8 +278,8 @@ void SampleScene::Update(GameManager* gameManager) {
 	//コントローラがある場合
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 		if (isRotateXKey_ == false) {
-			float rotateMove = (float)joyState.Gamepad.sThumbLY / SHRT_MAX * ROTATE_OFFSET;
-
+			float rotateMove = (float)joyState.Gamepad.sThumbRY / SHRT_MAX * ROTATE_OFFSET;
+			
 			//勝手に動くので制限を掛ける
 			const float MOVE_LIMITATION = 0.01f;
 			if (rotateMove < MOVE_LIMITATION && rotateMove > -MOVE_LIMITATION) {
@@ -299,27 +309,32 @@ void SampleScene::Update(GameManager* gameManager) {
 	playerDirection_ = { 0.0f,0.0f,0.0f };
 	isPlayerMoveKey_ = false;
 	//移動
-	if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
+	if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
 		playerDirection_.x = std::cosf(theta_- std::numbers::pi_v<float> / 2.0f);
 		playerDirection_.z = std::sinf(theta_- std::numbers::pi_v<float> / 2.0f);
 		isPlayerMoveKey_ = true;
 	}
-	if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
+	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
 		playerDirection_.x = std::cosf(theta_+ std::numbers::pi_v<float> / 2.0f);
 		playerDirection_.z = std::sinf(theta_+ std::numbers::pi_v<float> / 2.0f);
 		isPlayerMoveKey_ = true;
 	}
-	if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
+	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
 		playerDirection_.x = std::cosf(theta_);
 		playerDirection_.z = std::sinf(theta_);
 		isPlayerMoveKey_ = true;
 	}
-	if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
+	if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
 		playerDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float>);
 		playerDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float>);
 		isPlayerMoveKey_ = true;
 	}
+#ifdef _DEBUG
+	ImGui::Begin("Player");
+	ImGui::InputFloat3("Direction", &playerDirection_.x);
+	ImGui::End();
 
+#endif // _DEBUG
 
 
 	//コントローラーがある場合
@@ -330,17 +345,20 @@ void SampleScene::Update(GameManager* gameManager) {
 			
 
 			Vector3 rightStickInput = {};
-			rightStickInput.x = (static_cast<float>(joyState.Gamepad.sThumbRX) / SHRT_MAX * 1.0f)*std::cosf(theta_);
-			rightStickInput.z = (static_cast<float>(joyState.Gamepad.sThumbRY) / SHRT_MAX * 1.0f)*std::sinf(theta_);
+			rightStickInput.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f);
+			rightStickInput.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f);
 
-			float distance = 0;
+			float distance = sqrtf(rightStickInput.x* rightStickInput.x+ rightStickInput.z* rightStickInput.z);
 			distance;
-			float newTheta = 0.0f;
+			float forAcos = 1.0f / distance;
+			float newTheta = std::acosf(forAcos);
 			newTheta;
 #ifdef _DEBUG
 			ImGui::Begin("ControllerDirection");
-			ImGui::InputFloat3("LSInput", &rightStickInput.x);
-			ImGui::InputFloat("Theta", &newTheta);
+			ImGui::InputFloat("Theta", &theta_);
+			ImGui::InputFloat("Distance", &distance);
+			ImGui::InputFloat3("LSInputDirection", &rightStickInput.x);
+			ImGui::InputFloat("NewTheta", &newTheta);
 			ImGui::End();
 
 #endif // _DEBUG
