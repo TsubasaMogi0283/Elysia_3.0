@@ -236,7 +236,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	isRotateYKey_ = false;
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 		if (isRotateYKey_ == false) {
-			//やっぱりこっちも逆だね☆
+			//やっぱりこっちも逆じゃんね☆
 			float rotateMove = (float)joyState.Gamepad.sThumbLX / SHRT_MAX * ROTATE_OFFSET;
 			
 			//勝手に動いちゃうので制限を掛ける
@@ -302,7 +302,6 @@ void SampleScene::Update(GameManager* gameManager) {
 	if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
 		playerDirection_.x = std::cosf(theta_- std::numbers::pi_v<float> / 2.0f);
 		playerDirection_.z = std::sinf(theta_- std::numbers::pi_v<float> / 2.0f);
-
 		isPlayerMoveKey_ = true;
 	}
 	if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
@@ -316,8 +315,8 @@ void SampleScene::Update(GameManager* gameManager) {
 		isPlayerMoveKey_ = true;
 	}
 	if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
-		playerDirection_.x = -std::cosf(theta_);
-		playerDirection_.z = -std::sinf(theta_);
+		playerDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float>);
+		playerDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float>);
 		isPlayerMoveKey_ = true;
 	}
 
@@ -326,21 +325,43 @@ void SampleScene::Update(GameManager* gameManager) {
 	//コントローラーがある場合
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 		if (isPlayerMoveKey_ == false) {
-			playerDirection_.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 1.0f;
-			playerDirection_.z += (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 1.0f;
+			//元々1だから問題無し
+			const Vector3 INITIAL_VECTOR = { 1.0f,0.0f,0.0f };
+			
+
+			Vector3 rightStickInput = {};
+			rightStickInput.x = (static_cast<float>(joyState.Gamepad.sThumbRX) / SHRT_MAX * 1.0f)*std::cosf(theta_);
+			rightStickInput.z = (static_cast<float>(joyState.Gamepad.sThumbRY) / SHRT_MAX * 1.0f)*std::sinf(theta_);
+
+			float distance = 0;
+			distance;
+			float newTheta = 0.0f;
+			newTheta;
+#ifdef _DEBUG
+			ImGui::Begin("ControllerDirection");
+			ImGui::InputFloat3("LSInput", &rightStickInput.x);
+			ImGui::InputFloat("Theta", &newTheta);
+			ImGui::End();
+
+#endif // _DEBUG
+
 
 			//何か勝手に動いちゃうので制限を掛ける
-			const float MOVE_LIMITATION = 0.07f;
-			if (playerDirection_.x < MOVE_LIMITATION && playerDirection_.x > -MOVE_LIMITATION) {
-				playerDirection_.x = 0.0f;
+			//デッドゾーン
+			const float DEAD_ZONE = 0.07f;
+			if (rightStickInput.x < DEAD_ZONE && rightStickInput.x > -DEAD_ZONE) {
+				rightStickInput.x = 0.0f;
 			}
-			if (playerDirection_.z < MOVE_LIMITATION && playerDirection_.z > -MOVE_LIMITATION) {
-				playerDirection_.z = 0.0f;
+			if (rightStickInput.z < DEAD_ZONE && rightStickInput.z > -DEAD_ZONE) {
+				rightStickInput.z = 0.0f;
 			}
+
+
+			playerDirection_.x = rightStickInput.x;
+			playerDirection_.z = rightStickInput.z;
+
 
 		}
-
-
 	}
 
 
