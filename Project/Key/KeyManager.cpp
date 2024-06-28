@@ -13,6 +13,11 @@ void KeyManager::Initialize(uint32_t modelHandle){
 	key2->Initialize(modelHandle, keyPosition2);
 	keyes_.push_back(key2);
 
+	Key* key3 = new Key();
+	Vector3 keyPosition3 = { 8.0f,0.5f,-10.0f };
+	key3->Initialize(modelHandle, keyPosition3);
+	keyes_.push_back(key3);
+
 
 	uint32_t keySpriteHandle = TextureManager::GetInstance()->LoadTexture("Resources/Item/KeyList.png");
 	Vector3 keySpritePosition = { 0.0f,0.0f,0.0f };

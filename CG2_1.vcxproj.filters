@@ -286,6 +286,9 @@
     <Filter Include="Project\Enemy\EnemyManager">
       <UniqueIdentifier>{e2a6260b-6ea8-4c91-83ff-a92709617455}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Stage\Gate">
+      <UniqueIdentifier>{04fdbc6f-7a4a-4b0a-ad10-68fef5f36d90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -481,6 +484,9 @@
       <Filter>Project\Light\FlashLight</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\EnemyManager.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Stage\Gate\Gate.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -860,6 +866,9 @@
       <Filter>Project\Light\FlashLight</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\EnemyManager.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Stage\Gate\Gate.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>

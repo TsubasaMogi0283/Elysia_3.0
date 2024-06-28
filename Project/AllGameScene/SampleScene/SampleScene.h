@@ -37,6 +37,7 @@
 #include <Key/KeyManager.h>
 #include <Light/FlashLight/FlashLight.h>
 #include <Enemy/EnemyManager.h>
+#include <Stage/Gate/Gate.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -128,8 +129,14 @@ private:
 	Vector3 playerDirection_ = {0.0f,0.0f,0.0f};
 	bool isPlayerMoveKey_ = false;
 
+	uint32_t bTriggerTime_ = 0;
+	bool isBTrigger_ = false;
+
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;
+	//ゲート
+	std::unique_ptr<Gate> gate_ = nullptr;
+	bool isEscape_ = false;
 
 	//鍵
 	std::unique_ptr<KeyManager> keyManager_ = {};
@@ -164,4 +171,8 @@ private:
 	WorldTransform debugTowerWorldTransform_ = {};
 
 #pragma endregion
+
+
+
+
 };

@@ -113,10 +113,20 @@ private:
 	ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
 	//マウスのデバイスを生成
 	ComPtr<IDirectInputDevice8> mouseDevice_ = nullptr;
+	//コントローラーのデバイスを生成
+	ComPtr<IDirectInputDevice8> joyStickDevice_ = nullptr;
 
 	//全キーの入力状態を取得する
 	BYTE preKey_[256] = {};
 	BYTE currentKey_[256] = {};
+
+	//コントローラーのボタン
+	//16の4乗
+	static const uint32_t XINPUT_GAMEPAD_NUMBER_ = 16 * 16 * 16 * 16;
+	BYTE preControllerButtons_[XUSER_MAX_COUNT][XINPUT_GAMEPAD_TRIGGER_THRESHOLD];
+	BYTE currentControllerButtons_[XUSER_MAX_COUNT][XINPUT_GAMEPAD_TRIGGER_THRESHOLD];
+
+
 
 	//マウスの入力状態を取得
 	DIMOUSESTATE currentMouse_ = {};

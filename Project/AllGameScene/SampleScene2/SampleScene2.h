@@ -47,13 +47,11 @@ public:
 
 
 private:
-	std::unique_ptr<Sprite> sprite_ = nullptr;
+	std::unique_ptr<Sprite> text_ = nullptr;
 
-	std::unique_ptr<Sprite> spriteUV_ = nullptr;
-
-	std::unique_ptr<Sprite> howToSprite_ = nullptr;
-
-
+	uint32_t bTriggerTime_ = 0;
+	bool isBTrigger_ = false;
 	
+	bool restrat_ = false;
 };
 

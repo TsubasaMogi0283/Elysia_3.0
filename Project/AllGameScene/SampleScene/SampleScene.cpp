@@ -29,6 +29,9 @@ void SampleScene::Initialize() {
 	player_->Initialize();
 	playerDirection_ = { 0.0f,0.0f,0.0f };
 	isPlayerMoveKey_ = false;
+	bTriggerTime_ = 0;
+	isBTrigger_ = false;
+	
 	//初期は1人称視点
 	viewOfPoint_ = FirstPerson;
 
@@ -39,6 +42,9 @@ void SampleScene::Initialize() {
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize(groundModelHandle);
 
+	uint32_t gateModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Gate","Gate.obj");
+	gate_ = std::make_unique<Gate>();
+	gate_->Initialize(gateModelhandle);
 #pragma region 鍵
 	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","Cube.obj");
 
@@ -478,11 +484,36 @@ void SampleScene::Update(GameManager* gameManager) {
 		KeyCollision();
 	}
 	
+	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 
+		//Bボタンを押したとき
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+			bTriggerTime_ += 1;
+
+		}
+		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+			bTriggerTime_ = 0;
+		}
+
+		if (bTriggerTime_ == 1) {
+			//脱出
+#ifdef _DEBUG
+			ImGui::Begin("B");
+			ImGui::End();
+
+#endif
+		}
+
+	}
 
 	//地面
 	ground_->Update();
-	
+
+
+
+	//門
+	gate_->Update();
+
 	//ライト
 	Vector3 lightDirection = flashLight_->GetDirection();
 	lightCollision_->Update(player_->GetWorldPosition(), lightDirection);
@@ -490,10 +521,10 @@ void SampleScene::Update(GameManager* gameManager) {
 	//更新
 	material_.Update();
 	directionalLight_.Update();
-	
+
 	//当たり判定
 	collisionManager_->CheckAllCollision();
-	
+
 	//敵を消す
 	enemyManager_->DeleteEnemy();
 
@@ -507,6 +538,65 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::End();
 
 #endif
+
+
+
+	//ゲート
+	if (gate_->isCollision(playerPosition)) {
+#ifdef _DEBUG
+		ImGui::Begin("InSpaceGate");
+		ImGui::End();
+
+#endif // _DEBUG
+
+		uint32_t playerKeyQuantity = player_->GetHavingKey();
+		if (playerKeyQuantity >= 3) {
+
+			#ifdef _DEBUG
+				ImGui::Begin("3Keys");
+				ImGui::End();
+
+			#endif // _DEBUG
+
+			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+					
+				//Bボタンを押したとき
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+					bTriggerTime_ += 1;
+					
+				}
+				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+					bTriggerTime_ = 0;
+				}
+
+				if (bTriggerTime_ == 1) {
+				//脱出
+				#ifdef _DEBUG
+					ImGui::Begin("B");
+					ImGui::End();
+
+				#endif
+
+					isEscape_ = true;
+				}
+				
+			}
+
+			if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
+				//脱出
+				isEscape_ = true;
+			}
+
+
+		}
+
+
+	}
+	
+	//脱出
+	if (isEscape_ == true) {
+		gameManager->ChangeScene(new SampleScene2());
+	}
 
 	
 }
@@ -538,6 +628,8 @@ void SampleScene::DrawObject3D() {
 	
 	//地面
 	ground_->Draw(camera_, spotLight);
+	//ゲート
+	gate_->Draw(camera_, spotLight);
 	//敵
 	enemyManager_->Draw(camera_, spotLight);
 
