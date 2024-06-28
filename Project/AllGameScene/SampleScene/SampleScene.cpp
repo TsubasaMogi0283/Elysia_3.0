@@ -246,7 +246,7 @@ void SampleScene::Update(GameManager* gameManager) {
 			float rotateMove = (float)joyState.Gamepad.sThumbRX / SHRT_MAX * ROTATE_OFFSET;
 			
 			//勝手に動いちゃうので制限を掛ける
-			const float MOVE_LIMITATION = 0.01f;
+			const float MOVE_LIMITATION = 0.02f;
 			if (rotateMove < MOVE_LIMITATION && rotateMove > -MOVE_LIMITATION) {
 				rotateMove = 0.0f;
 			}
@@ -287,7 +287,7 @@ void SampleScene::Update(GameManager* gameManager) {
 			float rotateMove = (float)joyState.Gamepad.sThumbRY / SHRT_MAX * ROTATE_OFFSET;
 			
 			//勝手に動くので制限を掛ける
-			const float MOVE_LIMITATION = 0.01f;
+			const float MOVE_LIMITATION = 0.02f;
 			if (rotateMove < MOVE_LIMITATION && rotateMove > -MOVE_LIMITATION) {
 				rotateMove = 0.0f;
 			}

@@ -44,13 +44,13 @@ void SampleScene2::Update(GameManager* gameManager){
 
 	//次のシーンへ
 	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
-		gameManager->ChangeScene(new SampleScene());
+		
 		restrat_ = true;
 	}
 
 	//今は
 	if (restrat_ == true) {
-
+		gameManager->ChangeScene(new SampleScene());
 	}
 }
 
