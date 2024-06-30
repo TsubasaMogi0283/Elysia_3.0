@@ -401,6 +401,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Math\Matrix\TransformationMatrix.h" />
     <ClInclude Include="Ellysia\Math\Quaternion\Quaternion.h" />
     <ClInclude Include="Ellysia\Math\Shape\AABB.h" />
+    <ClInclude Include="Ellysia\Math\Shape\Fan.h" />
     <ClInclude Include="Ellysia\Math\Shape\SphereShape.h" />
     <ClInclude Include="Ellysia\Math\Transform\EulerTransform.h" />
     <ClInclude Include="Ellysia\Math\Transform\QuaternionTransform.h" />

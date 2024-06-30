@@ -1,4 +1,6 @@
 #include "Collision.h"
+#include <VectorCalculation.h>
+#include <corecrt_math.h>
 
 
 
@@ -41,4 +43,18 @@ bool IsCollisionAABBAndPoint(const AABB& aabb, const Vector3& point){
     }
 
 
+}
+
+bool IsFanCollision(Fan& fan, Vector3& point){
+
+    //扇と点のベクトルを求める
+    Vector3 vector = Subtract(point, fan.position);
+    float distance = sqrtf(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+
+    if (fanLength < distance) {
+        return true;
+    }
+
+
+    return false;
 }

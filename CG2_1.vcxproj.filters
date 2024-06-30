@@ -871,6 +871,9 @@
     <ClInclude Include="Project\Stage\Gate\Gate.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
+    <ClInclude Include="Ellysia\Math\Shape\Fan.h">
+      <Filter>Ellysia\Header File\Math\Shape</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">
