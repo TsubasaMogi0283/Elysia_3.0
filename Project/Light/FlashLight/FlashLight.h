@@ -89,7 +89,7 @@ private:
 
 	Vector3 lightPosition = {};
 	Vector3 lightDirection_ = {};
-	float degree_ = 0.0f;
+	float lightSideTheta = 0.0f;
 
 	//角度
 	float theta_ = 0.0f;

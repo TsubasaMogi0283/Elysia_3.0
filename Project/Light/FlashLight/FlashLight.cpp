@@ -17,8 +17,9 @@ void FlashLight::Initialize(){
 	spotLight_.cosFallowoffStart_ = 6.1f;
 	//spotLight_.cosAngle_ = 0.98f;
 	spotLight_.intensity_ = 200.0f;
-	//片方の角度
-	degree_ = 15.0f;
+	//ライトの片方の角度
+	//15度=π/12
+	lightSideTheta = (std::numbers::pi_v<float>/12.0f);
 
 	theta_ = 0.0f;
 	phi_ = 0.0f;
@@ -69,18 +70,22 @@ void FlashLight::Update(){
 	spotLight_.direction_ = lightDirection_;
 
 	//片方の角度
-	float toRadian = degree_ * (std::numbers::pi_v<float> / 180.0f);
-	spotLight_.cosAngle_ = std::cosf(toRadian);
+	//float toRadian = degree_ * (std::numbers::pi_v<float> / 180.0f);
+	spotLight_.cosAngle_ = std::cosf(lightSideTheta);
 	//spotLight_.cosAngle_ = 0.98f;
 	
 	//扇
+	fan_.centerradian = theta_;
+	fan_.leftSideRadian = theta_ + lightSideTheta;
+	fan_.rightSideRadian = theta_ - lightSideTheta;
+
 	fan_.devidDirection = { .x=lightDirection_.x,.y= lightDirection_.z };
 	fan_.length = spotLight_.distance_;
 	fan_.position = { .x = lightPosition.x,.y = lightPosition.z };
 
 	const float DISTANCE = 20.0f;
-	Vector2 fanLeft = { .x = std::cosf(theta_ + toRadian)* DISTANCE,.y = std::sinf(theta_ + toRadian)* DISTANCE };
-	Vector2 fanRight = { .x = std::cosf(theta_ - toRadian)* DISTANCE,.y = std::sinf(theta_ - toRadian)* DISTANCE };
+	Vector2 fanLeft = { .x = std::cosf(theta_ + lightSideTheta)* DISTANCE,.y = std::sinf(theta_ + lightSideTheta)* DISTANCE };
+	Vector2 fanRight = { .x = std::cosf(theta_ - lightSideTheta)* DISTANCE,.y = std::sinf(theta_ - lightSideTheta)* DISTANCE };
 
 	worldTransform_[Left].translate_ = Add(playerPosition_,{ fanLeft.x ,0.0f,fanLeft.y });
 	worldTransform_[Right].translate_ = Add(playerPosition_,{ fanRight.x ,0.0f,fanRight.y });
@@ -91,6 +96,12 @@ void FlashLight::Update(){
 	ImGui::InputFloat("Length", &fan_.length);
 	ImGui::InputFloat3("Position", &fan_.position.x);
 	ImGui::InputFloat("Range", &fan_.directionRadian);
+	ImGui::InputFloat("LeftSideRadian", &fan_.leftSideRadian);
+	ImGui::InputFloat("CnterRadian", &fan_.centerradian);
+	ImGui::InputFloat("RightSideRadian", &fan_.rightSideRadian);
+
+
+
 	ImGui::InputFloat2("DevidDirection", &fan_.devidDirection.x);
 	ImGui::InputFloat2("FanLeft", &fanLeft.x);
 	ImGui::InputFloat2("FanRight", &fanRight.x);
@@ -99,7 +110,7 @@ void FlashLight::Update(){
 	ImGui::End();
 
 	ImGui::Begin("Light");
-	ImGui::SliderFloat("Degree", &degree_,0.0f,90.0f);
+	ImGui::SliderFloat("Degree", &lightSideTheta,0.0f,90.0f);
 	ImGui::InputFloat3("Position", &spotLight_.position_.x);
 	ImGui::InputFloat3("Direction", &spotLight_.direction_.x);
 	ImGui::SliderFloat("Distance", &spotLight_.distance_, 0.0f, 100.0f);

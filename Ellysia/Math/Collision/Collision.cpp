@@ -107,7 +107,7 @@ bool IsFanCollision(Fan& fan, Vector2& point){
 
 
 
-
+    //今は2次元でやっているが後で3次元に拡張する
 
 
     //扇と点のベクトルを求める
@@ -121,9 +121,16 @@ bool IsFanCollision(Fan& fan, Vector2& point){
     ImGui::End();
 #endif // _DEBUG
 
+    //扇の半径より大きい場合。
+    //範囲外なのでfalseを返す
+    if (fan.length < distance) {
+        return false;
+    }
 
 
-    Vector2 fanDirection = fan.devidDirection;
+    //中心のベクトル
+    //LightDirectionと同じ値にしよう
+    Vector2 centerVector = fan.devidDirection;
 
 
 

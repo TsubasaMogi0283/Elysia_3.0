@@ -13,6 +13,18 @@ struct Fan {
 	float directionRadian;
 	//2等分するベクトル
 	Vector2 devidDirection;
+	Vector2 rightVector;
+	Vector2 leftVector;
+
+
+	//左側の角度
+	float leftSideRadian;
+	//中心の角度
+	float centerradian;
+	//右側の角度
+	float rightSideRadian;
+
+
 };
 
 
