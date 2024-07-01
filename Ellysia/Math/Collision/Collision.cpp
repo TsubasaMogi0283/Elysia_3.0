@@ -1,7 +1,9 @@
 #include "Collision.h"
 #include <VectorCalculation.h>
 #include <corecrt_math.h>
-
+#include <numbers>
+#include <cmath>
+#include <imgui.h>
 
 
 //AABBとPointの当たり判定
@@ -45,16 +47,61 @@ bool IsCollisionAABBAndPoint(const AABB& aabb, const Vector3& point){
 
 }
 
-bool IsFanCollision(Fan& fan, Vector3& point){
+bool IsFanCollision(Fan& fan, Vector2& point){
+
+    //参考
+    //https://yttm-work.jp/collision/collision_0008.html
 
     //扇と点のベクトルを求める
-    Vector3 vector = Subtract(point, fan.position);
-    float distance = sqrtf(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+    Vector2 vector = { point.x-fan.position.x, point.y-fan.position.y };
+    float distance = sqrtf(vector.x * vector.x + vector.y * vector.y );
 
-    if (fanLength < distance) {
-        return true;
+#ifdef _DEBUG
+    ImGui::Begin("FanCollision");
+    ImGui::InputFloat2("Vector", &vector.x);
+    ImGui::InputFloat("Distance", &distance);
+    ImGui::End();
+#endif // _DEBUG
+
+    //範囲外の場合早期リターン
+    //この時は扇の半径の長さより長い時である
+    if (fan.length < distance) {
+        return false;
+    }
+    //扇を2等分する線のベクトルを求める
+    float directionRad = fan.directionRadian;
+    Vector2 fanDirection = { std::cosf(directionRad),std::sinf(directionRad)};
+    //Vector2 fanDirection = fan.devidDirection;
+
+    //扇と点のベクトルを単位ベクトルにする
+    Vector2 normalFanToPoint = {};
+    normalFanToPoint.x = vector.x / distance;
+    normalFanToPoint.y = vector.y / distance;
+
+    //内積計算
+    float dot = normalFanToPoint.x * fanDirection.y + normalFanToPoint.y * fanDirection.y;
+
+    //2で割る
+    float fanCos = std::cosf(directionRad / 2.0f);
+
+#ifdef _DEBUG
+    ImGui::Begin("FanCollision2");
+    ImGui::InputFloat("DirectionRad", &directionRad);
+    ImGui::InputFloat("NormalFanToPoint", &normalFanToPoint.x);
+    ImGui::InputFloat("Dot", &dot);
+    ImGui::InputFloat("FanCos", &fanCos);
+    ImGui::End();
+#endif // _DEBUG
+
+    //点が扇の範囲内にあるかを比較する
+    if (fanCos > dot) {
+        //当たっていない
+        return false;
     }
 
 
-    return false;
+
+
+
+    return true;
 }

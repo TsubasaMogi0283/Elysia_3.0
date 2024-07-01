@@ -38,6 +38,8 @@
 #include <Light/FlashLight/FlashLight.h>
 #include <Enemy/EnemyManager.h>
 #include <Stage/Gate/Gate.h>
+#include <Fan.h>
+#include "Collision.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -169,6 +171,10 @@ private:
 
 	std::unique_ptr<Model> debugTower_ = nullptr;
 	WorldTransform debugTowerWorldTransform_ = {};
+
+	std::unique_ptr<Model> debugFanCollisionSphereModel_ = nullptr;
+	WorldTransform debugFanCollisionSphereWorldTransform_ = {};
+	Material debugFanCollisionSphereMaterial_ = {};
 
 #pragma endregion
 

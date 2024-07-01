@@ -71,6 +71,7 @@ void SampleScene::Initialize() {
 #pragma endregion
 
 
+
 	
 #pragma region カメラ
 	//カメラ
@@ -94,6 +95,21 @@ void SampleScene::Initialize() {
 	lightCollision_ = new LightWeapon();
 	lightCollision_->Initialize(weaponLightModel);
 
+
+
+#pragma region 扇の当たり判定用の球
+#ifdef _DEBUG
+	debugFanCollisionSphereModel_.reset(Model::Create(weaponLightModel));
+	debugFanCollisionSphereWorldTransform_.Initialize();
+	debugFanCollisionSphereWorldTransform_.translate_ = { .x = 0.0f,.y = 0.0f,.z = 4.0f };
+	debugFanCollisionSphereMaterial_.Initialize();
+	debugFanCollisionSphereMaterial_.lightingKinds_=Spot;
+	debugFanCollisionSphereMaterial_.color_ = { .x = 0.0f,.y = 1.0f,.z = 0.0f,.w = 1.0f };
+
+#endif // _DEBUG
+
+
+#pragma endregion
 
 	collisionManager_ = std::make_unique<CollisionManager>();
 
@@ -238,13 +254,13 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 
 	//コントローラーがある場合
-	
+
 	isRotateYKey_ = false;
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 		if (isRotateYKey_ == false) {
 			//やっぱりこっちも逆じゃんね☆
 			float rotateMove = (float)joyState.Gamepad.sThumbRX / SHRT_MAX * ROTATE_OFFSET;
-			
+
 			//勝手に動いちゃうので制限を掛ける
 			const float MOVE_LIMITATION = 0.02f;
 			if (rotateMove < MOVE_LIMITATION && rotateMove > -MOVE_LIMITATION) {
@@ -285,7 +301,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 		if (isRotateXKey_ == false) {
 			float rotateMove = (float)joyState.Gamepad.sThumbRY / SHRT_MAX * ROTATE_OFFSET;
-			
+
 			//勝手に動くので制限を掛ける
 			const float MOVE_LIMITATION = 0.02f;
 			if (rotateMove < MOVE_LIMITATION && rotateMove > -MOVE_LIMITATION) {
@@ -316,13 +332,13 @@ void SampleScene::Update(GameManager* gameManager) {
 	isPlayerMoveKey_ = false;
 	//移動
 	if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
-		playerDirection_.x = std::cosf(theta_- std::numbers::pi_v<float> / 2.0f);
-		playerDirection_.z = std::sinf(theta_- std::numbers::pi_v<float> / 2.0f);
+		playerDirection_.x = std::cosf(theta_ - std::numbers::pi_v<float> / 2.0f);
+		playerDirection_.z = std::sinf(theta_ - std::numbers::pi_v<float> / 2.0f);
 		isPlayerMoveKey_ = true;
 	}
 	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
-		playerDirection_.x = std::cosf(theta_+ std::numbers::pi_v<float> / 2.0f);
-		playerDirection_.z = std::sinf(theta_+ std::numbers::pi_v<float> / 2.0f);
+		playerDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float> / 2.0f);
+		playerDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float> / 2.0f);
 		isPlayerMoveKey_ = true;
 	}
 	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
@@ -348,13 +364,13 @@ void SampleScene::Update(GameManager* gameManager) {
 		if (isPlayerMoveKey_ == false) {
 			//元々1だから問題無し
 			const Vector3 INITIAL_VECTOR = { 1.0f,0.0f,0.0f };
-			
+
 
 			Vector3 rightStickInput = {};
 			rightStickInput.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f);
 			rightStickInput.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f);
 
-			float distance = sqrtf(rightStickInput.x* rightStickInput.x+ rightStickInput.z* rightStickInput.z);
+			float distance = sqrtf(rightStickInput.x * rightStickInput.x + rightStickInput.z * rightStickInput.z);
 			distance;
 			float forAcos = 1.0f / distance;
 			float newTheta = std::acosf(forAcos);
@@ -395,7 +411,7 @@ void SampleScene::Update(GameManager* gameManager) {
 #pragma endregion
 
 
-	
+
 	//数学とプログラムで回る向きが違うことに煩わしさを感じます・・
 	//無理矢理直して楽になろう！！
 	float phi = -originPhi_;
@@ -441,7 +457,7 @@ void SampleScene::Update(GameManager* gameManager) {
 		//回り方が少し違うので注意
 		//何か嫌だね
 		camera_.rotate_.x = -phi;
-		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float>/2.0f;
+		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
 		camera_.rotate_.z = 0.0f;
 		camera_.translate_ = Add(player_->GetWorldPosition(), CAMERA_POSITION_OFFSET);
 
@@ -468,8 +484,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	//ライト確認用のタワー
 	debugTowerWorldTransform_.Update();
-	
-	
+
+
 
 	//プレイヤーの更新
 	player_->Update();
@@ -483,7 +499,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	if (keyQuantity > 0) {
 		KeyCollision();
 	}
-	
+
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 
 		//Bボタンを押したとき
@@ -527,6 +543,30 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	//敵を消す
 	enemyManager_->DeleteEnemy();
+
+#ifdef _DEBUG
+	debugFanCollisionSphereWorldTransform_.Update();
+	debugFanCollisionSphereMaterial_.Update();
+
+
+
+	Vector3 fanCollisionSphereWorldPosition = {
+		.x = debugFanCollisionSphereWorldTransform_.worldMatrix_.m[3][0] ,
+		.y = debugFanCollisionSphereWorldTransform_.worldMatrix_.m[3][1] ,
+		.z = debugFanCollisionSphereWorldTransform_.worldMatrix_.m[3][2] };
+
+	Vector2 newWorldPosition = { fanCollisionSphereWorldPosition.x,fanCollisionSphereWorldPosition.z };
+	Fan fan = flashLight_->GetFan();
+	if (IsFanCollision(fan, newWorldPosition)) {
+		ImGui::Begin("FanCollsion");
+		ImGui::End();
+	}
+
+#endif // _DEBUG
+
+	
+
+	
 
 
 #ifdef _DEBUG
@@ -637,11 +677,18 @@ void SampleScene::DrawObject3D() {
 
 	lightCollision_->Draw(camera_, spotLight);
 
-	debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight);
+	//debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight);
 	
 
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
+
+#ifdef _DEBUG
+	debugFanCollisionSphereModel_->Draw(debugFanCollisionSphereWorldTransform_,camera_, debugFanCollisionSphereMaterial_,spotLight);
+
+#endif // _DEBUG
+
+	
 
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "SpotLight.h"
+#include <Fan.h>
 
 class FlashLight{
 public:
@@ -58,6 +59,13 @@ public:
 		return lightDirection_;
 	}
 
+	/// <summary>
+	/// 扇を取得
+	/// </summary>
+	/// <returns></returns>
+	inline Fan GetFan() const{
+		return fan_;
+	}
 
 private:
 	//ここに値を入れてゲームシーンで他のオブジェクトに適用させる
@@ -68,11 +76,14 @@ private:
 
 	Vector3 lightPosition = {};
 	Vector3 lightDirection_ = {};
-
+	float degree_ = 0.0f;
 
 	//角度
 	float theta_ = 0.0f;
 	float phi_ = 0.0f;
+
+	//扇
+	Fan fan_ = {};
 
 };
 

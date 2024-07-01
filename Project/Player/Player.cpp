@@ -18,7 +18,6 @@ void Player::Initialize(){
 	radius_ = 1.0f;
 
 	worldTransform_.Initialize();
-	worldTransform_.translate_.z = -16.0f;
 }
 
 void Player::Update(){
