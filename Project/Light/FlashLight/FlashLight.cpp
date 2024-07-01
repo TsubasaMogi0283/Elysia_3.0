@@ -1,6 +1,8 @@
 #include "FlashLight.h"
 #include <VectorCalculation.h>
+#include "Camera.h"
 #include <numbers>
+
 
 void FlashLight::Initialize(){
 
@@ -26,7 +28,19 @@ void FlashLight::Initialize(){
 	fan_.range = 0.98f;
 	fan_.directionRadian = 0.98f;
 
+	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	
 
+	const float SCALE = 0.4f;
+	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
+		model_[i].reset(Model::Create(modelHandle));
+		worldTransform_[i].Initialize();
+		worldTransform_[i].scale_ = { .x = SCALE,.y = SCALE ,.z = SCALE };
+		
+	}
+
+	material_.Initialize();
+	material_.lightingKinds_ = None;
 }
 
 void FlashLight::Update(){
@@ -64,12 +78,24 @@ void FlashLight::Update(){
 	fan_.length = spotLight_.distance_;
 	fan_.position = { .x = lightPosition.x,.y = lightPosition.z };
 
+	const float DISTANCE = 20.0f;
+	Vector2 fanLeft = { .x = std::cosf(theta_ + toRadian)* DISTANCE,.y = std::sinf(theta_ + toRadian)* DISTANCE };
+	Vector2 fanRight = { .x = std::cosf(theta_ - toRadian)* DISTANCE,.y = std::sinf(theta_ - toRadian)* DISTANCE };
+
+	worldTransform_[Left].translate_ = Add(playerPosition_,{ fanLeft.x ,0.0f,fanLeft.y });
+	worldTransform_[Right].translate_ = Add(playerPosition_,{ fanRight.x ,0.0f,fanRight.y });
+
 
 #ifdef _DEBUG
 	ImGui::Begin("LightFan");
 	ImGui::InputFloat("Length", &fan_.length);
 	ImGui::InputFloat3("Position", &fan_.position.x);
 	ImGui::InputFloat("Range", &fan_.directionRadian);
+	ImGui::InputFloat2("DevidDirection", &fan_.devidDirection.x);
+	ImGui::InputFloat2("FanLeft", &fanLeft.x);
+	ImGui::InputFloat2("FanRight", &fanRight.x);
+
+
 	ImGui::End();
 
 	ImGui::Begin("Light");
@@ -89,5 +115,17 @@ void FlashLight::Update(){
 	
 
 	//更新
+	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
+		worldTransform_[i].Update();
+	}
+	
+	material_.Update();
 	spotLight_.Update();
+}
+
+void FlashLight::Draw(Camera& camera){
+	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
+		model_[i]->Draw(worldTransform_[i], camera, material_, spotLight_);
+	}
+	
 }

@@ -67,7 +67,7 @@ void SampleScene::Initialize() {
 	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
 	debugTower_.reset(Model::Create(debugTowerModelhandle));
 	debugTowerWorldTransform_.Initialize();
-
+	debugTowerWorldTransform_.translate_ = { .x = 1.0f,.y = 0.0f,.z = 2.0f };
 #pragma endregion
 
 
@@ -673,11 +673,11 @@ void SampleScene::DrawObject3D() {
 	//敵
 	enemyManager_->Draw(camera_, spotLight);
 
-	
+	flashLight_->Draw(camera_);
 
 	lightCollision_->Draw(camera_, spotLight);
 
-	//debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight);
+	debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight);
 	
 
 	//鍵

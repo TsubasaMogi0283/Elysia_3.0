@@ -53,8 +53,66 @@ bool IsFanCollision(Fan& fan, Vector2& point){
     //https://yttm-work.jp/collision/collision_0008.html
 
     //扇と点のベクトルを求める
-    Vector2 vector = { point.x-fan.position.x, point.y-fan.position.y };
-    float distance = sqrtf(vector.x * vector.x + vector.y * vector.y );
+//    Vector2 vector = { point.x-fan.position.x, point.y-fan.position.y };
+//    float distance = sqrtf(vector.x * vector.x + vector.y * vector.y );
+//
+//#ifdef _DEBUG
+//    ImGui::Begin("FanCollision");
+//    ImGui::InputFloat2("Vector", &vector.x);
+//    ImGui::InputFloat("Distance", &distance);
+//    ImGui::End();
+//#endif // _DEBUG
+//
+//    //範囲外の場合早期リターン
+//    //この時は扇の半径の長さより長い時である
+//    if (fan.length < distance) {
+//        return false;
+//    }
+//    //扇を2等分する線のベクトルを求める
+//    float directionRad = fan.directionRadian;
+//    Vector2 fanDirection = { std::cosf(directionRad),std::sinf(directionRad)};
+//    //Vector2 fanDirection = fan.devidDirection;
+//
+//    //扇と点のベクトルを単位ベクトルにする
+//    Vector2 normalFanToPoint = {};
+//    normalFanToPoint.x = vector.x / distance;
+//    normalFanToPoint.y = vector.y / distance;
+//
+//    //内積計算
+//    float dot = normalFanToPoint.x * fanDirection.y + normalFanToPoint.y * fanDirection.y;
+//
+//    //2で割る
+//    float fanCos = std::cosf(directionRad / 2.0f);
+//
+//#ifdef _DEBUG
+//    ImGui::Begin("FanCollision2");
+//    ImGui::InputFloat("DirectionRad", &directionRad);
+//    ImGui::InputFloat("NormalFanToPoint", &normalFanToPoint.x);
+//    ImGui::InputFloat("Dot", &dot);
+//    ImGui::InputFloat("FanCos", &fanCos);
+//    ImGui::End();
+//#endif // _DEBUG
+//
+//    //点が扇の範囲内にあるかを比較する
+//    if (fanCos > dot) {
+//        //当たっていない
+//        return false;
+//    }
+
+
+
+
+
+
+
+
+
+
+
+
+    //扇と点のベクトルを求める
+    Vector2 vector = { point.x - fan.position.x, point.y - fan.position.y };
+    float distance = sqrtf(vector.x * vector.x + vector.y * vector.y);
 
 #ifdef _DEBUG
     ImGui::Begin("FanCollision");
@@ -63,43 +121,9 @@ bool IsFanCollision(Fan& fan, Vector2& point){
     ImGui::End();
 #endif // _DEBUG
 
-    //範囲外の場合早期リターン
-    //この時は扇の半径の長さより長い時である
-    if (fan.length < distance) {
-        return false;
-    }
-    //扇を2等分する線のベクトルを求める
-    float directionRad = fan.directionRadian;
-    Vector2 fanDirection = { std::cosf(directionRad),std::sinf(directionRad)};
-    //Vector2 fanDirection = fan.devidDirection;
-
-    //扇と点のベクトルを単位ベクトルにする
-    Vector2 normalFanToPoint = {};
-    normalFanToPoint.x = vector.x / distance;
-    normalFanToPoint.y = vector.y / distance;
-
-    //内積計算
-    float dot = normalFanToPoint.x * fanDirection.y + normalFanToPoint.y * fanDirection.y;
-
-    //2で割る
-    float fanCos = std::cosf(directionRad / 2.0f);
-
-#ifdef _DEBUG
-    ImGui::Begin("FanCollision2");
-    ImGui::InputFloat("DirectionRad", &directionRad);
-    ImGui::InputFloat("NormalFanToPoint", &normalFanToPoint.x);
-    ImGui::InputFloat("Dot", &dot);
-    ImGui::InputFloat("FanCos", &fanCos);
-    ImGui::End();
-#endif // _DEBUG
-
-    //点が扇の範囲内にあるかを比較する
-    if (fanCos > dot) {
-        //当たっていない
-        return false;
-    }
 
 
+    Vector2 fanDirection = fan.devidDirection;
 
 
 

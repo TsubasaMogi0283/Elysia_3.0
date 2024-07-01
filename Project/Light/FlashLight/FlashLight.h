@@ -1,6 +1,13 @@
 #pragma once
+#include <memory>
+
 #include "SpotLight.h"
 #include <Fan.h>
+#include <WorldTransform.h>
+#include <Model.h>
+#include "Material.h"
+
+struct Camera;
 
 class FlashLight{
 public:
@@ -18,6 +25,12 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// 描画(デバッグ用)
+	/// </summary>
+	/// <param name="camera"></param>
+	void Draw(Camera& camera);
 
 	/// <summary>
 	/// デストラクタ
@@ -85,5 +98,14 @@ private:
 	//扇
 	Fan fan_ = {};
 
+
+	enum Side {
+		Right,
+		Left,
+	};
+	static const uint32_t SIDE_QUANTITY_ = 2;
+	std::unique_ptr<Model>model_[SIDE_QUANTITY_] = { nullptr };
+	WorldTransform worldTransform_[SIDE_QUANTITY_] = {};
+	Material material_ = {};
 };
 
