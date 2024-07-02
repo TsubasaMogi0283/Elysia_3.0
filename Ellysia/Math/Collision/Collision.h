@@ -7,4 +7,4 @@
 bool IsCollisionAABBAndPoint(const AABB& aabb, const Vector3& point);
 
 //扇型
-bool IsFanCollision(Fan& fan,Vector2& point);
+bool IsFanAndPointCollision(const Fan& fan,const Vector2& point);

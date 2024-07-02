@@ -1,6 +1,7 @@
 #pragma once
 #include <Vector3.h>
 #include "Vector2.h"
+
 //扇型
 struct Fan {
 	//中心座標
@@ -12,7 +13,7 @@ struct Fan {
 	//方向(角度)
 	float directionRadian;
 	//2等分するベクトル
-	Vector2 devidDirection;
+	Vector2 divideDirection;
 	Vector2 rightVector;
 	Vector2 leftVector;
 
@@ -20,7 +21,7 @@ struct Fan {
 	//左側の角度
 	float leftSideRadian;
 	//中心の角度
-	float centerradian;
+	float centerRadian;
 	//右側の角度
 	float rightSideRadian;
 

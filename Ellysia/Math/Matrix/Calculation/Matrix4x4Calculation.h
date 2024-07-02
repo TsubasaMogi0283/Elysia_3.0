@@ -7,10 +7,9 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <math.h>
+#include <cmath>
 
 
-//コタンジェント
-float Cot(float theta);
 
 //単位行列を作成する
 Matrix4x4 MakeIdentity4x4();

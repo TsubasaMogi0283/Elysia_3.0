@@ -107,5 +107,11 @@ private:
 	std::unique_ptr<Model>model_[SIDE_QUANTITY_] = { nullptr };
 	WorldTransform worldTransform_[SIDE_QUANTITY_] = {};
 	Material material_ = {};
+
+	//LightPosition
+	std::unique_ptr<Model>lightCenterModel_ = nullptr;
+	WorldTransform lightCenterWorldTransform_ = {};
+	Material lightCnterMaterial_ = {};
+
 };
 

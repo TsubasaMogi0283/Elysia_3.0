@@ -3,7 +3,6 @@
 #include "Camera.h"
 #include <numbers>
 
-
 void FlashLight::Initialize(){
 
 
@@ -42,6 +41,15 @@ void FlashLight::Initialize(){
 
 	material_.Initialize();
 	material_.lightingKinds_ = None;
+
+
+	lightCenterModel_.reset(Model::Create(modelHandle));
+	lightCenterWorldTransform_.Initialize();
+	lightCenterWorldTransform_.scale_ = { .x = SCALE,.y = SCALE ,.z = SCALE };
+	lightCnterMaterial_.Initialize();
+	lightCnterMaterial_.lightingKinds_ = None;
+
+
 }
 
 void FlashLight::Update(){
@@ -63,32 +71,41 @@ void FlashLight::Update(){
 
 	//プレイヤーの座標と微調整分
 	const float LIGHT_HEIGHT = 1.0f;
-	lightPosition = Add(playerPosition_, { 0.0f, LIGHT_HEIGHT,0.0f });
+	const Vector3 OFFSET = { 0.0f, LIGHT_HEIGHT,0.0f };
+	lightPosition = Add(playerPosition_, OFFSET);
 
 	//計算したものをSpotLightの方に入れる
 	spotLight_.position_ = lightPosition;
 	spotLight_.direction_ = lightDirection_;
 
 	//片方の角度
-	//float toRadian = degree_ * (std::numbers::pi_v<float> / 180.0f);
 	spotLight_.cosAngle_ = std::cosf(lightSideTheta);
-	//spotLight_.cosAngle_ = 0.98f;
 	
 	//扇
-	fan_.centerradian = theta_;
+	fan_.centerRadian = theta_;
 	fan_.leftSideRadian = theta_ + lightSideTheta;
 	fan_.rightSideRadian = theta_ - lightSideTheta;
 
-	fan_.devidDirection = { .x=lightDirection_.x,.y= lightDirection_.z };
+	fan_.divideDirection = { .x=lightDirection_.x,.y= lightDirection_.z };
 	fan_.length = spotLight_.distance_;
 	fan_.position = { .x = lightPosition.x,.y = lightPosition.z };
 
+
+	//端をデバッグ用として可視化
 	const float DISTANCE = 20.0f;
 	Vector2 fanLeft = { .x = std::cosf(theta_ + lightSideTheta)* DISTANCE,.y = std::sinf(theta_ + lightSideTheta)* DISTANCE };
 	Vector2 fanRight = { .x = std::cosf(theta_ - lightSideTheta)* DISTANCE,.y = std::sinf(theta_ - lightSideTheta)* DISTANCE };
 
+	fan_.leftVector = { .x = std::cosf(theta_ + lightSideTheta),.y = std::sinf(theta_ + lightSideTheta) };
+	fan_.rightVector = { .x = std::cosf(theta_ - lightSideTheta),.y = std::sinf(theta_ - lightSideTheta) };
+
 	worldTransform_[Left].translate_ = Add(playerPosition_,{ fanLeft.x ,0.0f,fanLeft.y });
 	worldTransform_[Right].translate_ = Add(playerPosition_,{ fanRight.x ,0.0f,fanRight.y });
+
+
+
+	//中心
+	lightCenterWorldTransform_.translate_ = lightPosition;
 
 
 #ifdef _DEBUG
@@ -97,12 +114,12 @@ void FlashLight::Update(){
 	ImGui::InputFloat3("Position", &fan_.position.x);
 	ImGui::InputFloat("Range", &fan_.directionRadian);
 	ImGui::InputFloat("LeftSideRadian", &fan_.leftSideRadian);
-	ImGui::InputFloat("CnterRadian", &fan_.centerradian);
+	ImGui::InputFloat("CnterRadian", &fan_.centerRadian);
 	ImGui::InputFloat("RightSideRadian", &fan_.rightSideRadian);
 
 
 
-	ImGui::InputFloat2("DevidDirection", &fan_.devidDirection.x);
+	ImGui::InputFloat2("DevidDirection", &fan_.divideDirection.x);
 	ImGui::InputFloat2("FanLeft", &fanLeft.x);
 	ImGui::InputFloat2("FanRight", &fanRight.x);
 
@@ -112,6 +129,7 @@ void FlashLight::Update(){
 	ImGui::Begin("Light");
 	ImGui::SliderFloat("Degree", &lightSideTheta,0.0f,90.0f);
 	ImGui::InputFloat3("Position", &spotLight_.position_.x);
+	ImGui::InputFloat("lengthXZ",&lengthXZ);
 	ImGui::InputFloat3("Direction", &spotLight_.direction_.x);
 	ImGui::SliderFloat("Distance", &spotLight_.distance_, 0.0f, 100.0f);
 	ImGui::SliderFloat("Decay", &spotLight_.decay_, 0.0f, 20.0f);
@@ -129,14 +147,19 @@ void FlashLight::Update(){
 	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
 		worldTransform_[i].Update();
 	}
-	
+	lightCenterWorldTransform_.Update();
+	lightCnterMaterial_.Update();
 	material_.Update();
 	spotLight_.Update();
 }
 
 void FlashLight::Draw(Camera& camera){
+	//端
 	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
 		model_[i]->Draw(worldTransform_[i], camera, material_, spotLight_);
 	}
+	//中心
+	lightCenterModel_->Draw(lightCenterWorldTransform_,camera, lightCnterMaterial_,spotLight_);
+
 	
 }

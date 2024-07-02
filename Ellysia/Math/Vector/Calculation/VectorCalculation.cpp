@@ -1,13 +1,21 @@
 #include "VectorCalculation.h"
 
 #include <corecrt_math.h>
-#include <Matrix4x4.h>
 #include <cassert>
 #include <numbers>
 #include <corecrt_math.h>
 #include <cmath>
 
-Vector3 Add(Vector3 v1, Vector3 v2) {
+Vector2 Add(const Vector2& v1, const Vector2& v2){
+	Vector2 result = {};
+	
+	result.x = v1.x + v2.x;
+	result.y = v1.x + v2.y;
+	
+	return result;
+}
+
+Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	Vector3 result = {};
 	result.x = v1.x + v2.x;
 	result.y = v1.y + v2.y;
@@ -16,8 +24,7 @@ Vector3 Add(Vector3 v1, Vector3 v2) {
 	return result;
 }
 
-//引き算
-Vector3 Subtract(Vector3 v1, Vector3 v2) {
+Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 	Vector3 result = {};
 	result.x = v1.x - v2.x;
 	result.y = v1.y - v2.y;
@@ -25,7 +32,7 @@ Vector3 Subtract(Vector3 v1, Vector3 v2) {
 	return result;
 }
 
-float Clamp(float t, float min, float max) {
+float Clamp(const float& t, const float& min, const float& max) {
 	if (t < min) {
 		return min;
 	}
@@ -38,19 +45,23 @@ float Clamp(float t, float min, float max) {
 
 }
 
-float DotVector3(Vector3 v1, Vector3 v2) {
+float Dot(const Vector3& v1, const Vector3& v2) {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
-float DotVector2(Vector3 v1, Vector3 v2) {
-	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+float Dot(const Vector2& v1, const Vector2& v2) {
+	return v1.x * v2.x + v1.y * v2.y;
 }
 
-float Length(Vector3 V1) {
+float Length(const Vector2& V1){
+	return sqrtf(V1.x * V1.x + V1.y * V1.y);
+}
+
+float Length(const Vector3& V1) {
 	return sqrtf(V1.x * V1.x + V1.y * V1.y + V1.z * V1.z);
 }
 
-Vector3 Normalize(Vector3 V1) {
+Vector3 Normalize(const Vector3& V1) {
 	Vector3 result = {};
 
 	float length = sqrtf(V1.x * V1.x + V1.y * V1.y + V1.z * V1.z);
@@ -75,7 +86,29 @@ Vector3 Normalize(Vector3 V1) {
 	return result;
 }
 
-float Lerp(float start, float end, float t){
+Vector2 Normalize(const Vector2& V1){
+	Vector2 result = {};
+
+	float length = sqrtf(V1.x * V1.x + V1.y * V1.y);
+
+	float newX = V1.x;
+	float newY = V1.y;
+
+
+	if (length != 0.0f) {
+		newX = V1.x / length;
+		newY = V1.y / length;
+
+	}
+
+	result.x = newX;
+	result.y = newY;
+
+
+	return result;
+}
+
+float Lerp(const float& start, const float& end, const float& t){
 	float result = 0.0f;
 
 	result = (1.0f - t) * start + t * end;
@@ -84,7 +117,7 @@ float Lerp(float start, float end, float t){
 	
 }
 
-Vector3 Lerp(Vector3 start, Vector3 end, float t){
+Vector3 Lerp(const Vector3& start, const Vector3& end, const float& t){
 	Vector3 result = {};
 
 	result.x = (1.0f - t) * start.x + t * end.x;
@@ -95,22 +128,26 @@ Vector3 Lerp(Vector3 start, Vector3 end, float t){
 
 }
 
-Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
+Vector3 Slerp(const Vector3& v1, const Vector3& v2,const float& t) {
 	float newT = Clamp(t, 0.0f, 1.0f);
 
-	Vector3 normalizeV1 = Normalize(v1);
-	Vector3 normalizeV2 = Normalize(v2);
+	Vector3 vector1 = v1;
+	Vector3 vector2 = v2;
+
+	Vector3 normalizeV1 = Normalize(vector1);
+	Vector3 normalizeV2 = Normalize(vector2);
 
 
-	float dot = DotVector3(normalizeV1, normalizeV2);
+	float dot = Dot(normalizeV1, normalizeV2);
 
 	float theta = std::acosf(dot) * newT;
 
-	Vector3 subtractVector3 = Subtract(v2, v1);
-	Vector3 relativeVector = Normalize(
-		{ subtractVector3.x * newT,
-		subtractVector3.y * newT,
-		subtractVector3.z * newT });
+	Vector3 subtractVector = Subtract(v2, v1);
+	Vector3 newSubtractVector = { 
+		subtractVector.x * newT,
+		subtractVector.y * newT,
+		subtractVector.z * newT };
+	Vector3 relativeVector = Normalize(newSubtractVector);
 
 	Vector3 result = {
 		v1.x * std::cos(theta) + relativeVector.x * std::sin(theta),
@@ -121,8 +158,12 @@ Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
 	return result;
 }
 
+float Cot(const float& theta){
+	return (1.0f / tan(theta));
 
-Vector3 Cross(const Vector3 v1, const Vector3 v2) {
+}
+
+Vector3 Cross(const Vector3& v1, const Vector3& v2) {
 	Vector3 result;
 	result.x = v1.y * v2.z - v1.z * v2.y;
 	result.y = v1.z * v2.x - v1.x * v2.z;
@@ -131,17 +172,14 @@ Vector3 Cross(const Vector3 v1, const Vector3 v2) {
 	return result;
 }
 
-
-
-
-Vector3 Project(const Vector3 a, const Vector3 b) {
+Vector3 Project(const Vector3& a, const Vector3& b) {
 
 	//Aベクトルを正射影ベクトルにする
 	Vector3 Vector3C = {};
 
 	//bの長さを求める
 	float lengthB = Length(b);
-	float dotAB = DotVector3(a, b);
+	float dotAB = Dot(a, b);
 
 	//||c||=||a||cosθ
 	//     ↓
@@ -160,10 +198,7 @@ Vector3 Project(const Vector3 a, const Vector3 b) {
 	return Vector3C;
 }
 
-
-
-//Transform
-Vector3 TransformCalculation(const Vector3 vector, const Matrix4x4 matrix) {
+Vector3 TransformCalculation(const Vector3& vector, const Matrix4x4& matrix) {
 	Vector3 result = {};
 
 	result.x = (vector.x * matrix.m[0][0]) + (vector.y * matrix.m[1][0]) + (vector.z * matrix.m[2][0]) + (1.0f * matrix.m[3][0]);
@@ -181,4 +216,8 @@ Vector3 TransformCalculation(const Vector3 vector, const Matrix4x4 matrix) {
 	return result;
 
 
+}
+
+void VectorTest::Text()
+{
 }

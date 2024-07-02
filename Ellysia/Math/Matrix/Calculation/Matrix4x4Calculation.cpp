@@ -1,11 +1,8 @@
 #include "Matrix4x4Calculation.h"
+#include <VectorCalculation.h>
 
 
 
-//コタンジェント
-float Cot(float theta) {
-	return (1.0f / tan(theta));
-}
 
 
 //単位行列を作成する

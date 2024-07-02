@@ -155,7 +155,9 @@ void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
 
 
 			if (distance < minDistance) {
-				(*it2)->SetTranslate(Add((*it2)->GetWorldPosition(), { -1.0,0.0f,0.0f }));
+				Vector3 enemyPosition = (*it2)->GetWorldPosition();
+				Vector3 speed = { -1.0,0.0f,0.0f };
+				(*it2)->SetTranslate(Add(enemyPosition, speed));
 			}
 
 			//if (distance < minDistance) {
@@ -459,14 +461,15 @@ void SampleScene::Update(GameManager* gameManager) {
 		camera_.rotate_.x = -phi;
 		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
 		camera_.rotate_.z = 0.0f;
-		camera_.translate_ = Add(player_->GetWorldPosition(), CAMERA_POSITION_OFFSET);
+		
+		camera_.translate_ = Add(playerPosition, CAMERA_POSITION_OFFSET);
 
 	}
 	else if (viewOfPoint_ == ThirdPersonBack) {
 
 
 		camera_.rotate_ = thirdPersonViewOfPointRotate_;
-		camera_.translate_ = Add(player_->GetWorldPosition(), cameraThirdPersonViewOfPointPosition_);
+		camera_.translate_ = Add(playerPosition, cameraThirdPersonViewOfPointPosition_);
 	}
 
 
@@ -557,7 +560,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	Vector2 newWorldPosition = { fanCollisionSphereWorldPosition.x,fanCollisionSphereWorldPosition.z };
 	Fan fan = flashLight_->GetFan();
-	if (IsFanCollision(fan, newWorldPosition)) {
+	if (IsFanAndPointCollision(fan, newWorldPosition)) {
 		ImGui::Begin("FanCollsion");
 		ImGui::End();
 	}

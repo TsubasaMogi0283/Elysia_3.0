@@ -47,7 +47,7 @@ bool IsCollisionAABBAndPoint(const AABB& aabb, const Vector3& point){
 
 }
 
-bool IsFanCollision(Fan& fan, Vector2& point){
+bool IsFanAndPointCollision(const Fan& fan, const Vector2& point){
 
     //参考
     //https://yttm-work.jp/collision/collision_0008.html
@@ -101,12 +101,6 @@ bool IsFanCollision(Fan& fan, Vector2& point){
 
 
 
-
-
-
-
-
-
     //今は2次元でやっているが後で3次元に拡張する
 
 
@@ -115,24 +109,53 @@ bool IsFanCollision(Fan& fan, Vector2& point){
     float distance = sqrtf(vector.x * vector.x + vector.y * vector.y);
 
 #ifdef _DEBUG
-    ImGui::Begin("FanCollision");
+    ImGui::Begin("FanCollision1");
     ImGui::InputFloat2("Vector", &vector.x);
     ImGui::InputFloat("Distance", &distance);
     ImGui::End();
 #endif // _DEBUG
 
-    //扇の半径より大きい場合。
+    //扇の半径より大きい場合
     //範囲外なのでfalseを返す
     if (fan.length < distance) {
         return false;
     }
 
 
+
+    //atan2で扇の中心から目的地までの角度を求めたい
+    //向きだけが欲しいので正規化をする
+    Vector2 normalizedFanPointVector = Normalize(vector);
+    //
+    float targetTheta = atan2f(normalizedFanPointVector.x, normalizedFanPointVector.y);
+    //ずれが発生しているのでその分足す
+    float newTargetTheta = targetTheta + std::numbers::pi_v<float> / 2.0f;
+
+    //「θL>=θT>=θR」この時だけ扇内にいる
+    //左端より大きい時と右端より小さい角度の時の場合
+    if (fan.leftSideRadian < newTargetTheta ||
+        newTargetTheta<fan.rightSideRadian) {
+        return false;
+    }
+
+
+
     //中心のベクトル
     //LightDirectionと同じ値にしよう
-    Vector2 centerVector = fan.devidDirection;
+    Vector2 centerVector = fan.divideDirection;
+    Vector2 leftSideVector = fan.leftVector;
+    Vector2 rightSideVector = fan.rightVector;
 
 
+    
+
+    //点の角度を求める
+#ifdef _DEBUG
+    ImGui::Begin("FanCollision2");
+    ImGui::End();
+#endif // _DEBUG
+
+    
 
     return true;
 }
