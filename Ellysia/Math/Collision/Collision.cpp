@@ -126,10 +126,29 @@ bool IsFanAndPointCollision(const Fan& fan, const Vector2& point){
     //atan2で扇の中心から目的地までの角度を求めたい
     //向きだけが欲しいので正規化をする
     Vector2 normalizedFanPointVector = Normalize(vector);
+
+    Vector2 direction = fan.divideDirection;
+
     //
     float targetTheta = atan2f(normalizedFanPointVector.x, normalizedFanPointVector.y);
     //ずれが発生しているのでその分足す
     float newTargetTheta = targetTheta + std::numbers::pi_v<float> / 2.0f;
+
+    float leftTheta = fan.leftSideRadian;
+    float centerTheta = fan.centerRadian;
+    float rightTheta = fan.rightSideRadian;
+    //点の角度を求める
+#ifdef _DEBUG
+    ImGui::Begin("FanCollision2");
+    ImGui::InputFloat("TargetTheta", &targetTheta);
+    ImGui::InputFloat("LeftTheta", &leftTheta);
+    ImGui::InputFloat("CenterTheta", &centerTheta);
+    ImGui::InputFloat("RightTheta", &rightTheta);
+    ImGui::InputFloat("NewTargetTheta", &newTargetTheta);
+    ImGui::End();
+#endif // _DEBUG
+
+
 
     //「θL>=θT>=θR」この時だけ扇内にいる
     //左端より大きい時と右端より小さい角度の時の場合
@@ -140,20 +159,7 @@ bool IsFanAndPointCollision(const Fan& fan, const Vector2& point){
 
 
 
-    //中心のベクトル
-    //LightDirectionと同じ値にしよう
-    Vector2 centerVector = fan.divideDirection;
-    Vector2 leftSideVector = fan.leftVector;
-    Vector2 rightSideVector = fan.rightVector;
 
-
-    
-
-    //点の角度を求める
-#ifdef _DEBUG
-    ImGui::Begin("FanCollision2");
-    ImGui::End();
-#endif // _DEBUG
 
     
 
