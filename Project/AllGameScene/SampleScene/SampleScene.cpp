@@ -101,7 +101,7 @@ void SampleScene::Initialize() {
 #ifdef _DEBUG
 	debugFanCollisionSphereModel_.reset(Model::Create(weaponLightModel));
 	debugFanCollisionSphereWorldTransform_.Initialize();
-	debugFanCollisionSphereWorldTransform_.translate_ = { .x = 0.0f,.y = 0.0f,.z = 4.0f };
+	debugFanCollisionSphereWorldTransform_.translate_ = { .x = 0.0f,.y = 0.0f,.z = -4.0f };
 	debugFanCollisionSphereMaterial_.Initialize();
 	debugFanCollisionSphereMaterial_.lightingKinds_=Spot;
 	debugFanCollisionSphereMaterial_.color_ = { .x = 0.0f,.y = 1.0f,.z = 0.0f,.w = 1.0f };

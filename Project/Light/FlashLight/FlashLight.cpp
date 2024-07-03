@@ -41,7 +41,7 @@ void FlashLight::Initialize(){
 
 	material_.Initialize();
 	material_.lightingKinds_ = None;
-
+	material_.color_ = { 0.5f,1.0f,0.5f,1.0f };
 
 	lightCenterModel_.reset(Model::Create(modelHandle));
 	lightCenterWorldTransform_.Initialize();

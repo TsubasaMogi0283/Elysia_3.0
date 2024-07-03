@@ -126,38 +126,85 @@ bool IsFanAndPointCollision(const Fan& fan, const Vector2& point){
     //atan2で扇の中心から目的地までの角度を求めたい
     //向きだけが欲しいので正規化をする
     Vector2 normalizedFanPointVector = Normalize(vector);
+    //Vector2 
 
-    Vector2 direction = fan.divideDirection;
+    
 
     //
     float targetTheta = atan2f(normalizedFanPointVector.x, normalizedFanPointVector.y);
     //ずれが発生しているのでその分足す
     float newTargetTheta = targetTheta + std::numbers::pi_v<float> / 2.0f;
 
-    float leftTheta = fan.leftSideRadian;
-    float centerTheta = fan.centerRadian;
-    float rightTheta = fan.rightSideRadian;
-    //点の角度を求める
+    //いずれも0～1のベクトルだからそのままでOK
+    //右側のベクトル
+    Vector2 rsVector = { .x = std::cosf(fan.rightSideRadian),.y = std::sinf(fan.rightSideRadian) };
+    //中心のベクトル
+    Vector2 direction = fan.divideDirection;
+    //左側のベクトル
+    Vector2 lsVector = { .x = std::cosf(fan.leftSideRadian),.y = std::sinf(fan.leftSideRadian) };
+    
+    //そこから内積を計算する
+    //右と中心
+    //float dotCenterAndRight = Dot(rsVector, direction);
+    //右と左
+    float dotRightAndLeft = Dot(rsVector, lsVector);
+
+
+    //右とターゲット
+    float dotrightAndtarget = Dot(rsVector, normalizedFanPointVector);
+
+    
+
+    float rsRadian = fan.rightSideRadian;
+
+    //左より大きい場合
+    if (dotrightAndtarget < dotRightAndLeft) {
+        return  false;
+    }
+
+
+    //右より小さい場合
+    //内積だとおかしくなるので角度で求めて除外をする
+
+    float newRightSideRadian = fan.rightSideRadian;
+
+
 #ifdef _DEBUG
     ImGui::Begin("FanCollision2");
+    ImGui::InputFloat2("RightVector", &rsVector.x);
+    ImGui::InputFloat2("LeftVector", &lsVector.x);
+    ImGui::InputFloat("NewRightSideRadian", &newRightSideRadian);
+
+
+    ImGui::InputFloat("RightRadian", &rsRadian);
     ImGui::InputFloat("TargetTheta", &targetTheta);
-    ImGui::InputFloat("LeftTheta", &leftTheta);
-    ImGui::InputFloat("CenterTheta", &centerTheta);
-    ImGui::InputFloat("RightTheta", &rightTheta);
     ImGui::InputFloat("NewTargetTheta", &newTargetTheta);
     ImGui::End();
 #endif // _DEBUG
 
+    
+    //1周超えたら2π引く
+    if (fan.rightSideRadian > std::numbers::pi_v<float>*2.0f) {
+        newRightSideRadian = fan.rightSideRadian - std::numbers::pi_v<float>*2.0f;
+    }
 
-
-    //「θL>=θT>=θR」この時だけ扇内にいる
-    //左端より大きい時と右端より小さい角度の時の場合
-    if (fan.leftSideRadian < newTargetTheta ||
-        newTargetTheta<fan.rightSideRadian) {
+    if (newRightSideRadian > targetTheta) {
         return false;
     }
 
 
+    //「θL>=θT>=θR」この時だけ扇内にいる
+    //左端より大きい時と右端より小さい角度の時の場合
+    //if (fan.leftSideRadian < newTargetTheta ||
+    //    newTargetTheta<fan.rightSideRadian) {
+    //    return false;
+    //}
+
+
+#ifdef _DEBUG
+    ImGui::Begin("FanCollisionFinal"); 
+    ImGui::End();
+#endif // _DEBUG
 
 
 
