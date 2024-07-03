@@ -126,4 +126,23 @@ private:
 	std::unique_ptr<RadialBlur> radialBlur_ = nullptr;
 	std::unique_ptr<Dissolve> dissolve_ = nullptr;
 	std::unique_ptr<RandomEffect> randomEffect_ = nullptr;
+
+
+private:
+	enum class PostEffect {
+		NoneEffect,
+		GrayEffect,
+		SepiaEffect,
+		VignetteEffect,
+		GaussianFilter,
+		LuminanceOutLineEffect,
+		RadialBlurEffect,
+		DissolveEffect,
+		RandomEffect,
+	};
+
+
+	//ポストエフェクトの切り替え
+	PostEffect postEffect_ = PostEffect::NoneEffect;
+	uint32_t postEffectKinds_ = 0;
 };

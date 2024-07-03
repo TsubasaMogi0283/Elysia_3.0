@@ -118,8 +118,13 @@ void SampleScene::Initialize() {
 	randomEffect_ = std::make_unique < RandomEffect>();
 	randomEffect_->Initialize();
 
+	//PostEffect
+	postEffect_ = PostEffect::NoneEffect;
+
 	directionalLight_.Initialize();
 	pointLight_.Initialize();
+	pointLight_.position_ = { 0.0f,3.0f,0.0f };
+	pointLight_.decay_ = 2.0f;
 	spotLight_.Initialize();
 }
 
@@ -233,16 +238,40 @@ void SampleScene::Update(GameManager* gameManager) {
 	camera_.rotate_ = Add(camera_.rotate_, { rotateMove.x * ROTATE_MOVE_SPEED,rotateMove.y * ROTATE_MOVE_SPEED,rotateMove.z * ROTATE_MOVE_SPEED });
 
 
-	//コントローラー
-	XINPUT_STATE joyState{};
+	if (Input::GetInstance()->IsTriggerKey(DIK_0) == true) {
+		postEffect_ = PostEffect::NoneEffect;
+	}
+	else if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
+		postEffect_ = PostEffect::GrayEffect;
+	}
+	else if (Input::GetInstance()->IsTriggerKey(DIK_2) == true) {
+		postEffect_ = PostEffect::SepiaEffect;
+	}
+	else if (Input::GetInstance()->IsTriggerKey(DIK_3) == true) {
+		postEffect_ = PostEffect::VignetteEffect;
+	}
+	else if (Input::GetInstance()->IsTriggerKey(DIK_4) == true) {
+		postEffect_ = PostEffect::GaussianFilter;
+	}
+	else if (Input::GetInstance()->IsTriggerKey(DIK_5) == true) {
+		postEffect_ = PostEffect::LuminanceOutLineEffect;
+	}
+	else if (Input::GetInstance()->IsTriggerKey(DIK_6) == true) {
+		postEffect_ = PostEffect::RadialBlurEffect;
+	}
+	else if (Input::GetInstance()->IsTriggerKey(DIK_7) == true) {
+		postEffect_ = PostEffect::DissolveEffect;
+	}
+	else if (Input::GetInstance()->IsTriggerKey(DIK_8) == true) {
+		postEffect_ = PostEffect::RandomEffect;
+	}
 
-	//コントローラーがある場合
-	if (Input::GetInstance()->IsPushKey(DIK_V)==true) {
-		Input::GetInstance()->SetVibration(1.0f, 1.0f);
-	}
-	else {
-		Input::GetInstance()->StopVibration();
-	}
+
+
+
+
+
+
 
 
 
@@ -302,10 +331,10 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 #endif
-	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
+	/*if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
 		AdjustmentItems::GetInstance()->SaveFile(GroupName);
 		gameManager->ChangeScene(new SampleScene2());
-	}
+	}*/
 
 
 	
@@ -319,6 +348,35 @@ void SampleScene::DrawSpriteBack(){
 void SampleScene::PreDrawPostEffectFirst(){
 	
 	
+	switch (postEffect_){
+	case PostEffect::NoneEffect:
+		back_->PreDraw();
+		break;
+	case PostEffect::GrayEffect:
+		grayScale_->PreDraw();
+		break;
+	case PostEffect::SepiaEffect:
+		sepiaScale_->PreDraw();
+		break;
+	case PostEffect::VignetteEffect:
+		vignette_->PreDraw();
+		break;
+	case PostEffect::GaussianFilter:
+		gaussianFilter_->PreDraw();
+		break;
+	case PostEffect::LuminanceOutLineEffect:
+		outLine_->PreDraw();
+		break;
+	case PostEffect::RadialBlurEffect:
+		radialBlur_->PreDraw();
+		break;
+	case PostEffect::DissolveEffect:
+		dissolve_->PreDraw();
+		break;
+	case PostEffect::RandomEffect:
+		randomEffect_->PreDraw();
+		break;
+	}
 	//back_->PreDraw();
 	//grayScale_->PreDraw();
 	//sepiaScale_->PreDraw();
@@ -328,7 +386,7 @@ void SampleScene::PreDrawPostEffectFirst(){
 	//radialBlur_->PreDraw();
 	//outLine_->PreDraw();
 	//dissolve_->PreDraw();
-	randomEffect_->PreDraw();
+	//randomEffect_->PreDraw();
 
 	//depthBasedOutline_->PreDraw();
 }
@@ -359,6 +417,35 @@ void SampleScene::DrawObject3D() {
 
 void SampleScene::DrawPostEffect(){
 	
+	switch (postEffect_) {
+	case PostEffect::NoneEffect:
+		back_->Draw();
+		break;
+	case PostEffect::GrayEffect:
+		grayScale_->Draw();
+		break;
+	case PostEffect::SepiaEffect:
+		sepiaScale_->Draw();
+		break;
+	case PostEffect::VignetteEffect:
+		vignette_->Draw();
+		break;
+	case PostEffect::GaussianFilter:
+		gaussianFilter_->Draw();
+		break;
+	case PostEffect::LuminanceOutLineEffect:
+		outLine_->Draw();
+		break;
+	case PostEffect::RadialBlurEffect:
+		radialBlur_->Draw();
+		break;
+	case PostEffect::DissolveEffect:
+		dissolve_->Draw();
+		break;
+	case PostEffect::RandomEffect:
+		randomEffect_->Draw();
+		break;
+	}
 	
 	//back_->Draw();
 	//grayScale_->Draw();
@@ -369,12 +456,12 @@ void SampleScene::DrawPostEffect(){
 	//radialBlur_->Draw();
 	//outLine_->Draw();
 	//dissolve_->Draw();
-	randomEffect_->Draw();
+	//randomEffect_->Draw();
 	//depthBasedOutline_->Draw(camera_);
 }
 
 void SampleScene::DrawSprite(){
-	sprite_->Draw();
+	//sprite_->Draw();
 }
 
 
