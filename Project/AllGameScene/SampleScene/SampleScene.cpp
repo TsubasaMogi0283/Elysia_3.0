@@ -64,11 +64,11 @@ void SampleScene::Initialize() {
 	noneAnimationWorldTransform_.translate_.y = 0.0f;
 
 	
-
+	//カメラ
 	camera_.Initialize();
 	camera_.translate_ = { 0.0f,1.0f,-10.0f };
 
-
+	//スカイボックス
 	uint32_t skyBoxTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG4/SkyBox/rostock_laage_airport_4k.dds");
 	skyBox_ = std::make_unique<SkyBox>();
 	skyBox_->Create(skyBoxTextureHandle);
@@ -84,37 +84,46 @@ void SampleScene::Initialize() {
 	sprite_.reset(Sprite::Create(textureHandle, { 0.0f,0.0f }));
 	sprite_->SetScale({0.5f, 0.5f});
 	
+	//通常
 	back_ = std::make_unique< BackText>();
 	back_->Initialize();
 
+	//グレースケール
 	grayScale_ = std::make_unique<GrayScale>();
 	grayScale_->Initialize();
 	
+	//セピア
 	sepiaScale_ = std::make_unique<SepiaScale>();
 	sepiaScale_->Initialize();
 
+	//ビネット
 	vignette_ = std::make_unique<Vignette>();
 	vignette_->Initialize();
 
+	//ボックスフィルター
 	boxFilter_ = std::make_unique<BoxFilter>();
 	boxFilter_->Initialize();
 
+	//ガウシアンフィルター
 	gaussianFilter_ = std::make_unique<GaussianFilter>();
 	gaussianFilter_->Initialize();
 
+	//ラジアルブラー
 	radialBlur_ = std::make_unique < RadialBlur>();
 	radialBlur_->Initialize();
 	
+	//アウトライン
 	outLine_ = std::make_unique < LuminanceBasedOutline>();
 	outLine_->Initialize();
 	depthBasedOutline_ = std::make_unique<DepthBasedOutline>();
 	depthBasedOutline_->Initialize();
 	
-	
+	//Dissolve
 	uint32_t dissolveTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise0.png");
 	dissolve_ = std::make_unique <Dissolve>();
 	dissolve_->Initialize(dissolveTextureHandle);
 	//
+	//ランダム
 	randomEffect_ = std::make_unique < RandomEffect>();
 	randomEffect_->Initialize();
 
@@ -139,9 +148,6 @@ void SampleScene::Initialize() {
 void SampleScene::Update(GameManager* gameManager) {
 	gameManager;
 
-	
-	
-	
 #pragma region アニメーションモデル
 	
 	humanAnimationTime_[0] += 1.0f / 60.0f;
@@ -181,63 +187,8 @@ void SampleScene::Update(GameManager* gameManager) {
 	ImGui::End();
 	
 #endif
-	const float CAMERA_MOVE_SPEED = 0.2f;
-	Vector3 move = {};
-	Vector3 rotateMove = {};
 
-	//Y
-	if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
-		move.y = 1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
-		move.y = -1.0f;
-	}
-	//X
-	else if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
-		move.x = 1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
-		move.x = -1.0f;
-	}
-	//Z
-	else if (Input::GetInstance()->IsPushKey(DIK_O) == true) {
-		move.z = 1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_L) == true) {
-		move.z = -1.0f;
-	}
-
-
-	else {
-		move.x = 0.0f;
-		move.y = 0.0f;
-		move.z = 0.0f;
-	}
-
-	//回転
-	const float ROTATE_MOVE_SPEED = 0.01f;
-	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
-		rotateMove.y = -1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
-		rotateMove.y = 1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
-		rotateMove.x = -1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
-		rotateMove.x = 1.0f;
-	}
-
-	else {
-		rotateMove.y = 0.0f;
-		rotateMove.x = 0.0f;
-	}
-
-	camera_.translate_ = Add(camera_.translate_, { move.x* CAMERA_MOVE_SPEED,move.y* CAMERA_MOVE_SPEED,move.z*CAMERA_MOVE_SPEED });
-	camera_.rotate_ = Add(camera_.rotate_, { rotateMove.x * ROTATE_MOVE_SPEED,rotateMove.y * ROTATE_MOVE_SPEED,rotateMove.z * ROTATE_MOVE_SPEED });
-
-
+#pragma region 選択
 	if (Input::GetInstance()->IsTriggerKey(DIK_0) == true) {
 		postEffect_ = PostEffect::NoneEffect;
 	}
@@ -251,29 +202,25 @@ void SampleScene::Update(GameManager* gameManager) {
 		postEffect_ = PostEffect::VignetteEffect;
 	}
 	else if (Input::GetInstance()->IsTriggerKey(DIK_4) == true) {
-		postEffect_ = PostEffect::GaussianFilter;
+		postEffect_ = PostEffect::BoxFilterEffect;
 	}
 	else if (Input::GetInstance()->IsTriggerKey(DIK_5) == true) {
-		postEffect_ = PostEffect::LuminanceOutLineEffect;
+		postEffect_ = PostEffect::GaussianFilter;
 	}
 	else if (Input::GetInstance()->IsTriggerKey(DIK_6) == true) {
-		postEffect_ = PostEffect::RadialBlurEffect;
+		postEffect_ = PostEffect::LuminanceOutLineEffect;
 	}
 	else if (Input::GetInstance()->IsTriggerKey(DIK_7) == true) {
-		postEffect_ = PostEffect::DissolveEffect;
+		postEffect_ = PostEffect::RadialBlurEffect;
 	}
 	else if (Input::GetInstance()->IsTriggerKey(DIK_8) == true) {
+		postEffect_ = PostEffect::DissolveEffect;
+	}
+	else if (Input::GetInstance()->IsTriggerKey(DIK_9) == true) {
 		postEffect_ = PostEffect::RandomEffect;
 	}
 
-
-
-
-
-
-
-
-
+#pragma endregion
 
 	humanMaterial_.Update();
 	sphereMaterial.Update();
@@ -331,10 +278,6 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 #endif
-	/*if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
-		AdjustmentItems::GetInstance()->SaveFile(GroupName);
-		gameManager->ChangeScene(new SampleScene2());
-	}*/
 
 
 	
@@ -342,7 +285,6 @@ void SampleScene::Update(GameManager* gameManager) {
 
 void SampleScene::DrawSpriteBack(){
 
-	//sprite_->Draw();
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
@@ -361,6 +303,9 @@ void SampleScene::PreDrawPostEffectFirst(){
 	case PostEffect::VignetteEffect:
 		vignette_->PreDraw();
 		break;
+	case PostEffect::BoxFilterEffect:
+		boxFilter_->PreDraw();
+		break;
 	case PostEffect::GaussianFilter:
 		gaussianFilter_->PreDraw();
 		break;
@@ -377,18 +322,6 @@ void SampleScene::PreDrawPostEffectFirst(){
 		randomEffect_->PreDraw();
 		break;
 	}
-	//back_->PreDraw();
-	//grayScale_->PreDraw();
-	//sepiaScale_->PreDraw();
-	//vignette_->PreDraw();
-	//boxFilter_->PreDraw();
-	//gaussianFilter_->PreDraw();
-	//radialBlur_->PreDraw();
-	//outLine_->PreDraw();
-	//dissolve_->PreDraw();
-	//randomEffect_->PreDraw();
-
-	//depthBasedOutline_->PreDraw();
 }
 
 /// <summary>
@@ -407,8 +340,7 @@ void SampleScene::DrawObject3D() {
 
 
 	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_, sphereMaterial, pointLight_);
-	//model_->Draw(worldTransform_, camera_, humanMaterial_, pointLight_);
-
+	
 
 	
 }
@@ -430,6 +362,9 @@ void SampleScene::DrawPostEffect(){
 	case PostEffect::VignetteEffect:
 		vignette_->Draw();
 		break;
+	case PostEffect::BoxFilterEffect:
+		boxFilter_->Draw();
+		break;
 	case PostEffect::GaussianFilter:
 		gaussianFilter_->Draw();
 		break;
@@ -447,17 +382,6 @@ void SampleScene::DrawPostEffect(){
 		break;
 	}
 	
-	//back_->Draw();
-	//grayScale_->Draw();
-	//sepiaScale_->Draw();
-	//vignette_->Draw();
-	//boxFilter_->Draw();
-	//gaussianFilter_->Draw();
-	//radialBlur_->Draw();
-	//outLine_->Draw();
-	//dissolve_->Draw();
-	//randomEffect_->Draw();
-	//depthBasedOutline_->Draw(camera_);
 }
 
 void SampleScene::DrawSprite(){

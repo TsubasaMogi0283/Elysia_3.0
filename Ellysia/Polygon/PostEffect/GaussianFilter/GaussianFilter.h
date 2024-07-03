@@ -56,8 +56,8 @@ public:
 
 private:
 	//別々で分けたい
-	ComPtr<ID3D12Resource> boxFilterTypeResource_ = nullptr;
-	GaussianFilterData* boxFilterTypeData_ = nullptr;
+	ComPtr<ID3D12Resource> gaussianFilterResource_ = nullptr;
+	GaussianFilterData* gaussianFilterTypeData_ = nullptr;
 	int32_t boxFilterType_ = GaussianFilter3x3;
 	float sigma_ = 0.0f;
 

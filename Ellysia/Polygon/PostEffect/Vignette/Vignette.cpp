@@ -5,6 +5,7 @@
 #include <SrvManager.h>
 #include "imgui.h"
 #include "RtvManager.h"
+#include <Input.h>
 
 
 
@@ -74,15 +75,38 @@ void Vignette::Draw() {
 	ImGui::End();
 
 #endif
-
-
-
+	//Scale
+	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+		scale_ += 0.8f;
+		if (scale_ > 100.0f) {
+			scale_ = 100.0f;
+		}
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_Q) == true) {
+		scale_ -= 0.8f;
+		if (scale_ < 0.0f) {
+			scale_ = 0.0f;
+		}
+	}
+	//Pow
+	if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+		pow_ += 0.05f;
+		if (pow_ > 10.0f) {
+			pow_ = 10.0f;
+		}
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
+		pow_ -= 0.05f;
+		if (pow_ < 0.0f) {
+			pow_ = 0.0f;
+		}
+	}
 
 #pragma region 数値の書き込み
 
 	valueResource_->Map(0, nullptr, reinterpret_cast<void**>(&vignetteData_));
 	vignetteData_->scale = scale_;
-	vignetteData_->pow = pow_;;
+	vignetteData_->pow = pow_;
 	valueResource_->Unmap(0, nullptr);
 
 

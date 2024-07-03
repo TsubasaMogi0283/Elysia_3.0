@@ -4,6 +4,7 @@
 #include <SrvManager.h>
 #include "imgui.h"
 #include "RtvManager.h"
+#include <Input.h>
 
 
 void RandomEffect::Initialize() {
@@ -14,7 +15,7 @@ void RandomEffect::Initialize() {
 
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
-	randomValue_.isUseTexture = false;
+	randomValue_.isUseTexture = true;
 	const std::string postEffectName = "RandomEffect";
 	rtvHandle_ = RtvManager::GetInstance()->Allocate(postEffectName);
 	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);
@@ -81,6 +82,16 @@ void RandomEffect::Draw() {
 	ImGui::Checkbox("UseTexture", &randomValue_.isUseTexture);
 	ImGui::End();
 #endif
+
+	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
+		if (randomValue_.isUseTexture == true) {
+			randomValue_.isUseTexture = false;
+		}
+		else {
+			randomValue_.isUseTexture = true;
+		}
+	}
+
 	randomValueResource_->Map(0,nullptr,reinterpret_cast<void**>(&randomValueData_));
 	std::uniform_real_distribution<float> distribute(0.0f, 1.0f);
 	randomValue_.value = distribute(randomEngine_);

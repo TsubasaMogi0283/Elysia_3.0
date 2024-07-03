@@ -4,6 +4,7 @@
 #include <SrvManager.h>
 #include "imgui.h"
 #include "RtvManager.h"
+#include <Input.h>
 
 void Dissolve::Initialize(uint32_t maskTexture){
 	//パイプライン
@@ -16,7 +17,7 @@ void Dissolve::Initialize(uint32_t maskTexture){
 	dessolveValue_.isUseEdge = true;
 	dessolveValue_.edgeThinkness = 0.04f;
 	dessolveValue_.edgeColor = { 1.0f,1.0f,1.0f };
-	dessolveValue_.threshold = 0.5f;
+	dessolveValue_.threshold = 0.4f;
 
 
 
@@ -84,6 +85,28 @@ void Dissolve::Draw(){
 	ImGui::End();
 #endif
 
+	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
+		if (dessolveValue_.isUseEdge == true) {
+			dessolveValue_.isUseEdge = false;
+		}
+		else {
+			dessolveValue_.isUseEdge = false;
+		}
+	}
+
+
+	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+		dessolveValue_.threshold += 0.005f;
+		if (dessolveValue_.threshold > 1.0f) {
+			dessolveValue_.threshold = 1.0f;
+		}
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_Q) == true) {
+		dessolveValue_.threshold -= 0.005f;
+		if (dessolveValue_.threshold < 0.0f) {
+			dessolveValue_.threshold = 0.0f;
+		}
+	}
 
 	dissolveResource_->Map(0, nullptr, reinterpret_cast<void**>(&dissolveData_));
 	dissolveData_->isUseEdge = dessolveValue_.isUseEdge;

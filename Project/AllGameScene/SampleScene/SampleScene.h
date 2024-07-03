@@ -134,6 +134,7 @@ private:
 		GrayEffect,
 		SepiaEffect,
 		VignetteEffect,
+		BoxFilterEffect,
 		GaussianFilter,
 		LuminanceOutLineEffect,
 		RadialBlurEffect,

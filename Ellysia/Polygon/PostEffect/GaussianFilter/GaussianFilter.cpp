@@ -4,6 +4,7 @@
 #include <SrvManager.h>
 #include "imgui.h"
 #include "RtvManager.h"
+#include <Input.h>
 
 
 
@@ -15,7 +16,7 @@ void GaussianFilter::Initialize(){
 	PipelineManager::GetInstance()->GenarateGaussianFilterPSO();
 	
 	//Effect
-	boxFilterTypeResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(GaussianFilterData));
+	gaussianFilterResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(GaussianFilterData));
 	sigma_ = 2.0f;
 	boxFilterType_ = GaussianFilter3x3;
 
@@ -71,16 +72,31 @@ void GaussianFilter::Draw(){
 #ifdef _DEBUG
 	ImGui::Begin("GaussianFilter");
 	ImGui::SliderInt("Type", &boxFilterType_, 0, 3);
-	ImGui::SliderFloat("Sigma", &sigma_, 0.0f, 100.0f);
+	ImGui::SliderFloat("Sigma", &sigma_, 0.0f, 6.0f);
 	ImGui::End();
 #endif // _DEBUG
 
+	if (sigma_ <= 0.0f) {
+		sigma_ = 0.05f;
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_Q) == true) {
+		sigma_ -= 0.01f;
+		if (sigma_ <= 0.0f) {
+			sigma_ = 0.05f;
+		}
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+		sigma_ += 0.01f;
+		if (sigma_ > 6.0f) {
+			sigma_ = 6.0f;
+		}
+	}
 
 
-	boxFilterTypeResource_->Map(0, nullptr, reinterpret_cast<void**>(&boxFilterTypeData_));
-	boxFilterTypeData_->sigma = sigma_;
-	boxFilterTypeData_->type = boxFilterType_;
-	boxFilterTypeResource_->Unmap(0, nullptr);
+	gaussianFilterResource_->Map(0, nullptr, reinterpret_cast<void**>(&gaussianFilterTypeData_));
+	gaussianFilterTypeData_->sigma = sigma_;
+	gaussianFilterTypeData_->type = boxFilterType_;
+	gaussianFilterResource_->Unmap(0, nullptr);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetGaussianFilterRootSignature().Get());
@@ -94,7 +110,7 @@ void GaussianFilter::Draw(){
 	TextureManager::GraphicsCommand(0,srvHandle_);
 
 	//Effect
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, boxFilterTypeResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, gaussianFilterResource_->GetGPUVirtualAddress());
 
 
 
