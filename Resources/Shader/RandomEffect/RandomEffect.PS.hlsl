@@ -8,8 +8,6 @@ struct PixelShaderOutput
 };
 
 
-//rand2To1dないやんけ・・
-//調べてみたらこのページにあった！！
 //https://www.ronja-tutorials.com/post/024-white-noise/
 float rand2dTo1d(float2 value){
     float2 dotDir = float2(12.9898, 78.233);
@@ -20,7 +18,10 @@ float rand2dTo1d(float2 value){
 }
 
 struct RandomEngine{
+    //値
     float value;
+	//テクスチャと乗算させるか
+    bool isUseTexture;
 };
 
 ConstantBuffer<RandomEngine> gRandomEngine : register(b0);
@@ -35,8 +36,19 @@ PixelShaderOutput main(VertexShaderOutput input)
     PixelShaderOutput output;
     
     float random = rand2dTo1d(input.texcoord * gRandomEngine.value);
-    //色にする
-    output.color = float4(random, random, random, 1.0f);
+   
+    //テクスチャを使って乗算させるかどうか
+    if (gRandomEngine.isUseTexture == true){
+        //テクスチャの色を取得
+        float4 textureColor = gTexture.Sample(gSample, input.texcoord);
+        //色にする
+        output.color = float4(random, random, random, 1.0f) * textureColor;
+        
+    }
+    //しない場合
+    else{
+        output.color = float4(random, random, random, 1.0f);
+    }
     
     return output;
 }
