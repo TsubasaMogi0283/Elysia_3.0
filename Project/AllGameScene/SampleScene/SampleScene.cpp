@@ -81,7 +81,7 @@ void SampleScene::Initialize() {
 	camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
 	cameraPosition_ = camera_.translate_;
 
-	CAMERA_POSITION_OFFSET = { 0.0f,3.0f,0.0f };
+	CAMERA_POSITION_OFFSET = { 0.0f,1.0f,0.0f };
 
 	thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
 	cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
@@ -101,7 +101,7 @@ void SampleScene::Initialize() {
 #ifdef _DEBUG
 	debugFanCollisionSphereModel_.reset(Model::Create(weaponLightModel));
 	debugFanCollisionSphereWorldTransform_.Initialize();
-	debugFanCollisionSphereWorldTransform_.translate_ = { .x = 0.0f,.y = 0.0f,.z = -4.0f };
+	debugFanCollisionSphereWorldTransform_.translate_ = { .x = 0.0f,.y = 0.0f,.z = 7.0f };
 	debugFanCollisionSphereMaterial_.Initialize();
 	debugFanCollisionSphereMaterial_.lightingKinds_=Spot;
 	debugFanCollisionSphereMaterial_.color_ = { .x = 0.0f,.y = 1.0f,.z = 0.0f,.w = 1.0f };
@@ -452,7 +452,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	//コントローラーだと
 	//十字ボタンが良いかも
 	//マイクラはそれだったから
-
+	
 	//1人称
 	if (viewOfPoint_ == FirstPerson) {
 
@@ -468,8 +468,8 @@ void SampleScene::Update(GameManager* gameManager) {
 	else if (viewOfPoint_ == ThirdPersonBack) {
 
 
-		camera_.rotate_ = thirdPersonViewOfPointRotate_;
-		camera_.translate_ = Add(playerPosition, cameraThirdPersonViewOfPointPosition_);
+		//camera_.rotate_ = thirdPersonViewOfPointRotate_;
+		camera_.translate_ = Add(playerPosition, Add(cameraThirdPersonViewOfPointPosition_, cameraTranslate));
 	}
 
 
@@ -574,7 +574,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 #ifdef _DEBUG
 	ImGui::Begin("Camera");
-	ImGui::InputFloat3("Rotate", &camera_.rotate_.x);
+	ImGui::SliderFloat3("Rotate", &camera_.rotate_.x,-3.0f,3.0f);
+	ImGui::SliderFloat3("Traslate", &cameraTranslate.x, -100.0f, 100.0f);
 	ImGui::SliderFloat3("PosOffset", &CAMERA_POSITION_OFFSET.x, -30.0f, 30.0f);
 	ImGui::InputFloat("Theta", &theta_);
 	ImGui::InputFloat("Phi", &phi);

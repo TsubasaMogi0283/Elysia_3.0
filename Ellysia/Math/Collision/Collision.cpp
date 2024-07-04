@@ -49,166 +49,103 @@ bool IsCollisionAABBAndPoint(const AABB& aabb, const Vector3& point){
 
 bool IsFanAndPointCollision(const Fan& fan, const Vector2& point){
 
-    //参考
-    //https://yttm-work.jp/collision/collision_0008.html
-
-    //扇と点のベクトルを求める
-//    Vector2 vector = { point.x-fan.position.x, point.y-fan.position.y };
-//    float distance = sqrtf(vector.x * vector.x + vector.y * vector.y );
-//
-//#ifdef _DEBUG
-//    ImGui::Begin("FanCollision");
-//    ImGui::InputFloat2("Vector", &vector.x);
-//    ImGui::InputFloat("Distance", &distance);
-//    ImGui::End();
-//#endif // _DEBUG
-//
-//    //範囲外の場合早期リターン
-//    //この時は扇の半径の長さより長い時である
-//    if (fan.length < distance) {
-//        return false;
-//    }
-//    //扇を2等分する線のベクトルを求める
-//    float directionRad = fan.directionRadian;
-//    Vector2 fanDirection = { std::cosf(directionRad),std::sinf(directionRad)};
-//    //Vector2 fanDirection = fan.devidDirection;
-//
-//    //扇と点のベクトルを単位ベクトルにする
-//    Vector2 normalFanToPoint = {};
-//    normalFanToPoint.x = vector.x / distance;
-//    normalFanToPoint.y = vector.y / distance;
-//
-//    //内積計算
-//    float dot = normalFanToPoint.x * fanDirection.y + normalFanToPoint.y * fanDirection.y;
-//
-//    //2で割る
-//    float fanCos = std::cosf(directionRad / 2.0f);
-//
-//#ifdef _DEBUG
-//    ImGui::Begin("FanCollision2");
-//    ImGui::InputFloat("DirectionRad", &directionRad);
-//    ImGui::InputFloat("NormalFanToPoint", &normalFanToPoint.x);
-//    ImGui::InputFloat("Dot", &dot);
-//    ImGui::InputFloat("FanCos", &fanCos);
-//    ImGui::End();
-//#endif // _DEBUG
-//
-//    //点が扇の範囲内にあるかを比較する
-//    if (fanCos > dot) {
-//        //当たっていない
-//        return false;
-//    }
-
 
 
     //今は2次元でやっているが後で3次元に拡張する
 
-
     //扇と点のベクトルを求める
-    Vector2 vector = { point.x - fan.position.x, point.y - fan.position.y };
-    float distance = sqrtf(vector.x * vector.x + vector.y * vector.y);
+    Vector2 vectorFanAndPont = { point.x - fan.position.x, point.y - fan.position.y };
+    //距離を求める
+    float distance = sqrtf(vectorFanAndPont.x * vectorFanAndPont.x + vectorFanAndPont.y * vectorFanAndPont.y);
 
-#ifdef _DEBUG
-    ImGui::Begin("FanCollision1");
-    ImGui::InputFloat2("Vector", &vector.x);
-    ImGui::InputFloat("Distance", &distance);
-    ImGui::End();
-#endif // _DEBUG
 
-    //扇の半径より大きい場合
+    //設定した扇の半径より大きい場合
     //範囲外なのでfalseを返す
     if (fan.length < distance) {
         return false;
     }
 
-
-
-    //atan2で扇の中心から目的地までの角度を求めたい
-    //向きだけが欲しいので正規化をする
-    Vector2 normalizedFanPointVector = Normalize(vector);
-    //Vector2 
-
     
+   //向きだけが欲しいので正規化をする
+    Vector2 normalizedFanAndPoint = Normalize(vectorFanAndPont);
 
-    //
-    float targetTheta = atan2f(normalizedFanPointVector.x, normalizedFanPointVector.y);
-    //ずれが発生しているのでその分足す
-    float newTargetTheta = targetTheta + std::numbers::pi_v<float> / 2.0f;
+    //向いている方向
+    Vector2 direction = Normalize(fan.direction);
 
-    //いずれも0～1のベクトルだからそのままでOK
-    //右側のベクトル
-    Vector2 rsVector = { .x = std::cosf(fan.rightSideRadian),.y = std::sinf(fan.rightSideRadian) };
-    //中心のベクトル
-    Vector2 direction = fan.divideDirection;
-    //左側のベクトル
-    Vector2 lsVector = { .x = std::cosf(fan.leftSideRadian),.y = std::sinf(fan.leftSideRadian) };
-    
-    //そこから内積を計算する
-    //右と中心
-    //float dotCenterAndRight = Dot(rsVector, direction);
-    //右と左
-    float dotRightAndLeft = Dot(rsVector, lsVector);
-
-
-    //右とターゲット
-    float dotrightAndtarget = Dot(rsVector, normalizedFanPointVector);
-
-    
-
-    float rsRadian = fan.rightSideRadian;
-
-    //左より大きい場合
-    if (dotrightAndtarget < dotRightAndLeft) {
-        return  false;
-    }
-
-
-    //右より小さい場合
-    //内積だとおかしくなるので角度で求めて除外をする
-
-    float newRightSideRadian = fan.rightSideRadian;
-
+    //内積を求める
+    //左右一致するはず
+    //左側
+    float centerAndLSDot = Dot(direction, fan.leftVector);
+    //右側
+    float centerAndRSDot = Dot(direction, fan.rightVector);
+    //ターゲット
+    float centerAndTargetDot = Dot(direction, normalizedFanAndPoint);
 
 #ifdef _DEBUG
-    ImGui::Begin("FanCollision2");
-    ImGui::InputFloat2("RightVector", &rsVector.x);
-    ImGui::InputFloat2("LeftVector", &lsVector.x);
-    ImGui::InputFloat("NewRightSideRadian", &newRightSideRadian);
 
-
-    ImGui::InputFloat("RightRadian", &rsRadian);
-    ImGui::InputFloat("TargetTheta", &targetTheta);
-    ImGui::InputFloat("NewTargetTheta", &newTargetTheta);
+    ImGui::Begin("FanDirection");
+    ImGui::InputFloat2("MainDirection", &direction.x);
+    ImGui::InputFloat2("Vector", &vectorFanAndPont.x);
+    ImGui::InputFloat2("NormalizedVector", &normalizedFanAndPoint.x);
     ImGui::End();
-#endif // _DEBUG
+
+    ImGui::Begin("FanDot");
+    ImGui::InputFloat("LSDot", &centerAndLSDot);
+    ImGui::InputFloat("RSDot", &centerAndRSDot);
+    ImGui::InputFloat("CTDot", &centerAndTargetDot);
 
     
-    //1周超えたら2π引く
-    if (fan.rightSideRadian > std::numbers::pi_v<float>*2.0f) {
-        newRightSideRadian = fan.rightSideRadian - std::numbers::pi_v<float>*2.0f;
-    }
+    ImGui::End();
 
-    if (newRightSideRadian > targetTheta) {
+
+
+    //角度を測って当たり判定をとろうと思ったけど一周した後が大変なことになっている
+    //内積でやった方が良いことに気づいたのでそちらで計算する
+    
+    //ライト(プレイヤー)とターゲットとの角度
+    float targetRadian = std::atan2f(normalizedFanAndPoint.y, normalizedFanAndPoint.x);
+
+    //持ってきた値を代入
+    float leftSideRadian = fan.leftSideRadian;
+    float newLeftSideRadian = fan.centerRadian + fan.sideAngle;
+    float rightSideRadian = fan.rightSideRadian;
+
+
+    //度数法
+    ImGui::Begin("FanRadian");
+    ImGui::InputFloat("LSRadian", &leftSideRadian);
+    ImGui::InputFloat("NewLSRadian", &newLeftSideRadian);
+    ImGui::InputFloat("TargetRadian", &targetRadian);
+    ImGui::InputFloat("RSRadian", &rightSideRadian);
+
+    ImGui::End();
+
+    //弧度法だとデバッグ時分かりずらと思ったので度数法に直す
+    //変換する関数を作った方が良いかも
+    float leftSideDigree = fan.leftSideRadian * (180.0f / std::numbers::pi_v<float>);
+    float rightSideDigree = fan.rightSideRadian * (180.0f / std::numbers::pi_v<float>);
+    float targetDigree = targetRadian * (180.0f / std::numbers::pi_v<float>);
+    //扇中心の角度
+    float centerDigree = fan.centerRadian * (180.0f / std::numbers::pi_v<float>);
+
+    ImGui::Begin("FanDigree");
+    ImGui::InputFloat("LSTheta", &leftSideDigree);
+    ImGui::InputFloat("CenterThetaOrigin", &centerDigree);
+    ImGui::InputFloat("NewTargetTheta", &targetDigree);
+    ImGui::InputFloat("RSTheta", &rightSideDigree);
+    ImGui::End();
+
+    
+#endif // _DEBUG
+
+    //最小でcenterAndLSDotまたはcenterAndRSDot
+    //これより小さくなったら当たっていないと返す
+    if (centerAndTargetDot < centerAndLSDot ||
+        centerAndTargetDot < centerAndRSDot) {
         return false;
     }
 
 
-    //「θL>=θT>=θR」この時だけ扇内にいる
-    //左端より大きい時と右端より小さい角度の時の場合
-    //if (fan.leftSideRadian < newTargetTheta ||
-    //    newTargetTheta<fan.rightSideRadian) {
-    //    return false;
-    //}
-
-
-#ifdef _DEBUG
-    ImGui::Begin("FanCollisionFinal"); 
-    ImGui::End();
-#endif // _DEBUG
-
-
-
-    
 
     return true;
 }

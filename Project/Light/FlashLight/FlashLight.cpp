@@ -26,7 +26,7 @@ void FlashLight::Initialize(){
 	fan_.length = spotLight_.distance_;
 	fan_.position = { .x = lightPosition.x,.y = lightPosition.y };
 	fan_.range = 0.98f;
-	fan_.directionRadian = 0.98f;
+	fan_.sideAngle = lightSideTheta;
 
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
 	
@@ -70,7 +70,7 @@ void FlashLight::Update(){
 
 
 	//プレイヤーの座標と微調整分
-	const float LIGHT_HEIGHT = 1.0f;
+	const float LIGHT_HEIGHT = 0.0f;
 	const Vector3 OFFSET = { 0.0f, LIGHT_HEIGHT,0.0f };
 	lightPosition = Add(playerPosition_, OFFSET);
 
@@ -86,7 +86,7 @@ void FlashLight::Update(){
 	fan_.leftSideRadian = theta_ + lightSideTheta;
 	fan_.rightSideRadian = theta_ - lightSideTheta;
 
-	fan_.divideDirection = { .x=lightDirection_.x,.y= lightDirection_.z };
+	fan_.direction = { .x=lightDirection_.x,.y= lightDirection_.z };
 	fan_.length = spotLight_.distance_;
 	fan_.position = { .x = lightPosition.x,.y = lightPosition.z };
 
@@ -112,14 +112,13 @@ void FlashLight::Update(){
 	ImGui::Begin("LightFan");
 	ImGui::InputFloat("Length", &fan_.length);
 	ImGui::InputFloat3("Position", &fan_.position.x);
-	ImGui::InputFloat("Range", &fan_.directionRadian);
 	ImGui::InputFloat("LeftSideRadian", &fan_.leftSideRadian);
 	ImGui::InputFloat("CnterRadian", &fan_.centerRadian);
 	ImGui::InputFloat("RightSideRadian", &fan_.rightSideRadian);
 
 
 
-	ImGui::InputFloat2("DevidDirection", &fan_.divideDirection.x);
+	ImGui::InputFloat2("DevidDirection", &fan_.direction.x);
 	ImGui::InputFloat2("FanLeft", &fanLeft.x);
 	ImGui::InputFloat2("FanRight", &fanRight.x);
 

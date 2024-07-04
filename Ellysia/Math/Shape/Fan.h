@@ -10,10 +10,12 @@ struct Fan {
 	float range;
 	//長さ
 	float length;
-	//方向(角度)
-	float directionRadian;
+
+	//片側の角度
+	float sideAngle;
+
 	//2等分するベクトル
-	Vector2 divideDirection;
+	Vector2 direction;
 	Vector2 rightVector;
 	Vector2 leftVector;
 

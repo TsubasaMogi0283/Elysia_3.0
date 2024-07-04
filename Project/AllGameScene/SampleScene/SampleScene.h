@@ -167,7 +167,7 @@ private:
 
 
 #pragma region デバッグ用のオブジェクト
-
+	Vector3 cameraTranslate = {};
 
 	std::unique_ptr<Model> debugTower_ = nullptr;
 	WorldTransform debugTowerWorldTransform_ = {};
