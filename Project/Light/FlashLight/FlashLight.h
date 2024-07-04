@@ -76,8 +76,16 @@ public:
 	/// 扇を取得
 	/// </summary>
 	/// <returns></returns>
-	inline Fan GetFan() const{
+	inline Fan2D GetFan() const{
 		return fan_;
+	}
+
+	/// <summary>
+	/// 扇の取得(3次元)
+	/// </summary>
+	/// <returns></returns>
+	inline Fan3D GetFan3D() const {
+		return fan3D_;
 	}
 
 private:
@@ -96,7 +104,8 @@ private:
 	float phi_ = 0.0f;
 
 	//扇
-	Fan fan_ = {};
+	Fan2D fan_ = {};
+	Fan3D fan3D_ = {};
 
 
 	enum Side {

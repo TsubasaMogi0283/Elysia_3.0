@@ -81,7 +81,7 @@ void SampleScene::Initialize() {
 	camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
 	cameraPosition_ = camera_.translate_;
 
-	CAMERA_POSITION_OFFSET = { 0.0f,1.0f,0.0f };
+	CAMERA_POSITION_OFFSET = { 0.0f,2.0f,0.0f };
 
 	thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
 	cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
@@ -558,9 +558,9 @@ void SampleScene::Update(GameManager* gameManager) {
 		.y = debugFanCollisionSphereWorldTransform_.worldMatrix_.m[3][1] ,
 		.z = debugFanCollisionSphereWorldTransform_.worldMatrix_.m[3][2] };
 
-	Vector2 newWorldPosition = { fanCollisionSphereWorldPosition.x,fanCollisionSphereWorldPosition.z };
-	Fan fan = flashLight_->GetFan();
-	if (IsFanAndPointCollision(fan, newWorldPosition)) {
+	Vector3 newWorldPosition = { fanCollisionSphereWorldPosition.x,fanCollisionSphereWorldPosition.y,fanCollisionSphereWorldPosition.z };
+	Fan3D fan = flashLight_->GetFan3D();
+	if (IsFanCollision(fan, newWorldPosition)) {
 		ImGui::Begin("FanCollsion");
 		ImGui::End();
 	}

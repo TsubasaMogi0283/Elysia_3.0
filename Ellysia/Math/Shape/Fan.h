@@ -2,12 +2,12 @@
 #include <Vector3.h>
 #include "Vector2.h"
 
+
+
 //扇型
-struct Fan {
+struct Fan2D {
 	//中心座標
 	Vector2 position;
-	//範囲(角度)
-	float range;
 	//長さ
 	float length;
 
@@ -30,4 +30,32 @@ struct Fan {
 
 };
 
+//ほぼほぼ円錐かも
+struct Fan3D {
+	//中心座標
+	Vector3 position;
+	//長さ
+	float length;
 
+	//片側の角度
+	float sideThetaAngle;
+	float sidePhiAngleSize;
+
+	//2等分するベクトル
+	Vector3 direction;
+	Vector3 rightVector;
+	Vector3 leftVector;
+
+
+	//
+	float centerPhi;
+
+	//左側の角度
+	float leftSideRadian;
+	//中心の角度
+	float centerRadian;
+	//右側の角度
+	float rightSideRadian;
+
+
+};

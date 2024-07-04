@@ -5,13 +5,12 @@
 
 void FlashLight::Initialize(){
 
-
-
 	//初期化
 	spotLight_.Initialize();
 
 	spotLight_.position_ = lightPosition;
-	spotLight_.distance_ = 35.0f;
+	const float LIGHT_DISTANCE = 20.0f;
+	spotLight_.distance_ = LIGHT_DISTANCE;
 	spotLight_.decay_ = 0.6f;
 	spotLight_.cosFallowoffStart_ = 6.1f;
 	//spotLight_.cosAngle_ = 0.98f;
@@ -25,8 +24,14 @@ void FlashLight::Initialize(){
 
 	fan_.length = spotLight_.distance_;
 	fan_.position = { .x = lightPosition.x,.y = lightPosition.y };
-	fan_.range = 0.98f;
 	fan_.sideAngle = lightSideTheta;
+
+
+	fan3D_.length = spotLight_.distance_;
+	fan3D_.position = lightPosition;
+	//同じサイズでいいかも
+	fan3D_.sideThetaAngle = lightSideTheta;
+	fan3D_.sidePhiAngleSize = lightSideTheta;
 
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
 	
@@ -52,8 +57,7 @@ void FlashLight::Initialize(){
 
 }
 
-void FlashLight::Update(){
-	
+void FlashLight::Update() {
 
 	//ライトの方向ベクトル
 	Vector3 direction = {};
@@ -80,24 +84,36 @@ void FlashLight::Update(){
 
 	//片方の角度
 	spotLight_.cosAngle_ = std::cosf(lightSideTheta);
-	
+
 	//扇
 	fan_.centerRadian = theta_;
 	fan_.leftSideRadian = theta_ + lightSideTheta;
 	fan_.rightSideRadian = theta_ - lightSideTheta;
 
-	fan_.direction = { .x=lightDirection_.x,.y= lightDirection_.z };
+	fan_.direction = { .x = lightDirection_.x,.y = lightDirection_.z };
 	fan_.length = spotLight_.distance_;
 	fan_.position = { .x = lightPosition.x,.y = lightPosition.z };
 
 
+	fan3D_.centerRadian = theta_;
+	fan3D_.direction = lightDirection_;
+	fan3D_.sidePhiAngleSize = lightSideTheta;
+	fan3D_.centerPhi = phi_;
+	fan3D_.length = spotLight_.distance_;
+	fan3D_.position = lightPosition;
+
 	//端をデバッグ用として可視化
 	const float DISTANCE = 20.0f;
-	Vector2 fanLeft = { .x = std::cosf(theta_ + lightSideTheta)* DISTANCE,.y = std::sinf(theta_ + lightSideTheta)* DISTANCE };
-	Vector2 fanRight = { .x = std::cosf(theta_ - lightSideTheta)* DISTANCE,.y = std::sinf(theta_ - lightSideTheta)* DISTANCE };
+	Vector2 fanLeft = { .x = std::cosf(theta_ + lightSideTheta) * DISTANCE,.y = std::sinf(theta_ + lightSideTheta) * DISTANCE };
+	Vector2 fanRight = { .x = std::cosf(theta_ - lightSideTheta) * DISTANCE,.y = std::sinf(theta_ - lightSideTheta) * DISTANCE };
 
 	fan_.leftVector = { .x = std::cosf(theta_ + lightSideTheta),.y = std::sinf(theta_ + lightSideTheta) };
 	fan_.rightVector = { .x = std::cosf(theta_ - lightSideTheta),.y = std::sinf(theta_ - lightSideTheta) };
+
+	//高さは同じ
+	fan3D_.leftVector = { .x = std::cosf(theta_ + lightSideTheta),.y=std::sinf(phi_), .z = std::sinf(theta_ + lightSideTheta)};
+	fan3D_.rightVector = { .x = std::cosf(theta_ - lightSideTheta),.y = std::sinf(phi_), .z = std::sinf(theta_ - lightSideTheta) };
+
 
 	worldTransform_[Left].translate_ = Add(playerPosition_,{ fanLeft.x ,0.0f,fanLeft.y });
 	worldTransform_[Right].translate_ = Add(playerPosition_,{ fanRight.x ,0.0f,fanRight.y });
@@ -154,9 +170,9 @@ void FlashLight::Update(){
 
 void FlashLight::Draw(Camera& camera){
 	//端
-	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
-		model_[i]->Draw(worldTransform_[i], camera, material_, spotLight_);
-	}
+	//for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
+	//	model_[i]->Draw(worldTransform_[i], camera, material_, spotLight_);
+	//}
 	//中心
 	lightCenterModel_->Draw(lightCenterWorldTransform_,camera, lightCnterMaterial_,spotLight_);
 
