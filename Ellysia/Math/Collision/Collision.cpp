@@ -160,7 +160,7 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
     }
 
     //向きだけが欲しいので正規化をする
-    Vector3 normalizedFanAndPoint = vectorFanAndPont;
+    Vector3 normalizedFanAndPoint = Normalize(vectorFanAndPont);
 
     //向いている方向
     Vector3 direction = Normalize(fan.direction);
@@ -171,29 +171,31 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
     //左
     Vector3 leftOriginDirection = {
         .x = direction.x + std::cosf(fan.centerRadian + fan.sideThetaAngle),
-        .y = std::sinf(fan.sidePhiAngleSize),
+        .y = std::sinf(fan.centerPhi),
         .z = direction.z + std::sinf(fan.centerRadian + fan.sideThetaAngle)
     };
     //右
     Vector3 rightOriginDirection = { 
-        .x = direction.x - std::cosf(fan.centerRadian - fan.sideThetaAngle),
-        .y = std::sinf(fan.sidePhiAngleSize), 
-        .z = direction.z - std::sinf(fan.centerRadian - fan.sideThetaAngle)
+        .x = direction.x + std::cosf(fan.centerRadian - fan.sideThetaAngle),
+        .y = std::sinf(fan.centerPhi),
+        .z = direction.z + std::sinf(fan.centerRadian - fan.sideThetaAngle)
     };
     
    
 
     //縦方向
     //縦
+    float size = fan.sidePhiAngleSize;
+    size;
     Vector3 upOriginDirection = { 
         .x = direction.x, 
-        .y = direction.y + std::sinf(fan.centerPhi+fan.sidePhiAngleSize),
+        .y = direction.y + std::sinf(fan.centerPhi+std::numbers::pi_v<float>/3.0f),
         .z = direction.z 
     };
     //下
     Vector3 downOriginDirection = {
         .x = direction.x,
-        .y = direction.y + std::sinf(fan.centerPhi - fan.sidePhiAngleSize),
+        .y = direction.y + std::sinf(fan.centerPhi - std::numbers::pi_v<float> / 3.0f),
         .z = direction.z 
     };
 
@@ -216,10 +218,29 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
 
 
 
+    //縦と横で2次元にして別々で計算した方が良いかも
+    //上手く出来なかったから
+    Vector2 newLeftDirection = { .x = leftDirection.x,.y = leftDirection.z };
+    Vector2 newRightDirection = { .x = rightDirection.x,.y = rightDirection.z };
+    Vector2 newUpDirection = { .x = upDirection.x,.y = upDirection.y };
+    Vector2 newDownDirection = { .x = downDirection.x,.y = downDirection.y };
+    Vector2 newXZDirection = { .x = normalizedFanAndPoint.x,.y = normalizedFanAndPoint.z };
+
+    //左右だったらY成分はいらないね
+    //左側
+    float dotLS = Dot({ direction.x,direction.z }, newLeftDirection);
+    //右側
+    float dotRS = Dot({ direction.x,direction.z }, newRightDirection);
+    //ターゲット
+    float dotCenterXZ = Dot({ direction.x,direction.z }, newXZDirection);
+
+
+
+
 #ifdef _DEBUG
 
     ImGui::Begin("FanDirectionOrigin");
-
+    ImGui::InputFloat3("FanAndPoint", &vectorFanAndPont.x);
     ImGui::InputFloat3("Up", &upOriginDirection.x);
     ImGui::InputFloat3("Down", &downOriginDirection.x);
     ImGui::InputFloat3("Left", &leftOriginDirection.x);
@@ -229,6 +250,7 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
 
 
     ImGui::Begin("FanDirection");
+    ImGui::InputFloat3("FanAndPoint", &normalizedFanAndPoint.x);
     ImGui::InputFloat3("Up", &upDirection.x);
     ImGui::InputFloat3("Down", &downDirection.x);
     ImGui::InputFloat3("Left", &leftDirection.x);
@@ -238,9 +260,9 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
     ImGui::Begin("FanDot");
     ImGui::InputFloat("LSDot", &centerAndLSDot);
     ImGui::InputFloat("RSDot", &centerAndRSDot);
-    ImGui::InputFloat("CTDot", &centerAndTargetDot);
     ImGui::InputFloat("UpDot", &centerAndUpDot);
     ImGui::InputFloat("DownDot", &centerAndDownDot);
+    ImGui::InputFloat("CTDot", &centerAndTargetDot);
     ImGui::End();
 
 
@@ -248,47 +270,21 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
     //角度を測って当たり判定をとろうと思ったけど一周した後が大変なことになっている
     //内積でやった方が良いことに気づいたのでそちらで計算する
 
-    //ライト(プレイヤー)とターゲットとの角度
-    float targetRadian = std::atan2f(normalizedFanAndPoint.y, normalizedFanAndPoint.x);
-
-    //持ってきた値を代入
-    float leftSideRadian = fan.leftSideRadian;
-    float newLeftSideRadian = fan.centerRadian + fan.sideThetaAngle;
-    float rightSideRadian = fan.rightSideRadian;
-
-
-    //度数法
-    ImGui::Begin("FanRadian");
-    ImGui::InputFloat("LSRadian", &leftSideRadian);
-    ImGui::InputFloat("NewLSRadian", &newLeftSideRadian);
-    ImGui::InputFloat("TargetRadian", &targetRadian);
-    ImGui::InputFloat("RSRadian", &rightSideRadian);
-    ImGui::End();
-
-    //弧度法だとデバッグ時分かりずらと思ったので度数法に直す
-    //変換する関数を作った方が良いかも
-    float leftSideDigree = fan.leftSideRadian * (180.0f / std::numbers::pi_v<float>);
-    float rightSideDigree = fan.rightSideRadian * (180.0f / std::numbers::pi_v<float>);
-    float targetDigree = targetRadian * (180.0f / std::numbers::pi_v<float>);
-    //扇中心の角度
-    float centerDigree = fan.centerRadian * (180.0f / std::numbers::pi_v<float>);
-
-    ImGui::Begin("FanDigree");
-    ImGui::InputFloat("LSTheta", &leftSideDigree);
-    ImGui::InputFloat("CenterThetaOrigin", &centerDigree);
-    ImGui::InputFloat("NewTargetTheta", &targetDigree);
-    ImGui::InputFloat("RSTheta", &rightSideDigree);
-    ImGui::End();
-
 
 #endif // _DEBUG
 
     //最小でcenterAndLSDotまたはcenterAndRSDot
     //これより小さくなったら当たっていないと返す
-    if (centerAndTargetDot < centerAndLSDot ||
-        centerAndTargetDot < centerAndRSDot) {
+    if (dotCenterXZ < dotLS ||
+        dotCenterXZ < dotRS) {
         return false;
     }
+    //縦
+    //if (centerAndTargetDot < centerAndUpDot ||
+    //    centerAndTargetDot < centerAndDownDot) {
+    //    return false;
+    //}
+
 
     return true;
 

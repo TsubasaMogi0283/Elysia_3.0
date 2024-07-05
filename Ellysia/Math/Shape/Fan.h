@@ -37,7 +37,7 @@ struct Fan3D {
 	//長さ
 	float length;
 
-	//片側の角度
+	//片側幅の角度
 	float sideThetaAngle;
 	float sidePhiAngleSize;
 
@@ -47,15 +47,9 @@ struct Fan3D {
 	Vector3 leftVector;
 
 
-	//
-	float centerPhi;
-
-	//左側の角度
-	float leftSideRadian;
 	//中心の角度
 	float centerRadian;
-	//右側の角度
-	float rightSideRadian;
+	float centerPhi;
 
 
 };
