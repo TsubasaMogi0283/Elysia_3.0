@@ -468,7 +468,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	else if (viewOfPoint_ == ThirdPersonBack) {
 
 
-		//camera_.rotate_ = thirdPersonViewOfPointRotate_;
+		camera_.rotate_ = thirdPersonViewOfPointRotate_;
 		camera_.translate_ = Add(playerPosition, Add(cameraThirdPersonViewOfPointPosition_, cameraTranslate));
 	}
 

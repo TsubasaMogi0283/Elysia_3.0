@@ -148,7 +148,11 @@ bool IsFanCollision(const Fan2D& fan, const Vector2& point){
 bool IsFanCollision(const Fan3D& fan, const Vector3& point){
     
     //扇と点のベクトルを求める
-    Vector3 vectorFanAndPont = { .x = point.x - fan.position.x, .y = point.y - fan.position.y, .z = point.z - fan.position.z };
+    Vector3 vectorFanAndPont = { 
+        .x = point.x - fan.position.x, 
+        .y = point.y - fan.position.y, 
+        .z = point.z - fan.position.z 
+    };
     
     //距離を求める
     float distance = sqrtf(vectorFanAndPont.x * vectorFanAndPont.x + vectorFanAndPont.y * vectorFanAndPont.y+ vectorFanAndPont.z* vectorFanAndPont.z);
@@ -166,38 +170,62 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
     Vector3 direction = Normalize(fan.direction);
 
     
-
     //横方向
     //左
     Vector3 leftOriginDirection = {
-        .x = direction.x + std::cosf(fan.centerRadian + fan.sideThetaAngle),
+        .x = std::cosf(fan.centerRadian + fan.sideThetaAngle),
         .y = std::sinf(fan.centerPhi),
-        .z = direction.z + std::sinf(fan.centerRadian + fan.sideThetaAngle)
+        .z = std::sinf(fan.centerRadian + fan.sideThetaAngle)
     };
     //右
     Vector3 rightOriginDirection = { 
-        .x = direction.x + std::cosf(fan.centerRadian - fan.sideThetaAngle),
+        .x = std::cosf(fan.centerRadian - fan.sideThetaAngle),
         .y = std::sinf(fan.centerPhi),
-        .z = direction.z + std::sinf(fan.centerRadian - fan.sideThetaAngle)
+        .z = std::sinf(fan.centerRadian - fan.sideThetaAngle)
     };
     
    
 
     //縦方向
     //縦
-    float size = fan.sidePhiAngleSize;
-    size;
+    float phi = fan.centerPhi;
+    const float UP_OFFSET = 10.0f;
+    const float DOWN_OFFSET = 30.0f;
+    float radian = UP_OFFSET * std::numbers::pi_v<float> / 180.0f;
+    float downRadian = DOWN_OFFSET * std::numbers::pi_v<float> / 180.0f;
+
+    
+    if (phi > radian ||phi< -downRadian) {
+        return false;
+    }
+
     Vector3 upOriginDirection = { 
-        .x = direction.x, 
-        .y = direction.y + std::sinf(fan.centerPhi+std::numbers::pi_v<float>/3.0f),
-        .z = direction.z 
+        .x = 0.0f, 
+        .y = std::sinf(phi + radian),
+        .z = std::cosf(phi + radian),
     };
     //下
     Vector3 downOriginDirection = {
-        .x = direction.x,
-        .y = direction.y + std::sinf(fan.centerPhi - std::numbers::pi_v<float> / 3.0f),
-        .z = direction.z 
+        .x = 0.0f,
+        .y = std::sinf(phi - radian),
+        .z = std::cosf(phi - radian),
     };
+
+#ifdef _DEBUG
+    ImGui::Begin("FanDirectionOrigin");
+    ImGui::InputFloat3("FanAndPoint", &vectorFanAndPont.x);
+    ImGui::InputFloat3("Up", &upOriginDirection.x);
+    ImGui::InputFloat3("Down", &downOriginDirection.x);
+    ImGui::InputFloat3("Left", &leftOriginDirection.x);
+    ImGui::InputFloat3("Right", &rightOriginDirection.x);
+    ImGui::InputFloat("Phi", &phi);
+    ImGui::InputFloat("radian", &radian);
+
+
+    ImGui::End();
+
+#endif
+
 
     //それぞれを正規化する
     Vector3 rightDirection = Normalize(rightOriginDirection);
@@ -205,16 +233,8 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
     Vector3 upDirection = Normalize(upOriginDirection);
     Vector3 downDirection = Normalize(downOriginDirection);
 
-    //左側
-    float centerAndLSDot = Dot(direction, leftDirection);
-    //右側
-    float centerAndRSDot = Dot(direction, rightDirection);
-    //上側
-    float centerAndUpDot = Dot(direction, upDirection);
-    //下側
-    float centerAndDownDot = Dot(direction, downDirection);
-    //ターゲット
-    float centerAndTargetDot = Dot(direction, normalizedFanAndPoint);
+    
+
 
 
 
@@ -222,33 +242,12 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
     //上手く出来なかったから
     Vector2 newLeftDirection = { .x = leftDirection.x,.y = leftDirection.z };
     Vector2 newRightDirection = { .x = rightDirection.x,.y = rightDirection.z };
-    Vector2 newUpDirection = { .x = upDirection.x,.y = upDirection.y };
-    Vector2 newDownDirection = { .x = downDirection.x,.y = downDirection.y };
+    Vector2 newUpDirection = { .x = upDirection.z,.y = upDirection.y };
+    Vector2 newDownDirection = { .x = downDirection.z,.y = downDirection.y };
     Vector2 newXZDirection = { .x = normalizedFanAndPoint.x,.y = normalizedFanAndPoint.z };
-
-    //左右だったらY成分はいらないね
-    //左側
-    float dotLS = Dot({ direction.x,direction.z }, newLeftDirection);
-    //右側
-    float dotRS = Dot({ direction.x,direction.z }, newRightDirection);
-    //ターゲット
-    float dotCenterXZ = Dot({ direction.x,direction.z }, newXZDirection);
-
-
-
+    Vector2 newZYDirection = { .x = normalizedFanAndPoint.z,.y = normalizedFanAndPoint.y };
 
 #ifdef _DEBUG
-
-    ImGui::Begin("FanDirectionOrigin");
-    ImGui::InputFloat3("FanAndPoint", &vectorFanAndPont.x);
-    ImGui::InputFloat3("Up", &upOriginDirection.x);
-    ImGui::InputFloat3("Down", &downOriginDirection.x);
-    ImGui::InputFloat3("Left", &leftOriginDirection.x);
-    ImGui::InputFloat3("Right", &rightOriginDirection.x);
-    ImGui::End();
-
-
-
     ImGui::Begin("FanDirection");
     ImGui::InputFloat3("FanAndPoint", &normalizedFanAndPoint.x);
     ImGui::InputFloat3("Up", &upDirection.x);
@@ -256,13 +255,38 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
     ImGui::InputFloat3("Left", &leftDirection.x);
     ImGui::InputFloat3("Right", &rightDirection.x);
     ImGui::End();
+
+
+#endif
+    //左側
+    float dotLS = Dot({.x = direction.x,.y = direction.z }, newLeftDirection);
+    //右側
+    float dotRS = Dot({.x = direction.x,.y = direction.z }, newRightDirection);
+    //ターゲット
+    float dotCenterXZ = Dot({ .x = direction.x,.y = direction.z }, newXZDirection);
+    //これより小さくなったら当たっていないと返す
     
+    
+    //上側
+    float dotUS = Dot({ .x = direction.z,.y = direction.y }, newUpDirection);
+    //下側
+    float dotDS = Dot({ .x = direction.z,.y = direction.y }, newDownDirection);
+    //ターゲット
+    float dotCenterYZ = Dot({.x = direction.z,.y = direction.y }, newZYDirection);
+
+#ifdef _DEBUG
+
+
+
     ImGui::Begin("FanDot");
-    ImGui::InputFloat("LSDot", &centerAndLSDot);
-    ImGui::InputFloat("RSDot", &centerAndRSDot);
-    ImGui::InputFloat("UpDot", &centerAndUpDot);
-    ImGui::InputFloat("DownDot", &centerAndDownDot);
-    ImGui::InputFloat("CTDot", &centerAndTargetDot);
+    ImGui::InputFloat("LSDot", &dotLS);
+    ImGui::InputFloat("RSDot", &dotRS);
+    ImGui::InputFloat("UpDot", &dotUS);
+    ImGui::InputFloat("DownDot", &dotDS);
+
+    ImGui::InputFloat("dotCenterXZ", &dotCenterXZ);
+    ImGui::InputFloat("dotCenterYZ", &dotCenterYZ);
+
     ImGui::End();
 
 
@@ -273,17 +297,16 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
 
 #endif // _DEBUG
 
-    //最小でcenterAndLSDotまたはcenterAndRSDot
-    //これより小さくなったら当たっていないと返す
     if (dotCenterXZ < dotLS ||
-        dotCenterXZ < dotRS) {
+        dotCenterXZ < dotRS ) {
         return false;
     }
-    //縦
-    //if (centerAndTargetDot < centerAndUpDot ||
-    //    centerAndTargetDot < centerAndDownDot) {
-    //    return false;
-    //}
+    
+
+
+
+
+    
 
 
     return true;
