@@ -96,6 +96,9 @@ private:
 	void KeyCollision();
 
 
+
+
+
 private:
 
 	//カメラ
@@ -113,7 +116,6 @@ private:
 	//平行光源
 	DirectionalLight directionalLight_ = {};
 	//スポットライト
-	//SpotLight spotLight_ = {};
 	std::unique_ptr<FlashLight> flashLight_ = nullptr;
 	//マテリアル
 	Material material_ = {};
@@ -136,6 +138,7 @@ private:
 
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;
+
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
 	bool isEscape_ = false;

@@ -4,7 +4,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
-
+#include "StageRect.h"
 struct Camera;
 struct SpotLight;
 
@@ -39,6 +39,16 @@ public:
 	~Ground() = default;
 
 
+public:
+	/// <summary>
+	/// 四隅の座標を取得
+	/// </summary>
+	/// <returns></returns>
+	inline StageRect GetStageRect() const {
+		return stageRect_;
+	}
+
+
 private:
 	//モデル
 	std::unique_ptr<Model> model_ = nullptr;
@@ -47,8 +57,9 @@ private:
 	//マテリアル
 	Material material_ = {};
 
-
-
+	//ステージスケールの大きさ
+	const float SCALE_SIZE_ = 40.0f;
+	StageRect stageRect_ = {};
 
 };
 

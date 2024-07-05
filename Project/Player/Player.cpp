@@ -7,9 +7,12 @@
 #include <numbers>
 
 
+#include "SampleScene/SampleScene.h"
+
 void Player::Initialize(){
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD3Player","Player.obj");
 	model_.reset(Model::Create(modelHandle));
+
 
 	//持っている鍵の数
 	haveKeyQuantity_ = 0;
@@ -17,6 +20,7 @@ void Player::Initialize(){
 	//半径
 	radius_ = 1.0f;
 
+	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 }
 
@@ -38,11 +42,30 @@ void Player::Update(){
 
 #endif
 
+
 	
 
 	const float MOVE_SPEED = 0.1f;
 	//加算
 	worldTransform_.translate_ = Add(worldTransform_.translate_, { moveDirection_.x * MOVE_SPEED,moveDirection_.y * MOVE_SPEED,moveDirection_.z * MOVE_SPEED });
+
+	//ステージの外には行けないようにする
+	//左
+	if (worldTransform_.translate_.x < stageRect_.leftBack.x + radius_) {
+		worldTransform_.translate_.x = stageRect_.leftBack.x + radius_;
+	}
+	//右
+	if (worldTransform_.translate_.x > stageRect_.rightBack.x - radius_) {
+		worldTransform_.translate_.x = stageRect_.rightBack.x - radius_;
+	}
+	//奥
+	if (worldTransform_.translate_.z > stageRect_.leftBack.z - radius_) {
+		worldTransform_.translate_.z = stageRect_.leftBack.z - radius_;
+	}
+	//手前
+	if (worldTransform_.translate_.z < stageRect_.leftFront.z + radius_) {
+		worldTransform_.translate_.z = stageRect_.leftFront.z + radius_;
+	}
 
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();

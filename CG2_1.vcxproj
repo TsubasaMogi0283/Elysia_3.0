@@ -452,6 +452,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Player\Player.h" />
     <ClInclude Include="Project\Stage\Gate\Gate.h" />
     <ClInclude Include="Project\Stage\Ground\Ground.h" />
+    <ClInclude Include="Project\Stage\Ground\StageRect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

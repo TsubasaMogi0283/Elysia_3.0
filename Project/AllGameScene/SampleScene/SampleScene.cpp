@@ -41,7 +41,10 @@ void SampleScene::Initialize() {
 	uint32_t groundModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize(groundModelHandle);
+	StageRect stageRect = ground_->GetStageRect();
 
+
+	//ゲート
 	uint32_t gateModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Gate","Gate.obj");
 	gate_ = std::make_unique<Gate>();
 	gate_->Initialize(gateModelhandle);
@@ -111,8 +114,11 @@ void SampleScene::Initialize() {
 
 #pragma endregion
 
-	collisionManager_ = std::make_unique<CollisionManager>();
+	//ステージ
+	player_->SetStageRect(stageRect);
 
+
+	collisionManager_ = std::make_unique<CollisionManager>();
 
 	theta_ = std::numbers::pi_v<float>/2.0f;
 
@@ -429,9 +435,9 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	collisionManager_->RegisterList(lightCollision_);
 
-
-	auto enemyes = enemyManager_->GetEnemyes();
-	for (auto it = enemyes.begin(); it != enemyes.end();) {
+	//エネミーをコリジョンマネージャーに追加
+	std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
+	for (std::list<Enemy*>::iterator it = enemyes.begin(); it != enemyes.end();) {
 		Enemy* enemy = *it;
 		if (enemy != nullptr) {
 			collisionManager_->RegisterList(enemy);

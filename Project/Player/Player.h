@@ -2,6 +2,7 @@
 #include "WorldTransform.h"
 #include "Model.h"
 #include <memory>
+#include "Stage/Ground/StageRect.h"
 
 struct Camera;
 struct SpotLight;
@@ -103,13 +104,35 @@ public:
 		this->moveDirection_ = moveDirection;
 	}
 
+	/// <summary>
+	/// ゲームシーンの取得
+	/// </summary>
+	/// <param name="gameScene"></param>
+	inline void SetGameScene(SampleScene* gameScene) {
+		this->gameScene_ = gameScene;
+	}
+
+	/// <summary>
+	/// 四隅の取得
+	/// </summary>
+	/// <param name="stageRect"></param>
+	/// <returns></returns>
+	inline void SetStageRect(StageRect stageRect) {
+		this->stageRect_ = stageRect;
+	}
+
 
 private:
+	//ゲームシーン
+	SampleScene* gameScene_ = nullptr;
+
 	//モデル
 	std::unique_ptr<Model> model_ = nullptr;
 
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_{};
+
+	StageRect stageRect_ = {};
 
 	//カメラ視点
 	uint32_t pointOfView_ = 0;
