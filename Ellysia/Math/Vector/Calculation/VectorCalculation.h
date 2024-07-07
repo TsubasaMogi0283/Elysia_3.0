@@ -118,12 +118,6 @@ Vector3 Lerp(const Vector3& start, const Vector3& end, const float& t);
 /// <returns></returns>
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, const float& t);
 
-/// <summary>
-/// コタンジェント
-/// </summary>
-/// <param name="theta"></param>
-/// <returns></returns>
-float Cot(const float& theta);
 
 /// <summary>
 /// 外積

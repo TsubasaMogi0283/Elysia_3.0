@@ -492,6 +492,9 @@
     <ClCompile Include="Project\AllGameScene\TitleScene\TitleScene.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\Math\Single\SingleCalculation.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -881,6 +884,9 @@
       <Filter>Project\Stage\Ground</Filter>
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\TitleScene\TitleScene.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Single\SingleCalculation.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>

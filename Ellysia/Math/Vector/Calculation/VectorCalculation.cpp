@@ -3,7 +3,6 @@
 #include <corecrt_math.h>
 #include <cassert>
 #include <numbers>
-#include <corecrt_math.h>
 #include <cmath>
 
 Vector2 Add(const Vector2& v1, const Vector2& v2){
@@ -158,10 +157,6 @@ Vector3 Slerp(const Vector3& v1, const Vector3& v2,const float& t) {
 	return result;
 }
 
-float Cot(const float& theta){
-	return (1.0f / tan(theta));
-
-}
 
 Vector3 Cross(const Vector3& v1, const Vector3& v2) {
 	Vector3 result;
