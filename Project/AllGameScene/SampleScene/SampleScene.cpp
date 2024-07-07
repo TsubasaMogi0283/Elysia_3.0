@@ -166,6 +166,13 @@ void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
 				(*it2)->SetTranslate(Add(enemyPosition, speed));
 			}
 
+			//
+			//Fan3D fan = flashLight_->GetFan3D();
+			//if (IsFanCollision(fan, newWorldPosition)) {
+			//	ImGui::Begin("FanCollsion");
+			//	ImGui::End();
+			//}
+
 			//if (distance < minDistance) {
 			//	Vector3 correction = {};
 			//	correction.x=diff.x * (minDistance - distance);
@@ -435,14 +442,27 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	collisionManager_->RegisterList(lightCollision_);
 
+	Fan3D fan = flashLight_->GetFan3D();
 	//エネミーをコリジョンマネージャーに追加
 	std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 	for (std::list<Enemy*>::iterator it = enemyes.begin(); it != enemyes.end();) {
 		Enemy* enemy = *it;
 		if (enemy != nullptr) {
-			collisionManager_->RegisterList(enemy);
+			//collisionManager_->RegisterList(enemy);
+
+			
+			
+			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
+
+				enemy->OnCollision();
+				ImGui::Begin("FanCollsion");
+				ImGui::End();
+			}
 		}
 		it++;
+
+		
+
 	}
 
 
@@ -456,7 +476,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 
 	//コントローラーだと
-	//十字ボタンが良いかも
+	//十字ボタンで切り替えのが良いかも
 	//マイクラはそれだったから
 	
 	//1人称
@@ -481,8 +501,6 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	//カメラの更新
 	camera_.Update();
-
-
 
 	//敵
 	enemyManager_->Update();
@@ -509,6 +527,7 @@ void SampleScene::Update(GameManager* gameManager) {
 		KeyCollision();
 	}
 
+	//脱出
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 
 		//Bボタンを押したとき
@@ -534,8 +553,6 @@ void SampleScene::Update(GameManager* gameManager) {
 	//地面
 	ground_->Update();
 
-
-
 	//門
 	gate_->Update();
 
@@ -548,7 +565,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	directionalLight_.Update();
 
 	//当たり判定
-	collisionManager_->CheckAllCollision();
+	//collisionManager_->CheckAllCollision();
 
 	//敵を消す
 	enemyManager_->DeleteEnemy();
@@ -563,13 +580,14 @@ void SampleScene::Update(GameManager* gameManager) {
 		.x = debugFanCollisionSphereWorldTransform_.worldMatrix_.m[3][0] ,
 		.y = debugFanCollisionSphereWorldTransform_.worldMatrix_.m[3][1] ,
 		.z = debugFanCollisionSphereWorldTransform_.worldMatrix_.m[3][2] };
+	fanCollisionSphereWorldPosition;
 
-	Vector3 newWorldPosition = { fanCollisionSphereWorldPosition.x,fanCollisionSphereWorldPosition.y,fanCollisionSphereWorldPosition.z };
-	Fan3D fan = flashLight_->GetFan3D();
-	if (IsFanCollision(fan, newWorldPosition)) {
-		ImGui::Begin("FanCollsion");
-		ImGui::End();
-	}
+	//Vector3 newWorldPosition = { fanCollisionSphereWorldPosition.x,fanCollisionSphereWorldPosition.y,fanCollisionSphereWorldPosition.z };
+	//Fan3D fan = flashLight_->GetFan3D();
+	//if (IsFanCollision(fan, newWorldPosition)) {
+	//	ImGui::Begin("FanCollsion");
+	//	ImGui::End();
+	//}
 
 #endif // _DEBUG
 
@@ -673,7 +691,6 @@ void SampleScene::DrawObject3D() {
 	//自分の目から自分の全身が見えるのはおかしいからね
 	if (viewOfPoint_ != FirstPerson) {
 		player_->Draw(camera_, material_, spotLight);
-
 	}
 	
 	//地面
@@ -683,13 +700,14 @@ void SampleScene::DrawObject3D() {
 	//敵
 	enemyManager_->Draw(camera_, spotLight);
 
+	//懐中電灯
 	flashLight_->Draw(camera_);
 
 	lightCollision_->Draw(camera_, spotLight);
 
+	//タワー
 	debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight);
 	
-
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
 
