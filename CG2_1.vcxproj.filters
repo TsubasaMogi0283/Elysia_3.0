@@ -285,6 +285,9 @@
     <ClCompile Include="Ellysia\LevelDataManager\LevelDataManager.cpp">
       <Filter>Ellysia\Source File\LevelDataManager</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Level1.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -495,6 +498,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\LevelDataManager\LevelDataManager.h">
       <Filter>Ellysia\Header File\LevelDataManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Level1.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

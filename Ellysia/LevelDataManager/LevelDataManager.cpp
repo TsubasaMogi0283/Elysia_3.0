@@ -36,37 +36,29 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 
 			//トランスフォームのパラメータ読み込み
 			nlohmann::json& transform = object["transform"];
-			//平行移動
 			//Blenderと軸の方向が違うので注意！
-
-			//  自作エンジン      Blender
-			//		x		←		y
-			//		y		←		z
-			//		z		←		-x
-			//
-			//回転
-			//進行方向に向かって...
-			//     左回り		右回り
-			objectData.translation.x = (float)transform["translation"][Y];
-			objectData.translation.y = (float)transform["translation"][Z];
-			objectData.translation.z = -(float)transform["translation"][X];
-			const float DEREES_TO_RADIUS_ = (float)std::numbers::pi / 180.0f;
+			// 
+			//平行移動
+			objectData.translation.x = (float)transform["translation"][1];
+			objectData.translation.y = (float)transform["translation"][2];
+			objectData.translation.z = (float)transform["translation"][0];
+			
 			//回転角
 			//そういえばBlenderは度数法だったね
 			//エンジンでは弧度法に直そう
-			objectData.rotation.x = -(float)transform["rotation"][Y]*DEREES_TO_RADIUS_;
-			objectData.rotation.y = -(float)transform["rotation"][Z]*DEREES_TO_RADIUS_;
-			objectData.rotation.z = (float)transform["rotation"][X]* DEREES_TO_RADIUS_;
-			//スケーリング
-			objectData.scaling.x = (float)transform["scaling"][Y];
-			objectData.scaling.y = (float)transform["scaling"][Z];
-			objectData.scaling.z = (float)transform["scaling"][X];
+			const float DEREES_TO_RADIUS_ = (float)std::numbers::pi / 180.0f;
+			objectData.rotation.x = -(float)transform["rotation"][1]*DEREES_TO_RADIUS_;
+			objectData.rotation.y = -(float)transform["rotation"][2]*DEREES_TO_RADIUS_;
+			objectData.rotation.z = -(float)transform["rotation"][0]* DEREES_TO_RADIUS_;
+
+			//スケール
+			objectData.scaling.x = (float)transform["scaling"][1];
+			objectData.scaling.y = (float)transform["scaling"][2];
+			objectData.scaling.z = (float)transform["scaling"][0];
 
 
 
 			//コライダーの読み込み
-			
-
 			nlohmann::json& collider = object["collider"];
 
 			objectData.colliderType = object["type"];
@@ -88,6 +80,35 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 	}
 
 }
+
+void LevelDataManager::Initialize(const std::string& directoryPath) {
+	for (auto& objectData : levelData->objects) {
+		//first,secondとあるからmapかも
+		decltype(models_)::iterator it = models_.find(objectData.fileName);
+
+		//まだ読み込みがされていない場合読み込む
+		if (it == models_.end()) {
+			Model* model = nullptr;
+			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(directoryPath, objectData.fileName);
+			model = Model::Create(modelHandle);
+			models_[objectData.fileName] = model;
+		}
+
+		//座標を入れるのワールドトランスフォームしかないのでそれでやる
+		WorldTransform* worldTransform = new WorldTransform();
+
+		worldTransform->Initialize();
+		worldTransform->translate_ = objectData.translation;
+		worldTransform->rotate_ = objectData.rotation;
+		worldTransform->scale_ = objectData.scaling;
+
+
+
+		//配列に登録
+		worldTransforms_.push_back(worldTransform);
+	}
+}
+
 
 void LevelDataManager::Load(const std::string& directoryPath, const std::string& fileName){
 
@@ -127,39 +148,17 @@ void LevelDataManager::Load(const std::string& directoryPath, const std::string&
 	//読み込み(再帰機能付き)
 	RecursiveLoad(deserialized["objects"]);
 
+	//初期化
+	Initialize(directoryPath);
 	
-
-	for (auto& objectData : levelData->objects) {
-		//first,secondとあるからmapかも
-		decltype(models_)::iterator it = models_.find(objectData.fileName);
-
-		//まだ読み込みがされていない場合読み込む
-		if (it == models_.end()) {
-			Model* model = nullptr;
-			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(directoryPath,objectData.fileName);
-			model=Model::Create(modelHandle);
-			models_[objectData.fileName] = model;
-		}
-		
-		//座標を入れるのWorldTransformしかないのでそれでやる
-		WorldTransform* worldTransform = new WorldTransform();
-
-		worldTransform->Initialize();
-		worldTransform->translate_ = objectData.translation;
-		worldTransform->rotate_ = objectData.rotation;
-		worldTransform->scale_ = objectData.scaling;
-
-
-
-		//配列に登録
-		//vector list?
-		worldTransforms_.push_back(worldTransform);
-	}
 
 }
 
 
+
+
 void LevelDataManager::Update(){
+	//ワールドトランスフォームの更新
 	for (WorldTransform* object : worldTransforms_) {
 		object->Update();
 	}
@@ -171,7 +170,6 @@ void LevelDataManager::Draw(Camera& camera){
 	for (auto& objectData : levelData->objects) {
 		//ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
-		//first,secondとあるからmapかも
 		decltype(models_)::iterator it = models_.find(objectData.fileName);
 		//見つかったらmodelに入れる
 		if (it != models_.end()) {
@@ -180,7 +178,7 @@ void LevelDataManager::Draw(Camera& camera){
 
 		model->Draw(*worldTransforms_[count], camera);
 
-
+		//数を増やしていく
 		count++;
 	}
 

@@ -14,17 +14,24 @@
 
 class LevelDataManager {
 public:
-	LevelDataManager() {};
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	LevelDataManager()=default;
 
-	~LevelDataManager();
-
-
+	
 
 private:
 	/// <summary>
 	/// 再帰的な読み込み
 	/// </summary>
 	void RecursiveLoad(nlohmann::json& objects);
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="directoryPath"></param>
+	void Initialize(const std::string& directoryPath);
 
 public:
 
@@ -34,7 +41,6 @@ public:
 	/// <param name="directoryPath">ResourcesのLevelData</param>
 	/// <param name="fileName">jsonファイル</param>
 	void Load(const std::string& directoryPath, const std::string& fileName);
-
 
 	/// <summary>
 	/// 更新
@@ -49,13 +55,15 @@ public:
 
 
 
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~LevelDataManager();
+
+
+
 
 private:
-	enum Coodinate {
-		X,
-		Y,
-		Z,
-	};
 
 	struct LevelData {
 		struct ObjectData {
@@ -83,6 +91,7 @@ private:
 
 
 	};
+
 
 	//モデルのコンテナ
 	std::map<std::string,Model*> models_;
