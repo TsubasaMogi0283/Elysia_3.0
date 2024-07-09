@@ -16,6 +16,111 @@ ModelManager* ModelManager::GetInstance() {
 	static ModelManager instance;
 	return &instance;
 }
+ModelData ModelManager::LoadFileFotLeveldata(const std::string& fileNameFolder, const std::string& fileName) {
+	ModelData modelData;
+
+
+	//assimpを利用してしてオブジェクトファイルを読んでいく
+	Assimp::Importer importer;
+	std::string filePath = fileNameFolder + "/" + fileName + "/" + fileName + ".obj";
+	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
+	//メッシュがないのは対応しない
+	//後読み込みが出来なかったらここで止まる
+	assert(scene->HasMeshes());
+
+
+	//ファイルを読み、ModelDataを構築していく
+
+
+	//Meshを解析
+	//Meshは複数のFaceで構成され、そのFaceは複数の頂点で構成されている
+	//さらにSceneには複数のMeshが存在しているというわけであるらしい
+	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
+		aiMesh* mesh = scene->mMeshes[meshIndex];
+		//Normalなので法線がない時は止める
+		assert(mesh->HasNormals());
+		//TextureCoordsなのでTexCoordが無い時は止める
+		assert(mesh->HasTextureCoords(0));
+
+		//faceを解析する
+		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
+			aiFace& face = mesh->mFaces[faceIndex];
+			//三角形のみサポート
+			assert(face.mNumIndices == 3);
+			//ここからFaceの中身であるVertexの解析を行っていく
+			for (uint32_t element = 0; element < face.mNumIndices; ++element) {
+				uint32_t vertexIndex = face.mIndices[element];
+				aiVector3D& position = mesh->mVertices[vertexIndex];
+				aiVector3D& normal = mesh->mNormals[vertexIndex];
+				aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
+				VertexData vertex;
+				vertex.position = { position.x,position.y,position.z,1.0f };
+				vertex.normal = { normal.x,normal.y,normal.z };
+				vertex.texCoord = { texcoord.x,texcoord.y };
+				//aiProcess_MakeLeftHandedはz*=-1で、
+				vertex.position.x *= -1.0f;
+				vertex.normal.x *= -1.0f;
+				modelData.vertices.push_back(vertex);
+
+
+
+			}
+
+
+		}
+
+	}
+
+
+	//Materialを解析する
+	for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
+		aiMaterial* material = scene->mMaterials[materialIndex];
+		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
+			aiString textureFilePath;
+			//画像ファイルのパスを保存
+			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
+			modelData.textureFilePath = fileNameFolder + "/" + fileName + "/" + textureFilePath.C_Str();
+
+		}
+	}
+
+	//ノードの読み込み
+	modelData.rootNode = ReadNode::GetInstance()->Read(scene->mRootNode);
+
+	//ModelDataを返す
+	return modelData;
+}
+
+uint32_t ModelManager::LoadModelFileForLevelData(const std::string& directoryPath, const std::string& fileName) {
+	//一度読み込んだものはその値を返す
+	//新規は勿論読み込みをする
+	for (uint32_t i = 0; i < MODEL_MAX_AMOUNT_; i++) {
+		//同じモデルを探す
+		if (ModelManager::GetInstance()->modelInfromtion_[i].directoryPath == directoryPath &&
+			ModelManager::GetInstance()->modelInfromtion_[i].folderName == fileName &&
+			ModelManager::GetInstance()->modelInfromtion_[i].filePath == fileName) {
+			return ModelManager::GetInstance()->modelInfromtion_[i].handle;
+		}
+	}
+
+	modelhandle++;
+
+	//モデルの読み込み
+	ModelData newModelData = ModelManager::GetInstance()->LoadFileFotLeveldata(directoryPath, fileName);
+
+	//新規登録
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].modelData = newModelData;
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].animationData = {};
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].directoryPath = directoryPath;
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].folderName = fileName;
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].filePath = fileName;
+	ModelManager::GetInstance()->modelInfromtion_[modelhandle].handle = modelhandle;
+
+	//値を返す
+	return modelhandle;
+}
+
+
 //モデルデータの読み込み
 ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::string& fileName) {
 	//1.中で必要となる変数の宣言
