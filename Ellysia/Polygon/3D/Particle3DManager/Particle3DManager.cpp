@@ -126,8 +126,7 @@ Particle Particle3DManager::MakeNewParticle(std::mt19937& randomEngine, Vector3 
 	particle.transform.rotate = { 0.0f,0.0f,0.0f };
 	//ランダムの値
 	Vector3 randomTranslate = {distribute(randomEngine),distribute(randomEngine),distribute(randomEngine)};
-	//particle.transform.translate = Add(emitter_.transform.translate, randomTranslate);
-	particle.transform.translate = Add(position, randomTranslate);
+	particle.transform.translate = VectorCalculation::Add(position, randomTranslate);
 
 	//速度
 	std::uniform_real_distribution<float>distVelocity(-1.0f, 1.0f);
@@ -223,21 +222,21 @@ void Particle3DManager::Update(Camera& camera) {
 			if (isBillBordMode_ == true) {
 				//Y軸でπ/2回転
 				//これからはM_PIじゃなくてstd::numbers::pi_vを使おうね
-				Matrix4x4 backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
+				Matrix4x4 backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 				//カメラの回転を適用する
-				Matrix4x4 billBoardMatrix = Multiply(backToFrontMatrix, camera.worldMatrix_);
+				Matrix4x4 billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix_);
 				//平行成分はいらないよ
 				billBoardMatrix.m[3][0] = 0.0f;
 				billBoardMatrix.m[3][1] = 0.0f;
 				billBoardMatrix.m[3][2] = 0.0f;
 
-				Matrix4x4 scaleMatrix = MakeScaleMatrix((*particleIterator).transform.scale);
-				Matrix4x4 translateMatrix = MakeTranslateMatrix((*particleIterator).transform.translate);
+				Matrix4x4 scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix((*particleIterator).transform.scale);
+				Matrix4x4 translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix((*particleIterator).transform.translate);
 
 
 				//パーティクル個別のRotateは関係ないよ
-				Matrix4x4 worldMatrix = Multiply(scaleMatrix, Multiply(billBoardMatrix, translateMatrix));
+				Matrix4x4 worldMatrix = Matrix4x4Calculation::Multiply(scaleMatrix, Matrix4x4Calculation::Multiply(billBoardMatrix, translateMatrix));
 
 				//最大値を超えて描画しないようにする
 				if (particleGroup.instanceNumber < MAX_INSTANCE_NUMBER_) {
@@ -254,7 +253,7 @@ void Particle3DManager::Update(Camera& camera) {
 			//ビルボード無し
 			else if (isBillBordMode_ == false) {
 				//ビルボードやらない版
-				Matrix4x4 worldMatrix = MakeAffineMatrix(
+				Matrix4x4 worldMatrix = Matrix4x4Calculation::MakeAffineMatrix(
 					(*particleIterator).transform.scale,
 					(*particleIterator).transform.rotate,
 					(*particleIterator).transform.translate);
@@ -304,7 +303,7 @@ void Particle3DManager::Draw(Camera& camera) {
 		materialData_->color = materialColor_;
 		materialData_->lightingKinds = isEnableLighting_;
 
-		materialData_->uvTransform = MakeIdentity4x4();
+		materialData_->uvTransform = Matrix4x4Calculation::MakeIdentity4x4();
 
 		materialResource_->Unmap(0, nullptr);
 

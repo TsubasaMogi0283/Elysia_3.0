@@ -32,7 +32,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 void Enemy::Update(){
 	
 	//更新
-	worldTransform_.translate_ = Add(worldTransform_.translate_, speed_);
+	worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speed_);
 	worldTransform_.Update();
 
 	material_.Update();

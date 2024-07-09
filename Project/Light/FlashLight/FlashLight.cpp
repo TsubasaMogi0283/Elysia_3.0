@@ -74,9 +74,9 @@ void FlashLight::Update() {
 
 
 	//プレイヤーの座標と微調整分
-	const float LIGHT_HEIGHT = 0.0f;
+	const float LIGHT_HEIGHT = 1.0f;
 	const Vector3 OFFSET = { 0.0f, LIGHT_HEIGHT,0.0f };
-	lightPosition = Add(playerPosition_, OFFSET);
+	lightPosition = VectorCalculation::Add(playerPosition_, OFFSET);
 
 	//計算したものをSpotLightの方に入れる
 	spotLight_.position_ = lightPosition;
@@ -115,8 +115,8 @@ void FlashLight::Update() {
 	fan3D_.rightVector = { .x = std::cosf(theta_ - lightSideTheta),.y = std::sinf(phi_), .z = std::sinf(theta_ - lightSideTheta) };
 
 
-	worldTransform_[Left].translate_ = Add(playerPosition_,{ fanLeft.x ,0.0f,fanLeft.y });
-	worldTransform_[Right].translate_ = Add(playerPosition_,{ fanRight.x ,0.0f,fanRight.y });
+	worldTransform_[Left].translate_ = VectorCalculation::Add(playerPosition_,{ fanLeft.x ,0.0f,fanLeft.y });
+	worldTransform_[Right].translate_ = VectorCalculation::Add(playerPosition_,{ fanRight.x ,0.0f,fanRight.y });
 
 
 

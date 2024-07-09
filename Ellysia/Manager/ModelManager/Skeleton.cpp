@@ -16,16 +16,16 @@ void Skeleton::Update(){
     //全てのJointを更新。親が若いので通常ループで処理可能になっている。
     for (Joint& joint : joints_) {
 
-        Matrix4x4 scaleMatrix = MakeScaleMatrix(joint.transform.scale);
+        Matrix4x4 scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(joint.transform.scale);
         Matrix4x4 rotateMatrix = MakeRotateMatrix(joint.transform.rotate);
-        Matrix4x4 translateMatrix = MakeTranslateMatrix(joint.transform.translate);
+        Matrix4x4 translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(joint.transform.translate);
         
 
-        joint.localMatrix = Multiply(scaleMatrix,Multiply(rotateMatrix, translateMatrix));
+        joint.localMatrix = Matrix4x4Calculation::Multiply(scaleMatrix,Matrix4x4Calculation::Multiply(rotateMatrix, translateMatrix));
 
         //親がいれば親の行列を掛ける
         if (joint.parent) {
-            joint.skeletonSpaceMatrix = Multiply(joint.localMatrix, joints_[*joint.parent].skeletonSpaceMatrix);
+            joint.skeletonSpaceMatrix = Matrix4x4Calculation::Multiply(joint.localMatrix, joints_[*joint.parent].skeletonSpaceMatrix);
         }
         //親がいないのでlocalMatrixとskeletonSpaceMatrixは一致する
         else {

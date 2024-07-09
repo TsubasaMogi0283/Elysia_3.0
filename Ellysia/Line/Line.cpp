@@ -70,18 +70,18 @@ void Line::Draw(Vector3 start, Vector3 end, Camera& camera) {
 	Vector3 scale = { 1.0f,1.0f,1.0f };
 	Vector3 rotate = { 0.0f,0.0f,0.0f };
 	//新しく引数作った方が良いかも
-	Matrix4x4 worldMatrix = MakeAffineMatrix(scale, rotate, start);
+	Matrix4x4 worldMatrix = Matrix4x4Calculation::MakeAffineMatrix(scale, rotate, start);
 	//遠視投影行列
 	//Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.5f, float() / float(WINDOW_SIZE_HEIGHT), 0.1f, 100.0f);
 	//Matrix4x4 worldMatrix = MakeAffineMatrix();
 	//遠視投影行列
-	Matrix4x4 viewMatrixSprite = MakeIdentity4x4();
+	Matrix4x4 viewMatrixSprite = Matrix4x4Calculation::MakeIdentity4x4();
 
-	Matrix4x4 projectionMatrixSprite = MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrixSprite = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 
 
 	//WVP行列を作成
-	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrixSprite, projectionMatrixSprite));
+	Matrix4x4 worldViewProjectionMatrix = Matrix4x4Calculation::Multiply(worldMatrix, Matrix4x4Calculation::Multiply(viewMatrixSprite, projectionMatrixSprite));
 
 	//書き込む為のアドレスを取得
 	wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpData_));
@@ -89,7 +89,7 @@ void Line::Draw(Vector3 start, Vector3 end, Camera& camera) {
 
 
 	//さっき作ったworldMatrixの情報をここに入れる
-	wvpData_->WVP = MakeIdentity4x4();
+	wvpData_->WVP = Matrix4x4Calculation::MakeIdentity4x4();
 	wvpData_->World = worldMatrix;
 
 

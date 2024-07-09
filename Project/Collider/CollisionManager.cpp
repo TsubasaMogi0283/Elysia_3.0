@@ -27,7 +27,7 @@ void CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* c
 
 #pragma region Sphereの当たり判定を計算
 
-	Vector3 collisionDistance = Subtract(colliderPosA, colliderPosB);
+	Vector3 collisionDistance = VectorCalculation::Subtract(colliderPosA, colliderPosB);
 
 	//距離を計算
 	float distance = sqrtf((collisionDistance.x * collisionDistance.x) + 

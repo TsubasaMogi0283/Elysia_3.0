@@ -85,14 +85,14 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			Vector3 translateAfter = { -translate.x,translate.y,translate.z };
 			Quaternion rotateQuaternion = { rotate.x,-rotate.y,-rotate.z,rotate.w };
 
-			Matrix4x4 scaleMatrix = MakeScaleMatrix(scaleAfter);
+			Matrix4x4 scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(scaleAfter);
 			Matrix4x4 rotateMatrix = MakeRotateMatrix(rotateQuaternion);
-			Matrix4x4 translateMatrix = MakeTranslateMatrix(translateAfter);
+			Matrix4x4 translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(translateAfter);
 
 
 			
-			Matrix4x4 bindPoseMatrix = Multiply(scaleMatrix, Multiply(rotateMatrix, translateMatrix));
-			jointWeightData.inverseBindPoseMatrix = Inverse(bindPoseMatrix);
+			Matrix4x4 bindPoseMatrix = Matrix4x4Calculation::Multiply(scaleMatrix, Matrix4x4Calculation::Multiply(rotateMatrix, translateMatrix));
+			jointWeightData.inverseBindPoseMatrix = Matrix4x4Calculation::Inverse(bindPoseMatrix);
 
 			//Weight情報を取り出す
 			for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {

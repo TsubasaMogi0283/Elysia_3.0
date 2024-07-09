@@ -47,7 +47,7 @@ void Player::Update(){
 
 	const float MOVE_SPEED = 0.1f;
 	//加算
-	worldTransform_.translate_ = Add(worldTransform_.translate_, { moveDirection_.x * MOVE_SPEED,moveDirection_.y * MOVE_SPEED,moveDirection_.z * MOVE_SPEED });
+	worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, { moveDirection_.x * MOVE_SPEED,moveDirection_.y * MOVE_SPEED,moveDirection_.z * MOVE_SPEED });
 
 	//ステージの外には行けないようにする
 	//左

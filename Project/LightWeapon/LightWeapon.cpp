@@ -72,7 +72,7 @@ void LightWeapon::Update(Vector3 playerPosition, Vector3 direction){
 	newTranslate.z = distanceOffset_ * direction.z;
 
 	//加算
-	worldTransform_.translate_ = Add(playerPosition, newTranslate);
+	worldTransform_.translate_ = VectorCalculation::Add(playerPosition, newTranslate);
 	
 	//更新
 	worldTransform_.Update();

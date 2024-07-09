@@ -144,7 +144,7 @@ void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
 	for (auto it1 = enemies.begin(); it1 != enemies.end(); ++it1) {
 		for (auto it2 = std::next(it1); it2 != enemies.end(); ++it2) {
 
-			Vector3 diff = Subtract((*it1)->GetWorldPosition(), (*it2)->GetWorldPosition());
+			Vector3 diff = VectorCalculation::Subtract((*it1)->GetWorldPosition(), (*it2)->GetWorldPosition());
 			float distance = sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
 			float minDistance = (*it1)->GetRadius() + (*it2)->GetRadius();
 
@@ -163,7 +163,7 @@ void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
 			if (distance < minDistance) {
 				Vector3 enemyPosition = (*it2)->GetWorldPosition();
 				Vector3 speed = { -1.0,0.0f,0.0f };
-				(*it2)->SetTranslate(Add(enemyPosition, speed));
+				(*it2)->SetTranslate(VectorCalculation::Add(enemyPosition, speed));
 			}
 
 			//
@@ -488,14 +488,14 @@ void SampleScene::Update(GameManager* gameManager) {
 		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
 		camera_.rotate_.z = 0.0f;
 		
-		camera_.translate_ = Add(playerPosition, CAMERA_POSITION_OFFSET);
+		camera_.translate_ = VectorCalculation::Add(playerPosition, CAMERA_POSITION_OFFSET);
 
 	}
 	else if (viewOfPoint_ == ThirdPersonBack) {
 
 
 		camera_.rotate_ = thirdPersonViewOfPointRotate_;
-		camera_.translate_ = Add(playerPosition, Add(cameraThirdPersonViewOfPointPosition_, cameraTranslate));
+		camera_.translate_ = VectorCalculation::Add(playerPosition, VectorCalculation::Add(cameraThirdPersonViewOfPointPosition_, cameraTranslate));
 	}
 
 

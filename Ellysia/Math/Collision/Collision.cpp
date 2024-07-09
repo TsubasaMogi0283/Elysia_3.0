@@ -4,6 +4,7 @@
 #include <numbers>
 #include <cmath>
 #include <imgui.h>
+#include <SingleCalculation.h>
 
 
 //AABBとPointの当たり判定
@@ -62,19 +63,19 @@ bool IsFanCollision(const Fan2D& fan, const Vector2& point){
     }
     
    //向きだけが欲しいので正規化をする
-    Vector2 normalizedFanAndPoint = Normalize(vectorFanAndPont);
+    Vector2 normalizedFanAndPoint = VectorCalculation::Normalize(vectorFanAndPont);
     //向いている方向
-    Vector2 direction = Normalize(fan.direction);
+    Vector2 direction = VectorCalculation::Normalize(fan.direction);
 
 
     //内積を求める
     //左右一致するはず
     //左側
-    float centerAndLSDot = Dot(direction, fan.leftVector);
+    float centerAndLSDot = SingleCalculation::Dot(direction, fan.leftVector);
     //右側
-    float centerAndRSDot = Dot(direction, fan.rightVector);
+    float centerAndRSDot = SingleCalculation::Dot(direction, fan.rightVector);
     //ターゲット
-    float centerAndTargetDot = Dot(direction, normalizedFanAndPoint);
+    float centerAndTargetDot = SingleCalculation::Dot(direction, normalizedFanAndPoint);
 
 #ifdef _DEBUG
 
@@ -164,10 +165,10 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
     }
 
     //向きだけが欲しいので正規化をする
-    Vector3 normalizedFanAndPoint = Normalize(vectorFanAndPont);
+    Vector3 normalizedFanAndPoint = VectorCalculation::Normalize(vectorFanAndPont);
 
     //向いている方向
-    Vector3 direction = Normalize(fan.direction);
+    Vector3 direction = VectorCalculation::Normalize(fan.direction);
 
     
     //横方向
@@ -228,10 +229,10 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
 
 
     //それぞれを正規化する
-    Vector3 rightDirection = Normalize(rightOriginDirection);
-    Vector3 leftDirection = Normalize(leftOriginDirection);
-    Vector3 upDirection = Normalize(upOriginDirection);
-    Vector3 downDirection = Normalize(downOriginDirection);
+    Vector3 rightDirection = VectorCalculation::Normalize(rightOriginDirection);
+    Vector3 leftDirection = VectorCalculation::Normalize(leftOriginDirection);
+    Vector3 upDirection = VectorCalculation::Normalize(upOriginDirection);
+    Vector3 downDirection = VectorCalculation::Normalize(downOriginDirection);
 
     
 
@@ -259,20 +260,20 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
 
 #endif
     //左側
-    float dotLS = Dot({.x = direction.x,.y = direction.z }, newLeftDirection);
+    float dotLS = SingleCalculation::Dot({.x = direction.x,.y = direction.z }, newLeftDirection);
     //右側
-    float dotRS = Dot({.x = direction.x,.y = direction.z }, newRightDirection);
+    float dotRS = SingleCalculation::Dot({.x = direction.x,.y = direction.z }, newRightDirection);
     //ターゲット
-    float dotCenterXZ = Dot({ .x = direction.x,.y = direction.z }, newXZDirection);
+    float dotCenterXZ = SingleCalculation::Dot({ .x = direction.x,.y = direction.z }, newXZDirection);
     //これより小さくなったら当たっていないと返す
     
     
     //上側
-    float dotUS = Dot({ .x = direction.z,.y = direction.y }, newUpDirection);
+    float dotUS = SingleCalculation::Dot({ .x = direction.z,.y = direction.y }, newUpDirection);
     //下側
-    float dotDS = Dot({ .x = direction.z,.y = direction.y }, newDownDirection);
+    float dotDS = SingleCalculation::Dot({ .x = direction.z,.y = direction.y }, newDownDirection);
     //ターゲット
-    float dotCenterYZ = Dot({.x = direction.z,.y = direction.y }, newZYDirection);
+    float dotCenterYZ = SingleCalculation::Dot({.x = direction.z,.y = direction.y }, newZYDirection);
 
 #ifdef _DEBUG
 
