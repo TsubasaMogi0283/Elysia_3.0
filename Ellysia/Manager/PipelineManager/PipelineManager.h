@@ -195,8 +195,14 @@ public:
 	ComPtr<ID3D12PipelineState> GetRandomEffectGraphicsPipelineState() {
 		return randomEffectPSO_.graphicsPipelineState_;
 	}
+	//コマンドに積むためのGetter(HSVFilter)
+	ComPtr<ID3D12RootSignature> GetHSVFilterRootSignature() {
+		return hsvFilterPSO_.rootSignature_;
+	}
+	ComPtr<ID3D12PipelineState> GetHSVFilterGraphicsPipelineState() {
+		return hsvFilterPSO_.graphicsPipelineState_;
+	}
 	
-
 
 
 
@@ -262,6 +268,9 @@ public:
 	//RandomEffect用
 	static void GenarateRandomEffectPSO();
 
+	//HSVFilter用
+	static void GenarateHSVFilterPSO();
+
 
 	//SkyBox
 	static void GenarateSkyBoxPSO();
@@ -287,6 +296,7 @@ private:
 	//モデル用の変数
 	PSOInformation particle3DPSO_ = {};
 
+#pragma region PostEffect
 	//CopyImage用
 	PSOInformation fullScreenPSO_ = {};
 	//GrayScale用
@@ -309,6 +319,10 @@ private:
 	PSOInformation dissolvePSO_ = {};
 	//RandomEffect用
 	PSOInformation randomEffectPSO_ = {};
+	//HSVFilter用
+	PSOInformation hsvFilterPSO_ = {};
+
+#pragma endregion
 
 	//アニメーションモデル用の変数
 	PSOInformation animationModelPSO_ = {};

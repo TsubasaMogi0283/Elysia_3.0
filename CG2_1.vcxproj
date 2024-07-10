@@ -177,6 +177,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Polygon\PostEffect\Dissolve\Dissolve.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\GrayScale\GrayScale.cpp" />
+    <ClCompile Include="Ellysia\Polygon\PostEffect\HSVFilter\HSVFilter.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\LuminanceBasedOutline\LuminanceBasedOutline.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\RadialBlur\RadialBlur.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\RandomEffect\RandomEffect.cpp" />
@@ -265,6 +266,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\Shader\GrayScale\GrayScale.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\HSVFilter\HSVFilter.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\HSVFilter\HSVFilter.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -435,6 +446,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\PostEffect\Dissolve\Dissolve.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\GrayScale\GrayScale.h" />
+    <ClInclude Include="Ellysia\Polygon\PostEffect\HSVFilter\HSVFilter.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\LuminanceBasedOutline\LuminanceBasedOutline.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\RadialBlur\RadialBlur.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\RandomEffect\RandomEffect.h" />
@@ -479,6 +491,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resources\Shader\GaussianFilter\Kernel.hlsli" />
     <None Include="Resources\Shader\GaussianFilter\SmoothingIndex.hlsli" />
     <None Include="Resources\Shader\GrayScale\GrayScale.hlsli" />
+    <None Include="Resources\Shader\HSVFilter\HSVFilter.hlsli" />
     <None Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.hlsli" />
     <None Include="Resources\Shader\Object2D\Object2d.hlsli" />
     <None Include="Resources\Shader\Object3D\Object3d.hlsli">

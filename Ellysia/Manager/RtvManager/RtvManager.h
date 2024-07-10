@@ -5,20 +5,35 @@
 
 class RtvManager{
 private:
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	RtvManager() = default;
 
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~RtvManager() = default;
 
 public:
-	//インスタンス
+	
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
 	static RtvManager* GetInstance();
 
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="rtvHeapManager"></param>
 	RtvManager(const RtvManager& rtvHeapManager) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="rtvHeapManager"></param>
+	/// <returns></returns>
 	RtvManager& operator=(const RtvManager& rtvHeapManager) = delete;
 
 public:

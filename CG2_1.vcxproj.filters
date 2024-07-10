@@ -295,6 +295,9 @@
     <Filter Include="Project\Level1">
       <UniqueIdentifier>{26351dc1-6df0-4580-8895-e2cb666481a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Resource File\PostEffect\HSVFilter">
+      <UniqueIdentifier>{0e24b5c3-2344-44c7-a2bc-552b34fcaed1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -507,6 +510,9 @@
     <ClCompile Include="Project\Level1\Level1.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\PostEffect\HSVFilter\HSVFilter.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -604,6 +610,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\GaussianFilter\GaussianFilter.VS.hlsl">
       <Filter>Ellysia\Resource File\PostEffect\GaussianFilter</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\HSVFilter\HSVFilter.PS.hlsl">
+      <Filter>Ellysia\Resource File\PostEffect\HSVFilter</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\HSVFilter\HSVFilter.VS.hlsl">
+      <Filter>Ellysia\Resource File\PostEffect\HSVFilter</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -907,6 +919,9 @@
     <ClInclude Include="Project\Level1\Level1.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\PostEffect\HSVFilter\HSVFilter.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">
@@ -983,6 +998,9 @@
     </None>
     <None Include="Resources\Shader\GaussianFilter\SmoothingIndex.hlsli">
       <Filter>Ellysia\Resource File\PostEffect\GaussianFilter</Filter>
+    </None>
+    <None Include="Resources\Shader\HSVFilter\HSVFilter.hlsli">
+      <Filter>Ellysia\Resource File\PostEffect\HSVFilter</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
