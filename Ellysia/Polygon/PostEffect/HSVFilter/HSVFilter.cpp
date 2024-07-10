@@ -2,16 +2,17 @@
 #include <PipelineManager.h>
 #include <RtvManager.h>
 #include <SrvManager.h>
+#include <TextureManager.h>
 
 
 void HSVFilter::Initialize(){
 	//エフェクトごとにhlsl分けたい
 	//いずれやる
-	PipelineManager::GetInstance()->GenarateBoxFilterPSO();
+	PipelineManager::GetInstance()->GenarateHSVFilterPSO();
 
 	//Effect
-	boxFilterTypeResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(BoxFilterType));
-	boxFilterType_ = BoxFilter3x3;
+	//boxFilterTypeResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(BoxFilterType));
+	//boxFilterType_ = BoxFilter3x3;
 
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
@@ -59,7 +60,7 @@ void HSVFilter::Draw(){
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 #ifdef _DEBUG
 	ImGui::Begin("BoxFilter");
-	ImGui::SliderInt("Kinds", &boxFilterType_, 0, 4);
+	//ImGui::SliderInt("Kinds", &boxFilterType_, 0, 4);
 	ImGui::End();
 
 #endif // _DEBUG
@@ -67,14 +68,14 @@ void HSVFilter::Draw(){
 
 
 	//BoxFilterの設定
-	boxFilterTypeResource_->Map(0, nullptr, reinterpret_cast<void**>(&boxFilterTypeData_));
-	boxFilterTypeData_->type = boxFilterType_;
-	boxFilterTypeResource_->Unmap(0, nullptr);
+	//boxFilterTypeResource_->Map(0, nullptr, reinterpret_cast<void**>(&boxFilterTypeData_));
+	//boxFilterTypeData_->type = boxFilterType_;
+	//boxFilterTypeResource_->Unmap(0, nullptr);
 
 
 
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetBoxFilterRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetBoxFilterGraphicsPipelineState().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetHSVFilterRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetHSVFilterGraphicsPipelineState().Get());
 
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -84,7 +85,7 @@ void HSVFilter::Draw(){
 
 
 	//Type
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, boxFilterTypeResource_->GetGPUVirtualAddress());
+	//DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, boxFilterTypeResource_->GetGPUVirtualAddress());
 
 
 

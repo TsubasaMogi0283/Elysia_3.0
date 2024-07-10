@@ -40,6 +40,7 @@
 #include <Stage/Gate/Gate.h>
 #include <Fan.h>
 #include "Collision.h"
+#include "../../../Ellysia/Polygon/PostEffect/HSVFilter/HSVFilter.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -124,6 +125,7 @@ private:
 	//今は使わない
 	std::unique_ptr<BackText> back_ = nullptr;
 
+	std::unique_ptr<HSVFilter> hsvFilter_ = nullptr;
 
 
 	

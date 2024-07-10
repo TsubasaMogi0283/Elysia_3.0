@@ -5,7 +5,7 @@
 #include "VertexData.h"
 
 class HSVFilter{
-
+public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
@@ -37,7 +37,7 @@ class HSVFilter{
 private:
 	//別々で分けたい
 	ComPtr<ID3D12Resource> boxFilterTypeResource_ = nullptr;
-	BoxFilterType* boxFilterTypeData_ = nullptr;
+	//BoxFilterType* boxFilterTypeData_ = nullptr;
 
 	//RTV
 	uint32_t rtvHandle_ = 0;

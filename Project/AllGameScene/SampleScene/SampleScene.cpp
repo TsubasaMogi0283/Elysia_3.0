@@ -125,6 +125,11 @@ void SampleScene::Initialize() {
 	back_ = std::make_unique< BackText>();
 	back_->Initialize();
 
+	hsvFilter_ = std::make_unique<HSVFilter>();
+	hsvFilter_->Initialize();
+
+
+
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
 	//material_.lightingKinds_ = Directional;
@@ -682,7 +687,8 @@ void SampleScene::DrawSpriteBack(){
 void SampleScene::PreDrawPostEffectFirst(){
 	
 	
-	back_->PreDraw();
+	//back_->PreDraw();
+	hsvFilter_->PreDraw();
 }
 
 
@@ -729,7 +735,8 @@ void SampleScene::DrawObject3D() {
 
 void SampleScene::DrawPostEffect(){
 	
-	back_->Draw();
+	//back_->Draw();
+	hsvFilter_->Draw();
 }
 
 void SampleScene::DrawSprite(){

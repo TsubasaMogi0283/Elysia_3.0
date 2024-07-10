@@ -77,13 +77,11 @@ float3 HSVToRGB(float3 hsv)
     float saturate = hsv.g;
     
     
-    if (saturate > 0.0f)
-    {
+    if (saturate > 0.0f){
         hue *= 6.0f;
         int i = (int) hue;
         float f = hue - (float) i;
-        switch (i)
-        {
+        switch (i){
             default:
             case 0:
                 green *= 1 - saturate * (1 - f);
@@ -121,6 +119,14 @@ PixelShaderOutput main(VertexShaderOutput input)
 {
     PixelShaderOutput output;
     
+    float4 textureColor = gTexture.Sample(gSample, input.texcoord);
+    float3 hsv = RGBToHSV(textureColor.rgb);
+    
+    
+    float3 rgb = HSVToRGB(hsv);
+    
+    output.color.rgb = rgb;
+    output.color.a = textureColor.a;
     
     return output;
 }
