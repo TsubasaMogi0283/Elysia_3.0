@@ -111,7 +111,7 @@ private:
 	uint32_t rtvHandle_=0;
 	//RTV
 	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
-
+	Vector4 renderTargetClearValue_ = {};
 	uint32_t srvHandle_ = 0;
 
 	D3D12_RESOURCE_BARRIER barrier = {};

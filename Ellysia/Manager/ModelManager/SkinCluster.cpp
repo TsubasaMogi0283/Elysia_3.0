@@ -56,7 +56,7 @@ void  SkinCluster::Create(const Skeleton& skeleton, const ModelData& modelData){
     inverseBindPoseMatrices.resize(skeleton_.joints_.size());
     //最後の所は「関数ポインタ」
     //()を付けないでね。ここ重要。
-    std::generate(inverseBindPoseMatrices.begin(), inverseBindPoseMatrices.end(), MakeIdentity4x4);
+    std::generate(inverseBindPoseMatrices.begin(), inverseBindPoseMatrices.end(), Matrix4x4Calculation::MakeIdentity4x4);
 
 #pragma region std::generateについて
     ////std::generate...初期化するときに便利！
@@ -105,9 +105,9 @@ void SkinCluster::Update(const Skeleton& skeleton){
         assert(jointIndex < inverseBindPoseMatrices.size());
         //inverseBindPoseMatricesに原因あり！！
         mappedPalette_[jointIndex].skeletonSpaceMatrix =
-            Multiply(inverseBindPoseMatrices[jointIndex], skeleton.joints_[jointIndex].skeletonSpaceMatrix);
+            Matrix4x4Calculation::Multiply(inverseBindPoseMatrices[jointIndex], skeleton.joints_[jointIndex].skeletonSpaceMatrix);
         mappedPalette_[jointIndex].skeletonSpaceIncerseTransposeMatrix = 
-            MakeTransposeMatrix(Inverse(mappedPalette_[jointIndex].skeletonSpaceMatrix));
+            Matrix4x4Calculation::MakeTransposeMatrix(Matrix4x4Calculation::Inverse(mappedPalette_[jointIndex].skeletonSpaceMatrix));
     }
 
 

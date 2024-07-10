@@ -196,17 +196,17 @@ void Sprite::Draw() {
 
 	//新しく引数作った方が良いかも
 	//3x3x3
-	Matrix4x4 worldMatrix = MakeAffineMatrix({ scale_.x,scale_.y,1.0f }, { 0.0f,0.0f,rotate_ }, position_);
+	Matrix4x4 worldMatrix = Matrix4x4Calculation::MakeAffineMatrix({ scale_.x,scale_.y,1.0f }, { 0.0f,0.0f,rotate_ }, position_);
 	//遠視投影行列
-	Matrix4x4 viewMatrix = MakeIdentity4x4();
+	Matrix4x4 viewMatrix = Matrix4x4Calculation::MakeIdentity4x4();
 	
-	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 	
 	//WVP行列を作成
-	Matrix4x4 worldViewProjectionMatrixSprite = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+	Matrix4x4 worldViewProjectionMatrixSprite = Matrix4x4Calculation::Multiply(worldMatrix, Matrix4x4Calculation::Multiply(viewMatrix, projectionMatrix));
 
 	transformationMatrixData_->WVP = worldViewProjectionMatrixSprite;
-	transformationMatrixData_->World = MakeIdentity4x4();
+	transformationMatrixData_->World = Matrix4x4Calculation::MakeIdentity4x4();
 
 	transformationMatrixResource_->Unmap(0, nullptr);
 
@@ -220,9 +220,9 @@ void Sprite::Draw() {
 	materialData_->lightingKinds = 0;
 	materialData_->shininess = 0.0f;
 
-	Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransformSprite_.scale);
-	uvTransformMatrix = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransformSprite_.rotate.z));
-	uvTransformMatrix = Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransformSprite_.translate));
+	Matrix4x4 uvTransformMatrix = Matrix4x4Calculation::MakeScaleMatrix(uvTransformSprite_.scale);
+	uvTransformMatrix = Matrix4x4Calculation::Multiply(uvTransformMatrix, Matrix4x4Calculation::MakeRotateZMatrix(uvTransformSprite_.rotate.z));
+	uvTransformMatrix = Matrix4x4Calculation::Multiply(uvTransformMatrix, Matrix4x4Calculation::MakeTranslateMatrix(uvTransformSprite_.translate));
 	materialData_->uvTransform = uvTransformMatrix;
 
 

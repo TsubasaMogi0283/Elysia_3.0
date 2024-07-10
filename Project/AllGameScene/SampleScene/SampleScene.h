@@ -28,6 +28,18 @@
 #include <Vignette.h>
 #include <BoxFilter.h>
 #include <GaussianFilter.h>
+#include <Player/Player.h>
+#include <Enemy/Enemy.h>
+#include <LightWeapon/LightWeapon.h>
+#include <Collider/CollisionManager.h>
+#include <Key/Key.h>
+#include <Stage/Ground/Ground.h>
+#include <Key/KeyManager.h>
+#include <Light/FlashLight/FlashLight.h>
+#include <Enemy/EnemyManager.h>
+#include <Stage/Gate/Gate.h>
+#include <Fan.h>
+#include "Collision.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -73,76 +85,102 @@ public:
 	~SampleScene();
 
 
+private:
+
+	
+	void CheckCollision(std::list<Enemy*>& enemies);
+
+	/// <summary>
+	/// 鍵の取得の処理
+	/// </summary>
+	void KeyCollision();
+
+
+
+
 
 private:
 
-
-	std::unique_ptr<Model> model_ = nullptr;
-	uint32_t modelHandle = 0;
-	WorldTransform worldTransform_ = {};
-	
+	//カメラ
 	Camera camera_ = {};
+	Vector3 cameraPosition_ = {};
+	Vector3 CAMERA_POSITION_OFFSET = { 0.0f,1.0f,0.0f };
 
-	std::unique_ptr<Sprite> sprite_ = nullptr;
+	Vector3 cameraThirdPersonViewOfPointPosition_ = {};
+	Vector3 thirdPersonViewOfPointRotate_ = {};
+
+	bool isRotateYKey_ = false;
+	bool isRotateXKey_ = false;
 
 
-	//歩き
-	static const int WALK_HUMAN_AMOUNT_ = 1;
-	std::unique_ptr<AnimationModel> human_[WALK_HUMAN_AMOUNT_] = { nullptr };
-	uint32_t humanModelHandle = {};
-	uint32_t humanAnimationModel_ = {};
-	WorldTransform humanWorldTransform_[WALK_HUMAN_AMOUNT_] = {};
-	Skeleton humanSkeleton_[WALK_HUMAN_AMOUNT_] = {};
-	float humanAnimationTime_[WALK_HUMAN_AMOUNT_] = {};
-	SkinCluster humanSkinCluster_[WALK_HUMAN_AMOUNT_] = {};
-
-	std::unique_ptr<Model> noneAnimationModel_ = nullptr;
-	WorldTransform noneAnimationWorldTransform_ = {};
-
-	std::unique_ptr<SkyBox> skyBox_ = nullptr;
-	WorldTransform skyBoxWorldTransform_ = {};
-
+	//平行光源
 	DirectionalLight directionalLight_ = {};
-	PointLight pointLight_ = {};
-	SpotLight spotLight_ = {};
+	//スポットライト
+	std::unique_ptr<FlashLight> flashLight_ = nullptr;
+	//マテリアル
+	Material material_ = {};
 
-	Material humanMaterial_ = {};
-	Material sphereMaterial = {};
-
-	const char* GroupName = "Player";
-	Vector3 position = {};
-
+	//ポストエフェクト
+	//今は使わない
 	std::unique_ptr<BackText> back_ = nullptr;
+
+
+
 	
 
-	std::unique_ptr<GrayScale> grayScale_ = nullptr;
-	std::unique_ptr<SepiaScale> sepiaScale_ = nullptr;
-	std::unique_ptr<Vignette> vignette_ = nullptr;
-	std::unique_ptr<BoxFilter> boxFilter_ = nullptr;
-	std::unique_ptr<GaussianFilter> gaussianFilter_ = nullptr;
+	//プレイヤー
+	std::unique_ptr<Player>player_ = nullptr;
+	Vector3 playerDirection_ = {0.0f,0.0f,0.0f};
+	bool isPlayerMoveKey_ = false;
 
-	std::unique_ptr<LuminanceBasedOutline> outLine_ = nullptr;
-	std::unique_ptr<DepthBasedOutline> depthBasedOutline_ = nullptr;
-	std::unique_ptr<RadialBlur> radialBlur_ = nullptr;
-	std::unique_ptr<Dissolve> dissolve_ = nullptr;
-	std::unique_ptr<RandomEffect> randomEffect_ = nullptr;
+	uint32_t bTriggerTime_ = 0;
+	bool isBTrigger_ = false;
+
+	//地面
+	std::unique_ptr<Ground> ground_ = nullptr;
+
+	//ゲート
+	std::unique_ptr<Gate> gate_ = nullptr;
+	bool isEscape_ = false;
+
+	//鍵
+	std::unique_ptr<KeyManager> keyManager_ = {};
+	uint32_t keyQuantity_ = 0;
+
+	
+	//敵
+	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
+	uint32_t enemyModelHandle_ = 0;
+
+	//プレイヤーのライトの判定
+	LightWeapon* lightCollision_ = nullptr;
+	WorldTransform lightCollisionWorldTransform_ = {};
+
+	uint32_t viewOfPoint_ = 0;
+
+	float theta_ = 0.0f;
+	float originPhi_ = 0.0f;
+
+	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 
 
-private:
-	enum class PostEffect {
-		NoneEffect,
-		GrayEffect,
-		SepiaEffect,
-		VignetteEffect,
-		GaussianFilter,
-		LuminanceOutLineEffect,
-		RadialBlurEffect,
-		DissolveEffect,
-		RandomEffect,
-	};
 
 
-	//ポストエフェクトの切り替え
-	PostEffect postEffect_ = PostEffect::NoneEffect;
-	uint32_t postEffectKinds_ = 0;
+
+
+
+#pragma region デバッグ用のオブジェクト
+	Vector3 cameraTranslate = {};
+
+	std::unique_ptr<Model> debugTower_ = nullptr;
+	WorldTransform debugTowerWorldTransform_ = {};
+
+	std::unique_ptr<Model> debugFanCollisionSphereModel_ = nullptr;
+	WorldTransform debugFanCollisionSphereWorldTransform_ = {};
+	Material debugFanCollisionSphereMaterial_ = {};
+
+#pragma endregion
+
+
+
 };

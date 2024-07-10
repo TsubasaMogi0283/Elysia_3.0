@@ -5,7 +5,7 @@ int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std:
     Joint joint = {};
     joint.name = node.name;
     joint.localMatrix = node.localMatrix;
-    joint.skeletonSpaceMatrix = MakeIdentity4x4();
+    joint.skeletonSpaceMatrix = Matrix4x4Calculation::MakeIdentity4x4();
     joint.transform = node.transform;
     //現在登録されている数をIndexに
     joint.index = int32_t(joints.size());

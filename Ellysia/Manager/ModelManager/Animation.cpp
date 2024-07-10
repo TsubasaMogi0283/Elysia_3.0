@@ -88,7 +88,7 @@ Vector3 CalculationValue(const std::vector<KeyFrameVector3>& keyFrames, float ti
             //範囲内を補間する
             float t = (time - keyFrames[index].time) / (keyFrames[nextIndex].time - keyFrames[index].time);
             //Vector3 だと線形補間
-            return Lerp(keyFrames[index].value, keyFrames[nextIndex].value, t);
+            return VectorCalculation::Lerp(keyFrames[index].value, keyFrames[nextIndex].value, t);
         }
     }
 

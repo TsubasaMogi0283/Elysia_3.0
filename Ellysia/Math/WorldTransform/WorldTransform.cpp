@@ -17,16 +17,16 @@ void WorldTransform::Initialize() {
 
 void WorldTransform::Update() {
 	//SRT合成
-	worldMatrix_ = MakeAffineMatrix(scale_, rotate_, translate_);
+	worldMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
 	//逆転置行列
 	//ワールド行列を逆転置にする
-	Matrix4x4 worldInverseMatrix = Inverse(worldMatrix_);
+	Matrix4x4 worldInverseMatrix = Matrix4x4Calculation::Inverse(worldMatrix_);
 	//転置にした
-	worldInverseTransposeMatrix_ = MakeTransposeMatrix(worldInverseMatrix);
+	worldInverseTransposeMatrix_ = Matrix4x4Calculation::MakeTransposeMatrix(worldInverseMatrix);
 
 	//親があれば親のワールド行列を掛ける
 	if (parent_) {
-		worldMatrix_ = Multiply(worldMatrix_, parent_->worldMatrix_);
+		worldMatrix_ = Matrix4x4Calculation::Multiply(worldMatrix_, parent_->worldMatrix_);
 	}
 
 	Transfer();

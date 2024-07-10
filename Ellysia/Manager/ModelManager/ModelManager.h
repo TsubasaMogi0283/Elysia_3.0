@@ -31,10 +31,9 @@ private:
 	//モデルデータの読み込み
 	static ModelData LoadFile(const std::string& directoryPath, const std::string& fileName);
 
+	static ModelData LoadFileFotLeveldata(const std::string& fileNameFolder, const std::string& fileName);
 
 public:
-
-	//LoadObjとLoadglTFの関数を作った方が良いかも
 
 
 
@@ -45,6 +44,12 @@ public:
 	/// <param name="fileName">ファイル名</param>
 	/// <returns></returns>
 	static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName);
+
+
+	/// <summary>
+	/// モデルデータの読み込み
+	/// </summary>
+	static uint32_t LoadModelFileForLevelData(const std::string& directoryPath, const std::string& fileName);
 
 	/// <summary>
 	/// アニメーション付きのglTFを読み込みたいときはこっちで
@@ -88,7 +93,11 @@ private:
 		//ファイル名など
 		std::string directoryPath;
 		std::string filePath;
+
+		//レベルデータ用
+		std::string folderName;
 	};
+
 
 
 	//mapにしたい

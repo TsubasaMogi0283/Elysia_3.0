@@ -76,7 +76,7 @@ void DepthBasedOutline::PreDraw() {
 void DepthBasedOutline::Draw(Camera& camera) {
 
 	projectionInverseResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraMatrix_));
-	Matrix4x4 projectionInverseMatrix4x4 = Inverse(camera.projectionMatrix_);
+	Matrix4x4 projectionInverseMatrix4x4 = Matrix4x4Calculation::Inverse(camera.projectionMatrix_);
 	cameraMatrix_->projectionInverse = projectionInverseMatrix4x4;
 	projectionInverseResource_->Unmap(0, nullptr);
 

@@ -42,7 +42,6 @@ private:
 	/// <returns></returns>
 	static Animation LoadAnimationFile(const std::string& directoryPath, const std::string& fileName);
 
-
 	/// <summary>
 	/// 任意の時刻の値を取得(Vector3版)
 	/// </summary>

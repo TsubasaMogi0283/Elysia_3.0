@@ -275,7 +275,7 @@ void Sphere::Draw(SphereShape sphereCondtion, Transform transform,Matrix4x4 view
 	materialData_->color = color;
 	materialData_->lightingKinds=0;
 
-	materialData_->uvTransform = MakeIdentity4x4();
+	materialData_->uvTransform = Matrix4x4Calculation::MakeIdentity4x4();
 
 	//サイズに注意を払ってね！！！！！
 	//どれだけのサイズが必要なのか考えよう
@@ -284,18 +284,18 @@ void Sphere::Draw(SphereShape sphereCondtion, Transform transform,Matrix4x4 view
 	
 
 	//新しく引数作った方が良いかも
-	Matrix4x4 worldMatrixSphere = MakeAffineMatrix(transform.scale,transform.rotate,Add(transform.translate,sphereCondtion.center));
+	Matrix4x4 worldMatrixSphere = Matrix4x4Calculation::MakeAffineMatrix(transform.scale,transform.rotate, VectorCalculation::Add(transform.translate,sphereCondtion.center));
 	//遠視投影行列
-	Matrix4x4 viewMatrixSphere = MakeIdentity4x4();
+	Matrix4x4 viewMatrixSphere = Matrix4x4Calculation::MakeIdentity4x4();
 	
-	Matrix4x4 projectionMatrixSphere = MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrixSphere = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 	
 	//WVP行列を作成
-	Matrix4x4 worldViewProjectionMatrixSphere = Multiply(worldMatrixSphere, Multiply(viewMatrix, projectionMatrix));
+	Matrix4x4 worldViewProjectionMatrixSphere = Matrix4x4Calculation::Multiply(worldMatrixSphere, Matrix4x4Calculation::Multiply(viewMatrix, projectionMatrix));
 
 
 	transformationMatrixDataSphere_->WVP = worldViewProjectionMatrixSphere;
-	transformationMatrixDataSphere_->World =MakeIdentity4x4();
+	transformationMatrixDataSphere_->World =Matrix4x4Calculation::MakeIdentity4x4();
 
 
 	
