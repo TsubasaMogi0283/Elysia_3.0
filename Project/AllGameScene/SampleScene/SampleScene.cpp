@@ -549,20 +549,6 @@ void SampleScene::Update(GameManager* gameManager) {
 		}
 
 	}
-	else if (Input::GetInstance()->IsTriggerKey(DIK_5) == true) {
-		postEffect_ = PostEffect::LuminanceOutLineEffect;
-	}
-	else if (Input::GetInstance()->IsTriggerKey(DIK_6) == true) {
-		postEffect_ = PostEffect::RadialBlurEffect;
-	}
-	else if (Input::GetInstance()->IsTriggerKey(DIK_7) == true) {
-		postEffect_ = PostEffect::DissolveEffect;
-	}
-	else if (Input::GetInstance()->IsTriggerKey(DIK_8) == true) {
-		postEffect_ = PostEffect::RandomEffect;
-	}
-
-
 
 
 
@@ -683,7 +669,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	//脱出
 	if (isEscape_ == true) {
 		gameManager->ChangeScene(new SampleScene2());
-	}*/
+	}
 
 	
 }
@@ -752,10 +738,6 @@ void SampleScene::DrawSprite(){
 	keyManager_->DrawSprite(keyQuantity);
 
 
-}
-
-void SampleScene::DrawSprite(){
-	//sprite_->Draw();
 }
 
 
