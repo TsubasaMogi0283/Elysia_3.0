@@ -10,6 +10,7 @@ void Level1::Update(){
 }
 
 void Level1::Draw(Camera& camera, SpotLight& spotLight){
-
+	camera;
+	spotLight;
 
 }

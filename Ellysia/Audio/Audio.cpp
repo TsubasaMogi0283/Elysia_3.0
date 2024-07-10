@@ -7,11 +7,6 @@
 
 static uint32_t audioIndex;
 
-//コンストラクタ
-Audio::Audio() {
-
-}
-
 Audio* Audio::GetInstance() {
 	static Audio instance;
 	return &instance;
@@ -34,10 +29,11 @@ void Audio::CreateSubmixVoice(uint32_t channel) {
 void Audio::Initialize() {
 
 	//MediaFundationの初期化
-	MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
+	HRESULT hr = {};
+	hr=MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
+	assert(SUCCEEDED(hr));
 
 	//XAudioのエンジンのインスタンスを生成
-	HRESULT hr;
 	hr = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
 	assert(SUCCEEDED(hr));
 
@@ -609,7 +605,7 @@ void Audio::PartlyLoopPlayWave(uint32_t audioHandle, float start, float lengthSe
 	//別名サスティンループというらしい
 	//シンセとかにあるサスティンと関係があるのかな
 	//この関数は部分ループ
-
+	
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buffer{};
 	buffer.pAudioData = audioInformation_[audioHandle].soundData_.pBuffer;
@@ -1050,12 +1046,7 @@ void Audio::Release() {
 	for (int i = 0; i < SOUND_DATE_MAX_; i++) {
 		SoundUnload(i);
 	}
-
-
-	MFShutdown();
-}
-
-//デストラクタ
-Audio::~Audio() {
-
+	HRESULT hr{};
+	hr=MFShutdown();
+	assert(SUCCEEDED(hr));
 }

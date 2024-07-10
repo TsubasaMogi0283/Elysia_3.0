@@ -12,6 +12,12 @@
 //Modelは別々のものだから
 
 
+struct Camera;
+struct Material;
+struct DirectionalLight;
+struct PointLight;
+struct SpotLight;
+
 class LevelDataManager {
 public:
 	/// <summary>
@@ -36,11 +42,17 @@ private:
 public:
 
 	/// <summary>
-	/// Leveldataの読み込み
+	/// レベルデータの読み込み
 	/// </summary>
 	/// <param name="directoryPath">ResourcesのLevelData</param>
 	/// <param name="fileName">jsonファイル</param>
 	void Load(const std::string& directoryPath, const std::string& fileName);
+
+	/// <summary>
+	/// レベルデータのグループを作る
+	/// </summary>
+	/// <param name="name"></param>
+	void GenarateLevelData(const std::string& name);
 
 	/// <summary>
 	/// 更新
@@ -48,9 +60,28 @@ public:
 	void Update();
 
 	/// <summary>
-	/// 描画
+	/// 描画(平行光源)
 	/// </summary>
-	void Draw(Camera& camera);
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="directionalLight"></param>
+	void Draw(Camera& camera, Material& material, DirectionalLight& directionalLight);
+
+	/// <summary>
+	/// 描画(点光源)
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="pointLight"></param>
+	void Draw(Camera& camera, Material& material, PointLight& pointLight);
+
+	/// <summary>
+	/// 描画(スポットライト)
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="spotLight"></param>
+	void Draw(Camera& camera,Material & material,SpotLight& spotLight);
 
 
 
@@ -64,6 +95,7 @@ public:
 
 
 private:
+	
 
 	struct LevelData {
 		struct ObjectData {
@@ -80,11 +112,8 @@ private:
 			Vector3 size;
 		};
 
-
 		//オブジェクト
 		std::vector<ObjectData> objects;
-
-		
 
 		//ファイルパス
 		std::string filePath;
@@ -100,10 +129,8 @@ private:
 	LevelData* levelData = nullptr;
 private:
 
-
-	static const uint32_t LEVEL_DATA_MAX_AMOUNT_ = 128;
-	//数の限界があるのでarrayがいいかな
-	std::array<LevelData, LEVEL_DATA_MAX_AMOUNT_> levelData_{};
+	//ここにデータを入れていく
+	std::map<std::string ,LevelData*> levelDatas_;
 
 
 

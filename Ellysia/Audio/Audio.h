@@ -45,10 +45,10 @@ enum AudioEffectType {
 class Audio final {
 private:
 	//コンストラクタ
-	Audio();
+	Audio()=default;
 
 	//デストラクタ
-	~Audio();
+	~Audio()=default;
 public:
 	//インスタンスの取得
 	static Audio* GetInstance();
@@ -60,24 +60,48 @@ public:
 	Audio& operator=(const Audio& obj) = delete;
 
 public:
-
-	//初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
 #pragma region 基本セット
 
-	//読み込み
+	/// <summary>
+	/// 読み込み
+	/// </summary>
+	/// <param name="fileName"></param>
+	/// <returns></returns>
 	static uint32_t LoadWave(const char* fileName);
 
-	//エフェクト版の読み込み
+	/// <summary>
+	/// エフェクト版の読み込み
+	/// </summary>
+	/// <param name="fileName"></param>
+	/// <param name="effectType"></param>
+	/// <returns></returns>
 	static uint32_t LoadWave(const char* fileName, uint32_t effectType);
 
+	/// <summary>
+	/// MP3読み込み
+	/// </summary>
+	/// <param name="fileName"></param>
+	/// <returns></returns>
 	static uint32_t LoadMP3(const WCHAR* fileName);
 
 
-	//音声再生
+	/// <summary>
+	/// 再生
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	/// <param name="isLoop"></param>
 	void PlayWave(uint32_t audioHandle, bool isLoop);
-	//ループ回数あり
+	
+	/// <summary>
+	/// 再生(ループ回数指定)
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	/// <param name="loopCount"></param>
 	void PlayWave(uint32_t audioHandle, int32_t loopCount);
 
 	/// <summary>

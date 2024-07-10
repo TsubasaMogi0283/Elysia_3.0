@@ -1,11 +1,15 @@
 #include "LevelDataManager.h"
-#include <cassert>
 
+#include <cassert>
+#include <numbers>
 #include <fstream>
 
 #include "ModelManager.h"
 #include "Camera.h"
-#include <numbers>
+#include "Material.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 
 void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 	//"objects"の全オブジェクトを走査
@@ -157,6 +161,13 @@ void LevelDataManager::Load(const std::string& directoryPath, const std::string&
 
 
 
+void LevelDataManager::GenarateLevelData(const std::string& name){
+
+
+	levelDatas_.
+
+}
+
 void LevelDataManager::Update(){
 	//ワールドトランスフォームの更新
 	for (WorldTransform* object : worldTransforms_) {
@@ -165,7 +176,7 @@ void LevelDataManager::Update(){
 
 }
 
-void LevelDataManager::Draw(Camera& camera){
+void LevelDataManager::Draw(Camera& camera, Material& material, DirectionalLight& directionalLight){
 	uint32_t count = 0;
 	for (auto& objectData : levelData->objects) {
 		//ファイル名から登録済みモデルを検索
@@ -176,12 +187,47 @@ void LevelDataManager::Draw(Camera& camera){
 			model = it->second;
 		}
 
-		model->Draw(*worldTransforms_[count], camera);
+		model->Draw(*worldTransforms_[count], camera, material, directionalLight);
 
 		//数を増やしていく
 		count++;
 	}
+}
 
+void LevelDataManager::Draw(Camera& camera, Material& material, PointLight& pointLight){
+	uint32_t count = 0;
+	for (auto& objectData : levelData->objects) {
+		//ファイル名から登録済みモデルを検索
+		Model* model = nullptr;
+		decltype(models_)::iterator it = models_.find(objectData.fileName);
+		//見つかったらmodelに入れる
+		if (it != models_.end()) {
+			model = it->second;
+		}
+
+		model->Draw(*worldTransforms_[count], camera, material, pointLight);
+
+		//数を増やしていく
+		count++;
+	}
+}
+
+void LevelDataManager::Draw(Camera& camera, Material& material, SpotLight& spotLight){
+	uint32_t count = 0;
+	for (auto& objectData : levelData->objects) {
+		//ファイル名から登録済みモデルを検索
+		Model* model = nullptr;
+		decltype(models_)::iterator it = models_.find(objectData.fileName);
+		//見つかったらmodelに入れる
+		if (it != models_.end()) {
+			model = it->second;
+		}
+
+		model->Draw(*worldTransforms_[count], camera, material, spotLight);
+
+		//数を増やしていく
+		count++;
+	}
 }
 
 

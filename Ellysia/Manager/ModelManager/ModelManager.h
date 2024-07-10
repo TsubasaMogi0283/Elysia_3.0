@@ -93,7 +93,11 @@ private:
 		//ファイル名など
 		std::string directoryPath;
 		std::string filePath;
+
+		//レベルデータ用
+		std::string folderName;
 	};
+
 
 
 	//mapにしたい
