@@ -89,7 +89,6 @@ private:
 	//インデックス
 	uint32_t index_ = 0;
 	ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap_ = nullptr;
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_;
 	static D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[RTV_DESCRIPTOR_SIZE_];
 
 

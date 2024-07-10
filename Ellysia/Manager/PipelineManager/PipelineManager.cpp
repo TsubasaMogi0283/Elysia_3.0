@@ -3255,7 +3255,6 @@ void PipelineManager::GenarateDissolvePSO() {
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 	//rootParameter生成。複数設定できるので配列。
-	//今回は結果一つだけなので長さ１の配列
 	D3D12_ROOT_PARAMETER rootParameters[3] = {};
 
 
