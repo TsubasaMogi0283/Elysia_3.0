@@ -9,22 +9,22 @@ const uint32_t COLLISION_ATTRIBUTE_PLAYER = 0b1;
 
 
 //敵陣営
-//10
+//2
 //左に1つシフトする
 const uint32_t COLLISION_ATTRIBUTE_ENEMY = 0b1 << 1;
 
 //オブジェクト
-//100
+//4
 //左に2つシフトする
 const uint32_t COLLISION_ATTRIBUTE_OBJECT = 0b1 << 2;
 
 //プレイヤー陣営の武器
-//100
+//8
 //左に2つシフトする
-const uint32_t COLLISION_ATTRIBUTE_P_WEAPON = 0b1 << 2;
+const uint32_t COLLISION_ATTRIBUTE_P_WEAPON = 0b1 << 3;
 
 //敵陣営の武器
-//1000
+//16
 //左に3つシフトする
-const uint32_t COLLISION_ATTRIBUTE_E_WEAPON = 0b1 << 3;
+const uint32_t COLLISION_ATTRIBUTE_E_WEAPON = 0b1 << 4;
 

@@ -3,9 +3,6 @@
 
 #include "d3dx12.h"
 #include <vector>
-static uint32_t descriptorSizeSRV_ = 0u;
-static uint32_t descriptorSizeRTV_ = 0u;
-static uint32_t descriptorSizeDSV_ = 0u;
 static uint32_t textureIndex;
 
 

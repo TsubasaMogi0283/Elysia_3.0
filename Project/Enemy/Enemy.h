@@ -7,6 +7,7 @@
 #include <memory>
 struct Camera;
 struct SpotLight;
+class Player;
 
 class Enemy :public Collider{
 public:
@@ -45,33 +46,64 @@ public:
 
 
 public:
+	/// <summary>
+	/// 衝突判定
+	/// </summary>
 	void OnCollision()override;
 
+	/// <summary>
+	/// ワールド座標
+	/// </summary>
+	/// <returns></returns>
 	Vector3 GetWorldPosition()override;
 
+	/// <summary>
+	/// 座標の指定
+	/// </summary>
+	/// <param name="translate"></param>
 	void SetTranslate(Vector3 translate);
-
-	void SetSammeEnemyCollisionAfter(Vector3 position, Vector3 speed);
 
 public:
 	
 
-
+	/// <summary>
+	/// 生きているかのフラグを取得
+	/// </summary>
+	/// <returns></returns>
 	bool GetIsAlive() {
 		return isAlive_;
 	}
 
 
+	/// <summary>
+	/// プレイヤー
+	/// </summary>
+	/// <param name="player"></param>
+	inline void Setlayer(Player* player) {
+		this->player_ = player;
+	}
+
 
 private:
+	//プレイヤー
+	Player* player_ = nullptr;
+
+	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
-	std::unique_ptr<Model> model_ = nullptr;
-	Vector4 color_ = {};
 	Vector3 speed_ = {};
+
+	//モデル
+	std::unique_ptr<Model> model_ = nullptr;
+	
+	//マテリアル
 	Material material_ = {};
-
-
+	Vector4 color_ = {};
+	
+	//消滅
 	int32_t deleteTime_ = 0;
 	bool isAlive_ = true;
+
+	//追跡
+	bool isTracking_ = false;
 };
 

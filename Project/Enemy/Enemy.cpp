@@ -15,6 +15,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	material_.lightingKinds_ = Spot;
 	deleteTime_ = 180;
 	isAlive_ = true;
+	isTracking_ = false;
 
 	//半径
 	radius_ = 1.0f;
@@ -83,11 +84,6 @@ void Enemy::SetTranslate(Vector3 translate) {
 	this->worldTransform_.translate_.y = translate.y;
 	this->worldTransform_.translate_.z = translate.z;
 
-}
-
-void Enemy::SetSammeEnemyCollisionAfter(Vector3 position, Vector3 speed) {
-	position;
-	speed;
 }
 
 

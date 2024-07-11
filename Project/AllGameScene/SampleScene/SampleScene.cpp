@@ -153,6 +153,10 @@ void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
 
 
 #ifdef _DEBUG
+
+
+
+
 			ImGui::Begin("EnemyCollision");
 			ImGui::InputFloat("Distance", &distance);
 			ImGui::InputFloat("Radius", &minDistance);
@@ -163,8 +167,10 @@ void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
 
 			//当たっている
 			if (distance < minDistance) {
+				
 				Vector3 enemyPosition = (*it2)->GetWorldPosition();
-				(*it2)->SetTranslate(VectorCalculation::Add(enemyPosition, speed));
+				enemyPosition;
+				//(*it2)->SetTranslate(VectorCalculation::Add(enemyPosition, speed));
 			}
 
 
