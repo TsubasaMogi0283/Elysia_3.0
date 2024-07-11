@@ -144,8 +144,11 @@ void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
 	for (auto it1 = enemies.begin(); it1 != enemies.end(); ++it1) {
 		for (auto it2 = std::next(it1); it2 != enemies.end(); ++it2) {
 
-			Vector3 diff = VectorCalculation::Subtract((*it1)->GetWorldPosition(), (*it2)->GetWorldPosition());
-			float distance = sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
+			//差分をとる
+			Vector3 difference = VectorCalculation::Subtract((*it1)->GetWorldPosition(), (*it2)->GetWorldPosition());
+			//距離
+			float distance = sqrtf(difference.x * difference.x + difference.y * difference.y + difference.z * difference.z);
+			//最小
 			float minDistance = (*it1)->GetRadius() + (*it2)->GetRadius();
 
 
@@ -153,38 +156,18 @@ void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
 			ImGui::Begin("EnemyCollision");
 			ImGui::InputFloat("Distance", &distance);
 			ImGui::InputFloat("Radius", &minDistance);
-
 			ImGui::End();
 
 #endif // DEBUG
 
 
-
+			//当たっている
 			if (distance < minDistance) {
 				Vector3 enemyPosition = (*it2)->GetWorldPosition();
-				Vector3 speed = { -1.0,0.0f,0.0f };
 				(*it2)->SetTranslate(VectorCalculation::Add(enemyPosition, speed));
 			}
 
-			//
-			//Fan3D fan = flashLight_->GetFan3D();
-			//if (IsFanCollision(fan, newWorldPosition)) {
-			//	ImGui::Begin("FanCollsion");
-			//	ImGui::End();
-			//}
 
-			//if (distance < minDistance) {
-			//	Vector3 correction = {};
-			//	correction.x=diff.x * (minDistance - distance);
-			//	correction.y = diff.y * (minDistance - distance);
-			//	correction.z = diff.z * (minDistance - distance);
-			//	
-
-
-			//	(*it1)->SetTranslate(Add((*it1)->GetWorldPosition(), { correction.x * 0.5f,correction.y * 0.5f,correction.z * 0.5f }));
-			//	(*it2)->SetTranslate(Add((*it2)->GetWorldPosition(), { correction.x * 0.5f,correction.y * 0.5f,correction.z * 0.5f }));
-
-			//}
 		}
 
 
