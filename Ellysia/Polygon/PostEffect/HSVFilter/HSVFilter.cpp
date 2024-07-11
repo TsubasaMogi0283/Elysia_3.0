@@ -10,9 +10,9 @@ void HSVFilter::Initialize(){
 	//いずれやる
 	PipelineManager::GetInstance()->GenarateHSVFilterPSO();
 
-	//Effect
-	//boxFilterTypeResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(BoxFilterType));
-	//boxFilterType_ = BoxFilter3x3;
+	//リソース
+	hsvResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(HSV));
+
 
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
@@ -60,7 +60,9 @@ void HSVFilter::Draw(){
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 #ifdef _DEBUG
 	ImGui::Begin("BoxFilter");
-	//ImGui::SliderInt("Kinds", &boxFilterType_, 0, 4);
+	ImGui::SliderFloat("Hue", &hsv_.hue, -1.0f, 1.0f);
+	ImGui::SliderFloat("Saturate", &hsv_.saturation, -1.0f, 1.0f);
+	ImGui::SliderFloat("Value", &hsv_.value, -1.0f, 1.0f);
 	ImGui::End();
 
 #endif // _DEBUG
@@ -68,9 +70,11 @@ void HSVFilter::Draw(){
 
 
 	//BoxFilterの設定
-	//boxFilterTypeResource_->Map(0, nullptr, reinterpret_cast<void**>(&boxFilterTypeData_));
-	//boxFilterTypeData_->type = boxFilterType_;
-	//boxFilterTypeResource_->Unmap(0, nullptr);
+	hsvResource_->Map(0, nullptr, reinterpret_cast<void**>(&hsvData_));
+	hsvData_->hue = hsv_.hue;
+	hsvData_->saturation = hsv_.saturation;
+	hsvData_->hue = hsv_.hue;
+	hsvResource_->Unmap(0, nullptr);
 
 
 
@@ -84,8 +88,8 @@ void HSVFilter::Draw(){
 	TextureManager::GraphicsCommand(0, srvHandle_);
 
 
-	//Type
-	//DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, boxFilterTypeResource_->GetGPUVirtualAddress());
+	//HSV
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, hsvResource_->GetGPUVirtualAddress());
 
 
 

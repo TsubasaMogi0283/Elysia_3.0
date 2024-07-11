@@ -511,7 +511,7 @@
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\PostEffect\HSVFilter\HSVFilter.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -920,6 +920,9 @@
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\PostEffect\HSVFilter\HSVFilter.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Color\HSV.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>

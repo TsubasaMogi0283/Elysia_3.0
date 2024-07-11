@@ -8,7 +8,13 @@ struct PixelShaderOutput
 };
 
 
-//ConstantBuffer<RandomEngine> gRandomEngine : register(b0);
+struct HSV{
+    float hue;
+    float saturation;
+    float value;
+};
+
+ConstantBuffer<HSV> gHSV : register(b0);
 
 Texture2D<float4> gTexture : register(t0);
 SamplerState gSample : register(s0);
@@ -24,44 +30,42 @@ float3 RGBToHSV(float3 color){
     float blue = color.b;
     
     
-    float max = red > green ? red : green;
+    //?演算子の処理については以下のコード
     //if(red>green){
-    //  red
+    //  max=red;
     //}
     //else {
-    //  green
+    //  max=green;
     //}
     //
+    
+    float max = red > green ? red : green;
     max = max > blue ? max : blue;
     float min = red < green ? red : green;
     min = min < blue ? min : blue;
-    float hue = max - min;
-    if (hue > 0.0f)
-    {
-        if (max == red)
-        {
-            hue = (green - blue) / hue;
-            if (hue < 0.0f)
-            {
-                hue += 6.0f;
+    float h = max - min;
+    if (h > 0.0f){
+        if (max == red){
+            h = (green - blue) / h;
+            if (h < 0.0f){
+                h += 6.0f;
             }
         }
-        else if (max == green)
-        {
-            hue = 2.0f + (blue - red) / hue;
+        else if (max == green){
+            h = 2.0f + (blue - red) / h;
         }
-        else
-        {
-            hue = 4.0f + (red - green) / hue;
+        else{
+            h = 4.0f + (red - green) / h;
         }
     }
-    hue /= 6.0f;
-    float saturate = (max - min);
-    if (max != 0.0f)
-        saturate /= max;
+    h /= 6.0f;
+    float s = (max - min);
+    if (max != 0.0f){
+        s /= max;
+    }
+        
     float value = max;
-    
-    float3 hsv = { hue, saturate, value };
+    float3 hsv = { h, s, value };
     
     
     return hsv;
@@ -69,43 +73,43 @@ float3 RGBToHSV(float3 color){
 //HSVからRGBへ
 float3 HSVToRGB(float3 hsv)
 {
-    float red = hsv.b;
-    float green = hsv.b;
-    float blue = hsv.b;
+    float red = hsv.z;
+    float green = hsv.z;
+    float blue = hsv.z;
     
-    float hue = hsv.r;
-    float saturate = hsv.g;
+    float h = hsv.x;
+    float s = hsv.y;
     
     
-    if (saturate > 0.0f){
-        hue *= 6.0f;
-        int i = (int) hue;
-        float f = hue - (float) i;
+    if (s > 0.0f){
+        h *= 6.0f;
+        int i = (int) h;
+        float f = h - (float) i;
         switch (i){
             default:
             case 0:
-                green *= 1 - saturate * (1 - f);
-                blue *= 1 - saturate;
+                green *= 1 - s * (1 - f);
+                blue *= 1 - s;
                 break;
             case 1:
-                red *= 1 - saturate * f;
-                blue *= 1 - saturate;
+                red *= 1 - s * f;
+                blue *= 1 - s;
                 break;
             case 2:
-                red *= 1 - saturate;
-                blue *= 1 - saturate * (1 - f);
+                red *= 1 - s;
+                blue *= 1 - s * (1 - f);
                 break;
             case 3:
-                red *= 1 - saturate;
-                green *= 1 - saturate * f;
+                red *= 1 - s;
+                green *= 1 - s * f;
                 break;
             case 4:
-                red *= 1 - saturate * (1 - f);
-                green *= 1 - saturate;
+                red *= 1 - s * (1 - f);
+                green *= 1 - s;
                 break;
             case 5:
-                green *= 1 - saturate;
-                blue *= 1 - saturate * f;
+                green *= 1 - s;
+                blue *= 1 - s * f;
                 break;
         }
     }
@@ -114,15 +118,38 @@ float3 HSVToRGB(float3 hsv)
     return rgb;
 }
 
-
-PixelShaderOutput main(VertexShaderOutput input)
+float WrapValue(float value, float minRange, float maxRange)
 {
+    float range = maxRange - minRange;
+    float modValue = fmod(value - minRange, range);
+    if (modValue < 0)
+    {
+        modValue += range;
+    }
+    return minRange + modValue;
+    
+}
+
+
+
+PixelShaderOutput main(VertexShaderOutput input){
     PixelShaderOutput output;
     
     float4 textureColor = gTexture.Sample(gSample, input.texcoord);
+    //HSVに変換
     float3 hsv = RGBToHSV(textureColor.rgb);
     
+    //調整項目を足す
+    hsv.x += gHSV.hue;
+    hsv.y += gHSV.saturation;
+    hsv.z += gHSV.value;
     
+    //0～1範囲
+    hsv.x = WrapValue(hsv.x,0.0f,1.0f);
+    hsv.y = saturate(hsv.y);
+    hsv.z = saturate(hsv.z);
+    
+    //RGBへ変換
     float3 rgb = HSVToRGB(hsv);
     
     output.color.rgb = rgb;
