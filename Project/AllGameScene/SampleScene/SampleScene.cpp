@@ -444,8 +444,12 @@ void SampleScene::Update(GameManager* gameManager) {
 			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
 
 				enemy->OnCollision();
+#ifdef _DEBUG
 				ImGui::Begin("FanCollsion");
 				ImGui::End();
+#endif // _DEBUG
+
+				
 			}
 		}
 		it++;
