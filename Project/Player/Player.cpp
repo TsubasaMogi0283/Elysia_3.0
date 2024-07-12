@@ -22,6 +22,7 @@ void Player::Initialize(){
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
+	worldTransform_.translate_ = { 0.0f,0.0f,0.0f };
 }
 
 void Player::Update(){
@@ -76,6 +77,9 @@ void Player::Update(){
 
 void Player::Draw(Camera& camera, Material& material, SpotLight& spotLight){
 	
+
+	Matrix4x4 wvp = Matrix4x4Calculation::Multiply(worldTransform_.worldMatrix_, Matrix4x4Calculation::Multiply(camera.viewMatrix_, camera.projectionMatrix_));
+
 	model_->Draw(worldTransform_, camera,material,spotLight);
 }
 

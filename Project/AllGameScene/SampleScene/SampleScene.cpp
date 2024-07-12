@@ -67,112 +67,126 @@ void SampleScene::Initialize() {
 
 #pragma region ライト確認用のタワー
 
-	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
-	debugTower_.reset(Model::Create(debugTowerModelhandle));
-	debugTowerWorldTransform_.Initialize();
-	debugTowerWorldTransform_.translate_ = { .x = 1.0f,.y = 0.0f,.z = 2.0f };
+uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
+debugTower_.reset(Model::Create(debugTowerModelhandle));
+debugTowerWorldTransform_.Initialize();
+debugTowerWorldTransform_.translate_ = { .x = 1.0f,.y = 0.0f,.z = 2.0f };
 #pragma endregion
 
 
 
-	
+
 #pragma region カメラ
-	//カメラ
-	camera_.Initialize();
-	camera_.translate_.y = 1.0f;
-	camera_.translate_.z = -15.0f;
-	camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
-	cameraPosition_ = camera_.translate_;
+//カメラ
+camera_.Initialize();
+camera_.translate_.y = 1.0f;
+camera_.translate_.z = -15.0f;
+camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
+cameraPosition_ = camera_.translate_;
 
-	CAMERA_POSITION_OFFSET = { 0.0f,2.0f,0.0f };
+CAMERA_POSITION_OFFSET = { 0.0f,2.0f,0.0f };
 
-	thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
-	cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
+thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
+cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
 
 
 #pragma endregion
 
 
-	//プレイヤーのライト
-	uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
-	lightCollision_ = new LightWeapon();
-	lightCollision_->Initialize(weaponLightModel);
+//プレイヤーのライト
+uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+lightCollision_ = new LightWeapon();
+lightCollision_->Initialize(weaponLightModel);
 
 
 
 #pragma region 扇の当たり判定用の球
 #ifdef _DEBUG
-	debugFanCollisionSphereModel_.reset(Model::Create(weaponLightModel));
-	debugFanCollisionSphereWorldTransform_.Initialize();
-	debugFanCollisionSphereWorldTransform_.translate_ = { .x = 0.0f,.y = 0.0f,.z = 7.0f };
-	debugFanCollisionSphereMaterial_.Initialize();
-	debugFanCollisionSphereMaterial_.lightingKinds_=Spot;
-	debugFanCollisionSphereMaterial_.color_ = { .x = 0.0f,.y = 1.0f,.z = 0.0f,.w = 1.0f };
+debugFanCollisionSphereModel_.reset(Model::Create(weaponLightModel));
+debugFanCollisionSphereWorldTransform_.Initialize();
+debugFanCollisionSphereWorldTransform_.translate_ = { .x = 0.0f,.y = 0.0f,.z = 7.0f };
+debugFanCollisionSphereMaterial_.Initialize();
+debugFanCollisionSphereMaterial_.lightingKinds_ = Spot;
+debugFanCollisionSphereMaterial_.color_ = { .x = 0.0f,.y = 1.0f,.z = 0.0f,.w = 1.0f };
 
 #endif // _DEBUG
 
 
 #pragma endregion
 
-	//ステージ
-	player_->SetStageRect(stageRect);
+//ステージ
+player_->SetStageRect(stageRect);
 
 
-	collisionManager_ = std::make_unique<CollisionManager>();
+collisionManager_ = std::make_unique<CollisionManager>();
 
-	theta_ = std::numbers::pi_v<float>/2.0f;
+theta_ = std::numbers::pi_v<float> / 2.0f;
 
-	back_ = std::make_unique< BackText>();
-	back_->Initialize();
+back_ = std::make_unique< BackText>();
+back_->Initialize();
 
-	material_.Initialize();
-	material_.lightingKinds_ = Spot;
-	//material_.lightingKinds_ = Directional;
+material_.Initialize();
+material_.lightingKinds_ = Spot;
+//material_.lightingKinds_ = Directional;
 
-	//懐中電灯
-	flashLight_ = std::make_unique<FlashLight>();
-	flashLight_->Initialize();
+//懐中電灯
+flashLight_ = std::make_unique<FlashLight>();
+flashLight_->Initialize();
 
-	directionalLight_.Initialize();
+directionalLight_.Initialize();
 }
 
 
 
 
-void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
+void SampleScene::CheckEnemyAndEnemyCollision(std::list<Enemy*>& enemies) {
 	//敵
 	for (auto it1 = enemies.begin(); it1 != enemies.end(); ++it1) {
 		for (auto it2 = std::next(it1); it2 != enemies.end(); ++it2) {
 
-			//差分をとる
-			Vector3 difference = VectorCalculation::Subtract((*it1)->GetWorldPosition(), (*it2)->GetWorldPosition());
 			//距離
-			float distance = sqrtf(difference.x * difference.x + difference.y * difference.y + difference.z * difference.z);
-			//最小
-			float minDistance = (*it1)->GetRadius() + (*it2)->GetRadius();
+			float distance = (*it1)->GetRadius() + (*it2)->GetRadius();
 
 
 #ifdef _DEBUG
 
-
-
-
 			ImGui::Begin("EnemyCollision");
 			ImGui::InputFloat("Distance", &distance);
-			ImGui::InputFloat("Radius", &minDistance);
 			ImGui::End();
 
 #endif // DEBUG
 
 
-			//当たっている
-			if (distance < minDistance) {
-				
-				Vector3 enemyPosition = (*it2)->GetWorldPosition();
-				enemyPosition;
-				//(*it2)->SetTranslate(VectorCalculation::Add(enemyPosition, speed));
+#pragma region 敵1
+
+			//敵1が敵2より右にいこうとしたとき
+			
+			if (
+				((*it1)->GetWorldPosition().x > (*it2)->GetWorldPosition().x - distance) &&
+				(((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) ||
+					((*it1)->GetWorldPosition().z < (*it2)->GetWorldPosition().z + distance))) {
+
+
+				Vector3 newEnemyPosition = {
+					.x = (*it2)->GetWorldPosition().x - distance,
+					.y = (*it1)->GetWorldPosition().y,
+					.z = (*it1)->GetWorldPosition().z,
+				};
+
+				(*it1)->SetTranslate(newEnemyPosition);
 			}
 
+
+
+			
+#pragma endregion
+
+
+
+#pragma region 敵2
+
+
+#pragma endregion
 
 		}
 
@@ -183,7 +197,7 @@ void SampleScene::CheckCollision(std::list<Enemy*>& enemies) {
 void SampleScene::KeyCollision(){
 
 	//鍵
-	auto keyes = keyManager_->GetKeyes();
+	std::list<Key*> keyes = keyManager_->GetKeyes();
 	for (Key* key : keyes) {
 
 		//勿論取得されていない時だけ受け付ける
@@ -231,7 +245,7 @@ void SampleScene::KeyCollision(){
 /// 更新
 /// </summary>
 void SampleScene::Update(GameManager* gameManager) {
-	gameManager;
+
 
 	//フレーム初めに
 	//コリジョンリストのクリア
@@ -441,22 +455,25 @@ void SampleScene::Update(GameManager* gameManager) {
 
 			
 			
-			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
-
-				enemy->OnCollision();
-#ifdef _DEBUG
-				ImGui::Begin("FanCollsion");
-				ImGui::End();
-#endif // _DEBUG
-
-				
-			}
+//			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
+//
+//				enemy->OnCollision();
+//#ifdef _DEBUG
+//				ImGui::Begin("FanCollsion");
+//				ImGui::End();
+//#endif // _DEBUG
+//
+//				
+//			}
 		}
 		it++;
 
 		
 
 	}
+
+
+
 
 
 	//1人称視点へ変更
@@ -475,8 +492,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	//1人称
 	if (viewOfPoint_ == FirstPerson) {
 
-		//回り方が少し違うので注意
-		//何か嫌だね
+		//もとに戻す
 		camera_.rotate_.x = -phi;
 		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
 		camera_.rotate_.z = 0.0f;
@@ -488,30 +504,13 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 		camera_.rotate_ = thirdPersonViewOfPointRotate_;
+		//camera_.rotate_ = {0.2f,0.0f,0.0f};
+
 		camera_.translate_ = VectorCalculation::Add(playerPosition, VectorCalculation::Add(cameraThirdPersonViewOfPointPosition_, cameraTranslate));
+		//camera_.translate_ = {0.0f,5.0f,-15.0f};
+
 	}
 
-
-	//カメラの更新
-	camera_.Update();
-
-	//敵
-	enemyManager_->Update();
-
-	//敵同士
-	CheckCollision(enemyes);
-
-
-	//ライト確認用のタワー
-	debugTowerWorldTransform_.Update();
-
-
-
-	//プレイヤーの更新
-	player_->Update();
-
-	//鍵
-	keyManager_->Update();
 
 	//鍵の取得処理
 	uint32_t keyQuantity = keyManager_->GetKeyQuantity();
@@ -546,7 +545,85 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 
+	//ゲート
+	if (gate_->isCollision(playerPosition)) {
+#ifdef _DEBUG
+		ImGui::Begin("InSpaceGate");
+		ImGui::End();
 
+#endif // _DEBUG
+
+		uint32_t playerKeyQuantity = player_->GetHavingKey();
+		if (playerKeyQuantity >= 3) {
+
+#ifdef _DEBUG
+			ImGui::Begin("3Keys");
+			ImGui::End();
+
+#endif // _DEBUG
+
+			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+
+				//Bボタンを押したとき
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+					bTriggerTime_ += 1;
+
+				}
+				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+					bTriggerTime_ = 0;
+				}
+
+				if (bTriggerTime_ == 1) {
+					//脱出
+#ifdef _DEBUG
+					ImGui::Begin("B");
+					ImGui::End();
+
+#endif
+
+					isEscape_ = true;
+				}
+
+			}
+
+			if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
+				//脱出
+				isEscape_ = true;
+			}
+
+
+		}
+
+
+	}
+
+	//脱出
+	if (isEscape_ == true) {
+		gameManager->ChangeScene(new SampleScene2());
+		return;
+	}
+
+
+
+
+	//カメラの更新
+	camera_.Update();
+
+	//敵
+	enemyManager_->Update();
+
+	//敵同士
+	//CheckEnemyAndEnemyCollision(enemyes);
+
+
+	//ライト確認用のタワー
+	debugTowerWorldTransform_.Update();
+
+	//プレイヤーの更新
+	player_->Update();
+
+	//鍵
+	keyManager_->Update();
 
 	//地面
 	ground_->Update();
@@ -568,26 +645,9 @@ void SampleScene::Update(GameManager* gameManager) {
 	//敵を消す
 	enemyManager_->DeleteEnemy();
 
-#ifdef _DEBUG
 	debugFanCollisionSphereWorldTransform_.Update();
 	debugFanCollisionSphereMaterial_.Update();
 
-
-
-	Vector3 fanCollisionSphereWorldPosition = {
-		.x = debugFanCollisionSphereWorldTransform_.worldMatrix_.m[3][0] ,
-		.y = debugFanCollisionSphereWorldTransform_.worldMatrix_.m[3][1] ,
-		.z = debugFanCollisionSphereWorldTransform_.worldMatrix_.m[3][2] };
-	fanCollisionSphereWorldPosition;
-
-	//Vector3 newWorldPosition = { fanCollisionSphereWorldPosition.x,fanCollisionSphereWorldPosition.y,fanCollisionSphereWorldPosition.z };
-	//Fan3D fan = flashLight_->GetFan3D();
-	//if (IsFanCollision(fan, newWorldPosition)) {
-	//	ImGui::Begin("FanCollsion");
-	//	ImGui::End();
-	//}
-
-#endif // _DEBUG
 
 	
 
@@ -607,74 +667,16 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 
-	//ゲート
-	if (gate_->isCollision(playerPosition)) {
-#ifdef _DEBUG
-		ImGui::Begin("InSpaceGate");
-		ImGui::End();
-
-#endif // _DEBUG
-
-		uint32_t playerKeyQuantity = player_->GetHavingKey();
-		if (playerKeyQuantity >= 3) {
-
-			#ifdef _DEBUG
-				ImGui::Begin("3Keys");
-				ImGui::End();
-
-			#endif // _DEBUG
-
-			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-					
-				//Bボタンを押したとき
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-					bTriggerTime_ += 1;
-					
-				}
-				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-					bTriggerTime_ = 0;
-				}
-
-				if (bTriggerTime_ == 1) {
-				//脱出
-				#ifdef _DEBUG
-					ImGui::Begin("B");
-					ImGui::End();
-
-				#endif
-
-					isEscape_ = true;
-				}
-				
-			}
-
-			if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
-				//脱出
-				isEscape_ = true;
-			}
-
-
-		}
-
-
-	}
 	
-	//脱出
-	if (isEscape_ == true) {
-		gameManager->ChangeScene(new SampleScene2());
-	}
 
 	
 }
 
 void SampleScene::DrawSpriteBack(){
 
-	//sprite_->Draw();
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
-	
-	
 	back_->PreDraw();
 }
 
@@ -735,10 +737,6 @@ void SampleScene::DrawSprite(){
 
 
 
-
-/// <summary>
-/// デストラクタ
-/// </summary>
 SampleScene::~SampleScene() {
 	
 	delete lightCollision_;

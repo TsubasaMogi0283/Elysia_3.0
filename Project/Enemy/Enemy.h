@@ -74,20 +74,16 @@ public:
 		return isAlive_;
 	}
 
-
 	/// <summary>
-	/// プレイヤー
+	/// プレイヤーの座標を取得
 	/// </summary>
-	/// <param name="player"></param>
-	inline void Setlayer(Player* player) {
-		this->player_ = player;
+	/// <param name="position"></param>
+	void GetPlayerPosition(Vector3& position) {
+		this->playerPosition_ = position;
 	}
 
 
 private:
-	//プレイヤー
-	Player* player_ = nullptr;
-
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 	Vector3 speed_ = {};
@@ -103,6 +99,8 @@ private:
 	int32_t deleteTime_ = 0;
 	bool isAlive_ = true;
 
+	//プレイヤーの座標
+	Vector3 playerPosition_ = {};
 	//追跡
 	bool isTracking_ = false;
 };

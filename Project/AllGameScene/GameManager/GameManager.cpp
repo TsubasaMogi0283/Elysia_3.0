@@ -8,7 +8,7 @@ GameManager::GameManager() {
 	
 void GameManager::Initialize() {
 	//シーンごとに動作確認したいときはここを変えてね
-	currentGamaScene_ = new TitleScene();
+	currentGamaScene_ = new SampleScene();
 	currentGamaScene_->Initialize();
 
 }

@@ -81,14 +81,16 @@ public:
 	void DrawSprite()override;
 
 #pragma endregion
+	/// <summary>
 	/// デストラクタ
+	/// </summary>
 	~SampleScene();
 
 
 private:
 
 	
-	void CheckCollision(std::list<Enemy*>& enemies);
+	void CheckEnemyAndEnemyCollision(std::list<Enemy*>& enemies);
 
 	/// <summary>
 	/// 鍵の取得の処理
