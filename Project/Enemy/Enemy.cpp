@@ -4,6 +4,7 @@
 #include <VectorCalculation.h>
 
 #include "SpotLight.h"
+#include <SingleCalculation.h>
 
 void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	
@@ -23,6 +24,9 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	//色
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
 
+	condition = EnemyCondition::Move;
+
+	attackTime_ = 0;
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY);
 	//相手
@@ -31,14 +35,121 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 }
 
 void Enemy::Update(){
+	//プレイヤーとの距離を求める
+	Vector3 difference = VectorCalculation::Subtract(playerPosition_, GetWorldPosition());
+	float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
+	const float ATTACK_DISTANCE_OFFSET = 0.0f;
+	float MINIMUM_DISTANCE = playerRadius_ + radius_+ ATTACK_DISTANCE_OFFSET;
+
+	//接近するときの距離
+	const float TRACKING_START_DISTANCE_ = 10.0f;
+
+
+	//攻撃するときの距離
+	const float ATTACK_START_DISTANCE_ = 6.0f;
+
+
+	if (distance > TRACKING_START_DISTANCE_) {
+		condition = EnemyCondition::Move;
+	}
+
 	
+	
+
+	
+
+
+
+	switch (condition) {
+	case EnemyCondition::None:
+
+		break;
+
+	case EnemyCondition::Move:
+		//通常の動き
+		t_ = 0.0f;
+		preTrackingPlayerPosition_ = {};
+		preTrackingPosition_ = {};
+		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speed_);
+
+
+		//設定した値より短くなったら接近開始
+		if (distance <= TRACKING_START_DISTANCE_ ) {
+
+			condition = EnemyCondition::PreTracking;
+		}
+
+		break;
+
+	case EnemyCondition::PreTracking:
+		//取得したら追跡
+		preTrackingPlayerPosition_ = playerPosition_;
+		preTrackingPosition_ = GetWorldPosition();
+		condition = EnemyCondition::Tracking;
+		break;
+
+	case EnemyCondition::Tracking:
+		t_ += 0.005f;
+		worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
+		
+
+		if (distance > TRACKING_START_DISTANCE_) {
+			condition = EnemyCondition::Move;
+		}
+		 
+		//設定した値より短くなったら攻撃開始
+		if (distance <= ATTACK_START_DISTANCE_ &&
+			MINIMUM_DISTANCE < distance) {
+
+			condition = EnemyCondition::Attck;
+		}
+
+		break;
+
+	case EnemyCondition::Attck:
+		attackTime_ += 1;
+		
+		if (attackTime_ > 1 && attackTime_ <= 160) {
+#ifdef _DEBUG
+			ImGui::Begin("Attack");
+			ImGui::End();
+#endif // DEBUG
+		}
+
+		if (attackTime_ > 180) {
+			attackTime_ = 0;
+		}
+
+
+		//攻撃し終わった後通常の動きに戻る
+		if (attackTime_ > 180 &&
+			(distance>=ATTACK_START_DISTANCE_&&
+				distance<TRACKING_START_DISTANCE_)) {
+			attackTime_ = 0;
+			condition = EnemyCondition::Move;
+		}
+
+
+
+	}
+
+
 	//更新
-	worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speed_);
 	worldTransform_.Update();
 
 	material_.Update();
 #ifdef _DEBUG
 	ImGui::Begin("Enemy");
+	ImGui::InputFloat("T", &t_);
+	ImGui::InputFloat3("Position", &worldTransform_.translate_.x);
+	ImGui::InputInt("condition", &condition);
+	ImGui::InputFloat("distance", &distance);
+	ImGui::InputFloat("MINIMUM_DISTANCE", &MINIMUM_DISTANCE);
+	ImGui::InputFloat3("preTrackingPlayerPosition", &preTrackingPlayerPosition_.x);
+	ImGui::InputFloat3("preTrackingPosition_", &preTrackingPosition_.x);
+
+
+
 	ImGui::InputInt("AliveTive", &deleteTime_);
 	ImGui::End();
 #endif // _DEBUG

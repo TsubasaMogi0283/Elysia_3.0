@@ -1,9 +1,11 @@
 #pragma once
 #include "Enemy.h"
+#include <memory>
 #include <list>
 
 struct Camera;
 struct SpotLight;
+class Player;
 
 class EnemyManager{
 public:
@@ -54,10 +56,18 @@ public:
 	/// </summary>
 	void DeleteEnemy();
 		
-	
+	/// <summary>
+	/// プレイヤーの設定
+	/// </summary>
+	/// <param name="player"></param>
+	void SetPlayer(Player* player) {
+		this->player_=player;
+	}
 	
 
 private:
+	Player* player_ = nullptr;
+
 	//エネミーのリスト
 	std::list<Enemy*>enemyes_ = {};
 	//モデルハンドル

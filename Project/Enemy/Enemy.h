@@ -70,17 +70,52 @@ public:
 	/// 生きているかのフラグを取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsAlive() {
+	inline bool GetIsAlive() {
 		return isAlive_;
 	}
 
+
 	/// <summary>
-	/// プレイヤーの座標を取得
+	/// プレイヤーの半径
+	/// </summary>
+	/// <param name="radius"></param>
+	void SetPlayerRadius(float& radius) {
+		this->playerRadius_ = radius;
+	}
+
+	/// <summary>
+	/// プレイヤーの座標を設定
 	/// </summary>
 	/// <param name="position"></param>
-	void GetPlayerPosition(Vector3& position) {
+	void SetPlayerPosition(Vector3& position) {
 		this->playerPosition_ = position;
 	}
+
+
+
+
+public:
+	//後々StatePatternで分けるつもり
+	enum EnemyCondition {
+		//何もしない
+		None,
+		//通常
+		Move,
+		//追いかけ始めるときの座標
+		PreTracking,
+		//追いかける
+		Tracking,
+		//攻撃
+		Attck,
+	};
+
+	int32_t GetEnemyCondition() const {
+		return condition;
+	}
+
+private:
+	int32_t condition = EnemyCondition::None;
+
 
 
 private:
@@ -99,9 +134,18 @@ private:
 	int32_t deleteTime_ = 0;
 	bool isAlive_ = true;
 
+	Vector3 preTrackingPosition_ = {};
+	Vector3 preTrackingPlayerPosition_ = {};
+
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
+	//プレイヤーの半径
+	float playerRadius_ = 0.0f;
+
 	//追跡
 	bool isTracking_ = false;
+
+	float t_ = 0.0f;
+	int32_t attackTime_ = 0;
 };
 
