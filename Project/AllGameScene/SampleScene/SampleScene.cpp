@@ -158,22 +158,81 @@ void SampleScene::CheckEnemyAndEnemyCollision(std::list<Enemy*>& enemies) {
 
 #pragma region 敵1
 
-			//敵1が敵2より右にいこうとしたとき
-			
-			if (
-				((*it1)->GetWorldPosition().x > (*it2)->GetWorldPosition().x - distance) &&
-				(((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) ||
-					((*it1)->GetWorldPosition().z < (*it2)->GetWorldPosition().z + distance))) {
+			//敵1が敵2より右に行こうとしたとき
+			if ((*it1)->GetDirection().x > 0.0f) {
+
+				if (
+					((*it1)->GetWorldPosition().x > (*it2)->GetWorldPosition().x - distance) &&
+					(((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) ||
+						((*it1)->GetWorldPosition().z < (*it2)->GetWorldPosition().z + distance))) {
 
 
-				Vector3 newEnemyPosition = {
-					.x = (*it2)->GetWorldPosition().x - distance,
-					.y = (*it1)->GetWorldPosition().y,
-					.z = (*it1)->GetWorldPosition().z,
-				};
+					Vector3 newEnemyPosition = {
+						.x = (*it2)->GetWorldPosition().x - distance,
+						.y = (*it1)->GetWorldPosition().y,
+						.z = (*it1)->GetWorldPosition().z,
+					};
 
-				(*it1)->SetTranslate(newEnemyPosition);
+					(*it1)->SetTranslate(newEnemyPosition);
+				}
 			}
+			
+			//敵1が敵2より左に行こうとしたとき
+			if ((*it1)->GetDirection().x < 0.0f) {
+
+				if (
+					((*it1)->GetWorldPosition().x < (*it2)->GetWorldPosition().x + distance) &&
+					(((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) ||
+						((*it1)->GetWorldPosition().z < (*it2)->GetWorldPosition().z + distance))) {
+
+
+					Vector3 newEnemyPosition = {
+						.x = (*it2)->GetWorldPosition().x + distance,
+						.y = (*it1)->GetWorldPosition().y,
+						.z = (*it1)->GetWorldPosition().z,
+					};
+
+					(*it1)->SetTranslate(newEnemyPosition);
+				}
+			}
+
+			//敵1が敵2より奥に行こうとしたとき
+			//if ((*it1)->GetDirection().z >= 0.0f) {
+			//
+			//	if (
+			//		((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) &&
+			//		(((*it1)->GetWorldPosition().x > (*it2)->GetWorldPosition().x - distance) ||
+			//			((*it1)->GetWorldPosition().x < (*it2)->GetWorldPosition().x + distance))) {
+			//
+			//
+			//		Vector3 newEnemyPosition = {
+			//			.x = (*it1)->GetWorldPosition().x,
+			//			.y = (*it1)->GetWorldPosition().y,
+			//			.z = (*it2)->GetWorldPosition().z - distance,
+			//		};
+			//
+			//		(*it1)->SetTranslate(newEnemyPosition);
+			//	}
+			//}
+
+			////敵1が敵2より手前に行こうとしたとき
+			//if ((*it1)->GetDirection().z < 0.0f) {
+			//
+			//	if (
+			//		((*it1)->GetWorldPosition().x < (*it2)->GetWorldPosition().x + distance) &&
+			//		(((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) ||
+			//			((*it1)->GetWorldPosition().z < (*it2)->GetWorldPosition().z + distance))) {
+			//
+			//
+			//		Vector3 newEnemyPosition = {
+			//			.x = (*it2)->GetWorldPosition().x + distance,
+			//			.y = (*it1)->GetWorldPosition().y,
+			//			.z = (*it1)->GetWorldPosition().z,
+			//		};
+			//
+			//		(*it1)->SetTranslate(newEnemyPosition);
+			//	}
+			//}
 
 
 
@@ -607,7 +666,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	enemyManager_->Update();
 
 	//敵同士
-	//CheckEnemyAndEnemyCollision(enemyes);
+	CheckEnemyAndEnemyCollision(enemyes);
 
 
 	//ライト確認用のタワー
@@ -699,7 +758,7 @@ void SampleScene::DrawObject3D() {
 
 	
 	//タワー
-	debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight);
+	//debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight);
 	
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);

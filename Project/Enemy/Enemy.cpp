@@ -54,22 +54,24 @@ void Enemy::Update(){
 	}
 
 	
-	
-
-	
-
-
-
 	switch (condition) {
 	case EnemyCondition::None:
-
+#ifdef _DEBUG
+		ImGui::Begin("None");
+		ImGui::End();
+#endif // DEBUG
 		break;
 
 	case EnemyCondition::Move:
+#ifdef _DEBUG
+		ImGui::Begin("Move");
+		ImGui::End();
+#endif // DEBUG
 		//通常の動き
 		t_ = 0.0f;
 		preTrackingPlayerPosition_ = {};
 		preTrackingPosition_ = {};
+		direction_ = VectorCalculation::Normalize(speed_);
 		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speed_);
 
 
@@ -82,6 +84,10 @@ void Enemy::Update(){
 		break;
 
 	case EnemyCondition::PreTracking:
+#ifdef _DEBUG
+		ImGui::Begin("PreTracking");
+		ImGui::End();
+#endif // DEBUG
 		//取得したら追跡
 		preTrackingPlayerPosition_ = playerPosition_;
 		preTrackingPosition_ = GetWorldPosition();
@@ -89,10 +95,19 @@ void Enemy::Update(){
 		break;
 
 	case EnemyCondition::Tracking:
+#ifdef _DEBUG
+		ImGui::Begin("Tracking");
+		ImGui::End();
+#endif // DEBUG
 		t_ += 0.005f;
 		worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
 		
+		//向きを求める
+		direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_,preTrackingPosition_);
+		direction_ = VectorCalculation::Normalize(direction_);
 
+
+		//Moveへ
 		if (distance > TRACKING_START_DISTANCE_) {
 			condition = EnemyCondition::Move;
 		}
@@ -141,15 +156,12 @@ void Enemy::Update(){
 #ifdef _DEBUG
 	ImGui::Begin("Enemy");
 	ImGui::InputFloat("T", &t_);
+	ImGui::InputFloat3("direction_", &direction_.x);
 	ImGui::InputFloat3("Position", &worldTransform_.translate_.x);
-	ImGui::InputInt("condition", &condition);
 	ImGui::InputFloat("distance", &distance);
 	ImGui::InputFloat("MINIMUM_DISTANCE", &MINIMUM_DISTANCE);
 	ImGui::InputFloat3("preTrackingPlayerPosition", &preTrackingPlayerPosition_.x);
 	ImGui::InputFloat3("preTrackingPosition_", &preTrackingPosition_.x);
-
-
-
 	ImGui::InputInt("AliveTive", &deleteTime_);
 	ImGui::End();
 #endif // _DEBUG

@@ -63,17 +63,23 @@ public:
 	/// <param name="translate"></param>
 	void SetTranslate(Vector3 translate);
 
-public:
-	
-
 	/// <summary>
 	/// 生きているかのフラグを取得
 	/// </summary>
 	/// <returns></returns>
-	inline bool GetIsAlive() {
+	inline bool GetIsAlive() const{
 		return isAlive_;
 	}
 
+	/// <summary>
+	/// 向きを取得
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetDirection() const {
+		return direction_;
+	}
+
+#pragma region EnemyManagerから取得
 
 	/// <summary>
 	/// プレイヤーの半径
@@ -90,7 +96,7 @@ public:
 	void SetPlayerPosition(Vector3& position) {
 		this->playerPosition_ = position;
 	}
-
+#pragma endregion
 
 
 
@@ -134,6 +140,10 @@ private:
 	int32_t deleteTime_ = 0;
 	bool isAlive_ = true;
 
+
+
+	//追跡
+	bool isTracking_ = false;
 	Vector3 preTrackingPosition_ = {};
 	Vector3 preTrackingPlayerPosition_ = {};
 
@@ -142,10 +152,11 @@ private:
 	//プレイヤーの半径
 	float playerRadius_ = 0.0f;
 
-	//追跡
-	bool isTracking_ = false;
+	//向き
+	Vector3 direction_ = {};
 
+	
 	float t_ = 0.0f;
+	//攻撃
 	int32_t attackTime_ = 0;
 };
-
