@@ -65,74 +65,74 @@ void SampleScene::Initialize() {
 	
 	
 	#pragma endregion
-	
-	#pragma region ライト確認用のタワー
-	
-	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
-	debugTower_.reset(Model::Create(debugTowerModelhandle));
-	debugTowerWorldTransform_.Initialize();
-	debugTowerWorldTransform_.translate_ = { .x = 1.0f,.y = 0.0f,.z = 2.0f };
-	#pragma endregion
-	
-	
-	
-	
-	#pragma region カメラ
-	//カメラ
-	camera_.Initialize();
-	camera_.translate_.y = 1.0f;
-	camera_.translate_.z = -15.0f;
-	camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
-	cameraPosition_ = camera_.translate_;
-	
-	CAMERA_POSITION_OFFSET = { 0.0f,2.0f,0.0f };
-	
-	thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
-	cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
-	
-	
-	#pragma endregion
-	
-	
-	//プレイヤーのライト
-	uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
-	lightCollision_ = new LightWeapon();
-	lightCollision_->Initialize(weaponLightModel);
-	
-	
-	
-	#pragma region 扇の当たり判定用の球
-	debugFanCollisionSphereModel_.reset(Model::Create(weaponLightModel));
-	debugFanCollisionSphereWorldTransform_.Initialize();
-	debugFanCollisionSphereWorldTransform_.translate_ = { .x = 0.0f,.y = 0.0f,.z = 7.0f };
-	debugFanCollisionSphereMaterial_.Initialize();
-	debugFanCollisionSphereMaterial_.lightingKinds_ = Spot;
-	debugFanCollisionSphereMaterial_.color_ = { .x = 0.0f,.y = 1.0f,.z = 0.0f,.w = 1.0f };
-	
-	
-	
-	#pragma endregion
-	
-	//ステージ
-	player_->SetStageRect(stageRect);
-	
-	
-	collisionManager_ = std::make_unique<CollisionManager>();
-	
-	theta_ = std::numbers::pi_v<float> / 2.0f;
-	
-	back_ = std::make_unique< BackText>();
-	back_->Initialize();
-	
-	material_.Initialize();
-	material_.lightingKinds_ = Spot;
-	//material_.lightingKinds_ = Directional;
-	
-	//懐中電灯
-	flashLight_ = std::make_unique<FlashLight>();
-	flashLight_->Initialize();
-	
-	directionalLight_.Initialize();
+
+#pragma region ライト確認用のタワー
+
+uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
+debugTower_.reset(Model::Create(debugTowerModelhandle));
+debugTowerWorldTransform_.Initialize();
+debugTowerWorldTransform_.translate_ = { .x = 1.0f,.y = 0.0f,.z = 2.0f };
+#pragma endregion
+
+
+
+
+#pragma region カメラ
+//カメラ
+camera_.Initialize();
+camera_.translate_.y = 1.0f;
+camera_.translate_.z = -15.0f;
+camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
+cameraPosition_ = camera_.translate_;
+
+CAMERA_POSITION_OFFSET = { 0.0f,2.0f,0.0f };
+
+thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
+cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
+
+
+#pragma endregion
+
+
+//プレイヤーのライト
+uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+lightCollision_ = new LightWeapon();
+lightCollision_->Initialize(weaponLightModel);
+
+
+
+#pragma region 扇の当たり判定用の球
+debugFanCollisionSphereModel_.reset(Model::Create(weaponLightModel));
+debugFanCollisionSphereWorldTransform_.Initialize();
+debugFanCollisionSphereWorldTransform_.translate_ = { .x = 0.0f,.y = 0.0f,.z = 7.0f };
+debugFanCollisionSphereMaterial_.Initialize();
+debugFanCollisionSphereMaterial_.lightingKinds_ = Spot;
+debugFanCollisionSphereMaterial_.color_ = { .x = 0.0f,.y = 1.0f,.z = 0.0f,.w = 1.0f };
+
+
+
+#pragma endregion
+
+//ステージ
+player_->SetStageRect(stageRect);
+
+
+collisionManager_ = std::make_unique<CollisionManager>();
+
+theta_ = std::numbers::pi_v<float> / 2.0f;
+
+back_ = std::make_unique< BackText>();
+back_->Initialize();
+
+material_.Initialize();
+material_.lightingKinds_ = Spot;
+//material_.lightingKinds_ = Directional;
+
+//懐中電灯
+flashLight_ = std::make_unique<FlashLight>();
+flashLight_->Initialize();
+
+directionalLight_.Initialize();
 }
 
 
@@ -153,48 +153,57 @@ void SampleScene::CheckEnemyAndEnemyCollision(std::list<Enemy*>& enemies) {
 			ImGui::InputFloat("Distance", &distance);
 			ImGui::End();
 
+
 #endif // DEBUG
 
 
 #pragma region 敵1
 
-			//敵1が敵2より右に行こうとしたとき
+			
 			if ((*it1)->GetDirection().x > 0.0f) {
 
-				if (
-					((*it1)->GetWorldPosition().x > (*it2)->GetWorldPosition().x - distance) &&
-					(((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) ||
-						((*it1)->GetWorldPosition().z < (*it2)->GetWorldPosition().z + distance))) {
+				//敵1が敵2より右に行こうとしたとき
+				if ((*it1)->GetWorldPosition().x > (*it2)->GetWorldPosition().x - distance) {
 
-
-					Vector3 newEnemyPosition = {
+					//敵2のZ
+					if (((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) ||
+						((*it1)->GetWorldPosition().z < (*it2)->GetWorldPosition().z + distance)){
+						Vector3 newEnemyPosition = {
 						.x = (*it2)->GetWorldPosition().x - distance,
 						.y = (*it1)->GetWorldPosition().y,
 						.z = (*it1)->GetWorldPosition().z,
-					};
+						};
 
-					(*it1)->SetTranslate(newEnemyPosition);
+						(*it1)->SetTranslate(newEnemyPosition);
+					}
+				
 				}
+
+
+					
+				
+
+			
 			}
 			
 			//敵1が敵2より左に行こうとしたとき
-			if ((*it1)->GetDirection().x < 0.0f) {
-
-				if (
-					((*it1)->GetWorldPosition().x < (*it2)->GetWorldPosition().x + distance) &&
-					(((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) ||
-						((*it1)->GetWorldPosition().z < (*it2)->GetWorldPosition().z + distance))) {
-
-
-					Vector3 newEnemyPosition = {
-						.x = (*it2)->GetWorldPosition().x + distance,
-						.y = (*it1)->GetWorldPosition().y,
-						.z = (*it1)->GetWorldPosition().z,
-					};
-
-					(*it1)->SetTranslate(newEnemyPosition);
-				}
-			}
+			//if ((*it1)->GetDirection().x < 0.0f) {
+			//
+			//	if (
+			//		((*it1)->GetWorldPosition().x < (*it2)->GetWorldPosition().x + distance) &&
+			//		(((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) ||
+			//			((*it1)->GetWorldPosition().z < (*it2)->GetWorldPosition().z + distance))) {
+			//
+			//
+			//		Vector3 newEnemyPosition = {
+			//			.x = (*it2)->GetWorldPosition().x + distance,
+			//			.y = (*it1)->GetWorldPosition().y,
+			//			.z = (*it1)->GetWorldPosition().z,
+			//		};
+			//
+			//		(*it1)->SetTranslate(newEnemyPosition);
+			//	}
+			//}
 
 			//敵1が敵2より奥に行こうとしたとき
 			//if ((*it1)->GetDirection().z >= 0.0f) {
