@@ -129,8 +129,8 @@ void SampleScene::Initialize() {
 
 void SampleScene::CheckEnemyAndEnemyCollision(std::list<Enemy*>& enemies) {
 	//敵
-	for (auto it1 = enemies.begin(); it1 != enemies.end(); ++it1) {
-		for (auto it2 = std::next(it1); it2 != enemies.end(); ++it2) {
+	for (std::list<Enemy*>::iterator it1 = enemies.begin(); it1 != enemies.end(); ++it1) {
+		for (std::list<Enemy*>::iterator it2 = std::next(it1); it2 != enemies.end(); ++it2) {
 
 			//距離
 			float distance = (*it1)->GetRadius() + (*it2)->GetRadius();
@@ -158,20 +158,21 @@ void SampleScene::CheckEnemyAndEnemyCollision(std::list<Enemy*>& enemies) {
 #pragma region 敵1
 
 
-
+			
 			//右に動いている時
+			//-45度～45度 
 			//X軸に動いていない時もこっちにいれる。左右どちらでもいいけどね。
-			if ((*it1)->GetDirection().x >= 0.0f) {
+			if (((*it1)->GetDirection().x >= 0.0f)&&((*it1)->GetDirection().x <= 1.0f)&&
+				(((*it1)->GetDirection().z< 0.5f)&&((*it1)->GetDirection().z >= -0.5f))) {
+
 				//敵1が敵2より右に行こうとしたとき
 				if ((*it1)->GetWorldPosition().x > (*it2)->GetWorldPosition().x - distance) {
-					//敵2のZ
+
+					//敵2に接触したとき
+					//ネストが多くなるけどこっちの方が見やすいと思ったのでこっちにした
 					if (((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) &&
 						((*it1)->GetWorldPosition().z < (*it2)->GetWorldPosition().z + distance)) {
 
-#ifdef _DEBUG
-						ImGui::Begin("Inside");
-						ImGui::End();
-#endif // _DEBUG
 
 						//新しい座標はめり込まないように設定する
 						Vector3 newEnemyPosition = {
@@ -181,18 +182,18 @@ void SampleScene::CheckEnemyAndEnemyCollision(std::list<Enemy*>& enemies) {
 						};
 						(*it1)->SetTranslate(newEnemyPosition);
 					}
-					
-				
 				}
 			}
 			
 			//左に動いている時
 			if ((*it1)->GetDirection().x < 0.0f) {
+
 				//敵1が敵2より左に行こうとしたとき
-				if (((*it1)->GetWorldPosition().x < (*it2)->GetWorldPosition().x + distance) ){
-					//敵2のZ
-					if ((((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) &&
-						((*it1)->GetWorldPosition().z < (*it2)->GetWorldPosition().z + distance))) {
+				if ((*it1)->GetWorldPosition().x < (*it2)->GetWorldPosition().x + distance){
+
+					//敵2に接触したとき
+					if (((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) &&
+						((*it1)->GetWorldPosition().z < (*it2)->GetWorldPosition().z + distance)) {
 
 						//新しい座標はめり込まないように設定する
 						Vector3 newEnemyPosition = {
@@ -205,24 +206,30 @@ void SampleScene::CheckEnemyAndEnemyCollision(std::list<Enemy*>& enemies) {
 				}
 			}
 
-			//敵1が敵2より奥に行こうとしたとき
-			//if ((*it1)->GetDirection().z >= 0.0f) {
-			//
-			//	if (
-			//		((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) &&
-			//		(((*it1)->GetWorldPosition().x > (*it2)->GetWorldPosition().x - distance) ||
-			//			((*it1)->GetWorldPosition().x < (*it2)->GetWorldPosition().x + distance))) {
-			//
-			//
-			//		Vector3 newEnemyPosition = {
-			//			.x = (*it1)->GetWorldPosition().x,
-			//			.y = (*it1)->GetWorldPosition().y,
-			//			.z = (*it2)->GetWorldPosition().z - distance,
-			//		};
-			//
-			//		(*it1)->SetTranslate(newEnemyPosition);
-			//	}
-			//}
+			//前に動いている時
+			if (((*it1)->GetDirection().z >= 0.0f)&&((*it1)->GetDirection().z <= 1.0f)&&
+				(((*it1)->GetDirection().x <= 0.5f) && ((*it1)->GetDirection().x >= -0.5f))) {
+
+				//敵1が敵2より前に行こうとしたとき
+				if ((*it1)->GetWorldPosition().z > (*it2)->GetWorldPosition().z - distance) {
+
+					//敵2に接触したとき
+					if (((*it1)->GetWorldPosition().x > (*it2)->GetWorldPosition().x - distance) &&
+							((*it1)->GetWorldPosition().x < (*it2)->GetWorldPosition().x + distance)) {
+
+
+						Vector3 newEnemyPosition = {
+							.x = (*it1)->GetWorldPosition().x,
+							.y = (*it1)->GetWorldPosition().y,
+							.z = (*it2)->GetWorldPosition().z - distance,
+						};
+
+						(*it1)->SetTranslate(newEnemyPosition);
+					}
+				}
+
+				
+			}
 
 			////敵1が敵2より手前に行こうとしたとき
 			//if ((*it1)->GetDirection().z < 0.0f) {
