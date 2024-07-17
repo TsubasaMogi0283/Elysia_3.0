@@ -9,25 +9,16 @@
 #include "Camera.h"
 
 #include <memory>
-#include <Particle3D.h>
 #include <Audio.h>
 #include "BackText.h"
-#include "LuminanceBasedOutline.h"
-#include "DepthBasedOutline.h"
-#include "RadialBlur.h"
-#include "Dissolve.h"
-#include "RandomEffect.h"
+
+
 #include "SkinCluster.h"
-#include "../../../Ellysia/Polygon/3D/SkyBox/SkyBox.h"
 #include "Material.h"
 #include "SpotLight.h"
 #include "DirectionalLight.h"
-#include "PointLight.h"
-#include <GrayScale.h>
-#include <SepiaScale.h>
-#include <Vignette.h>
-#include <BoxFilter.h>
-#include <GaussianFilter.h>
+
+
 #include <Player/Player.h>
 #include <Enemy/Enemy.h>
 #include <LightWeapon/LightWeapon.h>
@@ -48,13 +39,18 @@ class SampleScene : public IGameScene {
 public:
 
 	//コンストラクタ
-	SampleScene();
+	SampleScene()=default;
 
 	
+	/// <summary>
 	/// 初期化
+	/// </summary>
 	void Initialize()override;
 
+	/// <summary>
 	/// 更新
+	/// </summary>
+	/// <param name="gameManager"></param>
 	void Update(GameManager* gameManager)override;
 
 #pragma region 描画
@@ -112,6 +108,7 @@ private:
 	Vector3 cameraPosition_ = {};
 	Vector3 CAMERA_POSITION_OFFSET = { 0.0f,1.0f,0.0f };
 
+	//3人称視点
 	Vector3 cameraThirdPersonViewOfPointPosition_ = {};
 	Vector3 thirdPersonViewOfPointRotate_ = {};
 
