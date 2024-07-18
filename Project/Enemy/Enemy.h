@@ -9,6 +9,20 @@ struct Camera;
 struct SpotLight;
 class Player;
 
+//後々StatePatternで分けるつもり
+enum EnemyCondition {
+	//何もしない
+	NoneMove,
+	//通常
+	Move,
+	//追いかけ始めるときの座標
+	PreTracking,
+	//追いかける
+	Tracking,
+	//攻撃
+	Attck,
+};
+
 class Enemy :public Collider{
 public:
 
@@ -130,26 +144,22 @@ public:
 
 
 public:
-	//後々StatePatternで分けるつもり
-	enum EnemyCondition {
-		//何もしない
-		None,
-		//通常
-		Move,
-		//追いかけ始めるときの座標
-		PreTracking,
-		//追いかける
-		Tracking,
-		//攻撃
-		Attck,
-	};
+	
 
-	int32_t GetEnemyCondition() const {
-		return condition;
+	/// <summary>
+	/// 状態の設定
+	/// </summary>
+	/// <param name="condition"></param>
+	inline void SetCondition(uint32_t& condition) {
+		this->condition_ = condition;
+	}
+
+	uint32_t GetCondition() const {
+		return condition_;
 	}
 
 private:
-	int32_t condition = EnemyCondition::None;
+	uint32_t condition_ = EnemyCondition::Move;
 
 
 

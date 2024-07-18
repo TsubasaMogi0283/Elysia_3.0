@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "Player/Player.h"
+#include <VectorCalculation.h>
 
 void EnemyManager::Initialize(uint32_t modelhandle){
 	
@@ -52,6 +53,9 @@ void EnemyManager::GenarateEnemy() {
 
 void EnemyManager::Update(){
 
+
+
+
 #ifdef _DEBUG
 	//Gキーで出す
 	if (Input::GetInstance()->IsTriggerKey(DIK_G) == true) {
@@ -60,12 +64,26 @@ void EnemyManager::Update(){
 
 #endif
 
-	//プレイヤーの座標
-	Vector3 playerPosition = player_->GetWorldPosition();
+
+
+	//接近するときの距離
+	const float TRACKING_START_DISTANCE_ = 10.0f;
+
+	//攻撃するときの距離
+	const float ATTACK_START_DISTANCE_ = 6.0f;
+
 
 	//更新
 	for (Enemy* enemy : enemyes_) {
-		enemy->SetPlayerPosition(playerPosition);
+		//プレイヤーとの距離を求める
+		Vector3 difference = VectorCalculation::Subtract(player_->GetWorldPosition(), enemy->GetWorldPosition());
+		float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
+		const float ATTACK_DISTANCE_OFFSET = 0.0f;
+
+		float MINIMUM_DISTANCE = player_->GetRadius() + enemy->GetRadius() + ATTACK_DISTANCE_OFFSET;
+
+
+		enemy->SetPlayerPosition(player_->GetWorldPosition());
 		enemy->Update();
 		
 	}
