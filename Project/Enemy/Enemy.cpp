@@ -55,18 +55,21 @@ void Enemy::Update(){
 
 	
 	switch (condition) {
+		//何も攻撃しない
 	case EnemyCondition::None:
-#ifdef _DEBUG
-		ImGui::Begin("None");
-		ImGui::End();
-#endif // DEBUG
+		#ifdef _DEBUG
+			ImGui::Begin("None");
+			ImGui::End();
+		#endif // DEBUG
+
 		break;
 
+		//通常の動き
 	case EnemyCondition::Move:
-#ifdef _DEBUG
-		ImGui::Begin("Move");
-		ImGui::End();
-#endif // DEBUG
+		#ifdef _DEBUG
+			ImGui::Begin("Move");
+			ImGui::End();
+		#endif // DEBUG
 		//通常の動き
 		t_ = 0.0f;
 		preTrackingPlayerPosition_ = {};
@@ -83,22 +86,26 @@ void Enemy::Update(){
 
 		break;
 
+		//追跡準備
 	case EnemyCondition::PreTracking:
-#ifdef _DEBUG
-		ImGui::Begin("PreTracking");
-		ImGui::End();
-#endif // DEBUG
+		#ifdef _DEBUG
+			ImGui::Begin("PreTracking");
+			ImGui::End();
+		#endif // DEBUG
+
 		//取得したら追跡
 		preTrackingPlayerPosition_ = playerPosition_;
 		preTrackingPosition_ = GetWorldPosition();
 		condition = EnemyCondition::Tracking;
 		break;
 
+		//追跡
 	case EnemyCondition::Tracking:
-#ifdef _DEBUG
-		ImGui::Begin("Tracking");
-		ImGui::End();
-#endif // DEBUG
+
+		#ifdef _DEBUG
+			ImGui::Begin("Tracking");
+			ImGui::End();
+		#endif // DEBUG
 		t_ += 0.005f;
 		worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
 		
@@ -121,14 +128,15 @@ void Enemy::Update(){
 
 		break;
 
+		//攻撃
 	case EnemyCondition::Attck:
 		attackTime_ += 1;
 		
 		if (attackTime_ > 1 && attackTime_ <= 160) {
-#ifdef _DEBUG
+		#ifdef _DEBUG
 			ImGui::Begin("Attack");
 			ImGui::End();
-#endif // DEBUG
+		#endif // DEBUG
 		}
 
 		if (attackTime_ > 180) {
@@ -136,7 +144,8 @@ void Enemy::Update(){
 		}
 
 
-		//攻撃し終わった後通常の動きに戻る
+		//攻撃し終わった後距離が離れていれば通常の動きに戻る
+		//離れていなければもう一回攻撃
 		if (attackTime_ > 180 &&
 			(distance>=ATTACK_START_DISTANCE_&&
 				distance<TRACKING_START_DISTANCE_)) {
@@ -182,7 +191,7 @@ void Enemy::OnCollision() {
 
 
 
-	//カウントが0になったら消す
+	//0になったら消す
 	if (color_.y < 0.0f &&
 		color_.z < 0.0f) {
 		isAlive_ = false;
@@ -194,15 +203,16 @@ void Enemy::OnCollision() {
 }
 
 Vector3 Enemy::GetWorldPosition() {
-	Vector3 result = {};
-	result.x = worldTransform_.worldMatrix_.m[3][0];
-	result.y = worldTransform_.worldMatrix_.m[3][1];
-	result.z = worldTransform_.worldMatrix_.m[3][2];
+	Vector3 result = {
+		.x= worldTransform_.worldMatrix_.m[3][0],
+		.y = worldTransform_.worldMatrix_.m[3][1],
+		.z = worldTransform_.worldMatrix_.m[3][2],
+	};
 
 	return result;
 }
 
-void Enemy::SetTranslate(Vector3 translate) {
+void Enemy::SetTranslate(Vector3& translate) {
 	this->worldTransform_.translate_.x = translate.x;
 	this->worldTransform_.translate_.y = translate.y;
 	this->worldTransform_.translate_.z = translate.z;

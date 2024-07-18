@@ -13,14 +13,14 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy = new Enemy();
-	Vector3 position1 = { 1.0f,0.0f,10.0f };
-	enemy->Initialize(modelHandle_, position1, { 0.0f,0.0f,0.01f });
+	Vector3 position1 = {- 5.0f,0.0f,15.0f };
+	enemy->Initialize(modelHandle_, position1, { 0.01f,0.0f,0.01f });
 	enemy->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy);
 
 
 	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = { 0.0f,0.0f,15.0f };
+	Vector3 position2 = { 0.0f,0.0f,20.0f };
 	enemy2->Initialize(modelHandle_, position2, { 0.0f,0.0f,0.0f });
 	enemy2->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy2);

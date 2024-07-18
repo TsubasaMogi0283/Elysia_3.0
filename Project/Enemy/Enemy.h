@@ -61,7 +61,36 @@ public:
 	/// 座標の指定
 	/// </summary>
 	/// <param name="translate"></param>
-	void SetTranslate(Vector3 translate);
+	void SetTranslate(Vector3& translate);
+
+#pragma region 座標の設定
+
+	/// <summary>
+	/// X座標の設定
+	/// </summary>
+	/// <param name="posX"></param>
+	inline void SetPositionX(float& posX) {
+		this->worldTransform_.translate_.x = posX;
+	}
+
+	/// <summary>
+	/// Y座標の設定
+	/// </summary>
+	/// <param name="posX"></param>
+	inline void SetPositionY(float& posY) {
+		this->worldTransform_.translate_.y = posY;
+	}
+
+	/// <summary>
+	/// Z座標の設定
+	/// </summary>
+	/// <param name="posX"></param>
+	inline void SetPositionZ(float& posZ) {
+		this->worldTransform_.translate_.z = posZ;
+	}
+
+#pragma endregion
+
 
 	/// <summary>
 	/// 生きているかのフラグを取得
