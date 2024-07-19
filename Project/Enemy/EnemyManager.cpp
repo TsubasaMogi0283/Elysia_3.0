@@ -68,22 +68,24 @@ void EnemyManager::Update(){
 
 	//接近するときの距離
 	const float TRACKING_START_DISTANCE_ = 10.0f;
-
+	TRACKING_START_DISTANCE_;
 	//攻撃するときの距離
 	const float ATTACK_START_DISTANCE_ = 6.0f;
+	ATTACK_START_DISTANCE_;
 
+	Vector3 playerPosition = player_->GetWorldPosition();
 
 	//更新
 	for (Enemy* enemy : enemyes_) {
 		//プレイヤーとの距離を求める
-		Vector3 difference = VectorCalculation::Subtract(player_->GetWorldPosition(), enemy->GetWorldPosition());
+		Vector3 difference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
 		float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
 		const float ATTACK_DISTANCE_OFFSET = 0.0f;
-
+		distance;
 		float MINIMUM_DISTANCE = player_->GetRadius() + enemy->GetRadius() + ATTACK_DISTANCE_OFFSET;
+		MINIMUM_DISTANCE;
 
-
-		enemy->SetPlayerPosition(player_->GetWorldPosition());
+		enemy->SetPlayerPosition(playerPosition);
 		enemy->Update();
 		
 	}

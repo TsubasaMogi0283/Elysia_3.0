@@ -55,7 +55,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Enemy()=default;
+	~Enemy() = default;
 
 
 

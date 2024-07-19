@@ -33,13 +33,14 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER);
 
 }
+
 
 void Enemy::Update(){
 	
 
-	if (distance > TRACKING_START_DISTANCE_) {
-		condition_ = EnemyCondition::Move;
-	}
+	//if (distance > TRACKING_START_DISTANCE_) {
+	//	condition_ = EnemyCondition::Move;
+	//}
 
 	
 	switch (condition_) {
@@ -70,11 +71,11 @@ void Enemy::Update(){
 		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speed_);
 
 
-		//設定した値より短くなったら接近開始
-		if (distance <= TRACKING_START_DISTANCE_ ) {
-
-			condition_ = EnemyCondition::PreTracking;
-		}
+		////設定した値より短くなったら接近開始
+		//if (distance <= TRACKING_START_DISTANCE_ ) {
+		//
+		//	condition_ = EnemyCondition::PreTracking;
+		//}
 
 		break;
 
@@ -119,17 +120,17 @@ void Enemy::Update(){
 		#pragma endregion
 
 
-		//Moveへ
-		if (distance > TRACKING_START_DISTANCE_) {
-			condition_ = EnemyCondition::Move;
-		}
-
-		//設定した値より短くなったら攻撃開始
-		if (distance <= ATTACK_START_DISTANCE_ &&
-			MINIMUM_DISTANCE < distance) {
-
-			condition_ = EnemyCondition::Attck;
-		}
+		////Moveへ
+		//if (distance > TRACKING_START_DISTANCE_) {
+		//	condition_ = EnemyCondition::Move;
+		//}
+		//
+		////設定した値より短くなったら攻撃開始
+		//if (distance <= ATTACK_START_DISTANCE_ &&
+		//	MINIMUM_DISTANCE < distance) {
+		//
+		//	condition_ = EnemyCondition::Attck;
+		//}
 
 		break;
 
@@ -149,14 +150,14 @@ void Enemy::Update(){
 		}
 
 
-		//攻撃し終わった後距離が離れていれば通常の動きに戻る
-		//離れていなければもう一回攻撃
-		if (attackTime_ > 180 &&
-			(distance>=ATTACK_START_DISTANCE_&&
-				distance<TRACKING_START_DISTANCE_)) {
-			attackTime_ = 0;
-			condition_ = EnemyCondition::Move;
-		}
+		////攻撃し終わった後距離が離れていれば通常の動きに戻る
+		////離れていなければもう一回攻撃
+		//if (attackTime_ > 180 &&
+		//	(distance>=ATTACK_START_DISTANCE_&&
+		//		distance<TRACKING_START_DISTANCE_)) {
+		//	attackTime_ = 0;
+		//	condition_ = EnemyCondition::Move;
+		//}
 
 
 
@@ -172,8 +173,6 @@ void Enemy::Update(){
 	ImGui::InputFloat("T", &t_);
 	ImGui::InputFloat3("direction_", &direction_.x);
 	ImGui::InputFloat3("Position", &worldTransform_.translate_.x);
-	ImGui::InputFloat("distance", &distance);
-	ImGui::InputFloat("MINIMUM_DISTANCE", &MINIMUM_DISTANCE);
 	ImGui::InputFloat3("preTrackingPlayerPosition", &preTrackingPlayerPosition_.x);
 	ImGui::InputFloat3("preTrackingPosition_", &preTrackingPosition_.x);
 	ImGui::InputInt("AliveTive", &deleteTime_);
