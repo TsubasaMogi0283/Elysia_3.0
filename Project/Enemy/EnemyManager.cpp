@@ -75,6 +75,9 @@ void EnemyManager::Update(){
 
 	Vector3 playerPosition = player_->GetWorldPosition();
 
+
+
+	
 	//更新
 	for (Enemy* enemy : enemyes_) {
 		//プレイヤーとの距離を求める
@@ -84,6 +87,62 @@ void EnemyManager::Update(){
 		distance;
 		float MINIMUM_DISTANCE = player_->GetRadius() + enemy->GetRadius() + ATTACK_DISTANCE_OFFSET;
 		MINIMUM_DISTANCE;
+
+		uint32_t condition = enemy->GetCondition();
+
+
+		//通常時
+		if (distance > TRACKING_START_DISTANCE_) {
+			condition = EnemyCondition::Move;
+			enemy->SetCondition(condition);
+			
+		}
+
+
+		//設定した値より短くなったら接近開始
+		if (condition == EnemyCondition::Move) {
+			if (distance <= TRACKING_START_DISTANCE_) {
+
+				condition = EnemyCondition::PreTracking;
+				enemy->SetCondition(condition);
+			}
+		}
+
+
+		if (condition== EnemyCondition::Tracking) {
+
+			//Moveへ
+			if (distance > TRACKING_START_DISTANCE_) {
+				condition = EnemyCondition::Move;
+				enemy->SetCondition(condition);
+
+			}
+			
+			//設定した値より短くなったら攻撃開始
+			if (distance <= ATTACK_START_DISTANCE_ &&
+				MINIMUM_DISTANCE < distance) {
+			
+				condition = EnemyCondition::Attack;
+				enemy->SetCondition(condition);
+
+			}
+
+		}
+
+		if (condition == EnemyCondition::Attack) {
+			////攻撃し終わった後距離が離れていれば通常の動きに戻る
+			//離れていなければもう一回攻撃
+			if ((distance>=ATTACK_START_DISTANCE_&&
+					distance<TRACKING_START_DISTANCE_)) {
+				
+				condition = EnemyCondition::Move;
+				enemy->SetCondition(condition);
+			}
+
+
+		}
+
+
 
 		enemy->SetPlayerPosition(playerPosition);
 		enemy->Update();

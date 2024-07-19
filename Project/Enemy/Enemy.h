@@ -20,7 +20,7 @@ enum EnemyCondition {
 	//追いかける
 	Tracking,
 	//攻撃
-	Attck,
+	Attack,
 };
 
 class Enemy :public Collider{
@@ -185,6 +185,8 @@ private:
 	bool isTracking_ = false;
 	Vector3 preTrackingPosition_ = {};
 	Vector3 preTrackingPlayerPosition_ = {};
+
+
 
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};

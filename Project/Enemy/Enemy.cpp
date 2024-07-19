@@ -47,21 +47,21 @@ void Enemy::Update(){
 		//何も攻撃しない
 	case EnemyCondition::NoneMove:
 		#ifdef _DEBUG
-			ImGui::Begin("None");
-			ImGui::End();
+		ImGui::Begin("None");
+		ImGui::End();
 		#endif // DEBUG
 	
-			t_ = 0.0f;
-			preTrackingPlayerPosition_ = {};
-			preTrackingPosition_ = {};
+		t_ = 0.0f;
+		preTrackingPlayerPosition_ = {};
+		preTrackingPosition_ = {};
 
 		break;
 
 		//通常の動き
 	case EnemyCondition::Move:
 		#ifdef _DEBUG
-			ImGui::Begin("Move");
-			ImGui::End();
+		ImGui::Begin("Move");
+		ImGui::End();
 		#endif // DEBUG
 		//通常の動き
 		t_ = 0.0f;
@@ -135,7 +135,7 @@ void Enemy::Update(){
 		break;
 
 		//攻撃
-	case EnemyCondition::Attck:
+	case EnemyCondition::Attack:
 		attackTime_ += 1;
 		
 		if (attackTime_ > 1 && attackTime_ <= 160) {
