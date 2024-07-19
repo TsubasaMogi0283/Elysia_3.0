@@ -13,8 +13,8 @@ void FlashLight::Initialize(){
 	spotLight_.distance_ = LIGHT_DISTANCE;
 	spotLight_.decay_ = 0.6f;
 	spotLight_.cosFallowoffStart_ = 6.1f;
-	//spotLight_.cosAngle_ = 0.98f;
 	spotLight_.intensity_ = 200.0f;
+	spotLight_.aroundOffset_ = 0.1f;
 	//ライトの片方の角度
 	//15度=π/12
 	lightSideTheta = (std::numbers::pi_v<float>/12.0f);
@@ -32,6 +32,7 @@ void FlashLight::Initialize(){
 	//同じサイズでいいかも
 	fan3D_.sideThetaAngle = lightSideTheta;
 	fan3D_.sidePhiAngleSize = lightSideTheta;
+
 
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
 	
@@ -85,6 +86,7 @@ void FlashLight::Update() {
 	//片方の角度
 	spotLight_.cosAngle_ = std::cosf(lightSideTheta);
 
+	spotLight_.aroundOffset_ = 0.01f;
 	//扇
 	fan_.centerRadian = theta_;
 	fan_.leftSideRadian = theta_ + lightSideTheta;

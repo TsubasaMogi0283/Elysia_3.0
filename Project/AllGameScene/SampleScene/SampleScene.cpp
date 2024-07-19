@@ -33,10 +33,12 @@ void SampleScene::Initialize() {
 	StageRect stageRect = ground_->GetStageRect();
 	
 	
-	//ゲート
+	#pragma region ゲート
 	uint32_t gateModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Gate","Gate.obj");
 	gate_ = std::make_unique<Gate>();
 	gate_->Initialize(gateModelhandle);
+	#pragma endregion
+
 	#pragma region 鍵
 	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","Cube.obj");
 	
@@ -44,7 +46,6 @@ void SampleScene::Initialize() {
 	keyManager_->Initialize(keyModelHandle);
 	
 	#pragma endregion
-	
 	
 	#pragma region 敵
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD2_Enemy", "TD2_Enemy.obj");

@@ -37,11 +37,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 void Enemy::Update(){
 	
-
-	//if (distance > TRACKING_START_DISTANCE_) {
-	//	condition_ = EnemyCondition::Move;
-	//}
-
+	playerPosition_;
 	
 	switch (condition_) {
 		//何も攻撃しない
@@ -70,12 +66,6 @@ void Enemy::Update(){
 		direction_ = VectorCalculation::Normalize(speed_);
 		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speed_);
 
-
-		////設定した値より短くなったら接近開始
-		//if (distance <= TRACKING_START_DISTANCE_ ) {
-		//
-		//	condition_ = EnemyCondition::PreTracking;
-		//}
 
 		break;
 
@@ -120,17 +110,6 @@ void Enemy::Update(){
 		#pragma endregion
 
 
-		////Moveへ
-		//if (distance > TRACKING_START_DISTANCE_) {
-		//	condition_ = EnemyCondition::Move;
-		//}
-		//
-		////設定した値より短くなったら攻撃開始
-		//if (distance <= ATTACK_START_DISTANCE_ &&
-		//	MINIMUM_DISTANCE < distance) {
-		//
-		//	condition_ = EnemyCondition::Attck;
-		//}
 
 		break;
 
@@ -149,15 +128,6 @@ void Enemy::Update(){
 			attackTime_ = 0;
 		}
 
-
-		////攻撃し終わった後距離が離れていれば通常の動きに戻る
-		////離れていなければもう一回攻撃
-		//if (attackTime_ > 180 &&
-		//	(distance>=ATTACK_START_DISTANCE_&&
-		//		distance<TRACKING_START_DISTANCE_)) {
-		//	attackTime_ = 0;
-		//	condition_ = EnemyCondition::Move;
-		//}
 
 
 

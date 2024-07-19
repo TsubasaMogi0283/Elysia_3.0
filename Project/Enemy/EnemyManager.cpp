@@ -54,8 +54,6 @@ void EnemyManager::GenarateEnemy() {
 void EnemyManager::Update(){
 
 
-
-
 #ifdef _DEBUG
 	//Gキーで出す
 	if (Input::GetInstance()->IsTriggerKey(DIK_G) == true) {
@@ -68,11 +66,11 @@ void EnemyManager::Update(){
 
 	//接近するときの距離
 	const float TRACKING_START_DISTANCE_ = 10.0f;
-	TRACKING_START_DISTANCE_;
+	
 	//攻撃するときの距離
 	const float ATTACK_START_DISTANCE_ = 6.0f;
-	ATTACK_START_DISTANCE_;
-
+	
+	//プレイヤーの座標
 	Vector3 playerPosition = player_->GetWorldPosition();
 
 
@@ -84,19 +82,14 @@ void EnemyManager::Update(){
 		Vector3 difference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
 		float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
 		const float ATTACK_DISTANCE_OFFSET = 0.0f;
-		distance;
+		
 		float MINIMUM_DISTANCE = player_->GetRadius() + enemy->GetRadius() + ATTACK_DISTANCE_OFFSET;
-		MINIMUM_DISTANCE;
+		
 
+		//現在の状態を取得
 		uint32_t condition = enemy->GetCondition();
 
 
-		//通常時
-		if (distance > TRACKING_START_DISTANCE_) {
-			condition = EnemyCondition::Move;
-			enemy->SetCondition(condition);
-			
-		}
 
 
 		//設定した値より短くなったら接近開始
