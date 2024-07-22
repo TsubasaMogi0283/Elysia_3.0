@@ -195,8 +195,8 @@ void EnemyManager::Update(){
 	//差分ベクトル
 	Vector3 enemy1Position = enemy1->GetWorldPosition();
 	Vector3 enemy2Position = enemy2->GetWorldPosition();
-	//float enemyRadius1 = enemy1->GetRadius();
-	//float enemyRadiu2 = enemy2->GetRadius();
+	float enemyRadius1 = enemy1->GetRadius();
+	float enemyRadiu2 = enemy2->GetRadius();
 
 
 	Vector3 direction = enemy1->GetDirection();
@@ -213,12 +213,17 @@ void EnemyManager::Update(){
 
 
 
-	if (enemyAndEnemyDistance < projectDistance ) {
+	if (enemyAndEnemyDistance < projectDistance &&
+		projectDistance< enemyRadius1+ enemyRadiu2) {
 
 #ifdef _DEBUG
 		ImGui::Begin("Touch"); 
 		ImGui::End();
 #endif // _DEBUG
+
+
+		//uint32_t newCondition = EnemyCondition::NoneMove;
+		//enemy1->SetCondition(newCondition);
 
 	}
 
@@ -227,12 +232,6 @@ void EnemyManager::Update(){
 	ImGui::Begin("1");
 	ImGui::SliderFloat("Z", &z,-10.0f,10.0f);
 	ImGui::End();
-
-	//1.0f,1.0f
-	//if (enemyRadius1+ enemyRadiu2 > projectDistance) {
-		//uint32_t newCondition = EnemyCondition::NoneMove;
-		//enemy1->SetCondition(newCondition);
-	//}
 
 
 #ifdef _DEBUG
