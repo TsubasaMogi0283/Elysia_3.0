@@ -127,44 +127,6 @@ void SampleScene::Initialize() {
 
 
 
-
-void SampleScene::CheckEnemyAndEnemyCollision(std::list<Enemy*>& enemies) {
-	//敵
-	for (std::list<Enemy*>::iterator it1 = enemies.begin(); it1 != enemies.end(); ++it1) {
-		for (std::list<Enemy*>::iterator it2 = std::next(it1); it2 != enemies.end(); ++it2) {
-
-			//距離
-			float distance = (*it1)->GetRadius() + (*it2)->GetRadius();
-
-
-#ifdef _DEBUG
-
-			ImGui::Begin("EnemyCollision");
-			ImGui::InputFloat("Distance", &distance);
-			ImGui::End();
-
-
-			Vector3 enemy1X = (*it1)->GetWorldPosition();
-			Vector3 enemy2X = (*it2)->GetWorldPosition();
-
-			ImGui::Begin("EnemyPosition");
-			ImGui::InputFloat3("1", &enemy1X.x);
-			ImGui::InputFloat3("2", &enemy2X.x);
-
-			ImGui::End();
-
-#endif // DEBUG
-
-
-
-
-		}
-
-
-	}
-}
-
-
 void SampleScene::KeyCollision(){
 
 	//鍵
@@ -581,9 +543,6 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	//敵
 	enemyManager_->Update();
-
-	//敵同士
-	CheckEnemyAndEnemyCollision(enemyes);
 
 
 	//ライト確認用のタワー

@@ -19,10 +19,12 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	isTracking_ = false;
 
 	//半径
-	radius_ = 1.0f;
+	radius_ = 0.5f;
 	speed_ = speed;
 	//色
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
+	//デフォルトで右方向に向いているようにする
+	direction_ = { 1.0f,0.0f,0.0f };
 
 	condition_ = EnemyCondition::Move;
 
@@ -31,15 +33,19 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY);
 	//相手
 	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER);
+#ifdef _DEBUG
+	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	debugModel_.reset(Model::Create(debugModelHandle));
 
-	line_ = std::make_unique<Line>();
-	line_->Initialize();
+	debugModelWorldTransform_.Initialize();
+	debugModelWorldTransform_.scale_ = { 0.5f,0.5f,0.5f };
+#endif // _DEBUG
 
+	
 }
 
 
 void Enemy::Update(){
-	
 	playerPosition_;
 	
 	switch (condition_) {
@@ -53,9 +59,9 @@ void Enemy::Update(){
 		t_ = 0.0f;
 		preTrackingPlayerPosition_ = {};
 		preTrackingPosition_ = {};
-
+		speed_ = { 0.0f,0.0f,0.0f };
 		break;
-
+	
 		//通常の動き
 	case EnemyCondition::Move:
 		#ifdef _DEBUG
@@ -66,81 +72,99 @@ void Enemy::Update(){
 		t_ = 0.0f;
 		preTrackingPlayerPosition_ = {};
 		preTrackingPosition_ = {};
-		direction_ = VectorCalculation::Normalize(speed_);
+		if (speed_.x != 0.0f ||
+			speed_.y != 0.0f ||
+			speed_.z != 0.0f) {
+			direction_ = VectorCalculation::Normalize(speed_);
+		}
+		
 		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speed_);
-
-
+	
+	
 		break;
-
-	case EnemyCondition::PreTracking:
-
-		#pragma region 追跡準備
-
-		#ifdef _DEBUG
-			ImGui::Begin("PreTracking");
-			ImGui::End();
-		#endif // DEBUG
-
-		//取得したら追跡
-		preTrackingPlayerPosition_ = playerPosition_;
-		preTrackingPosition_ = GetWorldPosition();
-		
-
-		#pragma endregion
-
-		condition_ = EnemyCondition::Tracking;
-
-		break;
-
-
-
-		//追跡
-	case EnemyCondition::Tracking:
-
-		#pragma region 追跡処理
-
-		#ifdef _DEBUG
-			ImGui::Begin("Tracking");
-			ImGui::End();
-		#endif // DEBUG
-		t_ += 0.005f;
-		worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
-		
-		//向きを求める
-		direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_,preTrackingPosition_);
-		direction_ = VectorCalculation::Normalize(direction_);
-
-		#pragma endregion
-
-
-
-		break;
-
-		//攻撃
-	case EnemyCondition::Attack:
-		attackTime_ += 1;
-		
-		if (attackTime_ > 1 && attackTime_ <= 160) {
-		#ifdef _DEBUG
-			ImGui::Begin("Attack");
-			ImGui::End();
-		#endif // DEBUG
-		}
-
-		if (attackTime_ > 180) {
-			attackTime_ = 0;
-		}
-
-
-
-
+	
+	//case EnemyCondition::PreTracking:
+	//
+	//	#pragma region 追跡準備
+	//
+	//	#ifdef _DEBUG
+	//		ImGui::Begin("PreTracking");
+	//		ImGui::End();
+	//	#endif // DEBUG
+	//
+	//	//取得したら追跡
+	//	preTrackingPlayerPosition_ = playerPosition_;
+	//	preTrackingPosition_ = GetWorldPosition();
+	//	
+	//
+	//	#pragma endregion
+	//
+	//	condition_ = EnemyCondition::Tracking;
+	//
+	//	break;
+	//
+	//
+	//
+	//	//追跡
+	//case EnemyCondition::Tracking:
+	//
+	//	#pragma region 追跡処理
+	//
+	//	#ifdef _DEBUG
+	//		ImGui::Begin("Tracking");
+	//		ImGui::End();
+	//	#endif // DEBUG
+	//	t_ += 0.005f;
+	//	worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
+	//	
+	//	//向きを求める
+	//	direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_,preTrackingPosition_);
+	//	direction_ = VectorCalculation::Normalize(direction_);
+	//
+	//	#pragma endregion
+	//
+	//
+	//
+	//	break;
+	//
+	//	//攻撃
+	//case EnemyCondition::Attack:
+	//	attackTime_ += 1;
+	//	
+	//	if (attackTime_ > 1 && attackTime_ <= 160) {
+	//	#ifdef _DEBUG
+	//		ImGui::Begin("Attack");
+	//		ImGui::End();
+	//	#endif // DEBUG
+	//	}
+	//
+	//	if (attackTime_ > 180) {
+	//		attackTime_ = 0;
+	//	}
+	//
+	//
+	//
+	//
 	}
 
+	//direction_ = VectorCalculation::Normalize(speed_);
+	//worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speed_);
 
+
+#ifdef _DEBUG
+	const float INTERVAL = 3.0f;
+	Vector3 lineEnd = VectorCalculation::Add(GetWorldPosition(), { direction_.x * INTERVAL,direction_.y * INTERVAL,direction_.z * INTERVAL });
+	debugModelWorldTransform_.translate_ = lineEnd;
+	debugModelWorldTransform_.Update();
+
+#endif // _DEBUG
+
+	
 	//更新
 	worldTransform_.Update();
-
 	material_.Update();
+
+
 #ifdef _DEBUG
 	ImGui::Begin("Enemy");
 	ImGui::InputFloat("T", &t_);
@@ -200,12 +224,12 @@ void Enemy::SetTranslate(Vector3& translate) {
 
 
 void Enemy::Draw(Camera& camera,SpotLight&spotLight){
-	
 #ifdef _DEBUG
-	Vector3 lineEnd = VectorCalculation::Add(GetWorldPosition(), direction_);
-	line_->Draw(GetWorldPosition(), lineEnd,camera);
+	debugModel_->Draw(debugModelWorldTransform_, camera, material_, spotLight);
+
 #endif // _DEBUG
 
+	
 
 	//描画
 	if (isAlive_ == true) {

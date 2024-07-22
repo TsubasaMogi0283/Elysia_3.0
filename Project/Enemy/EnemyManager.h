@@ -36,7 +36,6 @@ public:
 	/// </summary>
 	~EnemyManager();
 
-
 public:
 	/// <summary>
 	/// エネミーのリストを取得
@@ -74,5 +73,15 @@ private:
 	uint32_t modelHandle_ = 0;
 
 
+	float z =0.0f;
+	Enemy* enemy1 = nullptr;
+	Enemy* enemy2 = nullptr;
+
+
+
+	//モデル
+	std::unique_ptr<Model> debugModel_ = nullptr;
+	WorldTransform debugModelWorldTransform_ = {};
+	Material material_ = {};
 };
 

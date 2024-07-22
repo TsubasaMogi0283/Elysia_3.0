@@ -158,7 +158,6 @@ Vector3 VectorCalculation::Project(const Vector3& v1, const Vector3& v2) {
 
 	float t = dot / (length * length);
 
-
 	Vector3 result = {};
 	result.x = t * v2.x;
 	result.y = t * v2.y;

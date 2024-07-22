@@ -86,13 +86,6 @@ public:
 private:
 
 	/// <summary>
-	/// 敵同士の当たり判定
-	/// </summary>
-	/// <param name="enemies"></param>
-	void CheckEnemyAndEnemyCollision(std::list<Enemy*>& enemies);
-
-
-	/// <summary>
 	/// 鍵の取得の処理
 	/// </summary>
 	void KeyCollision();

@@ -22,7 +22,7 @@ void Player::Initialize(){
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
-	worldTransform_.translate_ = { 0.0f,0.0f,0.0f };
+	worldTransform_.translate_ = { 0.0f,0.0f,-10.0f };
 }
 
 void Player::Update(){

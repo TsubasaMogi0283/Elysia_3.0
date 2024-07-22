@@ -180,26 +180,28 @@ private:
 	int32_t deleteTime_ = 0;
 	bool isAlive_ = true;
 
-
-
 	//追跡
 	bool isTracking_ = false;
 	Vector3 preTrackingPosition_ = {};
 	Vector3 preTrackingPlayerPosition_ = {};
 
+	//向き
+	Vector3 direction_ = {};
+	float t_ = 0.0f;
 
+	//攻撃
+	int32_t attackTime_ = 0;
 
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
 	//プレイヤーの半径
 	float playerRadius_ = 0.0f;
 
-	//向き
-	Vector3 direction_ = {};
 
-	std::unique_ptr<Line> line_ = nullptr;
-	
-	float t_ = 0.0f;
-	//攻撃
-	int32_t attackTime_ = 0;
+
+
+
+	//モデル
+	std::unique_ptr<Model> debugModel_ = nullptr;
+	WorldTransform debugModelWorldTransform_ = {};
 };
