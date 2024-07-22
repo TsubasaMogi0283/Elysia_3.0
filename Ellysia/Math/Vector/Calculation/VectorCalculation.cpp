@@ -148,29 +148,25 @@ Vector3 VectorCalculation::Cross(const Vector3& v1, const Vector3& v2){
 	return result;
 }
 
-Vector3 VectorCalculation::Project(const Vector3& v1, const Vector3& v2){
-	//Aベクトルを正射影ベクトルにする
+Vector3 VectorCalculation::Project(const Vector3& v1, const Vector3& v2) {
+
+	//内積
+	float dot = SingleCalculation::Dot(v1, v2);
+	//長さ
+	float length = SingleCalculation::Length(v2);
+
+
+	float t = dot / (length * length);
+
+
 	Vector3 result = {};
-
-	//bの長さを求める
-	float lengthB = SingleCalculation::Length(v2);
-	float dotAB = SingleCalculation::Dot(v1, v2);
-
-	//||c||=||a||cosθ
-	//     ↓
-	// a・b=||a|| ||b||cosθより
-	//     ↓
-	//||c||=a・b/||b||になる
-
-	//正射影ベクトルの長さ
-	float t = dotAB / (lengthB * lengthB);
-	float newT = SingleCalculation::Clamp(t, 0.0f, 1.0f);
-	result.x = newT *v2.x;
-	result.y = newT *v2.y;
-	result.z = newT *v2.z;
+	result.x = t * v2.x;
+	result.y = t * v2.y;
+	result.z = t * v2.z;
 
 
 	return result;
+
 }
 
 

@@ -74,8 +74,18 @@ void EnemyManager::Update(){
 	Vector3 playerPosition = player_->GetWorldPosition();
 
 
+	Vector3 vectorA = { 3.0f,0.0f,0.0f };
+	Vector3 vectorB = { 3.0f,2.0f,0.0f };
 
+	Vector3 project = VectorCalculation::Project(vectorB, vectorA);
 	
+	ImGui::Begin("ProjectTest");
+	ImGui::InputFloat3("A", &vectorA.x);
+	ImGui::InputFloat3("B", &vectorB.x);
+	ImGui::InputFloat3("Project", &project.x);
+	ImGui::End();
+
+
 	//更新
 	for (Enemy* enemy : enemyes_) {
 		//プレイヤーとの距離を求める
@@ -92,19 +102,24 @@ void EnemyManager::Update(){
 
 
 
-		//設定した値より短くなったら接近開始
+		//移動
 		if (condition == EnemyCondition::Move) {
+			
+			//設定した値より短くなったら接近開始
 			if (distance <= TRACKING_START_DISTANCE_) {
-
 				condition = EnemyCondition::PreTracking;
 				enemy->SetCondition(condition);
 			}
 		}
 
 
+		
+
+
+		//追跡
 		if (condition== EnemyCondition::Tracking) {
 
-			//Moveへ
+			//離れたらMoveへ
 			if (distance > TRACKING_START_DISTANCE_) {
 				condition = EnemyCondition::Move;
 				enemy->SetCondition(condition);
@@ -120,8 +135,19 @@ void EnemyManager::Update(){
 
 			}
 
+
+
+			//進行方向に同じ敵がいたら止まる
+			if (false) {
+				condition = EnemyCondition::Attack;
+				enemy->SetCondition(condition);
+
+			}
+
+
 		}
 
+		//攻撃
 		if (condition == EnemyCondition::Attack) {
 			////攻撃し終わった後距離が離れていれば通常の動きに戻る
 			//離れていなければもう一回攻撃
