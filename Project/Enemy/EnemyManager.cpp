@@ -79,12 +79,15 @@ void EnemyManager::Update(){
 
 	Vector3 project = VectorCalculation::Project(vectorB, vectorA);
 	
+#ifdef _DEBUG
+
 	ImGui::Begin("ProjectTest");
 	ImGui::InputFloat3("A", &vectorA.x);
 	ImGui::InputFloat3("B", &vectorB.x);
 	ImGui::InputFloat3("Project", &project.x);
 	ImGui::End();
 
+#endif // _DEBUG
 
 	//更新
 	for (Enemy* enemy : enemyes_) {

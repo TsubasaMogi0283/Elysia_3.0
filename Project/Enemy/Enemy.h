@@ -5,6 +5,7 @@
 #include "../Collider/Collider.h"
 #include "Material.h"
 #include <memory>
+#include "../../Ellysia/Line/Line.h"
 struct Camera;
 struct SpotLight;
 class Player;
@@ -196,6 +197,7 @@ private:
 	//向き
 	Vector3 direction_ = {};
 
+	std::unique_ptr<Line> line_ = nullptr;
 	
 	float t_ = 0.0f;
 	//攻撃

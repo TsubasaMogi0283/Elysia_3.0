@@ -32,6 +32,9 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	//相手
 	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER);
 
+	line_ = std::make_unique<Line>();
+	line_->Initialize();
+
 }
 
 
@@ -198,6 +201,12 @@ void Enemy::SetTranslate(Vector3& translate) {
 
 void Enemy::Draw(Camera& camera,SpotLight&spotLight){
 	
+#ifdef _DEBUG
+	Vector3 lineEnd = VectorCalculation::Add(GetWorldPosition(), direction_);
+	line_->Draw(GetWorldPosition(), lineEnd,camera);
+#endif // _DEBUG
+
+
 	//描画
 	if (isAlive_ == true) {
 		model_->Draw(worldTransform_, camera,material_, spotLight);
