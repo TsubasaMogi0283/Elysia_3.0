@@ -227,6 +227,8 @@ void EnemyManager::Update(){
 
 	}
 
+
+#ifdef _DEBUG
 	
 	enemy1->SetPositionZ(z);
 	ImGui::Begin("1");
@@ -234,7 +236,7 @@ void EnemyManager::Update(){
 	ImGui::End();
 
 
-#ifdef _DEBUG
+
 	ImGui::Begin("EnemyProject");
 	ImGui::InputFloat3("Difference", &enemyAndEnemyDifference.x);
 	ImGui::InputFloat3("projectVector", &projectVector.x);

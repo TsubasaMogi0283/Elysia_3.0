@@ -13,6 +13,7 @@ void Player::Initialize(){
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD3Player","Player.obj");
 	model_.reset(Model::Create(modelHandle));
 
+	isAbleToControll_ = false;
 
 	//持っている鍵の数
 	haveKeyQuantity_ = 0;
@@ -48,8 +49,11 @@ void Player::Update(){
 
 	const float MOVE_SPEED = 0.1f;
 	//加算
-	worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, { moveDirection_.x * MOVE_SPEED,moveDirection_.y * MOVE_SPEED,moveDirection_.z * MOVE_SPEED });
+	if (isAbleToControll_ == true) {
+		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, { moveDirection_.x * MOVE_SPEED,moveDirection_.y * MOVE_SPEED,moveDirection_.z * MOVE_SPEED });
 
+	}
+	
 	//ステージの外には行けないようにする
 	//左
 	if (worldTransform_.translate_.x < stageRect_.leftBack.x + radius_) {
@@ -77,9 +81,6 @@ void Player::Update(){
 
 void Player::Draw(Camera& camera, Material& material, SpotLight& spotLight){
 	
-
-	Matrix4x4 wvp = Matrix4x4Calculation::Multiply(worldTransform_.worldMatrix_, Matrix4x4Calculation::Multiply(camera.viewMatrix_, camera.projectionMatrix_));
-
 	model_->Draw(worldTransform_, camera,material,spotLight);
 }
 

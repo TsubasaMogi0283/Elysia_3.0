@@ -55,7 +55,7 @@ void Enemy::Update(){
 		ImGui::Begin("None");
 		ImGui::End();
 		#endif // DEBUG
-	
+		
 		t_ = 0.0f;
 		preTrackingPlayerPosition_ = {};
 		preTrackingPosition_ = {};

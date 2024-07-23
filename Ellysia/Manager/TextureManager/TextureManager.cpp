@@ -68,8 +68,6 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 	//0番目はImGuiが使っているからダメだった
 	TextureManager::GetInstance()->textureInformation_[textureIndex].handle_ = textureIndex;
 
-	auto test = metadata.IsCubemap();
-	test;
 	//SRVの生成
 	SrvManager::GetInstance()->CreateSRVForTexture2D(
 		TextureManager::GetInstance()->textureInformation_[textureIndex].handle_,

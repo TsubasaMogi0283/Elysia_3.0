@@ -91,8 +91,15 @@ private:
 	void KeyCollision();
 
 
+private:
+	enum GameCondition {
+		GameFadeIn,
+		Explanation,
+		GamePlay,
+		GameFadeOut,
+	};
 
-
+	GameCondition gameCondition_ = GameCondition::GameFadeIn;
 
 private:
 
@@ -109,8 +116,6 @@ private:
 	bool isRotateXKey_ = false;
 
 
-	//平行光源
-	DirectionalLight directionalLight_ = {};
 	//スポットライト
 	std::unique_ptr<FlashLight> flashLight_ = nullptr;
 	//マテリアル
@@ -121,8 +126,9 @@ private:
 	std::unique_ptr<BackText> back_ = nullptr;
 
 
-
-	
+	float t = 0.0f;
+	float p = 0.0f;
+	Vector3 pp = {};
 
 	//プレイヤー
 	Player* player_ = nullptr;
@@ -159,9 +165,33 @@ private:
 
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 
+#pragma region フェード
+
+	std::unique_ptr<Sprite> fadeSprite_ = nullptr;
+	//透明度
+	float fadeTransparency_ = 1.0f;
+
+	bool isFadeIn = true;
+	bool isFadeOut_ = false;
+
+#pragma endregion
 
 
+	bool isExplain_ = false;
+	bool isGamePlay_ = false;
 
+
+#pragma region 説明
+	static const uint32_t EXPLANATION_QUANTITY_ = 2;
+	std::unique_ptr<Sprite> explanation_[EXPLANATION_QUANTITY_] = { nullptr };
+
+	//Spaceで次に進むテキスト
+	static const uint32_t SPACE_TO_NEXT_QUANTITY_ = 2;
+	std::unique_ptr<Sprite> spaceToNext_[SPACE_TO_NEXT_QUANTITY_] = { nullptr };
+
+	uint32_t textureDisplayNumber_ = 0;
+
+#pragma endregion
 
 
 
