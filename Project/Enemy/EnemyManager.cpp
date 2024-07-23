@@ -15,15 +15,15 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 	//TLのレベルエディターでやってもいいかも！
 	enemy1 = new Enemy();
-	Vector3 position1 = {0.0f,0.0f,-10.0f };
-	enemy1->Initialize(modelHandle_, position1, { 0.01f,0.0f,0.01f });
+	Vector3 position1 = {0.0f,0.0f,9.0f };
+	enemy1->Initialize(modelHandle_, position1, { 0.01f,0.0f,0.00f });
 	enemy1->SetRadius_(player_->GetRadius());
 	//enemyes_.push_back(enemy);
 
 
 	enemy2 = new Enemy();
 	Vector3 position2 = { 5.0f,0.0f,1.0f };
-	enemy2->Initialize(modelHandle_, position2, { 0.0f,0.0f,0.0f });
+	enemy2->Initialize(modelHandle_, position2, { 0.0f,0.0f,-0.0f });
 	enemy2->SetRadius_(player_->GetRadius());
 	//enemyes_.push_back(enemy2);
 
@@ -80,105 +80,40 @@ void EnemyManager::Update(){
 
 	//接近するときの距離
 	const float TRACKING_START_DISTANCE_ = 10.0f;
-	TRACKING_START_DISTANCE_;
+	
 	//攻撃するときの距離
 	const float ATTACK_START_DISTANCE_ = 6.0f;
-	ATTACK_START_DISTANCE_;
+	
 	//プレイヤーの座標
 	Vector3 playerPosition = player_->GetWorldPosition();
-
+	const float ATTACK_DISTANCE_OFFSET = 0.0f;
+	float MINIMUM_DISTANCE = player_->GetRadius() + enemy1->GetRadius() + ATTACK_DISTANCE_OFFSET;
 	
-	//更新
-	//for (Enemy* enemy : enemyes_) {
-	//	//プレイヤーとの距離を求める
-	//	Vector3 difference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
-	//	float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
-	//	distance;
-	//	const float ATTACK_DISTANCE_OFFSET = 0.0f;
-	//	ATTACK_DISTANCE_OFFSET;
+	Vector3 difference = VectorCalculation::Subtract(playerPosition, enemy1->GetWorldPosition());
+	float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
+	
+	
+	uint32_t condition = enemy1->GetCondition();
+	
+	//移動
+	if (condition == EnemyCondition::Move) {
+		
+		//設定した値より短くなったら接近開始
+		if (distance <= TRACKING_START_DISTANCE_) {
+			condition = EnemyCondition::PreTracking;
+			enemy1->SetCondition(condition);
 
-	//	float MINIMUM_DISTANCE = player_->GetRadius() + enemy->GetRadius() + ATTACK_DISTANCE_OFFSET;
-	//	MINIMUM_DISTANCE;
-
-	//	//現在の状態を取得
-	//	uint32_t condition = enemy->GetCondition();
-	//	condition;
-
-	//	//敵同士の当たり判定
-	//	for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
-	//		for (std::list<Enemy*>::iterator it2 = std::next(it1); it2 != enemyes_.end(); ++it2) {
-
-	//			
-	//		
-	//		}
-	//	}
-
-
-	//	////移動
-	//	//if (condition == EnemyCondition::Move) {
-	//	//	
-	//	//	//設定した値より短くなったら接近開始
-	//	//	if (distance <= TRACKING_START_DISTANCE_) {
-	//	//		condition = EnemyCondition::PreTracking;
-	//	//		enemy->SetCondition(condition);
-	//	//	}
-	//	//}
-	//	//
-	//	//
-	//	//
-	//	//
-	//	//
-	//	////追跡
-	//	//if (condition== EnemyCondition::Tracking) {
-	//	//
-	//	//	//離れたらMoveへ
-	//	//	if (distance > TRACKING_START_DISTANCE_) {
-	//	//		condition = EnemyCondition::Move;
-	//	//		enemy->SetCondition(condition);
-	//	//
-	//	//	}
-	//	//	
-	//	//	//設定した値より短くなったら攻撃開始
-	//	//	if (distance <= ATTACK_START_DISTANCE_ &&
-	//	//		MINIMUM_DISTANCE < distance) {
-	//	//	
-	//	//		condition = EnemyCondition::Attack;
-	//	//		enemy->SetCondition(condition);
-	//	//
-	//	//	}
-	//	//
-	//	//
-	//	//
-	//	//	//進行方向に同じ敵がいたら止まる
-	//	//	if (false) {
-	//	//		condition = EnemyCondition::Attack;
-	//	//		enemy->SetCondition(condition);
-	//	//
-	//	//	}
-	//	//
-	//	//
-	//	//}
-	//	//
-	//	////攻撃
-	//	//if (condition == EnemyCondition::Attack) {
-	//	//	////攻撃し終わった後距離が離れていれば通常の動きに戻る
-	//	//	//離れていなければもう一回攻撃
-	//	//	if ((distance>=ATTACK_START_DISTANCE_&&
-	//	//			distance<TRACKING_START_DISTANCE_)) {
-	//	//		
-	//	//		condition = EnemyCondition::Move;
-	//	//		enemy->SetCondition(condition);
-	//	//	}
-	//	//
-	//	//
-	//	//}
+		}
+	}
+	
+	
+	
+	
+	
+	
 
 
 
-	//	enemy->SetPlayerPosition(playerPosition);
-	//	enemy->Update();
-	//	
-	//}
 
 
 
@@ -198,11 +133,12 @@ void EnemyManager::Update(){
 	float enemyRadius1 = enemy1->GetRadius();
 	float enemyRadius2 = enemy2->GetRadius();
 
+	
 
 	Vector3 direction = enemy1->GetDirection();
 	Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
 	float enemyAndEnemyDistance= sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
-	enemyAndEnemyDistance;
+
 	//正射影ベクトルを求める
 	Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
 	
@@ -211,45 +147,86 @@ void EnemyManager::Update(){
 	float projectDistance= sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
 
 
-	uint32_t condition = EnemyCondition::Move;
-	enemy1->SetCondition(condition);
-
-	if (enemyRadius1 + enemyRadius2 > projectDistance) {
+	
+	if (enemyAndEnemyDistance < enemyRadius1 + enemyRadius2) {
 #ifdef _DEBUG
 		ImGui::Begin("Touch");
 		ImGui::End();
 #endif // _DEBUG
 
-		if (enemyAndEnemyDistance < enemyRadius1 + enemyRadius2) {
+		if (enemyRadius1 + enemyRadius2 > projectDistance) {
 #ifdef _DEBUG
 			ImGui::Begin("CompleteTouch");
 			ImGui::End();
 #endif // _DEBUG
 
+
 			uint32_t newCondition = EnemyCondition::NoneMove;
 			enemy1->SetCondition(newCondition);
+
 		}
 
 
 
+		
+	}
 
-		//uint32_t newCondition = EnemyCondition::NoneMove;
-		//enemy1->SetCondition(newCondition);
+	
+
+
+
+
+
+	//追跡
+	if (condition == EnemyCondition::Tracking) {
+
+		//離れたらMoveへ
+		if (distance > TRACKING_START_DISTANCE_) {
+			condition = EnemyCondition::Move;
+			enemy1->SetCondition(condition);
+
+		}
+		
+
+
+		//設定した値より短くなったら攻撃開始
+		if (distance <= ATTACK_START_DISTANCE_ &&
+			MINIMUM_DISTANCE < distance) {
+
+			condition = EnemyCondition::Attack;
+			enemy1->SetCondition(condition);
+
+		}
+
+
 
 	}
 
+	//攻撃
+	if (condition == EnemyCondition::Attack) {
+		////攻撃し終わった後距離が離れていれば通常の動きに戻る
+		//離れていなければもう一回攻撃
+		if ((distance >= ATTACK_START_DISTANCE_ &&
+			distance < TRACKING_START_DISTANCE_)) {
+
+			condition = EnemyCondition::Move;
+			enemy1->SetCondition(condition);
+		}
+
+
+	}
 
 #ifdef _DEBUG
 	
 
 
 	ImGui::Begin("EnemyProject");
-	ImGui::InputFloat3("Difference", &enemyAndEnemyDifference.x);
-	ImGui::InputFloat3("projectVector", &projectVector.x);
-	ImGui::InputFloat3("differenceEnemyAndProject", &differenceEnemyAndProject.x);
-	ImGui::InputFloat3("1Direction", &direction.x);
-	ImGui::InputFloat("H", &projectDistance);
-	ImGui::InputFloat("Distance", &enemyAndEnemyDistance);
+	//ImGui::InputFloat3("Difference", &enemyAndEnemyDifference.x);
+	//ImGui::InputFloat3("projectVector", &projectVector.x);
+	//ImGui::InputFloat3("differenceEnemyAndProject", &differenceEnemyAndProject.x);
+	//ImGui::InputFloat3("1Direction", &direction.x);
+	//ImGui::InputFloat("H", &projectDistance);
+	//ImGui::InputFloat("Distance", &enemyAndEnemyDistance);
 
 	ImGui::End();
 
@@ -257,7 +234,7 @@ void EnemyManager::Update(){
 #endif // _DEBUG
 
 #ifdef _DEBUG
-	debugModelWorldTransform_.translate_ = projectVector;
+	//debugModelWorldTransform_.translate_ = projectVector;
 	debugModelWorldTransform_.Update();
 
 #endif // _DEBUG

@@ -5,11 +5,20 @@
 
 #include "SpotLight.h"
 #include <SingleCalculation.h>
+#include <numbers>
 
 void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	
 	model_.reset(Model::Create(modelHandle));
 	worldTransform_.Initialize();
+
+	worldTransform_.scale_ = { .x = SCALE_SIZE,.y = SCALE_SIZE ,.z = SCALE_SIZE };
+#ifdef _DEBUG
+	float DEBUG_SCALE = 1.0f;
+	worldTransform_.scale_ = { .x = DEBUG_SCALE,.y = DEBUG_SCALE ,.z = DEBUG_SCALE };
+#endif // _DEBUG
+
+
 	worldTransform_.translate_ = position;
 
 	material_.Initialize();
@@ -39,7 +48,8 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	debugModel_.reset(Model::Create(debugModelHandle));
 
 	debugModelWorldTransform_.Initialize();
-	debugModelWorldTransform_.scale_ = { 0.5f,0.5f,0.5f };
+	const float DEBUG_MODEL_SCALE = 0.25f;
+	debugModelWorldTransform_.scale_ = { .x= DEBUG_MODEL_SCALE,.y= DEBUG_MODEL_SCALE,.z= DEBUG_MODEL_SCALE };
 #endif // _DEBUG
 
 	
@@ -85,73 +95,70 @@ void Enemy::Update(){
 	
 		break;
 	
-	//case EnemyCondition::PreTracking:
-	//
-	//	#pragma region 追跡準備
-	//
-	//	#ifdef _DEBUG
-	//		ImGui::Begin("PreTracking");
-	//		ImGui::End();
-	//	#endif // DEBUG
-	//
-	//	//取得したら追跡
-	//	preTrackingPlayerPosition_ = playerPosition_;
-	//	preTrackingPosition_ = GetWorldPosition();
-	//	
-	//
-	//	#pragma endregion
-	//
-	//	condition_ = EnemyCondition::Tracking;
-	//
-	//	break;
-	//
-	//
-	//
-	//	//追跡
-	//case EnemyCondition::Tracking:
-	//
-	//	#pragma region 追跡処理
-	//
-	//	#ifdef _DEBUG
-	//		ImGui::Begin("Tracking");
-	//		ImGui::End();
-	//	#endif // DEBUG
-	//	t_ += 0.005f;
-	//	worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
-	//	
-	//	//向きを求める
-	//	direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_,preTrackingPosition_);
-	//	direction_ = VectorCalculation::Normalize(direction_);
-	//
-	//	#pragma endregion
-	//
-	//
-	//
-	//	break;
-	//
-	//	//攻撃
-	//case EnemyCondition::Attack:
-	//	attackTime_ += 1;
-	//	
-	//	if (attackTime_ > 1 && attackTime_ <= 160) {
-	//	#ifdef _DEBUG
-	//		ImGui::Begin("Attack");
-	//		ImGui::End();
-	//	#endif // DEBUG
-	//	}
-	//
-	//	if (attackTime_ > 180) {
-	//		attackTime_ = 0;
-	//	}
-	//
-	//
-	//
-	//
+	case EnemyCondition::PreTracking:
+	
+		#pragma region 追跡準備
+	
+		#ifdef _DEBUG
+			ImGui::Begin("PreTracking");
+			ImGui::End();
+		#endif // DEBUG
+	
+		//取得したら追跡
+		preTrackingPlayerPosition_ = playerPosition_;
+		preTrackingPosition_ = GetWorldPosition();
+		
+	
+		#pragma endregion
+	
+		condition_ = EnemyCondition::Tracking;
+	
+		break;
+	
+	
+	
+		//追跡
+	case EnemyCondition::Tracking:
+	
+		#pragma region 追跡処理
+	
+		#ifdef _DEBUG
+			ImGui::Begin("Tracking");
+			ImGui::End();
+		#endif // DEBUG
+		t_ += 0.005f;
+		worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
+		
+		//向きを求める
+		direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_,preTrackingPosition_);
+		direction_ = VectorCalculation::Normalize(direction_);
+	
+		#pragma endregion
+
+		break;
+	
+		//攻撃
+	case EnemyCondition::Attack:
+		attackTime_ += 1;
+		
+		if (attackTime_ > 60 && attackTime_ <= 180) {
+		#ifdef _DEBUG
+			ImGui::Begin("Attack");
+			ImGui::End();
+		#endif // DEBUG
+		}
+	
+		//4秒経ったらまた0になる
+		if (attackTime_ > 240) {
+			attackTime_ = 0;
+		}
+	
 	}
-
-	//direction_ = VectorCalculation::Normalize(speed_);
-	//worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speed_);
-
+	//向きを計算しモデルを回転させる
+	float directionToRotateY = std::atan2f(direction_.z,direction_.x);
+	const float ROTATE_OFFSET = std::numbers::pi_v<float>;
+	worldTransform_.rotate_.y = directionToRotateY+ ROTATE_OFFSET;
+	
 
 #ifdef _DEBUG
 	const float INTERVAL = 3.0f;
@@ -168,9 +175,12 @@ void Enemy::Update(){
 
 
 #ifdef _DEBUG
+	float degreeRotateY = directionToRotateY * (180.0f / std::numbers::pi_v<float>);
+
 	ImGui::Begin("Enemy");
 	ImGui::InputFloat("T", &t_);
 	ImGui::InputFloat3("direction_", &direction_.x);
+	ImGui::InputFloat("RotateY", &degreeRotateY);
 	ImGui::InputFloat3("Speed", &direction_.x);
 
 	ImGui::InputFloat3("Position", &worldTransform_.translate_.x);

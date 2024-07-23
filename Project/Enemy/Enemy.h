@@ -167,6 +167,8 @@ private:
 private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
+	const float SCALE_SIZE = 8.0f;
+	//移動速度
 	Vector3 preSpeed_ = {};
 	Vector3 speed_ = {};
 

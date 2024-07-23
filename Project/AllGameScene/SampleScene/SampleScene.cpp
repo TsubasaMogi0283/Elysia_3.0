@@ -61,9 +61,15 @@ void SampleScene::Initialize() {
 	
 	#pragma region 敵
 
-
+	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\External\Model\01_HalloweenItems00\01_HalloweenItems00\EditedGLTF\Ghost.gltf"
 	//"Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/obj","HalloweenItem_Ghost01.obj"
+	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
+#ifdef _DEBUG
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD2_Enemy", "TD2_Enemy.obj");
+
+#endif // _DEBUG
+
+	
 	enemyManager_ = std::make_unique<EnemyManager>();
 	enemyManager_->SetPlayer(player_);
 	enemyManager_->Initialize(enemyModelHandle_);
