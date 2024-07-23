@@ -88,13 +88,20 @@ void EnemyManager::Update(){
 	Vector3 playerPosition = player_->GetWorldPosition();
 	const float ATTACK_DISTANCE_OFFSET = 0.0f;
 	float MINIMUM_DISTANCE = player_->GetRadius() + enemy1->GetRadius() + ATTACK_DISTANCE_OFFSET;
-	
+	MINIMUM_DISTANCE;
 	Vector3 difference = VectorCalculation::Subtract(playerPosition, enemy1->GetWorldPosition());
 	float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
 	
 	
 	uint32_t condition = enemy1->GetCondition();
 	
+	//通常時
+	if (distance > TRACKING_START_DISTANCE_) {
+		condition = EnemyCondition::Move;
+		enemy1->SetCondition(condition);
+
+	}
+
 	//移動
 	if (condition == EnemyCondition::Move) {
 		
@@ -107,16 +114,6 @@ void EnemyManager::Update(){
 	}
 	
 	
-	
-	
-	
-	
-
-
-
-
-
-
 	enemy1->SetPlayerPosition(playerPosition);
 	enemy2->SetPlayerPosition(playerPosition);
 
@@ -192,10 +189,10 @@ void EnemyManager::Update(){
 		//設定した値より短くなったら攻撃開始
 		if (distance <= ATTACK_START_DISTANCE_ &&
 			MINIMUM_DISTANCE < distance) {
-
+		
 			condition = EnemyCondition::Attack;
 			enemy1->SetCondition(condition);
-
+		
 		}
 
 
@@ -204,14 +201,13 @@ void EnemyManager::Update(){
 
 	//攻撃
 	if (condition == EnemyCondition::Attack) {
-		////攻撃し終わった後距離が離れていれば通常の動きに戻る
+		//攻撃し終わった後距離が離れていれば通常の動きに戻る
 		//離れていなければもう一回攻撃
-		if ((distance >= ATTACK_START_DISTANCE_ &&
-			distance < TRACKING_START_DISTANCE_)) {
-
-			condition = EnemyCondition::Move;
-			enemy1->SetCondition(condition);
-		}
+		//if (distance >= ATTACK_START_DISTANCE_ ) {
+		//
+		//	condition = EnemyCondition::Move;
+		//	enemy1->SetCondition(condition);
+		//}
 
 
 	}
