@@ -20,6 +20,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 	//半径
 	radius_ = 0.5f;
+	preSpeed_ = speed;
 	speed_ = speed;
 	//色
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
@@ -64,6 +65,7 @@ void Enemy::Update(){
 	
 		//通常の動き
 	case EnemyCondition::Move:
+		speed_ = preSpeed_;
 		#ifdef _DEBUG
 		ImGui::Begin("Move");
 		ImGui::End();
@@ -169,6 +171,8 @@ void Enemy::Update(){
 	ImGui::Begin("Enemy");
 	ImGui::InputFloat("T", &t_);
 	ImGui::InputFloat3("direction_", &direction_.x);
+	ImGui::InputFloat3("Speed", &direction_.x);
+
 	ImGui::InputFloat3("Position", &worldTransform_.translate_.x);
 	ImGui::InputFloat3("preTrackingPlayerPosition", &preTrackingPlayerPosition_.x);
 	ImGui::InputFloat3("preTrackingPosition_", &preTrackingPosition_.x);

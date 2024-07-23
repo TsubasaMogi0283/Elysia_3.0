@@ -20,6 +20,9 @@ void SampleScene::Initialize() {
 	isFadeIn = true;
 	isFadeOut_ = false;
 
+
+
+
 #pragma endregion
 
 	#pragma region プレイヤー
@@ -57,6 +60,9 @@ void SampleScene::Initialize() {
 	#pragma endregion
 	
 	#pragma region 敵
+
+
+	//"Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/obj","HalloweenItem_Ghost01.obj"
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD2_Enemy", "TD2_Enemy.obj");
 	enemyManager_ = std::make_unique<EnemyManager>();
 	enemyManager_->SetPlayer(player_);
@@ -160,6 +166,14 @@ void SampleScene::Initialize() {
 	flashLight_ = std::make_unique<FlashLight>();
 	flashLight_->Initialize();
 	
+
+
+#ifdef _DEBUG
+	isFadeIn = false;
+	isGamePlay_ = true;
+#endif // _DEBUG
+
+
 }
 
 
@@ -522,14 +536,16 @@ void SampleScene::Update(GameManager* gameManager) {
 		}
 
 
-		//鍵の取得処理
+		#pragma region 鍵の取得処理
 		uint32_t keyQuantity = keyManager_->GetKeyQuantity();
 		//鍵が0より多ければ通る
 		if (keyQuantity > 0) {
 			KeyCollision();
 		}
 
-		//脱出
+		#pragma endregion
+
+		#pragma region 脱出
 		if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 
 			//Bボタンを押したとき
@@ -551,8 +567,6 @@ void SampleScene::Update(GameManager* gameManager) {
 			}
 
 		}
-
-
 
 
 		//ゲート
@@ -612,23 +626,14 @@ void SampleScene::Update(GameManager* gameManager) {
 			isFadeOut_ = true;
 			
 		}
+		#pragma endregion
 
 
-		//ライト確認用のタワー
-		debugTowerWorldTransform_.Update();
-
-		//プレイヤーの更新
-		player_->Update();
-
+		
 		//鍵
 		keyManager_->Update();
 
-		//地面
-		ground_->Update();
-
-		//門
-		gate_->Update();
-
+		
 		//ライト
 		Vector3 lightDirection = flashLight_->GetDirection();
 		lightCollision_->Update(player_->GetWorldPosition(), lightDirection);
@@ -640,10 +645,6 @@ void SampleScene::Update(GameManager* gameManager) {
 		collisionManager_->CheckAllCollision();
 
 		
-
-		debugFanCollisionSphereWorldTransform_.Update();
-		debugFanCollisionSphereMaterial_.Update();
-
 
 
 
@@ -664,6 +665,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 	
 	if (isFadeOut_ == true) {
+		player_->SetIsAbleToControll(false);
 		const float FADE_OUT_INTERVAL = 0.01f;
 		fadeTransparency_ += FADE_OUT_INTERVAL;
 		fadeSprite_->SetTransparency(fadeTransparency_);
@@ -679,7 +681,25 @@ void SampleScene::Update(GameManager* gameManager) {
 	//カメラの更新
 	camera_.Update();
 
-	
+	//地面
+	ground_->Update();
+
+	//門
+	gate_->Update();
+
+	//プレイヤーの更新
+	player_->Update();
+
+
+	//ライト確認用のタワー
+	debugTowerWorldTransform_.Update();
+
+	debugFanCollisionSphereWorldTransform_.Update();
+	debugFanCollisionSphereMaterial_.Update();
+
+
+
+
 }
 
 void SampleScene::DrawSpriteBack(){

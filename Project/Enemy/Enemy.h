@@ -167,6 +167,7 @@ private:
 private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
+	Vector3 preSpeed_ = {};
 	Vector3 speed_ = {};
 
 	//モデル
