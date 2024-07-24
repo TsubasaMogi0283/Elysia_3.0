@@ -197,6 +197,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Player\Player.cpp" />
     <ClCompile Include="Project\Stage\Gate\Gate.cpp" />
     <ClCompile Include="Project\Stage\Ground\Ground.cpp" />
+    <ClCompile Include="Project\Stage\Skydome\Skydome.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\AnimationObject3D\AnimationObject3D.PS.hlsl">
@@ -471,6 +472,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Stage\Gate\Gate.h" />
     <ClInclude Include="Project\Stage\Ground\Ground.h" />
     <ClInclude Include="Project\Stage\Ground\StageRect.h" />
+    <ClInclude Include="Project\Stage\Skydome\Skydome.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -3,6 +3,8 @@
 #include <memory>
 #include <list>
 
+#include "Stage/Ground/StageRect.h"
+
 struct Camera;
 struct SpotLight;
 class Player;
@@ -63,6 +65,13 @@ public:
 		this->player_=player;
 	}
 	
+	/// <summary>
+	/// ステージの四隅を取得
+	/// </summary>
+	/// <param name="stageRect"></param>
+	void SetStageRectangle(StageRect& stageRect) {
+		this->stageRect_ = stageRect;
+	}
 
 private:
 	Player* player_ = nullptr;
@@ -77,7 +86,7 @@ private:
 	Enemy* enemy1 = nullptr;
 	Enemy* enemy2 = nullptr;
 
-
+	StageRect stageRect_ = {};
 
 	//モデル
 	std::unique_ptr<Model> debugModel_ = nullptr;

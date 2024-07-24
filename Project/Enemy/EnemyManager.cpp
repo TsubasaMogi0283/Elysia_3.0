@@ -20,9 +20,10 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	enemy1->SetRadius_(player_->GetRadius());
 	//enemyes_.push_back(enemy1);
 
+	z = position1.z;
 
 	enemy2 = new Enemy();
-	Vector3 position2 = { 5.0f,0.0f,1.0f };
+	Vector3 position2 = { 5.0f,0.0f,9.0f };
 	enemy2->Initialize(modelHandle_, position2, { 0.0f,0.0f,-0.0f });
 	enemy2->SetRadius_(player_->GetRadius());
 	//enemyes_.push_back(enemy2);
@@ -80,10 +81,11 @@ void EnemyManager::Update(){
 
 	//接近するときの距離
 	const float TRACKING_START_DISTANCE_ = 10.0f;
-	
+	TRACKING_START_DISTANCE_;
 	//攻撃するときの距離
 	const float ATTACK_START_DISTANCE_ = 6.0f;
-	
+	ATTACK_START_DISTANCE_;
+
 	//プレイヤーの座標
 	Vector3 playerPosition = player_->GetWorldPosition();
 	const float ATTACK_DISTANCE_OFFSET = 0.0f;
@@ -91,27 +93,27 @@ void EnemyManager::Update(){
 	MINIMUM_DISTANCE;
 	Vector3 difference = VectorCalculation::Subtract(playerPosition, enemy1->GetWorldPosition());
 	float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
-	
+	distance;
 	
 	uint32_t condition = enemy1->GetCondition();
 	
 	//通常時
-	if (distance > TRACKING_START_DISTANCE_) {
-		condition = EnemyCondition::Move;
-		enemy1->SetCondition(condition);
-
-	}
-
-	//移動
-	if (condition == EnemyCondition::Move) {
-		
-		//設定した値より短くなったら接近開始
-		if (distance <= TRACKING_START_DISTANCE_) {
-			condition = EnemyCondition::PreTracking;
-			enemy1->SetCondition(condition);
-
-		}
-	}
+	//if (distance > TRACKING_START_DISTANCE_) {
+	//	condition = EnemyCondition::Move;
+	//	enemy1->SetCondition(condition);
+	//
+	//}
+	//
+	////移動
+	//if (condition == EnemyCondition::Move) {
+	//	
+	//	//設定した値より短くなったら接近開始
+	//	if (distance <= TRACKING_START_DISTANCE_) {
+	//		condition = EnemyCondition::PreTracking;
+	//		enemy1->SetCondition(condition);
+	//
+	//	}
+	//}
 	
 	
 	enemy1->SetPlayerPosition(playerPosition);
@@ -122,7 +124,7 @@ void EnemyManager::Update(){
 	enemy1->Update();
 	enemy2->Update();
 
-
+	enemy1->SetPositionZ(z);
 
 	//差分ベクトル
 	Vector3 enemy1Position = enemy1->GetWorldPosition();
@@ -144,17 +146,18 @@ void EnemyManager::Update(){
 	float projectDistance= sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
 
 
-	//進行方向にいたら
-	if (enemyRadius1 + enemyRadius2 > projectDistance) {
+	//進行方向上にいたら
+	if ((enemyRadius1 + enemyRadius2 > projectDistance)&&
+		(condition== EnemyCondition::Move || condition == EnemyCondition::Tracking)) {
 #ifdef _DEBUG
-		ImGui::Begin("Touch");
+		ImGui::Begin("On the direction of progress");
 		ImGui::End();
 #endif // _DEBUG
 
 		//接触していたら
 		if (enemyAndEnemyDistance < enemyRadius1 + enemyRadius2) {
 #ifdef _DEBUG
-			ImGui::Begin("CompleteTouch");
+			ImGui::Begin("Touch");
 			ImGui::End();
 #endif // _DEBUG
 			
@@ -163,10 +166,26 @@ void EnemyManager::Update(){
 			enemy1->SetCondition(newCondition);
 
 		}
+		//接触していない
+		else {
+#ifdef _DEBUG
+			ImGui::Begin("NotTouch");
+			ImGui::End();
+#endif // _DEBUG
+
+			uint32_t newCondition = EnemyCondition::Move;
+			enemy1->SetCondition(newCondition);
+
+		}
 
 
 
 		
+	}
+	if (enemyRadius1 + enemyRadius2 < projectDistance) {
+		uint32_t newCondition = EnemyCondition::Move;
+		enemy1->SetCondition(newCondition);
+
 	}
 
 	
@@ -175,35 +194,59 @@ void EnemyManager::Update(){
 
 
 
-	//追跡
-	if (condition == EnemyCondition::Tracking) {
+	////追跡
+	//if (condition == EnemyCondition::Tracking) {
+	//
+	//	//離れたらMoveへ
+	//	if (distance > TRACKING_START_DISTANCE_) {
+	//		condition = EnemyCondition::Move;
+	//		enemy1->SetCondition(condition);
+	//
+	//	}
+	//	
+	//
+	//
+	//	//設定した値より短くなったら攻撃開始
+	//	if (distance <= ATTACK_START_DISTANCE_ &&
+	//		MINIMUM_DISTANCE < distance) {
+	//	
+	//		condition = EnemyCondition::Attack;
+	//		enemy1->SetCondition(condition);
+	//	
+	//	}
+	//
+	//
+	//
+	//}
 
-		//離れたらMoveへ
-		if (distance > TRACKING_START_DISTANCE_) {
-			condition = EnemyCondition::Move;
-			enemy1->SetCondition(condition);
-
-		}
-		
-
-
-		//設定した値より短くなったら攻撃開始
-		if (distance <= ATTACK_START_DISTANCE_ &&
-			MINIMUM_DISTANCE < distance) {
-		
-			condition = EnemyCondition::Attack;
-			enemy1->SetCondition(condition);
-		
-		}
 
 
 
-	}
+
+	////ステージの外に行かないようにする
+	////左
+	//if (stageRect_.leftBack.x < enemy1->GetWorldPosition().x - enemy1->GetRadius()) {
+	//	enemy1->InvertSpeedX();
+	//}
+	////右
+	//if (stageRect_.rightBack.x > enemy1->GetWorldPosition().x + enemy1->GetRadius()) {
+	//	enemy1->InvertSpeedX();
+	//}
+	////後ろ
+	//if (stageRect_.leftBack.z < enemy1->GetWorldPosition().z + enemy1->GetRadius()) {
+	//	enemy1->InvertSpeedZ();
+	//}
+	////前
+	//if (stageRect_.leftFront.z > enemy1->GetWorldPosition().z - enemy1->GetRadius()) {
+	//	enemy1->InvertSpeedZ();
+	//}
 
 
 #ifdef _DEBUG
 	
-
+	ImGui::Begin("Enemy1");
+	ImGui::SliderFloat("Z", &z, -10.0f, 10.0f);
+	ImGui::End();
 
 	ImGui::Begin("EnemyProject");
 	//ImGui::InputFloat3("Difference", &enemyAndEnemyDifference.x);
@@ -219,7 +262,6 @@ void EnemyManager::Update(){
 #endif // _DEBUG
 
 #ifdef _DEBUG
-	//debugModelWorldTransform_.translate_ = projectVector;
 	debugModelWorldTransform_.Update();
 
 #endif // _DEBUG

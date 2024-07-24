@@ -107,6 +107,20 @@ public:
 #pragma endregion
 
 
+#pragma region スピードの反転
+	inline void InvertSpeedX() {
+		this->speed_.x *= -1.0f;
+	}
+	inline void InvertSpeedY() {
+		this->speed_.y *= -1.0f;
+	}
+	inline void InvertSpeedZ() {
+		this->speed_.z *= -1.0f;
+	}
+
+#pragma endregion
+
+
 	/// <summary>
 	/// 生きているかのフラグを取得
 	/// </summary>

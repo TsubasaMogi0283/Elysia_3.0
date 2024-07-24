@@ -31,6 +31,7 @@
 #include <Stage/Gate/Gate.h>
 #include <Fan.h>
 #include "Collision.h"
+#include <Stage/Skydome/Skydome.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -144,6 +145,9 @@ private:
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
 	bool isEscape_ = false;
+
+	//天球
+	std::unique_ptr<Skydome> skydome_ = nullptr;
 
 	//鍵
 	std::unique_ptr<KeyManager> keyManager_ = {};

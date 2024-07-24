@@ -16,10 +16,10 @@ void DirectionalLight::Initialize(){
 }
 
 void DirectionalLight::Update(){
-	bufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLight_));
-	directionalLight_->color = color_;
-	directionalLight_->direction = direction_;
-	directionalLight_->intensity = intensity_;
+	bufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
+	directionalLightData_->color = color_;
+	directionalLightData_->direction = direction_;
+	directionalLightData_->intensity = intensity_;
 	bufferResource_->Unmap(0, nullptr);
 }
 

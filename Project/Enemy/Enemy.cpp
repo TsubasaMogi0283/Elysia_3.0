@@ -57,7 +57,6 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 
 void Enemy::Update(){
-	playerPosition_;
 	
 	switch (condition_) {
 		//何も攻撃しない

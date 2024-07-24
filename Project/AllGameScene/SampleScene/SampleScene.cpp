@@ -59,6 +59,11 @@ void SampleScene::Initialize() {
 	
 	#pragma endregion
 	
+	uint32_t skydomeModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Game/Skydome","Skydome.obj");
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Initialize(skydomeModelHandle);
+
+
 	#pragma region 敵
 
 	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\External\Model\01_HalloweenItems00\01_HalloweenItems00\EditedGLTF\Ghost.gltf"
@@ -146,16 +151,13 @@ void SampleScene::Initialize() {
 
 	
 	textureDisplayNumber_ = 0;
-
-
-
 #pragma endregion
 
 	isGamePlay_ = false;
 	isExplain_ = false;
 	//ステージ
 	player_->SetStageRect(stageRect);
-	
+	enemyManager_->SetStageRectangle(stageRect);
 	
 	collisionManager_ = std::make_unique<CollisionManager>();
 	
@@ -175,8 +177,8 @@ void SampleScene::Initialize() {
 
 
 #ifdef _DEBUG
-	isFadeIn = false;
-	isGamePlay_ = true;
+	//isFadeIn = false;
+	//isGamePlay_ = true;
 #endif // _DEBUG
 
 
@@ -693,6 +695,9 @@ void SampleScene::Update(GameManager* gameManager) {
 	//門
 	gate_->Update();
 
+	//天球
+	skydome_->Update();
+
 	//プレイヤーの更新
 	player_->Update();
 
@@ -735,6 +740,8 @@ void SampleScene::DrawObject3D() {
 	gate_->Draw(camera_, spotLight);
 	//敵
 	enemyManager_->Draw(camera_, spotLight);
+	//天球
+	skydome_->Draw(camera_);
 
 	//懐中電灯
 	flashLight_->Draw(camera_);
@@ -775,9 +782,11 @@ void SampleScene::DrawSprite(){
 	
 	if (textureDisplayNumber_ == 1) {
 		explanation_[0]->Draw();
+		spaceToNext_[0]->Draw();
 	}
 	if (textureDisplayNumber_ == 2) {
 		explanation_[1]->Draw();
+		spaceToNext_[1]->Draw();
 	}
 	
 	//鍵
