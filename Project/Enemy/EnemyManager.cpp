@@ -146,16 +146,25 @@ void EnemyManager::Update(){
 	float projectDistance= sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
 
 
+	Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
+	dot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
+
+
 	//進行方向上にいたら
 	if ((enemyRadius1 + enemyRadius2 > projectDistance)&&
 		(condition== EnemyCondition::Move || condition == EnemyCondition::Tracking)) {
+
+		
+
 #ifdef _DEBUG
 		ImGui::Begin("On the direction of progress");
+		
 		ImGui::End();
 #endif // _DEBUG
 
+		
 		//接触していたら
-		if (enemyAndEnemyDistance < enemyRadius1 + enemyRadius2) {
+		if ((enemyAndEnemyDistance < enemyRadius1 + enemyRadius2)&& dot) {
 #ifdef _DEBUG
 			ImGui::Begin("Touch");
 			ImGui::End();
@@ -246,16 +255,19 @@ void EnemyManager::Update(){
 	
 	ImGui::Begin("Enemy1");
 	ImGui::SliderFloat("Z", &z, -10.0f, 10.0f);
+	ImGui::InputFloat("dot", &dot);
 	ImGui::End();
 
 	ImGui::Begin("EnemyProject");
-	//ImGui::InputFloat3("Difference", &enemyAndEnemyDifference.x);
-	//ImGui::InputFloat3("projectVector", &projectVector.x);
-	//ImGui::InputFloat3("differenceEnemyAndProject", &differenceEnemyAndProject.x);
-	//ImGui::InputFloat3("1Direction", &direction.x);
-	//ImGui::InputFloat("H", &projectDistance);
-	//ImGui::InputFloat("Distance", &enemyAndEnemyDistance);
 
+	ImGui::InputFloat3("Difference", &enemyAndEnemyDifference.x);
+	ImGui::InputFloat3("projectVector", &projectVector.x);
+	ImGui::InputFloat3("differenceEnemyAndProject", &differenceEnemyAndProject.x);
+	ImGui::InputFloat3("1Direction", &direction.x);
+	ImGui::InputFloat("H", &projectDistance);
+	
+	ImGui::InputFloat("Distance", &enemyAndEnemyDistance);
+	
 	ImGui::End();
 
 
