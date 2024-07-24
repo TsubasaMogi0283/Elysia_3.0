@@ -14,11 +14,13 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 
 	//TLのレベルエディターでやってもいいかも！
+	Enemy* enemy1 = nullptr;
+	Enemy* enemy2 = nullptr;
 	enemy1 = new Enemy();
 	Vector3 position1 = {0.0f,0.0f,9.0f };
 	enemy1->Initialize(modelHandle_, position1, { 0.01f,0.0f,0.00f });
 	enemy1->SetRadius_(player_->GetRadius());
-	//enemyes_.push_back(enemy1);
+	enemyes_.push_back(enemy1);
 
 	z = position1.z;
 
@@ -26,7 +28,7 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	Vector3 position2 = { 5.0f,0.0f,9.0f };
 	enemy2->Initialize(modelHandle_, position2, { 0.0f,0.0f,-0.0f });
 	enemy2->SetRadius_(player_->GetRadius());
-	//enemyes_.push_back(enemy2);
+	enemyes_.push_back(enemy2);
 
 
 
@@ -95,8 +97,6 @@ void EnemyManager::Update(){
 	//float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
 	//distance;
 	
-	uint32_t condition = enemy1->GetCondition();
-	
 	//通常時
 	//if (distance > TRACKING_START_DISTANCE_) {
 	//	condition = EnemyCondition::Move;
@@ -131,7 +131,7 @@ void EnemyManager::Update(){
 	
 
 	
-	//enemy1->SetPositionZ(z);
+	//
 
 	//差分ベクトル
 	//Vector3 enemy1Position = enemy1->GetWorldPosition();
@@ -142,20 +142,22 @@ void EnemyManager::Update(){
 
 	for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
 		for (std::list<Enemy*>::iterator it2 = std::next(it1); it2 != enemyes_.end(); ++it2) {
-			Enemy* enemy1 = *it1;
-			Enemy* enemy2 = *it2;
+			//Enemy* enemy1 = *it1;
+			//Enemy* enemy2 = *it2;
 
 			//ワールド座標
-			Vector3 enemy1Position = enemy1->GetWorldPosition();
-			Vector3 enemy2Position = enemy2->GetWorldPosition();
+			Vector3 enemy1Position = (*it1)->GetWorldPosition();
+			Vector3 enemy2Position = (*it2)->GetWorldPosition();
 			//半径
-			float enemyRadius1 = enemy1->GetRadius();
-			float enemyRadius2 = enemy2->GetRadius();
+			float enemyRadius1 = (*it1)->GetRadius();
+			float enemyRadius2 = (*it2)->GetRadius();
 
 			//向き
-			Vector3 direction = enemy1->GetDirection();
+			Vector3 direction = (*it1)->GetDirection();
 			Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
 			float enemyAndEnemyDistance = sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
+
+			(*it1)->SetPositionZ(z);
 
 			// 正射影ベクトルを求める
 			Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
@@ -163,7 +165,7 @@ void EnemyManager::Update(){
 			Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(enemyAndEnemyDifference, projectVector);
 			float projectDistance = sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
 
-			uint32_t condition = enemy1->GetCondition();
+			uint32_t condition = (*it1)->GetCondition();
 
 			// 進行方向上にいたら
 			if ((enemyRadius1 + enemyRadius2 > projectDistance) &&
@@ -183,7 +185,7 @@ void EnemyManager::Update(){
 					#endif // _DEBUG
 
 					uint32_t newCondition = EnemyCondition::NoneMove;
-					enemy1->SetCondition(newCondition);
+					(*it1)->SetCondition(newCondition);
 				}
 				// 接触していない
 				else {
@@ -194,19 +196,19 @@ void EnemyManager::Update(){
 					#endif // _DEBUG
 
 					uint32_t newCondition = EnemyCondition::Move;
-					enemy1->SetCondition(newCondition);
+					(*it1)->SetCondition(newCondition);
 				}
 			}
 
 			if (enemyRadius1 + enemyRadius2 <= projectDistance) {
-
+				uint32_t newCondition = EnemyCondition::Move;
+				(*it1)->SetCondition(newCondition);
 				if (condition == EnemyCondition::Move) {
-					uint32_t newCondition = EnemyCondition::Move;
-					enemy1->SetCondition(newCondition);
+					
 				}
 				if (condition == EnemyCondition::Tracking) {
-					uint32_t newCondition = EnemyCondition::Tracking;
-					enemy1->SetCondition(newCondition);
+					//uint32_t newCondition = EnemyCondition::Tracking;
+					//(*it1)->SetCondition(newCondition);
 				}
 				
 			}
@@ -373,16 +375,16 @@ void EnemyManager::Draw(Camera& camera, SpotLight& spotLight){
 		enemy->Draw(camera,spotLight);
 	}
 
-	enemy1->Draw(camera, spotLight);
-	enemy2->Draw(camera, spotLight);
+	//enemy1->Draw(camera, spotLight);
+	//enemy2->Draw(camera, spotLight);
 }
 
 EnemyManager::~EnemyManager(){
 	for (Enemy* enemy : enemyes_) {
 		delete enemy;
 	}
-	delete enemy1;
-	delete enemy2;
+	//delete enemy1;
+	//delete enemy2;
 
 
 }
