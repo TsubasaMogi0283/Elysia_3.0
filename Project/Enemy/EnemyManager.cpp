@@ -18,7 +18,7 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	Vector3 position1 = {0.0f,0.0f,9.0f };
 	enemy1->Initialize(modelHandle_, position1, { 0.01f,0.0f,0.00f });
 	enemy1->SetRadius_(player_->GetRadius());
-	//enemyes_.push_back(enemy);
+	//enemyes_.push_back(enemy1);
 
 
 	enemy2 = new Enemy();
@@ -144,19 +144,20 @@ void EnemyManager::Update(){
 	float projectDistance= sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
 
 
-	
-	if (enemyAndEnemyDistance < enemyRadius1 + enemyRadius2) {
+	//進行方向にいたら
+	if (enemyRadius1 + enemyRadius2 > projectDistance) {
 #ifdef _DEBUG
 		ImGui::Begin("Touch");
 		ImGui::End();
 #endif // _DEBUG
 
-		if (enemyRadius1 + enemyRadius2 > projectDistance) {
+		//接触していたら
+		if (enemyAndEnemyDistance < enemyRadius1 + enemyRadius2) {
 #ifdef _DEBUG
 			ImGui::Begin("CompleteTouch");
 			ImGui::End();
 #endif // _DEBUG
-
+			
 
 			uint32_t newCondition = EnemyCondition::NoneMove;
 			enemy1->SetCondition(newCondition);
@@ -199,18 +200,6 @@ void EnemyManager::Update(){
 
 	}
 
-	//攻撃
-	if (condition == EnemyCondition::Attack) {
-		//攻撃し終わった後距離が離れていれば通常の動きに戻る
-		//離れていなければもう一回攻撃
-		//if (distance >= ATTACK_START_DISTANCE_ ) {
-		//
-		//	condition = EnemyCondition::Move;
-		//	enemy1->SetCondition(condition);
-		//}
-
-
-	}
 
 #ifdef _DEBUG
 	

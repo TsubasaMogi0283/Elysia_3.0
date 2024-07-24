@@ -34,7 +34,10 @@ void Ellysia::Initialize(){
 
 	//COMを使用して開発されたソフトウェア部品をCOMコンポーネントと呼ぶ
 	//Textureを読むにあたって、COMコンポーネントの１つを利用する
-	CoInitializeEx(0, COINIT_MULTITHREADED);
+	HRESULT hResult = {};
+	hResult=CoInitializeEx(0, COINIT_MULTITHREADED);
+
+	assert(SUCCEEDED(hResult));
 
 	//DirectX
 	DirectXSetup::GetInstance()->FirstInitialize();
@@ -184,6 +187,11 @@ void Ellysia::Operate(){
 
 			//更新処理
 			Update();
+
+			//ESCAPE押されたら終了
+			if (Input::GetInstance()->IsPushKey(DIK_ESCAPE)) {
+				break;
+			}
 
 
 			//描画
