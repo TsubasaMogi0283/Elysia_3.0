@@ -89,11 +89,11 @@ void EnemyManager::Update(){
 	//プレイヤーの座標
 	Vector3 playerPosition = player_->GetWorldPosition();
 	const float ATTACK_DISTANCE_OFFSET = 0.0f;
-	float MINIMUM_DISTANCE = player_->GetRadius() + enemy1->GetRadius() + ATTACK_DISTANCE_OFFSET;
+	float MINIMUM_DISTANCE = player_->GetRadius() +1.0f + ATTACK_DISTANCE_OFFSET;
 	MINIMUM_DISTANCE;
-	Vector3 difference = VectorCalculation::Subtract(playerPosition, enemy1->GetWorldPosition());
-	float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
-	distance;
+	//Vector3 difference = VectorCalculation::Subtract(playerPosition, enemy1->GetWorldPosition());
+	//float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
+	//distance;
 	
 	uint32_t condition = enemy1->GetCondition();
 	
@@ -115,87 +115,163 @@ void EnemyManager::Update(){
 	//	}
 	//}
 	
+
+	for (Enemy* enemy : enemyes_) {
+		enemy->SetPlayerPosition(playerPosition);
+		enemy->Update();
+	}
 	
-	enemy1->SetPlayerPosition(playerPosition);
-	enemy2->SetPlayerPosition(playerPosition);
+	//enemy1->SetPlayerPosition(playerPosition);
+	//enemy2->SetPlayerPosition(playerPosition);
+	//
+	//enemy1->Update();
+	//enemy2->Update();
 
-	material_.Update();
 
-	enemy1->Update();
-	enemy2->Update();
+	
 
-	enemy1->SetPositionZ(z);
+	
+	//enemy1->SetPositionZ(z);
 
 	//差分ベクトル
-	Vector3 enemy1Position = enemy1->GetWorldPosition();
-	Vector3 enemy2Position = enemy2->GetWorldPosition();
-	float enemyRadius1 = enemy1->GetRadius();
-	float enemyRadius2 = enemy2->GetRadius();
+	//Vector3 enemy1Position = enemy1->GetWorldPosition();
+	//Vector3 enemy2Position = enemy2->GetWorldPosition();
+	//float enemyRadius1 = enemy1->GetRadius();
+	//float enemyRadius2 = enemy2->GetRadius();
+
+
+	for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
+		for (std::list<Enemy*>::iterator it2 = std::next(it1); it2 != enemyes_.end(); ++it2) {
+			Enemy* enemy1 = *it1;
+			Enemy* enemy2 = *it2;
+
+			//ワールド座標
+			Vector3 enemy1Position = enemy1->GetWorldPosition();
+			Vector3 enemy2Position = enemy2->GetWorldPosition();
+			//半径
+			float enemyRadius1 = enemy1->GetRadius();
+			float enemyRadius2 = enemy2->GetRadius();
+
+			//向き
+			Vector3 direction = enemy1->GetDirection();
+			Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
+			float enemyAndEnemyDistance = sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
+
+			// 正射影ベクトルを求める
+			Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
+
+			Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(enemyAndEnemyDifference, projectVector);
+			float projectDistance = sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
+
+			uint32_t condition = enemy1->GetCondition();
+
+			// 進行方向上にいたら
+			if ((enemyRadius1 + enemyRadius2 > projectDistance) &&
+				(condition == EnemyCondition::Move || condition == EnemyCondition::Tracking)) {
+				
+				#ifdef _DEBUG
+				ImGui::Begin("On the direction of progress");
+				ImGui::End();
+				#endif // _DEBUG
+
+				// 接触していたら
+				if (enemyAndEnemyDistance < enemyRadius1 + enemyRadius2) {
+					
+					#ifdef _DEBUG
+					ImGui::Begin("Touch");
+					ImGui::End();
+					#endif // _DEBUG
+
+					uint32_t newCondition = EnemyCondition::NoneMove;
+					enemy1->SetCondition(newCondition);
+				}
+				// 接触していない
+				else {
+
+					#ifdef _DEBUG
+					ImGui::Begin("NotTouch");
+					ImGui::End();
+					#endif // _DEBUG
+
+					uint32_t newCondition = EnemyCondition::Move;
+					enemy1->SetCondition(newCondition);
+				}
+			}
+
+			if (enemyRadius1 + enemyRadius2 <= projectDistance) {
+
+				if (condition == EnemyCondition::Move) {
+					uint32_t newCondition = EnemyCondition::Move;
+					enemy1->SetCondition(newCondition);
+				}
+				if (condition == EnemyCondition::Tracking) {
+					uint32_t newCondition = EnemyCondition::Tracking;
+					enemy1->SetCondition(newCondition);
+				}
+				
+			}
+		
+		}
+	}
 
 	
 
-	Vector3 direction = enemy1->GetDirection();
-	Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
-	float enemyAndEnemyDistance= sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
-
-	//正射影ベクトルを求める
-	Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
-	
-
-	Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(enemyAndEnemyDifference, projectVector);
-	float projectDistance= sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
-
-
-	Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
-	dot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
-
-
-	//進行方向上にいたら
-	if ((enemyRadius1 + enemyRadius2 > projectDistance)&&
-		(condition== EnemyCondition::Move || condition == EnemyCondition::Tracking)) {
-
-		
-
-#ifdef _DEBUG
-		ImGui::Begin("On the direction of progress");
-		
-		ImGui::End();
-#endif // _DEBUG
-
-		
-		//接触していたら
-		if ((enemyAndEnemyDistance < enemyRadius1 + enemyRadius2)&& dot) {
-#ifdef _DEBUG
-			ImGui::Begin("Touch");
-			ImGui::End();
-#endif // _DEBUG
-			
-
-			uint32_t newCondition = EnemyCondition::NoneMove;
-			enemy1->SetCondition(newCondition);
-
-		}
-		//接触していない
-		else {
-#ifdef _DEBUG
-			ImGui::Begin("NotTouch");
-			ImGui::End();
-#endif // _DEBUG
-
-			uint32_t newCondition = EnemyCondition::Move;
-			enemy1->SetCondition(newCondition);
-
-		}
-
-
-
-		
-	}
-	if (enemyRadius1 + enemyRadius2 < projectDistance) {
-		uint32_t newCondition = EnemyCondition::Move;
-		enemy1->SetCondition(newCondition);
-
-	}
+//	Vector3 direction = enemy1->GetDirection();
+//	Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
+//	float enemyAndEnemyDistance= sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
+//
+//	//正射影ベクトルを求める
+//	Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
+//	Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(enemyAndEnemyDifference, projectVector);
+//	float projectDistance= sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
+//
+//
+//	Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
+//	dot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
+//
+//
+//	//進行方向上にいたら
+//	if ((enemyRadius1 + enemyRadius2 > projectDistance)&&
+//		(condition== EnemyCondition::Move || condition == EnemyCondition::Tracking)) {
+//
+//		
+//
+//#ifdef _DEBUG
+//		ImGui::Begin("On the direction of progress");
+//		
+//		ImGui::End();
+//#endif // _DEBUG
+//
+//		
+//		//接触していたら
+//		if ((enemyAndEnemyDistance < enemyRadius1 + enemyRadius2)&& dot) {
+//#ifdef _DEBUG
+//			ImGui::Begin("Touch");
+//			ImGui::End();
+//#endif // _DEBUG
+//			
+//
+//			uint32_t newCondition = EnemyCondition::NoneMove;
+//			enemy1->SetCondition(newCondition);
+//
+//		}
+//		//接触していない
+//		else {
+//#ifdef _DEBUG
+//			ImGui::Begin("NotTouch");
+//			ImGui::End();
+//#endif // _DEBUG
+//
+//			uint32_t newCondition = EnemyCondition::Move;
+//			enemy1->SetCondition(newCondition);
+//
+//		}
+//	}
+//	if (enemyRadius1 + enemyRadius2 < projectDistance) {
+//		uint32_t newCondition = EnemyCondition::Move;
+//		enemy1->SetCondition(newCondition);
+//
+//	}
 
 	
 
@@ -251,6 +327,8 @@ void EnemyManager::Update(){
 	//}
 
 
+	material_.Update();
+
 #ifdef _DEBUG
 	
 	ImGui::Begin("Enemy1");
@@ -258,17 +336,17 @@ void EnemyManager::Update(){
 	ImGui::InputFloat("dot", &dot);
 	ImGui::End();
 
-	ImGui::Begin("EnemyProject");
-
-	ImGui::InputFloat3("Difference", &enemyAndEnemyDifference.x);
-	ImGui::InputFloat3("projectVector", &projectVector.x);
-	ImGui::InputFloat3("differenceEnemyAndProject", &differenceEnemyAndProject.x);
-	ImGui::InputFloat3("1Direction", &direction.x);
-	ImGui::InputFloat("H", &projectDistance);
-	
-	ImGui::InputFloat("Distance", &enemyAndEnemyDistance);
-	
-	ImGui::End();
+	//ImGui::Begin("EnemyProject");
+	//
+	//ImGui::InputFloat3("Difference", &enemyAndEnemyDifference.x);
+	//ImGui::InputFloat3("projectVector", &projectVector.x);
+	//ImGui::InputFloat3("differenceEnemyAndProject", &differenceEnemyAndProject.x);
+	//ImGui::InputFloat3("1Direction", &direction.x);
+	//ImGui::InputFloat("H", &projectDistance);
+	//
+	//ImGui::InputFloat("Distance", &enemyAndEnemyDistance);
+	//
+	//ImGui::End();
 
 
 #endif // _DEBUG
