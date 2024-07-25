@@ -15,25 +15,23 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = { 5.0f,0.0f,9.0f };
+	Vector3 position1 = { 0.0f,0.0f,9.0f };
 	enemy1->Initialize(modelHandle_, position1, { 0.0f,0.0f,0.00f });
-	enemy1->SetRadius_(player_->GetRadius());
+	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
 	enemyes_.push_back(enemy1);
 
-	z = position1.z;
 
 	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = { 1.0f,0.0f,9.0f };
-	enemy2->Initialize(modelHandle_, position2, { 0.01f,0.0f,-0.0f });
-	enemy2->SetRadius_(player_->GetRadius());
+	Vector3 position2 = { -50.0f,0.0f,9.0f };
+	enemy2->Initialize(modelHandle_, position2, { -0.01f,0.0f,-0.0f });
+	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
 	enemyes_.push_back(enemy2);
-	z2 = position2.z;
 
-	//Enemy* enemy3 = new Enemy();
-	//Vector3 position3 = { 0.0f,0.0f,9.0f };
-	//enemy3->Initialize(modelHandle_, position3, { 0.00f,0.0f,0.0f });
-	//enemy3->SetRadius_(player_->GetRadius());
-	//enemyes_.push_back(enemy3);
+	Enemy* enemy3 = new Enemy();
+	Vector3 position3 = { 5.0f,0.0f,9.0f };
+	enemy3->Initialize(modelHandle_, position3, { -0.01f,0.0f,0.0f });
+	enemy3->SetRadius_(player_->GetRadius());
+	enemyes_.push_back(enemy3);
 
 
 	//モデル
@@ -125,8 +123,6 @@ void EnemyManager::Update(){
 		enemy->Update();
 	}
 	
-
-
 	//空じゃない時判定を取る
 	if (enemyes_.empty() == false) {
 		//昇順
@@ -136,17 +132,11 @@ void EnemyManager::Update(){
 				//ワールド座標
 				Vector3 enemy1Position = (*it1)->GetWorldPosition();
 				Vector3 enemy2Position = (*it2)->GetWorldPosition();
-				//半径
-				float enemyRadius1 = (*it1)->GetRadius();
-				float enemyRadius2 = (*it2)->GetRadius();
-
 				//向き
 				Vector3 direction = (*it1)->GetDirection();
 				Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
 				float enemyAndEnemyDistance = sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
-
-				(*it1)->SetPositionZ(z);
-				//(*it2)->SetPositionZ(z);
+				
 				// 正射影ベクトルを求める
 				Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
 				Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(enemyAndEnemyDifference, projectVector);
@@ -161,7 +151,7 @@ void EnemyManager::Update(){
 				uint32_t condition = (*it1)->GetCondition();
 
 				// 進行方向上にいたら
-				if ((enemyRadius1 + enemyRadius2 > projectDistance) &&
+				if ((ENEMY_SCALE_SIZE_*2.0f > projectDistance) &&
 					(condition == EnemyCondition::Move || condition == EnemyCondition::Tracking)) {
 				
 				#ifdef _DEBUG
@@ -170,7 +160,7 @@ void EnemyManager::Update(){
 				#endif // _DEBUG
 
 				// 接触していたら
-				if ((enemyAndEnemyDistance < enemyRadius1 + enemyRadius2)&& dot>0.0f) {
+				if ((enemyAndEnemyDistance < ENEMY_SCALE_SIZE_ * 2.0f)&& dot>0.0f) {
 					
 					#ifdef _DEBUG
 					ImGui::Begin("Touch");
@@ -193,7 +183,7 @@ void EnemyManager::Update(){
 				}
 			}
 				//いなかった場合
-				if (enemyRadius1 + enemyRadius2 <= projectDistance) {
+				if (ENEMY_SCALE_SIZE_ * 2.0f <= projectDistance) {
 					uint32_t newCondition = EnemyCondition::Move;
 					(*it1)->SetCondition(newCondition);
 					if (condition == EnemyCondition::Move) {
@@ -208,36 +198,27 @@ void EnemyManager::Update(){
 			}
 		}
 
-	//降順
-	
+		//降順
 		for (std::list<Enemy*>::iterator it1 = std::prev(enemyes_.end());; --it1) {
 
+			//最初に戻ってきたらbreakでループを抜ける
 			if (it1 == enemyes_.begin()) {
 				break;
 			}
 
 			for (std::list<Enemy*>::iterator it2 = std::prev(it1); ; --it2) {
 
-#ifdef _DEBUG
-				ImGui::Begin("aaaaaa");
-				ImGui::End();
-#endif // _DEBUG
 
 
 				//ワールド座標
 				Vector3 enemy1Position = (*it1)->GetWorldPosition();
 				Vector3 enemy2Position = (*it2)->GetWorldPosition();
-				//半径
-				float enemyRadius1 = (*it1)->GetRadius();
-				float enemyRadius2 = (*it2)->GetRadius();
 
 				//向き
 				Vector3 direction = (*it1)->GetDirection();
 				Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
 				float enemyAndEnemyDistance = sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
 
-				(*it2)->SetPositionZ(z2);
-				//(*it2)->SetPositionZ(z);
 				// 正射影ベクトルを求める
 				Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
 				Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(enemyAndEnemyDifference, projectVector);
@@ -252,19 +233,19 @@ void EnemyManager::Update(){
 				uint32_t condition = (*it1)->GetCondition();
 
 				// 進行方向上にいたら
-				if ((enemyRadius1 + enemyRadius2 > projectDistance) &&
+				if ((ENEMY_SCALE_SIZE_ * 2.0f > projectDistance) &&
 					(condition == EnemyCondition::Move || condition == EnemyCondition::Tracking)) {
 
 #ifdef _DEBUG
-					ImGui::Begin("On the direction of progress");
+					ImGui::Begin("222222On the direction of progress");
 					ImGui::End();
 #endif // _DEBUG
 
 					// 接触していたら
-					if ((enemyAndEnemyDistance < enemyRadius1 + enemyRadius2) && dot > 0.0f) {
+					if ((enemyAndEnemyDistance < ENEMY_SCALE_SIZE_ * 2.0f) && dot > 0.0f) {
 
 #ifdef _DEBUG
-						ImGui::Begin("Touch");
+						ImGui::Begin("22222222Touch");
 						ImGui::End();
 #endif // _DEBUG
 
@@ -275,7 +256,7 @@ void EnemyManager::Update(){
 					else {
 
 #ifdef _DEBUG
-						ImGui::Begin("NotTouch");
+						ImGui::Begin("222222NotTouch");
 						ImGui::End();
 #endif // _DEBUG
 
@@ -284,7 +265,7 @@ void EnemyManager::Update(){
 					}
 				}
 				//いなかった場合
-				if (enemyRadius1 + enemyRadius2 <= projectDistance) {
+				if (ENEMY_SCALE_SIZE_ * 2.0f <= projectDistance) {
 					uint32_t newCondition = EnemyCondition::Move;
 					(*it1)->SetCondition(newCondition);
 					if (condition == EnemyCondition::Move) {
@@ -308,12 +289,6 @@ void EnemyManager::Update(){
 		}
 	}
 	
-
-	
-
-
-
-
 
 	////追跡
 	//if (condition == EnemyCondition::Tracking) {
@@ -346,12 +321,6 @@ void EnemyManager::Update(){
 
 #ifdef _DEBUG
 	
-	ImGui::Begin("Enemy1");
-	ImGui::SliderFloat("Z", &z, -10.0f, 10.0f);
-	ImGui::SliderFloat("Z2", &z2, -10.0f, 10.0f);
-
-	ImGui::End();
-
 
 
 #endif // _DEBUG

@@ -177,8 +177,8 @@ void SampleScene::Initialize() {
 
 
 #ifdef _DEBUG
-	//isFadeIn = false;
-	//isGamePlay_ = true;
+	isFadeIn = false;
+	isGamePlay_ = true;
 #endif // _DEBUG
 
 
@@ -291,37 +291,22 @@ void SampleScene::Update(GameManager* gameManager) {
 
 #pragma region 回転
 
-#pragma region 横旋回
+#pragma region Y軸に旋回
 
 		//+が左回り
 		const float ROTATE_OFFSET = 0.025f;
+		//左を向く
 		if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
 			theta_ += ROTATE_OFFSET;
 			isRotateYKey_ = true;
 		}
+		//右を向く
 		if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
 			theta_ -= ROTATE_OFFSET;
 			isRotateYKey_ = true;
 		}
 
-		//コントローラーがある場合
-
-		isRotateYKey_ = false;
-		if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-			if (isRotateYKey_ == false) {
-				//やっぱりこっちも逆じゃんね☆
-				float rotateMove = (float)joyState.Gamepad.sThumbRX / SHRT_MAX * ROTATE_OFFSET;
-
-				//勝手に動いちゃうので制限を掛ける
-				const float MOVE_LIMITATION = 0.02f;
-				if (rotateMove < MOVE_LIMITATION && rotateMove > -MOVE_LIMITATION) {
-					rotateMove = 0.0f;
-				}
-				theta_ -= rotateMove;
-			}
-
-
-		}
+		
 
 		//2πより大きくなったら0にまた戻す
 		if (theta_ > 2.0f * std::numbers::pi_v<float>) {
@@ -336,7 +321,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 #pragma region X軸に旋回
 
-		isRotateXKey_ = false;
+		
 		//上を向く
 		if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
 			originPhi_ -= ROTATE_OFFSET;
@@ -348,21 +333,8 @@ void SampleScene::Update(GameManager* gameManager) {
 			isRotateXKey_ = true;
 		}
 
-		//コントローラがある場合
-		if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-			if (isRotateXKey_ == false) {
-				float rotateMove = (float)joyState.Gamepad.sThumbRY / SHRT_MAX * ROTATE_OFFSET;
 
-				//勝手に動くので制限を掛ける
-				const float MOVE_LIMITATION = 0.02f;
-				if (rotateMove < MOVE_LIMITATION && rotateMove > -MOVE_LIMITATION) {
-					rotateMove = 0.0f;
-				}
-				originPhi_ -= rotateMove;
-			}
-		}
-
-
+		
 
 		//±π/6くらいに制限を掛けておきたい
 		//それ以下以上だと首が大変なことになっているように見えるからね
@@ -374,6 +346,40 @@ void SampleScene::Update(GameManager* gameManager) {
 		}
 
 #pragma endregion
+
+#pragma region コントローラーの回転
+
+		isRotateXKey_ = false;
+		isRotateYKey_ = false;
+
+		//コントローラーがある場合
+		if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+			const float MOVE_LIMITATION = 0.02f;
+
+			//キーボード入力していない時
+			if (isRotateYKey_ == false && isRotateXKey_ == false) {
+
+				//入力
+				float rotateMoveX = (float)joyState.Gamepad.sThumbRY / SHRT_MAX * ROTATE_OFFSET;
+				float rotateMoveY = (float)joyState.Gamepad.sThumbRX / SHRT_MAX * ROTATE_OFFSET;
+				
+				//勝手に動くので制限を掛ける
+				if (rotateMoveY < MOVE_LIMITATION && rotateMoveY > -MOVE_LIMITATION) {
+					rotateMoveY = 0.0f;
+				}
+				if (rotateMoveX < MOVE_LIMITATION && rotateMoveX > -MOVE_LIMITATION) {
+					rotateMoveX = 0.0f;
+				}
+
+				//補正後の値を代入する
+				theta_ -= rotateMoveY;
+				originPhi_ -= rotateMoveX;
+			}
+
+
+
+		}
+
 
 #pragma endregion
 
@@ -412,9 +418,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 		//コントローラーがある場合
 		if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+			//キーボード入力していない時に受け付ける
 			if (isPlayerMoveKey_ == false) {
-				//元々1だから問題無し
-				const Vector3 INITIAL_VECTOR = { 1.0f,0.0f,0.0f };
 
 
 				Vector3 rightStickInput = {};

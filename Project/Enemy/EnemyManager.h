@@ -81,10 +81,7 @@ private:
 	//モデルハンドル
 	uint32_t modelHandle_ = 0;
 
-
-	float z =0.0f;
-	float z2 = 0.0f;
-	//float dot = 0.0f;
+	const float ENEMY_SCALE_SIZE_ = 1.0f;
 	
 
 	StageRect stageRect_ = {};
