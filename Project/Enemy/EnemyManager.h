@@ -83,6 +83,7 @@ private:
 
 
 	float z =0.0f;
+	float z2 = 0.0f;
 	//float dot = 0.0f;
 	
 

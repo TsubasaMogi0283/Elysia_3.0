@@ -15,7 +15,7 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = {-10.0f,0.0f,9.0f };
+	Vector3 position1 = { 0.0f,0.0f,9.0f };
 	enemy1->Initialize(modelHandle_, position1, { 0.00f,0.0f,0.00f });
 	enemy1->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy1);
@@ -27,12 +27,13 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	enemy2->Initialize(modelHandle_, position2, { -0.01f,0.0f,-0.0f });
 	enemy2->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy2);
+	z2 = position2.z;
 
-	Enemy* enemy3 = new Enemy();
-	Vector3 position3 = { 0.0f,0.0f,9.0f };
-	enemy3->Initialize(modelHandle_, position3, { 0.00f,0.0f,0.0f });
-	enemy3->SetRadius_(player_->GetRadius());
-	enemyes_.push_back(enemy3);
+	//Enemy* enemy3 = new Enemy();
+	//Vector3 position3 = { 0.0f,0.0f,9.0f };
+	//enemy3->Initialize(modelHandle_, position3, { 0.00f,0.0f,0.0f });
+	//enemy3->SetRadius_(player_->GetRadius());
+	//enemyes_.push_back(enemy3);
 
 
 	//モデル
@@ -140,7 +141,7 @@ void EnemyManager::Update(){
 			Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
 			float enemyAndEnemyDistance = sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
 
-			//(*it1)->SetPositionZ(z);
+			(*it1)->SetPositionZ(z);
 			//(*it2)->SetPositionZ(z);
 			// 正射影ベクトルを求める
 			Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
@@ -221,7 +222,7 @@ void EnemyManager::Update(){
 			Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
 			float enemyAndEnemyDistance = sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
 
-			//(*it1)->SetPositionZ(z);
+			(*it2)->SetPositionZ(z2);
 			//(*it2)->SetPositionZ(z);
 			// 正射影ベクトルを求める
 			Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
@@ -284,13 +285,6 @@ void EnemyManager::Update(){
 		}
 	}
 
-//
-//	if (enemyRadius1 + enemyRadius2 < projectDistance) {
-//		uint32_t newCondition = EnemyCondition::Move;
-//		enemy1->SetCondition(newCondition);
-//
-//	}
-
 	
 
 
@@ -330,6 +324,8 @@ void EnemyManager::Update(){
 	
 	ImGui::Begin("Enemy1");
 	ImGui::SliderFloat("Z", &z, -10.0f, 10.0f);
+	ImGui::SliderFloat("Z2", &z2, -10.0f, 10.0f);
+
 	ImGui::End();
 
 
