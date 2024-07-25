@@ -14,22 +14,25 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 
 	//TLのレベルエディターでやってもいいかも！
-	Enemy* enemy1 = nullptr;
-	Enemy* enemy2 = nullptr;
-	enemy1 = new Enemy();
-	Vector3 position1 = {0.0f,0.0f,9.0f };
-	enemy1->Initialize(modelHandle_, position1, { 0.01f,0.0f,0.00f });
+	Enemy* enemy1 = new Enemy();
+	Vector3 position1 = {-10.0f,0.0f,9.0f };
+	enemy1->Initialize(modelHandle_, position1, { 0.00f,0.0f,0.00f });
 	enemy1->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy1);
 
 	z = position1.z;
 
-	enemy2 = new Enemy();
-	Vector3 position2 = { 5.0f,0.0f,9.0f };
-	enemy2->Initialize(modelHandle_, position2, { 0.0f,0.0f,-0.0f });
+	Enemy* enemy2 = new Enemy();
+	Vector3 position2 = { -1.0f,0.0f,9.0f };
+	enemy2->Initialize(modelHandle_, position2, { 0.01f,0.0f,-0.0f });
 	enemy2->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy2);
 
+	Enemy* enemy3 = new Enemy();
+	Vector3 position3 = { 5.0f,0.0f,9.0f };
+	enemy3->Initialize(modelHandle_, position3, { 0.00f,0.0f,0.0f });
+	enemy3->SetRadius_(player_->GetRadius());
+	enemyes_.push_back(enemy3);
 
 
 	//モデル
@@ -121,29 +124,9 @@ void EnemyManager::Update(){
 		enemy->Update();
 	}
 	
-	//enemy1->SetPlayerPosition(playerPosition);
-	//enemy2->SetPlayerPosition(playerPosition);
-	//
-	//enemy1->Update();
-	//enemy2->Update();
-
-
-	
-
-	
-	//
-
-	//差分ベクトル
-	//Vector3 enemy1Position = enemy1->GetWorldPosition();
-	//Vector3 enemy2Position = enemy2->GetWorldPosition();
-	//float enemyRadius1 = enemy1->GetRadius();
-	//float enemyRadius2 = enemy2->GetRadius();
-
 
 	for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
 		for (std::list<Enemy*>::iterator it2 = std::next(it1); it2 != enemyes_.end(); ++it2) {
-			//Enemy* enemy1 = *it1;
-			//Enemy* enemy2 = *it2;
 
 			//ワールド座標
 			Vector3 enemy1Position = (*it1)->GetWorldPosition();
@@ -161,9 +144,14 @@ void EnemyManager::Update(){
 
 			// 正射影ベクトルを求める
 			Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
-
 			Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(enemyAndEnemyDifference, projectVector);
 			float projectDistance = sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
+
+			//内積
+			//進行方向の前にいると+
+			Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
+			float dot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
+			
 
 			uint32_t condition = (*it1)->GetCondition();
 
@@ -177,7 +165,7 @@ void EnemyManager::Update(){
 				#endif // _DEBUG
 
 				// 接触していたら
-				if (enemyAndEnemyDistance < enemyRadius1 + enemyRadius2) {
+				if ((enemyAndEnemyDistance < enemyRadius1 + enemyRadius2)&& dot>0.0f) {
 					
 					#ifdef _DEBUG
 					ImGui::Begin("Touch");
@@ -335,20 +323,8 @@ void EnemyManager::Update(){
 	
 	ImGui::Begin("Enemy1");
 	ImGui::SliderFloat("Z", &z, -10.0f, 10.0f);
-	ImGui::InputFloat("dot", &dot);
 	ImGui::End();
 
-	//ImGui::Begin("EnemyProject");
-	//
-	//ImGui::InputFloat3("Difference", &enemyAndEnemyDifference.x);
-	//ImGui::InputFloat3("projectVector", &projectVector.x);
-	//ImGui::InputFloat3("differenceEnemyAndProject", &differenceEnemyAndProject.x);
-	//ImGui::InputFloat3("1Direction", &direction.x);
-	//ImGui::InputFloat("H", &projectDistance);
-	//
-	//ImGui::InputFloat("Distance", &enemyAndEnemyDistance);
-	//
-	//ImGui::End();
 
 
 #endif // _DEBUG

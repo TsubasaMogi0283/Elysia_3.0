@@ -28,7 +28,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	isTracking_ = false;
 
 	//半径
-	radius_ = 0.5f;
+	radius_ = 1.0f;
 	preSpeed_ = speed;
 	speed_ = speed;
 	//色

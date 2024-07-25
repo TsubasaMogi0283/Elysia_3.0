@@ -83,7 +83,7 @@ private:
 
 
 	float z =0.0f;
-	float dot = 0.0f;
+	//float dot = 0.0f;
 	
 
 	StageRect stageRect_ = {};
