@@ -174,6 +174,7 @@ public:
 	}
 
 private:
+	uint32_t preCondition_ = EnemyCondition::NoneMove;
 	uint32_t condition_ = EnemyCondition::Move;
 
 

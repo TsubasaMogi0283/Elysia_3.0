@@ -18,27 +18,38 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	worldTransform_.scale_ = { .x = DEBUG_SCALE,.y = DEBUG_SCALE ,.z = DEBUG_SCALE };
 #endif // _DEBUG
 
-
+	//座標の代入
 	worldTransform_.translate_ = position;
 
+	//マテリアルの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
-	deleteTime_ = 180;
+
+	//生存か死亡
 	isAlive_ = true;
+	deleteTime_ = 180;
+	
+	//追跡かどうか
 	isTracking_ = false;
 
 	//半径
 	radius_ = 1.0f;
 	preSpeed_ = speed;
 	speed_ = speed;
+
 	//色
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
 	//デフォルトで右方向に向いているようにする
 	direction_ = { 1.0f,0.0f,0.0f };
 
+	//状態
+	preCondition_ = EnemyCondition::NoneMove;
 	condition_ = EnemyCondition::Move;
 
+	//攻撃
 	attackTime_ = 0;
+
+	//判定
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY);
 	//相手
