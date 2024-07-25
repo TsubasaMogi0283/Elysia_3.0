@@ -15,16 +15,16 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = { 0.0f,0.0f,9.0f };
-	enemy1->Initialize(modelHandle_, position1, { 0.00f,0.0f,0.00f });
+	Vector3 position1 = { 5.0f,0.0f,9.0f };
+	enemy1->Initialize(modelHandle_, position1, { 0.0f,0.0f,0.00f });
 	enemy1->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy1);
 
 	z = position1.z;
 
 	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = { 5.0f,0.0f,9.0f };
-	enemy2->Initialize(modelHandle_, position2, { -0.01f,0.0f,-0.0f });
+	Vector3 position2 = { 1.0f,0.0f,9.0f };
+	enemy2->Initialize(modelHandle_, position2, { 0.01f,0.0f,-0.0f });
 	enemy2->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy2);
 	z2 = position2.z;
@@ -125,40 +125,44 @@ void EnemyManager::Update(){
 		enemy->Update();
 	}
 	
-	//昇順
-	for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
-		for (std::list<Enemy*>::iterator it2 = std::next(it1); it2 != enemyes_.end(); ++it2) {
 
-			//ワールド座標
-			Vector3 enemy1Position = (*it1)->GetWorldPosition();
-			Vector3 enemy2Position = (*it2)->GetWorldPosition();
-			//半径
-			float enemyRadius1 = (*it1)->GetRadius();
-			float enemyRadius2 = (*it2)->GetRadius();
 
-			//向き
-			Vector3 direction = (*it1)->GetDirection();
-			Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
-			float enemyAndEnemyDistance = sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
+	//空じゃない時判定を取る
+	if (enemyes_.empty() == false) {
+		//昇順
+		for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
+			for (std::list<Enemy*>::iterator it2 = std::next(it1); it2 != enemyes_.end(); ++it2) {
 
-			(*it1)->SetPositionZ(z);
-			//(*it2)->SetPositionZ(z);
-			// 正射影ベクトルを求める
-			Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
-			Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(enemyAndEnemyDifference, projectVector);
-			float projectDistance = sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
+				//ワールド座標
+				Vector3 enemy1Position = (*it1)->GetWorldPosition();
+				Vector3 enemy2Position = (*it2)->GetWorldPosition();
+				//半径
+				float enemyRadius1 = (*it1)->GetRadius();
+				float enemyRadius2 = (*it2)->GetRadius();
 
-			//内積
-			//進行方向の前にいると+
-			Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
-			float dot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
-			
-			//現在の状態
-			uint32_t condition = (*it1)->GetCondition();
+				//向き
+				Vector3 direction = (*it1)->GetDirection();
+				Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
+				float enemyAndEnemyDistance = sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
 
-			// 進行方向上にいたら
-			if ((enemyRadius1 + enemyRadius2 > projectDistance) &&
-				(condition == EnemyCondition::Move || condition == EnemyCondition::Tracking)) {
+				(*it1)->SetPositionZ(z);
+				//(*it2)->SetPositionZ(z);
+				// 正射影ベクトルを求める
+				Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
+				Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(enemyAndEnemyDifference, projectVector);
+				float projectDistance = sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
+
+				//内積
+				//進行方向の前にいると+
+				Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
+				float dot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
+				
+				//現在の状態
+				uint32_t condition = (*it1)->GetCondition();
+
+				// 進行方向上にいたら
+				if ((enemyRadius1 + enemyRadius2 > projectDistance) &&
+					(condition == EnemyCondition::Move || condition == EnemyCondition::Tracking)) {
 				
 				#ifdef _DEBUG
 				ImGui::Begin("On the direction of progress");
@@ -188,102 +192,122 @@ void EnemyManager::Update(){
 					(*it1)->SetCondition(newCondition);
 				}
 			}
-			//いなかった場合
-			if (enemyRadius1 + enemyRadius2 <= projectDistance) {
-				uint32_t newCondition = EnemyCondition::Move;
-				(*it1)->SetCondition(newCondition);
-				if (condition == EnemyCondition::Move) {
-					
+				//いなかった場合
+				if (enemyRadius1 + enemyRadius2 <= projectDistance) {
+					uint32_t newCondition = EnemyCondition::Move;
+					(*it1)->SetCondition(newCondition);
+					if (condition == EnemyCondition::Move) {
+						
+					}
+					if (condition == EnemyCondition::Tracking) {
+						//uint32_t newCondition = EnemyCondition::Tracking;
+						//(*it1)->SetCondition(newCondition);
+					}
 				}
-				if (condition == EnemyCondition::Tracking) {
-					//uint32_t newCondition = EnemyCondition::Tracking;
-					//(*it1)->SetCondition(newCondition);
-				}
+			
 			}
-		
 		}
-	}
-
-	
 
 	//降順
-	for (std::list<Enemy*>::iterator it1 = std::prev(enemyes_.end()); it1 != enemyes_.begin(); --it1) {
-		for (std::list<Enemy*>::iterator it2 = std::prev(it1); it2 != enemyes_.begin(); --it2) {
+	
+		for (std::list<Enemy*>::iterator it1 = std::prev(enemyes_.end());; --it1) {
 
-			//ワールド座標
-			Vector3 enemy1Position = (*it1)->GetWorldPosition();
-			Vector3 enemy2Position = (*it2)->GetWorldPosition();
-			//半径
-			float enemyRadius1 = (*it1)->GetRadius();
-			float enemyRadius2 = (*it2)->GetRadius();
+			if (it1 == enemyes_.begin()) {
+				break;
+			}
 
-			//向き
-			Vector3 direction = (*it1)->GetDirection();
-			Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
-			float enemyAndEnemyDistance = sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
-
-			(*it2)->SetPositionZ(z2);
-			//(*it2)->SetPositionZ(z);
-			// 正射影ベクトルを求める
-			Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
-			Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(enemyAndEnemyDifference, projectVector);
-			float projectDistance = sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
-
-			//内積
-			//進行方向の前にいると+
-			Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
-			float dot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
-
-			//現在の状態
-			uint32_t condition = (*it1)->GetCondition();
-
-			// 進行方向上にいたら
-			if ((enemyRadius1 + enemyRadius2 > projectDistance) &&
-				(condition == EnemyCondition::Move || condition == EnemyCondition::Tracking)) {
+			for (std::list<Enemy*>::iterator it2 = std::prev(it1); ; --it2) {
 
 #ifdef _DEBUG
-				ImGui::Begin("On the direction of progress");
+				ImGui::Begin("aaaaaa");
 				ImGui::End();
 #endif // _DEBUG
 
-				// 接触していたら
-				if ((enemyAndEnemyDistance < enemyRadius1 + enemyRadius2) && dot > 0.0f) {
+
+				//ワールド座標
+				Vector3 enemy1Position = (*it1)->GetWorldPosition();
+				Vector3 enemy2Position = (*it2)->GetWorldPosition();
+				//半径
+				float enemyRadius1 = (*it1)->GetRadius();
+				float enemyRadius2 = (*it2)->GetRadius();
+
+				//向き
+				Vector3 direction = (*it1)->GetDirection();
+				Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
+				float enemyAndEnemyDistance = sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
+
+				(*it2)->SetPositionZ(z2);
+				//(*it2)->SetPositionZ(z);
+				// 正射影ベクトルを求める
+				Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
+				Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(enemyAndEnemyDifference, projectVector);
+				float projectDistance = sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
+
+				//内積
+				//進行方向の前にいると+
+				Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
+				float dot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
+
+				//現在の状態
+				uint32_t condition = (*it1)->GetCondition();
+
+				// 進行方向上にいたら
+				if ((enemyRadius1 + enemyRadius2 > projectDistance) &&
+					(condition == EnemyCondition::Move || condition == EnemyCondition::Tracking)) {
 
 #ifdef _DEBUG
-					ImGui::Begin("Touch");
+					ImGui::Begin("On the direction of progress");
 					ImGui::End();
 #endif // _DEBUG
 
-					uint32_t newCondition = EnemyCondition::NoneMove;
-					(*it1)->SetCondition(newCondition);
+					// 接触していたら
+					if ((enemyAndEnemyDistance < enemyRadius1 + enemyRadius2) && dot > 0.0f) {
+
+#ifdef _DEBUG
+						ImGui::Begin("Touch");
+						ImGui::End();
+#endif // _DEBUG
+
+						uint32_t newCondition = EnemyCondition::NoneMove;
+						(*it1)->SetCondition(newCondition);
+					}
+					// 接触していない
+					else {
+
+#ifdef _DEBUG
+						ImGui::Begin("NotTouch");
+						ImGui::End();
+#endif // _DEBUG
+
+						uint32_t newCondition = EnemyCondition::Move;
+						(*it1)->SetCondition(newCondition);
+					}
 				}
-				// 接触していない
-				else {
-
-#ifdef _DEBUG
-					ImGui::Begin("NotTouch");
-					ImGui::End();
-#endif // _DEBUG
-
+				//いなかった場合
+				if (enemyRadius1 + enemyRadius2 <= projectDistance) {
 					uint32_t newCondition = EnemyCondition::Move;
 					(*it1)->SetCondition(newCondition);
-				}
-			}
-			//いなかった場合
-			if (enemyRadius1 + enemyRadius2 <= projectDistance) {
-				uint32_t newCondition = EnemyCondition::Move;
-				(*it1)->SetCondition(newCondition);
-				if (condition == EnemyCondition::Move) {
+					if (condition == EnemyCondition::Move) {
 
+					}
+					if (condition == EnemyCondition::Tracking) {
+						//uint32_t newCondition = EnemyCondition::Tracking;
+						//(*it1)->SetCondition(newCondition);
+					}
 				}
-				if (condition == EnemyCondition::Tracking) {
-					//uint32_t newCondition = EnemyCondition::Tracking;
-					//(*it1)->SetCondition(newCondition);
+
+
+				if (it2 == enemyes_.begin()) {
+					break;
 				}
+
 			}
+
+
 
 		}
 	}
+	
 
 	
 
