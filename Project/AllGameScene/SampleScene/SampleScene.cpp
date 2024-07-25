@@ -422,39 +422,40 @@ void SampleScene::Update(GameManager* gameManager) {
 			if (isPlayerMoveKey_ == false) {
 
 
-				Vector3 rightStickInput = {};
-				rightStickInput.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f);
-				rightStickInput.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f);
+				Vector3 rightStickInput = {
+					.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
+					.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
+				};
+				
+				float radian = std::atan2f(rightStickInput.z, rightStickInput.x);
+				float tR = theta_ + radian;
+				
+				//Vector3 newDorection = {};
 
-				float distance = sqrtf(rightStickInput.x * rightStickInput.x + rightStickInput.z * rightStickInput.z);
-				distance;
-				float forAcos = 1.0f / distance;
-				float newTheta = std::acosf(forAcos);
-				newTheta;
 #ifdef _DEBUG
 				ImGui::Begin("ControllerDirection");
 				ImGui::InputFloat("Theta", &theta_);
-				ImGui::InputFloat("Distance", &distance);
+				ImGui::InputFloat("T", &tR);
+
 				ImGui::InputFloat3("LSInputDirection", &rightStickInput.x);
-				ImGui::InputFloat("NewTheta", &newTheta);
 				ImGui::End();
 
 #endif // _DEBUG
 
 
-				//何か勝手に動いちゃうので制限を掛ける
+
 				//デッドゾーン
-				const float DEAD_ZONE = 0.07f;
-				if (rightStickInput.x < DEAD_ZONE && rightStickInput.x > -DEAD_ZONE) {
-					rightStickInput.x = 0.0f;
-				}
-				if (rightStickInput.z < DEAD_ZONE && rightStickInput.z > -DEAD_ZONE) {
-					rightStickInput.z = 0.0f;
-				}
+				//const float DEAD_ZONE = 0.07f;
+				//if (rightStickInput.x < DEAD_ZONE && rightStickInput.x > -DEAD_ZONE) {
+				//	rightStickInput.x = 0.0f;
+				//}
+				//if (rightStickInput.z < DEAD_ZONE && rightStickInput.z > -DEAD_ZONE) {
+				//	rightStickInput.z = 0.0f;
+				//}
 
 
-				playerDirection_.x = rightStickInput.x;
-				playerDirection_.z = rightStickInput.z;
+				playerDirection_.x = std::cosf(tR);
+				playerDirection_.z = std::sinf(tR);
 
 
 			}
