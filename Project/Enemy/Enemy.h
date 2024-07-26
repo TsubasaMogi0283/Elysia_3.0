@@ -215,8 +215,8 @@ private:
 	//プレイヤーの半径
 	float playerRadius_ = 0.0f;
 
-
-
+	//ステージの四隅座標
+	//StageRect stageRect_ = {};
 
 
 	//モデル

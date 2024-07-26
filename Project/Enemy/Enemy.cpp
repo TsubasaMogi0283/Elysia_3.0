@@ -69,6 +69,26 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 void Enemy::Update(){
 	
+
+//#pragma region ステージの外に行かないようにする
+//
+//	Vector3 position = enemy->GetWorldPosition();
+//	float xxxx = stageRect_.leftBack.x + enemy->GetRadius();
+//	//左
+//	if (position.x < xxxx) {
+//#ifdef _DEBUG
+//		ImGui::Begin("Aaaaa");
+//		ImGui::End();
+//#endif // _DEBUG
+//		enemy->InvertSpeedX();
+//
+//		//enemy->InvertSpeedX();
+//	}
+//
+//#pragma endregion
+
+
+
 	switch (condition_) {
 		//何も攻撃しない
 	case EnemyCondition::NoneMove:
@@ -85,7 +105,13 @@ void Enemy::Update(){
 	
 		//通常の動き
 	case EnemyCondition::Move:
-		speed_ = preSpeed_;
+
+		if (preCondition_ == EnemyCondition::NoneMove) {
+			speed_ = preSpeed_;
+		}
+		else if (preCondition_ == EnemyCondition::NoneMove) {
+			speed_ = preSpeed_;
+		}
 		#ifdef _DEBUG
 		ImGui::Begin("Move");
 		ImGui::End();

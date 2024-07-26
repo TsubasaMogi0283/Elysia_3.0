@@ -16,22 +16,22 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
 	Vector3 position1 = { 0.0f,0.0f,9.0f };
-	enemy1->Initialize(modelHandle_, position1, { 0.0f,0.0f,0.00f });
+	enemy1->Initialize(modelHandle_, position1, { -0.05f,0.0f,0.00f });
 	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
 	enemyes_.push_back(enemy1);
 
 
-	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = { -50.0f,0.0f,9.0f };
-	enemy2->Initialize(modelHandle_, position2, { -0.01f,0.0f,-0.0f });
-	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemyes_.push_back(enemy2);
+	//Enemy* enemy2 = new Enemy();
+	//Vector3 position2 = { -50.0f,0.0f,9.0f };
+	//enemy2->Initialize(modelHandle_, position2, { -0.01f,0.0f,-0.0f });
+	//enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
+	//enemyes_.push_back(enemy2);
 
-	Enemy* enemy3 = new Enemy();
-	Vector3 position3 = { 5.0f,0.0f,9.0f };
-	enemy3->Initialize(modelHandle_, position3, { -0.01f,0.0f,0.0f });
-	enemy3->SetRadius_(player_->GetRadius());
-	enemyes_.push_back(enemy3);
+	//Enemy* enemy3 = new Enemy();
+	//Vector3 position3 = { 5.0f,0.0f,9.0f };
+	//enemy3->Initialize(modelHandle_, position3, { -0.01f,0.0f,0.0f });
+	//enemy3->SetRadius_(player_->GetRadius());
+	//enemyes_.push_back(enemy3);
 
 
 	//モデル
@@ -120,7 +120,13 @@ void EnemyManager::Update(){
 
 	for (Enemy* enemy : enemyes_) {
 		enemy->SetPlayerPosition(playerPosition);
+		
+		
+		
 		enemy->Update();
+
+
+
 	}
 	
 	//空じゃない時判定を取る
