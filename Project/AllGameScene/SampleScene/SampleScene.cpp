@@ -445,7 +445,7 @@ void SampleScene::Update(GameManager* gameManager) {
 					leftStickInput.z = 0.0f;
 				}
 
-
+				//角度を求めたい
 				float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
 				if (radian < 0.0f) {
 					radian += 2.0f*std::numbers::pi_v<float>;
@@ -479,8 +479,8 @@ void SampleScene::Update(GameManager* gameManager) {
 				
 
 
-				playerDirection_.x = leftStickInput.x;
-				playerDirection_.z = leftStickInput.z;
+				playerDirection_.x = std::cosf(tR);
+				playerDirection_.z = std::sinf(tR);
 
 
 			}
