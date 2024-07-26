@@ -422,16 +422,11 @@ void SampleScene::Update(GameManager* gameManager) {
 			if (isPlayerMoveKey_ == false) {
 
 
-
-
+				//コントローラーの入力
+				bool isInput = false; 
 				Vector3 leftStickInput = {
 					.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
 					.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
-				};
-				
-				Vector2 stick = {
-					.x=static_cast<float>(joyState.Gamepad.sThumbLX),
-					.y=static_cast<float>(joyState.Gamepad.sThumbLY),
 				};
 				
 
@@ -441,47 +436,57 @@ void SampleScene::Update(GameManager* gameManager) {
 				if (leftStickInput.x < DEAD_ZONE && leftStickInput.x > -DEAD_ZONE) {
 					leftStickInput.x = 0.0f;
 				}
+				else {
+					isInput = true;
+				}
+
 				if (leftStickInput.z < DEAD_ZONE && leftStickInput.z > -DEAD_ZONE) {
 					leftStickInput.z = 0.0f;
 				}
-
-				//角度を求めたい
-				float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
-				if (radian < 0.0f) {
-					radian += 2.0f*std::numbers::pi_v<float>;
+				else {
+					isInput = true;
 				}
-				float tR = theta_ + radian;
-				float newTheta = theta_ * (180.0f / std::numbers::pi_v<float>);
-				//Vector3 newDorection = {};
 
-				float inputDegree = radian * (180.0f / std::numbers::pi_v<float>);
+
+				if (isInput == true) {
+					//角度を求めたい
+					float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
+					if (radian < 0.0f) {
+						radian += 2.0f * std::numbers::pi_v<float>;
+					}
+					float tR = theta_ + radian-std::numbers::pi_v<float>/2.0f;
+					float newTheta = theta_ * (180.0f / std::numbers::pi_v<float>);
+					//Vector3 newDorection = {};
+
+					float inputDegree = radian * (180.0f / std::numbers::pi_v<float>);
 
 #ifdef _DEBUG
-				ImGui::Begin("ControllerDirection");
-				ImGui::InputFloat2("stick", &stick.x);
+					ImGui::Begin("ControllerDirection");
 
-				ImGui::InputFloat("Radian", &radian);
-				ImGui::InputFloat("Theta", &theta_);
-				ImGui::InputFloat("NewTheta", &newTheta);
+					ImGui::InputFloat("Radian", &radian);
+					ImGui::InputFloat("Theta", &theta_);
+					ImGui::InputFloat("NewTheta", &newTheta);
 
-				ImGui::InputFloat("T", &tR);
-				ImGui::InputFloat("inputDegree", &inputDegree);
+					ImGui::InputFloat("T", &tR);
+					ImGui::InputFloat("inputDegree", &inputDegree);
 
-				
 
-				ImGui::InputFloat3("LSInputDirection", &leftStickInput.x);
-				ImGui::End();
+
+					ImGui::InputFloat3("LSInputDirection", &leftStickInput.x);
+					ImGui::End();
 
 #endif // _DEBUG
 
 
 
+
+
+
+					playerDirection_.x = std::cosf(tR);
+					playerDirection_.z = std::sinf(tR);
+
+				}
 				
-
-
-				playerDirection_.x = std::cosf(tR);
-				playerDirection_.z = std::sinf(tR);
-
 
 			}
 		}
