@@ -439,7 +439,6 @@ void SampleScene::Update(GameManager* gameManager) {
 				else {
 					isInput = true;
 				}
-
 				if (leftStickInput.z < DEAD_ZONE && leftStickInput.z > -DEAD_ZONE) {
 					leftStickInput.z = 0.0f;
 				}
@@ -447,43 +446,22 @@ void SampleScene::Update(GameManager* gameManager) {
 					isInput = true;
 				}
 
-
+				//入力されていたら計算
 				if (isInput == true) {
-					//角度を求めたい
+					//角度を求める
 					float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
+					//値を0～2πに直してtheta_に揃える
 					if (radian < 0.0f) {
 						radian += 2.0f * std::numbers::pi_v<float>;
 					}
-					float tR = theta_ + radian-std::numbers::pi_v<float>/2.0f;
-					float newTheta = theta_ * (180.0f / std::numbers::pi_v<float>);
-					//Vector3 newDorection = {};
-
-					float inputDegree = radian * (180.0f / std::numbers::pi_v<float>);
-
-#ifdef _DEBUG
-					ImGui::Begin("ControllerDirection");
-
-					ImGui::InputFloat("Radian", &radian);
-					ImGui::InputFloat("Theta", &theta_);
-					ImGui::InputFloat("NewTheta", &newTheta);
-
-					ImGui::InputFloat("T", &tR);
-					ImGui::InputFloat("inputDegree", &inputDegree);
+					const float OFFSET = std::numbers::pi_v<float> / 2.0f;
+					float resultTheta = theta_ + radian-OFFSET;
 
 
 
-					ImGui::InputFloat3("LSInputDirection", &leftStickInput.x);
-					ImGui::End();
-
-#endif // _DEBUG
-
-
-
-
-
-
-					playerDirection_.x = std::cosf(tR);
-					playerDirection_.z = std::sinf(tR);
+					//向きを代入
+					playerDirection_.x = std::cosf(resultTheta);
+					playerDirection_.z = std::sinf(resultTheta);
 
 				}
 				
