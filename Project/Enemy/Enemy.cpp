@@ -109,16 +109,14 @@ void Enemy::Update(){
 	case EnemyCondition::Move:
 
 
-		if (GetWorldPosition().x < stageRect_.leftBack.x + radius_) {
-#ifdef _DEBUG
-			ImGui::Begin("AAAAAAAAA"); 
-			ImGui::End();
-#endif // _DEBUG
-
+		if ((GetWorldPosition().x < stageRect_.leftBack.x + radius_) ||(GetWorldPosition().x > stageRect_.rightBack.x - radius_)) {
 			speed_.x *= -1.0f;
-
-
 		}
+		if ((GetWorldPosition().z < stageRect_.leftFront.z + radius_)|| (GetWorldPosition().z > stageRect_.leftBack.z - radius_)) {
+			speed_.z *= -1.0f;
+		}
+
+
 
 		//if (preCondition_ == EnemyCondition::NoneMove) {
 		//	speed_ = preSpeed_;

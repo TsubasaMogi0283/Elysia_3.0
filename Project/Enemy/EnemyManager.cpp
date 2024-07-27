@@ -16,7 +16,7 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
 	Vector3 position1 = { 0.0f,0.0f,9.0f };
-	enemy1->Initialize(modelHandle_, position1, { -0.05f,0.0f,0.00f });
+	enemy1->Initialize(modelHandle_, position1, { -0.05f,0.0f,0.05f });
 	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
 	enemy1->SetStageRect(stageRect_);
 	enemyes_.push_back(enemy1);
