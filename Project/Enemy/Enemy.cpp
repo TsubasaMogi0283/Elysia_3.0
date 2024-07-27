@@ -86,7 +86,9 @@ void Enemy::Update(){
 //	}
 //
 //#pragma endregion
-
+	//更新
+	worldTransform_.Update();
+	material_.Update();
 
 
 	switch (condition_) {
@@ -106,12 +108,24 @@ void Enemy::Update(){
 		//通常の動き
 	case EnemyCondition::Move:
 
-		if (preCondition_ == EnemyCondition::NoneMove) {
-			speed_ = preSpeed_;
+
+		if (GetWorldPosition().x < stageRect_.leftBack.x + radius_) {
+#ifdef _DEBUG
+			ImGui::Begin("AAAAAAAAA"); 
+			ImGui::End();
+#endif // _DEBUG
+
+			speed_.x *= -1.0f;
+
+
 		}
-		else if (preCondition_ == EnemyCondition::NoneMove) {
-			speed_ = preSpeed_;
-		}
+
+		//if (preCondition_ == EnemyCondition::NoneMove) {
+		//	speed_ = preSpeed_;
+		//}
+		//else if (preCondition_ == EnemyCondition::NoneMove) {
+		//	speed_ = preSpeed_;
+		//}
 		#ifdef _DEBUG
 		ImGui::Begin("Move");
 		ImGui::End();

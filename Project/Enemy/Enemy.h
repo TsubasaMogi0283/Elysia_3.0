@@ -6,6 +6,8 @@
 #include "Material.h"
 #include <memory>
 #include "../../Ellysia/Line/Line.h"
+#include "Stage/Ground/StageRect.h"
+
 struct Camera;
 struct SpotLight;
 class Player;
@@ -22,6 +24,11 @@ enum EnemyCondition {
 	Tracking,
 	//攻撃
 	Attack,
+
+	//速度反転
+	InverseSpeed,
+
+
 };
 
 class Enemy :public Collider{
@@ -157,9 +164,29 @@ public:
 #pragma endregion
 
 
+	/// <summary>
+	/// ステージの四隅
+	/// </summary>
+	/// <param name="stageRect"></param>
+	void SetStageRect(StageRect& stageRect) {
+		this->stageRect_ = stageRect;
+	}
+
 
 public:
 	
+	/// <summary>
+	/// 前の状態の設定
+	/// </summary>
+	/// <param name="condition"></param>
+	inline void SetPreCondition(uint32_t& preCondition) {
+		this->preCondition_ = preCondition;
+	}
+
+	uint32_t GetPreCondition() const {
+		return preCondition_;
+	}
+
 
 	/// <summary>
 	/// 状態の設定
@@ -216,7 +243,7 @@ private:
 	float playerRadius_ = 0.0f;
 
 	//ステージの四隅座標
-	//StageRect stageRect_ = {};
+	StageRect stageRect_ = {};
 
 
 	//モデル

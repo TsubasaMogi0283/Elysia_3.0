@@ -77,6 +77,7 @@ void SampleScene::Initialize() {
 	
 	enemyManager_ = std::make_unique<EnemyManager>();
 	enemyManager_->SetPlayer(player_);
+	enemyManager_->SetStageRectangle(stageRect);
 	enemyManager_->Initialize(enemyModelHandle_);
 	
 	
@@ -157,7 +158,6 @@ void SampleScene::Initialize() {
 	isExplain_ = false;
 	//ステージ
 	player_->SetStageRect(stageRect);
-	enemyManager_->SetStageRectangle(stageRect);
 	
 	collisionManager_ = std::make_unique<CollisionManager>();
 	
