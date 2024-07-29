@@ -49,6 +49,11 @@ void SampleScene::Initialize() {
 	uint32_t gateModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Gate","Gate.obj");
 	gate_ = std::make_unique<Gate>();
 	gate_->Initialize(gateModelhandle);
+	isAbleToEscape_ = false;
+
+	uint32_t escapeTexturehandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/EscapeText.png");
+	escapeText_.reset(Sprite::Create(escapeTexturehandle, { .x = 0.0f,.y = 0.0f }));
+
 	#pragma endregion
 
 	#pragma region 鍵
@@ -152,6 +157,18 @@ void SampleScene::Initialize() {
 
 	
 	textureDisplayNumber_ = 0;
+
+	//常時表示
+	//操作
+	uint32_t operationTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Operation/Operation.png");
+	operation_.reset(Sprite::Create(operationTextureHandle, {.x=0.0f,.y=0.0f}));
+	isGamePlay_ = false;
+
+	uint32_t pickUpTextureManager = TextureManager::GetInstance()->LoadTexture("Resources/Game/Key/PickUpKey.png");
+	pickUpKey_.reset(Sprite::Create(pickUpTextureManager, { .x = 0.0f,.y = 0.0f }));
+	//非表示にする
+	pickUpKey_->SetInvisible(true);
+
 #pragma endregion
 
 	isGamePlay_ = false;
@@ -209,6 +226,8 @@ void SampleScene::KeyCollision(){
 				ImGui::Begin("KeyCollision");
 				ImGui::End();
 #endif 
+				//表示する
+				pickUpKey_->SetInvisible(false);
 
 				//
 				if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
@@ -217,9 +236,13 @@ void SampleScene::KeyCollision(){
 					//鍵が取得される
 					key->PickedUp();
 				}
-
-
 			}
+			else {
+				//非表示にする
+				pickUpKey_->SetInvisible(true);
+			}
+
+
 		}
 
 		
@@ -260,6 +283,8 @@ void SampleScene::Update(GameManager* gameManager) {
 	}
 
 	if (isFadeIn == false && isFadeOut_ == false) {
+		
+
 		fadeTransparency_ = 0.0f;
 		//操作は全部ゲームシーンで統一させたい
 		//コマンドパターンですっきりさせても良さそう
@@ -277,7 +302,8 @@ void SampleScene::Update(GameManager* gameManager) {
 		if (isGamePlay_ == true) {
 			player_->SetIsAbleToControll(true);
 
-
+			//操作説明を追加
+			isDisplayUI_ = true;
 
 
 			//敵
@@ -590,6 +616,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 		}
 
+		
+
 
 		//ゲート
 		if (gate_->isCollision(playerPosition)) {
@@ -601,6 +629,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 			uint32_t playerKeyQuantity = player_->GetHavingKey();
 			if (playerKeyQuantity >= 3) {
+				isAbleToEscape_ = true;
+			}
 
 #ifdef _DEBUG
 				ImGui::Begin("3Keys");
@@ -621,24 +651,23 @@ void SampleScene::Update(GameManager* gameManager) {
 
 					if (bTriggerTime_ == 1) {
 						//脱出
-#ifdef _DEBUG
-						ImGui::Begin("B");
-						ImGui::End();
-
-#endif
-
 						isEscape_ = true;
 					}
 
 				}
 
 				if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
+
+#ifdef _DEBUG
+					ImGui::Begin("B");
+					ImGui::End();
+
+#endif
+
 					//脱出
 					isEscape_ = true;
 				}
 
-
-			}
 
 
 		}
@@ -788,12 +817,13 @@ void SampleScene::DrawPostEffect(){
 void SampleScene::DrawSprite(){
 	
 
-	//フェード
-	if (isFadeIn == true || isFadeOut_ == true) {
-		fadeSprite_->Draw();
+	if (isAbleToEscape_ == true) {
+		escapeText_->Draw();
 
 	}
+
 	
+	//説明
 	if (textureDisplayNumber_ == 1) {
 		explanation_[0]->Draw();
 		spaceToNext_[0]->Draw();
@@ -803,12 +833,26 @@ void SampleScene::DrawSprite(){
 		spaceToNext_[1]->Draw();
 	}
 	
-	//鍵
-	uint32_t keyQuantity = player_->GetHavingKey();
-	keyManager_->DrawSprite(keyQuantity);
+	if (isDisplayUI_ == true) {
+		operation_->Draw();
+
+		pickUpKey_->Draw();
+
+		//鍵
+		uint32_t keyQuantity = player_->GetHavingKey();
+		keyManager_->DrawSprite(keyQuantity);
 
 
+	}
 
+	
+	
+	
+	//フェード
+	if (isFadeIn == true || isFadeOut_ == true) {
+		fadeSprite_->Draw();
+
+	}
 
 
 }

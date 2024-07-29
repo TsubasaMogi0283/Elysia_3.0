@@ -130,7 +130,7 @@ private:
 	float t = 0.0f;
 	float p = 0.0f;
 	Vector3 pp = {};
-
+	
 	//プレイヤー
 	Player* player_ = nullptr;
 	Vector3 playerDirection_ = {0.0f,0.0f,0.0f};
@@ -145,14 +145,15 @@ private:
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
 	bool isEscape_ = false;
+	//脱出出来るか
+	bool isAbleToEscape_ = false;
+
+	
 
 	//天球
 	std::unique_ptr<Skydome> skydome_ = nullptr;
 
-	//鍵
-	std::unique_ptr<KeyManager> keyManager_ = {};
-	uint32_t keyQuantity_ = 0;
-
+	
 	
 	//敵
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
@@ -168,6 +169,35 @@ private:
 	float originPhi_ = 0.0f;
 
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+
+
+
+	
+#pragma region ゲーム中のUI
+
+	//UIManagerを作った方がよさそう
+	//ベタガキ過ぎるので
+
+	//UIを表示するかどうか
+	bool isDisplayUI_ = false;
+
+
+	//脱出テキスト
+	std::unique_ptr<Sprite> escapeText_ = nullptr;
+
+	//操作
+	std::unique_ptr<Sprite> operation_ = nullptr;
+
+	//鍵取得
+	std::unique_ptr<Sprite> pickUpKey_ = nullptr;
+
+
+
+	//鍵
+	std::unique_ptr<KeyManager> keyManager_ = {};
+	uint32_t keyQuantity_ = 0;
+
+
 
 #pragma region フェード
 

@@ -9,6 +9,20 @@
 
 void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	
+	//Stageの四隅が一つでも同じだったら引っかかるようにしている
+	//X軸
+	assert((stageRect_.leftBack.x != stageRect_.leftFront.x) ||
+		(stageRect_.leftBack.x != stageRect_.rightBack.x) ||
+		(stageRect_.leftBack.x != stageRect_.rightFront.x));
+
+	//Z軸
+	assert((stageRect_.leftBack.z != stageRect_.leftFront.z) ||
+		(stageRect_.leftBack.z != stageRect_.rightFront.z)||
+		(stageRect_.rightBack.z != stageRect_.rightFront.z));
+
+
+
+
 	model_.reset(Model::Create(modelHandle));
 	worldTransform_.Initialize();
 
@@ -159,6 +173,7 @@ void Enemy::Update(){
 	
 		#pragma endregion
 	
+		preCondition_ = EnemyCondition::PreTracking;
 		condition_ = EnemyCondition::Tracking;
 	
 		break;
@@ -167,7 +182,6 @@ void Enemy::Update(){
 	
 		//追跡
 	case EnemyCondition::Tracking:
-	
 		#pragma region 追跡処理
 	
 		#ifdef _DEBUG
