@@ -53,8 +53,8 @@ void SampleScene::Initialize() {
 
 	uint32_t escapeTexturehandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/EscapeText.png");
 	escapeText_.reset(Sprite::Create(escapeTexturehandle, { .x = 0.0f,.y = 0.0f }));
-
 	#pragma endregion
+
 
 	#pragma region 鍵
 	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","Cube.obj");
@@ -69,10 +69,8 @@ void SampleScene::Initialize() {
 	skydome_->Initialize(skydomeModelHandle);
 
 
-	#pragma region 敵
 
-	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\External\Model\01_HalloweenItems00\01_HalloweenItems00\EditedGLTF\Ghost.gltf"
-	//"Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/obj","HalloweenItem_Ghost01.obj"
+	#pragma region 敵
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
 #ifdef _DEBUG
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD2_Enemy", "TD2_Enemy.obj");
@@ -84,12 +82,11 @@ void SampleScene::Initialize() {
 	enemyManager_->SetPlayer(player_);
 	enemyManager_->SetStageRectangle(stageRect);
 	enemyManager_->Initialize(enemyModelHandle_);
-	
-	
 	#pragma endregion
 
+
+
 	#pragma region ライト確認用のタワー
-	
 	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
 	debugTower_.reset(Model::Create(debugTowerModelhandle));
 	debugTowerWorldTransform_.Initialize();
