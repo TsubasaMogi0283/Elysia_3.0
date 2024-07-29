@@ -33,6 +33,8 @@
 #include "Collision.h"
 #include <Stage/Skydome/Skydome.h>
 
+#include "Input.h"
+
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
 
@@ -104,6 +106,11 @@ private:
 
 private:
 
+
+	//操作は全部ゲームシーンで統一させたい
+	//コマンドパターンですっきりさせても良さそう
+	XINPUT_STATE joyState{};
+
 	//カメラ
 	Camera camera_ = {};
 	Vector3 cameraPosition_ = {};
@@ -145,8 +152,6 @@ private:
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
 	bool isEscape_ = false;
-	//脱出出来るか
-	bool isAbleToEscape_ = false;
 
 	
 
@@ -196,7 +201,10 @@ private:
 	//鍵
 	std::unique_ptr<KeyManager> keyManager_ = {};
 	uint32_t keyQuantity_ = 0;
+	bool isAbleToPickUpKey_ = false;
 
+	std::unique_ptr<Sprite>lackOfKeyesNumberSprite_[3] = { nullptr };
+	uint32_t lackOfKeyesNumber_ = 0;
 
 
 #pragma region フェード
@@ -223,7 +231,7 @@ private:
 	static const uint32_t SPACE_TO_NEXT_QUANTITY_ = 2;
 	std::unique_ptr<Sprite> spaceToNext_[SPACE_TO_NEXT_QUANTITY_] = { nullptr };
 
-	uint32_t textureDisplayNumber_ = 0;
+	uint32_t howToPlayTextureNumber_ = 0;
 
 #pragma endregion
 

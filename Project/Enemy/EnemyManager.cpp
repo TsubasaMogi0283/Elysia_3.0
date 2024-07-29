@@ -5,6 +5,7 @@
 #include "Player/Player.h"
 #include <VectorCalculation.h>
 #include <SingleCalculation.h>
+#include <random>
 
 void EnemyManager::Initialize(uint32_t modelhandle){
 	
@@ -30,17 +31,17 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
 	Vector3 position1 = { 0.0f,0.0f,4.0f };
-	enemy1->Initialize(modelHandle_, position1, { -0.01f,0.0f,0.0f });
-	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
 	enemy1->SetStageRect(stageRect_);
+	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
+	enemy1->Initialize(modelHandle_, position1, { -0.01f,0.0f,0.0f });
 	enemyes_.push_back(enemy1);
 
 
 	Enemy* enemy2 = new Enemy();
 	Vector3 position2 = { -5.0f,0.0f,10.0f };
-	enemy2->Initialize(modelHandle_, position2, { -0.0f,0.0f,-0.0f });
-	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
 	enemy2->SetStageRect(stageRect_);
+	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
+	enemy2->Initialize(modelHandle_, position2, { -0.0f,0.0f,-0.0f });
 	enemyes_.push_back(enemy2);
 
 	//Enemy* enemy3 = new Enemy();
@@ -78,7 +79,10 @@ void EnemyManager::DeleteEnemy(){
 
 void EnemyManager::GenarateEnemy() {
 	Enemy* enemy = new Enemy();
-	Vector3 position1 = { 4.0f,0.0f,10.0f };
+	std::random_device seedGenerator;
+	std::mt19937 randomEngine(seedGenerator());
+	std::uniform_real_distribution<float> distribute(-30.0f, 30.0f);
+	Vector3 position1 = { distribute(randomEngine),0.0f,distribute(randomEngine) };
 	enemy->Initialize(modelHandle_, position1, { 0.0f,0.0f,0.0f });
 	enemy->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy);
@@ -153,11 +157,6 @@ void EnemyManager::Update(){
 	for (Enemy* enemy : enemyes_) {
 		enemy->SetPlayerPosition(playerPosition);
 		enemy->Update();
-		//
-		//if (enemy->GetWorldPosition().x < stageRect_.leftBack.x + LEFT_LINE) {
-		//	enemy->InvertSpeedX();
-		//}
-
 	}
 	
 

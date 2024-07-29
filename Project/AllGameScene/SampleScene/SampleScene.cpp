@@ -49,10 +49,13 @@ void SampleScene::Initialize() {
 	uint32_t gateModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Gate","Gate.obj");
 	gate_ = std::make_unique<Gate>();
 	gate_->Initialize(gateModelhandle);
-	isAbleToEscape_ = false;
+
+	
 
 	uint32_t escapeTexturehandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/EscapeText.png");
 	escapeText_.reset(Sprite::Create(escapeTexturehandle, { .x = 0.0f,.y = 0.0f }));
+	//最初は非表示にする
+	escapeText_->SetInvisible(true);
 	#pragma endregion
 
 
@@ -153,7 +156,7 @@ void SampleScene::Initialize() {
 	}
 
 	
-	textureDisplayNumber_ = 0;
+	howToPlayTextureNumber_ = 0;
 
 	//常時表示
 	//操作
@@ -163,9 +166,7 @@ void SampleScene::Initialize() {
 
 	uint32_t pickUpTextureManager = TextureManager::GetInstance()->LoadTexture("Resources/Game/Key/PickUpKey.png");
 	pickUpKey_.reset(Sprite::Create(pickUpTextureManager, { .x = 0.0f,.y = 0.0f }));
-	//非表示にする
-	pickUpKey_->SetInvisible(true);
-
+	
 #pragma endregion
 
 	isGamePlay_ = false;
@@ -223,8 +224,8 @@ void SampleScene::KeyCollision(){
 				ImGui::Begin("KeyCollision");
 				ImGui::End();
 #endif 
-				//表示する
-				pickUpKey_->SetInvisible(false);
+
+				key->SetIsPrePickUp(true);
 
 				//
 				if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
@@ -233,19 +234,45 @@ void SampleScene::KeyCollision(){
 					//鍵が取得される
 					key->PickedUp();
 				}
+
+				//Bボタンを押したとき
+				if (Input::GetInstance()->GetJoystickState(joyState) == true){
+					if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+						bTriggerTime_ += 1;
+
+					}
+					if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+						bTriggerTime_ = 0;
+					}
+
+					if (bTriggerTime_ == 1) {
+						//プレイヤーの持っているか鍵の数が増える
+						player_->AddHaveKeyQuantity();
+						//鍵が取得される
+						key->PickedUp();
+					}
+				}
+
 			}
 			else {
-				//非表示にする
-				pickUpKey_->SetInvisible(true);
+				key->SetIsPrePickUp(false);
 			}
 
 
 		}
-
-		
-
 	}
-	
+
+	//どれか一つでもtrueになっていたら
+	isAbleToPickUpKey_ = std::any_of(keyes.begin(), keyes.end(), [](Key* key) {
+		return key->GetIsPrePickUp() == true;
+	});
+
+
+#ifdef _DEBUG
+	ImGui::Begin("KeyPickUp"); 
+	ImGui::Checkbox("IsPickUp", &isAbleToPickUpKey_);
+	ImGui::End();
+#endif // _DEBUG
 
 
 }
@@ -268,14 +295,12 @@ void SampleScene::Update(GameManager* gameManager) {
 		const float FADE_IN_INTERVAL = 0.01f;
 		fadeTransparency_ -= FADE_IN_INTERVAL;
 		
-
-
-
+		//完全に透明になったらゲームが始まる
 		if (fadeTransparency_ < 0.0f) {
 			fadeTransparency_ = 0.0f;
 			isFadeIn = false;
 			isExplain_ = true;
-			textureDisplayNumber_ = 1;
+			howToPlayTextureNumber_ = 1;
 		}
 	}
 
@@ -283,15 +308,28 @@ void SampleScene::Update(GameManager* gameManager) {
 		
 
 		fadeTransparency_ = 0.0f;
-		//操作は全部ゲームシーンで統一させたい
-		//コマンドパターンですっきりさせても良さそう
-		XINPUT_STATE joyState{};
+		
 
 		if (isExplain_ == true) {
 			if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
-				++textureDisplayNumber_;
+				++howToPlayTextureNumber_;
 			}
-			if (textureDisplayNumber_ > 2) {
+			//Bボタンを押したとき
+			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+					bTriggerTime_ += 1;
+
+				}
+				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+					bTriggerTime_ = 0;
+				}
+
+				if (bTriggerTime_ == 1) {
+					++howToPlayTextureNumber_;
+				}
+			}
+
+			if (howToPlayTextureNumber_ > 2) {
 				isExplain_ = false;
 				isGamePlay_ = true;
 			}
@@ -511,8 +549,6 @@ void SampleScene::Update(GameManager* gameManager) {
 		flashLight_->SetPhi(phi);
 		flashLight_->Update();
 
-
-
 		collisionManager_->RegisterList(lightCollision_);
 
 		Fan3D fan = flashLight_->GetFan3D();
@@ -590,28 +626,6 @@ void SampleScene::Update(GameManager* gameManager) {
 
 		#pragma endregion
 
-		#pragma region 脱出
-		if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-
-			//Bボタンを押したとき
-			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-				bTriggerTime_ += 1;
-
-			}
-			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-				bTriggerTime_ = 0;
-			}
-
-			if (bTriggerTime_ == 1) {
-				//脱出
-#ifdef _DEBUG
-				ImGui::Begin("B");
-				ImGui::End();
-
-#endif
-			}
-
-		}
 
 		
 
@@ -624,49 +638,36 @@ void SampleScene::Update(GameManager* gameManager) {
 
 #endif // _DEBUG
 
+			//3個取得したら脱出できる
 			uint32_t playerKeyQuantity = player_->GetHavingKey();
-			if (playerKeyQuantity >= 3) {
-				isAbleToEscape_ = true;
+			if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
+				escapeText_->SetInvisible(false);
 			}
 
-#ifdef _DEBUG
-				ImGui::Begin("3Keys");
-				ImGui::End();
 
-#endif // _DEBUG
+			//コントローラーのBボタンを押したら脱出のフラグがたつ
+			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 
-				if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-
-					//Bボタンを押したとき
-					if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-						bTriggerTime_ += 1;
-
-					}
-					if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-						bTriggerTime_ = 0;
-					}
-
-					if (bTriggerTime_ == 1) {
-						//脱出
-						isEscape_ = true;
-					}
+				//Bボタンを押したとき
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+					bTriggerTime_ += 1;
 
 				}
+				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+					bTriggerTime_ = 0;
+				}
 
-				if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
-
-#ifdef _DEBUG
-					ImGui::Begin("B");
-					ImGui::End();
-
-#endif
-
+				if (bTriggerTime_ == 1) {
 					//脱出
 					isEscape_ = true;
 				}
 
-
-
+			}
+			//SPACEキーを押したら脱出のフラグがたつ
+			if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
+				//脱出
+				isEscape_ = true;
+			}
 		}
 
 		//脱出
@@ -692,13 +693,6 @@ void SampleScene::Update(GameManager* gameManager) {
 		//当たり判定
 		collisionManager_->CheckAllCollision();
 
-		
-
-
-
-
-
-
 #ifdef _DEBUG
 		ImGui::Begin("Camera");
 		ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
@@ -712,7 +706,10 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	}
 	
+	//ホワイトアウト
 	if (isFadeOut_ == true) {
+		escapeText_->SetInvisible(true);
+
 		player_->SetIsAbleToControll(false);
 		const float FADE_OUT_INTERVAL = 0.01f;
 		fadeTransparency_ += FADE_OUT_INTERVAL;
@@ -814,18 +811,15 @@ void SampleScene::DrawPostEffect(){
 void SampleScene::DrawSprite(){
 	
 
-	if (isAbleToEscape_ == true) {
-		escapeText_->Draw();
-
-	}
+	
 
 	
 	//説明
-	if (textureDisplayNumber_ == 1) {
+	if (howToPlayTextureNumber_ == 1) {
 		explanation_[0]->Draw();
 		spaceToNext_[0]->Draw();
 	}
-	if (textureDisplayNumber_ == 2) {
+	if (howToPlayTextureNumber_ == 2) {
 		explanation_[1]->Draw();
 		spaceToNext_[1]->Draw();
 	}
@@ -833,12 +827,17 @@ void SampleScene::DrawSprite(){
 	if (isDisplayUI_ == true) {
 		operation_->Draw();
 
-		pickUpKey_->Draw();
+		if (isAbleToPickUpKey_ == true) {
+			pickUpKey_->Draw();
 
+		}
+		
 		//鍵
 		uint32_t keyQuantity = player_->GetHavingKey();
 		keyManager_->DrawSprite(keyQuantity);
 
+
+		escapeText_->Draw();
 
 	}
 

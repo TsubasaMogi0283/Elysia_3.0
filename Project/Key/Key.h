@@ -68,6 +68,16 @@ public:
 		return isPickUp_;
 	}
 
+	/// <summary>
+	/// 取得前
+	/// </summary>
+	/// <param name="isPrePickUp"></param>
+	inline void SetIsPrePickUp(bool isPrePickUp) {
+		this->isPrePickUp_ = isPrePickUp;
+	}
+	inline bool GetIsPrePickUp()const {
+		return isPrePickUp_;
+	}
 
 
 private:
@@ -78,7 +88,8 @@ private:
 	//マテリアル
 	Material material_ = {};
 	
-
+	//取得する前
+	bool isPrePickUp_ = false;
 	//取得されたか
 	bool isPickUp_ = false;
 
