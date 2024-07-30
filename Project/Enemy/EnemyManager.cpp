@@ -183,6 +183,29 @@ void EnemyManager::Update(){
 
 			//追跡の時に
 			if (condition == EnemyCondition::Tracking) {
+
+				if ((enemy->GetWorldPosition().x< stageRect_.leftBack.x + ENEMY_SCALE_SIZE_)|| (enemy->GetWorldPosition().x > stageRect_.rightBack.x - ENEMY_SCALE_SIZE_)) {
+					//前回のMove状態を記録
+					uint32_t preCondition = condition;
+					enemy->SetPreCondition(preCondition);
+
+					//状態を記録
+					condition = EnemyCondition::Move;
+					enemy->SetCondition(condition);
+
+				}
+				if ((enemy->GetWorldPosition().z > stageRect_.leftBack.x - ENEMY_SCALE_SIZE_) || (enemy->GetWorldPosition().z< stageRect_.leftFront.z + ENEMY_SCALE_SIZE_)) {
+					//前回のMove状態を記録
+					uint32_t preCondition = condition;
+					enemy->SetPreCondition(preCondition);
+
+					//状態を記録
+					condition = EnemyCondition::Move;
+					enemy->SetCondition(condition);
+
+				}
+
+				
 				//Moveへ
 				if (distance > TRACKING_START_DISTANCE_) {
 					
@@ -225,6 +248,7 @@ void EnemyManager::Update(){
 					condition = EnemyCondition::Move;
 					enemy->SetCondition(condition);
 				}
+
 
 
 			}

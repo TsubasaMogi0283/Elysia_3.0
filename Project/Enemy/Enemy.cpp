@@ -105,14 +105,14 @@ void Enemy::Update(){
 		//通常の動き
 	case EnemyCondition::Move:
 
+		
 		//ステージの外に行けないようにいする
-		if ((GetWorldPosition().x < stageRect_.leftBack.x + radius_) ||(GetWorldPosition().x > stageRect_.rightBack.x - radius_)) {
+		if ((GetWorldPosition().x < stageRect_.leftBack.x + radius_) || (GetWorldPosition().x > stageRect_.rightBack.x - radius_)) {
 			speed_.x *= -1.0f;
 		}
-		if ((GetWorldPosition().z < stageRect_.leftFront.z + radius_)|| (GetWorldPosition().z > stageRect_.leftBack.z - radius_)) {
+		if ((GetWorldPosition().z < stageRect_.leftFront.z + radius_) || (GetWorldPosition().z > stageRect_.leftBack.z - radius_)) {
 			speed_.z *= -1.0f;
 		}
-
 
 
 		//if (preCondition_ == EnemyCondition::NoneMove) {
@@ -170,14 +170,14 @@ void Enemy::Update(){
 			ImGui::End();
 #endif // DEBUG
 
-			//線形補間で移動する
-			t_ += 0.005f;
-			worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
+		//線形補間で移動する
+		t_ += 0.005f;
+		worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
 
-			//向きを求める
-			direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_, preTrackingPosition_);
-			direction_ = VectorCalculation::Normalize(direction_);
 
+		//向きを求める
+		direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_, preTrackingPosition_);
+		direction_ = VectorCalculation::Normalize(direction_);
 
 		break;
 	
@@ -198,6 +198,10 @@ void Enemy::Update(){
 		}
 	
 	}
+
+
+	
+
 	//向きを計算しモデルを回転させる
 	float directionToRotateY = std::atan2f(-direction_.z,direction_.x);
 
@@ -205,8 +209,8 @@ void Enemy::Update(){
 	worldTransform_.rotate_.y = directionToRotateY + ROTATE_OFFSET;
 
 #ifdef _DEBUG
-	const float ROTATE_OFFSET = std::numbers::pi_v<float>;
-	worldTransform_.rotate_.y = directionToRotateY + ROTATE_OFFSET;
+	const float DEBUG_ROTATE_OFFSET = std::numbers::pi_v<float>;
+	worldTransform_.rotate_.y = directionToRotateY + DEBUG_ROTATE_OFFSET;
 
 #endif // _DEBUG
 
