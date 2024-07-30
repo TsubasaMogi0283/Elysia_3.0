@@ -13,7 +13,7 @@
 void SampleScene::Initialize() {
 
 #pragma region フェード
-	uint32_t fadeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/Black.png");
+	uint32_t fadeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/.png");
 	fadeSprite_.reset(Sprite::Create(fadeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	fadeTransparency_ = 1.0f;
 
