@@ -224,7 +224,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 
 }
 
-void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& pointLight){
+void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight){
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
@@ -295,7 +295,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
 
 	//SpotLight
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, pointLight.bufferResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLight.bufferResource_->GetGPUVirtualAddress());
 
 	if (material.isEnviromentMap_ ==true&&eviromentTextureHandle_ != 0) {
 		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);

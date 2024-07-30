@@ -13,6 +13,7 @@ void Player::Initialize(){
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD3Player","Player.obj");
 	model_.reset(Model::Create(modelHandle));
 
+	isAbleToControll_ = false;
 
 	//持っている鍵の数
 	haveKeyQuantity_ = 0;
@@ -22,13 +23,10 @@ void Player::Initialize(){
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
+	worldTransform_.translate_ = { 0.0f,0.0f,-10.0f };
 }
 
 void Player::Update(){
-
-	
-
-
 
 
 #ifdef _DEBUG
@@ -47,8 +45,11 @@ void Player::Update(){
 
 	const float MOVE_SPEED = 0.1f;
 	//加算
-	worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, { moveDirection_.x * MOVE_SPEED,moveDirection_.y * MOVE_SPEED,moveDirection_.z * MOVE_SPEED });
+	if (isAbleToControll_ == true) {
+		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, { moveDirection_.x * MOVE_SPEED,moveDirection_.y * MOVE_SPEED,moveDirection_.z * MOVE_SPEED });
 
+	}
+	
 	//ステージの外には行けないようにする
 	//左
 	if (worldTransform_.translate_.x < stageRect_.leftBack.x + radius_) {

@@ -9,25 +9,16 @@
 #include "Camera.h"
 
 #include <memory>
-#include <Particle3D.h>
 #include <Audio.h>
 #include "BackText.h"
-#include "LuminanceBasedOutline.h"
-#include "DepthBasedOutline.h"
-#include "RadialBlur.h"
-#include "Dissolve.h"
-#include "RandomEffect.h"
+
+
 #include "SkinCluster.h"
-#include "../../../Ellysia/Polygon/3D/SkyBox/SkyBox.h"
 #include "Material.h"
 #include "SpotLight.h"
 #include "DirectionalLight.h"
-#include "PointLight.h"
-#include <GrayScale.h>
-#include <SepiaScale.h>
-#include <Vignette.h>
-#include <BoxFilter.h>
-#include <GaussianFilter.h>
+
+
 #include <Player/Player.h>
 #include <Enemy/Enemy.h>
 #include <LightWeapon/LightWeapon.h>
@@ -40,6 +31,10 @@
 #include <Stage/Gate/Gate.h>
 #include <Fan.h>
 #include "Collision.h"
+#include <Stage/Skydome/Skydome.h>
+
+#include "Input.h"
+#include <Stage/ObjectManager/ObjectManager.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -48,13 +43,18 @@ class SampleScene : public IGameScene {
 public:
 
 	//コンストラクタ
-	SampleScene();
+	SampleScene()=default;
 
 	
+	/// <summary>
 	/// 初期化
+	/// </summary>
 	void Initialize()override;
 
+	/// <summary>
 	/// 更新
+	/// </summary>
+	/// <param name="gameManager"></param>
 	void Update(GameManager* gameManager)override;
 
 #pragma region 描画
@@ -81,14 +81,13 @@ public:
 	void DrawSprite()override;
 
 #pragma endregion
+	/// <summary>
 	/// デストラクタ
+	/// </summary>
 	~SampleScene();
 
 
 private:
-
-	
-	void CheckCollision(std::list<Enemy*>& enemies);
 
 	/// <summary>
 	/// 鍵の取得の処理
@@ -96,16 +95,29 @@ private:
 	void KeyCollision();
 
 
+private:
+	enum GameCondition {
+		GameFadeIn,
+		Explanation,
+		GamePlay,
+		GameFadeOut,
+	};
 
-
+	GameCondition gameCondition_ = GameCondition::GameFadeIn;
 
 private:
+
+
+	//操作は全部ゲームシーンで統一させたい
+	//コマンドパターンですっきりさせても良さそう
+	XINPUT_STATE joyState{};
 
 	//カメラ
 	Camera camera_ = {};
 	Vector3 cameraPosition_ = {};
 	Vector3 CAMERA_POSITION_OFFSET = { 0.0f,1.0f,0.0f };
 
+	//3人称視点
 	Vector3 cameraThirdPersonViewOfPointPosition_ = {};
 	Vector3 thirdPersonViewOfPointRotate_ = {};
 
@@ -113,8 +125,6 @@ private:
 	bool isRotateXKey_ = false;
 
 
-	//平行光源
-	DirectionalLight directionalLight_ = {};
 	//スポットライト
 	std::unique_ptr<FlashLight> flashLight_ = nullptr;
 	//マテリアル
@@ -125,16 +135,21 @@ private:
 	std::unique_ptr<BackText> back_ = nullptr;
 
 
-
+	float t = 0.0f;
+	float p = 0.0f;
+	Vector3 pp = {};
 	
-
 	//プレイヤー
-	std::unique_ptr<Player>player_ = nullptr;
+	Player* player_ = nullptr;
 	Vector3 playerDirection_ = {0.0f,0.0f,0.0f};
 	bool isPlayerMoveKey_ = false;
 
 	uint32_t bTriggerTime_ = 0;
 	bool isBTrigger_ = false;
+
+	//オブジェクトマネージャー
+	std::unique_ptr<ObjectManager>objectManager_ = nullptr;
+
 
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;
@@ -143,10 +158,12 @@ private:
 	std::unique_ptr<Gate> gate_ = nullptr;
 	bool isEscape_ = false;
 
-	//鍵
-	std::unique_ptr<KeyManager> keyManager_ = {};
-	uint32_t keyQuantity_ = 0;
+	
 
+	//天球
+	std::unique_ptr<Skydome> skydome_ = nullptr;
+
+	
 	
 	//敵
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
@@ -165,7 +182,63 @@ private:
 
 
 
+	
+#pragma region ゲーム中のUI
 
+	//UIManagerを作った方がよさそう
+	//ベタガキ過ぎるので
+
+	//UIを表示するかどうか
+	bool isDisplayUI_ = false;
+
+
+	//脱出テキスト
+	std::unique_ptr<Sprite> escapeText_ = nullptr;
+
+	//操作
+	std::unique_ptr<Sprite> operation_ = nullptr;
+
+	//鍵取得
+	std::unique_ptr<Sprite> pickUpKey_ = nullptr;
+
+
+
+	//鍵
+	std::unique_ptr<KeyManager> keyManager_ = {};
+	uint32_t keyQuantity_ = 0;
+	bool isAbleToPickUpKey_ = false;
+
+	std::unique_ptr<Sprite>lackOfKeyesNumberSprite_[3] = { nullptr };
+	uint32_t lackOfKeyesNumber_ = 0;
+
+
+#pragma region フェード
+
+	std::unique_ptr<Sprite> fadeSprite_ = nullptr;
+	//透明度
+	float fadeTransparency_ = 1.0f;
+
+	bool isFadeIn = true;
+	bool isFadeOut_ = false;
+
+#pragma endregion
+
+
+	bool isExplain_ = false;
+	bool isGamePlay_ = false;
+
+
+#pragma region 説明
+	static const uint32_t EXPLANATION_QUANTITY_ = 2;
+	std::unique_ptr<Sprite> explanation_[EXPLANATION_QUANTITY_] = { nullptr };
+
+	//Spaceで次に進むテキスト
+	static const uint32_t SPACE_TO_NEXT_QUANTITY_ = 2;
+	std::unique_ptr<Sprite> spaceToNext_[SPACE_TO_NEXT_QUANTITY_] = { nullptr };
+
+	uint32_t howToPlayTextureNumber_ = 0;
+
+#pragma endregion
 
 
 

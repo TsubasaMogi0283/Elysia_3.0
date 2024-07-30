@@ -64,15 +64,26 @@ public:
 		return uint32_t(keyes_.size());
 	}
 
+	inline uint32_t GetMaxKeyQuantity()const {
+		return MAX_KEY_QUANTITY_;
+	}
+
 
 private:
 	//鍵
 	std::list<Key*>keyes_ = {};
 
+	const uint32_t MAX_KEY_QUANTITY_ = 3;
+
 	//UI
 	std::unique_ptr<Sprite> keySprite_ = nullptr;
 	static const uint32_t NUMBER_QUANTITY_ = 10;
 	std::unique_ptr<Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
+
+
+
+	//鍵取得
+	std::unique_ptr<Sprite> pickUpKey_ = nullptr;
 
 
 };

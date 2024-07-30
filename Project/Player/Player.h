@@ -121,6 +121,14 @@ public:
 		this->stageRect_ = stageRect;
 	}
 
+	/// <summary>
+	/// 操作を受け付けるか受け付けないかの設定
+	/// </summary>
+	/// <param name="isControll"></param>
+	inline void SetIsAbleToControll(bool isControll) {
+		this->isAbleToControll_ = isControll;
+	}
+
 
 private:
 	//ゲームシーン
@@ -150,6 +158,8 @@ private:
 	
 	bool isPressKey_ = false;
 
+	//操作可能かどうか
+	bool isAbleToControll_ = false;
 
 };
 

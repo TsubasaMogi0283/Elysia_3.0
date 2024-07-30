@@ -195,8 +195,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\LightWeapon\LightWeapon.cpp" />
     <ClCompile Include="Project\Light\FlashLight\FlashLight.cpp" />
     <ClCompile Include="Project\Player\Player.cpp" />
+    <ClCompile Include="Project\Stage\DemoObject\DemoObject.cpp" />
     <ClCompile Include="Project\Stage\Gate\Gate.cpp" />
     <ClCompile Include="Project\Stage\Ground\Ground.cpp" />
+    <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp" />
+    <ClCompile Include="Project\Stage\Skydome\Skydome.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\AnimationObject3D\AnimationObject3D.PS.hlsl">
@@ -265,6 +268,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\Shader\GrayScale\GrayScale.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Line3D\Line3D.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Line3D\Line3D.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -458,9 +471,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\LightWeapon\LightWeapon.h" />
     <ClInclude Include="Project\Light\FlashLight\FlashLight.h" />
     <ClInclude Include="Project\Player\Player.h" />
+    <ClInclude Include="Project\Stage\DemoObject\DemoObject.h" />
     <ClInclude Include="Project\Stage\Gate\Gate.h" />
     <ClInclude Include="Project\Stage\Ground\Ground.h" />
     <ClInclude Include="Project\Stage\Ground\StageRect.h" />
+    <ClInclude Include="Project\Stage\ObjectManager\ObjectManager.h" />
+    <ClInclude Include="Project\Stage\Skydome\Skydome.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -479,6 +495,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resources\Shader\GaussianFilter\Kernel.hlsli" />
     <None Include="Resources\Shader\GaussianFilter\SmoothingIndex.hlsli" />
     <None Include="Resources\Shader\GrayScale\GrayScale.hlsli" />
+    <None Include="Resources\Shader\Line3D\Line3D.hlsli" />
     <None Include="Resources\Shader\LuminanceBasedOutline\LuminanceBasedOutline.hlsli" />
     <None Include="Resources\Shader\Object2D\Object2d.hlsli" />
     <None Include="Resources\Shader\Object3D\Object3d.hlsli">

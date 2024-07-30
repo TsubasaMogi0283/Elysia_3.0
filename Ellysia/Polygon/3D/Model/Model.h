@@ -61,8 +61,8 @@ public:
 	/// </summary>
 	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
-	/// <param name="pointLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& pointLight);
+	/// <param name="spotLight"></param>
+	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight);
 
 
 

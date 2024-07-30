@@ -162,9 +162,9 @@ void LevelDataManager::Load(const std::string& directoryPath, const std::string&
 
 
 void LevelDataManager::GenarateLevelData(const std::string& name){
+	name;
 
-
-	levelDatas_.
+	//levelDatas_.
 
 }
 

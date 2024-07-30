@@ -1,9 +1,13 @@
 #pragma once
 #include "Enemy.h"
+#include <memory>
 #include <list>
+
+#include "Stage/Ground/StageRect.h"
 
 struct Camera;
 struct SpotLight;
+class Player;
 
 class EnemyManager{
 public:
@@ -34,7 +38,6 @@ public:
 	/// </summary>
 	~EnemyManager();
 
-
 public:
 	/// <summary>
 	/// エネミーのリストを取得
@@ -54,15 +57,38 @@ public:
 	/// </summary>
 	void DeleteEnemy();
 		
+	/// <summary>
+	/// プレイヤーの設定
+	/// </summary>
+	/// <param name="player"></param>
+	void SetPlayer(Player* player) {
+		this->player_=player;
+	}
 	
-	
+	/// <summary>
+	/// ステージの四隅を取得
+	/// </summary>
+	/// <param name="stageRect"></param>
+	void SetStageRectangle(StageRect& stageRect) {
+		this->stageRect_ = stageRect;
+	}
 
 private:
+	Player* player_ = nullptr;
+
 	//エネミーのリスト
 	std::list<Enemy*>enemyes_ = {};
 	//モデルハンドル
 	uint32_t modelHandle_ = 0;
 
+	const float ENEMY_SCALE_SIZE_ = 1.0f;
+	
 
+	StageRect stageRect_ = {};
+
+	//モデル
+	std::unique_ptr<Model> debugModel_ = nullptr;
+	WorldTransform debugModelWorldTransform_ = {};
+	Material material_ = {};
 };
 

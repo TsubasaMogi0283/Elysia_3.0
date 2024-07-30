@@ -3,9 +3,6 @@
 
 #include "d3dx12.h"
 #include <vector>
-static uint32_t descriptorSizeSRV_ = 0u;
-static uint32_t descriptorSizeRTV_ = 0u;
-static uint32_t descriptorSizeDSV_ = 0u;
 static uint32_t textureIndex;
 
 
@@ -71,8 +68,6 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 	//0番目はImGuiが使っているからダメだった
 	TextureManager::GetInstance()->textureInformation_[textureIndex].handle_ = textureIndex;
 
-	auto test = metadata.IsCubemap();
-	test;
 	//SRVの生成
 	SrvManager::GetInstance()->CreateSRVForTexture2D(
 		TextureManager::GetInstance()->textureInformation_[textureIndex].handle_,

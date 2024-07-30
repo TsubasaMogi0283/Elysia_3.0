@@ -81,6 +81,8 @@ struct SpotLight
     float cosFallowoffStart;
 	//スポットライトの余弦
     float cosAngle;
+    //当たっていない所をこれで明るくする
+    float aroundOffset;
 
 
 };
@@ -271,14 +273,13 @@ PixelShaderOutput main(VertexShaderOutput input)
 		
         float3 diffuseSpotLight = gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * cos * gSpotLight.intensity;
         float3 specularSpotLight = gSpotLight.color.rgb * gSpotLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
-		
-        output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor;
-        output.color.a = gMaterial.color.a * textureColor.a;
-        
+        float3 offset = { gSpotLight.aroundOffset, gSpotLight.aroundOffset, gSpotLight.aroundOffset };
+        //float3 offset = { 0.004f, 0.004f, 0.004f };
         //通常はこっち
         if (gMaterial.isEnviromentMap == false)
         {
-            output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor;
+            
+            output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor + offset;
             output.color.a = gMaterial.color.a * textureColor.a;
 
         }
@@ -289,21 +290,11 @@ PixelShaderOutput main(VertexShaderOutput input)
             float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
             float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
 
-            output.color.rgb = (enviromentColor.rgb) * ((diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor);
+            output.color.rgb = (enviromentColor.rgb) * ((diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor+offset);
             output.color.a = gMaterial.color.a * textureColor.a;
 		
         }
         
-    }
-    else if (gMaterial.enableLighting == 4)
-    {
-        float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
-        float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
-        float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
-
-        output.color.rgb = enviromentColor.rgb;
-        output.color.a = gMaterial.color.a;
-		
     }
     else
     {

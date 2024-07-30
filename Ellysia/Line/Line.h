@@ -15,20 +15,37 @@
 
 class Line {
 public:
-	//コンストラクタ
-	Line();
+	
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	Line()=default;
 
-	//初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
-	//描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="start"></param>
+	/// <param name="end"></param>
+	/// <param name="camera"></param>
 	void Draw(Vector3 start,Vector3 end, Camera& camera);
 
 
-
-	~Line();
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Line()=default;
 
 public:
+
+	/// <summary>
+	/// 色の設定
+	/// </summary>
+	/// <param name="color"></param>
 	void SetColor(Vector4 color) {
 		this->color_ = color;
 	}
@@ -43,13 +60,9 @@ private:
 
 
 	struct LineTransformMatrix {
-		//始点
 		Matrix4x4 WVP;
 		Matrix4x4 World;
 
-		//終点
-		/*Matrix4x4 endWVP;
-		Matrix4x4 endWorld;*/
 
 	};
 
@@ -64,10 +77,10 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
 
 	//Resource
-	ComPtr<ID3D12Resource> vertexResouce_;
+	ComPtr<ID3D12Resource> vertexResouce_=nullptr;
 
 	//Resourceにデータを書き込む
-	LineVertexData* vertexData_;
+	LineVertexData* vertexData_=nullptr;
 
 	//マテリアル用のリソースを作る
 	ComPtr<ID3D12Resource> materialResource_ = nullptr;
@@ -77,8 +90,6 @@ private:
 	ComPtr<ID3D12Resource> wvpResource_ = nullptr;
 	LineTransformMatrix* wvpData_ = nullptr;
 
-	//テクスチャハンドル
-	uint32_t textureHandle_ = 0u;
 
 	Vector4 color_ = {};
 };

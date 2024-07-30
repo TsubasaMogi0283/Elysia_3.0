@@ -37,7 +37,11 @@ public:
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> bufferResource_=nullptr;
+
+
+private:
+
 	//書き込みデータ
-	DirectionalLightData* directionalLight_ = nullptr;
+	DirectionalLightData* directionalLightData_ = nullptr;
 
 };
