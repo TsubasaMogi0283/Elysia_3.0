@@ -257,7 +257,7 @@ void Enemy::OnCollision() {
 	ImGui::End();
 
 #endif // _DEBUG
-	const float COLOR_CHANGE_INTERVAL = 0.001f;
+	const float COLOR_CHANGE_INTERVAL = 0.005f;
 	color_.y -= COLOR_CHANGE_INTERVAL;
 	color_.z -= COLOR_CHANGE_INTERVAL;
 
