@@ -304,6 +304,12 @@
     <Filter Include="Project\GameScene\Title">
       <UniqueIdentifier>{92919d9a-660d-4a63-8767-0a9223021c5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Stage\ObjectManager">
+      <UniqueIdentifier>{07691779-7717-47c0-8eaf-66d662b47822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Stage\DemoObject">
+      <UniqueIdentifier>{23eb0470-6142-403d-b697-8c87c43993b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -518,6 +524,12 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Math\Vector\Material.cpp">
       <Filter>Ellysia\Source File\Polygone\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Stage\DemoObject\DemoObject.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -927,6 +939,12 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\PostEffect\GrayScale\GrayScale.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Stage\ObjectManager\ObjectManager.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Stage\DemoObject\DemoObject.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

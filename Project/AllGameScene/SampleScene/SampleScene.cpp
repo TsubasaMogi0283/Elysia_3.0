@@ -26,13 +26,13 @@ void SampleScene::Initialize() {
 
 #endif // _DEBUG
 
-
-
 #pragma endregion
 
-	#pragma region プレイヤー
+#pragma region プレイヤー
 	player_ = new Player();
 	player_->Initialize();
+	player_->SetIsAbleToControll(false);
+
 	playerDirection_ = { 0.0f,0.0f,0.0f };
 	isPlayerMoveKey_ = false;
 	bTriggerTime_ = 0;
@@ -41,19 +41,27 @@ void SampleScene::Initialize() {
 	//初期は1人称視点
 	viewOfPoint_ = FirstPerson;
 	
-	#pragma endregion
+#pragma endregion
 	
-	//地面
+#pragma region オブジェクト
+	objectManager_ = std::make_unique<ObjectManager>();
+	objectManager_->Initialize();
+
+	#pragma region 地面
 	uint32_t groundModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize(groundModelHandle);
 	StageRect stageRect = ground_->GetStageRect();
-	
+	#pragma endregion
+
 	
 	#pragma region ゲート
 	uint32_t gateModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Gate","Gate.obj");
 	gate_ = std::make_unique<Gate>();
 	gate_->Initialize(gateModelhandle);
+
+
+
 
 	
 
@@ -63,6 +71,7 @@ void SampleScene::Initialize() {
 	escapeText_->SetInvisible(true);
 	#pragma endregion
 
+#pragma endregion
 
 	#pragma region 鍵
 	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","Cube.obj");
@@ -565,16 +574,18 @@ void SampleScene::Update(GameManager* gameManager) {
 				collisionManager_->RegisterList(enemy);
 
 
-							if (IsFanCollision(fan, enemy->GetWorldPosition())) {
-				
-								enemy->OnCollision();
-				#ifdef _DEBUG
-								ImGui::Begin("FanCollsion");
-								ImGui::End();
-				#endif // _DEBUG
-				
-								
-							}
+				if (IsFanCollision(fan, enemy->GetWorldPosition())) {
+	
+					enemy->OnCollision();
+
+
+					#ifdef _DEBUG
+					ImGui::Begin("FanCollsion");
+					ImGui::End();
+					#endif // _DEBUG
+	
+					
+				}
 			}
 			it++;
 
@@ -744,6 +755,9 @@ void SampleScene::Update(GameManager* gameManager) {
 	//カメラの更新
 	camera_.Update();
 
+	//オブジェクトマネージャーの更新
+	objectManager_->Update();
+
 	//地面
 	ground_->Update();
 
@@ -756,15 +770,11 @@ void SampleScene::Update(GameManager* gameManager) {
 	//プレイヤーの更新
 	player_->Update();
 
-
 	//ライト確認用のタワー
 	debugTowerWorldTransform_.Update();
 
 	debugFanCollisionSphereWorldTransform_.Update();
 	debugFanCollisionSphereMaterial_.Update();
-
-
-
 
 }
 
@@ -802,6 +812,8 @@ void SampleScene::DrawObject3D() {
 	flashLight_->Draw(camera_);
 
 	
+	objectManager_->Draw(camera_, spotLight);
+
 	//タワー
 	//debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight);
 	

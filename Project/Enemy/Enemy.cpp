@@ -79,7 +79,8 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 	
 }
-
+
+
 
 void Enemy::Update(){
 	
@@ -196,7 +197,6 @@ void Enemy::Update(){
 		if (attackTime_ > 240) {
 			attackTime_ = 0;
 		}
-	
 	}
 
 
@@ -209,9 +209,8 @@ void Enemy::Update(){
 	worldTransform_.rotate_.y = directionToRotateY + ROTATE_OFFSET;
 
 #ifdef _DEBUG
-	const float DEBUG_ROTATE_OFFSET = std::numbers::pi_v<float>;
-	worldTransform_.rotate_.y = directionToRotateY + DEBUG_ROTATE_OFFSET;
-
+	const float DEBUG_MODEL_ROTATE_OFFSET = std::numbers::pi_v<float>;
+	worldTransform_.rotate_.y = directionToRotateY + DEBUG_MODEL_ROTATE_OFFSET;
 #endif // _DEBUG
 
 
