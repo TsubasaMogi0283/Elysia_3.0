@@ -197,7 +197,6 @@ void SampleScene::Initialize() {
 	
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
-	//material_.lightingKinds_ = Directional;
 	
 	//懐中電灯
 	flashLight_ = std::make_unique<FlashLight>();
@@ -291,9 +290,6 @@ void SampleScene::KeyCollision(){
 
 }
 
-
-
-
 /// <summary>
 /// 更新
 /// </summary>
@@ -303,8 +299,8 @@ void SampleScene::Update(GameManager* gameManager) {
 		//コリジョンリストのクリア
 	collisionManager_->ClearList();
 
-
 	fadeSprite_->SetTransparency(fadeTransparency_);
+	//フェードイン
 	if (isFadeIn==true) {
 		const float FADE_IN_INTERVAL = 0.01f;
 		fadeTransparency_ -= FADE_IN_INTERVAL;
@@ -318,12 +314,11 @@ void SampleScene::Update(GameManager* gameManager) {
 		}
 	}
 
-	if (isFadeIn == false && isFadeOut_ == false) {
-		
 
+	//ゲーム
+	if (isFadeIn == false && isFadeOut_ == false) {
 		fadeTransparency_ = 0.0f;
 		
-
 		if (isExplain_ == true) {
 			if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
 				++howToPlayTextureNumber_;
@@ -353,7 +348,6 @@ void SampleScene::Update(GameManager* gameManager) {
 
 			//操作説明を追加
 			isDisplayUI_ = true;
-
 
 			//敵
 			enemyManager_->Update();
@@ -588,9 +582,6 @@ void SampleScene::Update(GameManager* gameManager) {
 				}
 			}
 			it++;
-
-
-
 		}
 
 
@@ -689,11 +680,7 @@ void SampleScene::Update(GameManager* gameManager) {
 					//脱出
 					isEscape_ = true;
 				}
-
 			}
-
-
-			
 		}
 		else {
 			escapeText_->SetInvisible(true);
@@ -711,7 +698,6 @@ void SampleScene::Update(GameManager* gameManager) {
 		//鍵
 		keyManager_->Update();
 
-		
 		//ライト
 		Vector3 lightDirection = flashLight_->GetDirection();
 		lightCollision_->Update(player_->GetWorldPosition(), lightDirection);
@@ -730,7 +716,6 @@ void SampleScene::Update(GameManager* gameManager) {
 		ImGui::InputFloat("Theta", &theta_);
 		ImGui::InputFloat("Phi", &phi);
 		ImGui::End();
-
 #endif
 
 	}
