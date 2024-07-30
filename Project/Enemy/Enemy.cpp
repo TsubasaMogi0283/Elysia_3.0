@@ -89,7 +89,7 @@ void Enemy::Update(){
 
 
 	switch (condition_) {
-		//何も攻撃しない
+		//何もしない
 	case EnemyCondition::NoneMove:
 		#ifdef _DEBUG
 		ImGui::Begin("None");
@@ -105,7 +105,7 @@ void Enemy::Update(){
 		//通常の動き
 	case EnemyCondition::Move:
 
-
+		//ステージの外に行けないようにいする
 		if ((GetWorldPosition().x < stageRect_.leftBack.x + radius_) ||(GetWorldPosition().x > stageRect_.rightBack.x - radius_)) {
 			speed_.x *= -1.0f;
 		}
@@ -155,23 +155,22 @@ void Enemy::Update(){
 		
 	
 		#pragma endregion
-		preCondition_ = EnemyCondition::PreTracking;
 
+		preCondition_ = EnemyCondition::PreTracking;
 		condition_ = EnemyCondition::Tracking;
 
 		break;
 	
-	
-	
 		//追跡
 	case EnemyCondition::Tracking:
 		//追跡処理
-		//if (preCondition_ == EnemyCondition::PreTracking) {
 
 #ifdef _DEBUG
 			ImGui::Begin("Tracking");
 			ImGui::End();
 #endif // DEBUG
+
+			//線形補間で移動する
 			t_ += 0.005f;
 			worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
 
@@ -179,7 +178,6 @@ void Enemy::Update(){
 			direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_, preTrackingPosition_);
 			direction_ = VectorCalculation::Normalize(direction_);
 
-		//}
 
 		break;
 	
@@ -201,9 +199,18 @@ void Enemy::Update(){
 	
 	}
 	//向きを計算しモデルを回転させる
-	float directionToRotateY = std::atan2f(direction_.z,direction_.x);
+	float directionToRotateY = std::atan2f(-direction_.z,direction_.x);
+
+	const float ROTATE_OFFSET = -std::numbers::pi_v<float>/2.0f;
+	worldTransform_.rotate_.y = directionToRotateY + ROTATE_OFFSET;
+
+#ifdef _DEBUG
 	const float ROTATE_OFFSET = std::numbers::pi_v<float>;
-	worldTransform_.rotate_.y = directionToRotateY+ ROTATE_OFFSET;
+	worldTransform_.rotate_.y = directionToRotateY + ROTATE_OFFSET;
+
+#endif // _DEBUG
+
+
 	
 
 #ifdef _DEBUG
@@ -246,7 +253,7 @@ void Enemy::OnCollision() {
 	ImGui::End();
 
 #endif // _DEBUG
-	const float COLOR_CHANGE_INTERVAL = 0.0005f;
+	const float COLOR_CHANGE_INTERVAL = 0.001f;
 	color_.y -= COLOR_CHANGE_INTERVAL;
 	color_.z -= COLOR_CHANGE_INTERVAL;
 
@@ -286,8 +293,6 @@ void Enemy::Draw(Camera& camera,SpotLight&spotLight){
 	debugModel_->Draw(debugModelWorldTransform_, camera, material_, spotLight);
 
 #endif // _DEBUG
-
-	
 
 	//描画
 	if (isAlive_ == true) {

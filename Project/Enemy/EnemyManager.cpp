@@ -149,14 +149,11 @@ void EnemyManager::Update(){
 
 	//1体だけの時
 	if (enemyAmount == 1) {
-		
 		for (Enemy* enemy : enemyes_) {
 			uint32_t condition = enemy->GetCondition();
 			Vector3 enemyPosition = enemy->GetWorldPosition();
 
-
-
-
+			//プレイヤーとの距離を求める
 			Vector3 difference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
 			float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
 
@@ -184,7 +181,7 @@ void EnemyManager::Update(){
 				}
 			}
 
-
+			//追跡の時に
 			if (condition == EnemyCondition::Tracking) {
 				//Moveへ
 				if (distance > TRACKING_START_DISTANCE_) {
@@ -214,12 +211,17 @@ void EnemyManager::Update(){
 
 			}
 
+			//攻撃の時に・・
 			if (condition == EnemyCondition::Attack) {
 				////攻撃し終わった後距離が離れていれば通常の動きに戻る
 				//離れていなければもう一回攻撃
-				if ((distance >= ATTACK_START_DISTANCE_ &&
-					distance < TRACKING_START_DISTANCE_)) {
+				if ((distance >= ATTACK_START_DISTANCE_)) {
 
+					//前回の記録
+					uint32_t preCondition = condition;
+					enemy->SetPreCondition(preCondition);
+
+					//状態を記録
 					condition = EnemyCondition::Move;
 					enemy->SetCondition(condition);
 				}
@@ -281,15 +283,6 @@ void EnemyManager::Update(){
 				uint32_t condition = (*it1)->GetCondition();
 				
 				
-				
-
-
-				//if (enemy1Position.x < LEFT_LINE) {
-				//	
-				//	//X軸に反転
-				//	(*it1)->InvertSpeedX();
-				//
-				//}
 
 				// 進行方向上にいたら
 				if ((ENEMY_SCALE_SIZE_*2.0f > projectDistance) &&
@@ -330,13 +323,6 @@ void EnemyManager::Update(){
 				if (ENEMY_SCALE_SIZE_ * 2.0f <= projectDistance) {
 					uint32_t newCondition = EnemyCondition::Move;
 					(*it1)->SetCondition(newCondition);
-					if (condition == EnemyCondition::Move) {
-						
-					}
-					if (condition == EnemyCondition::Tracking) {
-						//uint32_t newCondition = EnemyCondition::Tracking;
-						//(*it1)->SetCondition(newCondition);
-					}
 				}
 			
 			}
@@ -442,41 +428,9 @@ void EnemyManager::Update(){
 	}
 	
 
-	////追跡
-	//if (condition == EnemyCondition::Tracking) {
-	//
-	//	//離れたらMoveへ
-	//	if (distance > TRACKING_START_DISTANCE_) {
-	//		condition = EnemyCondition::Move;
-	//		enemy1->SetCondition(condition);
-	//
-	//	}
-	//	
-	//
-	//
-	//	//設定した値より短くなったら攻撃開始
-	//	if (distance <= ATTACK_START_DISTANCE_ &&
-	//		MINIMUM_DISTANCE < distance) {
-	//	
-	//		condition = EnemyCondition::Attack;
-	//		enemy1->SetCondition(condition);
-	//	
-	//	}
-	//
-	//
-	//
-	//}
-
 
 
 	material_.Update();
-
-#ifdef _DEBUG
-	
-
-
-#endif // _DEBUG
-
 #ifdef _DEBUG
 	debugModelWorldTransform_.Update();
 

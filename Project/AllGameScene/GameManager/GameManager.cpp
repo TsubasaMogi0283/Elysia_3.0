@@ -6,7 +6,7 @@
 
 void GameManager::Initialize() {
 	//シーンごとに動作確認したいときはここを変えてね
-	currentGamaScene_ = new TitleScene();
+	currentGamaScene_ = new SampleScene();
 
 #ifdef _DEBUG
 	currentGamaScene_ = new SampleScene();
