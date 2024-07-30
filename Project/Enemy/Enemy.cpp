@@ -155,7 +155,8 @@ void Enemy::Update(){
 		
 	
 		#pragma endregion
-	
+		preCondition_ = EnemyCondition::PreTracking;
+
 		condition_ = EnemyCondition::Tracking;
 
 		break;

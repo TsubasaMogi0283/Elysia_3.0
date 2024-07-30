@@ -161,34 +161,84 @@ void EnemyManager::Update(){
 			float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
 
 
-			//離れたらMoveへ
+
+
+			//通常時
 			if (distance > TRACKING_START_DISTANCE_) {
-				uint32_t preCondition = condition;
-				enemy->SetPreCondition(preCondition);
 				condition = EnemyCondition::Move;
 				enemy->SetCondition(condition);
 
 			}
 
 
-
-			//設定した値より短くなったら攻撃開始
-			if (distance <= TRACKING_START_DISTANCE_) {
-
-				if (ATTACK_START_DISTANCE_ <= distance) {
+			//設定した値より短くなったら接近開始
+			if (condition == EnemyCondition::Move) {
+				if (distance <= TRACKING_START_DISTANCE_) {
+					//前回のMove状態を記録
 					uint32_t preCondition = condition;
 					enemy->SetPreCondition(preCondition);
+					
+					//状態を記録
 					condition = EnemyCondition::PreTracking;
 					enemy->SetCondition(condition);
 				}
+			}
 
-				
+
+			if (condition == EnemyCondition::Tracking) {
+				//Moveへ
+				if (distance > TRACKING_START_DISTANCE_) {
+					
+					//前回のMove状態を記録
+					uint32_t preCondition = condition;
+					enemy->SetPreCondition(preCondition);
+					
+					//状態を記録
+					condition = EnemyCondition::Move;
+					enemy->SetCondition(condition);
+
+				}
+
+				//設定した値より短くなったら攻撃開始
+				if (distance <= ATTACK_START_DISTANCE_ &&
+					MINIMUM_DISTANCE < distance) {
+					//前回のMove状態を記録
+					uint32_t preCondition = condition;
+					enemy->SetPreCondition(preCondition);
+
+					//状態を記録
+					condition = EnemyCondition::Attack;
+					enemy->SetCondition(condition);
+
+				}
 
 			}
 
+			if (condition == EnemyCondition::Attack) {
+				////攻撃し終わった後距離が離れていれば通常の動きに戻る
+				//離れていなければもう一回攻撃
+				if ((distance >= ATTACK_START_DISTANCE_ &&
+					distance < TRACKING_START_DISTANCE_)) {
+
+					condition = EnemyCondition::Move;
+					enemy->SetCondition(condition);
+				}
+
+
+			}
+
+
 #ifdef _DEBUG
+
+			int32_t debugCondition = static_cast<uint32_t>(condition);
+			int32_t debugPreCondition = static_cast<uint32_t>(enemy->GetPreCondition());
+
 			ImGui::Begin("Enemy1"); 
 			ImGui::InputFloat("Distance", &distance);
+			ImGui::InputInt("Condition", &debugCondition);
+			ImGui::InputInt("PreCondition", &debugPreCondition);
+
+			
 			ImGui::End();
 #endif // _DEBUG
 
