@@ -1,8 +1,9 @@
 #include "GameManager.h"
 #include "SampleScene/SampleScene.h"
 #include "SampleScene2/SampleScene2.h"
-
 #include "TitleScene/TitleScene.h"
+
+//シーンファクトリー作った方がよさそう
 
 void GameManager::Initialize() {
 	//シーンごとに動作確認したいときはここを変えてね
@@ -12,7 +13,7 @@ void GameManager::Initialize() {
 	currentGamaScene_ = new SampleScene();
 #endif // _DEBUG
 
-
+	//初期化
 	currentGamaScene_->Initialize();
 
 }
@@ -21,7 +22,7 @@ void GameManager::ChangeScene(IGameScene* newGameScene) {
 	//一度消してから次のシーンにいく
 	delete currentGamaScene_;
 	currentGamaScene_ = newGameScene;
-	//今は言っているシーンが引数
+	//引数が今入っているシーン
 	currentGamaScene_->Initialize();
 }
 
@@ -56,5 +57,4 @@ void GameManager::DrawPostEffect(){
 
 GameManager::~GameManager() {
 	delete currentGamaScene_;
-
 }
