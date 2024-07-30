@@ -83,23 +83,6 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 void Enemy::Update(){
 	
-
-//#pragma region ステージの外に行かないようにする
-//
-//	Vector3 position = enemy->GetWorldPosition();
-//	float xxxx = stageRect_.leftBack.x + enemy->GetRadius();
-//	//左
-//	if (position.x < xxxx) {
-//#ifdef _DEBUG
-//		ImGui::Begin("Aaaaa");
-//		ImGui::End();
-//#endif // _DEBUG
-//		enemy->InvertSpeedX();
-//
-//		//enemy->InvertSpeedX();
-//	}
-//
-//#pragma endregion
 	//更新
 	worldTransform_.Update();
 	material_.Update();
@@ -173,29 +156,29 @@ void Enemy::Update(){
 	
 		#pragma endregion
 	
-		preCondition_ = EnemyCondition::PreTracking;
 		condition_ = EnemyCondition::Tracking;
-	
+
 		break;
 	
 	
 	
 		//追跡
 	case EnemyCondition::Tracking:
-		#pragma region 追跡処理
-	
-		#ifdef _DEBUG
+		//追跡処理
+		//if (preCondition_ == EnemyCondition::PreTracking) {
+
+#ifdef _DEBUG
 			ImGui::Begin("Tracking");
 			ImGui::End();
-		#endif // DEBUG
-		t_ += 0.005f;
-		worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
-		
-		//向きを求める
-		direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_,preTrackingPosition_);
-		direction_ = VectorCalculation::Normalize(direction_);
-	
-		#pragma endregion
+#endif // DEBUG
+			t_ += 0.005f;
+			worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
+
+			//向きを求める
+			direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_, preTrackingPosition_);
+			direction_ = VectorCalculation::Normalize(direction_);
+
+		//}
 
 		break;
 	
@@ -262,11 +245,9 @@ void Enemy::OnCollision() {
 	ImGui::End();
 
 #endif // _DEBUG
-	const float COLOR_CHANGE_INTERVAL = 0.005f;
+	const float COLOR_CHANGE_INTERVAL = 0.0005f;
 	color_.y -= COLOR_CHANGE_INTERVAL;
 	color_.z -= COLOR_CHANGE_INTERVAL;
-
-
 
 	//0になったら消す
 	if (color_.y < 0.0f &&

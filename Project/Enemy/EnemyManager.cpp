@@ -24,9 +24,9 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 		(stageRect_.leftBack.z != stageRect_.rightFront.z));
 
 
-
+	//モデルを代入
 	modelHandle_ = modelhandle;
-
+	assert(modelHandle_ != 0);
 
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
@@ -37,12 +37,12 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	enemyes_.push_back(enemy1);
 
 
-	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = { -5.0f,0.0f,10.0f };
-	enemy2->SetStageRect(stageRect_);
-	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemy2->Initialize(modelHandle_, position2, { -0.0f,0.0f,-0.0f });
-	enemyes_.push_back(enemy2);
+	//Enemy* enemy2 = new Enemy();
+	//Vector3 position2 = { -5.0f,0.0f,10.0f };
+	//enemy2->SetStageRect(stageRect_);
+	//enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
+	//enemy2->Initialize(modelHandle_, position2, { -0.0f,0.0f,-0.0f });
+	//enemyes_.push_back(enemy2);
 
 	//Enemy* enemy3 = new Enemy();
 	//Vector3 position3 = { 5.0f,0.0f,9.0f };
@@ -104,7 +104,7 @@ void EnemyManager::Update(){
 
 
 	//接近するときの距離
-	const float TRACKING_START_DISTANCE_ = 10.0f;
+	const float TRACKING_START_DISTANCE_ = 15.0f;
 	TRACKING_START_DISTANCE_;
 	//攻撃するときの距離
 	const float ATTACK_START_DISTANCE_ = 6.0f;
@@ -117,23 +117,7 @@ void EnemyManager::Update(){
 	MINIMUM_DISTANCE;
 	
 	
-	//通常時
-	//if (distance > TRACKING_START_DISTANCE_) {
-	//	condition = EnemyCondition::Move;
-	//	enemy1->SetCondition(condition);
-	//
-	//}
-	//
-	////移動
-	//if (condition == EnemyCondition::Move) {
-	//	
-	//	//設定した値より短くなったら接近開始
-	//	if (distance <= TRACKING_START_DISTANCE_) {
-	//		condition = EnemyCondition::PreTracking;
-	//		enemy1->SetCondition(condition);
-	//
-	//	}
-	//}
+	
 	
 
 
@@ -168,35 +152,49 @@ void EnemyManager::Update(){
 		
 		for (Enemy* enemy : enemyes_) {
 			uint32_t condition = enemy->GetCondition();
-			condition;
 			Vector3 enemyPosition = enemy->GetWorldPosition();
-			////追跡
-			if (condition == EnemyCondition::Tracking) {
-				Vector3 difference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
-				float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
-				distance;
-			
-				//離れたらMoveへ
-				if (distance > TRACKING_START_DISTANCE_) {
-					condition = EnemyCondition::Move;
-					enemy->SetCondition(condition);
-			
-				}
-				
-			
-			
-				//設定した値より短くなったら攻撃開始
-				if (distance <= ATTACK_START_DISTANCE_ &&
-					MINIMUM_DISTANCE < distance) {
-				
-					condition = EnemyCondition::Attack;
-					enemy->SetCondition(condition);
-				
-				}
-			
-			
-			
+
+
+
+
+			Vector3 difference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
+			float distance = sqrtf(std::powf(difference.x, 2.0f) + std::powf(difference.y, 2.0f) + std::powf(difference.z, 2.0f));
+
+
+			//離れたらMoveへ
+			if (distance > TRACKING_START_DISTANCE_) {
+				uint32_t preCondition = condition;
+				enemy->SetPreCondition(preCondition);
+				condition = EnemyCondition::Move;
+				enemy->SetCondition(condition);
+
 			}
+
+
+
+			//設定した値より短くなったら攻撃開始
+			if (distance <= TRACKING_START_DISTANCE_) {
+
+				if (ATTACK_START_DISTANCE_ <= distance) {
+					uint32_t preCondition = condition;
+					enemy->SetPreCondition(preCondition);
+					condition = EnemyCondition::PreTracking;
+					enemy->SetCondition(condition);
+				}
+
+				
+
+			}
+
+#ifdef _DEBUG
+			ImGui::Begin("Enemy1"); 
+			ImGui::InputFloat("Distance", &distance);
+			ImGui::End();
+#endif // _DEBUG
+
+
+
+
 		}
 		
 

@@ -13,13 +13,18 @@
 void SampleScene::Initialize() {
 
 #pragma region フェード
-	uint32_t fadeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/White.png");
+	uint32_t fadeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/Black.png");
 	fadeSprite_.reset(Sprite::Create(fadeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	fadeTransparency_ = 1.0f;
 
 	isFadeIn = true;
 	isFadeOut_ = false;
 
+#ifdef _DEBUG
+	isFadeIn = false;
+	isFadeOut_ = false;
+
+#endif // _DEBUG
 
 
 
@@ -262,7 +267,7 @@ void SampleScene::KeyCollision(){
 		}
 	}
 
-	//どれか一つでもtrueになっていたら
+	//listにあるKeyの中にある「isPrePickUp_」のどれか一つでもtrueになっていたらtrueを返す
 	isAbleToPickUpKey_ = std::any_of(keyes.begin(), keyes.end(), [](Key* key) {
 		return key->GetIsPrePickUp() == true;
 	});
@@ -560,16 +565,16 @@ void SampleScene::Update(GameManager* gameManager) {
 				collisionManager_->RegisterList(enemy);
 
 
-				//			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
-				//
-				//				enemy->OnCollision();
-				//#ifdef _DEBUG
-				//				ImGui::Begin("FanCollsion");
-				//				ImGui::End();
-				//#endif // _DEBUG
-				//
-				//				
-				//			}
+							if (IsFanCollision(fan, enemy->GetWorldPosition())) {
+				
+								enemy->OnCollision();
+				#ifdef _DEBUG
+								ImGui::Begin("FanCollsion");
+								ImGui::End();
+				#endif // _DEBUG
+				
+								
+							}
 			}
 			it++;
 
@@ -585,6 +590,8 @@ void SampleScene::Update(GameManager* gameManager) {
 		if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
 			viewOfPoint_ = FirstPerson;
 		}
+		
+
 		//3人称視点へ変更
 		else if (Input::GetInstance()->IsTriggerKey(DIK_3) == true) {
 			viewOfPoint_ = ThirdPersonBack;
@@ -622,6 +629,9 @@ void SampleScene::Update(GameManager* gameManager) {
 		//鍵が0より多ければ通る
 		if (keyQuantity > 0) {
 			KeyCollision();
+		}
+		else {
+			isAbleToPickUpKey_ = false;
 		}
 
 		#pragma endregion
@@ -668,6 +678,9 @@ void SampleScene::Update(GameManager* gameManager) {
 				//脱出
 				isEscape_ = true;
 			}
+		}
+		else {
+			escapeText_->SetInvisible(true);
 		}
 
 		//脱出
@@ -824,30 +837,27 @@ void SampleScene::DrawSprite(){
 		spaceToNext_[1]->Draw();
 	}
 	
+	//UIを表示するかどうか
 	if (isDisplayUI_ == true) {
+		//操作説明
 		operation_->Draw();
 
+		//鍵の取得
 		if (isAbleToPickUpKey_ == true) {
 			pickUpKey_->Draw();
-
 		}
 		
 		//鍵
 		uint32_t keyQuantity = player_->GetHavingKey();
 		keyManager_->DrawSprite(keyQuantity);
 
-
+		//脱出
 		escapeText_->Draw();
-
 	}
 
-	
-	
-	
 	//フェード
 	if (isFadeIn == true || isFadeOut_ == true) {
 		fadeSprite_->Draw();
-
 	}
 
 

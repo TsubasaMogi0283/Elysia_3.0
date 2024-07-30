@@ -9,7 +9,7 @@ void FlashLight::Initialize(){
 	spotLight_.Initialize();
 
 	spotLight_.position_ = lightPosition;
-	const float LIGHT_DISTANCE = 20.0f;
+	const float LIGHT_DISTANCE = 22.0f;
 	spotLight_.distance_ = LIGHT_DISTANCE;
 	spotLight_.decay_ = 0.6f;
 	spotLight_.cosFallowoffStart_ = 6.1f;
