@@ -28,10 +28,6 @@ void Player::Initialize(){
 
 void Player::Update(){
 
-	
-
-
-
 
 #ifdef _DEBUG
 	//ImGuiにInputUintが内の不便・・

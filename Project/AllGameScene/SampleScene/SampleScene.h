@@ -34,6 +34,7 @@
 #include <Stage/Skydome/Skydome.h>
 
 #include "Input.h"
+#include <Stage/ObjectManager/ObjectManager.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -145,6 +146,10 @@ private:
 
 	uint32_t bTriggerTime_ = 0;
 	bool isBTrigger_ = false;
+
+	//オブジェクトマネージャー
+	std::unique_ptr<ObjectManager>objectManager_ = nullptr;
+
 
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;

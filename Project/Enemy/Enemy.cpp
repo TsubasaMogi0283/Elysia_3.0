@@ -196,7 +196,6 @@ void Enemy::Update(){
 		if (attackTime_ > 240) {
 			attackTime_ = 0;
 		}
-	
 	}
 	//向きを計算しモデルを回転させる
 	float directionToRotateY = std::atan2f(-direction_.z,direction_.x);
@@ -205,8 +204,8 @@ void Enemy::Update(){
 	worldTransform_.rotate_.y = directionToRotateY + ROTATE_OFFSET;
 
 #ifdef _DEBUG
-	const float ROTATE_OFFSET = std::numbers::pi_v<float>;
-	worldTransform_.rotate_.y = directionToRotateY + ROTATE_OFFSET;
+	const float DEBUG_MODEL_ROTATE_OFFSET = std::numbers::pi_v<float>;
+	worldTransform_.rotate_.y = directionToRotateY + DEBUG_MODEL_ROTATE_OFFSET;
 
 #endif // _DEBUG
 
