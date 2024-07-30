@@ -192,6 +192,7 @@ private:
 	bool isDisplayUI_ = false;
 
 
+
 	//脱出テキスト
 	std::unique_ptr<Sprite> escapeText_ = nullptr;
 

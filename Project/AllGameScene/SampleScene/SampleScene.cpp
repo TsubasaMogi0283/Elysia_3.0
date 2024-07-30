@@ -13,7 +13,7 @@
 void SampleScene::Initialize() {
 
 #pragma region フェード
-	uint32_t fadeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/.png");
+	uint32_t fadeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/White.png");
 	fadeSprite_.reset(Sprite::Create(fadeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	fadeTransparency_ = 1.0f;
 
@@ -162,8 +162,8 @@ void SampleScene::Initialize() {
 	
 
 	uint32_t spaceToNextTextureHandle[SPACE_TO_NEXT_QUANTITY_] = {};
-	spaceToNextTextureHandle[0] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/Explanation1.png");
-	spaceToNextTextureHandle[1] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/Explanation2.png");
+	spaceToNextTextureHandle[0] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/ExplanationNext1.png");
+	spaceToNextTextureHandle[1] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/ExplanationNext2.png");
 
 	for (uint32_t i = 0; i < SPACE_TO_NEXT_QUANTITY_; ++i) {
 		spaceToNext_[i].reset(Sprite::Create(spaceToNextTextureHandle[i], { .x=0.0f,.y = 0.0f }));
@@ -663,32 +663,37 @@ void SampleScene::Update(GameManager* gameManager) {
 			uint32_t playerKeyQuantity = player_->GetHavingKey();
 			if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
 				escapeText_->SetInvisible(false);
-			}
 
 
-			//コントローラーのBボタンを押したら脱出のフラグがたつ
-			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 
-				//Bボタンを押したとき
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-					bTriggerTime_ += 1;
+				//コントローラーのBボタンを押したら脱出のフラグがたつ
+				if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+
+					//Bボタンを押したとき
+					if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+						bTriggerTime_ += 1;
+
+					}
+					if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+						bTriggerTime_ = 0;
+					}
+
+					if (bTriggerTime_ == 1) {
+						//脱出
+						isEscape_ = true;
+					}
 
 				}
-				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-					bTriggerTime_ = 0;
-				}
-
-				if (bTriggerTime_ == 1) {
+				//SPACEキーを押したら脱出のフラグがたつ
+				if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
 					//脱出
 					isEscape_ = true;
 				}
 
 			}
-			//SPACEキーを押したら脱出のフラグがたつ
-			if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
-				//脱出
-				isEscape_ = true;
-			}
+
+
+			
 		}
 		else {
 			escapeText_->SetInvisible(true);
