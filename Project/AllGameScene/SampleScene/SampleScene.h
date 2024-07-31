@@ -95,6 +95,12 @@ private:
 	void KeyCollision();
 
 
+	/// <summary>
+	/// ステージオブジェクトとの当たり判定
+	/// </summary>
+	void ObjectCollision();
+
+
 private:
 	enum GameCondition {
 		GameFadeIn,

@@ -525,11 +525,11 @@
     <ClCompile Include="Ellysia\Math\Vector\Material.cpp">
       <Filter>Ellysia\Source File\Polygone\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Stage\DemoObject\DemoObject.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Project\Stage\DemoObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp">
+      <Filter>Project\Stage\ObjectManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -941,10 +941,10 @@
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Project\Stage\ObjectManager\ObjectManager.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Project\Stage\ObjectManager</Filter>
     </ClInclude>
     <ClInclude Include="Project\Stage\DemoObject\DemoObject.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Project\Stage\DemoObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

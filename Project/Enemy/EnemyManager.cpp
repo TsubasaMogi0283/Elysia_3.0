@@ -36,7 +36,7 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	enemy1->Initialize(modelHandle_, position1, { -0.01f,0.0f,0.0f });
 	enemyes_.push_back(enemy1);
 
-
+		
 	//Enemy* enemy2 = new Enemy();
 	//Vector3 position2 = { -5.0f,0.0f,10.0f };
 	//enemy2->SetStageRect(stageRect_);

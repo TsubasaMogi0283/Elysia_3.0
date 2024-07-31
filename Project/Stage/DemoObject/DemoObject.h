@@ -2,11 +2,10 @@
 #include "Model.h"
 
 #include "WorldTransform.h"
-#include "Material.h"
 
 struct Camera;
 struct SpotLight;
-
+struct Material;
 
 class DemoObject{
 public:
@@ -19,7 +18,8 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	/// <param name="modelHandle"></param>
+	void Initialize(uint32_t& modelHandle);
 
 	/// <summary>
 	/// 更新
@@ -30,21 +30,37 @@ public:
 	/// 描画
 	/// </summary>
 	/// <param name="camera"></param>
+	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void Draw(Camera& camera, SpotLight& spotLight);
+	void Draw(Camera& camera,Material& material, SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
 	~DemoObject() = default;
 
+public:
+	/// <summary>
+	/// 半径を取得
+	/// </summary>
+	/// <returns></returns>
+	float GetRadian() const {
+		return radius_;
+	}
+
+	/// <summary>
+	/// ワールド座標
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition();
+
+
 private:
 	//各オブジェクトをリストにするかも
 	WorldTransform worldTransform_ = {};
-	Material material_ = {};
 	std::unique_ptr<Model>model_ = nullptr;
 
-
+	float radius_ = 1.0f;
 
 };
 

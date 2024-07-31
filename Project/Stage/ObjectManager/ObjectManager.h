@@ -1,8 +1,11 @@
 #pragma once
-#include "Model.h"
+#include <list>
+#include <memory>
 
+#include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
+#include <Stage/DemoObject/DemoObject.h>
 
 //LevelEditorでステージを作るつもり
 
@@ -37,13 +40,24 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~ObjectManager() = default;
+	~ObjectManager();
+
+public:
+	/// <summary>
+	/// DemoObjectリストの取得
+	/// </summary>
+	/// <returns></returns>
+	std::list <DemoObject*> GetDemoObjets()const {
+		return demoObjects_;
+	}
+
+
 
 private:
 	//各オブジェクトをリストにするかも
-	WorldTransform worldTransform_ = {};
 	Material material_ = {};
-	std::unique_ptr<Model>model_ = nullptr;
+	std::list <DemoObject*> demoObjects_ = {};
+
 
 };
 

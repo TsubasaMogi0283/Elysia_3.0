@@ -8,6 +8,7 @@
 #include "AnimationManager.h"
 #include <numbers>
 #include <TextureManager.h>
+#include <SingleCalculation.h>
 
 
 void SampleScene::Initialize() {
@@ -290,13 +291,56 @@ void SampleScene::KeyCollision(){
 
 }
 
+void SampleScene::ObjectCollision(){
+	Vector3 playerPosition = player_->GetWorldPosition();
+	
+	std::list <DemoObject*> demoObjects = objectManager_->GetDemoObjets();
+	for (DemoObject* demoObject : demoObjects) {
+		//ワールド座標
+		Vector3 objectPosition = demoObject->GetWorldPosition();
+
+		//オブジェクトは動く必要がないのでプレイヤーだけで大丈夫
+		
+		//オブジェクトとプレイヤーとの差分ベクトル
+		Vector3 objectPlayerDifference = VectorCalculation::Subtract(objectPosition, playerPosition);
+		float enemyAndEnemyDistance = sqrtf(std::powf(objectPlayerDifference.x, 2.0f) + std::powf(objectPlayerDifference.y, 2.0f) + std::powf(objectPlayerDifference.z, 2.0f));
+
+		// 正射影ベクトルを求める
+		// 上のベクトルを射影する
+		Vector3 projectObjectPlayerDifference = VectorCalculation::Project(objectPlayerDifference, playerDirection_);
+		Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(objectPlayerDifference, projectObjectPlayerDifference);
+		float projectDistance = sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
+
+
+
+		//射影ベクトルがそれぞれの半径より短くなった場合
+		if (projectDistance < player_->GetRadius() + demoObject->GetRadian()) {
+
+			//内積
+			//進行方向の前にいると+
+			Vector3 normalizedObjectAndPlayer = VectorCalculation::Normalize(objectPlayerDifference);
+			float dot = SingleCalculation::Dot(playerDirection_, normalizedObjectAndPlayer);
+
+			//進行方向にいた場合
+			if ((enemyAndEnemyDistance < player_->GetRadius() + demoObject->GetRadian()) && dot > 0.0f) {
+
+			}
+
+		}
+
+
+		
+	}
+
+}
+
 /// <summary>
 /// 更新
 /// </summary>
 void SampleScene::Update(GameManager* gameManager) {
 
 	//フレーム初めに
-		//コリジョンリストのクリア
+	//コリジョンリストのクリア
 	collisionManager_->ClearList();
 
 	fadeSprite_->SetTransparency(fadeTransparency_);
@@ -559,6 +603,10 @@ void SampleScene::Update(GameManager* gameManager) {
 
 		collisionManager_->RegisterList(lightCollision_);
 
+
+		
+
+
 		Fan3D fan = flashLight_->GetFan3D();
 		//エネミーをコリジョンマネージャーに追加
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
@@ -698,6 +746,10 @@ void SampleScene::Update(GameManager* gameManager) {
 		//鍵
 		keyManager_->Update();
 
+		//オブジェクトの当たり判定
+		ObjectCollision();
+
+
 		//ライト
 		Vector3 lightDirection = flashLight_->GetDirection();
 		lightCollision_->Update(player_->GetWorldPosition(), lightDirection);
@@ -743,6 +795,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	//オブジェクトマネージャーの更新
 	objectManager_->Update();
 
+	
 	//地面
 	ground_->Update();
 
@@ -796,7 +849,7 @@ void SampleScene::DrawObject3D() {
 	//懐中電灯
 	flashLight_->Draw(camera_);
 
-	
+	//ステージオブジェクト
 	objectManager_->Draw(camera_, spotLight);
 
 	//タワー
@@ -824,10 +877,6 @@ void SampleScene::DrawPostEffect(){
 }
 
 void SampleScene::DrawSprite(){
-	
-
-	
-
 	
 	//説明
 	if (howToPlayTextureNumber_ == 1) {
