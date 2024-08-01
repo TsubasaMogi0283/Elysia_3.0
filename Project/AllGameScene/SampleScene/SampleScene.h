@@ -147,8 +147,10 @@ private:
 	
 	//プレイヤー
 	Player* player_ = nullptr;
-	Vector3 playerDirection_ = {0.0f,0.0f,0.0f};
+	Vector3 playerMoveDirection_ = {0.0f,0.0f,0.0f};
+	Vector3 playerDirection = {};
 	bool isPlayerMoveKey_ = false;
+	bool isAbleToMovePlayer_ = false;
 
 	uint32_t bTriggerTime_ = 0;
 	bool isBTrigger_ = false;

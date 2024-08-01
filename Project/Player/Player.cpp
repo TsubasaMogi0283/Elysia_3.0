@@ -67,38 +67,6 @@ void Player::Update(){
 	}
 	
 
-	auto demoObjects = objectManager_->GetDemoObjets();
-	for (DemoObject* demoObject : demoObjects) {
-		//ワールド座標
-		Vector3 demoObjectPosition = demoObject->GetWorldPosition();
-
-		//差分ベクトル
-		Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(demoObjectPosition, GetWorldPosition());
-		float enemyAndEnemyDistance = sqrtf(std::powf(demoObjectAndPlayerDifference.x, 2.0f) + std::powf(demoObjectAndPlayerDifference.y, 2.0f) + std::powf(demoObjectAndPlayerDifference.z, 2.0f));
-		enemyAndEnemyDistance;
-		// 正射影ベクトルを求める
-		Vector3 demoObjectAndPlayerProject = VectorCalculation::Project(demoObjectAndPlayerDifference, moveDirection_);
-		Vector3 demoObjectAndPlayerProjectDifference = VectorCalculation::Subtract(demoObjectAndPlayerDifference, demoObjectAndPlayerProject);
-		float projectDistance = sqrtf(std::powf(demoObjectAndPlayerProjectDifference.x, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.y, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.z, 2.0f));
-
-
-		if (projectDistance < demoObject->GetRadius() + radius_) {
-			//内積
-		//進行方向の前にいると+
-			Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
-			float dot = SingleCalculation::Dot(moveDirection_, normalizedDemoAndPlayer);
-
-			
-			//進行・逆進行方向上にいた場合
-			if (dot > 0.0f) {
-
-			}
-
-		}
-
-		
-
-	}
 
 	//ステージの外には行けないようにする
 	//左

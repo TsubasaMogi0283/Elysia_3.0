@@ -100,8 +100,23 @@ public:
 	/// 動く方向の設定
 	/// </summary>
 	/// <param name="move"></param>
-	inline void SetMoveDirection(Vector3 moveDirection) {
+	inline void SetMoveDirection(Vector3& moveDirection) {
 		this->moveDirection_ = moveDirection;
+	}
+
+	/// <summary>
+	/// 現在の方向の設定
+	/// </summary>
+	/// <param name="direction"></param>
+	inline void SetDirection(Vector3& direction) {
+		this->direction_ = direction;
+	}
+	/// <summary>
+	/// 現在の方向を取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetDirection() {
+		return direction_;
 	}
 
 	inline void SetObjectManager(ObjectManager* objectManager) {
@@ -150,6 +165,8 @@ private:
 
 	//動く方向
 	Vector3 moveDirection_ = {};
+
+	Vector3 direction_ = {};
 	bool isAbleToMove_ = true;
 
 	
