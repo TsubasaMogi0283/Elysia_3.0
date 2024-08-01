@@ -276,19 +276,9 @@ void EnemyManager::Update(){
 			ImGui::InputFloat("Distance", &distance);
 			ImGui::InputInt("Condition", &debugCondition);
 			ImGui::InputInt("PreCondition", &debugPreCondition);
-
-			
 			ImGui::End();
 #endif // _DEBUG
-
-
-
-
 		}
-		
-
-		
-
 	}
 
 	

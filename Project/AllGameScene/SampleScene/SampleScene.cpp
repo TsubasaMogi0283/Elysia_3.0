@@ -29,23 +29,10 @@ void SampleScene::Initialize() {
 
 #pragma endregion
 
-#pragma region プレイヤー
-	player_ = new Player();
-	player_->Initialize();
-	player_->SetIsAbleToControll(false);
 
-	playerDirection_ = { 0.0f,0.0f,0.0f };
-	isPlayerMoveKey_ = false;
-	bTriggerTime_ = 0;
-	isBTrigger_ = false;
-		
-	//初期は1人称視点
-	viewOfPoint_ = FirstPerson;
-	
-#pragma endregion
 	
 #pragma region オブジェクト
-	objectManager_ = std::make_unique<ObjectManager>();
+	objectManager_ = new ObjectManager();
 	objectManager_->Initialize();
 
 	#pragma region 地面
@@ -74,13 +61,32 @@ void SampleScene::Initialize() {
 
 #pragma endregion
 
-	#pragma region 鍵
+#pragma region プレイヤー
+	player_ = new Player();
+	//ステージ
+	player_->SetStageRect(stageRect);
+	player_->SetObjectManager(objectManager_);
+	player_->Initialize();
+	player_->SetIsAbleToControll(false);
+
+	playerDirection_ = { 0.0f,0.0f,0.0f };
+	isPlayerMoveKey_ = false;
+	bTriggerTime_ = 0;
+	isBTrigger_ = false;
+
+	//初期は1人称視点
+	viewOfPoint_ = FirstPerson;
+
+#pragma endregion
+
+
+#pragma region 鍵
 	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","Cube.obj");
 	
 	keyManager_ = std::make_unique<KeyManager>();
 	keyManager_->Initialize(keyModelHandle);
 	
-	#pragma endregion
+#pragma endregion
 	
 	uint32_t skydomeModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Game/Skydome","Skydome.obj");
 	skydome_ = std::make_unique<Skydome>();
@@ -186,9 +192,8 @@ void SampleScene::Initialize() {
 
 	isGamePlay_ = false;
 	isExplain_ = false;
-	//ステージ
-	player_->SetStageRect(stageRect);
 	
+
 	collisionManager_ = std::make_unique<CollisionManager>();
 	
 	theta_ = std::numbers::pi_v<float> / 2.0f;
@@ -294,43 +299,43 @@ void SampleScene::KeyCollision(){
 void SampleScene::ObjectCollision(){
 	Vector3 playerPosition = player_->GetWorldPosition();
 	
-	std::list <DemoObject*> demoObjects = objectManager_->GetDemoObjets();
-	for (DemoObject* demoObject : demoObjects) {
-		//ワールド座標
-		Vector3 objectPosition = demoObject->GetWorldPosition();
+	//std::list <DemoObject*> demoObjects = objectManager_->GetDemoObjets();
+	//for (DemoObject* demoObject : demoObjects) {
+	//	//ワールド座標
+	//	Vector3 objectPosition = demoObject->GetWorldPosition();
 
-		//オブジェクトは動く必要がないのでプレイヤーだけで大丈夫
-		
-		//オブジェクトとプレイヤーとの差分ベクトル
-		Vector3 objectPlayerDifference = VectorCalculation::Subtract(objectPosition, playerPosition);
-		float enemyAndEnemyDistance = sqrtf(std::powf(objectPlayerDifference.x, 2.0f) + std::powf(objectPlayerDifference.y, 2.0f) + std::powf(objectPlayerDifference.z, 2.0f));
+	//	//オブジェクトは動く必要がないのでプレイヤーだけで大丈夫
+	//	
+	//	//オブジェクトとプレイヤーとの差分ベクトル
+	//	Vector3 objectPlayerDifference = VectorCalculation::Subtract(objectPosition, playerPosition);
+	//	float enemyAndEnemyDistance = sqrtf(std::powf(objectPlayerDifference.x, 2.0f) + std::powf(objectPlayerDifference.y, 2.0f) + std::powf(objectPlayerDifference.z, 2.0f));
 
-		// 正射影ベクトルを求める
-		// 上のベクトルを射影する
-		Vector3 projectObjectPlayerDifference = VectorCalculation::Project(objectPlayerDifference, playerDirection_);
-		Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(objectPlayerDifference, projectObjectPlayerDifference);
-		float projectDistance = sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
-
-
-
-		//射影ベクトルがそれぞれの半径より短くなった場合
-		if (projectDistance < player_->GetRadius() + demoObject->GetRadian()) {
-
-			//内積
-			//進行方向の前にいると+
-			Vector3 normalizedObjectAndPlayer = VectorCalculation::Normalize(objectPlayerDifference);
-			float dot = SingleCalculation::Dot(playerDirection_, normalizedObjectAndPlayer);
-
-			//進行方向にいた場合
-			if ((enemyAndEnemyDistance < player_->GetRadius() + demoObject->GetRadian()) && dot > 0.0f) {
-
-			}
-
-		}
+	//	// 正射影ベクトルを求める
+	//	// 上のベクトルを射影する
+	//	Vector3 projectObjectPlayerDifference = VectorCalculation::Project(objectPlayerDifference, playerDirection_);
+	//	Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(objectPlayerDifference, projectObjectPlayerDifference);
+	//	float projectDistance = sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
 
 
-		
-	}
+
+	//	//射影ベクトルがそれぞれの半径より短くなった場合
+	//	if (projectDistance < player_->GetRadius() + demoObject->GetRadius()) {
+
+	//		//内積
+	//		//進行方向の前にいると+
+	//		Vector3 normalizedObjectAndPlayer = VectorCalculation::Normalize(objectPlayerDifference);
+	//		float dot = SingleCalculation::Dot(playerDirection_, normalizedObjectAndPlayer);
+
+	//		//進行方向にいた場合
+	//		if ((enemyAndEnemyDistance < player_->GetRadius() + demoObject->GetRadius()) && dot > 0.0f) {
+
+	//		}
+
+	//	}
+
+
+	//	
+	//}
 
 }
 
@@ -634,7 +639,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 
-
+		#pragma region 視点
 
 		//1人称視点へ変更
 		if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
@@ -674,6 +679,9 @@ void SampleScene::Update(GameManager* gameManager) {
 		}
 
 
+#pragma endregion
+
+
 		#pragma region 鍵の取得処理
 		uint32_t keyQuantity = keyManager_->GetKeyQuantity();
 		//鍵が0より多ければ通る
@@ -685,9 +693,6 @@ void SampleScene::Update(GameManager* gameManager) {
 		}
 
 		#pragma endregion
-
-
-		
 
 
 		//ゲート
@@ -740,7 +745,6 @@ void SampleScene::Update(GameManager* gameManager) {
 			
 		}
 		#pragma endregion
-
 
 		
 		//鍵
@@ -919,4 +923,5 @@ void SampleScene::DrawSprite(){
 SampleScene::~SampleScene() {
 	delete player_;
 	delete lightCollision_;
+	delete objectManager_;
 }

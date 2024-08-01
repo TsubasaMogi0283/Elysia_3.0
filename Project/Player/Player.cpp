@@ -6,10 +6,15 @@
 #include "SpotLight.h"
 #include <numbers>
 
-
+#include "Stage/ObjectManager/ObjectManager.h"
 #include "SampleScene/SampleScene.h"
+#include <SingleCalculation.h>
 
 void Player::Initialize(){
+
+	//空だと止まる
+	assert(objectManager_!=nullptr);
+
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD3Player","Player.obj");
 	model_.reset(Model::Create(modelHandle));
 
@@ -17,6 +22,9 @@ void Player::Initialize(){
 
 	//持っている鍵の数
 	haveKeyQuantity_ = 0;
+
+	//進むことが出来るかどうか
+	isAbleToMove_ = true;
 
 	//半径
 	radius_ = 1.0f;
@@ -28,14 +36,21 @@ void Player::Initialize(){
 
 void Player::Update(){
 
+	//逆方向
+	Vector3 backDirection = {
+		.x = -moveDirection_.x,
+		.y = -moveDirection_.y,
+		.z = -moveDirection_.z
+	};
 
 #ifdef _DEBUG
-	//ImGuiにInputUintが内の不便・・
+	//ImGuiにInputUintが無いの不便・・
 	int keyQuantity = haveKeyQuantity_;
 	ImGui::Begin("Player");
 	ImGui::InputInt("KeyQuantity", &keyQuantity);
 	ImGui::InputFloat3("Transrate", &worldTransform_.translate_.x);
 	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
+	ImGui::InputFloat3("BackDirection", &backDirection.x);
 	ImGui::End();
 
 #endif
@@ -44,28 +59,67 @@ void Player::Update(){
 	
 
 	const float MOVE_SPEED = 0.1f;
+
 	//加算
 	if (isAbleToControll_ == true) {
 		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, { moveDirection_.x * MOVE_SPEED,moveDirection_.y * MOVE_SPEED,moveDirection_.z * MOVE_SPEED });
 
 	}
 	
+
+	auto demoObjects = objectManager_->GetDemoObjets();
+	for (DemoObject* demoObject : demoObjects) {
+		//ワールド座標
+		Vector3 demoObjectPosition = demoObject->GetWorldPosition();
+
+		//差分ベクトル
+		Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(demoObjectPosition, GetWorldPosition());
+		float enemyAndEnemyDistance = sqrtf(std::powf(demoObjectAndPlayerDifference.x, 2.0f) + std::powf(demoObjectAndPlayerDifference.y, 2.0f) + std::powf(demoObjectAndPlayerDifference.z, 2.0f));
+		enemyAndEnemyDistance;
+		// 正射影ベクトルを求める
+		Vector3 demoObjectAndPlayerProject = VectorCalculation::Project(demoObjectAndPlayerDifference, moveDirection_);
+		Vector3 demoObjectAndPlayerProjectDifference = VectorCalculation::Subtract(demoObjectAndPlayerDifference, demoObjectAndPlayerProject);
+		float projectDistance = sqrtf(std::powf(demoObjectAndPlayerProjectDifference.x, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.y, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.z, 2.0f));
+
+
+		if (projectDistance < demoObject->GetRadius() + radius_) {
+			//内積
+		//進行方向の前にいると+
+			Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
+			float dot = SingleCalculation::Dot(moveDirection_, normalizedDemoAndPlayer);
+
+			
+			//進行・逆進行方向上にいた場合
+			if (dot > 0.0f) {
+
+			}
+
+		}
+
+		
+
+	}
+
 	//ステージの外には行けないようにする
 	//左
 	if (worldTransform_.translate_.x < stageRect_.leftBack.x + radius_) {
 		worldTransform_.translate_.x = stageRect_.leftBack.x + radius_;
+	
 	}
 	//右
 	if (worldTransform_.translate_.x > stageRect_.rightBack.x - radius_) {
 		worldTransform_.translate_.x = stageRect_.rightBack.x - radius_;
+
 	}
 	//奥
 	if (worldTransform_.translate_.z > stageRect_.leftBack.z - radius_) {
 		worldTransform_.translate_.z = stageRect_.leftBack.z - radius_;
+
 	}
 	//手前
 	if (worldTransform_.translate_.z < stageRect_.leftFront.z + radius_) {
 		worldTransform_.translate_.z = stageRect_.leftFront.z + radius_;
+
 	}
 
 	//ワールドトランスフォームの更新

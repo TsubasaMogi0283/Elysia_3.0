@@ -154,7 +154,7 @@ private:
 	bool isBTrigger_ = false;
 
 	//オブジェクトマネージャー
-	std::unique_ptr<ObjectManager>objectManager_ = nullptr;
+	ObjectManager* objectManager_ = nullptr;
 
 
 	//地面

@@ -8,7 +8,7 @@ struct Camera;
 struct SpotLight;
 struct Material;
 class SampleScene;
-
+class ObjectManager;
 
 enum PlayerViewOfPoint {
 	//未定
@@ -104,13 +104,10 @@ public:
 		this->moveDirection_ = moveDirection;
 	}
 
-	/// <summary>
-	/// ゲームシーンの取得
-	/// </summary>
-	/// <param name="gameScene"></param>
-	inline void SetGameScene(SampleScene* gameScene) {
-		this->gameScene_ = gameScene;
+	inline void SetObjectManager(ObjectManager* objectManager) {
+		this->objectManager_ = objectManager;
 	}
+	
 
 	/// <summary>
 	/// 四隅の取得
@@ -131,8 +128,7 @@ public:
 
 
 private:
-	//ゲームシーン
-	SampleScene* gameScene_ = nullptr;
+	ObjectManager* objectManager_ = nullptr;
 
 	//モデル
 	std::unique_ptr<Model> model_ = nullptr;
@@ -154,6 +150,7 @@ private:
 
 	//動く方向
 	Vector3 moveDirection_ = {};
+	bool isAbleToMove_ = true;
 
 	
 	bool isPressKey_ = false;

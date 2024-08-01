@@ -44,7 +44,7 @@ public:
 	/// 半径を取得
 	/// </summary>
 	/// <returns></returns>
-	float GetRadian() const {
+	float GetRadius() const {
 		return radius_;
 	}
 
