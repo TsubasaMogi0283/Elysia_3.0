@@ -343,57 +343,218 @@ void SampleScene::ObjectCollision(){
 		for (DemoObject* demoObject : demoObjects) {
 			//ワールド座標
 			Vector3 demoObjectPosition = demoObject->GetWorldPosition();
-
-			//差分ベクトル
+			// 差分ベクトル
 			Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(demoObjectPosition, playerPosition);
-			float enemyPlayerDistance = sqrtf(std::powf(demoObjectAndPlayerDifference.x, 2.0f) + std::powf(demoObjectAndPlayerDifference.y, 2.0f) + std::powf(demoObjectAndPlayerDifference.z, 2.0f));
-			
-			// 正射影ベクトルを求める
-			
-			Vector3 demoObjectAndPlayerProject = VectorCalculation::Project(demoObjectAndPlayerDifference, playerDirection);
-			Vector3 demoObjectAndPlayerProjectDifference = VectorCalculation::Subtract(demoObjectAndPlayerDifference, demoObjectAndPlayerProject);
-			float projectDistance = sqrtf(std::powf(demoObjectAndPlayerProjectDifference.x, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.y, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.z, 2.0f));
+			float enemyPlayerDistance = sqrtf(
+				std::powf(demoObjectAndPlayerDifference.x, 2.0f) +
+				std::powf(demoObjectAndPlayerDifference.y, 2.0f) +
+				std::powf(demoObjectAndPlayerDifference.z, 2.0f)
+			);
 
+			// 正射影ベクトルを求める
+			Vector3 demoObjectAndPlayerProject = VectorCalculation::Project(demoObjectAndPlayerDifference, direction);
+			Vector3 demoObjectAndPlayerProjectDifference = VectorCalculation::Subtract(demoObjectAndPlayerDifference, demoObjectAndPlayerProject);
+			float projectDistance = sqrtf(
+				std::powf(demoObjectAndPlayerProjectDifference.x, 2.0f) +
+				std::powf(demoObjectAndPlayerProjectDifference.y, 2.0f) +
+				std::powf(demoObjectAndPlayerProjectDifference.z, 2.0f)
+			);
 
 			Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
-			//進行方向上にいた場合
+			// 進行方向上にいた場合
 			if (projectDistance < demoObject->GetRadius() + player_->GetRadius()) {
-				//内積を求める
-				//進行方向の前にいると+
-				
-				float dot = SingleCalculation::Dot(playerDirection, normalizedDemoAndPlayer);
+				// 内積を求める
+				// 進行方向の前にいると+
+				float directionDot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
 
-				//進行・逆進行方向上にいた場合
-				if ((enemyPlayerDistance< demoObject->GetRadius() + player_->GetRadius())&&(dot > 0.0f)) {
+				// 進行・逆進行方向上にいた場合
+				if (enemyPlayerDistance < demoObject->GetRadius() + player_->GetRadius() && directionDot > 0.0f) {
 					isAbleToMovePlayer_ = false;
 
+					// Collision response: Push the player out of the object
+					Vector3 pushOutDirection = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
+					float overlapDistance = (demoObject->GetRadius() + player_->GetRadius()) - enemyPlayerDistance;
+					playerPosition = VectorCalculation::Add(playerPosition, VectorCalculation::Multiply(pushOutDirection, overlapDistance));
 
-#ifdef _DEBUG
-					ImGui::Begin("PAOC"); 
-					ImGui::End();
-#endif // _DEBUG
-
-
-
+					player_->SetTranslate(playerPosition);
 				}
-
-
 			}
-
-#ifdef _DEBUG
-			ImGui::Begin("PlayerAndObjectCollision");
-			ImGui::InputFloat("EnemyAndPlayerDistance", &enemyPlayerDistance);
-			ImGui::InputFloat3("demoObjectAndPlayerProjectDifference", &demoObjectAndPlayerProjectDifference.x);
-			ImGui::InputFloat("ProjectDistance", &projectDistance);
-			ImGui::InputFloat3("normalizedDemoAndPlayer", &normalizedDemoAndPlayer.x);
-			ImGui::End();
-#endif // _DEBUG
-			
+//			//差分ベクトル
+//			Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(demoObjectPosition, playerPosition);
+//			float enemyPlayerDistance = sqrtf(std::powf(demoObjectAndPlayerDifference.x, 2.0f) + std::powf(demoObjectAndPlayerDifference.y, 2.0f) + std::powf(demoObjectAndPlayerDifference.z, 2.0f));
+//			
+//			// 正射影ベクトルを求める
+//			
+//			Vector3 demoObjectAndPlayerProject = VectorCalculation::Project(demoObjectAndPlayerDifference, direction);
+//			Vector3 demoObjectAndPlayerProjectDifference = VectorCalculation::Subtract(demoObjectAndPlayerDifference, demoObjectAndPlayerProject);
+//			float projectDistance = sqrtf(std::powf(demoObjectAndPlayerProjectDifference.x, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.y, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.z, 2.0f));
+//
+//
+//			Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
+//			//進行方向上にいた場合
+//			if (projectDistance < demoObject->GetRadius() + player_->GetRadius()) {
+//				//内積を求める
+//				//進行方向の前にいると+
+//				
+//				dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
+//
+//				//進行・逆進行方向上にいた場合
+//				if ((enemyPlayerDistance< demoObject->GetRadius() + player_->GetRadius())&&(dot > 0.0f)) {
+//					isAbleToMovePlayer_ = false;
+//
+//
+//#ifdef _DEBUG
+//					ImGui::Begin("PAOC"); 
+//					ImGui::End();
+//#endif // _DEBUG
+//
+//
+//
+//				}
+//				else {
+//					isAbleToMovePlayer_ = true;
+//				}
+//
+//			}
+//
+//#ifdef _DEBUG
+//			ImGui::Begin("PlayerAndObjectCollision");
+//			ImGui::InputFloat("EnemyAndPlayerDistance", &enemyPlayerDistance);
+//			ImGui::InputFloat3("demoObjectAndPlayerProjectDifference", &demoObjectAndPlayerProjectDifference.x);
+//			ImGui::InputFloat("ProjectDistance", &projectDistance);
+//			ImGui::InputFloat("Dot", &dot);
+//			ImGui::InputFloat3("normalizedDemoAndPlayer", &normalizedDemoAndPlayer.x);
+//			ImGui::End();
+//#endif // _DEBUG
+//			
 
 		}
 	//}
 
 	
+}
+
+void SampleScene::PlayerMove(){
+
+
+	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
+	isPlayerMoveKey_ = false;
+	//isAbleToMovePlayer_ = true;
+
+
+#pragma region キーボード
+//移動
+	if (isAbleToMovePlayer_ == true) {
+		if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
+			playerMoveDirection_.x = std::cosf(theta_ - std::numbers::pi_v<float> / 2.0f);
+			playerMoveDirection_.z = std::sinf(theta_ - std::numbers::pi_v<float> / 2.0f);
+			//キーボード入力をしている
+			isPlayerMoveKey_ = true;
+
+		}
+		if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
+			playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float> / 2.0f);
+			playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float> / 2.0f);
+
+			//キーボード入力をしている
+			isPlayerMoveKey_ = true;
+		}
+		if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+			playerMoveDirection_.x = std::cosf(theta_);
+			playerMoveDirection_.z = std::sinf(theta_);
+
+			//キーボード入力をしている
+			isPlayerMoveKey_ = true;
+		}
+		if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+			playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float>);
+			playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float>);
+
+			//キーボード入力をしている
+			isPlayerMoveKey_ = true;
+		}
+	}
+
+
+#pragma endregion
+
+#pragma region コントローラー
+	//接続時
+	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+		//キーボード入力していない時・移動できる時に受け付ける
+		if (isPlayerMoveKey_ == false && isAbleToMovePlayer_ == true) {
+
+
+			//コントローラーの入力
+			bool isInput = false;
+			Vector3 leftStickInput = {
+				.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
+				.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
+			};
+
+
+
+			//デッドゾーン
+			const float DEAD_ZONE = 0.1f;
+			if (std::abs(leftStickInput.x) > DEAD_ZONE) {
+				leftStickInput.x = 0.0f;
+			}
+			else {
+				isInput = true;
+			}
+			if (std::abs(leftStickInput.z) > DEAD_ZONE) {
+				leftStickInput.z = 0.0f;
+			}
+			else {
+				isInput = true;
+			}
+
+			//入力されていたら計算
+			if (isInput == true) {
+				//角度を求める
+				float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
+				//値を0～2πに直してtheta_に揃える
+				if (radian < 0.0f) {
+					radian += 2.0f * std::numbers::pi_v<float>;
+				}
+				const float OFFSET = std::numbers::pi_v<float> / 2.0f;
+				float resultTheta = theta_ + radian - OFFSET;
+
+
+				//向きを代入
+				playerMoveDirection_.x = std::cosf(resultTheta);
+				playerMoveDirection_.z = std::sinf(resultTheta);
+
+			}
+
+
+		}
+	}
+
+#pragma endregion
+
+
+#ifdef _DEBUG
+	ImGui::Begin("Player");
+	ImGui::InputFloat3("Direction", &playerMoveDirection_.x);
+	ImGui::Checkbox("IsPlayerMove", &isAbleToMovePlayer_);
+	ImGui::InputFloat3("playerDirection", &playerDirection.x);
+	ImGui::End();
+
+#endif // _DEBUG
+
+
+
+	//プレイヤーの動く方向を入れる
+	player_->SetMoveDirection(playerMoveDirection_);
+
+
+
+
+
+
+
+
 }
 
 /// <summary>
@@ -558,128 +719,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 #pragma endregion
 
-#pragma region プレイヤーの移動
 
-		playerMoveDirection_ = { 0.0f,0.0f,0.0f };
-		isPlayerMoveKey_ = false;
-		isAbleToMovePlayer_ = true;
-
-
-		#pragma region キーボード
-		//移動
-		if (isAbleToMovePlayer_ == true) {
-			if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
-				playerMoveDirection_.x = std::cosf(theta_ - std::numbers::pi_v<float> / 2.0f);
-				playerMoveDirection_.z = std::sinf(theta_ - std::numbers::pi_v<float> / 2.0f);
-				//キーボード入力をしている
-				isPlayerMoveKey_ = true;
-
-				//プレイヤーが動く
-				isAbleToMovePlayer_ = true;
-			}
-			if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
-				playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float> / 2.0f);
-				playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float> / 2.0f);
-
-				//キーボード入力をしている
-				isPlayerMoveKey_ = true;
-				//プレイヤーが動く
-				isAbleToMovePlayer_ = true;
-			}
-			if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
-				playerMoveDirection_.x = std::cosf(theta_);
-				playerMoveDirection_.z = std::sinf(theta_);
-
-				//キーボード入力をしている
-				isPlayerMoveKey_ = true;
-				//プレイヤーが動く
-				isAbleToMovePlayer_ = true;
-			}
-			if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
-				playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float>);
-				playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float>);
-
-				//キーボード入力をしている
-				isPlayerMoveKey_ = true;
-				//プレイヤーが動く
-				isAbleToMovePlayer_ = true;
-			}
-		}
-		
-
-		#pragma endregion
-
-		#pragma region コントローラー
-		//接続時
-		if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-			//キーボード入力していない時・移動できる時に受け付ける
-			if (isPlayerMoveKey_ == false && isAbleToMovePlayer_==true) {
-
-
-				//コントローラーの入力
-				bool isInput = false; 
-				Vector3 leftStickInput = {
-					.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
-					.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
-				};
-				
-
-
-				//デッドゾーン
-				const float DEAD_ZONE = 0.1f;
-				if (leftStickInput.x < DEAD_ZONE && leftStickInput.x > -DEAD_ZONE) {
-					leftStickInput.x = 0.0f;
-				}
-				else {
-					isInput = true;
-				}
-				if (leftStickInput.z < DEAD_ZONE && leftStickInput.z > -DEAD_ZONE) {
-					leftStickInput.z = 0.0f;
-				}
-				else {
-					isInput = true;
-				}
-
-				//入力されていたら計算
-				if (isInput == true) {
-					//角度を求める
-					float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
-					//値を0～2πに直してtheta_に揃える
-					if (radian < 0.0f) {
-						radian += 2.0f * std::numbers::pi_v<float>;
-					}
-					const float OFFSET = std::numbers::pi_v<float> / 2.0f;
-					float resultTheta = theta_ + radian-OFFSET;
-					
-
-					//向きを代入
-					playerMoveDirection_.x = std::cosf(resultTheta);
-					playerMoveDirection_.z = std::sinf(resultTheta);
-
-				}
-				
-
-			}
-		}
-
-		#pragma endregion
-
-
-#ifdef _DEBUG
-		ImGui::Begin("Player");
-		ImGui::InputFloat3("Direction", &playerMoveDirection_.x);
-		ImGui::Checkbox("IsPlayerMove", &isAbleToMovePlayer_);
-		ImGui::InputFloat3("playerDirection", &playerDirection.x);
-		ImGui::End();
-
-#endif // _DEBUG
-
-		
-
-		//プレイヤーの動く方向を入れる
-		player_->SetMoveDirection(playerMoveDirection_);
-
-#pragma endregion
+		PlayerMove();
 
 
 
@@ -1013,3 +1054,5 @@ SampleScene::~SampleScene() {
 	delete lightCollision_;
 	delete objectManager_;
 }
+
+

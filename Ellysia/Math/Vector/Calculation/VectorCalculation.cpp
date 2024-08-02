@@ -46,6 +46,35 @@ Vector3 VectorCalculation::Subtract(const Vector3& v1, const Vector3& v2){
 	return result;
 }
 
+Vector2 VectorCalculation::Multiply(const Vector2& v1, const Vector2& v2){
+	Vector2 result = {
+		.x = v1.x * v2.x,
+		.y = v1.y * v2.y,
+	};
+
+	return result;
+}
+
+Vector3 VectorCalculation::Multiply(const Vector3& v1, const Vector3& v2){
+	Vector3 result = {
+		.x = v1.x * v2.x,
+		.y = v1.y * v2.y,
+		.z = v1.z * v2.z
+	};
+
+	return result;
+}
+
+Vector3 VectorCalculation::Multiply(const Vector3& v1, const float& value){
+	Vector3 result = {
+		.x = v1.x * value,
+		.y = v1.y * value,
+		.z = v1.z * value
+	};
+
+	return result;
+}
+
 Vector2 VectorCalculation::Normalize(const Vector2& v){
 	Vector2 result = {};
 

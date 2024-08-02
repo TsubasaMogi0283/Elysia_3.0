@@ -119,6 +119,11 @@ public:
 		return direction_;
 	}
 
+
+	void SetTranslate(const Vector3& translate) {
+		this->worldTransform_.translate_ = translate;
+	}
+
 	inline void SetObjectManager(ObjectManager* objectManager) {
 		this->objectManager_ = objectManager;
 	}

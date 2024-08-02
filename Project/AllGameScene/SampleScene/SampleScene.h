@@ -88,6 +88,10 @@ public:
 
 
 private:
+	void PlayerMove();
+
+
+private:
 
 	/// <summary>
 	/// 鍵の取得の処理
@@ -145,6 +149,8 @@ private:
 	float p = 0.0f;
 	Vector3 pp = {};
 	
+	float dot = {};
+
 	//プレイヤー
 	Player* player_ = nullptr;
 	Vector3 playerMoveDirection_ = {0.0f,0.0f,0.0f};

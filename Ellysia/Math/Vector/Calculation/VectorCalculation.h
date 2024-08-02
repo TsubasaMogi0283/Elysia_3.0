@@ -37,6 +37,32 @@ namespace VectorCalculation {
 	/// <returns></returns>
 	Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 
+
+	/// <summary>
+	/// 乗算(Vector2)
+	/// </summary>
+	/// <param name="v1"></param>
+	/// <param name="v2"></param>
+	/// <returns></returns>
+	Vector2 Multiply(const Vector2& v1, const Vector2& v2);
+
+	/// <summary>
+	/// 乗算(Vector3)
+	/// </summary>
+	/// <param name="v1"></param>
+	/// <param name="v2"></param>
+	/// <returns></returns>
+	Vector3 Multiply(const Vector3& v1, const Vector3& v2);
+
+	/// <summary>
+	/// 乗算(Vector3*float)
+	/// </summary>
+	/// <param name="v1"></param>
+	/// <param name="value"></param>
+	/// <returns></returns>
+	Vector3 Multiply(const Vector3& v1, const float& value);
+
+
 	/// <summary>
 	/// 正規化(Vector2)
 	/// </summary>
