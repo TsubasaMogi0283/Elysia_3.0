@@ -6,7 +6,6 @@ void DemoObject::Initialize(uint32_t& modelHandle){
 
 	//ワールドトランスフォーム
 	worldTransform_.Initialize();
-	worldTransform_.translate_.y = 1.0f;
 }
 
 void DemoObject::Update(){

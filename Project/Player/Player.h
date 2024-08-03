@@ -22,6 +22,13 @@ enum PlayerViewOfPoint {
 
 };
 
+enum PlayerMoveCondition {
+	//動かない
+	NonePlayerMove,
+	//動く
+	OnPlayerMove,
+};
+
 class Player{
 public:
 	/// <summary>
@@ -104,30 +111,8 @@ public:
 		this->moveDirection_ = moveDirection;
 	}
 
-	/// <summary>
-	/// 現在の方向の設定
-	/// </summary>
-	/// <param name="direction"></param>
-	inline void SetDirection(Vector3& direction) {
-		this->direction_ = direction;
-	}
-	/// <summary>
-	/// 現在の方向を取得
-	/// </summary>
-	/// <returns></returns>
-	Vector3 GetDirection() {
-		return direction_;
-	}
 
 
-	void SetTranslate(const Vector3& translate) {
-		this->worldTransform_.translate_ = translate;
-	}
-
-	inline void SetObjectManager(ObjectManager* objectManager) {
-		this->objectManager_ = objectManager;
-	}
-	
 
 	/// <summary>
 	/// 四隅の取得
@@ -147,14 +132,18 @@ public:
 	}
 
 
+
+	void SetPlayerMoveCondition(uint32_t& condition) {
+		this->moveCondition_ = condition;
+	}
+
 private:
-	ObjectManager* objectManager_ = nullptr;
 
 	//モデル
 	std::unique_ptr<Model> model_ = nullptr;
 
 	//ワールドトランスフォーム
-	WorldTransform worldTransform_{};
+	WorldTransform worldTransform_={};
 
 	StageRect stageRect_ = {};
 
@@ -171,14 +160,12 @@ private:
 	//動く方向
 	Vector3 moveDirection_ = {};
 
-	Vector3 direction_ = {};
-	bool isAbleToMove_ = true;
-
 	
-	bool isPressKey_ = false;
 
 	//操作可能かどうか
 	bool isAbleToControll_ = false;
+	//移動状態
+	uint32_t moveCondition_ = 0;
 
 };
 

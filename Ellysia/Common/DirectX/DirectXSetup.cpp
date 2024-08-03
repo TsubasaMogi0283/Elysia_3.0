@@ -515,7 +515,7 @@ void DirectXSetup::SetResourceBarrierForSwapChain(D3D12_RESOURCE_STATES beforeSt
 void DirectXSetup::InitializeFPS() {
 	//現在時間を記録する
 	//初期化前の時間を記録
-	DirectXSetup::GetInstance()->reference_ = std::chrono::steady_clock::now();
+	DirectXSetup::GetInstance()->frameEndTime_ = std::chrono::steady_clock::now();
 
 	//std::chrono::steady_clock...逆行しないタイマー
 }
@@ -632,13 +632,13 @@ void DirectXSetup::UpdateFPS() {
 
 	//前回記録からの経過時間を取得する
 	//現在時間から前回の時間を引くことで前回からの経過時間を取得する
-	std::chrono::microseconds elapsed = std::chrono::duration_cast<std::chrono::microseconds>(now - DirectXSetup::GetInstance()->reference_);
+	std::chrono::microseconds elapsed = std::chrono::duration_cast<std::chrono::microseconds>(now - DirectXSetup::GetInstance()->frameEndTime_);
 
 	//前回から1/60秒経つまで待機する
 	//1/60秒(よりわずかに短い時間)経っていない場合
 	if (elapsed < MIN_CHECK_TIME) {
 		//1/60秒経過するまで微小なスリープを繰り返す
-		while (std::chrono::steady_clock::now() - DirectXSetup::GetInstance()->reference_ < MIN_TIME) {
+		while (std::chrono::steady_clock::now() - DirectXSetup::GetInstance()->frameEndTime_ < MIN_TIME) {
 			//1マイクロ秒スリープ
 			std::this_thread::sleep_for(std::chrono::microseconds(1));
 		}
@@ -646,7 +646,7 @@ void DirectXSetup::UpdateFPS() {
 
 	//次のフレームの計算に使うため、待機完了後の時間を記録しておく
 	//現在の時間を記録する
-	DirectXSetup::GetInstance()->reference_ = std::chrono::steady_clock::now();
+	DirectXSetup::GetInstance()->frameEndTime_ = std::chrono::steady_clock::now();
 
 
 

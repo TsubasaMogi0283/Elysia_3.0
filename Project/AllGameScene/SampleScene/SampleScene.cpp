@@ -62,10 +62,10 @@ void SampleScene::Initialize() {
 	player_ = new Player();
 	//ステージ
 	player_->SetStageRect(stageRect);
-	player_->SetObjectManager(objectManager_);
 	player_->Initialize();
 	player_->SetIsAbleToControll(false);
 
+	playerPosition_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
 	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
 	isPlayerMoveKey_ = false;
 	bTriggerTime_ = 0;
@@ -295,143 +295,125 @@ void SampleScene::KeyCollision(){
 
 void SampleScene::ObjectCollision(){
 	
-	//std::list <DemoObject*> demoObjects = objectManager_->GetDemoObjets();
-	//for (DemoObject* demoObject : demoObjects) {
-	//	//ワールド座標
-	//	Vector3 objectPosition = demoObject->GetWorldPosition();
-
-	//	//オブジェクトは動く必要がないのでプレイヤーだけで大丈夫
-	//	
-	//	//オブジェクトとプレイヤーとの差分ベクトル
-	//	Vector3 objectPlayerDifference = VectorCalculation::Subtract(objectPosition, playerPosition);
-	//	float enemyAndEnemyDistance = sqrtf(std::powf(objectPlayerDifference.x, 2.0f) + std::powf(objectPlayerDifference.y, 2.0f) + std::powf(objectPlayerDifference.z, 2.0f));
-
-	//	// 正射影ベクトルを求める
-	//	// 上のベクトルを射影する
-	//	Vector3 projectObjectPlayerDifference = VectorCalculation::Project(objectPlayerDifference, playerDirection_);
-	//	Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(objectPlayerDifference, projectObjectPlayerDifference);
-	//	float projectDistance = sqrtf(std::powf(differenceEnemyAndProject.x, 2.0f) + std::powf(differenceEnemyAndProject.y, 2.0f) + std::powf(differenceEnemyAndProject.z, 2.0f));
-
-
-
-	//	//射影ベクトルがそれぞれの半径より短くなった場合
-	//	if (projectDistance < player_->GetRadius() + demoObject->GetRadius()) {
-
-	//		//内積
-	//		//進行方向の前にいると+
-	//		Vector3 normalizedObjectAndPlayer = VectorCalculation::Normalize(objectPlayerDifference);
-	//		float dot = SingleCalculation::Dot(playerDirection_, normalizedObjectAndPlayer);
-
-	//		//進行方向にいた場合
-	//		if ((enemyAndEnemyDistance < player_->GetRadius() + demoObject->GetRadius()) && dot > 0.0f) {
-
-	//		}
-
-	//	}
-
-
-	//	
-	//}
 
 
 	Vector3 direction = flashLight_->GetDirection();
 
 	//プレイヤーが動いている時だけ当たり判定をとる
-	//if (isAbleToMovePlayer_ == true) {
+	//if (isPlayerMove_ == true) {
 		auto demoObjects = objectManager_->GetDemoObjets();
-		Vector3 playerPosition = player_->GetWorldPosition();
 		for (DemoObject* demoObject : demoObjects) {
-			//ワールド座標
-			Vector3 demoObjectPosition = demoObject->GetWorldPosition();
-			// 差分ベクトル
-			Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(demoObjectPosition, playerPosition);
-			float enemyPlayerDistance = sqrtf(
-				std::powf(demoObjectAndPlayerDifference.x, 2.0f) +
-				std::powf(demoObjectAndPlayerDifference.y, 2.0f) +
-				std::powf(demoObjectAndPlayerDifference.z, 2.0f)
-			);
-
+			
+			//オブジェクトとの差分ベクトル
+			Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(demoObject->GetWorldPosition(), playerPosition_);
+			
 			// 正射影ベクトルを求める
-			Vector3 demoObjectAndPlayerProject = VectorCalculation::Project(demoObjectAndPlayerDifference, direction);
-			Vector3 demoObjectAndPlayerProjectDifference = VectorCalculation::Subtract(demoObjectAndPlayerDifference, demoObjectAndPlayerProject);
-			float projectDistance = sqrtf(
-				std::powf(demoObjectAndPlayerProjectDifference.x, 2.0f) +
-				std::powf(demoObjectAndPlayerProjectDifference.y, 2.0f) +
-				std::powf(demoObjectAndPlayerProjectDifference.z, 2.0f)
-			);
+			Vector3 demoObjectAndPlayerProject = VectorCalculation::Project(demoObjectAndPlayerDifference, { direction.x,0.0f,direction.z });
+			Vector3 demoObjectAndPlayerProjectDifference = VectorCalculation::Subtract(demoObject->GetWorldPosition(), demoObjectAndPlayerProject);
+			float projectDistance = sqrtf(std::powf(demoObjectAndPlayerProjectDifference.x, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.y, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.z, 2.0f));
 
+
+
+
+
+			float objectPlayerDistance = sqrtf(std::powf(demoObjectAndPlayerDifference.x, 2.0f) + std::powf(demoObjectAndPlayerDifference.y, 2.0f) + std::powf(demoObjectAndPlayerDifference.z, 2.0f));
 			Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
-			// 進行方向上にいた場合
+			dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
+			//進行方向上にいた場合
 			if (projectDistance < demoObject->GetRadius() + player_->GetRadius()) {
-				// 内積を求める
-				// 進行方向の前にいると+
-				float directionDot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
+				//内積を求める
+				//進行方向の前にいると+
+				
+				
 
-				// 進行・逆進行方向上にいた場合
-				if (enemyPlayerDistance < demoObject->GetRadius() + player_->GetRadius() && directionDot > 0.0f) {
-					isAbleToMovePlayer_ = false;
+				//進行・逆進行方向上にいた場合
+				if ((objectPlayerDistance< demoObject->GetRadius() + player_->GetRadius())&&(dot > 0.0f)) {
+					//isAbleToMovePlayer_ = false;
 
-					// Collision response: Push the player out of the object
-					Vector3 pushOutDirection = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
-					float overlapDistance = (demoObject->GetRadius() + player_->GetRadius()) - enemyPlayerDistance;
-					playerPosition = VectorCalculation::Add(playerPosition, VectorCalculation::Multiply(pushOutDirection, overlapDistance));
 
-					player_->SetTranslate(playerPosition);
+					#ifdef _DEBUG
+					ImGui::Begin("PAOC"); 
+					ImGui::End();
+					#endif // _DEBUG
+
+
+
 				}
+				else {
+					//isAbleToMovePlayer_ = true;
+				}
+
 			}
-//			//差分ベクトル
-//			Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(demoObjectPosition, playerPosition);
-//			float enemyPlayerDistance = sqrtf(std::powf(demoObjectAndPlayerDifference.x, 2.0f) + std::powf(demoObjectAndPlayerDifference.y, 2.0f) + std::powf(demoObjectAndPlayerDifference.z, 2.0f));
-//			
-//			// 正射影ベクトルを求める
-//			
-//			Vector3 demoObjectAndPlayerProject = VectorCalculation::Project(demoObjectAndPlayerDifference, direction);
-//			Vector3 demoObjectAndPlayerProjectDifference = VectorCalculation::Subtract(demoObjectAndPlayerDifference, demoObjectAndPlayerProject);
-//			float projectDistance = sqrtf(std::powf(demoObjectAndPlayerProjectDifference.x, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.y, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.z, 2.0f));
-//
-//
-//			Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
-//			//進行方向上にいた場合
-//			if (projectDistance < demoObject->GetRadius() + player_->GetRadius()) {
-//				//内積を求める
-//				//進行方向の前にいると+
-//				
-//				dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
-//
-//				//進行・逆進行方向上にいた場合
-//				if ((enemyPlayerDistance< demoObject->GetRadius() + player_->GetRadius())&&(dot > 0.0f)) {
-//					isAbleToMovePlayer_ = false;
-//
-//
-//#ifdef _DEBUG
-//					ImGui::Begin("PAOC"); 
-//					ImGui::End();
-//#endif // _DEBUG
-//
-//
-//
-//				}
-//				else {
-//					isAbleToMovePlayer_ = true;
-//				}
-//
-//			}
-//
-//#ifdef _DEBUG
-//			ImGui::Begin("PlayerAndObjectCollision");
-//			ImGui::InputFloat("EnemyAndPlayerDistance", &enemyPlayerDistance);
-//			ImGui::InputFloat3("demoObjectAndPlayerProjectDifference", &demoObjectAndPlayerProjectDifference.x);
-//			ImGui::InputFloat("ProjectDistance", &projectDistance);
-//			ImGui::InputFloat("Dot", &dot);
-//			ImGui::InputFloat3("normalizedDemoAndPlayer", &normalizedDemoAndPlayer.x);
-//			ImGui::End();
-//#endif // _DEBUG
-//			
+
+			#ifdef _DEBUG
+			ImGui::Begin("PlayerAndObjectCollision");
+			ImGui::InputFloat3("demoObjectAndPlayerDifference", &demoObjectAndPlayerDifference.x);
+			ImGui::InputFloat("EnemyAndPlayerDistance", &objectPlayerDistance);
+			ImGui::InputFloat3("Project", &demoObjectAndPlayerProject.x);
+			ImGui::InputFloat3("demoObjectAndPlayerProjectDifference", &demoObjectAndPlayerProjectDifference.x);
+			ImGui::InputFloat("ProjectDistance", &projectDistance);
+			ImGui::InputFloat("Dot", &dot);
+			ImGui::InputFloat3("normalizedDemoAndPlayer", &normalizedDemoAndPlayer.x);
+			ImGui::End();
+			#endif // _DEBUG
+			
 
 		}
 	//}
 
 	
+}
+
+void SampleScene::EscapeCondition(){
+	//ゲート
+	if (gate_->isCollision(playerPosition_)) {
+#ifdef _DEBUG
+		ImGui::Begin("InSpaceGate");
+		ImGui::End();
+
+#endif // _DEBUG
+
+		//3個取得したら脱出できる
+		uint32_t playerKeyQuantity = player_->GetHavingKey();
+		if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
+			escapeText_->SetInvisible(false);
+
+
+
+			//コントローラーのBボタンを押したら脱出のフラグがたつ
+			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+
+				//Bボタンを押したとき
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+					bTriggerTime_ += 1;
+
+				}
+				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+					bTriggerTime_ = 0;
+				}
+
+				if (bTriggerTime_ == 1) {
+					//脱出
+					isEscape_ = true;
+				}
+
+			}
+			//SPACEキーを押したら脱出のフラグがたつ
+			if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
+				//脱出
+				isEscape_ = true;
+			}
+		}
+	}
+	else {
+		escapeText_->SetInvisible(true);
+	}
+
+	//脱出
+	if (isEscape_ == true) {
+		isFadeOut_ = true;
+	}
+
 }
 
 void SampleScene::PlayerMove(){
@@ -440,16 +422,18 @@ void SampleScene::PlayerMove(){
 	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
 	isPlayerMoveKey_ = false;
 	//isAbleToMovePlayer_ = true;
-
+	isPlayerMove_ = false;
 
 #pragma region キーボード
 //移動
-	if (isAbleToMovePlayer_ == true) {
+	//if (isAbleToMovePlayer_ == true) {
 		if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
 			playerMoveDirection_.x = std::cosf(theta_ - std::numbers::pi_v<float> / 2.0f);
 			playerMoveDirection_.z = std::sinf(theta_ - std::numbers::pi_v<float> / 2.0f);
 			//キーボード入力をしている
 			isPlayerMoveKey_ = true;
+			//動いている
+			isPlayerMove_ = true;
 
 		}
 		if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
@@ -458,6 +442,8 @@ void SampleScene::PlayerMove(){
 
 			//キーボード入力をしている
 			isPlayerMoveKey_ = true;
+			//動いている
+			isPlayerMove_ = true;
 		}
 		if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
 			playerMoveDirection_.x = std::cosf(theta_);
@@ -465,6 +451,8 @@ void SampleScene::PlayerMove(){
 
 			//キーボード入力をしている
 			isPlayerMoveKey_ = true;
+			//動いている
+			isPlayerMove_ = true;
 		}
 		if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
 			playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float>);
@@ -472,8 +460,10 @@ void SampleScene::PlayerMove(){
 
 			//キーボード入力をしている
 			isPlayerMoveKey_ = true;
+			//動いている
+			isPlayerMove_ = true;
 		}
-	}
+	//}
 
 
 #pragma endregion
@@ -482,7 +472,7 @@ void SampleScene::PlayerMove(){
 	//接続時
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 		//キーボード入力していない時・移動できる時に受け付ける
-		if (isPlayerMoveKey_ == false && isAbleToMovePlayer_ == true) {
+		if (isPlayerMoveKey_ == false) {
 
 
 			//コントローラーの入力
@@ -511,6 +501,9 @@ void SampleScene::PlayerMove(){
 
 			//入力されていたら計算
 			if (isInput == true) {
+				//動いている
+				isPlayerMove_ = true;
+
 				//角度を求める
 				float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
 				//値を0～2πに直してtheta_に揃える
@@ -534,10 +527,20 @@ void SampleScene::PlayerMove(){
 #pragma endregion
 
 
+
+	if (isPlayerMove_ == true) {
+		uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+		player_->SetPlayerMoveCondition(newCondition);
+	}
+	else {
+		uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+		player_->SetPlayerMoveCondition(newCondition);
+	}
+
 #ifdef _DEBUG
 	ImGui::Begin("Player");
 	ImGui::InputFloat3("Direction", &playerMoveDirection_.x);
-	ImGui::Checkbox("IsPlayerMove", &isAbleToMovePlayer_);
+	ImGui::Checkbox("IsPlayerMove", &isPlayerMove_);
 	ImGui::InputFloat3("playerDirection", &playerDirection.x);
 	ImGui::End();
 
@@ -719,7 +722,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 #pragma endregion
 
-
+		//プレイヤーの移動
 		PlayerMove();
 
 
@@ -729,8 +732,8 @@ void SampleScene::Update(GameManager* gameManager) {
 		float phi = -originPhi_;
 
 		//懐中電灯
-		Vector3 playerPosition = player_->GetWorldPosition();
-		flashLight_->SetPlayerPosition(playerPosition);
+		playerPosition_ = player_->GetWorldPosition();
+		flashLight_->SetPlayerPosition(playerPosition_);
 		flashLight_->SetTheta(theta_);
 		flashLight_->SetPhi(phi);
 		flashLight_->Update();
@@ -793,7 +796,7 @@ void SampleScene::Update(GameManager* gameManager) {
 			camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
 			camera_.rotate_.z = 0.0f;
 
-			camera_.translate_ = VectorCalculation::Add(playerPosition, CAMERA_POSITION_OFFSET);
+			camera_.translate_ = VectorCalculation::Add(playerPosition_, CAMERA_POSITION_OFFSET);
 
 		}
 		else if (viewOfPoint_ == ThirdPersonBack) {
@@ -802,7 +805,7 @@ void SampleScene::Update(GameManager* gameManager) {
 			camera_.rotate_ = thirdPersonViewOfPointRotate_;
 			//camera_.rotate_ = {0.2f,0.0f,0.0f};
 
-			camera_.translate_ = VectorCalculation::Add(playerPosition, VectorCalculation::Add(cameraThirdPersonViewOfPointPosition_, cameraTranslate));
+			camera_.translate_ = VectorCalculation::Add(playerPosition_, VectorCalculation::Add(cameraThirdPersonViewOfPointPosition_, cameraTranslate));
 			//camera_.translate_ = {0.0f,5.0f,-15.0f};
 
 		}
@@ -823,56 +826,9 @@ void SampleScene::Update(GameManager* gameManager) {
 
 		#pragma endregion
 
-
-		//ゲート
-		if (gate_->isCollision(playerPosition)) {
-#ifdef _DEBUG
-			ImGui::Begin("InSpaceGate");
-			ImGui::End();
-
-#endif // _DEBUG
-
-			//3個取得したら脱出できる
-			uint32_t playerKeyQuantity = player_->GetHavingKey();
-			if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
-				escapeText_->SetInvisible(false);
-
-
-
-				//コントローラーのBボタンを押したら脱出のフラグがたつ
-				if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-
-					//Bボタンを押したとき
-					if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-						bTriggerTime_ += 1;
-
-					}
-					if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-						bTriggerTime_ = 0;
-					}
-
-					if (bTriggerTime_ == 1) {
-						//脱出
-						isEscape_ = true;
-					}
-
-				}
-				//SPACEキーを押したら脱出のフラグがたつ
-				if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
-					//脱出
-					isEscape_ = true;
-				}
-			}
-		}
-		else {
-			escapeText_->SetInvisible(true);
-		}
-
-		//脱出
-		if (isEscape_ == true) {
-			isFadeOut_ = true;
-		}
-
+		//脱出の仕組み
+		EscapeCondition();
+		
 		#pragma endregion
 
 		
@@ -885,7 +841,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 		//ライト
 		Vector3 lightDirection = flashLight_->GetDirection();
-		lightCollision_->Update(player_->GetWorldPosition(), lightDirection);
+		lightCollision_->Update(playerPosition_, lightDirection);
 
 		//更新
 		material_.Update();
@@ -940,6 +896,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	//プレイヤーの更新
 	player_->Update();
+	playerPosition_ = player_->GetWorldPosition();
 
 	//ライト確認用のタワー
 	debugTowerWorldTransform_.Update();

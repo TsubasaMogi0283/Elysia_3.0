@@ -12,8 +12,7 @@
 
 void Player::Initialize(){
 
-	//空だと止まる
-	assert(objectManager_!=nullptr);
+
 
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD3Player","Player.obj");
 	model_.reset(Model::Create(modelHandle));
@@ -23,8 +22,6 @@ void Player::Initialize(){
 	//持っている鍵の数
 	haveKeyQuantity_ = 0;
 
-	//進むことが出来るかどうか
-	isAbleToMove_ = true;
 
 	//半径
 	radius_ = 1.0f;
@@ -36,37 +33,21 @@ void Player::Initialize(){
 
 void Player::Update(){
 
-	//逆方向
-	Vector3 backDirection = {
-		.x = -moveDirection_.x,
-		.y = -moveDirection_.y,
-		.z = -moveDirection_.z
-	};
 
-#ifdef _DEBUG
-	//ImGuiにInputUintが無いの不便・・
-	int keyQuantity = haveKeyQuantity_;
-	ImGui::Begin("Player");
-	ImGui::InputInt("KeyQuantity", &keyQuantity);
-	ImGui::InputFloat3("Transrate", &worldTransform_.translate_.x);
-	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
-	ImGui::InputFloat3("BackDirection", &backDirection.x);
-	ImGui::End();
 
-#endif
+
 
 
 	
 
 	const float MOVE_SPEED = 0.1f;
 
-	//加算
-	if (isAbleToControll_ == true) {
-		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, { moveDirection_.x * MOVE_SPEED,moveDirection_.y * MOVE_SPEED,moveDirection_.z * MOVE_SPEED });
+	//動けるときだけ加算
+	if (isAbleToControll_ == true && moveCondition_==PlayerMoveCondition::OnPlayerMove) {
+		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, VectorCalculation::Multiply(moveDirection_,MOVE_SPEED));
 
 	}
 	
-
 
 	//ステージの外には行けないようにする
 	//左
@@ -93,7 +74,18 @@ void Player::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
+#ifdef _DEBUG
+	//ImGuiにInputUintが無いの不便・・
+	int keyQuantity = haveKeyQuantity_;
+	int condition = moveCondition_;
+	ImGui::Begin("Player");
+	ImGui::InputInt("KeyQuantity", &keyQuantity);
+	ImGui::InputFloat3("Transrate", &worldTransform_.translate_.x);
+	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
+	ImGui::InputInt("moveCondition_", &condition);
+	ImGui::End();
 
+#endif
 
 }
 

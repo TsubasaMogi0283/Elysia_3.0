@@ -16,6 +16,8 @@ void GameManager::Initialize() {
 	//初期化
 	currentGamaScene_->Initialize();
 
+	SCENE_QUANTITY_ = 0;
+
 }
 
 void GameManager::ChangeScene(IGameScene* newGameScene) {
@@ -29,6 +31,33 @@ void GameManager::ChangeScene(IGameScene* newGameScene) {
 
 
 void GameManager::Update() {
+
+#ifdef _DEBUG
+	
+	const char* sceneName[] = { "Title", "Game", "Win" };
+	//シーンファクトリー組み合わせたらデバッグがやりやすそう
+	ImGui::Begin("Scene");
+	if (ImGui::BeginCombo("SceneSelect", sceneName[SCENE_QUANTITY_])) {
+		for (uint32_t i = 0; i < IM_ARRAYSIZE(sceneName); i++) {
+			bool isSelected = (SCENE_QUANTITY_ == i);
+			if (ImGui::Selectable(sceneName[i], isSelected))
+			{
+				SCENE_QUANTITY_ = i; // 選択されたアイテムのインデックスを更新
+			}
+
+			// 現在選択されているアイテムにフォーカスを設定
+			if (isSelected) {
+				ImGui::SetItemDefaultFocus();
+			}
+				
+		}
+
+		ImGui::EndCombo();
+	}
+	ImGui::End();
+#endif // _DEBUG
+
+
 	currentGamaScene_->Update(this);
 }
 

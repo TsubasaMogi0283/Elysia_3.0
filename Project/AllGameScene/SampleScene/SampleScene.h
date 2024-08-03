@@ -88,10 +88,12 @@ public:
 
 
 private:
-	void PlayerMove();
+	
 
 
 private:
+
+
 
 	/// <summary>
 	/// 鍵の取得の処理
@@ -104,6 +106,12 @@ private:
 	/// </summary>
 	void ObjectCollision();
 
+	/// <summary>
+	/// プレイヤーの移動
+	/// </summary>
+	void PlayerMove();
+
+	void EscapeCondition();
 
 private:
 	enum GameCondition {
@@ -153,10 +161,11 @@ private:
 
 	//プレイヤー
 	Player* player_ = nullptr;
-	Vector3 playerMoveDirection_ = {0.0f,0.0f,0.0f};
+	Vector3 playerPosition_ = {};
+	Vector3 playerMoveDirection_ = {};
 	Vector3 playerDirection = {};
 	bool isPlayerMoveKey_ = false;
-	bool isAbleToMovePlayer_ = false;
+	bool isPlayerMove_ = false;
 
 	uint32_t bTriggerTime_ = 0;
 	bool isBTrigger_ = false;
