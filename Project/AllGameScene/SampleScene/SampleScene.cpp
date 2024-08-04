@@ -297,7 +297,7 @@ void SampleScene::ObjectCollision(){
 	
 
 
-	Vector3 direction = flashLight_->GetDirection();
+	Vector3 direction = playerMoveDirection_;
 
 	//プレイヤーが動いている時だけ当たり判定をとる
 	//if (isPlayerMove_ == true) {
@@ -329,7 +329,8 @@ void SampleScene::ObjectCollision(){
 				//進行・逆進行方向上にいた場合
 				if ((objectPlayerDistance< demoObject->GetRadius() + player_->GetRadius())&&(dot > 0.0f)) {
 					//isAbleToMovePlayer_ = false;
-
+					uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+					player_->SetPlayerMoveCondition(newCondition);
 
 					#ifdef _DEBUG
 					ImGui::Begin("PAOC"); 
@@ -341,6 +342,9 @@ void SampleScene::ObjectCollision(){
 				}
 				else {
 					//isAbleToMovePlayer_ = true;
+					uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+					player_->SetPlayerMoveCondition(newCondition);
+
 				}
 
 			}
