@@ -40,6 +40,8 @@ public:
 	/// <returns></returns>
 	static Model* Create(uint32_t modelHandle);
 
+	#pragma region 描画
+
 	/// <summary>
 	/// 描画
 	/// </summary>
@@ -64,7 +66,7 @@ public:
 	/// <param name="spotLight"></param>
 	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight);
 
-
+#pragma endregion
 
 	/// <summary>
 	/// デストラクタ
@@ -93,7 +95,7 @@ public:
 	}
 
 
-private:
+
 
 private:
 	//頂点リソースを作る

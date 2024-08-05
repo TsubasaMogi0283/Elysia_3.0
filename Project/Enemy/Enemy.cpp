@@ -75,7 +75,14 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	debugModelWorldTransform_.Initialize();
 	const float DEBUG_MODEL_SCALE = 0.25f;
 	debugModelWorldTransform_.scale_ = { .x= DEBUG_MODEL_SCALE,.y= DEBUG_MODEL_SCALE,.z= DEBUG_MODEL_SCALE };
+
+
+	
+
 #endif // _DEBUG
+	attackModel_ =new EnemyAttackCollision();
+	attackModel_->Initialize(debugModelHandle);
+	isAttack_ = false;
 
 	
 }
@@ -88,7 +95,7 @@ void Enemy::Update(){
 	worldTransform_.Update();
 	material_.Update();
 
-
+	//状態
 	switch (condition_) {
 		//何もしない
 	case EnemyCondition::NoneMove:
@@ -186,11 +193,18 @@ void Enemy::Update(){
 	case EnemyCondition::Attack:
 		attackTime_ += 1;
 		
-		if (attackTime_ > 60 && attackTime_ <= 180) {
-		#ifdef _DEBUG
+
+		//2～4秒までが攻撃
+		if (attackTime_ > 120 && attackTime_ <= 240) {
+			isAttack_ = true;
+#ifdef _DEBUG
 			ImGui::Begin("Attack");
 			ImGui::End();
-		#endif // DEBUG
+#endif // DEBUG
+
+		}
+		else {
+			isAttack_ = false;
 		}
 	
 		//4秒経ったらまた0になる
@@ -217,14 +231,19 @@ void Enemy::Update(){
 	
 
 #ifdef _DEBUG
-	const float INTERVAL = 3.0f;
-	Vector3 lineEnd = VectorCalculation::Add(GetWorldPosition(), { direction_.x * INTERVAL,direction_.y * INTERVAL,direction_.z * INTERVAL });
-	debugModelWorldTransform_.translate_ = lineEnd;
+	const float INTERVAL = 5.0f;
+	debugModelWorldTransform_.translate_ = VectorCalculation::Add(GetWorldPosition(), VectorCalculation::Multiply(direction_, INTERVAL));
 	debugModelWorldTransform_.Update();
 
-#endif // _DEBUG
-
 	
+
+#endif // _DEBUG
+	Vector3 enemyWorldPosition = GetWorldPosition();
+	attackModel_->SetEnemyPosition(enemyWorldPosition);
+	attackModel_->SetEnemyDirection(direction_);
+	attackModel_->Update();
+
+
 	//更新
 	worldTransform_.Update();
 	material_.Update();
@@ -238,7 +257,7 @@ void Enemy::Update(){
 	ImGui::InputFloat3("direction_", &direction_.x);
 	ImGui::InputFloat("RotateY", &degreeRotateY);
 	ImGui::InputFloat3("Speed", &direction_.x);
-
+	ImGui::Checkbox("isAttck", &isAttack_);
 	ImGui::InputFloat3("Position", &worldTransform_.translate_.x);
 	ImGui::InputFloat3("preTrackingPlayerPosition", &preTrackingPlayerPosition_.x);
 	ImGui::InputFloat3("preTrackingPosition_", &preTrackingPosition_.x);
@@ -297,10 +316,19 @@ void Enemy::Draw(Camera& camera,SpotLight&spotLight){
 
 #endif // _DEBUG
 
+	//攻撃用
+	if (isAttack_ == true) {
+		attackModel_->Draw(camera, spotLight);
+	}
+
 	//描画
 	if (isAlive_ == true) {
 		model_->Draw(worldTransform_, camera,material_, spotLight);
 	}
 	
+}
+
+Enemy::~Enemy(){
+	delete attackModel_;
 }
 

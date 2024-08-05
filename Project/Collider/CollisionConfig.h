@@ -7,24 +7,14 @@
 //プレイヤー陣営
 const uint32_t COLLISION_ATTRIBUTE_PLAYER = 0b1;
 
-
 //敵陣営
 //2
 //左に1つシフトする
 const uint32_t COLLISION_ATTRIBUTE_ENEMY = 0b1 << 1;
 
-//オブジェクト
+//敵の攻撃の当たり判定
 //4
-//左に2つシフトする
-const uint32_t COLLISION_ATTRIBUTE_OBJECT = 0b1 << 2;
+//左に1つシフトする
+const uint32_t COLLISION_ATTRIBUTE_ENEMY_ATTACK = 0b1 << 2;
 
-//プレイヤー陣営の武器
-//8
-//左に2つシフトする
-const uint32_t COLLISION_ATTRIBUTE_P_WEAPON = 0b1 << 3;
-
-//敵陣営の武器
-//16
-//左に3つシフトする
-const uint32_t COLLISION_ATTRIBUTE_E_WEAPON = 0b1 << 4;
 

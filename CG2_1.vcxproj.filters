@@ -310,6 +310,9 @@
     <Filter Include="Project\Stage\DemoObject">
       <UniqueIdentifier>{23eb0470-6142-403d-b697-8c87c43993b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Enemy\EnemyAttackCollision">
+      <UniqueIdentifier>{20d87d40-77b6-425d-8fb0-6466f81f7d5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -530,6 +533,9 @@
     </ClCompile>
     <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp">
       <Filter>Project\Stage\ObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -945,6 +951,9 @@
     </ClInclude>
     <ClInclude Include="Project\Stage\DemoObject\DemoObject.h">
       <Filter>Project\Stage\DemoObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\EnemyAttackCollision.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

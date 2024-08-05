@@ -7,6 +7,7 @@
 #include <memory>
 #include "../../Ellysia/Line/Line.h"
 #include "Stage/Ground/StageRect.h"
+#include "EnemyAttackCollision.h"
 
 struct Camera;
 struct SpotLight;
@@ -63,7 +64,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Enemy() = default;
+	~Enemy();
 
 
 
@@ -249,4 +250,9 @@ private:
 	//モデル
 	std::unique_ptr<Model> debugModel_ = nullptr;
 	WorldTransform debugModelWorldTransform_ = {};
+
+	//攻撃用
+	EnemyAttackCollision* attackModel_ = nullptr;
+	bool isAttack_ = false;
+
 };

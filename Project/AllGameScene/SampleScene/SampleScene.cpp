@@ -759,7 +759,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 				if (IsFanCollision(fan, enemy->GetWorldPosition())) {
 	
-					enemy->OnCollision();
+					//enemy->OnCollision();
 
 
 					#ifdef _DEBUG
