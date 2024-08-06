@@ -17,8 +17,7 @@ enum PlayerViewOfPoint {
 	FirstPerson = 1,
 	//3人称後方
 	ThirdPersonBack = 2,
-	//3人称後方
-	ThirdPersonFront = 3,
+
 
 };
 
@@ -80,6 +79,12 @@ public:
 	Vector3 GetWorldPosition()const;
 
 	/// <summary>
+	///	衝突
+	/// </summary>
+	void OnCollision();
+
+
+	/// <summary>
 	/// 半径を取得
 	/// </summary>
 	/// <returns></returns>
@@ -93,7 +98,6 @@ public:
 	inline void AddHaveKeyQuantity() {
 		haveKeyQuantity_++;
 	}
-
 
 	/// <summary>
 	/// 今鍵を何個持っているか
@@ -111,8 +115,13 @@ public:
 		this->moveDirection_ = moveDirection;
 	}
 
-
-
+	/// <summary>
+	/// 動きの状態を設定
+	/// </summary>
+	/// <param name="condition"></param>
+	void SetPlayerMoveCondition(uint32_t& condition) {
+		this->moveCondition_ = condition;
+	}
 
 	/// <summary>
 	/// 四隅の取得
@@ -131,11 +140,15 @@ public:
 		this->isAbleToControll_ = isControll;
 	}
 
-
-
-	void SetPlayerMoveCondition(uint32_t& condition) {
-		this->moveCondition_ = condition;
+	/// <summary>
+	/// 体力を取得
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetHP()const {
+		return hp_;
 	}
+
+	
 
 private:
 
@@ -148,24 +161,26 @@ private:
 	StageRect stageRect_ = {};
 
 	//カメラ視点
-	uint32_t pointOfView_ = 0;
+	uint32_t pointOfView_ = 0u;
 
 	//半径
 	float radius_ = 0.0f;
 
 	//持っている鍵の数
 	//可算なのでQuantity
-	uint32_t haveKeyQuantity_ = 0;
+	uint32_t haveKeyQuantity_ = 0u;
 
 	//動く方向
 	Vector3 moveDirection_ = {};
 
+	//体力
+	int32_t hp_ = 0;
 	
 
 	//操作可能かどうか
 	bool isAbleToControll_ = false;
 	//移動状態
-	uint32_t moveCondition_ = 0;
+	uint32_t moveCondition_ = 0u;
 
 };
 

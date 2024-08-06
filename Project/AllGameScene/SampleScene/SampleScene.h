@@ -157,7 +157,7 @@ private:
 	float p = 0.0f;
 	Vector3 pp = {};
 	
-	float dot = {};
+	float dot = 0.0f;
 
 	//プレイヤー
 	Player* player_ = nullptr;
@@ -167,7 +167,7 @@ private:
 	bool isPlayerMoveKey_ = false;
 	bool isPlayerMove_ = false;
 
-	uint32_t bTriggerTime_ = 0;
+	uint32_t bTriggerTime_ = 0u;
 	bool isBTrigger_ = false;
 
 	//オブジェクトマネージャー
@@ -190,13 +190,13 @@ private:
 	
 	//敵
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
-	uint32_t enemyModelHandle_ = 0;
+	uint32_t enemyModelHandle_ = 0u;
 
 	//プレイヤーのライトの判定
 	LightWeapon* lightCollision_ = nullptr;
 	WorldTransform lightCollisionWorldTransform_ = {};
 
-	uint32_t viewOfPoint_ = 0;
+	uint32_t viewOfPoint_ = 0u;
 
 	float theta_ = 0.0f;
 	float originPhi_ = 0.0f;
@@ -209,12 +209,10 @@ private:
 #pragma region ゲーム中のUI
 
 	//UIManagerを作った方がよさそう
-	//ベタガキ過ぎるので
+	//ベタ書き過ぎるので
 
 	//UIを表示するかどうか
 	bool isDisplayUI_ = false;
-
-
 
 	//脱出テキスト
 	std::unique_ptr<Sprite> escapeText_ = nullptr;
@@ -225,15 +223,19 @@ private:
 	//鍵取得
 	std::unique_ptr<Sprite> pickUpKey_ = nullptr;
 
-
+	//プレイヤーの体力
+	static const uint32_t PLAYER_HP_MAX_QUANTITY_ = 3u;
+	uint32_t currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
+	std::unique_ptr<Sprite> playerHP_[PLAYER_HP_MAX_QUANTITY_] = { nullptr };
+	std::unique_ptr<Sprite> playerHPBackFrame_ = nullptr;
 
 	//鍵
 	std::unique_ptr<KeyManager> keyManager_ = {};
-	uint32_t keyQuantity_ = 0;
+	uint32_t keyQuantity_ = 0u;
 	bool isAbleToPickUpKey_ = false;
 
 	std::unique_ptr<Sprite>lackOfKeyesNumberSprite_[3] = { nullptr };
-	uint32_t lackOfKeyesNumber_ = 0;
+	uint32_t lackOfKeyesNumber_ = 0u;
 
 
 #pragma region フェード
@@ -253,14 +255,14 @@ private:
 
 
 #pragma region 説明
-	static const uint32_t EXPLANATION_QUANTITY_ = 2;
+	static const uint32_t EXPLANATION_QUANTITY_ = 2u;
 	std::unique_ptr<Sprite> explanation_[EXPLANATION_QUANTITY_] = { nullptr };
 
 	//Spaceで次に進むテキスト
-	static const uint32_t SPACE_TO_NEXT_QUANTITY_ = 2;
+	static const uint32_t SPACE_TO_NEXT_QUANTITY_ = 2u;
 	std::unique_ptr<Sprite> spaceToNext_[SPACE_TO_NEXT_QUANTITY_] = { nullptr };
 
-	uint32_t howToPlayTextureNumber_ = 0;
+	uint32_t howToPlayTextureNumber_ = 0u;
 
 #pragma endregion
 

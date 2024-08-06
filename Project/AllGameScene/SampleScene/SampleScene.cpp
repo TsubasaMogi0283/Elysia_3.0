@@ -74,6 +74,8 @@ void SampleScene::Initialize() {
 	//初期は1人称視点
 	viewOfPoint_ = FirstPerson;
 
+
+
 #pragma endregion
 
 
@@ -160,7 +162,7 @@ void SampleScene::Initialize() {
 	explanationTextureHandle[0] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/Explanation1.png");
 	explanationTextureHandle[1] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/Explanation2.png");
 
-	for (uint32_t i = 0; i < EXPLANATION_QUANTITY_; ++i) {
+	for (uint32_t i = 0u; i < EXPLANATION_QUANTITY_; ++i) {
 		explanation_[i].reset(Sprite::Create(explanationTextureHandle[i], {.x=0.0f,.y=0.0f}));
 	}
 	
@@ -174,18 +176,38 @@ void SampleScene::Initialize() {
 	}
 
 	
-	howToPlayTextureNumber_ = 0;
+	howToPlayTextureNumber_ = 0u;
 
 	//常時表示
 	//操作
 	uint32_t operationTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Operation/Operation.png");
-	operation_.reset(Sprite::Create(operationTextureHandle, {.x=0.0f,.y=0.0f}));
+	operation_.reset(Sprite::Create(operationTextureHandle, {.x=20.0f,.y=0.0f}));
 	isGamePlay_ = false;
 
 	uint32_t pickUpTextureManager = TextureManager::GetInstance()->LoadTexture("Resources/Game/Key/PickUpKey.png");
 	pickUpKey_.reset(Sprite::Create(pickUpTextureManager, { .x = 0.0f,.y = 0.0f }));
 	
 #pragma endregion
+
+#pragma region UI
+	uint32_t playerHPTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Player/PlayerHP.png");
+	uint32_t playerHPBackFrameTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Player/PlayerHPBack.png");
+	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
+	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
+		playerHP_[i].reset(Sprite::Create(playerHPTextureHandle, {.x=static_cast<float>(i)*64+ INITIAL_POSITION.x,.y= INITIAL_POSITION .y}));
+	}
+	
+	playerHPBackFrame_.reset(Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
+	currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
+
+#pragma endregion
+
+
+
+
+
+
+
 
 	isGamePlay_ = false;
 	isExplain_ = false;
@@ -232,6 +254,7 @@ void SampleScene::KeyCollision(){
 
 			float colissionDistance = sqrtf(distance.x + distance.y + distance.z);
 			
+
 
 			//範囲内にいれば入力を受け付ける
 			if (colissionDistance <= player_->GetRadius() + key->GetRadius()) {
@@ -328,7 +351,6 @@ void SampleScene::ObjectCollision(){
 
 				//進行・逆進行方向上にいた場合
 				if ((objectPlayerDistance< demoObject->GetRadius() + player_->GetRadius())&&(dot > 0.0f)) {
-					//isAbleToMovePlayer_ = false;
 					uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
 					player_->SetPlayerMoveCondition(newCondition);
 
@@ -341,7 +363,6 @@ void SampleScene::ObjectCollision(){
 
 				}
 				else {
-					//isAbleToMovePlayer_ = true;
 					uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
 					player_->SetPlayerMoveCondition(newCondition);
 
@@ -632,7 +653,7 @@ void SampleScene::Update(GameManager* gameManager) {
 		
 		
 
-#pragma region 回転
+		#pragma region 回転
 
 #pragma region Y軸に旋回
 
@@ -843,9 +864,18 @@ void SampleScene::Update(GameManager* gameManager) {
 		ObjectCollision();
 
 
+
+
+
+
+
 		//ライト
 		Vector3 lightDirection = flashLight_->GetDirection();
 		lightCollision_->Update(playerPosition_, lightDirection);
+
+		//現在のプレイヤーの体力を取得
+		currentDisplayHP_ = player_->GetHP();
+		
 
 		//更新
 		material_.Update();
@@ -973,11 +1003,11 @@ void SampleScene::DrawPostEffect(){
 void SampleScene::DrawSprite(){
 	
 	//説明
-	if (howToPlayTextureNumber_ == 1) {
+	if (howToPlayTextureNumber_ == 1u) {
 		explanation_[0]->Draw();
 		spaceToNext_[0]->Draw();
 	}
-	if (howToPlayTextureNumber_ == 2) {
+	if (howToPlayTextureNumber_ == 2u) {
 		explanation_[1]->Draw();
 		spaceToNext_[1]->Draw();
 	}
@@ -998,6 +1028,17 @@ void SampleScene::DrawSprite(){
 
 		//脱出
 		escapeText_->Draw();
+
+		//プレイヤーの体力の枠
+		playerHPBackFrame_->Draw();
+
+		//プレイヤーの体力(アイコン型)
+		for (uint32_t i = 0u; i < currentDisplayHP_; ++i) {
+			playerHP_[i]->Draw();
+		}
+
+		
+
 	}
 
 	//フェード

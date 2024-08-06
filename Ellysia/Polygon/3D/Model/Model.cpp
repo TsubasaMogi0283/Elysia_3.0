@@ -52,10 +52,6 @@ Model* Model::Create(uint32_t modelHandle) {
 	//カメラ
 	model->cameraResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraForGPU)).Get();
 
-
-
-	
-
 	return model;
 
 }
@@ -65,6 +61,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
+
 
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
@@ -148,6 +145,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
 
+
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
@@ -228,6 +226,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
+
 
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む

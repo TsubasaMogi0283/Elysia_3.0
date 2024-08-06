@@ -20,7 +20,10 @@ void Player::Initialize(){
 	isAbleToControll_ = false;
 
 	//持っている鍵の数
-	haveKeyQuantity_ = 0;
+	haveKeyQuantity_ = 0u;
+	
+	//体力
+	hp_ = 3u;
 
 
 	//半径
@@ -32,13 +35,6 @@ void Player::Initialize(){
 }
 
 void Player::Update(){
-
-
-
-
-
-
-	
 
 	const float MOVE_SPEED = 0.1f;
 
@@ -53,22 +49,18 @@ void Player::Update(){
 	//左
 	if (worldTransform_.translate_.x < stageRect_.leftBack.x + radius_) {
 		worldTransform_.translate_.x = stageRect_.leftBack.x + radius_;
-	
 	}
 	//右
 	if (worldTransform_.translate_.x > stageRect_.rightBack.x - radius_) {
 		worldTransform_.translate_.x = stageRect_.rightBack.x - radius_;
-
 	}
 	//奥
 	if (worldTransform_.translate_.z > stageRect_.leftBack.z - radius_) {
 		worldTransform_.translate_.z = stageRect_.leftBack.z - radius_;
-
 	}
 	//手前
 	if (worldTransform_.translate_.z < stageRect_.leftFront.z + radius_) {
 		worldTransform_.translate_.z = stageRect_.leftFront.z + radius_;
-
 	}
 
 	//ワールドトランスフォームの更新
@@ -78,13 +70,25 @@ void Player::Update(){
 	//ImGuiにInputUintが無いの不便・・
 	int keyQuantity = haveKeyQuantity_;
 	int condition = moveCondition_;
+
+	if (hp_ > 3) {
+		hp_ = 3;
+	}
+	if (hp_ < 0) {
+		hp_ = 0;
+	}
 	ImGui::Begin("Player");
-	ImGui::InputInt("KeyQuantity", &keyQuantity);
+	if (ImGui::TreeNode("Condition")) {
+		ImGui::InputInt("KeyQuantity", &keyQuantity);
+		ImGui::InputInt("HP", &hp_);
+
+		ImGui::TreePop();
+	}
+
 	ImGui::InputFloat3("Transrate", &worldTransform_.translate_.x);
 	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
 	ImGui::InputInt("moveCondition_", &condition);
 	ImGui::End();
-
 #endif
 
 }
@@ -95,12 +99,16 @@ void Player::Draw(Camera& camera, Material& material, SpotLight& spotLight){
 }
 
 Vector3 Player::GetWorldPosition()const {
-	Vector3 result = {};
-	result.x = worldTransform_.worldMatrix_.m[3][0];
-	result.y = worldTransform_.worldMatrix_.m[3][1];
-	result.z = worldTransform_.worldMatrix_.m[3][2];
+	Vector3 worldPosition = {
+		.x = worldTransform_.worldMatrix_.m[3][0],
+		.y = worldTransform_.worldMatrix_.m[3][1],
+		.z = worldTransform_.worldMatrix_.m[3][2],
+	};
+	return worldPosition;
+}
 
-	return result;
+void Player::OnCollision(){
+
 }
 
 
