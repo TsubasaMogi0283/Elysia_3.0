@@ -3,7 +3,7 @@
 #include "Model.h"
 #include <memory>
 #include "Stage/Ground/StageRect.h"
-
+#include "../Collider/Collider.h"
 struct Camera;
 struct SpotLight;
 struct Material;
@@ -17,8 +17,6 @@ enum PlayerViewOfPoint {
 	FirstPerson = 1,
 	//3人称後方
 	ThirdPersonBack = 2,
-
-
 };
 
 enum PlayerMoveCondition {
@@ -28,7 +26,7 @@ enum PlayerMoveCondition {
 	OnPlayerMove,
 };
 
-class Player{
+class Player :public Collider {
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -76,12 +74,12 @@ public:
 	/// ワールド座標を所得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition()const;
+	Vector3 GetWorldPosition()override;
 
 	/// <summary>
 	///	衝突
 	/// </summary>
-	void OnCollision();
+	void OnCollision()override;
 
 
 	/// <summary>
@@ -137,7 +135,7 @@ public:
 	/// </summary>
 	/// <param name="isControll"></param>
 	inline void SetIsAbleToControll(bool isControll) {
-		this->isAbleToControll_ = isControll;
+		this->isControll_ = isControll;
 	}
 
 	/// <summary>
@@ -158,13 +156,11 @@ private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_={};
 
+	//ステージの四隅
 	StageRect stageRect_ = {};
 
 	//カメラ視点
 	uint32_t pointOfView_ = 0u;
-
-	//半径
-	float radius_ = 0.0f;
 
 	//持っている鍵の数
 	//可算なのでQuantity
@@ -175,10 +171,14 @@ private:
 
 	//体力
 	int32_t hp_ = 0;
-	
+	//敵の攻撃に当たった時のタイマー
+	int32_t downTime_ = 0;
+	//敵の攻撃に当たったかどうか
+	bool isDamage_ = false;
+	bool acceptDamege_ = false;
 
 	//操作可能かどうか
-	bool isAbleToControll_ = false;
+	bool isControll_ = false;
 	//移動状態
 	uint32_t moveCondition_ = 0u;
 

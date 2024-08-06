@@ -88,11 +88,7 @@ void Ellysia::Update(){
 	//グローバル変数の更新
 	AdjustmentItems::GetInstance()->GetInstance()->Update();
 
-	//ImGuiの更新
-#ifdef _DEBUG
-	ImGuiManager::GetInstance()->Update();
-#endif
-	
+
 	//入力の更新
 	Input::GetInstance()->Update();
 	
@@ -130,7 +126,7 @@ void Ellysia::Draw(){
 
 	//ImGuiの描画
   #ifdef _DEBUG
-	ImGuiManager::GetInstance()->PreDraw();	
+
 	ImGuiManager::GetInstance()->Draw();
 	
 #endif

@@ -17,7 +17,7 @@ void Player::Initialize(){
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD3Player","Player.obj");
 	model_.reset(Model::Create(modelHandle));
 
-	isAbleToControll_ = false;
+	isControll_ = false;
 
 	//持っている鍵の数
 	haveKeyQuantity_ = 0u;
@@ -25,6 +25,7 @@ void Player::Initialize(){
 	//体力
 	hp_ = 3u;
 
+	acceptDamege_ = true;
 
 	//半径
 	radius_ = 1.0f;
@@ -39,7 +40,7 @@ void Player::Update(){
 	const float MOVE_SPEED = 0.1f;
 
 	//動けるときだけ加算
-	if (isAbleToControll_ == true && moveCondition_==PlayerMoveCondition::OnPlayerMove) {
+	if (isControll_ == true && moveCondition_==PlayerMoveCondition::OnPlayerMove) {
 		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, VectorCalculation::Multiply(moveDirection_,MOVE_SPEED));
 
 	}
@@ -66,6 +67,27 @@ void Player::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
+	//ダメージを受けている時
+	if (isDamage_ == true) {
+		downTime_ += 1;
+		acceptDamege_ = false;
+		if (downTime_ == 1) {
+			//体力が1つ減る
+			--hp_;
+			
+			
+		}
+	}
+
+	//だいたい4秒くらいにする
+	if (downTime_ > 240) {
+		isDamage_ = false;
+		acceptDamege_ = true;
+		downTime_ = 0;
+	}
+
+
+
 #ifdef _DEBUG
 	//ImGuiにInputUintが無いの不便・・
 	int keyQuantity = haveKeyQuantity_;
@@ -77,10 +99,12 @@ void Player::Update(){
 	if (hp_ < 0) {
 		hp_ = 0;
 	}
-	ImGui::Begin("Player");
+	ImGui::Begin("プレイヤー");
 	if (ImGui::TreeNode("Condition")) {
 		ImGui::InputInt("KeyQuantity", &keyQuantity);
 		ImGui::InputInt("HP", &hp_);
+		ImGui::Checkbox("acceptDamege_", &acceptDamege_);
+		ImGui::Checkbox("isDamage_", &isDamage_);
 
 		ImGui::TreePop();
 	}
@@ -98,7 +122,7 @@ void Player::Draw(Camera& camera, Material& material, SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera,material,spotLight);
 }
 
-Vector3 Player::GetWorldPosition()const {
+Vector3 Player::GetWorldPosition() {
 	Vector3 worldPosition = {
 		.x = worldTransform_.worldMatrix_.m[3][0],
 		.y = worldTransform_.worldMatrix_.m[3][1],
@@ -108,6 +132,21 @@ Vector3 Player::GetWorldPosition()const {
 }
 
 void Player::OnCollision(){
+
+	
+	//ダメージを受け付けている時だけ
+	if (acceptDamege_ == true) {
+		isDamage_ = true;
+		
+
+
+
+	}
+	
+
+
+	
+
 
 }
 

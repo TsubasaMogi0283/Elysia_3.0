@@ -4,10 +4,10 @@
 class ImGuiManager final{
 private:
 	//コンストラクタ
-	ImGuiManager();
+	ImGuiManager()=default;
 
 	//デストラクタ
-	~ImGuiManager();
+	~ImGuiManager()=default;
 
 public:
 	
@@ -23,31 +23,33 @@ public:
 public:
 
 	
-	//初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
-	//ここからフレームが始まる
+	/// <summary>
+	/// フレーム開始
+	/// </summary>
 	void BeginFrame();
 
-	//更新
-	void Update();
 
-
-	//描画前の処理
-	void PreDraw();
-
-	//描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-
+	/// <summary>
+	/// 描画終わり
+	/// </summary>
 	void EndDraw();
 
 
-	//解放処理
+	/// <summary>
+	/// 解放
+	/// </summary>
 	void Release();
 
 	
-
-private:
 
 };
