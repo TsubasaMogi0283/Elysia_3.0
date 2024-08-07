@@ -51,7 +51,6 @@ void CollisionManager::CheckAllCollision(){
 
 
 	//総当たりの判定
-	//総当たりだからそのままだと自機と自弾にも当たり判定が対応しちゃうよ
 	std::list<Collider*>::iterator itrA = colliders_.begin();
 	for (; itrA != colliders_.end(); ++itrA) {
 		

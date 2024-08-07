@@ -655,7 +655,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 		#pragma region 回転
 
-#pragma region Y軸に旋回
+		#pragma region Y軸に旋回
 
 		//+が左回り
 		const float ROTATE_OFFSET = 0.025f;
@@ -681,9 +681,9 @@ void SampleScene::Update(GameManager* gameManager) {
 			theta_ = 0.0f;
 		}
 
-#pragma endregion
+		#pragma endregion
 
-#pragma region X軸に旋回
+		#pragma region X軸に旋回
 
 		
 		//上を向く
@@ -709,9 +709,9 @@ void SampleScene::Update(GameManager* gameManager) {
 			originPhi_ = -std::numbers::pi_v<float> / 6.0f;
 		}
 
-#pragma endregion
+		#pragma endregion
 
-#pragma region コントローラーの回転
+		#pragma region コントローラーの回転
 
 		isRotateXKey_ = false;
 		isRotateYKey_ = false;
@@ -772,29 +772,31 @@ void SampleScene::Update(GameManager* gameManager) {
 		Fan3D fan = flashLight_->GetFan3D();
 		//エネミーをコリジョンマネージャーに追加
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
-		for (std::list<Enemy*>::iterator it = enemyes.begin(); it != enemyes.end();) {
-			Enemy* enemy = *it;
-			if (enemy != nullptr) {
-				collisionManager_->RegisterList(enemy);
+		for (Enemy* enemy : enemyes) {
+			collisionManager_->RegisterList(enemy);
 
+			//攻撃用の判定が出ていたら登録
+			if (enemy->GetIsAttack() == true) {
+				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 
-				if (IsFanCollision(fan, enemy->GetWorldPosition())) {
-	
-					//enemy->OnCollision();
-
-
-					#ifdef _DEBUG
-					ImGui::Begin("FanCollsion");
-					ImGui::End();
-					#endif // _DEBUG
-	
-					
-				}
 			}
-			it++;
+			
+			//いずれこれもCollisionManagerに入れるつもり
+			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
+
+				//enemy->OnCollision();
+
+
+#ifdef _DEBUG
+				ImGui::Begin("FanCollsion");
+				ImGui::End();
+#endif // _DEBUG
+
+
+			}
 		}
 
-
+		collisionManager_->RegisterList(player_);
 
 		#pragma region 視点
 

@@ -67,9 +67,10 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY);
 	//相手
-	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER);
-#ifdef _DEBUG
+	SetCollisionMask(COLLISION_ATTRIBUTE_NONE);
 	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+#ifdef _DEBUG
+	
 	debugModel_.reset(Model::Create(debugModelHandle));
 
 	debugModelWorldTransform_.Initialize();
@@ -105,6 +106,7 @@ void Enemy::Update(){
 		#endif // DEBUG
 		
 		t_ = 0.0f;
+		attackTime_ = 0;
 		preTrackingPlayerPosition_ = {};
 		preTrackingPosition_ = {};
 		speed_ = { 0.0f,0.0f,0.0f };
@@ -121,6 +123,9 @@ void Enemy::Update(){
 		if ((GetWorldPosition().z < stageRect_.leftFront.z + radius_) || (GetWorldPosition().z > stageRect_.leftBack.z - radius_)) {
 			speed_.z *= -1.0f;
 		}
+
+		attackTime_ = 0;
+		isAttack_ = false;
 
 
 		//if (preCondition_ == EnemyCondition::NoneMove) {
@@ -150,6 +155,8 @@ void Enemy::Update(){
 	
 	case EnemyCondition::PreTracking:
 	
+		attackTime_ = 0;
+		isAttack_ = false;
 		#pragma region 追跡準備
 	
 		#ifdef _DEBUG
@@ -172,6 +179,7 @@ void Enemy::Update(){
 		//追跡
 	case EnemyCondition::Tracking:
 		//追跡処理
+
 
 #ifdef _DEBUG
 			ImGui::Begin("Tracking");
@@ -211,6 +219,10 @@ void Enemy::Update(){
 		if (attackTime_ > 240) {
 			attackTime_ = 0;
 		}
+
+
+		break;
+
 	}
 
 
@@ -252,7 +264,77 @@ void Enemy::Update(){
 #ifdef _DEBUG
 	float degreeRotateY = directionToRotateY * (180.0f / std::numbers::pi_v<float>);
 
-	ImGui::Begin("Enemy");
+	ImGui::Begin("敵");
+	if (ImGui::TreeNode("状態")) {
+		ImGui::InputFloat4("色", &color_.x);
+
+
+		switch (condition_) {
+		case EnemyCondition::NoneMove:
+			ImGui::Text("動けない");
+			break;
+
+
+		case EnemyCondition::Move:
+			ImGui::Text("通常");
+
+
+			break;
+
+		case EnemyCondition::PreTracking:
+			ImGui::Text("追跡前");
+
+			break;
+
+
+		case EnemyCondition::Tracking:
+			ImGui::Text("追跡");
+
+			break;
+
+
+		case EnemyCondition::Attack:
+			ImGui::Text("攻撃");
+
+			break;
+
+		}
+
+		switch (preCondition_) {
+		case EnemyCondition::NoneMove:
+			ImGui::Text("動けない");
+			break;
+
+
+		case EnemyCondition::Move:
+			ImGui::Text("通常");
+
+
+			break;
+
+		case EnemyCondition::PreTracking:
+			ImGui::Text("追跡前");
+
+			break;
+
+
+		case EnemyCondition::Tracking:
+			ImGui::Text("追跡");
+
+			break;
+
+
+		case EnemyCondition::Attack:
+			ImGui::Text("攻撃");
+
+			break;
+
+		}
+
+
+		ImGui::TreePop();
+	}
+
 	ImGui::InputFloat("T", &t_);
 	ImGui::InputFloat3("direction_", &direction_.x);
 	ImGui::InputFloat("RotateY", &degreeRotateY);
@@ -282,7 +364,7 @@ void Enemy::OnCollision() {
 	//0になったら消す
 	if (color_.y < 0.0f &&
 		color_.z < 0.0f) {
-		isAlive_ = false;
+		isAttack_ = false;
 	}
 
 

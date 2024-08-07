@@ -9,6 +9,7 @@
 #include "Stage/ObjectManager/ObjectManager.h"
 #include "SampleScene/SampleScene.h"
 #include <SingleCalculation.h>
+#include <Collider/CollisionConfig.h>
 
 void Player::Initialize(){
 
@@ -25,10 +26,19 @@ void Player::Initialize(){
 	//体力
 	hp_ = 3u;
 
+	//ダメージについて
 	acceptDamege_ = true;
+	isDamage_ = false;
 
 	//半径
 	radius_ = 1.0f;
+
+	//判定
+	//自分
+	SetCollisionAttribute(COLLISION_ATTRIBUTE_PLAYER);
+	//相手
+	SetCollisionMask(COLLISION_ATTRIBUTE_ENEMY_ATTACK);
+
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -74,14 +84,15 @@ void Player::Update(){
 		if (downTime_ == 1) {
 			//体力が1つ減る
 			--hp_;
-			
-			
 		}
+	}
+	else {
+		downTime_ = 0;
 	}
 
 	//だいたい4秒くらいにする
 	if (downTime_ > 240) {
-		isDamage_ = false;
+		//isDamage_ = false;
 		acceptDamege_ = true;
 		downTime_ = 0;
 	}
@@ -108,7 +119,7 @@ void Player::Update(){
 
 		ImGui::TreePop();
 	}
-
+	ImGui::InputInt("downTime", &downTime_);
 	ImGui::InputFloat3("Transrate", &worldTransform_.translate_.x);
 	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
 	ImGui::InputInt("moveCondition_", &condition);
@@ -132,12 +143,13 @@ Vector3 Player::GetWorldPosition() {
 }
 
 void Player::OnCollision(){
-
+	
 	
 	//ダメージを受け付けている時だけ
 	if (acceptDamege_ == true) {
-		isDamage_ = true;
 		
+		isDamage_ = true;
+
 
 
 

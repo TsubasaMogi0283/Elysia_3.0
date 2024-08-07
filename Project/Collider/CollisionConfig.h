@@ -2,6 +2,10 @@
 #include <cstdint>
 
 
+//未定。仮置きみたいなもの
+//0
+const uint32_t COLLISION_ATTRIBUTE_NONE = 0b0;
+
 //基本2進数で
 //1
 //プレイヤー陣営
