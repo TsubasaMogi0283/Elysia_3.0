@@ -494,6 +494,61 @@ void SampleScene::PlayerMove(){
 #pragma endregion
 
 #pragma region コントローラー
+
+	//コントローラーがある場合
+		//if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+		//	//キーボード入力していない時に受け付ける
+		//	if (isPlayerMoveKey_ == false) {
+		//
+		//
+		//		//コントローラーの入力
+		//		bool isInput = false;
+		//		Vector3 leftStickInput = {
+		//			.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
+		//			.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
+		//		};
+		//
+		//
+		//
+		//		//デッドゾーン
+		//		const float DEAD_ZONE = 0.1f;
+		//		if (leftStickInput.x < DEAD_ZONE && leftStickInput.x > -DEAD_ZONE) {
+		//			leftStickInput.x = 0.0f;
+		//		}
+		//		else {
+		//			isInput = true;
+		//		}
+		//		if (leftStickInput.z < DEAD_ZONE && leftStickInput.z > -DEAD_ZONE) {
+		//			leftStickInput.z = 0.0f;
+		//		}
+		//		else {
+		//			isInput = true;
+		//		}
+		//
+		//		//入力されていたら計算
+		//		if (isInput == true) {
+		//			//角度を求める
+		//			float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
+		//			//値を0～2πに直してtheta_に揃える
+		//			if (radian < 0.0f) {
+		//				radian += 2.0f * std::numbers::pi_v<float>;
+		//			}
+		//			const float OFFSET = std::numbers::pi_v<float> / 2.0f;
+		//			float resultTheta = theta_ + radian - OFFSET;
+		//
+		//
+		//
+		//			//向きを代入
+		//			playerDirection_.x = std::cosf(resultTheta);
+		//			playerDirection_.z = std::sinf(resultTheta);
+		//
+		//		}
+		//
+		//
+		//	}
+		//}
+
+
 	//接続時
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
 		//キーボード入力していない時・移動できる時に受け付ける
@@ -509,20 +564,23 @@ void SampleScene::PlayerMove(){
 
 
 
+
+
 			//デッドゾーン
 			const float DEAD_ZONE = 0.1f;
-			if (std::abs(leftStickInput.x) > DEAD_ZONE) {
+			if (std::abs(leftStickInput.x) < DEAD_ZONE) {
 				leftStickInput.x = 0.0f;
 			}
 			else {
 				isInput = true;
 			}
-			if (std::abs(leftStickInput.z) > DEAD_ZONE) {
+			if (std::abs(leftStickInput.z) < DEAD_ZONE) {
 				leftStickInput.z = 0.0f;
 			}
 			else {
 				isInput = true;
 			}
+		
 
 			//入力されていたら計算
 			if (isInput == true) {
