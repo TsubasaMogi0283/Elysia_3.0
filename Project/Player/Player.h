@@ -175,7 +175,7 @@ private:
 	int32_t downTime_ = 0;
 	//敵の攻撃に当たったかどうか
 	bool isDamage_ = false;
-	bool acceptDamege_ = false;
+	bool acceptDamage_ = false;
 
 	//操作可能かどうか
 	bool isControll_ = false;

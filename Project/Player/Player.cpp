@@ -27,7 +27,7 @@ void Player::Initialize(){
 	hp_ = 3u;
 
 	//ダメージについて
-	acceptDamege_ = true;
+	acceptDamage_ = true;
 	isDamage_ = false;
 
 	//半径
@@ -77,26 +77,11 @@ void Player::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
-	//ダメージを受けている時
-	if (isDamage_ == true) {
-		downTime_ += 1;
-		acceptDamege_ = false;
-		if (downTime_ == 1) {
-			//体力が1つ減る
-			--hp_;
-		}
-	}
-	else {
+	
+	if (!isDamage_) {
 		downTime_ = 0;
 	}
-
-	//だいたい4秒くらいにする
-	if (downTime_ > 240) {
-		//isDamage_ = false;
-		acceptDamege_ = true;
-		downTime_ = 0;
-	}
-
+	
 
 
 #ifdef _DEBUG
@@ -104,17 +89,12 @@ void Player::Update(){
 	int keyQuantity = haveKeyQuantity_;
 	int condition = moveCondition_;
 
-	if (hp_ > 3) {
-		hp_ = 3;
-	}
-	if (hp_ < 0) {
-		hp_ = 0;
-	}
+
 	ImGui::Begin("プレイヤー");
 	if (ImGui::TreeNode("Condition")) {
 		ImGui::InputInt("KeyQuantity", &keyQuantity);
 		ImGui::InputInt("HP", &hp_);
-		ImGui::Checkbox("acceptDamege_", &acceptDamege_);
+		ImGui::Checkbox("acceptDamage_", &acceptDamage_);
 		ImGui::Checkbox("isDamage_", &isDamage_);
 
 		ImGui::TreePop();
@@ -144,22 +124,35 @@ Vector3 Player::GetWorldPosition() {
 
 void Player::OnCollision(){
 	
-	
-	//ダメージを受け付けている時だけ
-	if (acceptDamege_ == true) {
-		
-		isDamage_ = true;
 
+	isDamage_ = true;
 
+	// ダメージを受け付けている時だけ処理を実行
+	if (acceptDamage_==true) {
+		// ダメージを受ける処理を1回だけ行う
+		if (downTime_ == 0) {
+			// 体力を1つ減らす
+			--hp_;
 
+			// ダメージを受け付けなくする
+			acceptDamage_ = false;
 
+			// ダウンタイマーを開始する
+			downTime_ = 1;
+		}
 	}
-	
 
+	// ダウンタイマーが動いている場合
+	if (downTime_ > 0) {
+		// タイマーを増加させる
+		++downTime_;
 
-	
-
-
+		// 240フレーム（4秒）経過したら再度ダメージを受け付ける
+		if (downTime_ > 240) {
+			acceptDamage_ = true;
+			downTime_ = 0; // タイマーをリセット
+		}
+	}
 }
 
 

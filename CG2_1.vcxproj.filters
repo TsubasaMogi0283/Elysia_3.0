@@ -313,6 +313,9 @@
     <Filter Include="Project\Enemy\EnemyAttackCollision">
       <UniqueIdentifier>{20d87d40-77b6-425d-8fb0-6466f81f7d5a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\GameScene\Lose">
+      <UniqueIdentifier>{57682276-21c2-48e2-83ee-02eed279de4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -535,6 +538,9 @@
       <Filter>Project\Stage\ObjectManager</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -953,6 +959,9 @@
       <Filter>Project\Stage\DemoObject</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\EnemyAttackCollision.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
