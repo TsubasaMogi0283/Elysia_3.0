@@ -206,6 +206,10 @@ void Enemy::Update(){
 		if (attackTime_ > 120 && attackTime_ <= 240) {
 			if (attackTime_ == 121) {
 				isAttack_ = true;
+				
+			}
+			else {
+				isAttack_ = false;
 			}
 
 			
