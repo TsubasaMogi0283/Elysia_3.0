@@ -3,6 +3,7 @@
 #include <Input.h>
 #include <AdjustmentItems.h>
 #include "SampleScene2/SampleScene2.h"
+#include "LoseScene/LoseScene.h"
 
 #include "ModelManager.h"
 #include "AnimationManager.h"
@@ -785,7 +786,11 @@ void SampleScene::Update(GameManager* gameManager) {
 			if (enemy->GetIsAttack() == true) {
 				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 
+
 			}
+
+
+
 			
 			//いずれこれもCollisionManagerに入れるつもり
 			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
@@ -875,7 +880,8 @@ void SampleScene::Update(GameManager* gameManager) {
 
 		//体力が0になったら負け
 		if (player_->GetHP() <= 0) {
-
+			gameManager->ChangeScene(new LoseScene());
+			return;
 		}
 
 

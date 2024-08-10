@@ -7,6 +7,8 @@ public:
 	//衝突時に呼ばれる関数
 	virtual void OnCollision()=0;
 
+
+
 	//ワールド座標を取得
 	//純粋仮想関数
 	virtual Vector3 GetWorldPosition() = 0;

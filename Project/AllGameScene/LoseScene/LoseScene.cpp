@@ -4,8 +4,8 @@ void LoseScene::Initialize()
 {
 }
 
-void LoseScene::Update(GameManager* gameManager)
-{
+void LoseScene::Update(GameManager* gameManager){
+	gameManager;
 }
 
 void LoseScene::DrawSpriteBack()

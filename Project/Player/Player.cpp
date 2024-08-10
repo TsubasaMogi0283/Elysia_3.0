@@ -78,12 +78,28 @@ void Player::Update(){
 	worldTransform_.Update();
 
 	
-	if (!isDamage_) {
-		downTime_ = 0;
-	}
+
 	
+	// ダメージを受け付けている時だけ処理を実行
+	if (isDamage_ == true) {
+		
+
+		//acceptDamage_ = false;
+
+		// ダメージを受ける処理を1回だけ行う
+		if (downTime_ == 1) {
+			// 体力を1つ減らす
+		//	--hp_;
 
 
+
+		}
+
+		
+
+	}
+
+	
 #ifdef _DEBUG
 	//ImGuiにInputUintが無いの不便・・
 	int keyQuantity = haveKeyQuantity_;
@@ -123,36 +139,9 @@ Vector3 Player::GetWorldPosition() {
 }
 
 void Player::OnCollision(){
+
+	--hp_;
+
 	
-
-	isDamage_ = true;
-
-	// ダメージを受け付けている時だけ処理を実行
-	if (acceptDamage_==true) {
-		// ダメージを受ける処理を1回だけ行う
-		if (downTime_ == 0) {
-			// 体力を1つ減らす
-			--hp_;
-
-			// ダメージを受け付けなくする
-			acceptDamage_ = false;
-
-			// ダウンタイマーを開始する
-			downTime_ = 1;
-		}
-	}
-
-	// ダウンタイマーが動いている場合
-	if (downTime_ > 0) {
-		// タイマーを増加させる
-		++downTime_;
-
-		// 240フレーム（4秒）経過したら再度ダメージを受け付ける
-		if (downTime_ > 240) {
-			acceptDamage_ = true;
-			downTime_ = 0; // タイマーをリセット
-		}
-	}
 }
-
 

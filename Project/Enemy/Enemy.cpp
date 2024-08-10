@@ -204,7 +204,11 @@ void Enemy::Update(){
 
 		//2～4秒までが攻撃
 		if (attackTime_ > 120 && attackTime_ <= 240) {
-			isAttack_ = true;
+			if (attackTime_ == 121) {
+				isAttack_ = true;
+			}
+
+			
 #ifdef _DEBUG
 			ImGui::Begin("Attack");
 			ImGui::End();
@@ -371,6 +375,8 @@ void Enemy::OnCollision() {
 	material_.color_ = color_;
 	
 }
+
+
 
 Vector3 Enemy::GetWorldPosition() {
 	Vector3 result = {

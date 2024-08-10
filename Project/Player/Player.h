@@ -80,6 +80,8 @@ public:
 	///	衝突
 	/// </summary>
 	void OnCollision()override;
+	
+
 
 
 	/// <summary>

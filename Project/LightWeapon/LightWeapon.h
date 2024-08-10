@@ -43,6 +43,9 @@ public:
 public:
 	//衝突判定
 	void OnCollision()override;
+
+
+
 	//ワールド座標を取得
 	Vector3 GetWorldPosition()override;
 

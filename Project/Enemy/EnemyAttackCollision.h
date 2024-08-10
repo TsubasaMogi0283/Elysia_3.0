@@ -69,6 +69,8 @@ public:
 	/// </summary>
 	void OnCollision()override;
 
+
+
 private:
 	std::unique_ptr<Model> model_ = nullptr;
 	WorldTransform worldTransform_ = {};
