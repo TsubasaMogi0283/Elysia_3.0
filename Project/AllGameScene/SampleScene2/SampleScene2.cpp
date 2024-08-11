@@ -8,9 +8,9 @@
 
 void SampleScene2::Initialize() {
 	//メイン
-	uint32_t textureHandle = TextureManager::LoadTexture("Resources/Result/Win/EscapeSucceeded.png");
-	winTexture_.reset(Sprite::Create(textureHandle, { .x = 0.0f,.y = 0.0f }));
-	winTexture_->SetScale({.x=1.0f,.y=1.0f});
+	uint32_t succeededTextureHandle = TextureManager::LoadTexture("Resources/Result/Win/EscapeSucceeded.png");
+	winTexture_.reset(Sprite::Create(succeededTextureHandle, { .x = 0.0f,.y = 0.0f }));
+	winTexture_->SetScale({ .x = 1.0f,.y = 1.0f });
 
 	//Text
 	uint32_t textHandle = TextureManager::GetInstance()->LoadTexture("Resources/Result/Win/WinText.png");

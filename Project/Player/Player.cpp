@@ -30,8 +30,17 @@ void Player::Initialize(){
 	acceptDamage_ = true;
 	isDamage_ = false;
 
+
+
+	#pragma region 当たり判定について
+
+	collisionType_ = CollisionType::SphereType;
+
 	//半径
 	radius_ = 1.0f;
+
+	#pragma endregion
+
 
 	//判定
 	//自分
@@ -79,25 +88,7 @@ void Player::Update(){
 
 	
 
-	
-	// ダメージを受け付けている時だけ処理を実行
-	if (isDamage_ == true) {
-		
 
-		//acceptDamage_ = false;
-
-		// ダメージを受ける処理を1回だけ行う
-		if (downTime_ == 1) {
-			// 体力を1つ減らす
-		//	--hp_;
-
-
-
-		}
-
-		
-
-	}
 
 	
 #ifdef _DEBUG
@@ -139,9 +130,7 @@ Vector3 Player::GetWorldPosition() {
 }
 
 void Player::OnCollision(){
-
+	//体力を1減らす
 	--hp_;
-
-	
 }
 

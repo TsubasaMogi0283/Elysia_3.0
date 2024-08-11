@@ -17,7 +17,15 @@ void EnemyAttackCollision::Initialize(uint32_t modelHandle){
 
 
 	#pragma region 当たり判定
+
+	//種類
+	collisionType_ = CollisionType::SphereType;
+
+	//半径
 	radius_ = 1.0f;
+
+
+
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY_ATTACK);
 	//相手

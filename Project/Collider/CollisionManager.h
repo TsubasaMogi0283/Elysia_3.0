@@ -4,12 +4,6 @@
 #include <list>
 
 
-enum CollisionType {
-	//球
-	SphereType,
-	//箱(縦横指定)
-	BoxType,
-};
 
 
 class CollisionManager{

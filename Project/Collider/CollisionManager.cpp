@@ -47,8 +47,6 @@ void CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* c
 
 
 void CollisionManager::CheckAllCollision(){
-	//いずれここの関数で引数を用意して
-	//どの当たり判定にするか選択できるようにしたい
 
 
 	//総当たりの判定
@@ -67,7 +65,13 @@ void CollisionManager::CheckAllCollision(){
 			Collider* colliderB = *itrB;
 
 			//球
-			CheckSphereCollisionPair(colliderA, colliderB);
+			if (colliderA->GetCollisionType() == CollisionType::SphereType) {
+				CheckSphereCollisionPair(colliderA, colliderB);
+			}
+
+			
+
+
 			
 
 		}

@@ -541,7 +541,7 @@
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Project\GameScene\Lose</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -962,7 +962,7 @@
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Project\GameScene\Lose</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
