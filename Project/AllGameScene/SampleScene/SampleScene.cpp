@@ -206,7 +206,10 @@ void SampleScene::Initialize() {
 
 
 
-
+	//testSphere_ = new Sphere();
+	//testSphere_->Initialize();
+	//testSphereTransform_ = { { 1.0f,1.0f,1.0f },{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f }};
+	//testSphreShape_ = { {.x=0.0f,.y=1.0f,.z=0.0f},3.0f };
 
 
 
@@ -967,6 +970,8 @@ void SampleScene::PreDrawPostEffectFirst(){
 
 void SampleScene::DrawObject3D() {
 	
+	//testSphere_->Draw(testSphreShape_, testSphereTransform_, camera_.viewMatrix_, camera_.projectionMatrix_, {1.0f,1.0f,1.0f,1.0f});
+
 	//懐中電灯を取得
 	SpotLight spotLight = flashLight_->GetSpotLight();
 

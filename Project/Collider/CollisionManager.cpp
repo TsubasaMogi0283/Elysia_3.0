@@ -45,6 +45,11 @@ void CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* c
 
 }
 
+void CollisionManager::CheckFanAndPointPair(Collider* colliderA, Collider* colliderB){
+	colliderA;
+	colliderB;
+}
+
 
 void CollisionManager::CheckAllCollision(){
 
@@ -64,10 +69,14 @@ void CollisionManager::CheckAllCollision(){
 		for (; itrB != colliders_.end(); ++itrB) {
 			Collider* colliderB = *itrB;
 
-			//球
-			if (colliderA->GetCollisionType() == CollisionType::SphereType) {
+			//球同士
+			if (colliderA->GetCollisionType() == CollisionType::SphereType &&
+				colliderB->GetCollisionType() == CollisionType::SphereType) {
 				CheckSphereCollisionPair(colliderA, colliderB);
 			}
+
+			//扇と点
+
 
 			
 

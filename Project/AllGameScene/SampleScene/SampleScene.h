@@ -35,6 +35,7 @@
 
 #include "Input.h"
 #include <Stage/ObjectManager/ObjectManager.h>
+#include "../../../Ellysia/Polygon/3D/Sphere/Sphere.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -266,6 +267,9 @@ private:
 
 #pragma endregion
 
+	//Sphere* testSphere_ = nullptr;
+	//Transform testSphereTransform_ = {};
+	//SphereShape testSphreShape_ = {};
 
 
 #pragma region デバッグ用のオブジェクト
