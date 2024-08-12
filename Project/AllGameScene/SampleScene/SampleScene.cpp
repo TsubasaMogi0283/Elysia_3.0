@@ -323,72 +323,52 @@ void SampleScene::KeyCollision(){
 void SampleScene::ObjectCollision(){
 	
 
-
+	//プレイヤーの移動方向
 	Vector3 direction = playerMoveDirection_;
-
-	//プレイヤーが動いている時だけ当たり判定をとる
-	//if (isPlayerMove_ == true) {
-		auto demoObjects = objectManager_->GetDemoObjets();
-		for (DemoObject* demoObject : demoObjects) {
-			
-			//オブジェクトとの差分ベクトル
-			Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(demoObject->GetWorldPosition(), playerPosition_);
-			
-			// 正射影ベクトルを求める
-			Vector3 demoObjectAndPlayerProject = VectorCalculation::Project(demoObjectAndPlayerDifference, { direction.x,0.0f,direction.z });
-			Vector3 demoObjectAndPlayerProjectDifference = VectorCalculation::Subtract(demoObject->GetWorldPosition(), demoObjectAndPlayerProject);
-			float projectDistance = sqrtf(std::powf(demoObjectAndPlayerProjectDifference.x, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.y, 2.0f) + std::powf(demoObjectAndPlayerProjectDifference.z, 2.0f));
+	//プレイヤーの当たり判定AABB
+	AABB playerAABB = player_->GetAABB();
 
 
 
+	auto demoObjects = objectManager_->GetDemoObjets();
+	for (DemoObject* demoObject : demoObjects) {
+		
+		//オブジェクトのAABB
+		AABB objectAABB = demoObject->GetAABB();
 
-
-			float objectPlayerDistance = sqrtf(std::powf(demoObjectAndPlayerDifference.x, 2.0f) + std::powf(demoObjectAndPlayerDifference.y, 2.0f) + std::powf(demoObjectAndPlayerDifference.z, 2.0f));
-			Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
-			dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
-			//進行方向上にいた場合
-			if (projectDistance < demoObject->GetRadius() + player_->GetRadius()) {
-				//内積を求める
-				//進行方向の前にいると+
-				
-				
-
-				//進行・逆進行方向上にいた場合
-				if ((objectPlayerDistance< demoObject->GetRadius() + player_->GetRadius())&&(dot > 0.0f)) {
-					uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
-					player_->SetPlayerMoveCondition(newCondition);
-
-					#ifdef _DEBUG
-					ImGui::Begin("PAOC"); 
-					ImGui::End();
-					#endif // _DEBUG
+		//オブジェクトとの差分ベクトル
+		Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(demoObject->GetWorldPosition(), playerPosition_);
+		
 
 
 
-				}
-				else {
-					uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
-					player_->SetPlayerMoveCondition(newCondition);
 
-				}
+		//オブジェクトとプレイヤーの距離
+		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
+		//内積
+		dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
 
-			}
-
-			#ifdef _DEBUG
-			ImGui::Begin("PlayerAndObjectCollision");
-			ImGui::InputFloat3("demoObjectAndPlayerDifference", &demoObjectAndPlayerDifference.x);
-			ImGui::InputFloat("EnemyAndPlayerDistance", &objectPlayerDistance);
-			ImGui::InputFloat3("Project", &demoObjectAndPlayerProject.x);
-			ImGui::InputFloat3("demoObjectAndPlayerProjectDifference", &demoObjectAndPlayerProjectDifference.x);
-			ImGui::InputFloat("ProjectDistance", &projectDistance);
-			ImGui::InputFloat("Dot", &dot);
-			ImGui::InputFloat3("normalizedDemoAndPlayer", &normalizedDemoAndPlayer.x);
-			ImGui::End();
-			#endif // _DEBUG
-			
+		//衝突判定
+		//だいたい内積は0.7くらいが良さそう
+		if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
+			(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z)&&
+			(dot > 0.7f)) {
+			uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+			player_->SetPlayerMoveCondition(newCondition);
 
 		}
-	//}
+		else {
+			uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+			player_->SetPlayerMoveCondition(newCondition);
+
+		}
+
+
+
+		
+
+	}
+	
 
 	
 }

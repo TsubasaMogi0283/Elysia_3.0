@@ -45,7 +45,7 @@ void Player::Initialize(){
 	//AABBのmax部分に加算する縦横高さのサイズ
 	upSideSize_ = {1.0f,1.0f,1.0f};
 
-	//AABBのmax部分に加算する縦横高さのサイズ
+	//AABBのmin部分に加算する縦横高さのサイズ
 	downSideSize_ = {1.0f,1.0f,1.0f};
 
 	#pragma endregion
@@ -95,8 +95,13 @@ void Player::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
-	
+	aabb_.min.x = GetWorldPosition().x - downSideSize_.x;
+	aabb_.min.y = GetWorldPosition().y - downSideSize_.y;
+	aabb_.min.z = GetWorldPosition().z - downSideSize_.z;
 
+	aabb_.max.x = GetWorldPosition().x + downSideSize_.x;
+	aabb_.max.y = GetWorldPosition().y + downSideSize_.y;
+	aabb_.max.z = GetWorldPosition().z + downSideSize_.z;
 
 
 	

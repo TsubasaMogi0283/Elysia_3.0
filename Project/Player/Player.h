@@ -4,6 +4,8 @@
 #include <memory>
 #include "Stage/Ground/StageRect.h"
 #include "../Collider/Collider.h"
+#include "AABB.h"
+
 struct Camera;
 struct SpotLight;
 struct Material;
@@ -81,10 +83,14 @@ public:
 	/// </summary>
 	void OnCollision()override;
 	
+	inline AABB GetAABB() {
+		return aabb_;
+	}
 
 
-
-	/// <summary>
+	/// <summa
+	/// 
+	/// ry>
 	/// 半径を取得
 	/// </summary>
 	/// <returns></returns>
@@ -172,7 +178,7 @@ private:
 	Vector3 moveDirection_ = {};
 
 	const float SIDE_SIZE = 1.0f;
-
+	AABB aabb_ = {};
 
 	//体力
 	int32_t hp_ = 0;

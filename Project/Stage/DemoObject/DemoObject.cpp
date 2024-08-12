@@ -9,7 +9,19 @@ void DemoObject::Initialize(uint32_t& modelHandle){
 }
 
 void DemoObject::Update(){
+	
+
 	worldTransform_.Update();
+
+
+	aabb_.min.x = GetWorldPosition().x - radius_;
+	aabb_.min.y = GetWorldPosition().y - radius_;
+	aabb_.min.z = GetWorldPosition().z - radius_;
+
+	aabb_.max.x = GetWorldPosition().x + radius_;
+	aabb_.max.y = GetWorldPosition().y + radius_;
+	aabb_.max.z = GetWorldPosition().z + radius_;
+
 }
 
 void DemoObject::Draw(Camera& camera, Material& material, SpotLight& spotLight){

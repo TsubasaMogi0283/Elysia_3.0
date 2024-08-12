@@ -2,6 +2,7 @@
 #include "Model.h"
 
 #include "WorldTransform.h"
+#include <AABB.h>
 
 struct Camera;
 struct SpotLight;
@@ -55,12 +56,20 @@ public:
 	Vector3 GetWorldPosition();
 
 
+	inline AABB GetAABB() {
+		return aabb_;
+	}
+
+
 private:
 	//各オブジェクトをリストにするかも
 	WorldTransform worldTransform_ = {};
 	std::unique_ptr<Model>model_ = nullptr;
 
 	float radius_ = 1.0f;
+
+
+	AABB aabb_ = {};
 
 };
 
