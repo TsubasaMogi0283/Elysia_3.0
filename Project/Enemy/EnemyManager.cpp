@@ -37,12 +37,12 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	enemyes_.push_back(enemy1);
 
 		
-	//Enemy* enemy2 = new Enemy();
-	//Vector3 position2 = { -5.0f,0.0f,10.0f };
-	//enemy2->SetStageRect(stageRect_);
-	//enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
-	//enemy2->Initialize(modelHandle_, position2, { -0.0f,0.0f,-0.0f });
-	//enemyes_.push_back(enemy2);
+	Enemy* enemy2 = new Enemy();
+	Vector3 position2 = { -5.0f,0.0f,10.0f };
+	enemy2->SetStageRect(stageRect_);
+	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
+	enemy2->Initialize(modelHandle_, position2, { -0.0f,0.0f,-0.0f });
+	enemyes_.push_back(enemy2);
 
 	//Enemy* enemy3 = new Enemy();
 	//Vector3 position3 = { 5.0f,0.0f,9.0f };
@@ -281,7 +281,7 @@ void EnemyManager::Update(){
 		}
 	}
 
-	
+	//1体より多い時
 	if (enemyAmount > 1) {
 		//昇順
 		for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {

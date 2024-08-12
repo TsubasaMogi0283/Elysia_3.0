@@ -1,6 +1,8 @@
 #include "CollisionManager.h"
 #include <VectorCalculation.h>
 
+#include "AABB.h"
+
 void CollisionManager::RegisterList(Collider* collider){
 	//引数から登録
 	colliders_.push_back(collider);
@@ -9,10 +11,10 @@ void CollisionManager::RegisterList(Collider* collider){
 //コライダー2つの衝突判定と応答
 void CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* colliderB) {
 	//コライダーAのワールド座標を取得
-	Vector3 colliderPosA = colliderA->GetWorldPosition();
+	Vector3 colliderPositionA = colliderA->GetWorldPosition();
 	
 	//コライダーBのワールド座標を取得
-	Vector3 colliderPosB = colliderB->GetWorldPosition();
+	Vector3 colliderPositionB = colliderB->GetWorldPosition();
 	
 	//衝突フィルタリング
 	//ビット演算だから&で
@@ -27,12 +29,13 @@ void CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* c
 
 #pragma region Sphereの当たり判定を計算
 
-	Vector3 collisionDistance = VectorCalculation::Subtract(colliderPosA, colliderPosB);
+	//AとBの差分ベクトルを求める
+	Vector3 difference = VectorCalculation::Subtract(colliderPositionA, colliderPositionB);
 
 	//距離を計算
-	float distance = sqrtf((collisionDistance.x * collisionDistance.x) + 
-		(collisionDistance.y * collisionDistance.y) + 
-		(collisionDistance.z * collisionDistance.z));
+	float distance = sqrtf((difference.x * difference.x) + 
+		(difference.y * difference.y) + 
+		(difference.z * difference.z));
 	
 	//当たった時
 	if (distance < colliderA->GetRadius() + colliderB->GetRadius()) {
@@ -44,6 +47,64 @@ void CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* c
 #pragma endregion
 
 }
+
+void CollisionManager::CheckAABBCollisionPair(Collider* colliderA, Collider* colliderB){
+
+	//衝突フィルタリング
+	//ビット演算だから&で
+	//当たらないなら計算する必要はないのでreturn
+	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
+		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0) {
+		return;
+	}
+
+
+	//コライダーAのワールド座標を取得
+	Vector3 colliderPosisionA = colliderA->GetWorldPosition();
+
+	//コライダーBのワールド座標を取得
+	Vector3 colliderPosisionB = colliderB->GetWorldPosition();
+
+	
+
+	//コライダーAの下方サイズ
+	Vector3 downSideSizeA = colliderA->GetDownSideSize();
+	//コライダーBの下方サイズ
+	Vector3 downSideSizeB = colliderB->GetDownSideSize();
+
+
+	//コライダーAの上方サイズ
+	Vector3 upSideSizeA = colliderA->GetUpSideSize();
+	//コライダーBの上方サイズ
+	Vector3 upSideSizeB = colliderB->GetUpSideSize();
+
+
+
+	//コライダーAのAABBを求める
+	AABB aabb1 = {
+		.min{.x = colliderPosisionA.x - downSideSizeA.x,.y = colliderPosisionA.y - downSideSizeA.y,.z = colliderPosisionA.z - downSideSizeA.z },
+		.max{.x = colliderPosisionA.x + upSideSizeA.x,.y = colliderPosisionA.y + upSideSizeA.y,.z = colliderPosisionA.z + upSideSizeA.z }
+	};
+
+	//コライダーBのAABBを求める
+	AABB aabb2 = {
+		.min{.x = colliderPosisionB.x - downSideSizeB.x,.y = colliderPosisionB.y - downSideSizeB.y,.z = colliderPosisionB.z - downSideSizeB.z },
+		.max{.x = colliderPosisionB.x + upSideSizeB.x,.y = colliderPosisionB.y + upSideSizeB.y,.z = colliderPosisionB.z + upSideSizeB.z }
+	};
+
+
+	//衝突判定
+	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
+		(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
+		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z)) {
+		colliderA->OnCollision();
+		colliderB->OnCollision();
+	}
+
+
+}
+
+
 
 void CollisionManager::CheckFanAndPointPair(Collider* colliderA, Collider* colliderB){
 	colliderA;
@@ -75,11 +136,13 @@ void CollisionManager::CheckAllCollision(){
 				CheckSphereCollisionPair(colliderA, colliderB);
 			}
 
+			//AABB同士
+			if (colliderA->GetCollisionType() == CollisionType::AABBType &&
+				colliderB->GetCollisionType() == CollisionType::AABBType) {
+				CheckAABBCollisionPair(colliderA, colliderB);
+			}
+
 			//扇と点
-
-
-			
-
 
 			
 

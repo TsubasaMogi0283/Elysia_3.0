@@ -755,7 +755,10 @@ void SampleScene::Update(GameManager* gameManager) {
 		}
 
 
-#pragma endregion
+		#pragma endregion
+
+		#pragma endregion
+
 
 		//プレイヤーの移動
 		PlayerMove();
@@ -852,7 +855,7 @@ void SampleScene::Update(GameManager* gameManager) {
 		}
 
 
-#pragma endregion
+		#pragma endregion
 
 
 		#pragma region 鍵の取得処理
@@ -870,8 +873,7 @@ void SampleScene::Update(GameManager* gameManager) {
 		//脱出の仕組み
 		EscapeCondition();
 		
-		#pragma endregion
-
+		
 		
 		//鍵
 		keyManager_->Update();

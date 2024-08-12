@@ -2,6 +2,7 @@
 #include "Vector3.h"
 #include <cstdint>
 #include <string>
+#include "AABB.h"
 
 enum CollisionType {
 	//球
@@ -36,6 +37,28 @@ public:
 	void SetRadius_(float radius) {
 		this->radius_ = radius;
 	}
+
+
+
+#pragma region AABB
+
+	/// <summary>
+	/// 上方のサイズ
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetUpSideSize() {
+		return upSideSize_;
+	}
+	
+	/// <summary>
+	/// 下方のサイズ
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetDownSideSize() {
+		return downSideSize_;
+	}
+
+#pragma endregion
 
 
 
@@ -79,24 +102,17 @@ protected:
 
 #pragma endregion
 
-#pragma region ボックス
 
-	//横幅
-	float sideWidth_ = 1.0f;
-	//縦幅
-	float sideLength_ = 1.0f;
-	//高さ
-	float sideHeight_ = 1.0f;
-
-#pragma endregion
 
 #pragma region AABB
 
-	//最小点(手前の左下)
-	Vector3 min_;
+	//AABBのmax部分に加算する縦横高さのサイズ
+	Vector3 upSideSize_ = {};
 
-	//最大点(奥の右上)
-	Vector3 max_;
+	//AABBのmax部分に加算する縦横高さのサイズ
+	Vector3 downSideSize_ = {};
+
+
 
 #pragma endregion
 

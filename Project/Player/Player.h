@@ -171,6 +171,9 @@ private:
 	//動く方向
 	Vector3 moveDirection_ = {};
 
+	const float SIDE_SIZE = 1.0f;
+
+
 	//体力
 	int32_t hp_ = 0;
 	//敵の攻撃に当たった時のタイマー

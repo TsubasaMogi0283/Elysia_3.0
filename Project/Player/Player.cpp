@@ -30,7 +30,10 @@ void Player::Initialize(){
 	acceptDamage_ = true;
 	isDamage_ = false;
 
-
+	//ワールドトランスフォームの初期化
+	worldTransform_.Initialize();
+	const Vector3 INITIAL_POSITION = { .x=0.0f,.y=0.0f,.z=-10.0f };
+	worldTransform_.translate_ = INITIAL_POSITION;
 
 	#pragma region 当たり判定について
 
@@ -38,6 +41,12 @@ void Player::Initialize(){
 
 	//半径
 	radius_ = 1.0f;
+
+	//AABBのmax部分に加算する縦横高さのサイズ
+	upSideSize_ = {1.0f,1.0f,1.0f};
+
+	//AABBのmax部分に加算する縦横高さのサイズ
+	downSideSize_ = {1.0f,1.0f,1.0f};
 
 	#pragma endregion
 
@@ -49,14 +58,14 @@ void Player::Initialize(){
 	SetCollisionMask(COLLISION_ATTRIBUTE_ENEMY_ATTACK);
 
 
-	//ワールドトランスフォームの初期化
-	worldTransform_.Initialize();
-	worldTransform_.translate_ = { 0.0f,0.0f,-10.0f };
+	
 }
 
 void Player::Update(){
 
 	const float MOVE_SPEED = 0.1f;
+
+
 
 	//動けるときだけ加算
 	if (isControll_ == true && moveCondition_==PlayerMoveCondition::OnPlayerMove) {

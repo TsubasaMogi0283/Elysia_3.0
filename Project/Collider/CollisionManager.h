@@ -35,12 +35,22 @@ public:
 	~CollisionManager()=default;
 
 private:
+
+	//StatePatternでやるのも良いかも
+
 	/// <summary>
 	/// 球同士
 	/// </summary>
 	/// <param name="colliderA"></param>
 	/// <param name="colliderB"></param>
 	void CheckSphereCollisionPair(Collider* colliderA, Collider* colliderB);
+
+	/// <summary>
+	/// AABB同士
+	/// </summary>
+	/// <param name="colliderA"></param>
+	/// <param name="colliderB"></param>
+	void CheckAABBCollisionPair(Collider* colliderA, Collider* colliderB);
 
 	/// <summary>
 	/// 扇と点
