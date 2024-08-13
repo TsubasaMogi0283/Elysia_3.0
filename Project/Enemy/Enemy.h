@@ -156,6 +156,11 @@ public:
 #pragma endregion
 
 
+	inline AABB GetAABB() {
+		return aabb_;
+	}
+
+
 	/// <summary>
 	/// ステージの四隅
 	/// </summary>

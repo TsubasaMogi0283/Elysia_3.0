@@ -287,6 +287,16 @@ void EnemyManager::Update(){
 		for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
 			for (std::list<Enemy*>::iterator it2 = std::next(it1); it2 != enemyes_.end(); ++it2) {
 
+
+				//it1とit2が一致した場合は計算をせずに次のループへ
+				if (it1 == it2) {
+					continue;
+				}
+
+				//AABB
+				AABB aabb1 = (*it1)->GetAABB();
+				AABB aabb2 = (*it2)->GetAABB();
+
 				//ワールド座標
 				Vector3 enemy1Position = (*it1)->GetWorldPosition();
 				Vector3 enemy2Position = (*it2)->GetWorldPosition();
@@ -309,7 +319,12 @@ void EnemyManager::Update(){
 				//現在の状態
 				uint32_t condition = (*it1)->GetCondition();
 				
-				
+				//衝突判定
+				if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
+					(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
+					(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z)) {
+
+				}
 
 				// 進行方向上にいたら
 				if ((ENEMY_SCALE_SIZE_*2.0f > projectDistance) &&
@@ -321,7 +336,7 @@ void EnemyManager::Update(){
 					#endif // _DEBUG
 
 					// 接触していたら
-					if ((enemyAndEnemyDistance < ENEMY_SCALE_SIZE_ * 2.0f)&& dot>0.0f) {
+					if ((enemyAndEnemyDistance < ENEMY_SCALE_SIZE_ * 2.0f)&& dot>0.7f) {
 						
 						#ifdef _DEBUG
 						ImGui::Begin("Touch");
@@ -355,10 +370,12 @@ void EnemyManager::Update(){
 			}
 		}
 
+		//降順必要ないかも
+
 		//降順の計算をするのは2体以上いる時だけ
 		//必要のない計算は出来るだけしないようにね
 		
-			//降順
+		//降順
 		for (std::list<Enemy*>::iterator it1 = std::prev(enemyes_.end());; --it1) {
 
 			//最初に戻ってきたらbreakでループを抜ける
