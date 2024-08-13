@@ -46,8 +46,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	//追跡かどうか
 	isTracking_ = false;
 
-	//半径
-	radius_ = 1.0f;
+	
 	preSpeed_ = speed;
 	speed_ = speed;
 
@@ -63,11 +62,25 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	//攻撃
 	attackTime_ = 0;
 
+
+#pragma region 当たり判定
+	//半径
+	radius_ = 1.0f;
+
+	//AABBのmax部分に加算する縦横高さのサイズ
+	upSideSize_ = { 1.0f,1.0f,1.0f };
+
+	//AABBのmin部分に加算する縦横高さのサイズ
+	downSideSize_ = { 1.0f,1.0f,1.0f };
+
 	//判定
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY);
 	//相手
 	SetCollisionMask(COLLISION_ATTRIBUTE_NONE);
+
+#pragma endregion
+
 	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
 #ifdef _DEBUG
 	
@@ -95,6 +108,10 @@ void Enemy::Update(){
 	//更新
 	worldTransform_.Update();
 	material_.Update();
+
+	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
+	aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
+
 
 	//状態
 	switch (condition_) {

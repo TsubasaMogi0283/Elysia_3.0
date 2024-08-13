@@ -8,6 +8,7 @@
 #include "../../Ellysia/Line/Line.h"
 #include "Stage/Ground/StageRect.h"
 #include "EnemyAttackCollision.h"
+#include "AABB.h"
 
 struct Camera;
 struct SpotLight;
@@ -247,6 +248,9 @@ private:
 
 	//攻撃
 	int32_t attackTime_ = 0;
+
+	AABB aabb_ = {};
+
 
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
