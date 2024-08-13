@@ -122,22 +122,6 @@ void EnemyManager::Update(){
 
 
 
-	//左端
-	const float LEFT_LINE = stageRect_.leftBack.x + ENEMY_SCALE_SIZE_;
-	LEFT_LINE;
-	//右端
-	const float RIGHT_LINE = stageRect_.rightBack.x - ENEMY_SCALE_SIZE_;
-	RIGHT_LINE;
-	//奥側
-	const float BACK_LINE = stageRect_.leftBack.x - ENEMY_SCALE_SIZE_;
-	BACK_LINE;
-	//手前側
-	const float FRONT_LINE = stageRect_.rightFront.x + ENEMY_SCALE_SIZE_;
-	FRONT_LINE;
-
-
-
-
 	for (Enemy* enemy : enemyes_) {
 		enemy->SetPlayerPosition(playerPosition);
 		enemy->Update();
@@ -303,9 +287,15 @@ void EnemyManager::Update(){
 
 				//向き
 				Vector3 direction = (*it1)->GetDirection();
+				
+				//敵同士の差分ベクトル
 				Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemy2Position, enemy1Position);
+				
+				//敵同士の距離
 				float enemyAndEnemyDistance = sqrtf(std::powf(enemyAndEnemyDifference.x, 2.0f) + std::powf(enemyAndEnemyDifference.y, 2.0f) + std::powf(enemyAndEnemyDifference.z, 2.0f));
 				
+
+
 				// 正射影ベクトルを求める
 				Vector3 projectVector = VectorCalculation::Project(enemyAndEnemyDifference, direction);
 				Vector3 differenceEnemyAndProject = VectorCalculation::Subtract(enemyAndEnemyDifference, projectVector);
@@ -319,12 +309,20 @@ void EnemyManager::Update(){
 				//現在の状態
 				uint32_t condition = (*it1)->GetCondition();
 				
-				//衝突判定
-				if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
-					(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
-					(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z)) {
+				//前方にいた場合
+				if (dot > 0.0f) {
+					//衝突判定
+					if ((aabb1.min.x < aabb2.max.x && aabb1.max.x > aabb2.min.x) &&
+						(aabb1.min.y < aabb2.max.y && aabb1.max.y > aabb2.min.y) &&
+						(aabb1.min.z < aabb2.max.z && aabb1.max.z > aabb2.min.z)) {
 
+
+
+
+					}
 				}
+
+				
 
 				// 進行方向上にいたら
 				if ((ENEMY_SCALE_SIZE_*2.0f > projectDistance) &&

@@ -38,6 +38,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	//マテリアルの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
+	material_.color_ = { 0.0f,1.0f,1.0f,1.0f };
 
 	//生存か死亡
 	isAlive_ = true;
@@ -295,6 +296,12 @@ void Enemy::Update(){
 	ImGui::InputFloat("RotateY", &degreeRotateY);
 	ImGui::InputFloat3("Speed", &direction_.x);
 	ImGui::Checkbox("isAttck", &isAttack_);
+	if (ImGui::TreeNode("AABB")) {
+		ImGui::InputFloat3("Max", &aabb_.max.x);
+		ImGui::InputFloat3("Min", &aabb_.min.x);
+		ImGui::TreePop();
+	}
+
 	ImGui::InputFloat3("Position", &worldTransform_.translate_.x);
 	ImGui::InputFloat3("preTrackingPlayerPosition", &preTrackingPlayerPosition_.x);
 	ImGui::InputFloat3("preTrackingPosition_", &preTrackingPosition_.x);
