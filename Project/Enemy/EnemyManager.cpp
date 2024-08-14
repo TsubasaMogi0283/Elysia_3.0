@@ -37,22 +37,24 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	enemyes_.push_back(enemy1);
 
 		
-	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = { -5.0f,0.0f,10.0f };
-	enemy2->SetStageRect(stageRect_);
-	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemy2->Initialize(modelHandle_, position2, { -0.0f,0.0f,-0.0f });
-	enemyes_.push_back(enemy2);
+	//Enemy* enemy2 = new Enemy();
+	//Vector3 position2 = { -5.0f,0.0f,10.0f };
+	//enemy2->SetStageRect(stageRect_);
+	//enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
+	//enemy2->Initialize(modelHandle_, position2, { -0.0f,0.0f,-0.0f });
+	//enemyes_.push_back(enemy2);
 
 	//Enemy* enemy3 = new Enemy();
 	//Vector3 position3 = { 5.0f,0.0f,9.0f };
 	//enemy3->Initialize(modelHandle_, position3, { -0.01f,0.0f,0.0f });
 	//enemy3->SetRadius_(player_->GetRadius());
 	//enemyes_.push_back(enemy3);
-
+	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\TD2_Enemy\TD2_Enemy.obj"
 
 	//モデル
 	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	
+
 	debugModel_.reset(Model::Create(debugModelHandle));
 
 	debugModelWorldTransform_.Initialize();
