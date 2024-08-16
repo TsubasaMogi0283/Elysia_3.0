@@ -38,7 +38,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	//マテリアルの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
-	//material_.color_ = { 0.0f,1.0f,1.0f,1.0f };
+	material_.color_ = { 0.0f,1.0f,1.0f,1.0f };
 
 	//生存か死亡
 	isAlive_ = true;
@@ -58,7 +58,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 	//状態
 	preCondition_ = EnemyCondition::NoneMove;
-	condition_ = EnemyCondition::Move;
+	condition_ = EnemyCondition::NoneMove;
 
 	//攻撃
 	attackTime_ = 0;
@@ -146,12 +146,11 @@ void Enemy::Update(){
 		isAttack_ = false;
 
 
-		//if (preCondition_ == EnemyCondition::NoneMove) {
-		//	speed_ = preSpeed_;
-		//}
-		//else if (preCondition_ == EnemyCondition::NoneMove) {
-		//	speed_ = preSpeed_;
-		//}
+		if (preCondition_ == EnemyCondition::NoneMove) {
+			speed_ = preSpeed_;
+		}
+
+
 		#ifdef _DEBUG
 		ImGui::Begin("Move");
 		ImGui::End();

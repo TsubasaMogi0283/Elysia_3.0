@@ -84,6 +84,8 @@ private:
 	const float ENEMY_SCALE_SIZE_ = 1.0f;
 	
 
+	float z = 0.0f;
+
 	StageRect stageRect_ = {};
 
 	//モデル
