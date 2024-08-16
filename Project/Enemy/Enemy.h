@@ -198,6 +198,15 @@ public:
 	}
 
 
+	inline void SaveSpeed() {
+		preSpeed_ = speed_;
+	}
+
+	inline void TakeOutSpeed() {
+		speed_ = preSpeed_;
+	}
+
+
 #pragma region 攻撃用
 
 	//攻撃用
@@ -214,6 +223,9 @@ public:
 	}
 
 #pragma endregion
+
+
+	
 
 
 

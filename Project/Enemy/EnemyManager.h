@@ -84,7 +84,14 @@ private:
 	const float ENEMY_SCALE_SIZE_ = 1.0f;
 	
 
-	float z = 0.0f;
+
+	int i= 0;
+	int j = 0;
+	float dot = 0.0f;
+
+	AABB aabb[2] = {};
+
+	Vector3 enemyPosition[2] = {};
 
 	StageRect stageRect_ = {};
 
