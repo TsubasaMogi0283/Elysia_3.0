@@ -30,29 +30,35 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = { -5.0f,0.0f,4.0f };
+	Vector3 position1 = { 0.0f,0.0f,4.0f };
 
 	enemy1->SetStageRect(stageRect_);
 	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemy1->Initialize(modelHandle_, position1, { 0.01f,0.0f,0.0f });
-	uint32_t condition = EnemyCondition::Move;
-	enemy1->SetCondition(condition);
+	enemy1->Initialize(modelHandle_, position1, { 0.0f,0.0f,0.0f });
+	//uint32_t condition = EnemyCondition::Move;
+	//enemy1->SetCondition(condition);
 	enemyes_.push_back(enemy1);
 
 		
 	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = { 0.0f,0.0f,4.0f };
-
+	Vector3 position2 = { 10.0f,0.0f,4.0f };
+	
 	enemy2->SetStageRect(stageRect_);
 	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemy2->Initialize(modelHandle_, position2, { -0.0f,0.0f,-0.0f });
+	enemy2->Initialize(modelHandle_, position2, { 0.0f,0.0f,-0.0f });
+	//uint32_t condition = EnemyCondition::Move;
+	//enemy2->SetCondition(condition);
 	enemyes_.push_back(enemy2);
 
-	//Enemy* enemy3 = new Enemy();
-	//Vector3 position3 = { 5.0f,0.0f,9.0f };
-	//enemy3->Initialize(modelHandle_, position3, { -0.01f,0.0f,0.0f });
-	//enemy3->SetRadius_(player_->GetRadius());
-	//enemyes_.push_back(enemy3);
+	Enemy* enemy3 = new Enemy();
+	Vector3 position3 = { -5.0f,0.0f,4.0f };
+	enemy3->SetStageRect(stageRect_);
+	
+	enemy3->Initialize(modelHandle_, position3, { 0.01f,0.0f,0.0f });
+	uint32_t condition = EnemyCondition::Move;
+	enemy3->SetCondition(condition);
+	enemy3->SetRadius_(player_->GetRadius());
+	enemyes_.push_back(enemy3);
 	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\TD2_Enemy\TD2_Enemy.obj"
 
 	//モデル
@@ -287,7 +293,7 @@ void EnemyManager::Update(){
 
 			//AABB
 			aabb[0] = (*it1)->GetAABB();
-
+			
 			enemyPosition[0] = (*it1)->GetWorldPosition();
 			//向き
 			Vector3 direction = (*it1)->GetDirection();
@@ -297,9 +303,7 @@ void EnemyManager::Update(){
 
 			for (std::list<Enemy*>::iterator it2 = enemyes_.begin(); it2 != enemyes_.end(); ++it2) {
 
-
 				++i;
-
 
 				//std::list<Enemy*>::iterator it2 = std::next(it1); it2 != enemyes_.end(); ++it2
 
@@ -315,24 +319,26 @@ void EnemyManager::Update(){
 				if ((aabb[0].min.x < aabb[1].max.x && aabb[0].max.x > aabb[1].min.x) &&
 					(aabb[0].min.y < aabb[1].max.y && aabb[0].max.y > aabb[1].min.y) &&
 					(aabb[0].min.z < aabb[1].max.z && aabb[0].max.z > aabb[1].min.z)) {
-					
+					//ワールド座標
+					enemyPosition[1] = (*it2)->GetWorldPosition();
+
+
+					//敵同士の差分ベクトル
+					Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemyPosition[1], enemyPosition[0]);
+
+					//内積
+					//進行方向の前にいると+
+					Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
+					dot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
+
+
+					break;
 				}
 				else {
 					continue;
 				}
 
 
-				//ワールド座標
-				enemyPosition[1] = (*it2)->GetWorldPosition();
-
-				
-				//敵同士の差分ベクトル
-				Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemyPosition[1], enemyPosition[0]);
-				
-				//内積
-				//進行方向の前にいると+
-				Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
-				dot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
 				
 			}
 
