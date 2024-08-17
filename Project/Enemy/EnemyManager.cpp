@@ -30,31 +30,25 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = { 0.0f,0.0f,4.0f };
-
+	Vector3 position1 = { 10.0f,0.0f,4.0f };
 	enemy1->SetStageRect(stageRect_);
 	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
 	enemy1->Initialize(modelHandle_, position1, { 0.0f,0.0f,0.0f });
-	//uint32_t condition = EnemyCondition::Move;
-	//enemy1->SetCondition(condition);
 	enemyes_.push_back(enemy1);
 
 		
 	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = { 10.0f,0.0f,4.0f };
-	
+	Vector3 position2 = { 0.0f,0.0f,4.0f };
 	enemy2->SetStageRect(stageRect_);
 	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemy2->Initialize(modelHandle_, position2, { 0.0f,0.0f,-0.0f });
-	//uint32_t condition = EnemyCondition::Move;
-	//enemy2->SetCondition(condition);
+	enemy2->Initialize(modelHandle_, position2, { 0.01f,0.0f,-0.0f });
 	enemyes_.push_back(enemy2);
 
 	Enemy* enemy3 = new Enemy();
 	Vector3 position3 = { -5.0f,0.0f,4.0f };
 	enemy3->SetStageRect(stageRect_);
 	
-	enemy3->Initialize(modelHandle_, position3, { 0.01f,0.0f,0.0f });
+	enemy3->Initialize(modelHandle_, position3, { 0.015f,0.0f,0.0f });
 	uint32_t condition = EnemyCondition::Move;
 	enemy3->SetCondition(condition);
 	enemy3->SetRadius_(player_->GetRadius());
@@ -127,7 +121,6 @@ void EnemyManager::Update(){
 	const float ATTACK_DISTANCE_OFFSET = 0.0f;
 	float MINIMUM_DISTANCE = player_->GetRadius() +1.0f + ATTACK_DISTANCE_OFFSET;
 	MINIMUM_DISTANCE;
-	
 	
 	
 	
@@ -350,6 +343,7 @@ void EnemyManager::Update(){
 
 			//前方にいた場合
 			if (dot > 0.0f) {
+				//接触した場合
 				if ((aabb[0].min.x < aabb[1].max.x && aabb[0].max.x > aabb[1].min.x) &&
 					(aabb[0].min.y < aabb[1].max.y && aabb[0].max.y > aabb[1].min.y) &&
 					(aabb[0].min.z < aabb[1].max.z && aabb[0].max.z > aabb[1].min.z)) {
@@ -364,7 +358,28 @@ void EnemyManager::Update(){
 					//(*it1)->TakeOutSpeed();
 					continue;
 				}
-				
+				//接触していない場合
+				else {
+					uint32_t newCondition = EnemyCondition::Move;
+
+					//前の状態を保存
+					(*it1)->SetPreCondition(condition);
+					//スピードの保存
+					//(*it1)->SaveSpeed();
+					//状態の変更
+					(*it1)->SetCondition(newCondition);
+				}
+			}
+			//前方にいない場合
+			else {
+				uint32_t newCondition = EnemyCondition::Move;
+
+				//前の状態を保存
+				(*it1)->SetPreCondition(condition);
+				//スピードの保存
+				//(*it1)->SaveSpeed();
+				//状態の変更
+				(*it1)->SetCondition(newCondition);
 			}
 
 

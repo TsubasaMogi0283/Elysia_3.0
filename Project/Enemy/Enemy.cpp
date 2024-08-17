@@ -57,9 +57,19 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	direction_ = { 1.0f,0.0f,0.0f };
 
 	//状態
-	preCondition_ = EnemyCondition::NoneMove;
-	condition_ = EnemyCondition::NoneMove;
+	preCondition_ = EnemyCondition::Move;
+	condition_ = EnemyCondition::Move;
 
+
+	//スピードが全て0になっていたらNoneMove
+	if (speed_.x == 0.0f &&
+		speed_.y == 0.0f &&
+		speed_.z == 0.0f) {
+		preCondition_ = EnemyCondition::NoneMove;
+		condition_ = EnemyCondition::NoneMove;
+
+	}
+	
 	//攻撃
 	attackTime_ = 0;
 
