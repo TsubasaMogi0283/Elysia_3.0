@@ -44,15 +44,15 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	enemy2->Initialize(modelHandle_, position2, { 0.01f,0.0f,-0.0f });
 	enemyes_.push_back(enemy2);
 
-	Enemy* enemy3 = new Enemy();
-	Vector3 position3 = { -5.0f,0.0f,4.0f };
-	enemy3->SetStageRect(stageRect_);
-	
-	enemy3->Initialize(modelHandle_, position3, { 0.015f,0.0f,0.0f });
-	uint32_t condition = EnemyCondition::Move;
-	enemy3->SetCondition(condition);
-	enemy3->SetRadius_(player_->GetRadius());
-	enemyes_.push_back(enemy3);
+	//Enemy* enemy3 = new Enemy();
+	//Vector3 position3 = { -5.0f,0.0f,4.0f };
+	//enemy3->SetStageRect(stageRect_);
+	//
+	//enemy3->Initialize(modelHandle_, position3, { 0.015f,0.0f,0.0f });
+	//uint32_t condition = EnemyCondition::Move;
+	//enemy3->SetCondition(condition);
+	//enemy3->SetRadius_(player_->GetRadius());
+	//enemyes_.push_back(enemy3);
 	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\TD2_Enemy\TD2_Enemy.obj"
 
 	//モデル
@@ -282,8 +282,6 @@ void EnemyManager::Update(){
 
 		for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
 
-			++j;
-
 			//AABB
 			aabb[0] = (*it1)->GetAABB();
 			
@@ -291,14 +289,7 @@ void EnemyManager::Update(){
 			//向き
 			Vector3 direction = (*it1)->GetDirection();
 
-
-
-
 			for (std::list<Enemy*>::iterator it2 = enemyes_.begin(); it2 != enemyes_.end(); ++it2) {
-
-				++i;
-
-				//std::list<Enemy*>::iterator it2 = std::next(it1); it2 != enemyes_.end(); ++it2
 
 				//it1とit2が一致した場合は計算をせずに次のループへ
 				if (it1 == it2) {
@@ -335,14 +326,16 @@ void EnemyManager::Update(){
 				
 			}
 
-
-
-
 			//現在の状態
 			uint32_t condition = (*it1)->GetCondition();
 
+			//プレイヤーとの距離
+			Vector3 playerEnemyDifference = VectorCalculation::Subtract(playerPosition, (*it1)->GetWorldPosition());
+			float playerEnemyDistance = SingleCalculation::Length(playerEnemyDifference);
+
+
 			//前方にいた場合
-			if (dot > 0.0f) {
+			if (dot > 0.0f && condition == EnemyCondition::Move) {
 				//接触した場合
 				if ((aabb[0].min.x < aabb[1].max.x && aabb[0].max.x > aabb[1].min.x) &&
 					(aabb[0].min.y < aabb[1].max.y && aabb[0].max.y > aabb[1].min.y) &&
@@ -351,11 +344,9 @@ void EnemyManager::Update(){
 
 					//前の状態を保存
 					(*it1)->SetPreCondition(condition);
-					//スピードの保存
-					//(*it1)->SaveSpeed();
 					//状態の変更
 					(*it1)->SetCondition(newCondition);
-					//(*it1)->TakeOutSpeed();
+					
 					continue;
 				}
 				//接触していない場合
@@ -372,23 +363,77 @@ void EnemyManager::Update(){
 			}
 			//前方にいない場合
 			else {
-				uint32_t newCondition = EnemyCondition::Move;
+				if (playerEnemyDistance > TRACKING_START_DISTANCE_) {
+					uint32_t newCondition = EnemyCondition::Move;
 
-				//前の状態を保存
-				(*it1)->SetPreCondition(condition);
-				//スピードの保存
-				//(*it1)->SaveSpeed();
-				//状態の変更
-				(*it1)->SetCondition(newCondition);
+					//前の状態を保存
+					(*it1)->SetPreCondition(condition);
+					//スピードの保存
+					//(*it1)->SaveSpeed();
+					//状態の変更
+					(*it1)->SetCondition(newCondition);
+				}
+
+
+				//設定した値より短くなったら接近開始
+				if (condition == EnemyCondition::Move) {
+					if (playerEnemyDistance <= TRACKING_START_DISTANCE_) {
+						//前回のMove状態を記録
+						uint32_t preCondition = condition;
+						(*it1)->SetPreCondition(preCondition);
+
+						//状態を記録
+						condition = EnemyCondition::PreTracking;
+						(*it1)->SetCondition(condition);
+					}
+				}
+
+				//追跡の時に
+				if (condition == EnemyCondition::Tracking) {
+
+
+
+					//Moveへ
+					if (playerEnemyDistance > TRACKING_START_DISTANCE_) {
+
+
+
+						//前回のMove状態を記録
+						uint32_t preCondition = condition;
+						(*it1)->SetPreCondition(preCondition);
+
+						//状態を記録
+						condition = EnemyCondition::Move;
+						(*it1)->SetCondition(condition);
+
+					}
+
+					//設定した値より短くなったら攻撃開始
+					if (playerEnemyDistance <= ATTACK_START_DISTANCE_ &&
+						MINIMUM_DISTANCE < playerEnemyDistance) {
+						//前回のMove状態を記録
+						uint32_t preCondition = condition;
+						(*it1)->SetPreCondition(preCondition);
+
+						//状態を記録
+						condition = EnemyCondition::Attack;
+						(*it1)->SetCondition(condition);
+
+					}
+
+				}
+
 			}
 
 
 
+
+
+			
+
+			
+
 		}
-
-
-		
-		
 	}
 	
 

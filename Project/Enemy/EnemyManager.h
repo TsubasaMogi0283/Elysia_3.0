@@ -85,8 +85,6 @@ private:
 	
 
 
-	int i= 0;
-	int j = 0;
 	float dot = 0.0f;
 
 	AABB aabb[2] = {};

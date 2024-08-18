@@ -57,7 +57,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	direction_ = { 1.0f,0.0f,0.0f };
 
 	//状態
-	preCondition_ = EnemyCondition::Move;
+	preCondition_ = EnemyCondition::NoneMove;
 	condition_ = EnemyCondition::Move;
 
 
@@ -303,7 +303,17 @@ void Enemy::Update(){
 	ImGui::InputFloat("T", &t_);
 	ImGui::InputFloat3("direction_", &direction_.x);
 	ImGui::InputFloat("RotateY", &degreeRotateY);
+	
+	
 	ImGui::InputFloat3("Speed", &direction_.x);
+	if (ImGui::TreeNode("Condition")) {
+		int newCondition = static_cast<int>(condition_);
+		int newPreCondition = static_cast<int>(preCondition_);
+		ImGui::InputInt("Current", &newCondition);
+		ImGui::InputInt("Pre", &newPreCondition);
+		ImGui::TreePop();
+	}
+	
 	ImGui::Checkbox("isAttck", &isAttack_);
 	if (ImGui::TreeNode("AABB")) {
 		ImGui::InputFloat3("Max", &aabb_.max.x);
