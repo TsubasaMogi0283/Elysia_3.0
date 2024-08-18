@@ -1,13 +1,10 @@
 #include "WindowsSetup.h"
 
+#include <ConvertLog.h>
+
 #pragma comment(lib,"winmm.lib")
 
 
-//コンストラクタ
-WindowsSetup::WindowsSetup() {
-	
-
-}
 
 
 WindowsSetup* WindowsSetup::GetInstance() {
@@ -33,6 +30,16 @@ LRESULT WindowsSetup::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 	}
 
 	return DefWindowProc(hwnd, msg, wparam, lparam);
+
+}
+
+void WindowsSetup::OutputText(std::string& stringText){
+
+	//wstringからstringに変換
+	std::wstring newString = ConvertString(stringText);
+	
+	//出力
+	OutputDebugStringW(newString.c_str());
 
 }
 
@@ -74,8 +81,8 @@ void  WindowsSetup::RegisterWindowsClass() {
 	);
 
 		
-
-
+	std::string a = "あ";
+	OutputText(a);
 	
 }
 
@@ -122,7 +129,3 @@ void WindowsSetup::Close() {
 }
 
 
-//デストラクタも
-WindowsSetup::~WindowsSetup() {
-
-}
