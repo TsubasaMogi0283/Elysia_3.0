@@ -36,7 +36,7 @@ LRESULT WindowsSetup::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 void WindowsSetup::OutputText(std::string& stringText){
 
 	//wstringからstringに変換
-	std::wstring newString = ConvertString(stringText);
+	std::wstring newString = ConvertString::ToWString(stringText);
 	
 	//出力
 	OutputDebugStringW(newString.c_str());

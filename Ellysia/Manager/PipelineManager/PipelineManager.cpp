@@ -87,7 +87,7 @@ void PipelineManager::GenaratedLinePSO() {
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->linePSO_.signatureBlob_, &PipelineManager::GetInstance()->linePSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->linePSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->linePSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 
@@ -305,7 +305,7 @@ void PipelineManager::GenerateSpritePSO() {
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->spritePSO_.signatureBlob_, &PipelineManager::GetInstance()->spritePSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->spritePSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->spritePSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 
@@ -688,7 +688,7 @@ void PipelineManager::GenerateModelPSO() {
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->modelPSO_.signatureBlob_, &PipelineManager::GetInstance()->modelPSO_.errorBlob_);
 	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->modelPSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->modelPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 
@@ -1089,7 +1089,7 @@ void PipelineManager::GenerateAnimationModelPSO() {
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->animationModelPSO_.signatureBlob_, &PipelineManager::GetInstance()->animationModelPSO_.errorBlob_);
 	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->animationModelPSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->animationModelPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 
@@ -1444,7 +1444,7 @@ void PipelineManager::GenerateParticle3DPSO() {
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->particle3DPSO_.signatureBlob_, &PipelineManager::GetInstance()->particle3DPSO_.errorBlob_);
 	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->particle3DPSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->particle3DPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 
@@ -1685,7 +1685,7 @@ void PipelineManager::GenarateFullScreenPSO() {
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->fullScreenPSO_.signatureBlob_, &PipelineManager::GetInstance()->fullScreenPSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->fullScreenPSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->fullScreenPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -1857,7 +1857,7 @@ void PipelineManager::GenarateGrayScalePSO(){
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->grayScalePSO_.signatureBlob_, &PipelineManager::GetInstance()->grayScalePSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->grayScalePSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->grayScalePSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -2026,7 +2026,7 @@ void PipelineManager::GenarateSepiaScalePSO(){
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->sepiaScalePSO_.signatureBlob_, &PipelineManager::GetInstance()->sepiaScalePSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->sepiaScalePSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->sepiaScalePSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -2204,7 +2204,7 @@ void PipelineManager::GenarateVignettePSO(){
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->vignettePSO_.signatureBlob_, &PipelineManager::GetInstance()->vignettePSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->vignettePSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->vignettePSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -2382,7 +2382,7 @@ void PipelineManager::GenarateBoxFilterPSO(){
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->boxFilterPSO_.signatureBlob_, &PipelineManager::GetInstance()->boxFilterPSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->boxFilterPSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->boxFilterPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -2564,7 +2564,7 @@ void PipelineManager::GenarateGaussianFilterPSO(){
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->gaussianFilterPSO_.signatureBlob_, &PipelineManager::GetInstance()->gaussianFilterPSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->gaussianFilterPSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->gaussianFilterPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -2737,7 +2737,7 @@ void PipelineManager::GenarateLuminanceBasedOutlinePSO() {
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.signatureBlob_, &PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -2963,7 +2963,7 @@ void PipelineManager::GenarateDepthBasedOutlinePSO() {
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->depthBasedOutlinePSO_.signatureBlob_, &PipelineManager::GetInstance()->depthBasedOutlinePSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->depthBasedOutlinePSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->depthBasedOutlinePSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -3138,7 +3138,7 @@ void PipelineManager::GenerateRadialBlurPSO() {
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->radialBlurPSO_.signatureBlob_, &PipelineManager::GetInstance()->radialBlurPSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->radialBlurPSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->radialBlurPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -3337,7 +3337,7 @@ void PipelineManager::GenarateDissolvePSO() {
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->dissolvePSO_.signatureBlob_, &PipelineManager::GetInstance()->dissolvePSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->dissolvePSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->dissolvePSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -3518,7 +3518,7 @@ void PipelineManager::GenarateRandomEffectPSO() {
 	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->randomEffectPSO_.signatureBlob_, &PipelineManager::GetInstance()->randomEffectPSO_.errorBlob_);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->randomEffectPSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->randomEffectPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -3726,7 +3726,7 @@ void PipelineManager::GenarateSkyBoxPSO() {
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->skyBoxPSO_.signatureBlob_, &PipelineManager::GetInstance()->skyBoxPSO_.errorBlob_);
 	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->skyBoxPSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->skyBoxPSO_.errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 

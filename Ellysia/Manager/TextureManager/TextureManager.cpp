@@ -112,7 +112,7 @@ DirectX::ScratchImage TextureManager::LoadTextureData(const std::string& filePat
 
 	//テクスチャファイルを読んでプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
-	std::wstring filePathW = ConvertString(filePath);
+	std::wstring filePathW = ConvertString::ToWString(filePath);
 	//dssファイルの場合
 	if (filePathW.ends_with(L".dds")) {
 		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);

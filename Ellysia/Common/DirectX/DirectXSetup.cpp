@@ -171,7 +171,7 @@ void DirectXSetup::SelectAdapter() {
 		//ソフトウェアアダプタでなければ採用
 		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
 			//採用したアダプタの情報をログに出力.(wstring)
-			Log(ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
+			ConvertString::Log(ConvertString::ToString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
 			break;
 		}
 		//ソフトウェアアダプタだった場合無視
@@ -211,14 +211,14 @@ void DirectXSetup::GenerateD3D12Device() {
 		//指定した機能レベルでデバイスが生成できたか確認
 		if (SUCCEEDED(hr)) {
 			//生成できたのでログ出力を行ってループを抜ける
-			Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
+			ConvertString::Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
 			break;
 		}
 	}
 
 	//デバイスの生成が上手くいかなかったので起動できない
 	assert(DirectXSetup::GetInstance()->m_device_ != nullptr);
-	Log("Complete create D3D12Device!!!\n");
+	ConvertString::Log("Complete create D3D12Device!!!\n");
 
 }
 
