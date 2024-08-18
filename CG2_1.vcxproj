@@ -52,17 +52,17 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)External\nlohmann;$(ProjectDir)External\DirectXTex;$(ProjectDir)External\ImGui</IncludePath>
+    <IncludePath>$(ProjectDir)External\DirectXTex;$(ProjectDir)External\nlohmannJson;$(ProjectDir)External\ImGui;</IncludePath>
     <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\Generated\Outputs\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)External\nlohmann;$(ProjectDir)External\DirectXTex;$(ProjectDir)External\ImGui</IncludePath>
+    <IncludePath>$(ProjectDir)External\DirectXTex;$(ProjectDir)External\nlohmannJson;$(ProjectDir)External\ImGui;$(ProjectDir)External\nlohmannJson</IncludePath>
     <IntDir>$(SolutionDir)..\Generated\Obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)..\Generated\Outputs\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">
-    <IncludePath>$(ProjectDir)External\nlohmann;$(ProjectDir)External\DirectXTex;$(ProjectDir)External\ImGui</IncludePath>
+    <IncludePath>$(ProjectDir)External\DirectXTex;$(ProjectDir)External\nlohmannJson;$(ProjectDir)External\ImGui;$(ProjectDir)External\nlohmannJson</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -455,8 +455,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\PostEffect\RandomEffect\RandomEffect.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\SepiaScale\SepiaScale.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\Vignette\Vignette.h" />
-    <ClInclude Include="External\nlohmann\json.hpp" />
-    <ClInclude Include="External\nlohmann\json_fwd.hpp" />
     <ClInclude Include="Project\AllGameScene\GameManager\GameManager.h" />
     <ClInclude Include="Project\AllGameScene\GameManager\IGameScene.h" />
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h" />

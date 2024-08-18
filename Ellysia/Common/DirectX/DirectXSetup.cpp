@@ -2,7 +2,6 @@
 #include <thread>
 #include <d3dx12.h>
 
-
 #include <PipelineManager.h>
 #include <SrvManager.h>
 #include "../RtvManager/RtvManager.h"
@@ -45,22 +44,19 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateBufferResource(size_t sizeInBytes) {
 	
 	uploadHeapProperties_.Type = D3D12_HEAP_TYPE_UPLOAD;
 
-	//頂点リソースの設定
-	D3D12_RESOURCE_DESC vertexResourceDesc_{};
+	D3D12_RESOURCE_DESC resourceDesc_{};
 	//バッファリソース。テクスチャの場合はまた別の設定をする
-	vertexResourceDesc_.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	vertexResourceDesc_.Width = sizeInBytes;
+	resourceDesc_.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resourceDesc_.Width = sizeInBytes;
 	//バッファの場合はこれらは1にする決まり
-	vertexResourceDesc_.Height = 1;
-	vertexResourceDesc_.DepthOrArraySize = 1;
-	vertexResourceDesc_.MipLevels = 1;
-	vertexResourceDesc_.SampleDesc.Count = 1;
+	resourceDesc_.Height = 1;
+	resourceDesc_.DepthOrArraySize = 1;
+	resourceDesc_.MipLevels = 1;
+	resourceDesc_.SampleDesc.Count = 1;
 
 	//バッファの場合はこれにする決まり
-	vertexResourceDesc_.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	resourceDesc_.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	//実際に頂点リソースを作る
-	//ID3D12Resource* vertexResource_ = nullptr;
 	
 	//次はここで問題
 	//hrは調査用
@@ -68,7 +64,7 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateBufferResource(size_t sizeInBytes) {
 	hr = DirectXSetup::GetInstance()->GetDevice()->CreateCommittedResource(
 		&uploadHeapProperties_,
 		D3D12_HEAP_FLAG_NONE,
-		&vertexResourceDesc_,
+		&resourceDesc_,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr, IID_PPV_ARGS(&resource));
 	assert(SUCCEEDED(hr));

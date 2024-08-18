@@ -130,9 +130,6 @@
     <Filter Include="Ellysia\Source File\Polygone\3D\Particle3DManager">
       <UniqueIdentifier>{3ec739a0-2572-47d0-a8e3-2884e559d8fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="External">
-      <UniqueIdentifier>{14a915d2-8493-4c0a-a515-545fd5a67d14}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Header File\AdjustmentItems">
       <UniqueIdentifier>{790ca7fe-3aed-4cdc-bdf7-edc3fdacdae6}</UniqueIdentifier>
     </Filter>
@@ -768,12 +765,6 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Audio\AudioStruct.h">
       <Filter>Ellysia\Header File\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="External\nlohmann\json_fwd.hpp">
-      <Filter>External</Filter>
-    </ClInclude>
-    <ClInclude Include="External\nlohmann\json.hpp">
-      <Filter>External</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Shape\SphereShape.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>

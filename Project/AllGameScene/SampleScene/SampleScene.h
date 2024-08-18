@@ -36,6 +36,7 @@
 #include "Input.h"
 #include <Stage/ObjectManager/ObjectManager.h>
 #include "../../../Ellysia/Polygon/3D/Sphere/Sphere.h"
+#include <LevelDataManager.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -285,5 +286,5 @@ private:
 #pragma endregion
 
 
-
+	LevelDataManager* a = nullptr;
 };
