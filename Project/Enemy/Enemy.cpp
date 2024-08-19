@@ -156,9 +156,6 @@ void Enemy::Update(){
 		isAttack_ = false;
 
 
-		if (preCondition_ == EnemyCondition::NoneMove) {
-			speed_ = preSpeed_;
-		}
 
 
 		#ifdef _DEBUG

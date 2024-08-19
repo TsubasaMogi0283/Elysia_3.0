@@ -30,10 +30,10 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = { 10.0f,0.0f,4.0f };
+	Vector3 position1 = { -5.0f,0.0f,4.0f };
 	enemy1->SetStageRect(stageRect_);
 	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemy1->Initialize(modelHandle_, position1, { 0.0f,0.0f,0.0f });
+	enemy1->Initialize(modelHandle_, position1, { 0.02f,0.0f,0.0f });
 	enemyes_.push_back(enemy1);
 
 		
@@ -41,7 +41,7 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	Vector3 position2 = { 0.0f,0.0f,4.0f };
 	enemy2->SetStageRect(stageRect_);
 	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemy2->Initialize(modelHandle_, position2, { 0.01f,0.0f,-0.0f });
+	enemy2->Initialize(modelHandle_, position2, { 0.00f,0.0f,-0.0f });
 	enemyes_.push_back(enemy2);
 
 	//Enemy* enemy3 = new Enemy();
@@ -141,7 +141,6 @@ void EnemyManager::Update(){
 	if (enemyAmount == 1) {
 		for (Enemy* enemy : enemyes_) {
 			uint32_t condition = enemy->GetCondition();
-			//Vector3 enemyPosition = enemy->GetWorldPosition();
 
 			//プレイヤーとの距離を求める
 			Vector3 difference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
@@ -160,11 +159,12 @@ void EnemyManager::Update(){
 
 			//設定した値より短くなったら接近開始
 			if (condition == EnemyCondition::Move) {
+
 				if (distance <= TRACKING_START_DISTANCE_) {
 					//前回のMove状態を記録
 					uint32_t preCondition = condition;
 					enemy->SetPreCondition(preCondition);
-					
+					enemy->SaveSpeed();
 					//状態を記録
 					condition = EnemyCondition::PreTracking;
 					enemy->SetCondition(condition);
@@ -174,43 +174,9 @@ void EnemyManager::Update(){
 			//追跡の時に
 			if (condition == EnemyCondition::Tracking) {
 
-				//if ((enemy->GetWorldPosition().x< stageRect_.leftBack.x + ENEMY_SCALE_SIZE_*1.0f)|| (enemy->GetWorldPosition().x > stageRect_.rightBack.x - ENEMY_SCALE_SIZE_ * 1.0f)) {
-				//	//前回のMove状態を記録
-				//	uint32_t preCondition = condition;
-				//	enemy->SetPreCondition(preCondition);
-				//
-				//	//状態を記録
-				//	condition = EnemyCondition::Move;
-				//	enemy->SetCondition(condition);
-				//
-				//}
-				//if ((enemy->GetWorldPosition().z > stageRect_.leftBack.x - ENEMY_SCALE_SIZE_ * 1.0f) || (enemy->GetWorldPosition().z< stageRect_.leftFront.z + ENEMY_SCALE_SIZE_ * 1.0f)) {
-				//	//前回のMove状態を記録
-				//	uint32_t preCondition = condition;
-				//	enemy->SetPreCondition(preCondition);
-				//
-				//	//状態を記録
-				//	condition = EnemyCondition::Move;
-				//	enemy->SetCondition(condition);
-				//
-				//}
-
-				
 				//Moveへ
 				if (distance > TRACKING_START_DISTANCE_ ) {
 					
-					float TRACKING_STOP_BACK_LINE = stageRect_.leftBack.z - ENEMY_SCALE_SIZE_ * 2.0f;
-					float TRACKING_STOP_FRONT_LINE = stageRect_.leftFront.z + ENEMY_SCALE_SIZE_ * 2.0f;
-
-
-					if (enemy->GetWorldPosition().z > TRACKING_STOP_BACK_LINE) {
-						enemy->SetPositionZ(TRACKING_STOP_BACK_LINE);
-
-					}
-					if (enemy->GetWorldPosition().z < stageRect_.leftFront.z + ENEMY_SCALE_SIZE_ * 2.0f) {
-						enemy->SetPositionZ(TRACKING_STOP_FRONT_LINE);
-
-					}
 
 					//前回のMove状態を記録
 					uint32_t preCondition = condition;
