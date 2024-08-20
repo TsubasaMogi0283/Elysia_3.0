@@ -195,6 +195,8 @@ void Enemy::Update(){
 	
 		#pragma endregion
 
+
+		//強制的に追跡
 		preCondition_ = EnemyCondition::PreTracking;
 		condition_ = EnemyCondition::Tracking;
 
@@ -218,6 +220,9 @@ void Enemy::Update(){
 		//向きを求める
 		direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_, preTrackingPosition_);
 		direction_ = VectorCalculation::Normalize(direction_);
+
+
+		
 
 		break;
 	

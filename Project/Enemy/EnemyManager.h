@@ -85,7 +85,7 @@ private:
 	
 
 
-	float dot = 0.0f;
+	float dot_ = 0.0f;
 
 	AABB aabb[2] = {};
 
