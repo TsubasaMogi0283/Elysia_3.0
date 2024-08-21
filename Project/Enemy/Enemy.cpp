@@ -9,19 +9,6 @@
 
 void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	
-	//Stageの四隅が一つでも同じだったら引っかかるようにしている
-	//X軸
-	assert((stageRect_.leftBack.x != stageRect_.leftFront.x) ||
-		(stageRect_.leftBack.x != stageRect_.rightBack.x) ||
-		(stageRect_.leftBack.x != stageRect_.rightFront.x));
-
-	//Z軸
-	assert((stageRect_.leftBack.z != stageRect_.leftFront.z) ||
-		(stageRect_.leftBack.z != stageRect_.rightFront.z)||
-		(stageRect_.rightBack.z != stageRect_.rightFront.z));
-
-
-
 
 	model_.reset(Model::Create(modelHandle));
 	worldTransform_.Initialize();
@@ -67,7 +54,6 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 		speed_.z == 0.0f) {
 		preCondition_ = EnemyCondition::NoneMove;
 		condition_ = EnemyCondition::NoneMove;
-
 	}
 	
 	//攻撃
@@ -79,10 +65,10 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	radius_ = 1.0f;
 
 	//AABBのmax部分に加算する縦横高さのサイズ
-	upSideSize_ = { 1.0f,1.0f,1.0f };
+	upSideSize_ = {.x= radius_ ,.y= radius_ ,.z= radius_ };
 
 	//AABBのmin部分に加算する縦横高さのサイズ
-	downSideSize_ = { 1.0f,1.0f,1.0f };
+	downSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
 
 	//判定
 	//自分
@@ -116,13 +102,6 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 void Enemy::Update(){
 	
-	//更新
-	worldTransform_.Update();
-	material_.Update();
-
-	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
-	aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
-
 
 	//状態
 	switch (condition_) {
@@ -144,14 +123,7 @@ void Enemy::Update(){
 	case EnemyCondition::Move:
 
 		
-		//ステージの外に行けないようにいする
-		if ((GetWorldPosition().x < stageRect_.leftBack.x + radius_) || (GetWorldPosition().x > stageRect_.rightBack.x - radius_)) {
-			speed_.x *= -1.0f;
-		}
-		if ((GetWorldPosition().z < stageRect_.leftFront.z + radius_) || (GetWorldPosition().z > stageRect_.leftBack.z - radius_)) {
-			speed_.z *= -1.0f;
-		}
-
+		
 		attackTime_ = 0;
 		isAttack_ = false;
 
@@ -192,7 +164,7 @@ void Enemy::Update(){
 		preTrackingPlayerPosition_ = playerPosition_;
 		preTrackingPosition_ = GetWorldPosition();
 		
-	
+		
 		#pragma endregion
 
 
@@ -255,8 +227,8 @@ void Enemy::Update(){
 		//4秒経ったらまた0になる
 		if (attackTime_ > 240) {
 			attackTime_ = 0;
-		}
 
+		}
 
 		break;
 
@@ -296,6 +268,10 @@ void Enemy::Update(){
 	//更新
 	worldTransform_.Update();
 	material_.Update();
+
+	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
+	aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
+
 
 
 #ifdef _DEBUG
@@ -365,13 +341,6 @@ Vector3 Enemy::GetWorldPosition() {
 	};
 
 	return result;
-}
-
-void Enemy::SetTranslate(Vector3& translate) {
-	this->worldTransform_.translate_.x = translate.x;
-	this->worldTransform_.translate_.y = translate.y;
-	this->worldTransform_.translate_.z = translate.z;
-
 }
 
 

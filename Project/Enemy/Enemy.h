@@ -83,12 +83,6 @@ public:
 	/// <returns></returns>
 	Vector3 GetWorldPosition()override;
 
-	/// <summary>
-	/// 座標の指定
-	/// </summary>
-	/// <param name="translate"></param>
-	void SetTranslate(Vector3& translate);
-
 #pragma region 座標の設定
 
 
@@ -105,19 +99,6 @@ public:
 
 #pragma endregion
 
-
-#pragma region スピードの反転
-	inline void InvertSpeedX() {
-		this->speed_.x *= -1.0f;
-	}
-	inline void InvertSpeedY() {
-		this->speed_.y *= -1.0f;
-	}
-	inline void InvertSpeedZ() {
-		this->speed_.z *= -1.0f;
-	}
-
-#pragma endregion
 
 
 	/// <summary>
@@ -136,16 +117,6 @@ public:
 		return direction_;
 	}
 
-#pragma region EnemyManagerから取得
-
-	/// <summary>
-	/// プレイヤーの半径
-	/// </summary>
-	/// <param name="radius"></param>
-	void SetPlayerRadius(float& radius) {
-		this->playerRadius_ = radius;
-	}
-
 	/// <summary>
 	/// プレイヤーの座標を設定
 	/// </summary>
@@ -153,21 +124,11 @@ public:
 	void SetPlayerPosition(Vector3& position) {
 		this->playerPosition_ = position;
 	}
-#pragma endregion
-
 
 	inline AABB GetAABB() {
 		return aabb_;
 	}
 
-
-	/// <summary>
-	/// ステージの四隅
-	/// </summary>
-	/// <param name="stageRect"></param>
-	void SetStageRect(StageRect& stageRect) {
-		this->stageRect_ = stageRect;
-	}
 
 
 public:
@@ -195,6 +156,15 @@ public:
 
 	uint32_t GetCondition() const {
 		return condition_;
+	}
+
+
+
+	inline void InvertSpeedX() {
+		speed_.x *= -1.0f;
+	}
+	inline void InvertSpeedZ() {
+		speed_.z *= -1.0f;
 	}
 
 
@@ -271,12 +241,6 @@ private:
 
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
-	//プレイヤーの半径
-	float playerRadius_ = 0.0f;
-
-	//ステージの四隅座標
-	StageRect stageRect_ = {};
-
 
 	//モデル
 	std::unique_ptr<Model> debugModel_ = nullptr;

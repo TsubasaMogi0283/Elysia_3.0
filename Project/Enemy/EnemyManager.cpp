@@ -31,9 +31,8 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
 	Vector3 position1 = { 1.0f,0.0f,4.0f };
-	enemy1->SetStageRect(stageRect_);
 	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemy1->Initialize(modelHandle_, position1, { 0.0001f,0.0f,0.0f });
+	enemy1->Initialize(modelHandle_, position1, { -0.05f,0.0f,0.0f });
 	enemyes_.push_back(enemy1);
 
 		
@@ -190,10 +189,8 @@ void EnemyManager::Update(){
 			
 			}
 
-
 			Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
 			float dot = SingleCalculation::Dot(normalizedDefference, enemyDirection);
-
 
 #ifdef _DEBUG
 			ImGui::Begin("Dot");
@@ -204,6 +201,30 @@ void EnemyManager::Update(){
 			
 			//設定した値より短くなったら接近開始
 			if (condition == EnemyCondition::Move) {
+
+
+				//ステージの端またはステージオブジェクトに当たったら
+				//スピードが反転する
+				
+
+
+				//ステージの端に行ったら反転
+				if ((enemyAABB.min.x < stageRect_.leftBack.x) ||(enemyAABB.max.x > stageRect_.rightBack.x)) {
+					enemy->InvertSpeedX();
+				}
+
+
+				//ステージの外に行けないようにいする
+				//if ((enemy->GetWorldPosition().x < stageRect_.leftBack.x + enemy->GetRadius()) || (enemy->GetWorldPosition().x > stageRect_.rightBack.x - enemy->GetRadius())) {
+				//	enemy->InverseSpeedX();
+				//}
+				//if ((GetWorldPosition().z < stageRect_.leftFront.z + radius_) || (GetWorldPosition().z > stageRect_.leftBack.z - radius_)) {
+				//	speed_.z *= -1.0f;
+				//}
+
+
+
+
 				//追跡準備をする
 				if (projectDefferenceDistance <= TRACKING_START_DISTANCE_&& dot >0.9f) {
 					//前回のMove状態を記録
