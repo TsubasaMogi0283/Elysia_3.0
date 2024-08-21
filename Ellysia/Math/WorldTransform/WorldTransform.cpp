@@ -8,19 +8,21 @@ void WorldTransform::Initialize() {
 	//Resource作成
 	bufferResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(WorldTransformData)).Get();
 
-	//初期
-	scale_ = { 1.0f, 1.0f,1.0f };
-	rotate_ = { 0.0f, 0.0f, 0.0f };
-	translate_ = { 0.0f, 0.0f, 0.0f };
+	//初期値
+	scale_ = { .x = 1.0f,.y = 1.0f,.z = 1.0f };
+	rotate_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+	translate_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
 }
 
 
 void WorldTransform::Update() {
 	//SRT合成
 	worldMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
+
 	//逆転置行列
 	//ワールド行列を逆転置にする
 	Matrix4x4 worldInverseMatrix = Matrix4x4Calculation::Inverse(worldMatrix_);
+	
 	//転置にした
 	worldInverseTransposeMatrix_ = Matrix4x4Calculation::MakeTransposeMatrix(worldInverseMatrix);
 
@@ -29,6 +31,7 @@ void WorldTransform::Update() {
 		worldMatrix_ = Matrix4x4Calculation::Multiply(worldMatrix_, parent_->worldMatrix_);
 	}
 
+	//転送
 	Transfer();
 }
 

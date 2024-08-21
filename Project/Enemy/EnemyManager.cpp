@@ -32,7 +32,7 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	Enemy* enemy1 = new Enemy();
 	Vector3 position1 = { 1.0f,0.0f,4.0f };
 	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemy1->Initialize(modelHandle_, position1, { -0.05f,0.0f,0.0f });
+	enemy1->Initialize(modelHandle_, position1, { 0.00f,0.0f,0.05f });
 	enemyes_.push_back(enemy1);
 
 		
@@ -166,7 +166,7 @@ void EnemyManager::Update(){
 
 			
 
-			//範囲外になったら通常の動きへ
+			//範囲外になったら通常の動きへ。15
 			if (projectDefferenceDistance > TRACKING_START_DISTANCE_) {
 
 				
@@ -208,11 +208,17 @@ void EnemyManager::Update(){
 				
 
 
-				//ステージの端に行ったら反転
+				#pragma region ステージの端に行ったら反転
+				//X
 				if ((enemyAABB.min.x < stageRect_.leftBack.x) ||(enemyAABB.max.x > stageRect_.rightBack.x)) {
 					enemy->InvertSpeedX();
 				}
+				//Z
+				if ((enemyAABB.min.z < stageRect_.leftFront.z) || (enemyAABB.max.z > stageRect_.leftBack.z)) {
+					enemy->InvertSpeedZ();
+				}
 
+				#pragma endregion
 
 				//ステージの外に行けないようにいする
 				//if ((enemy->GetWorldPosition().x < stageRect_.leftBack.x + enemy->GetRadius()) || (enemy->GetWorldPosition().x > stageRect_.rightBack.x - enemy->GetRadius())) {
@@ -225,7 +231,7 @@ void EnemyManager::Update(){
 
 
 
-				//追跡準備をする
+				//追跡準備をする。15
 				if (projectDefferenceDistance <= TRACKING_START_DISTANCE_&& dot >0.9f) {
 					//前回のMove状態を記録
 					uint32_t preCondition = condition;
