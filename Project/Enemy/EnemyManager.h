@@ -8,6 +8,8 @@
 struct Camera;
 struct SpotLight;
 class Player;
+class ObjectManager;
+
 
 class EnemyManager{
 public:
@@ -61,20 +63,31 @@ public:
 	/// プレイヤーの設定
 	/// </summary>
 	/// <param name="player"></param>
-	void SetPlayer(Player* player) {
+	inline void SetPlayer(Player* player) {
 		this->player_=player;
 	}
 	
 	/// <summary>
+	/// オブジェクト管理クラスの設定
+	/// </summary>
+	/// <param name="objectManager"></param>
+	inline void SetObjectManager(ObjectManager* objectManager) {
+		this->objectManager_ = objectManager;
+	}
+
+	/// <summary>
 	/// ステージの四隅を取得
 	/// </summary>
 	/// <param name="stageRect"></param>
-	void SetStageRectangle(StageRect& stageRect) {
+	inline void SetStageRectangle(StageRect& stageRect) {
 		this->stageRect_ = stageRect;
 	}
 
+	
+
 private:
 	Player* player_ = nullptr;
+	ObjectManager* objectManager_ = nullptr;
 
 	//エネミーのリスト
 	std::list<Enemy*>enemyes_ = {};

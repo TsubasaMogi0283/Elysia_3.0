@@ -3,14 +3,16 @@
 #include <cassert>
 
 #include "Player/Player.h"
+#include "Stage/ObjectManager/ObjectManager.h"
 #include <VectorCalculation.h>
 #include <SingleCalculation.h>
 #include <random>
 
 void EnemyManager::Initialize(uint32_t modelhandle){
 	
-	//Playerが空だったら引っかかるようにしている
+	//空だったら引っかかるようにしている
 	assert(player_!=nullptr);
+	assert(objectManager_ != nullptr);
 
 	//Stageの四隅が一つでも同じだったら引っかかるようにしている
 	//X軸
@@ -30,24 +32,21 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 	//TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = { 1.0f,0.0f,4.0f };
+	Vector3 position1 = { 0.0f,0.0f,7.0f };
 	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemy1->Initialize(modelHandle_, position1, { 0.00f,0.0f,0.05f });
+	enemy1->Initialize(modelHandle_, position1, { -0.0f,0.0f,-0.01f });
 	enemyes_.push_back(enemy1);
 
 		
-	//Enemy* enemy2 = new Enemy();
-	//Vector3 position2 = { 0.0f,0.0f,4.0f };
-	//enemy2->SetStageRect(stageRect_);
-	//enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
-	//enemy2->Initialize(modelHandle_, position2, { 0.00f,0.0f,-0.0f });
-	//enemyes_.push_back(enemy2);
-
+	Enemy* enemy2 = new Enemy();
+	Vector3 position2 = { 10.0f,0.0f,18.0f };
+	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
+	enemy2->Initialize(modelHandle_, position2, { -0.02f,0.0f,0.0f });
+	enemyes_.push_back(enemy2);
+	
 	//Enemy* enemy3 = new Enemy();
-	//Vector3 position3 = { -5.0f,0.0f,4.0f };
-	//enemy3->SetStageRect(stageRect_);
-	//
-	//enemy3->Initialize(modelHandle_, position3, { 0.015f,0.0f,0.0f });
+	//Vector3 position3 = { -10.0f,0.0f,4.0f };
+	//enemy3->Initialize(modelHandle_, position3, { 0.01f,0.0f,0.01f });
 	//uint32_t condition = EnemyCondition::Move;
 	//enemy3->SetCondition(condition);
 	//enemy3->SetRadius_(player_->GetRadius());
@@ -79,7 +78,6 @@ void EnemyManager::DeleteEnemy(){
 		}
 		return false;
 	});
-
 }
 
 void EnemyManager::GenarateEnemy() {
@@ -91,7 +89,6 @@ void EnemyManager::GenarateEnemy() {
 	enemy->Initialize(modelHandle_, position1, { 0.0f,0.0f,0.0f });
 	enemy->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy);
-
 }
 
 
@@ -120,12 +117,112 @@ void EnemyManager::Update(){
 	MINIMUM_DISTANCE;
 	
 	
+	//敵はポリモーフィズムでやった方がよさそう
 
-
-
+	//全ての敵
 	for (Enemy* enemy : enemyes_) {
+		//プレイヤーの位置を設定
 		enemy->SetPlayerPosition(playerPosition);
+
+		//更新
 		enemy->Update();
+
+		//AABB
+		AABB enemyAABB = enemy->GetAABB();
+
+		//移動中の時
+		if (enemy->GetCondition() == EnemyCondition::Move) {
+
+			#pragma region ステージの端に行ったら反転
+			//X
+			if ((enemyAABB.min.x < stageRect_.leftBack.x) || (enemyAABB.max.x > stageRect_.rightBack.x)) {
+				enemy->InvertSpeedX();
+			}
+			//Z
+			if ((enemyAABB.min.z < stageRect_.leftFront.z) || (enemyAABB.max.z > stageRect_.leftBack.z)) {
+				enemy->InvertSpeedZ();
+			}
+			#pragma endregion
+
+			#pragma region ステージオブジェクト
+
+			//仮置きのステージオブジェクト
+			std::list<DemoObject*>demoObjects=objectManager_->GetDemoObjets();
+			for (DemoObject* demoObject : demoObjects) {
+
+				//AABBを取得
+				AABB objectAABB = demoObject->GetAABB();
+
+				//位置を取得
+				Vector3 objectPosition = demoObject->GetWorldPosition();
+
+				//オブジェクトとの差分ベクトル
+				Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
+				Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
+
+				//敵の向いている方向
+				Vector3 enemyDirection = enemy->GetDirection();
+
+				//前にある場合だけ計算
+				float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
+
+#ifdef _DEBUG
+				ImGui::Begin("DemoObjectEnemy"); 
+				ImGui::InputFloat("Dot", &dot);
+				ImGui::End();
+#endif // _DEBUG
+
+
+
+				//進行方向上にあるときだけ計算する
+				if (dot > 0.0f) {
+					
+					float em = enemyAABB.min.x;
+					float om = objectAABB.min.x;
+					float eM = enemyAABB.max.x;
+					float oM = objectAABB.max.x;
+
+					em, om, eM, oM;
+
+
+					if (((enemyAABB.max.x > objectAABB.min.x) &&(enemyAABB.min.x < objectAABB.max.x)) &&
+						((enemyAABB.max.z > objectAABB.min.z)&&(enemyAABB.min.z < objectAABB.max.z))) {
+					
+						enemy->InvertSpeedX();
+#ifdef _DEBUG
+						ImGui::Begin("aa"); 
+						ImGui::Text("Inside");
+						ImGui::End();
+#endif // _DEBUG
+
+
+
+					}
+
+
+
+
+				}
+				else {
+					continue;
+
+				}
+
+				
+
+
+			}
+
+			
+
+
+
+
+			#pragma endregion
+
+
+		}
+
 	}
 	
 
@@ -138,7 +235,6 @@ void EnemyManager::Update(){
 		for (Enemy* enemy : enemyes_) {
 			uint32_t condition = enemy->GetCondition();
 
-			//////////////
 
 			//向き
 			Vector3 enemyDirection = enemy->GetDirection();
@@ -207,30 +303,6 @@ void EnemyManager::Update(){
 				//スピードが反転する
 				
 
-
-				#pragma region ステージの端に行ったら反転
-				//X
-				if ((enemyAABB.min.x < stageRect_.leftBack.x) ||(enemyAABB.max.x > stageRect_.rightBack.x)) {
-					enemy->InvertSpeedX();
-				}
-				//Z
-				if ((enemyAABB.min.z < stageRect_.leftFront.z) || (enemyAABB.max.z > stageRect_.leftBack.z)) {
-					enemy->InvertSpeedZ();
-				}
-
-				#pragma endregion
-
-				//ステージの外に行けないようにいする
-				//if ((enemy->GetWorldPosition().x < stageRect_.leftBack.x + enemy->GetRadius()) || (enemy->GetWorldPosition().x > stageRect_.rightBack.x - enemy->GetRadius())) {
-				//	enemy->InverseSpeedX();
-				//}
-				//if ((GetWorldPosition().z < stageRect_.leftFront.z + radius_) || (GetWorldPosition().z > stageRect_.leftBack.z - radius_)) {
-				//	speed_.z *= -1.0f;
-				//}
-
-
-
-
 				//追跡準備をする。15
 				if (projectDefferenceDistance <= TRACKING_START_DISTANCE_&& dot >0.9f) {
 					//前回のMove状態を記録
@@ -269,9 +341,7 @@ void EnemyManager::Update(){
 					//状態を記録
 					condition = EnemyCondition::Attack;
 					enemy->SetCondition(condition);
-			
 				}
-			
 			}
 			
 			//攻撃の時に
@@ -287,9 +357,6 @@ void EnemyManager::Update(){
 					condition = EnemyCondition::Move;
 					enemy->SetCondition(condition);
 				}
-			
-			
-			
 			}
 
 

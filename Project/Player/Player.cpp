@@ -32,7 +32,7 @@ void Player::Initialize(){
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
-	const Vector3 INITIAL_POSITION = { .x=0.0f,.y=0.0f,.z=-10.0f };
+	const Vector3 INITIAL_POSITION = { .x=0.0f,.y=0.0f,.z=-15.0f };
 	worldTransform_.translate_ = INITIAL_POSITION;
 
 	#pragma region 当たり判定について

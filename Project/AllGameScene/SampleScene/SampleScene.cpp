@@ -104,11 +104,12 @@ void SampleScene::Initialize() {
 	
 	enemyManager_ = std::make_unique<EnemyManager>();
 	enemyManager_->SetPlayer(player_);
+	enemyManager_->SetObjectManager(objectManager_);
 	enemyManager_->SetStageRectangle(stageRect);
 	enemyManager_->Initialize(enemyModelHandle_);
 	#pragma endregion
 
-
+	
 
 	#pragma region ライト確認用のタワー
 	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
@@ -330,7 +331,7 @@ void SampleScene::ObjectCollision(){
 
 
 
-	auto demoObjects = objectManager_->GetDemoObjets();
+	std::list <DemoObject*> demoObjects = objectManager_->GetDemoObjets();
 	for (DemoObject* demoObject : demoObjects) {
 		
 		//オブジェクトのAABB
@@ -339,10 +340,6 @@ void SampleScene::ObjectCollision(){
 		//オブジェクトとの差分ベクトル
 		Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(demoObject->GetWorldPosition(), playerPosition_);
 		
-
-
-
-
 		//オブジェクトとプレイヤーの距離
 		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
 		//内積
@@ -434,52 +431,48 @@ void SampleScene::PlayerMove(){
 	isPlayerMove_ = false;
 
 #pragma region キーボード
-//移動
-	//if (isAbleToMovePlayer_ == true) {
-		if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
-			playerMoveDirection_.x = std::cosf(theta_ - std::numbers::pi_v<float> / 2.0f);
-			playerMoveDirection_.z = std::sinf(theta_ - std::numbers::pi_v<float> / 2.0f);
-			//キーボード入力をしている
-			isPlayerMoveKey_ = true;
-			//動いている
-			isPlayerMove_ = true;
+	//移動
+	if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
+		playerMoveDirection_.x = std::cosf(theta_ - std::numbers::pi_v<float> / 2.0f);
+		playerMoveDirection_.z = std::sinf(theta_ - std::numbers::pi_v<float> / 2.0f);
+		//キーボード入力をしている
+		isPlayerMoveKey_ = true;
+		//動いている
+		isPlayerMove_ = true;
 
-		}
-		if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
-			playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float> / 2.0f);
-			playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float> / 2.0f);
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
+		playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float> / 2.0f);
+		playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float> / 2.0f);
 
-			//キーボード入力をしている
-			isPlayerMoveKey_ = true;
-			//動いている
-			isPlayerMove_ = true;
-		}
-		if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
-			playerMoveDirection_.x = std::cosf(theta_);
-			playerMoveDirection_.z = std::sinf(theta_);
+		//キーボード入力をしている
+		isPlayerMoveKey_ = true;
+		//動いている
+		isPlayerMove_ = true;
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+		playerMoveDirection_.x = std::cosf(theta_);
+		playerMoveDirection_.z = std::sinf(theta_);
 
-			//キーボード入力をしている
-			isPlayerMoveKey_ = true;
-			//動いている
-			isPlayerMove_ = true;
-		}
-		if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
-			playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float>);
-			playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float>);
+		//キーボード入力をしている
+		isPlayerMoveKey_ = true;
+		//動いている
+		isPlayerMove_ = true;
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+		playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float>);
+		playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float>);
 
-			//キーボード入力をしている
-			isPlayerMoveKey_ = true;
-			//動いている
-			isPlayerMove_ = true;
-		}
-	//}
+		//キーボード入力をしている
+		isPlayerMoveKey_ = true;
+		//動いている
+		isPlayerMove_ = true;
+	}
 
 
 #pragma endregion
 
 #pragma region コントローラー
-
-
 
 	//接続時
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
@@ -493,9 +486,6 @@ void SampleScene::PlayerMove(){
 				.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
 				.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
 			};
-
-
-
 
 
 			//デッドゾーン
@@ -532,10 +522,7 @@ void SampleScene::PlayerMove(){
 				//向きを代入
 				playerMoveDirection_.x = std::cosf(resultTheta);
 				playerMoveDirection_.z = std::sinf(resultTheta);
-
 			}
-
-
 		}
 	}
 
@@ -598,7 +585,6 @@ void SampleScene::Update(GameManager* gameManager) {
 			howToPlayTextureNumber_ = 1;
 		}
 	}
-
 
 	//ゲーム
 	if (isFadeIn == false && isFadeOut_ == false) {

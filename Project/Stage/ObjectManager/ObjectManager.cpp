@@ -4,9 +4,11 @@ void ObjectManager::Initialize(){
 	
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","cube.obj");
 	
+	//
 
 	DemoObject* demoObject1 = new DemoObject();
-	demoObject1->Initialize(modelHandle);
+	Vector3 demoObjectPosition1 = { .x = 0.0f,.y = 0.0f,.z = 4.0f };
+	demoObject1->Initialize(modelHandle, demoObjectPosition1);
 	demoObjects_.push_back(demoObject1);
 
 	material_.Initialize();

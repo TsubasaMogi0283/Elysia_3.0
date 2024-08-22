@@ -25,7 +25,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	//マテリアルの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
-	material_.color_ = { 0.0f,1.0f,1.0f,1.0f };
+	//material_.color_ = { 0.0f,1.0f,1.0f,1.0f };
 
 	//生存か死亡
 	isAlive_ = true;
@@ -324,6 +324,7 @@ void Enemy::OnCollision() {
 	if (color_.y < 0.0f &&
 		color_.z < 0.0f) {
 		isAttack_ = false;
+		isAlive_ = false;
 	}
 
 

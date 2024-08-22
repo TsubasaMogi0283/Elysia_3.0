@@ -20,7 +20,8 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="modelHandle"></param>
-	void Initialize(uint32_t& modelHandle);
+	/// <param name="position"></param>
+	void Initialize(uint32_t& modelHandle,const Vector3& position);
 
 	/// <summary>
 	/// 更新
