@@ -163,37 +163,50 @@ void EnemyManager::Update(){
 				//敵の向いている方向
 				Vector3 enemyDirection = enemy->GetDirection();
 
-				//前にある場合だけ計算
-				float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
+				
+
+
+
+
+				if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
+					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
+
+					//前にある場合だけ計算
+					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
+
+
+
+
+					
+
+					//進行方向上にあるときだけ計算する
+					if (dot > 0.0f) {
+
+						//差分ベクトルのXとZの大きさを比べ
+							//値が大きい方で反転させる
+						float defferenceValueX = std::abs(defference.x);
+						float defferenceValueZ = std::abs(defference.z);
+
+
+						if (defferenceValueX >= defferenceValueZ) {
+							enemy->InvertSpeedX();
+						}
+						else {
+							enemy->InvertSpeedZ();
+						}
+
+
 
 #ifdef _DEBUG
-				ImGui::Begin("DemoObjectEnemy"); 
-				ImGui::InputFloat("Dot", &dot);
-				ImGui::End();
-#endif // _DEBUG
+						ImGui::Begin("DemoObjectEnemy");
+						ImGui::InputFloat("Dot", &dot);
+						ImGui::InputFloat3("defference", &defference.x);
+						ImGui::InputFloat("defferenceValueX", &defferenceValueX);
+						ImGui::InputFloat("defferenceValueZ", &defferenceValueZ);
 
-
-
-				//進行方向上にあるときだけ計算する
-				if (dot > 0.0f) {
-					
-					float em = enemyAABB.min.x;
-					float om = objectAABB.min.x;
-					float eM = enemyAABB.max.x;
-					float oM = objectAABB.max.x;
-
-					em, om, eM, oM;
-
-
-					if (((enemyAABB.max.x > objectAABB.min.x) &&(enemyAABB.min.x < objectAABB.max.x)) &&
-						((enemyAABB.max.z > objectAABB.min.z)&&(enemyAABB.min.z < objectAABB.max.z))) {
-					
-						enemy->InvertSpeedX();
-#ifdef _DEBUG
-						ImGui::Begin("aa"); 
-						ImGui::Text("Inside");
 						ImGui::End();
 #endif // _DEBUG
+
 
 
 
@@ -201,14 +214,17 @@ void EnemyManager::Update(){
 
 
 
+					
+
+
 
 				}
 				else {
 					continue;
-
 				}
 
-				
+
+
 
 
 			}
