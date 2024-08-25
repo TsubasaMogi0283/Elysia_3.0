@@ -13,7 +13,7 @@ void ObjectManager::Initialize(){
 
 
 
-	uint32_t treeModelHandle = 0;
+	uint32_t treeModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/tree_3D","tree1.fbx");
 
 	Tree* tree1 = new Tree();
 	Vector3 treePosition = { 4.0,0.0f,5.0f };
