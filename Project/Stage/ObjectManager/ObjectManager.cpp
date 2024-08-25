@@ -11,6 +11,18 @@ void ObjectManager::Initialize(){
 	demoObject1->Initialize(modelHandle, demoObjectPosition1);
 	demoObjects_.push_back(demoObject1);
 
+
+
+	uint32_t treeModelHandle = 0;
+
+	Tree* tree1 = new Tree();
+	Vector3 treePosition = { 4.0,0.0f,5.0f };
+	tree1->Initialize(treeModelHandle, treePosition);
+	trees_.push_back(tree1);
+
+
+
+
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
 }
@@ -21,15 +33,25 @@ void ObjectManager::Update(){
 		demoObject->Update();
 	}
 
+	//木の更新
+	for (Tree* tree : trees_) {
+		tree->Update();
+	}
+
 	//マテリアルの更新
 	material_.Update();
 }
 
 void ObjectManager::Draw(Camera& camera, SpotLight& spotLight){
 
-	//DemoObject更新
+	//DemoObjectの描画
 	for (DemoObject* demoObject : demoObjects_) {
 		demoObject->Draw(camera,material_,spotLight);
+	}
+
+	//木の描画
+	for (Tree* tree : trees_) {
+		tree->Draw(camera,material_,spotLight);
 	}
 
 }
@@ -40,5 +62,11 @@ ObjectManager::~ObjectManager(){
 	for (DemoObject* demoObject : demoObjects_) {
 		delete demoObject;
 	}
+
+	//木
+	for (Tree* tree : trees_) {
+		delete tree;
+	}
+
 
 }

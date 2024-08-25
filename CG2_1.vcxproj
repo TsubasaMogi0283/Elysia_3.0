@@ -202,6 +202,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Stage\Ground\Ground.cpp" />
     <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp" />
     <ClCompile Include="Project\Stage\Skydome\Skydome.cpp" />
+    <ClCompile Include="Project\Stage\StageObject\Tree\Tree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\AnimationObject3D\AnimationObject3D.PS.hlsl">
@@ -481,6 +482,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Stage\Ground\StageRect.h" />
     <ClInclude Include="Project\Stage\ObjectManager\ObjectManager.h" />
     <ClInclude Include="Project\Stage\Skydome\Skydome.h" />
+    <ClInclude Include="Project\Stage\StageObject\StageObject.h" />
+    <ClInclude Include="Project\Stage\StageObject\Tree\Tree.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

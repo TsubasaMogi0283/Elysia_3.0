@@ -5,7 +5,8 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
-#include <Stage/DemoObject/DemoObject.h>
+#include "Stage/DemoObject/DemoObject.h"
+#include "Stage/StageObject/Tree/Tree.h"
 
 //LevelEditorでステージを作るつもり
 
@@ -56,8 +57,12 @@ public:
 private:
 	//各オブジェクトをリストにするかも
 	Material material_ = {};
+	
+	//デモ用オブジェクト
 	std::list <DemoObject*> demoObjects_ = {};
 
+	//木
+	std::list <Tree*> trees_ = {};
 
 };
 
