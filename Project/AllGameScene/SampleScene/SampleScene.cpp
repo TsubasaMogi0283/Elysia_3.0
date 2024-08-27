@@ -51,8 +51,8 @@ void SampleScene::Initialize() {
 
 
 
-	uint32_t escapeTexturehandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/EscapeText.png");
-	escapeText_.reset(Sprite::Create(escapeTexturehandle, { .x = 0.0f,.y = 0.0f }));
+	uint32_t escapeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/EscapeText.png");
+	escapeText_.reset(Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	//最初は非表示にする
 	escapeText_->SetInvisible(true);
 	#pragma endregion
@@ -201,6 +201,11 @@ void SampleScene::Initialize() {
 	
 	playerHPBackFrame_.reset(Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
 	currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
+
+
+	//ゴールに向かえのテキスト
+	uint32_t toEscapeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/ToGoal.png");
+	toEscape_.reset(Sprite::Create(toEscapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 
 #pragma endregion
 
@@ -825,9 +830,9 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 		#pragma region 鍵の取得処理
-		uint32_t keyQuantity = keyManager_->GetKeyQuantity();
+		keyQuantity_ = keyManager_->GetKeyQuantity();
 		//鍵が0より多ければ通る
-		if (keyQuantity > 0) {
+		if (keyQuantity_ > 0) {
 			KeyCollision();
 		}
 		else {
@@ -1024,6 +1029,9 @@ void SampleScene::DrawSprite(){
 		//プレイヤーの体力(アイコン型)
 		for (uint32_t i = 0u; i < currentDisplayHP_; ++i) {
 			playerHP_[i]->Draw();
+		}
+		if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
+			toEscape_->Draw();
 		}
 
 		

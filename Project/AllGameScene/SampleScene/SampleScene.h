@@ -239,6 +239,9 @@ private:
 	uint32_t lackOfKeyesNumber_ = 0u;
 
 
+	std::unique_ptr<Sprite> toEscape_ = nullptr;
+
+
 #pragma region フェード
 
 	std::unique_ptr<Sprite> fadeSprite_ = nullptr;
