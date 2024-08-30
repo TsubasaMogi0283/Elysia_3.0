@@ -88,16 +88,8 @@ private:
 
 
 
-	//画像読み込み
-	
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU_[TEXTURE_MAX_AMOUNT_] = {};
-	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_[TEXTURE_MAX_AMOUNT_] = {};
-
-
-
-
-
 	//構造体版
+	//mapにしたい
 	//array...stdの配列版。その名前の通り配列だよね
 	std::array<TextureInformation, TEXTURE_MAX_AMOUNT_> textureInformation_{};
 

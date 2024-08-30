@@ -31,6 +31,14 @@ public:
 	~Tree()=default ;
 
 public:
+	/// <summary>
+	/// 葉のモデルを追加
+	/// </summary>
+	/// <param name="leefModelHandle"></param>
+	void SetLeefModelHandle(uint32_t& leefModelHandle) {
+		this->leefModelHandle_ = leefModelHandle;
+	}
+
 
 	/// <summary>
 	/// ワールド座標を取得
@@ -46,5 +54,12 @@ public:
 
 
 
+
+
+private:
+
+	//StageObjectは基本1個のモデルだけどこれのクラスでは例外で+1個必要
+	std::unique_ptr<Model> leefModel_ = nullptr;
+	uint32_t leefModelHandle_ = 0u;
 };
 

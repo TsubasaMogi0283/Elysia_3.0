@@ -365,10 +365,6 @@ void SampleScene::ObjectCollision(){
 
 		}
 
-
-
-		
-
 	}
 	
 

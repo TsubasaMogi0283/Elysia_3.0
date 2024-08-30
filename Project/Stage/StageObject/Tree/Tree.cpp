@@ -1,10 +1,14 @@
 #include "Tree.h"
 
 void Tree::Initialize(uint32_t& modelHandle, Vector3& position){
+	//モデルの作成
 	model_.reset(Model::Create(modelHandle));
+	leefModel_.reset(Model::Create(leefModelHandle_));
 
-	//ワールドトランスフォーム
+	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
+	const float SIZE = 1.5f;
+	worldTransform_.scale_ = { .x = SIZE ,.y = SIZE ,.z = SIZE };
 	worldTransform_.translate_ = position;
 
 
@@ -24,13 +28,11 @@ void Tree::Initialize(uint32_t& modelHandle, Vector3& position){
 void Tree::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
-
-
-
 }
 
 void Tree::Draw(Camera& camera, Material& material, SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera, material, spotLight);
+	leefModel_->Draw(worldTransform_, camera, material, spotLight);
 }
 
 Vector3 Tree::GetWorldPosition(){

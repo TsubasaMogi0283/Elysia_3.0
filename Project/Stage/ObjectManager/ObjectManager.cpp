@@ -14,14 +14,21 @@ void ObjectManager::Initialize(){
 
 
 	//uint32_t treeModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/tree_3D","tree1.fbx");
-	uint32_t treeModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube", "cube.obj");
-
+	uint32_t leefmodelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/tree_3D/Tree1", "Leef1.obj");
+	uint32_t trunkModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/tree_3D/Tree1", "Trunk1.obj");
+	
 
 	Tree* tree1 = new Tree();
 	Vector3 treePosition = { 4.0,0.0f,5.0f };
-	tree1->Initialize(treeModelHandle, treePosition);
+	tree1->SetLeefModelHandle(leefmodelHandle);
+	tree1->Initialize(trunkModelHandle, treePosition);
 	trees_.push_back(tree1);
 
+	Tree* tree2 = new Tree();
+	Vector3 treePosition2 = { -4.0,0.0f,-8.0f };
+	tree2->SetLeefModelHandle(leefmodelHandle);
+	tree2->Initialize(trunkModelHandle, treePosition2);
+	trees_.push_back(tree2);
 
 
 
