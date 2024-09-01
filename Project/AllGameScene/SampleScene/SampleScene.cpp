@@ -768,7 +768,7 @@ void SampleScene::Update(GameManager* gameManager) {
 			//いずれこれもCollisionManagerに入れるつもり
 			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
 
-				//enemy->OnCollision();
+				enemy->OnCollision();
 
 
 #ifdef _DEBUG
