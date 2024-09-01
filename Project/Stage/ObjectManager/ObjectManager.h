@@ -48,11 +48,17 @@ public:
 	/// DemoObjectリストの取得
 	/// </summary>
 	/// <returns></returns>
-	std::list <DemoObject*> GetDemoObjets()const {
+	inline std::list <DemoObject*> GetDemoObjets()const {
 		return demoObjects_;
 	}
 
-
+	/// <summary>
+	/// 木のリストを取得
+	/// </summary>
+	/// <returns></returns>
+	inline std::list <Tree*> GetTrees()const {
+		return trees_;
+	}
 
 private:
 	//各オブジェクトをリストにするかも

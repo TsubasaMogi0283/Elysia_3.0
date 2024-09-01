@@ -158,7 +158,7 @@ private:
 	float p = 0.0f;
 	Vector3 pp = {};
 	
-	float dot = 0.0f;
+	
 
 	//プレイヤー
 	Player* player_ = nullptr;

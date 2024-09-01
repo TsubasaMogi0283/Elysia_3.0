@@ -335,7 +335,7 @@ void SampleScene::ObjectCollision(){
 	AABB playerAABB = player_->GetAABB();
 
 
-
+	//デモ用
 	std::list <DemoObject*> demoObjects = objectManager_->GetDemoObjets();
 	for (DemoObject* demoObject : demoObjects) {
 		
@@ -348,7 +348,7 @@ void SampleScene::ObjectCollision(){
 		//オブジェクトとプレイヤーの距離
 		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
 		//内積
-		dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
+		float dot  = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
 
 		//衝突判定
 		//だいたい内積は0.7くらいが良さそう
@@ -368,6 +368,38 @@ void SampleScene::ObjectCollision(){
 	}
 	
 
+
+	//木
+	std::list <Tree*> trees = objectManager_->GetTrees();
+	for (Tree* tree : trees) {
+
+		//オブジェクトのAABB
+		AABB objectAABB = tree->GetAABB();
+
+		//オブジェクトとの差分ベクトル
+		Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(tree->GetWorldPosition(), playerPosition_);
+
+		//オブジェクトとプレイヤーの距離
+		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
+		//内積
+		float dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
+
+		//衝突判定
+		//だいたい内積は0.7くらいが良さそう
+		if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
+			(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z) &&
+			(dot > 0.7f)) {
+			uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+			player_->SetPlayerMoveCondition(newCondition);
+
+		}
+		else {
+			uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+			player_->SetPlayerMoveCondition(newCondition);
+
+		}
+
+	}
 	
 }
 

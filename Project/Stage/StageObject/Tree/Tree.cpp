@@ -11,9 +11,9 @@ void Tree::Initialize(uint32_t& modelHandle, Vector3& position){
 	worldTransform_.scale_ = { .x = SIZE ,.y = SIZE ,.z = SIZE };
 	worldTransform_.translate_ = position;
 
-
-	Vector3 min = {};
-	Vector3 max = {};
+	const float INTERVAL = 1.0f;
+	Vector3 min = { .x = INTERVAL,.y = INTERVAL,.z = INTERVAL };
+	Vector3 max = { .x = INTERVAL,.y = INTERVAL,.z = INTERVAL };
 
 	aabb_.min.x = position.x - min.x;
 	aabb_.min.y = position.y - min.y;
