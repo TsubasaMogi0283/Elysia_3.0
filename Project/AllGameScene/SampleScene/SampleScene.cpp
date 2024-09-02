@@ -350,11 +350,13 @@ void SampleScene::ObjectCollision(){
 			(dot > 0.7f)) {
 			uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
 			player_->SetPlayerMoveCondition(newCondition);
+			break;
 
 		}
 		else {
 			uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
 			player_->SetPlayerMoveCondition(newCondition);
+			continue;
 
 		}
 

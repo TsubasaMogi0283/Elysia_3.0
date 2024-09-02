@@ -3,7 +3,7 @@
 void Tree::Initialize(uint32_t& modelHandle, Vector3& position){
 	//モデルの作成
 	model_.reset(Model::Create(modelHandle));
-	leefModel_.reset(Model::Create(leefModelHandle_));
+	//leefModel_.reset(Model::Create(leefModelHandle_));
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -32,7 +32,7 @@ void Tree::Update(){
 
 void Tree::Draw(Camera& camera, Material& material, SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera, material, spotLight);
-	leefModel_->Draw(worldTransform_, camera, material, spotLight);
+	//leefModel_->Draw(worldTransform_, camera, material, spotLight);
 }
 
 Vector3 Tree::GetWorldPosition(){
