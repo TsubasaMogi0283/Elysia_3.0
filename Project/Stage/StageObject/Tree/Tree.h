@@ -5,12 +5,18 @@
 
 class Tree :public StageObject{
 public:
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	Tree() = default;
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="modelHandle"></param>
 	/// <param name="position"></param>
-	void Initialize(uint32_t& modelHandle, Vector3& position) override;
+	void Initialize(const uint32_t& modelHandle,const Vector3& position) override;
 
 	/// <summary>
 	/// 更新
@@ -25,19 +31,14 @@ public:
 	/// <param name="spotLight"></param>
 	void Draw(Camera& camera, Material& material, SpotLight& spotLight) override;
 
+
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Tree()=default ;
+	~Tree() =default;
+
 
 public:
-	/// <summary>
-	/// 葉のモデルを追加
-	/// </summary>
-	/// <param name="leefModelHandle"></param>
-	void SetLeefModelHandle(uint32_t& leefModelHandle) {
-		this->leefModelHandle_ = leefModelHandle;
-	}
 
 
 	/// <summary>
@@ -60,6 +61,5 @@ private:
 
 	//StageObjectは基本1個のモデルだけどこれのクラスでは例外で+1個必要
 	std::unique_ptr<Model> leefModel_ = nullptr;
-	uint32_t leefModelHandle_ = 0u;
 };
 

@@ -1,9 +1,10 @@
 #include "Tree.h"
 
-void Tree::Initialize(uint32_t& modelHandle, Vector3& position){
+void Tree::Initialize(const uint32_t& modelHandle,const Vector3& position){
 	//モデルの作成
 	model_.reset(Model::Create(modelHandle));
-	//leefModel_.reset(Model::Create(leefModelHandle_));
+	uint32_t leefmodelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/tree_3D/Tree1", "Leef1.obj");
+	leefModel_.reset(Model::Create(leefmodelHandle));
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -32,8 +33,9 @@ void Tree::Update(){
 
 void Tree::Draw(Camera& camera, Material& material, SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera, material, spotLight);
-	//leefModel_->Draw(worldTransform_, camera, material, spotLight);
+	leefModel_->Draw(worldTransform_, camera, material, spotLight);
 }
+
 
 Vector3 Tree::GetWorldPosition(){
 	Vector3 position = {
@@ -47,3 +49,5 @@ Vector3 Tree::GetWorldPosition(){
 AABB Tree::GetAABB(){
 	return aabb_;
 }
+
+

@@ -350,13 +350,14 @@ void SampleScene::ObjectCollision(){
 			(dot > 0.7f)) {
 			uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
 			player_->SetPlayerMoveCondition(newCondition);
+			//当たったらループを抜ける
 			break;
 
 		}
 		else {
+			//当たっていない
 			uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
 			player_->SetPlayerMoveCondition(newCondition);
-			continue;
 
 		}
 
@@ -386,6 +387,7 @@ void SampleScene::ObjectCollision(){
 	//		(dot > 0.7f)) {
 	//		uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
 	//		player_->SetPlayerMoveCondition(newCondition);
+	//		break;
 	//
 	//	}
 	//	else {

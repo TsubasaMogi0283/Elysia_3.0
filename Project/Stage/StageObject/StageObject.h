@@ -5,6 +5,9 @@
 #include <WorldTransform.h>
 #include <AABB.h>
 
+
+#include "StageObject.h"
+
 struct Camera;
 struct Material;
 struct SpotLight;
@@ -16,7 +19,7 @@ public:
 	/// </summary>
 	/// <param name="modelHandle"></param>
 	/// <param name="position"></param>
-	virtual void Initialize(uint32_t& modelHandle,Vector3& position) = 0;
+	virtual void Initialize(const uint32_t& modelHandle,const Vector3& position) = 0;
 
 	/// <summary>
 	/// 更新
@@ -30,6 +33,11 @@ public:
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
 	virtual void Draw(Camera& camera, Material& material, SpotLight& spotLight)=0;
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	virtual ~StageObject() = default;
 
 
 public:

@@ -1,20 +1,24 @@
 #include "DemoObject.h"
 
 
-void DemoObject::Initialize(uint32_t& modelHandle,const Vector3& position){
+void DemoObject::Initialize(const uint32_t& modelHandle,const Vector3& position){
 	model_.reset(Model::Create(modelHandle));
 
 	//ワールドトランスフォーム
 	worldTransform_.Initialize();
 	worldTransform_.translate_ = position;
 
-	aabb_.min.x = position.x - radius_;
-	aabb_.min.y = position.y - radius_;
-	aabb_.min.z = position.z - radius_;
+	const float INTERVAL = 1.0f;
+	Vector3 min = { .x = INTERVAL,.y = INTERVAL,.z = INTERVAL };
+	Vector3 max = { .x = INTERVAL,.y = INTERVAL,.z = INTERVAL };
 
-	aabb_.max.x = position.x + radius_;
-	aabb_.max.y = position.y + radius_;
-	aabb_.max.z = position.z + radius_;
+	aabb_.min.x = position.x - min.x;
+	aabb_.min.y = position.y - min.y;
+	aabb_.min.z = position.z - min.z;
+
+	aabb_.max.x = position.x + max.x;
+	aabb_.max.y = position.y + max.y;
+	aabb_.max.z = position.z + max.z;
 
 }
 
@@ -22,15 +26,6 @@ void DemoObject::Update(){
 	
 
 	worldTransform_.Update();
-
-	aabb_.min.x = GetWorldPosition().x - radius_;
-	aabb_.min.y = GetWorldPosition().y - radius_;
-	aabb_.min.z = GetWorldPosition().z - radius_;
-
-	aabb_.max.x = GetWorldPosition().x + radius_;
-	aabb_.max.y = GetWorldPosition().y + radius_;
-	aabb_.max.z = GetWorldPosition().z + radius_;
-	
 
 }
 
@@ -45,5 +40,9 @@ Vector3 DemoObject::GetWorldPosition(){
 		.z = worldTransform_.worldMatrix_.m[3][2],
 	};
 	return position;
+}
+
+AABB DemoObject::GetAABB(){
+	return aabb_;
 }
 

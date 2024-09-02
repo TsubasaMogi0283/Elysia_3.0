@@ -52,23 +52,17 @@ public:
 		return demoObjects_;
 	}
 
-	/// <summary>
-	/// 木のリストを取得
-	/// </summary>
-	/// <returns></returns>
-	inline std::list <Tree*> GetTrees()const {
-		return trees_;
-	}
 
 private:
 	//各オブジェクトをリストにするかも
 	Material material_ = {};
 	
+	//ステージオブジェクト
+	std::list<StageObject*> stageObjects_{};
+
 	//デモ用オブジェクト
 	std::list <DemoObject*> demoObjects_ = {};
 
-	//木
-	std::list <Tree*> trees_ = {};
 
 };
 
