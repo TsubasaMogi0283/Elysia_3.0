@@ -212,13 +212,6 @@ void SampleScene::Initialize() {
 
 
 
-	//testSphere_ = new Sphere();
-	//testSphere_->Initialize();
-	//testSphereTransform_ = { { 1.0f,1.0f,1.0f },{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f }};
-	//testSphreShape_ = { {.x=0.0f,.y=1.0f,.z=0.0f},3.0f };
-
-
-
 	isGamePlay_ = false;
 	isExplain_ = false;
 	
@@ -369,37 +362,37 @@ void SampleScene::ObjectCollision(){
 	
 
 
-	//木
-	std::list <Tree*> trees = objectManager_->GetTrees();
-	for (Tree* tree : trees) {
-
-		//オブジェクトのAABB
-		AABB objectAABB = tree->GetAABB();
-
-		//オブジェクトとの差分ベクトル
-		Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(tree->GetWorldPosition(), playerPosition_);
-
-		//オブジェクトとプレイヤーの距離
-		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
-		//内積
-		float dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
-
-		//衝突判定
-		//だいたい内積は0.7くらいが良さそう
-		if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
-			(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z) &&
-			(dot > 0.7f)) {
-			uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
-			player_->SetPlayerMoveCondition(newCondition);
-
-		}
-		else {
-			uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
-			player_->SetPlayerMoveCondition(newCondition);
-
-		}
-
-	}
+	////木
+	//std::list <Tree*> trees = objectManager_->GetTrees();
+	//for (Tree* tree : trees) {
+	//
+	//	//オブジェクトのAABB
+	//	AABB objectAABB = tree->GetAABB();
+	//
+	//	//オブジェクトとの差分ベクトル
+	//	Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(tree->GetWorldPosition(), playerPosition_);
+	//
+	//	//オブジェクトとプレイヤーの距離
+	//	Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
+	//	//内積
+	//	float dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
+	//
+	//	//衝突判定
+	//	//だいたい内積は0.7くらいが良さそう
+	//	if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
+	//		(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z) &&
+	//		(dot > 0.7f)) {
+	//		uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+	//		player_->SetPlayerMoveCondition(newCondition);
+	//
+	//	}
+	//	else {
+	//		uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+	//		player_->SetPlayerMoveCondition(newCondition);
+	//
+	//	}
+	//
+	//}
 	
 }
 
@@ -800,7 +793,7 @@ void SampleScene::Update(GameManager* gameManager) {
 			//いずれこれもCollisionManagerに入れるつもり
 			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
 
-				enemy->OnCollision();
+				//enemy->OnCollision();
 
 
 #ifdef _DEBUG
