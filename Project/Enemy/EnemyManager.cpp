@@ -53,14 +53,7 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 	enemyes_.push_back(enemy3);
 	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\TD2_Enemy\TD2_Enemy.obj"
 
-	//モデル
-	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
 	
-
-	debugModel_.reset(Model::Create(debugModelHandle));
-
-	debugModelWorldTransform_.Initialize();
-	debugModelWorldTransform_.scale_ = { 0.5f,0.5f,0.5f };
 
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
@@ -93,8 +86,6 @@ void EnemyManager::GenarateEnemy() {
 
 
 void EnemyManager::Update(){
-
-
 #ifdef _DEBUG
 	//Gキーで出す
 	if (Input::GetInstance()->IsTriggerKey(DIK_G) == true) {
@@ -102,8 +93,6 @@ void EnemyManager::Update(){
 	}
 
 #endif
-
-
 
 	//接近するときの距離
 	const float TRACKING_START_DISTANCE_ = 15.0f;
@@ -114,7 +103,6 @@ void EnemyManager::Update(){
 	Vector3 playerPosition = player_->GetWorldPosition();
 	const float ATTACK_DISTANCE_OFFSET = 0.0f;
 	float MINIMUM_DISTANCE = player_->GetRadius() +1.0f + ATTACK_DISTANCE_OFFSET;
-	MINIMUM_DISTANCE;
 	
 	
 	//敵はポリモーフィズムでやった方がよさそう
@@ -122,8 +110,12 @@ void EnemyManager::Update(){
 	//全ての敵
 	for (Enemy* enemy : enemyes_) {
 		//プレイヤーの位置を設定
-		enemy->SetPlayerPosition(playerPosition);
+		//使っているのはPreTrackingしかないので
+		if (enemy->GetCondition() == EnemyCondition::PreTracking) {
+			enemy->SetPlayerPosition(playerPosition);
 
+		}
+		
 		//更新
 		enemy->Update();
 
@@ -147,26 +139,29 @@ void EnemyManager::Update(){
 			#pragma region ステージオブジェクト
 
 			//仮置きのステージオブジェクト
-			std::list<DemoObject*>demoObjects=objectManager_->GetDemoObjets();
-			for (DemoObject* demoObject : demoObjects) {
+			std::list<StageObject*>stageObjects=objectManager_->GetStageObjets();
+			for (StageObject* stageObject : stageObjects) {
 
 				//AABBを取得
-				AABB objectAABB = demoObject->GetAABB();
+				AABB objectAABB = stageObject->GetAABB();
 
 				//位置を取得
-				Vector3 objectPosition = demoObject->GetWorldPosition();
+				Vector3 objectPosition = stageObject->GetWorldPosition();
 
-				//オブジェクトとの差分ベクトル
-				Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
-				Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
-
-				//敵の向いている方向
-				Vector3 enemyDirection = enemy->GetDirection();
-
+				
 				
 				//お互いのAABBが接触している場合
 				if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
 					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
+					//オブジェクトとの差分ベクトル
+					Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
+					Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
+
+
+					//敵の向いている方向
+					Vector3 enemyDirection = enemy->GetDirection();
+
+
 
 					//前にある場合だけ計算
 					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
@@ -203,13 +198,6 @@ void EnemyManager::Update(){
 
 					}
 				}
-				else {
-					continue;
-				}
-
-
-
-
 
 			}
 
@@ -220,13 +208,12 @@ void EnemyManager::Update(){
 
 	}
 	
-
 	//現在の敵の数
 	uint32_t enemyAmount = static_cast<uint32_t>(enemyes_.size());
 
 	//1体だけの時
 	//衝突判定をやる必要が無いからね
-	if (enemyAmount == 1) {
+	if (enemyAmount == 1u) {
 		for (Enemy* enemy : enemyes_) {
 			uint32_t condition = enemy->GetCondition();
 
@@ -372,18 +359,9 @@ void EnemyManager::Update(){
 		}
 	}
 
-
-
 	//1体より多い時
-	if (enemyAmount > 1) {
-		
-
-		//イテレーターは同時に始める
-		//一致したらcontinueで次のループで
-
+	if (enemyAmount > 1u) {
 		for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
-
-
 
 			//AABB
 			aabb[0] = (*it1)->GetAABB();
@@ -392,6 +370,9 @@ void EnemyManager::Update(){
 			//向き
 			Vector3 direction = (*it1)->GetDirection();
 
+			//内積
+			float dot = 0.0f;
+
 			for (std::list<Enemy*>::iterator it2 = enemyes_.begin(); it2 != enemyes_.end(); ++it2) {
 
 				//it1とit2が一致した場合は計算をせずに次のループへ
@@ -399,10 +380,10 @@ void EnemyManager::Update(){
 					continue;
 				}
 
-
+				//2体目のAABBを取得
 				aabb[1] = (*it2)->GetAABB();
 
-				//そもそも衝突していないなら計算する必要が無い
+				//接触している場合
 				if ((aabb[0].min.x < aabb[1].max.x && aabb[0].max.x > aabb[1].min.x) &&
 					(aabb[0].min.y < aabb[1].max.y && aabb[0].max.y > aabb[1].min.y) &&
 					(aabb[0].min.z < aabb[1].max.z && aabb[0].max.z > aabb[1].min.z)) {
@@ -416,13 +397,10 @@ void EnemyManager::Update(){
 					//内積
 					//進行方向の前にいると+
 					Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
-					dot_ = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
+					dot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
 
 
 					break;
-				}
-				else {
-					continue;
 				}
 
 
@@ -438,8 +416,9 @@ void EnemyManager::Update(){
 
 
 			//前方にいた場合
-			if (dot_ > 0.0f && condition == EnemyCondition::Move) {
+			if (dot > 0.0f && condition == EnemyCondition::Move) {
 				//接触した場合
+				//止まる
 				if ((aabb[0].min.x < aabb[1].max.x && aabb[0].max.x > aabb[1].min.x) &&
 					(aabb[0].min.y < aabb[1].max.y && aabb[0].max.y > aabb[1].min.y) &&
 					(aabb[0].min.z < aabb[1].max.z && aabb[0].max.z > aabb[1].min.z)) {
@@ -458,8 +437,6 @@ void EnemyManager::Update(){
 
 					//前の状態を保存
 					(*it1)->SetPreCondition(condition);
-					//スピードの保存
-					//(*it1)->SaveSpeed();
 					//状態の変更
 					(*it1)->SetCondition(newCondition);
 				}
@@ -486,21 +463,15 @@ void EnemyManager::Update(){
 						(*it1)->SetPreCondition(preCondition);
 
 						//状態を記録
-						//condition = EnemyCondition::PreTracking;
-						//(*it1)->SetCondition(condition);
+						condition = EnemyCondition::PreTracking;
+						(*it1)->SetCondition(condition);
 					}
 				}
 
 				//追跡の時に
 				if (condition == EnemyCondition::Tracking) {
-
-
-
 					//Moveへ
 					if (playerEnemyDistance > TRACKING_START_DISTANCE_) {
-
-
-
 						//前回のMove状態を記録
 						uint32_t preCondition = condition;
 						(*it1)->SetPreCondition(preCondition);
@@ -523,42 +494,13 @@ void EnemyManager::Update(){
 						(*it1)->SetCondition(condition);
 
 					}
-
 				}
-
 			}
-
-
-
-
-
-			
-
-			
-
 		}
 	}
-	
-
-
-
-	material_.Update();
-#ifdef _DEBUG
-	debugModelWorldTransform_.Update();
-
-#endif // _DEBUG
-
-	
-	
-
 }
 
 void EnemyManager::Draw(Camera& camera, SpotLight& spotLight){
-#ifdef _DEBUG
-	debugModel_->Draw(debugModelWorldTransform_, camera, material_, spotLight);
-
-#endif // _DEBUG
-
 
 	//描画
 	for (Enemy* enemy : enemyes_) {

@@ -98,7 +98,7 @@ private:
 	
 
 
-	float dot_ = 0.0f;
+	
 
 	AABB aabb[2] = {};
 
@@ -107,8 +107,6 @@ private:
 	StageRect stageRect_ = {};
 
 	//モデル
-	std::unique_ptr<Model> debugModel_ = nullptr;
-	WorldTransform debugModelWorldTransform_ = {};
 	Material material_ = {};
 };
 

@@ -45,12 +45,6 @@ public:
 	AABB GetAABB() override;
 
 
-private:
-	//各オブジェクトをリストにするかも
-	WorldTransform worldTransform_ = {};
-	std::unique_ptr<Model>model_ = nullptr;
-
-
 
 
 };

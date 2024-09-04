@@ -48,8 +48,8 @@ public:
 	/// DemoObjectリストの取得
 	/// </summary>
 	/// <returns></returns>
-	inline std::list <DemoObject*> GetDemoObjets()const {
-		return demoObjects_;
+	inline std::list <StageObject*> GetStageObjets()const {
+		return stageObjects_;
 	}
 
 
@@ -60,8 +60,6 @@ private:
 	//ステージオブジェクト
 	std::list<StageObject*> stageObjects_{};
 
-	//デモ用オブジェクト
-	std::list <DemoObject*> demoObjects_ = {};
 
 
 };

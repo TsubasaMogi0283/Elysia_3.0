@@ -98,7 +98,6 @@ void SampleScene::Initialize() {
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
 #ifdef _DEBUG
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube", "Cube.obj");
-	//enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD2_Enemy", "TD2_Enemy.obj");
 #endif // _DEBUG
 
 	
@@ -329,17 +328,17 @@ void SampleScene::ObjectCollision(){
 
 
 	//デモ用
-	std::list <DemoObject*> demoObjects = objectManager_->GetDemoObjets();
-	for (DemoObject* demoObject : demoObjects) {
+	std::list <StageObject*> stageObjects = objectManager_->GetStageObjets();
+	for (StageObject* stageObject : stageObjects) {
 		
 		//オブジェクトのAABB
-		AABB objectAABB = demoObject->GetAABB();
+		AABB objectAABB = stageObject->GetAABB();
 
 		//オブジェクトとの差分ベクトル
-		Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(demoObject->GetWorldPosition(), playerPosition_);
+		Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(stageObject->GetWorldPosition(), playerPosition_);
 		
 		//オブジェクトとプレイヤーの距離
-		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
+		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
 		//内積
 		float dot  = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
 
@@ -364,39 +363,6 @@ void SampleScene::ObjectCollision(){
 	}
 	
 
-
-	////木
-	//std::list <Tree*> trees = objectManager_->GetTrees();
-	//for (Tree* tree : trees) {
-	//
-	//	//オブジェクトのAABB
-	//	AABB objectAABB = tree->GetAABB();
-	//
-	//	//オブジェクトとの差分ベクトル
-	//	Vector3 demoObjectAndPlayerDifference = VectorCalculation::Subtract(tree->GetWorldPosition(), playerPosition_);
-	//
-	//	//オブジェクトとプレイヤーの距離
-	//	Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(demoObjectAndPlayerDifference);
-	//	//内積
-	//	float dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
-	//
-	//	//衝突判定
-	//	//だいたい内積は0.7くらいが良さそう
-	//	if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
-	//		(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z) &&
-	//		(dot > 0.7f)) {
-	//		uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
-	//		player_->SetPlayerMoveCondition(newCondition);
-	//		break;
-	//
-	//	}
-	//	else {
-	//		uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
-	//		player_->SetPlayerMoveCondition(newCondition);
-	//
-	//	}
-	//
-	//}
 	
 }
 

@@ -172,10 +172,6 @@ public:
 		preSpeed_ = speed_;
 	}
 
-	inline void TakeOutSpeed() {
-		speed_ = preSpeed_;
-	}
-
 
 #pragma region 攻撃用
 
@@ -236,6 +232,7 @@ private:
 	//攻撃
 	int32_t attackTime_ = 0;
 
+	//AABB
 	AABB aabb_ = {};
 
 
