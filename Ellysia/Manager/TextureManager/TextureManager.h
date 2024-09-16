@@ -64,8 +64,6 @@ private:
 
 
 public:
-	static const int TEXTURE_MAX_AMOUNT_ = 256;
-
 
 
 	struct TextureInformation {
@@ -74,8 +72,8 @@ public:
 		ComPtr<ID3D12Resource> resource_ = nullptr;
 		ComPtr<ID3D12Resource> internegiateResource_ = nullptr;
 
-		DirectX::ScratchImage mipImages_;
-		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc_;
+		DirectX::ScratchImage mipImages_ = {};
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc_ = {};
 
 
 		//読み込んだテクスチャの名前
@@ -86,8 +84,11 @@ public:
 	};
 
 
-	// テクスチャ情報を取得/設定するアクセサ関数
-	std::map<std::string, TextureInformation>& GetTextureInformation() {
+	/// <summary>
+	/// テクスチャ情報を取得/設定する
+	/// </summary>
+	/// <returns></returns>
+	inline std::map<std::string, TextureInformation>& GetTextureInformation() {
 		return textureInformation_;
 	}
 

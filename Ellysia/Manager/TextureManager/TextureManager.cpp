@@ -85,7 +85,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 	// 読み込んだデータをmapに保存
 	textureManager->GetTextureInformation()[filePath] = std::move(textureInfo);
 
-	TextureManager::GetInstance()->handleToFilePathMap_[index_] = filePath; // handle-to-filePathマップに保存
+	TextureManager::GetInstance()->handleToFilePathMap_[index_] = filePath; 
 
 	return textureInfo.handle_;
 }
