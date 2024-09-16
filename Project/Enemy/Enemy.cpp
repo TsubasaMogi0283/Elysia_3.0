@@ -129,11 +129,6 @@ void Enemy::Update(){
 
 
 
-
-		#ifdef _DEBUG
-		ImGui::Begin("Move");
-		ImGui::End();
-		#endif // DEBUG
 		//通常の動き
 		t_ = 0.0f;
 		preTrackingPlayerPosition_ = {};
@@ -155,10 +150,6 @@ void Enemy::Update(){
 		isAttack_ = false;
 		#pragma region 追跡準備
 	
-		#ifdef _DEBUG
-			ImGui::Begin("PreTracking");
-			ImGui::End();
-		#endif // DEBUG
 	
 		//取得したら追跡
 		preTrackingPlayerPosition_ = playerPosition_;

@@ -244,7 +244,7 @@ void EnemyManager::Update(){
 
 			
 
-			//範囲外になったら通常の動きへ。15
+			//範囲外になったら通常の動きへ。
 			if (projectDefferenceDistance > TRACKING_START_DISTANCE_) {
 
 				
@@ -258,13 +258,6 @@ void EnemyManager::Update(){
 #endif // _DEBUG
 
 
-			}
-			else {
-				#ifdef _DEBUG
-				ImGui::Begin("AAAAAA"); 
-				ImGui::End();
-				#endif // _DEBUG
-			
 			}
 
 			Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
