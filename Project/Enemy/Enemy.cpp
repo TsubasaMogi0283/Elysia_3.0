@@ -102,7 +102,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 void Enemy::Update(){
 	
-
+	const float SPEED_AMOUNT = 0.05f;
 	//状態
 	switch (condition_) {
 		//何もしない
@@ -112,7 +112,6 @@ void Enemy::Update(){
 		ImGui::End();
 		#endif // DEBUG
 		
-		t_ = 0.0f;
 		attackTime_ = 0;
 		preTrackingPlayerPosition_ = {};
 		preTrackingPosition_ = {};
@@ -130,7 +129,6 @@ void Enemy::Update(){
 
 
 		//通常の動き
-		t_ = 0.0f;
 		preTrackingPlayerPosition_ = {};
 		preTrackingPosition_ = {};
 		if (speed_.x != 0.0f ||
@@ -171,21 +169,20 @@ void Enemy::Update(){
 
 
 #ifdef _DEBUG
-			ImGui::Begin("Tracking");
-			ImGui::End();
+		ImGui::Begin("Tracking");
+		ImGui::End();
 #endif // DEBUG
 
-		//線形補間で移動する
-		t_ += 0.005f;
-		worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
 
 
 		//向きを求める
 		direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_, preTrackingPosition_);
 		direction_ = VectorCalculation::Normalize(direction_);
 
+		//加算
+		Vector3 speedVelocity = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
+		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speedVelocity);
 
-		
 
 		break;
 	
@@ -269,7 +266,6 @@ void Enemy::Update(){
 	float degreeRotateY = directionToRotateY * (180.0f / std::numbers::pi_v<float>);
 
 	ImGui::Begin("敵");
-	ImGui::InputFloat("T", &t_);
 	ImGui::InputFloat3("direction_", &direction_.x);
 	ImGui::InputFloat("RotateY", &degreeRotateY);
 	

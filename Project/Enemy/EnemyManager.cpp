@@ -229,128 +229,73 @@ void EnemyManager::Update(){
 			//プレイヤーと敵の差分ベクトル
 			//対象にするものがプレイヤーなのでプレイヤーから引いてね
 			Vector3 defference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
+			//距離
 			float defferenceDistance = SingleCalculation::Length(defference);
 
 
 			//正射影ベクトル
 			Vector3 projectDifference = VectorCalculation::Project(defference, enemyDirection);
-			float projectDefferenceDistance = SingleCalculation::Length(projectDifference);
-
-			
-			//プレイヤーと敵の間隔
-			const float PLAYER_ENEMY_INTERVAL = player_->GetRadius() + enemy->GetRadius();
-			PLAYER_ENEMY_INTERVAL;
-
 
 			
 
-			//範囲外になったら通常の動きへ。
-			if (projectDefferenceDistance > TRACKING_START_DISTANCE_) {
-
-				
-
-				condition = EnemyCondition::Move;
-				enemy->SetCondition(condition);
-
-#ifdef _DEBUG
-				ImGui::Begin("ChangeMove"); 
-				ImGui::End();
-#endif // _DEBUG
-
-
-			}
 
 			Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
 			float dot = SingleCalculation::Dot(normalizedDefference, enemyDirection);
 
-#ifdef _DEBUG
-			ImGui::Begin("Dot");
-			ImGui::InputFloat("Value", &dot);
-			ImGui::End();
-#endif // _DEBUG
-
 			
-			//設定した値より短くなったら接近開始
-			if (condition == EnemyCondition::Move) {
 
+			if (dot > 0.8f) {
+				if ((defferenceDistance < TRACKING_START_DISTANCE_ && defferenceDistance>ATTACK_START_DISTANCE_)
+					&& condition == EnemyCondition::Move) {
 
-				//ステージの端またはステージオブジェクトに当たったら
-				//スピードが反転する
+					//前の状態を保存
+					enemy->SetPreCondition(condition);
+
+					//現在の状態を保存
+					uint32_t newCondition = EnemyCondition::PreTracking;
+					enemy->SetPlayerPosition(playerPosition);
+					enemy->SetCondition(newCondition);
+				}
+
+				//追跡している時
+				if (defferenceDistance <= ATTACK_START_DISTANCE_ && condition == EnemyCondition::Tracking) {
+					//前の状態を保存
+					enemy->SetPreCondition(condition);
+
+					//現在の状態を保存
+					uint32_t newCondition = EnemyCondition::Attack;
+					enemy->SetCondition(newCondition);
+				}
+				//攻撃中にプレイヤーが離れた時
+				if (defferenceDistance > ATTACK_START_DISTANCE_ && condition == EnemyCondition::Attack) {
+					//前の状態を保存
+					enemy->SetPreCondition(condition);
+
+					//現在の状態を保存
+					uint32_t newCondition = EnemyCondition::Move;
+					enemy->SetCondition(newCondition);
+				}
 				
 
-				//追跡準備をする。15
-				if (projectDefferenceDistance <= TRACKING_START_DISTANCE_&& dot >0.9f) {
-					//前回のMove状態を記録
-					uint32_t preCondition = condition;
-					enemy->SetPreCondition(preCondition);
-					enemy->SaveSpeed();
-					//状態を記録
-					condition = EnemyCondition::PreTracking;
-					enemy->SetCondition(condition);
-				}
 			}
-			
-			//追跡の時に
-			if (condition == EnemyCondition::Tracking) {
-				//進行方向にいない場合
-				//Moveへ
-				if ((projectDefferenceDistance > TRACKING_START_DISTANCE_ ) && (dot <= 0.9f)) {
-			
-					//前回のMove状態を記録
-					uint32_t preCondition = condition;
-					enemy->SetPreCondition(preCondition);
-					
-					//状態を記録
-					condition = EnemyCondition::Move;
-					enemy->SetCondition(condition);
-			
-				}
-			
-				//設定した値より短くなったら攻撃開始
-				if (projectDefferenceDistance <= ATTACK_START_DISTANCE_ &&
-					MINIMUM_DISTANCE < projectDefferenceDistance) {
-					//前回のMove状態を記録
-					uint32_t preCondition = condition;
-					enemy->SetPreCondition(preCondition);
-			
-					//状態を記録
-					condition = EnemyCondition::Attack;
-					enemy->SetCondition(condition);
-				}
-			}
-			
-			//攻撃の時に
-			if (condition == EnemyCondition::Attack) {
-				//攻撃し終わった後距離が離れていれば通常の動きに戻る
-				if ((projectDefferenceDistance >= MINIMUM_DISTANCE)) {
-			
-					//前回の記録
-					uint32_t preCondition = condition;
-					enemy->SetPreCondition(preCondition);
-			
-					//状態を記録
-					condition = EnemyCondition::Move;
-					enemy->SetCondition(condition);
-				}
+			//前方にいなければ強制的にMove
+			else {
+				//前の状態を保存
+				enemy->SetPreCondition(condition);
+				//現在の状態を保存
+				uint32_t newCondition = EnemyCondition::Move;
+				enemy->SetCondition(newCondition);
 			}
 
-
-#ifdef _DEBUG
-
-			int32_t debugCondition = static_cast<uint32_t>(condition);
-			int32_t debugPreCondition = static_cast<uint32_t>(enemy->GetPreCondition());
-
-			ImGui::Begin("Enemy1"); 
-			ImGui::InputFloat3("Difference", &defference.x);
-			ImGui::InputFloat("defferenceDistance", &defferenceDistance);
-			ImGui::InputFloat3("projectDifference", &projectDifference.x);
-			ImGui::InputFloat("Distance", &projectDefferenceDistance);
-			ImGui::InputInt("Condition", &debugCondition);
-			ImGui::InputInt("PreCondition", &debugPreCondition);
-			ImGui::End();
-#endif // _DEBUG
 		}
 	}
+
+
+
+
+
+
+
 
 	//1体より多い時
 	if (enemyAmount > 1u) {

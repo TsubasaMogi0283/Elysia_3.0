@@ -227,7 +227,6 @@ private:
 
 	//向き
 	Vector3 direction_ = {};
-	float t_ = 0.0f;
 
 	//攻撃
 	int32_t attackTime_ = 0;
