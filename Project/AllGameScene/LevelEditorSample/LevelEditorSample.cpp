@@ -46,11 +46,6 @@ void LevelEditorSample::DrawPostEffect()
 }
 
 void LevelEditorSample::DrawSprite(){
-	title_->Draw();
-
-	
-	text_->Draw();
-	
 
 
 }

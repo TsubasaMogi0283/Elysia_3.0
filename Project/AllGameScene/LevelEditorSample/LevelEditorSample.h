@@ -57,5 +57,8 @@ public:
 
 private:
 
+	Camera camera_ = {};
+
+
 };
 
