@@ -183,6 +183,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Polygon\PostEffect\SepiaScale\SepiaScale.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\Vignette\Vignette.cpp" />
     <ClCompile Include="Project\AllGameScene\GameManager\GameManager.cpp" />
+    <ClCompile Include="Project\AllGameScene\LevelEditorSample\LevelEditorSample.cpp" />
     <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp" />
     <ClCompile Include="Project\AllGameScene\SampleScene2\SampleScene2.cpp" />
     <ClCompile Include="Project\AllGameScene\SampleScene\SampleScene.cpp" />
@@ -460,6 +461,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="External\nlohmann\json_fwd.hpp" />
     <ClInclude Include="Project\AllGameScene\GameManager\GameManager.h" />
     <ClInclude Include="Project\AllGameScene\GameManager\IGameScene.h" />
+    <ClInclude Include="Project\AllGameScene\LevelEditorSample\LevelEditorSample.h" />
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h" />
     <ClInclude Include="Project\AllGameScene\SampleScene2\SampleScene2.h" />
     <ClInclude Include="Project\AllGameScene\SampleScene\SampleScene.h" />

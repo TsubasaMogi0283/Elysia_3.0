@@ -319,6 +319,9 @@
     <Filter Include="Project\ObjectManager\StageObject\Tree">
       <UniqueIdentifier>{5a44d3e4-b20b-4e25-b81a-9f359069b5ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\GameScene\LevelEditorSample">
+      <UniqueIdentifier>{cb24ff76-ddbd-45d1-b26d-09fce883e618}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -548,6 +551,9 @@
     </ClCompile>
     <ClCompile Include="Project\Stage\StageObject\Tree\Tree.cpp">
       <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\LevelEditorSample\LevelEditorSample.cpp">
+      <Filter>Project\GameScene\LevelEditorSample</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -975,6 +981,9 @@
     </ClInclude>
     <ClInclude Include="Project\Stage\StageObject\Tree\Tree.h">
       <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\LevelEditorSample\LevelEditorSample.h">
+      <Filter>Project\GameScene\LevelEditorSample</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
