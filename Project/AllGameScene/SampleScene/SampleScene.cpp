@@ -10,6 +10,11 @@
 #include <numbers>
 #include <TextureManager.h>
 #include <SingleCalculation.h>
+#include "SampleScene.h"
+#include <imgui.h>
+#include <Input.h>
+#include <AdjustmentItems.h>
+
 
 
 void SampleScene::Initialize() {

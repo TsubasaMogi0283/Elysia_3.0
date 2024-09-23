@@ -11,7 +11,7 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 
-void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
+void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 	//"objects"の全オブジェクトを走査
 	for (nlohmann::json& object : objects) {
 		//各オブジェクトに必ずtypeが入っているよ
@@ -25,9 +25,9 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 		if (type.compare("MESH") == 0) {
 			//要素追加
 			//emplace_backというとvectorだね！
-			levelData->objects.emplace_back(LevelData::ObjectData{});
+			levelData.objects.emplace_back(LevelData::ObjectData{});
 			//今追加した要素の参照を得る
-			LevelData::ObjectData& objectData = levelData->objects.back();
+			LevelData::ObjectData& objectData = levelData.objects.back();
 			//ここでのファイルネームはオブジェクトの名前
 			if (object.contains("file_name")) {
 				//ファイル名
@@ -77,7 +77,7 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 
 
 			if (object.contains("children")) {
-				RecursiveLoad(object["children"]);
+				Place(object["children"], levelData);
 			}
 
 		}
@@ -85,15 +85,22 @@ void LevelDataManager::RecursiveLoad(nlohmann::json& objects) {
 
 }
 
-void LevelDataManager::Initialize(const std::string& directoryPath) {
-	for (auto& objectData : levelData->objects) {
+void LevelDataManager::Ganarate(LevelData& levelData) {
+
+	std::string levelEditorDirectoryPath = "Resources/LevelData/";
+
+	std::string levelDataFolder = {};
+	levelDataFolder;
+	//for()
+
+	for (auto& objectData : levelData.objects) {
 		//first,secondとあるからmapかも
 		decltype(models_)::iterator it = models_.find(objectData.fileName);
 
 		//まだ読み込みがされていない場合読み込む
 		if (it == models_.end()) {
 			Model* model = nullptr;
-			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(directoryPath, objectData.fileName);
+			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.fileName);
 			model = Model::Create(modelHandle);
 			models_[objectData.fileName] = model;
 		}
@@ -114,14 +121,15 @@ void LevelDataManager::Initialize(const std::string& directoryPath) {
 }
 
 
-void LevelDataManager::Load(const std::string& directoryPath, const std::string& fileName){
+void LevelDataManager::Load(const std::string& filePath){
 
 	//ファイルストリーム
 	std::ifstream file;
 
 	//ファイルを開く
-	std::string filePath = directoryPath + "/" + fileName ;
-	file.open(filePath);
+	std::string levelEditorDirectoryPath = "Resources/LevelData/";
+	std::string filePathString = levelEditorDirectoryPath + filePath ;
+	file.open(filePathString);
 
 	if (file.fail()) {
 		assert(0);
@@ -146,27 +154,40 @@ void LevelDataManager::Load(const std::string& directoryPath, const std::string&
 	//正しいレベルデータファイルはチェック
 	assert(name.compare("scene") == 0);
 
-	//レベルデータ格納用インスlタンスを生成
-	levelData = new LevelData();
-
-	//読み込み(再帰機能付き)
-	RecursiveLoad(deserialized["objects"]);
-
-	//初期化
-	Initialize(directoryPath);
+	//レベルデータ格納用インスタンスを生成
+	levelDatas_[filePathString] = new LevelData();
+	
 	
 
+	std::string folderName = {};
+	std::string fileName = {};
+	size_t slashPosition = filePath.find('/');
+
+	if (slashPosition != std::string::npos) {
+		//0からslashPositionまで
+		folderName = filePath.substr(0, slashPosition);
+		//「/」から最後まで
+		fileName = filePath.substr(slashPosition + 1);
+	}
+	
+
+
+	levelDatas_[filePathString]->folderName = folderName;
+	levelDatas_[filePathString]->fileName = fileName;
+
+	LevelData& levelData = *levelDatas_[filePathString];
+
+	//読み込み(再帰機能付き)
+	Place(deserialized["objects"], levelData);
+	
+	//生成
+	Ganarate(levelData);
+
 }
 
 
 
 
-void LevelDataManager::GenarateLevelData(const std::string& name){
-	name;
-
-	//levelDatas_.
-
-}
 
 void LevelDataManager::Update(){
 	//ワールドトランスフォームの更新
@@ -178,7 +199,7 @@ void LevelDataManager::Update(){
 
 void LevelDataManager::Draw(Camera& camera, Material& material, DirectionalLight& directionalLight){
 	uint32_t count = 0;
-	for (auto& objectData : levelData->objects) {
+	for (auto& objectData : levelDatas_.begin()->second->objects) {
 		//ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
 		decltype(models_)::iterator it = models_.find(objectData.fileName);
@@ -196,7 +217,7 @@ void LevelDataManager::Draw(Camera& camera, Material& material, DirectionalLight
 
 void LevelDataManager::Draw(Camera& camera, Material& material, PointLight& pointLight){
 	uint32_t count = 0;
-	for (auto& objectData : levelData->objects) {
+	for (auto& objectData : levelDatas_.begin()->second->objects) {
 		//ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
 		decltype(models_)::iterator it = models_.find(objectData.fileName);
@@ -214,7 +235,7 @@ void LevelDataManager::Draw(Camera& camera, Material& material, PointLight& poin
 
 void LevelDataManager::Draw(Camera& camera, Material& material, SpotLight& spotLight){
 	uint32_t count = 0;
-	for (auto& objectData : levelData->objects) {
+	for (auto& objectData : levelDatas_.begin()->second->objects) {
 		//ファイル名から登録済みモデルを検索
 		Model* model = nullptr;
 		decltype(models_)::iterator it = models_.find(objectData.fileName);
@@ -233,7 +254,6 @@ void LevelDataManager::Draw(Camera& camera, Material& material, SpotLight& spotL
 
 
 LevelDataManager::~LevelDataManager(){
-
 	for (auto& pair : models_) {
 		delete pair.second;
 	}
@@ -244,5 +264,8 @@ LevelDataManager::~LevelDataManager(){
 	}
 	worldTransforms_.clear();
 
-	delete levelData;
+	for (auto& pair : levelDatas_) {
+		delete pair.second;
+	}
+	levelDatas_.clear();
 }

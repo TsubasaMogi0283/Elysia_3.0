@@ -27,32 +27,14 @@ public:
 
 	
 
-private:
-	/// <summary>
-	/// 再帰的な読み込み
-	/// </summary>
-	void RecursiveLoad(nlohmann::json& objects);
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="directoryPath"></param>
-	void Initialize(const std::string& directoryPath);
 
 public:
 
 	/// <summary>
 	/// レベルデータの読み込み
 	/// </summary>
-	/// <param name="directoryPath">ResourcesのLevelData</param>
-	/// <param name="fileName">jsonファイル</param>
-	void Load(const std::string& directoryPath, const std::string& fileName);
-
-	/// <summary>
-	/// レベルデータのグループを作る
-	/// </summary>
-	/// <param name="name"></param>
-	void GenarateLevelData(const std::string& name);
+	/// <param name="filePath">jsonファイル</param>
+	void Load(const std::string& filePath);
 
 	/// <summary>
 	/// 更新
@@ -99,12 +81,12 @@ private:
 
 	struct LevelData {
 		struct ObjectData {
-			//ファイル名
+			//オブジェクトのファイル名
 			std::string fileName;
 			//Transform
-			Vector3 translation;
-			Vector3 rotation;
 			Vector3 scaling;
+			Vector3 rotation;
+			Vector3 translation;
 
 			//コライダー
 			std::string colliderType;
@@ -118,6 +100,11 @@ private:
 		//ファイルパス
 		std::string filePath;
 
+		//フォルダ名
+		std::string folderName;
+		//ファイル名
+		std::string fileName;
+
 
 	};
 
@@ -126,16 +113,25 @@ private:
 	std::map<std::string,Model*> models_;
 
 	std::vector<WorldTransform*> worldTransforms_;
-	LevelData* levelData = nullptr;
+	//LevelData* levelData = nullptr;
+
+private:
+	/// <summary>
+	/// 位置決め
+	/// </summary>
+	void Place(nlohmann::json& objects, LevelData& levelData);
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="directoryPath"></param>
+	void Ganarate(LevelData& levelData);
+
+
 private:
 
 	//ここにデータを入れていく
 	std::map<std::string ,LevelData*> levelDatas_;
-
-
-
-
-
 
 };
 

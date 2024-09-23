@@ -2,6 +2,7 @@
 #include "SampleScene/SampleScene.h"
 #include "SampleScene2/SampleScene2.h"
 #include "TitleScene/TitleScene.h"
+#include "LevelEditorSample/LevelEditorSample.h"
 
 //シーンファクトリー作った方がよさそう
 
@@ -10,7 +11,7 @@ void GameManager::Initialize() {
 	currentGamaScene_ = new TitleScene();
 
 #ifdef _DEBUG
-	currentGamaScene_ = new SampleScene();
+	currentGamaScene_ = new LevelEditorSample();
 #endif // _DEBUG
 
 	//初期化
