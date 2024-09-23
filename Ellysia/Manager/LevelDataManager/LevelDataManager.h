@@ -41,6 +41,8 @@ public:
 	/// </summary>
 	void Update();
 
+#pragma region 描画
+
 	/// <summary>
 	/// 描画(平行光源)
 	/// </summary>
@@ -66,7 +68,7 @@ public:
 	void Draw(Camera& camera,Material & material,SpotLight& spotLight);
 
 
-
+#pragma endregion
 
 	/// <summary>
 	/// デストラクタ
@@ -97,8 +99,6 @@ private:
 		//オブジェクト
 		std::vector<ObjectData> objects;
 
-		//ファイルパス
-		std::string filePath;
 
 		//フォルダ名
 		std::string folderName;
@@ -113,7 +113,6 @@ private:
 	std::map<std::string,Model*> models_;
 
 	std::vector<WorldTransform*> worldTransforms_;
-	//LevelData* levelData = nullptr;
 
 private:
 	/// <summary>

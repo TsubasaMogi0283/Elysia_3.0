@@ -12,6 +12,8 @@
 #include "SpotLight.h"
 
 void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
+
+
 	//"objects"の全オブジェクトを走査
 	for (nlohmann::json& object : objects) {
 		//各オブジェクトに必ずtypeが入っているよ
