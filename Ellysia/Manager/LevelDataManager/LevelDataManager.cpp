@@ -65,18 +65,24 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 
 			//コライダーの読み込み
-			nlohmann::json& collider = object["collider"];
+			//まずあるかどうか
+			if (object.contains("collider")) {
+				nlohmann::json& collider = object["collider"];
 
-			objectData.colliderType = object["type"];
-			//中心座標
-			objectData.center.x = (float)collider["center"][1];
-			objectData.center.y = (float)collider["center"][2];
-			objectData.center.z = -(float)collider["center"][0];
-			//サイズ
-			objectData.size.x = (float)collider["size"][1];
-			objectData.size.y = (float)collider["size"][2];
-			objectData.size.z = (float)collider["size"][0];
+				// コライダーの種別を取得
+				if (collider.contains("type")) {
+					objectData.colliderType = collider["type"];  // ここで正しいコライダータイプを取得
+				}
 
+				//中心座標
+				objectData.center.x = (float)collider["center"][1];
+				objectData.center.y = (float)collider["center"][2];
+				objectData.center.z = -(float)collider["center"][0];
+				//サイズ
+				objectData.size.x = (float)collider["size"][1];
+				objectData.size.y = (float)collider["size"][2];
+				objectData.size.z = (float)collider["size"][0];
+			}
 
 			if (object.contains("children")) {
 				Place(object["children"], levelData);
@@ -89,11 +95,9 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 void LevelDataManager::Ganarate(LevelData& levelData) {
 
-	std::string levelEditorDirectoryPath = "Resources/LevelData/";
+	std::string levelEditorDirectoryPath = "Resources/LevelData/"+ levelData.folderName;
 
-	std::string levelDataFolder = {};
-	levelDataFolder;
-	//for()
+
 
 	for (auto& objectData : levelData.objects) {
 		//first,secondとあるからmapかも
@@ -102,7 +106,8 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 		//まだ読み込みがされていない場合読み込む
 		if (it == models_.end()) {
 			Model* model = nullptr;
-			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.fileName);
+			std::string modelPath = objectData.fileName ;
+			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, modelPath);
 			model = Model::Create(modelHandle);
 			models_[objectData.fileName] = model;
 		}
@@ -199,6 +204,8 @@ void LevelDataManager::Update(){
 
 }
 
+#pragma region 描画
+
 void LevelDataManager::Draw(Camera& camera, Material& material, DirectionalLight& directionalLight){
 	uint32_t count = 0;
 	for (auto& objectData : levelDatas_.begin()->second->objects) {
@@ -253,7 +260,7 @@ void LevelDataManager::Draw(Camera& camera, Material& material, SpotLight& spotL
 	}
 }
 
-
+#pragma endregion
 
 LevelDataManager::~LevelDataManager(){
 	for (auto& pair : models_) {

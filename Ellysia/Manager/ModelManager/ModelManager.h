@@ -48,7 +48,7 @@ private:
 	/// <param name="fileNameFolder"></param>
 	/// <param name="fileName"></param>
 	/// <returns></returns>
-	static ModelData LoadFileFotLeveldata(const std::string& fileNameFolder, const std::string& fileName);
+	static ModelData LoadFileForLeveldata(const std::string& fileNameFolder, const std::string& fileName);
 
 public:
 

@@ -17,7 +17,7 @@ void LevelEditorSample::Initialize(){
 	levelEditor_ = new LevelDataManager();
 	//levelEditor_->Load("Resources/LevelData/LevelData1", "TL1TestFor13.json");
 
-	levelEditor_->Load("Test/LevelEditor.json");
+	levelEditor_->Load("Test/Test.json");
 
 	directionalLight_.Initialize();
 	
@@ -27,10 +27,22 @@ void LevelEditorSample::Initialize(){
 
 	//カメラ
 	camera_.Initialize();
-	camera_.translate_ = { 0.0f,0.0f,-9.8f };
+	camera_.translate_ = { 0.0f,0.0f,-30.0f };
+
+	back_ = std::make_unique<BackText>();
+	back_->Initialize();
+
 }
 
 void LevelEditorSample::Update(GameManager* gameManager){
+
+
+#ifdef _DEBUG
+	ImGui::Begin("Camera"); 
+	ImGui::SliderFloat3("Position", &camera_.translate_.x, -50.0f, 50.0f);
+	ImGui::End();
+#endif // _DEBUG
+
 
 
 	gameManager;
@@ -55,8 +67,8 @@ void LevelEditorSample::PreDrawPostEffectFirst(){
 	back_->PreDraw();
 }
 
-void LevelEditorSample::DrawPostEffect()
-{
+void LevelEditorSample::DrawPostEffect(){
+	back_->Draw();
 }
 
 void LevelEditorSample::DrawSprite(){
@@ -64,6 +76,6 @@ void LevelEditorSample::DrawSprite(){
 
 }
 
-LevelEditorSample::~LevelEditorSample()
-{
+LevelEditorSample::~LevelEditorSample(){
+	delete levelEditor_;
 }
