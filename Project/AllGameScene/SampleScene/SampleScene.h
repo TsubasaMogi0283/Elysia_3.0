@@ -88,9 +88,6 @@ public:
 	~SampleScene();
 
 
-private:
-	
-
 
 private:
 
@@ -154,10 +151,6 @@ private:
 	std::unique_ptr<BackText> back_ = nullptr;
 
 
-	float t = 0.0f;
-	float p = 0.0f;
-	Vector3 pp = {};
-	
 	
 
 	//プレイヤー

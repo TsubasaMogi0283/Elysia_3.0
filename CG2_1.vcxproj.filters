@@ -319,6 +319,9 @@
     <Filter Include="Project\GameScene\LevelEditorSample">
       <UniqueIdentifier>{cb24ff76-ddbd-45d1-b26d-09fce883e618}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Enemy\StrongEnemy">
+      <UniqueIdentifier>{53f59d92-040d-4e5f-a0f1-6da83d07e9ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -551,6 +554,9 @@
     </ClCompile>
     <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp">
       <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\10Days_Grade3\Project\AllGameScene\GameScene\GameAudioScene\StrongEnemy.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -981,6 +987,12 @@
     </ClInclude>
     <ClInclude Include="Project\Stage\StageObject\Tree\Tree.h">
       <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\10Days_Grade3\Project\AllGameScene\GameScene\GameAudioScene\StrongEnemy.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\EnemyCondition.h">
+      <Filter>Project\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,29 +9,13 @@
 #include "Stage/Ground/StageRect.h"
 #include "EnemyAttackCollision.h"
 #include "AABB.h"
+#include "EnemyCondition.h"
 
 struct Camera;
 struct SpotLight;
 class Player;
 
-//後々StatePatternで分けるつもり
-enum EnemyCondition {
-	//何もしない
-	NoneMove,
-	//通常
-	Move,
-	//追いかけ始めるときの座標
-	PreTracking,
-	//追いかける
-	Tracking,
-	//攻撃
-	Attack,
 
-	//速度反転
-	InverseSpeed,
-
-
-};
 
 class Enemy :public Collider{
 public:

@@ -596,17 +596,6 @@ void DirectXSetup::SecondInitialize() {
 	//RenderTargetViewの設定
 	GenarateFence();
 
-
-	//DXCの初期化
-	////ShaderCompile
-	//ShaderはHLSLによって記述されているが、GPUが解釈できる形ではない
-	//一度DXIL(DirectX Intermediate Language)というドライバ用の形式に変換され、
-	//ドライバがGPU用のバイナリに変更しやっと実行されるよ。手間だね。
-	// 
-	// DXC(DirectX Shader Compiler)がHLSLからDXILにするCompilerである
-	//
-
-
 	
 
 	

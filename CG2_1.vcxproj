@@ -127,6 +127,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\10Days_Grade3\Project\AllGameScene\GameScene\GameAudioScene\StrongEnemy.cpp" />
     <ClCompile Include="Ellysia\AdjustmentItems\AdjustmentItems.cpp" />
     <ClCompile Include="Ellysia\Audio\Audio.cpp" />
     <ClCompile Include="Ellysia\Camera\Camera.cpp" />
@@ -378,6 +379,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\10Days_Grade3\Project\AllGameScene\GameScene\GameAudioScene\StrongEnemy.h" />
     <ClInclude Include="Ellysia\AdjustmentItems\AdjustmentItems.h" />
     <ClInclude Include="Ellysia\Audio\Audio.h" />
     <ClInclude Include="Ellysia\Audio\AudioStruct.h" />
@@ -471,6 +473,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Collider\CollisionManager.h" />
     <ClInclude Include="Project\Enemy\Enemy.h" />
     <ClInclude Include="Project\Enemy\EnemyAttackCollision.h" />
+    <ClInclude Include="Project\Enemy\EnemyCondition.h" />
     <ClInclude Include="Project\Enemy\EnemyManager.h" />
     <ClInclude Include="Project\Key\Key.h" />
     <ClInclude Include="Project\Key\KeyManager.h" />
