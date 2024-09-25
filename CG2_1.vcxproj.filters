@@ -537,9 +537,6 @@
     <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp">
       <Filter>Project\ObjectManager</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp">
       <Filter>Project\GameScene\Lose</Filter>
     </ClCompile>
@@ -551,6 +548,9 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\LevelDataManager\LevelDataManager.cpp">
       <Filter>Ellysia\Source File\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp">
+      <Filter>Project</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
