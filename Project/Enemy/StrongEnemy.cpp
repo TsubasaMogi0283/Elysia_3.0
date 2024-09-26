@@ -60,7 +60,7 @@ void StrongEnemy::Update(){
 
 
 
-//	const float SPEED_AMOUNT = 0.05f;
+	const float SPEED_AMOUNT = 0.05f;
 //	//状態
 //	switch (condition_) {
 //		//何もしない
@@ -140,22 +140,21 @@ void StrongEnemy::Update(){
 //
 //	}
 
+	//向きを求める
+	direction_ = VectorCalculation::Normalize(speed_);
 
 
 
-	////向きを計算しモデルを回転させる
-	//float directionToRotateY = std::atan2f(-direction_.z, direction_.x);
-	//
-	//const float ROTATE_OFFSET = -std::numbers::pi_v<float> / 2.0f;
-	//worldTransform_.rotate_.y = directionToRotateY + ROTATE_OFFSET;
+	//向きを計算しモデルを回転させる
+	float directionToRotateY = std::atan2f(-direction_.z, direction_.x);
+	const float ROTATE_OFFSET = -std::numbers::pi_v<float> / 2.0f;
+	worldTransform_.rotate_.y = directionToRotateY + ROTATE_OFFSET;
 
-	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
-	aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
+	
 
-
-
-
-	worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speed_);
+	//座標の計算
+	Vector3 newSpeed = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
+	worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, newSpeed);
 
 
 
@@ -164,6 +163,15 @@ void StrongEnemy::Update(){
 
 	//マテリアル
 	material_.Update();
+
+
+
+	//AABBの計算
+	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
+	aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
+
+
+
 }
 
 void StrongEnemy::Draw(Camera& camera, SpotLight& spotLight){
