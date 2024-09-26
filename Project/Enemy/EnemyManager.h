@@ -4,6 +4,9 @@
 #include <list>
 
 #include "Stage/Ground/StageRect.h"
+#include "StrongEnemy.h"
+
+
 
 struct Camera;
 struct SpotLight;
@@ -21,8 +24,8 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="modelhandle"></param>
-	void Initialize(uint32_t modelhandle);
+	/// <param name="normalEnemymodel"></param>
+	void Initialize(uint32_t& normalEnemyModel, uint32_t &strongEnemyModel);
 	
 	/// <summary>
 	/// 更新
@@ -54,11 +57,17 @@ public:
 	/// </summary>
 	void GenarateEnemy();
 
+
+	/// <summary>
+	/// 強い敵を生成
+	/// </summary>
+	void GenarateStrongEnemy();
+
 	/// <summary>
 	/// エネミーを消す処理
 	/// </summary>
 	void DeleteEnemy();
-		
+	
 	/// <summary>
 	/// プレイヤーの設定
 	/// </summary>
@@ -91,8 +100,13 @@ private:
 
 	//エネミーのリスト
 	std::list<Enemy*>enemyes_ = {};
+	std::list<StrongEnemy*>strongEnemyes_ = {};
+
+
+
 	//モデルハンドル
-	uint32_t modelHandle_ = 0;
+	uint32_t normalEnemyModelHandle_ = 0u;
+	uint32_t strongEnemyModelHandle_ = 0u;
 
 	const float ENEMY_SCALE_SIZE_ = 1.0f;
 	

@@ -22,3 +22,8 @@ const uint32_t COLLISION_ATTRIBUTE_ENEMY = 0b1 << 1;
 const uint32_t COLLISION_ATTRIBUTE_ENEMY_ATTACK = 0b1 << 2;
 
 
+//一発アウトの敵の攻撃の当たり判定
+//8
+//左に1つシフトする
+const uint32_t COLLISION_ATTRIBUTE_STRONG_ENEMY_ATTACK = 0b1 << 3;
+

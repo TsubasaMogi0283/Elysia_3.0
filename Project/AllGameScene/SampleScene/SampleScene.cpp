@@ -101,6 +101,8 @@ void SampleScene::Initialize() {
 
 	#pragma region 敵
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
+	uint32_t strongEnemyModelHandle= ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
+
 #ifdef _DEBUG
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube", "Cube.obj");
 #endif // _DEBUG
@@ -110,7 +112,7 @@ void SampleScene::Initialize() {
 	enemyManager_->SetPlayer(player_);
 	enemyManager_->SetObjectManager(objectManager_);
 	enemyManager_->SetStageRectangle(stageRect);
-	enemyManager_->Initialize(enemyModelHandle_);
+	enemyManager_->Initialize(enemyModelHandle_, strongEnemyModelHandle);
 	#pragma endregion
 
 	

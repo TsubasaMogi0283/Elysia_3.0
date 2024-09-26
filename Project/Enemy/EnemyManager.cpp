@@ -8,7 +8,7 @@
 #include <SingleCalculation.h>
 #include <random>
 
-void EnemyManager::Initialize(uint32_t modelhandle){
+void EnemyManager::Initialize(uint32_t& normalEnemyModel, uint32_t& strongEnemyModel){
 	
 	//空だったら引っかかるようにしている
 	assert(player_!=nullptr);
@@ -27,15 +27,15 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 
 	//モデルを代入
-	modelHandle_ = modelhandle;
-	assert(modelHandle_ != 0);
+	normalEnemyModelHandle_ = normalEnemyModel;
+	strongEnemyModelHandle_ = strongEnemyModel;
 
-	//TLのレベルエディターでやってもいいかも！
-	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = { 0.0f,0.0f,7.0f };
-	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemy1->Initialize(modelHandle_, position1, { -0.0f,0.0f,-0.01f });
-	enemyes_.push_back(enemy1);
+	////TLのレベルエディターでやってもいいかも！
+	//Enemy* enemy1 = new Enemy();
+	//Vector3 position1 = { 0.0f,0.0f,7.0f };
+	//enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
+	//enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,-0.01f });
+	//enemyes_.push_back(enemy1);
 
 		
 	//Enemy* enemy2 = new Enemy();
@@ -55,10 +55,13 @@ void EnemyManager::Initialize(uint32_t modelhandle){
 
 	
 
+
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
 
 }
+
+
 
 
 
@@ -79,17 +82,45 @@ void EnemyManager::GenarateEnemy() {
 	std::mt19937 randomEngine(seedGenerator());
 	std::uniform_real_distribution<float> distribute(-30.0f, 30.0f);
 	Vector3 position1 = { distribute(randomEngine),0.0f,distribute(randomEngine) };
-	enemy->Initialize(modelHandle_, position1, { 0.0f,0.0f,0.0f });
+	enemy->Initialize(normalEnemyModelHandle_, position1, { 0.0f,0.0f,0.0f });
 	enemy->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy);
 }
 
 
+void EnemyManager::GenarateStrongEnemy(){
+	//生成
+	StrongEnemy* enemy = new StrongEnemy();
+	std::random_device seedGenerator;
+	std::mt19937 randomEngine(seedGenerator());
+
+	//位置を決める
+	std::uniform_real_distribution<float> positionDistribute(stageRect_.leftBack.x, stageRect_.rightBack.x);
+	Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
+	
+
+	//位置を決める
+	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
+	Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
+
+
+#ifdef _DEBUG
+	position = { -4.0f,0.0f,5.0f };
+	speed = { -0.01f,0.0f,0.03f };
+#endif // _DEBUG
+
+
+
+	enemy->Initialize(strongEnemyModelHandle_, position, speed);
+	enemy->SetRadius_(player_->GetRadius());
+	strongEnemyes_.push_back(enemy);
+}
+
 void EnemyManager::Update(){
 #ifdef _DEBUG
 	//Gキーで出す
 	if (Input::GetInstance()->IsTriggerKey(DIK_G) == true) {
-		GenarateEnemy();
+		GenarateStrongEnemy();
 	}
 
 #endif
@@ -290,13 +321,6 @@ void EnemyManager::Update(){
 		}
 	}
 
-
-
-
-
-
-
-
 	//1体より多い時
 	if (enemyAmount > 1u) {
 		for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
@@ -436,23 +460,61 @@ void EnemyManager::Update(){
 			}
 		}
 	}
+
+
+
+
+	for (StrongEnemy* strongEnemy : strongEnemyes_) {
+		//一発アウトの敵の更新
+		strongEnemy->Update();
+		//プレイヤーの座標を設定
+		strongEnemy->SetPlayerPosition(playerPosition);
+
+		AABB strongEnemyAABB = strongEnemy->GetAABB();
+
+#pragma region ステージの端に行ったら反転
+		//X
+		if ((strongEnemyAABB.min.x < stageRect_.leftBack.x) || 
+			(strongEnemyAABB.max.x > stageRect_.rightBack.x)) {
+			strongEnemy->InvertSpeedX();
+		}
+		//Z
+		if ((strongEnemyAABB.min.z < stageRect_.leftFront.z) || 
+			(strongEnemyAABB.max.z > stageRect_.leftBack.z)) {
+			strongEnemy->InvertSpeedZ();
+		}
+#pragma endregion
+
+	}
+
+
+
 }
 
 void EnemyManager::Draw(Camera& camera, SpotLight& spotLight){
 
-	//描画
+	//通常
 	for (Enemy* enemy : enemyes_) {
 		enemy->Draw(camera,spotLight);
+	}
+
+	//一発アウト
+	for (StrongEnemy* strongEnemy : strongEnemyes_) {
+		strongEnemy->Draw(camera, spotLight);
 	}
 
 }
 
 EnemyManager::~EnemyManager(){
+	//通常
 	for (Enemy* enemy : enemyes_) {
 		delete enemy;
 	}
 
-
+	//一発アウト
+	for (StrongEnemy* strongEnemy : strongEnemyes_) {
+		delete strongEnemy;
+	}
 }
 
 
