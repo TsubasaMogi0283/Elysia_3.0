@@ -37,6 +37,7 @@ void Player::Initialize(){
 
 	#pragma region 当たり判定について
 
+	//種類
 	collisionType_ = CollisionType::SphereType;
 
 	//半径
@@ -48,15 +49,21 @@ void Player::Initialize(){
 	//AABBのmin部分に加算する縦横高さのサイズ
 	downSideSize_ = {1.0f,1.0f,1.0f};
 
-	#pragma endregion
-
-
 	//判定
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_PLAYER);
 	//相手
 	SetCollisionMask(COLLISION_ATTRIBUTE_ENEMY_ATTACK);
 
+
+	//一発アウト用
+	collisionToStrongEnemy_ = std::make_unique<PlayerCollisionToStrongEnemy>();
+	collisionToStrongEnemy_->Initialize();
+
+	#pragma endregion
+
+
+	
 
 	
 }
@@ -95,6 +102,7 @@ void Player::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
+
 	aabb_.min.x = GetWorldPosition().x - downSideSize_.x;
 	aabb_.min.y = GetWorldPosition().y - downSideSize_.y;
 	aabb_.min.z = GetWorldPosition().z - downSideSize_.z;
@@ -102,6 +110,10 @@ void Player::Update(){
 	aabb_.max.x = GetWorldPosition().x + downSideSize_.x;
 	aabb_.max.y = GetWorldPosition().y + downSideSize_.y;
 	aabb_.max.z = GetWorldPosition().z + downSideSize_.z;
+
+	//一発アウト用の当たり判定
+	collisionToStrongEnemy_->SetPlayerPosition(GetWorldPosition());
+	collisionToStrongEnemy_->Update();
 
 
 	
@@ -132,6 +144,12 @@ void Player::Update(){
 void Player::Draw(Camera& camera, Material& material, SpotLight& spotLight){
 	
 	model_->Draw(worldTransform_, camera,material,spotLight);
+
+#ifdef _DEBUG
+	collisionToStrongEnemy_->Draw(camera, spotLight);
+#endif // _DEBUG
+
+
 }
 
 Vector3 Player::GetWorldPosition() {

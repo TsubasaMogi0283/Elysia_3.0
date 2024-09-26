@@ -50,7 +50,7 @@ void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& 
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_STRONG_ENEMY);
 	//相手
-	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER);
+	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER2);
 
 #pragma endregion
 

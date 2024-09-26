@@ -5,6 +5,7 @@
 #include "Stage/Ground/StageRect.h"
 #include "../Collider/Collider.h"
 #include "AABB.h"
+#include "PlayerCollisionToStrongEnemy.h"
 
 struct Camera;
 struct SpotLight;
@@ -83,14 +84,16 @@ public:
 	/// </summary>
 	void OnCollision()override;
 	
+
+	/// <summary>
+	/// AABBの取得
+	/// </summary>
 	inline AABB GetAABB() {
 		return aabb_;
 	}
 
 
-	/// <summa
-	/// 
-	/// ry>
+	/// <summary>
 	/// 半径を取得
 	/// </summary>
 	/// <returns></returns>
@@ -156,6 +159,14 @@ public:
 
 	
 
+	/// <summary>
+	/// 一発アウトの敵用の当たり判定
+	/// </summary>
+	/// <returns></returns>
+	PlayerCollisionToStrongEnemy* GetCollisionToStrongEnemy()const {
+		return collisionToStrongEnemy_.get();
+	}
+
 private:
 
 	//モデル
@@ -192,6 +203,17 @@ private:
 	bool isControll_ = false;
 	//移動状態
 	uint32_t moveCondition_ = 0u;
+
+
+
+
+
+
+
+	//当たり判定(一発アウトの敵用)
+	std::unique_ptr<PlayerCollisionToStrongEnemy>collisionToStrongEnemy_ = nullptr;
+
+
 
 };
 

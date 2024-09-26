@@ -50,7 +50,7 @@ public:
 	/// 敵のワールド座標の設定
 	/// </summary>
 	/// <param name="position"></param>
-	inline void SetEnemyPosition(Vector3& position) {
+	inline void SetPlayerPosition(Vector3 position) {
 		this->playerWorldPosition_ = position;
 	}
 

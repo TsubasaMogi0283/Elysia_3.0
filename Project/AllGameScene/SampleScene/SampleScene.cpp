@@ -65,7 +65,7 @@ void SampleScene::Initialize() {
 #pragma endregion
 
 #pragma region プレイヤー
-	player_ = std::make_unique< Player>();
+	player_ = std::make_unique<Player>();
 	//ステージ
 	player_->SetStageRect(stageRect);
 	player_->Initialize();
@@ -782,7 +782,7 @@ void SampleScene::Update(GameManager* gameManager) {
 			}
 		}
 		collisionManager_->RegisterList(player_.get());
-
+		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 
 		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
 		for (StrongEnemy* strongEnemy : strongEnemyes) {
@@ -867,6 +867,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 		//体力が0になったら負け
+		//または一発アウトの敵
 		if (player_->GetHP() <= 0 || isTouchStrongEnemy_==true) {
 			gameManager->ChangeScene(new LoseScene());
 			return;

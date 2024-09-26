@@ -62,6 +62,6 @@ Vector3 PlayerCollisionToStrongEnemy::GetWorldPosition(){
 	return position;
 }
 
-void PlayerCollisionToStrongEnemy::OnCollision()
-{
+void PlayerCollisionToStrongEnemy::OnCollision(){
+
 }
