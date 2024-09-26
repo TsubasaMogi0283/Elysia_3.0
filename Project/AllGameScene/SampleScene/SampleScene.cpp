@@ -65,7 +65,7 @@ void SampleScene::Initialize() {
 #pragma endregion
 
 #pragma region プレイヤー
-	player_ = new Player();
+	player_ = std::make_unique< Player>();
 	//ステージ
 	player_->SetStageRect(stageRect);
 	player_->Initialize();
@@ -86,7 +86,7 @@ void SampleScene::Initialize() {
 
 
 #pragma region 鍵
-	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","Cube.obj");
+	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/key","Key.obj");
 	
 	keyManager_ = std::make_unique<KeyManager>();
 	keyManager_->Initialize(keyModelHandle);
@@ -109,7 +109,7 @@ void SampleScene::Initialize() {
 
 	
 	enemyManager_ = std::make_unique<EnemyManager>();
-	enemyManager_->SetPlayer(player_);
+	enemyManager_->SetPlayer(player_.get());
 	enemyManager_->SetObjectManager(objectManager_);
 	enemyManager_->SetStageRectangle(stageRect);
 	enemyManager_->Initialize(enemyModelHandle_, strongEnemyModelHandle);
@@ -770,7 +770,7 @@ void SampleScene::Update(GameManager* gameManager) {
 			//いずれこれもCollisionManagerに入れるつもり
 			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
 
-				//enemy->OnCollision();
+				enemy->OnCollision();
 
 
 #ifdef _DEBUG
@@ -781,8 +781,22 @@ void SampleScene::Update(GameManager* gameManager) {
 
 			}
 		}
+		collisionManager_->RegisterList(player_.get());
 
-		collisionManager_->RegisterList(player_);
+
+		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
+		for (StrongEnemy* strongEnemy : strongEnemyes) {
+			collisionManager_->RegisterList(strongEnemy);
+			bool isTouch = strongEnemy->GetIsTouchPlayer();
+
+			if (isTouch == true) {
+				isTouchStrongEnemy_ = true;
+			}
+		}
+
+
+
+		
 
 		#pragma region 視点
 
@@ -853,7 +867,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 
 		//体力が0になったら負け
-		if (player_->GetHP() <= 0) {
+		if (player_->GetHP() <= 0 || isTouchStrongEnemy_==true) {
 			gameManager->ChangeScene(new LoseScene());
 			return;
 		}
@@ -1047,7 +1061,6 @@ void SampleScene::DrawSprite(){
 
 
 SampleScene::~SampleScene() {
-	delete player_;
 	delete lightCollision_;
 	delete objectManager_;
 }

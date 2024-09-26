@@ -154,7 +154,7 @@ private:
 	
 
 	//プレイヤー
-	Player* player_ = nullptr;
+	std::unique_ptr<Player> player_ = nullptr;
 	Vector3 playerPosition_ = {};
 	Vector3 playerMoveDirection_ = {};
 	Vector3 playerDirection = {};
@@ -198,7 +198,7 @@ private:
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 
 
-
+	bool isTouchStrongEnemy_ = false;
 	
 #pragma region ゲーム中のUI
 
@@ -234,6 +234,7 @@ private:
 
 	std::unique_ptr<Sprite> toEscape_ = nullptr;
 
+#pragma endregion
 
 #pragma region フェード
 

@@ -322,6 +322,9 @@
     <Filter Include="Project\Enemy\StrongEnemy">
       <UniqueIdentifier>{53f59d92-040d-4e5f-a0f1-6da83d07e9ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Player\PlayerCollisionToStrongEnemy">
+      <UniqueIdentifier>{7432f915-4798-42a9-a5f0-8b71bd080803}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
@@ -557,6 +560,9 @@
     </ClCompile>
     <ClCompile Include="Project\Enemy\StrongEnemy.cpp">
       <Filter>Project\Enemy\StrongEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\PlayerCollisionToStrongEnemy.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -993,6 +999,9 @@
     </ClInclude>
     <ClInclude Include="Project\Enemy\StrongEnemy.h">
       <Filter>Project\Enemy\StrongEnemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\PlayerCollisionToStrongEnemy.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

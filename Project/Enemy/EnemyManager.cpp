@@ -31,29 +31,49 @@ void EnemyManager::Initialize(uint32_t& normalEnemyModel, uint32_t& strongEnemyM
 	strongEnemyModelHandle_ = strongEnemyModel;
 
 	////TLのレベルエディターでやってもいいかも！
-	//Enemy* enemy1 = new Enemy();
-	//Vector3 position1 = { 0.0f,0.0f,7.0f };
-	//enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
-	//enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,-0.01f });
-	//enemyes_.push_back(enemy1);
+	Enemy* enemy1 = new Enemy();
+	Vector3 position1 = { 0.0f,0.0f,11.0f };
+	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
+	enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,0.01f });
+	enemyes_.push_back(enemy1);
 
 		
-	//Enemy* enemy2 = new Enemy();
-	//Vector3 position2 = { 10.0f,0.0f,18.0f };
-	//enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
-	//enemy2->Initialize(modelHandle_, position2, { -0.02f,0.0f,0.0f });
-	//enemyes_.push_back(enemy2);
-	//
-	//Enemy* enemy3 = new Enemy();
-	//Vector3 position3 = { -10.0f,0.0f,4.0f };
-	//enemy3->Initialize(modelHandle_, position3, { 0.01f,0.0f,0.01f });
-	//uint32_t condition = EnemyCondition::Move;
-	//enemy3->SetCondition(condition);
-	//enemy3->SetRadius_(player_->GetRadius());
-	//enemyes_.push_back(enemy3);
+	Enemy* enemy2 = new Enemy();
+	Vector3 position2 = { -10.0f,0.0f,20.0f };
+	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
+	enemy2->Initialize(normalEnemyModelHandle_, position2, { 0.01f,0.0f,0.0f });
+	enemyes_.push_back(enemy2);
+	
+	Enemy* enemy3 = new Enemy();
+	Vector3 position3 = { -10.0f,0.0f,4.0f };
+	enemy3->Initialize(normalEnemyModelHandle_, position3, { 0.01f,0.0f,0.01f });
+	uint32_t condition = EnemyCondition::Move;
+	enemy3->SetCondition(condition);
+	enemy3->SetRadius_(player_->GetRadius());
+	enemyes_.push_back(enemy3);
 	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\TD2_Enemy\TD2_Enemy.obj"
 
-	
+	//生成
+	StrongEnemy* enemy = new StrongEnemy();
+	std::random_device seedGenerator;
+	std::mt19937 randomEngine(seedGenerator());
+
+	//位置を決める
+	std::uniform_real_distribution<float> positionDistribute(stageRect_.leftBack.x, stageRect_.rightBack.x);
+	Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
+
+
+	//位置を決める
+	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
+	Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
+
+	position = { -4.0f,0.0f,5.0f };
+	speed = { -0.01f,0.0f,0.03f };
+
+
+	enemy->Initialize(strongEnemyModelHandle_, position, speed);
+	enemy->SetRadius_(player_->GetRadius());
+	strongEnemyes_.push_back(enemy);
 
 
 	material_.Initialize();
@@ -236,6 +256,73 @@ void EnemyManager::Update(){
 
 
 		}
+
+
+		if (enemy->GetCondition() == EnemyCondition::Tracking) {
+		
+			//仮置きのステージオブジェクト
+			std::list<StageObject*>stageObjects = objectManager_->GetStageObjets();
+			for (StageObject* stageObject : stageObjects) {
+
+				//AABBを取得
+				AABB objectAABB = stageObject->GetAABB();
+
+				//位置を取得
+				Vector3 objectPosition = stageObject->GetWorldPosition();
+
+
+
+				//お互いのAABBが接触している場合
+				if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
+					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
+					//オブジェクトとの差分ベクトル
+					Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
+					Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
+
+
+					//敵の向いている方向
+					Vector3 enemyDirection = enemy->GetDirection();
+
+
+
+					//前にある場合だけ計算
+					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
+
+					//進行方向上にあるときだけ計算する
+					if (dot > 0.0f) {
+
+						//差分ベクトルのXとZの大きさを比べ
+						//値が大きい方で反転させる
+						float defferenceValueX = std::abs(defference.x);
+						float defferenceValueZ = std::abs(defference.z);
+
+
+						if (defferenceValueX >= defferenceValueZ) {
+							enemy->InvertSpeedX();
+						}
+						else {
+							enemy->InvertSpeedZ();
+						}
+
+
+
+#ifdef _DEBUG
+						ImGui::Begin("DemoObjectEnemy");
+						ImGui::InputFloat("Dot", &dot);
+						ImGui::InputFloat3("defference", &defference.x);
+						ImGui::InputFloat("defferenceValueX", &defferenceValueX);
+						ImGui::InputFloat("defferenceValueZ", &defferenceValueZ);
+						ImGui::End();
+#endif // _DEBUG
+
+
+
+
+					}
+				}
+			}
+		}
+
 
 	}
 	

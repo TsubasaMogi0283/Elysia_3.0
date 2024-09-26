@@ -48,10 +48,17 @@ public:
 	/// エネミーのリストを取得
 	/// </summary>
 	/// <returns></returns>
-	inline std::list<Enemy*> GetEnemyes() {
+	inline std::list<Enemy*> GetEnemyes() const{
 		return enemyes_;
 	}
 	
+
+	inline std::list<StrongEnemy*>GetStrongEnemyes()const {
+		return strongEnemyes_;
+	}
+
+
+
 	/// <summary>
 	/// エネミーの生成
 	/// </summary>

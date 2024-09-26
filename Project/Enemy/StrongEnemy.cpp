@@ -35,6 +35,8 @@ void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& 
 
 
 #pragma region 当たり判定
+
+	collisionType_ = CollisionType::SphereType;
 	//半径
 	radius_ = 2.0f;
 
@@ -46,7 +48,7 @@ void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& 
 
 	//判定
 	//自分
-	SetCollisionAttribute(COLLISION_ATTRIBUTE_STRONG_ENEMY_ATTACK);
+	SetCollisionAttribute(COLLISION_ATTRIBUTE_STRONG_ENEMY);
 	//相手
 	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER);
 

@@ -67,8 +67,9 @@ public:
 		this->playerPosition_ = position;
 	}
 
-
-
+	inline bool GetIsTouchPlayer()const {
+		return isTouchPlayer_;
+	}
 
 
 public:
