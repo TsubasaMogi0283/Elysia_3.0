@@ -32,14 +32,14 @@ void EnemyManager::Initialize(uint32_t& normalEnemyModel, uint32_t& strongEnemyM
 
 	////TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = { 0.0f,0.0f,11.0f };
+	Vector3 position1 = { 0.0f,0.0f,21.0f };
 	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
 	enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,0.01f });
 	enemyes_.push_back(enemy1);
 
 		
 	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = { -10.0f,0.0f,20.0f };
+	Vector3 position2 = { -20.0f,0.0f,10.0f };
 	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
 	enemy2->Initialize(normalEnemyModelHandle_, position2, { 0.01f,0.0f,0.0f });
 	enemyes_.push_back(enemy2);
@@ -57,20 +57,20 @@ void EnemyManager::Initialize(uint32_t& normalEnemyModel, uint32_t& strongEnemyM
 	StrongEnemy* enemy = new StrongEnemy();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
-
+	
 	//位置を決める
 	std::uniform_real_distribution<float> positionDistribute(stageRect_.leftBack.x, stageRect_.rightBack.x);
 	Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
-
-
+	
+	
 	//位置を決める
 	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
 	Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
-
+	
 	position = { -4.0f,0.0f,5.0f };
 	speed = { -0.01f,0.0f,0.03f };
-
-
+	
+	
 	enemy->Initialize(strongEnemyModelHandle_, position, speed);
 	enemy->SetRadius_(player_->GetRadius());
 	strongEnemyes_.push_back(enemy);
