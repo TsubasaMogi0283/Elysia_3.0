@@ -68,7 +68,7 @@ void EnemyManager::Initialize(uint32_t& normalEnemyModel, uint32_t& strongEnemyM
 	Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
 	
 	position = { -4.0f,0.0f,5.0f };
-	speed = { -0.01f,0.0f,0.03f };
+	speed = { 0.01f,0.0f,-0.03f };
 	
 	
 	enemy->Initialize(strongEnemyModelHandle_, position, speed);
@@ -557,7 +557,42 @@ void EnemyManager::Update(){
 		//プレイヤーの座標を設定
 		strongEnemy->SetPlayerPosition(playerPosition);
 
+		//AABBの取得
 		AABB strongEnemyAABB = strongEnemy->GetAABB();
+
+
+		//追跡開始の距離
+		const float TRACKING_START_DISTANCE = 30.0f;
+
+		//距離を求める
+		Vector3 playerStrongEnemyDifference = VectorCalculation::Subtract(playerPosition, strongEnemy->GetWorldPosition());
+		float playerStrongEnemyDistance = SingleCalculation::Length(playerStrongEnemyDifference);
+		
+
+#ifdef _DEBUG
+		ImGui::Begin("強い敵");
+		ImGui::InputFloat3("プレイヤーとの差分", &playerStrongEnemyDifference.x);
+		ImGui::InputFloat("プレイヤーとの距離", &playerStrongEnemyDistance);
+		ImGui::End();
+#endif // _DEBUG
+
+
+
+		//設定した距離より小さくなると追跡
+		if (playerStrongEnemyDistance <= TRACKING_START_DISTANCE) {
+			
+			//追跡に移行
+			uint32_t newCondition = EnemyCondition::Tracking;
+			strongEnemy->SetCondition(newCondition);
+		}
+		else {
+
+			//通常の動きに移行
+			uint32_t newCondition = EnemyCondition::Move;
+			strongEnemy->SetCondition(newCondition);
+		}
+
+
 
 #pragma region ステージの端に行ったら反転
 		//X

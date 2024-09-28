@@ -69,8 +69,6 @@ public:
 		this->pointOfView_ = pointOfView;
 	}
 
-	//Getterは後ろにconst を付ける方が良いらしい
-	//オブジェクトの状態を変更しない読み取り専用だから
 
 
 	/// <summary>

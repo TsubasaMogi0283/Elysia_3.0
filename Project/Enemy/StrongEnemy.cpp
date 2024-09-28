@@ -19,10 +19,6 @@ void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& 
 	worldTransform_.translate_ = position;
 
 
-
-
-
-
 	//スピード
 	speed_ = speed;
 
@@ -34,8 +30,13 @@ void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& 
 	isTouchPlayer_ = false;
 
 
+
+	//状態の初期化
+	condition_ = EnemyCondition::Tracking;
+
 #pragma region 当たり判定
 
+	//当たり判定で使う種類
 	collisionType_ = CollisionType::SphereType;
 	//半径
 	radius_ = 2.0f;
@@ -61,90 +62,68 @@ void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& 
 void StrongEnemy::Update(){
 
 
-
 	const float SPEED_AMOUNT = 0.05f;
-//	//状態
-//	switch (condition_) {
-//		//何もしない
-//	case EnemyCondition::NoneMove:
-//#ifdef _DEBUG
-//		ImGui::Begin("None");
-//		ImGui::End();
-//#endif // DEBUG
-//
-//		preTrackingPlayerPosition_ = {};
-//		preTrackingPosition_ = {};
-//		speed_ = { 0.0f,0.0f,0.0f };
-//		break;
-//
-//		//通常の動き
-//	case EnemyCondition::Move:
-//
-//
-//
-//
-//		//通常の動き
-//		preTrackingPlayerPosition_ = {};
-//		preTrackingPosition_ = {};
-//		if (speed_.x != 0.0f ||
-//			speed_.y != 0.0f ||
-//			speed_.z != 0.0f) {
-//			direction_ = VectorCalculation::Normalize(speed_);
-//		}
-//
-//		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speed_);
-//
-//
-//		break;
-//
-//	case EnemyCondition::PreTracking:
-//
-//#pragma region 追跡準備
-//
-//
-//		//取得したら追跡
-//		preTrackingPlayerPosition_ = playerPosition_;
-//		preTrackingPosition_ = GetWorldPosition();
-//
-//
-//#pragma endregion
-//
-//
-//		//強制的に追跡
-//		preCondition_ = EnemyCondition::PreTracking;
-//		condition_ = EnemyCondition::Tracking;
-//
-//		break;
-//
-//		//追跡
-//	case EnemyCondition::Tracking:
-//		//追跡処理
-//
-//
-//#ifdef _DEBUG
-//		ImGui::Begin("Tracking");
-//		ImGui::End();
-//#endif // DEBUG
-//
-//
-//
-//		//向きを求める
-//		direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_, preTrackingPosition_);
-//		direction_ = VectorCalculation::Normalize(direction_);
-//
-//		//加算
-//		Vector3 speedVelocity = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
-//		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speedVelocity);
-//
-//
-//		break;
-//
-//
-//	}
+	//状態
+	switch (condition_) {
+	case EnemyCondition::NoneMove:
+		//何もしない
+#ifdef _DEBUG
+		ImGui::Begin("None");
+		ImGui::End();
+#endif // DEBUG
 
-	//向きを求める
-	direction_ = VectorCalculation::Normalize(speed_);
 
+		speed_ = { 0.0f,0.0f,0.0f };
+		break;
+
+		//通常の動き
+	case EnemyCondition::Move:
+
+
+		//スピードの正規化
+		if (speed_.x != 0.0f ||
+			speed_.y != 0.0f ||
+			speed_.z != 0.0f) {
+			direction_ = VectorCalculation::Normalize(speed_);
+		}
+
+		//加算
+		Vector3 moveSpeedVelocity = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
+		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, moveSpeedVelocity);
+
+
+		break;
+
+
+
+	case EnemyCondition::Tracking:
+
+		#pragma region 追跡
+
+		//向きを求める
+		direction_ = VectorCalculation::Subtract(playerPosition_, GetWorldPosition());
+		direction_ = VectorCalculation::Normalize(direction_);
+
+		//加算
+		Vector3 newSpeed = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
+		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, newSpeed);
+
+
+
+#ifdef _DEBUG
+		ImGui::Begin("Tracking");
+		ImGui::InputFloat3("方向", &direction_.x);
+		ImGui::InputFloat3("プレイヤーの座標", &playerPosition_.x);
+
+		ImGui::End();
+#endif // DEBUG
+
+
+
+		#pragma endregion
+
+		break;
+	}
 
 
 	//向きを計算しモデルを回転させる
@@ -154,18 +133,11 @@ void StrongEnemy::Update(){
 
 	
 
-	//座標の計算
-	Vector3 newSpeed = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
-	worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, newSpeed);
-
-
-
-	//ワールドトランスフォーム
+	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
-	//マテリアル
+	//マテリアルの更新
 	material_.Update();
-
 
 
 	//AABBの計算
@@ -181,6 +153,7 @@ void StrongEnemy::Draw(Camera& camera, SpotLight& spotLight){
 }
 
 void StrongEnemy::OnCollision(){
+	//プレイヤーと接触した
 	isTouchPlayer_ = true;
 
 }
@@ -190,8 +163,7 @@ Vector3 StrongEnemy::GetWorldPosition(){
 	Vector3 position = {
 		.x = worldTransform_.worldMatrix_.m[3][0],
 		.y = worldTransform_.worldMatrix_.m[3][1],
-		.z = worldTransform_.worldMatrix_.m[3][2],
-
+		.z = worldTransform_.worldMatrix_.m[3][2]
 	};
 
 	return position;

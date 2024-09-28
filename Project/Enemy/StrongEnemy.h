@@ -73,17 +73,6 @@ public:
 
 
 public:
-	/// <summary>
-	/// 前の状態の設定
-	/// </summary>
-	/// <param name="condition"></param>
-	inline void SetPreCondition(uint32_t& preCondition) {
-		this->preCondition_ = preCondition;
-	}
-
-	uint32_t GetPreCondition() const {
-		return preCondition_;
-	}
 
 
 	/// <summary>
@@ -122,7 +111,6 @@ public:
 
 private:
 	//状態
-	uint32_t preCondition_ = EnemyCondition::NoneMove;
 	uint32_t condition_ = EnemyCondition::Move;
 
 private:
@@ -156,8 +144,6 @@ private:
 
 	//追跡
 	bool isTracking_ = false;
-	Vector3 preTrackingPosition_ = {};
-	Vector3 preTrackingPlayerPosition_ = {};
 
 
 };
