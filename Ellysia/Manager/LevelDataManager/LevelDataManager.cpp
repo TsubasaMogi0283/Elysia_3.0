@@ -178,11 +178,15 @@ void LevelDataManager::Load(const std::string& filePath){
 	}
 	
 
-
+	//それぞれに情報を記録
 	levelDatas_[filePathString]->folderName = folderName;
 	levelDatas_[filePathString]->fileName = fileName;
+	levelDatas_[filePathString]->handle = handle_;
 
 	LevelData& levelData = *levelDatas_[filePathString];
+
+	//ハンドルの加算
+	++handle_;
 
 	//読み込み(再帰機能付き)
 	Place(deserialized["objects"], levelData);
@@ -192,11 +196,8 @@ void LevelDataManager::Load(const std::string& filePath){
 
 }
 
-
-
-
-
-void LevelDataManager::Update(){
+void LevelDataManager::Update(uint32_t& levelDataHandle){
+	levelDataHandle;
 	//ワールドトランスフォームの更新
 	for (WorldTransform* object : worldTransforms_) {
 		object->Update();
@@ -206,7 +207,9 @@ void LevelDataManager::Update(){
 
 #pragma region 描画
 
-void LevelDataManager::Draw(Camera& camera, Material& material, DirectionalLight& directionalLight){
+void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, DirectionalLight& directionalLight){
+	levelDataHandle;
+	
 	uint32_t count = 0;
 	for (auto& objectData : levelDatas_.begin()->second->objects) {
 		//ファイル名から登録済みモデルを検索
@@ -224,7 +227,9 @@ void LevelDataManager::Draw(Camera& camera, Material& material, DirectionalLight
 	}
 }
 
-void LevelDataManager::Draw(Camera& camera, Material& material, PointLight& pointLight){
+void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, PointLight& pointLight){
+	levelDataHandle;
+	
 	uint32_t count = 0;
 	for (auto& objectData : levelDatas_.begin()->second->objects) {
 		//ファイル名から登録済みモデルを検索
@@ -242,7 +247,9 @@ void LevelDataManager::Draw(Camera& camera, Material& material, PointLight& poin
 	}
 }
 
-void LevelDataManager::Draw(Camera& camera, Material& material, SpotLight& spotLight){
+void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, SpotLight& spotLight){
+	levelDataHandle;
+	
 	uint32_t count = 0;
 	for (auto& objectData : levelDatas_.begin()->second->objects) {
 		//ファイル名から登録済みモデルを検索

@@ -27,7 +27,7 @@ void LevelEditorSample::Initialize(){
 
 	//カメラ
 	camera_.Initialize();
-	camera_.translate_ = { 0.0f,0.0f,-30.0f };
+	camera_.translate_ = {.x = 0.0f,.y = 2.0f,.z = -30.0f };
 
 	back_ = std::make_unique<BackText>();
 	back_->Initialize();

@@ -1,15 +1,15 @@
 #pragma once
 #include <string>
-#include <Vector3.h>
 #include <vector>
 #include <array>
 #include <map>
+
+
+#include <Vector3.h>
 #include <json.hpp>
 #include <Model.h>
 #include "WorldTransform.h"
 
-//このクラスを元に継承させた方が良いかも
-//Modelは別々のものだから
 
 
 struct Camera;
@@ -25,9 +25,6 @@ public:
 	/// </summary>
 	LevelDataManager()=default;
 
-	
-
-
 public:
 
 	/// <summary>
@@ -39,33 +36,37 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	/// <param name="levelDataHandle"></param>
+	void Update(uint32_t&levelDataHandle);
 
 #pragma region 描画
 
 	/// <summary>
 	/// 描画(平行光源)
 	/// </summary>
+	/// <param name="levelDataHandle"></param>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="directionalLight"></param>
-	void Draw(Camera& camera, Material& material, DirectionalLight& directionalLight);
+	void Draw(uint32_t& levelDataHandle,Camera& camera, Material& material, DirectionalLight& directionalLight);
 
 	/// <summary>
 	/// 描画(点光源)
 	/// </summary>
+	/// <param name="levelDataHandle"></param>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="pointLight"></param>
-	void Draw(Camera& camera, Material& material, PointLight& pointLight);
+	void Draw(uint32_t& levelDataHandle,Camera& camera, Material& material, PointLight& pointLight);
 
 	/// <summary>
 	/// 描画(スポットライト)
 	/// </summary>
+	/// <param name="levelDataHandle"></param>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void Draw(Camera& camera,Material & material,SpotLight& spotLight);
+	void Draw(uint32_t& levelDataHandle,Camera& camera,Material & material,SpotLight& spotLight);
 
 
 #pragma endregion
@@ -83,8 +84,14 @@ private:
 
 	struct LevelData {
 		struct ObjectData {
+			//モデル
+			std::unique_ptr<Model>model_ = nullptr;
+			//ワールドトランスフォーム
+			WorldTransform worldTransform_ = {};
+
 			//オブジェクトのファイル名
 			std::string fileName;
+			
 			//Transform
 			Vector3 scaling;
 			Vector3 rotation;
@@ -96,6 +103,10 @@ private:
 			Vector3 size;
 		};
 
+		//ハンドル
+		uint32_t handle;
+
+
 		//オブジェクト
 		std::vector<ObjectData> objects;
 
@@ -104,8 +115,6 @@ private:
 		std::string folderName;
 		//ファイル名
 		std::string fileName;
-
-
 	};
 
 
@@ -131,6 +140,9 @@ private:
 
 	//ここにデータを入れていく
 	std::map<std::string ,LevelData*> levelDatas_;
+
+	uint32_t handle_ = 0u;
+
 
 };
 

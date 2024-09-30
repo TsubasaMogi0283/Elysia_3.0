@@ -428,14 +428,16 @@ void SampleScene::EscapeCondition(){
 void SampleScene::PlayerMove(){
 
 
-	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
+	
 
 	//何も押していないの時つまり動いていないので
 	//通常はfalseにしておく
 	isPlayerMoveKey_ = false;
 	isPlayerMove_ = false;
+	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
 
-#pragma region キーボード
+
+	#pragma region キーボード
 	//移動
 	if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
 		playerMoveDirection_.x = std::cosf(theta_ - std::numbers::pi_v<float> / 2.0f);
@@ -475,9 +477,9 @@ void SampleScene::PlayerMove(){
 	}
 
 
-#pragma endregion
+	#pragma endregion
 
-#pragma region コントローラー
+	#pragma region コントローラー
 
 	//接続時
 	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
