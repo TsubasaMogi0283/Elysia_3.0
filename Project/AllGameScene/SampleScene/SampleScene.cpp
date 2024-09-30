@@ -429,8 +429,10 @@ void SampleScene::PlayerMove(){
 
 
 	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
+
+	//何も押していないの時つまり動いていないので
+	//通常はfalseにしておく
 	isPlayerMoveKey_ = false;
-	//isAbleToMovePlayer_ = true;
 	isPlayerMove_ = false;
 
 #pragma region キーボード
@@ -532,11 +534,23 @@ void SampleScene::PlayerMove(){
 #pragma endregion
 
 
-
+	//プレイヤーが動いている時
 	if (isPlayerMove_ == true) {
+		//状態の設定
 		uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
 		player_->SetPlayerMoveCondition(newCondition);
+
+		//ダッシュ
+		if (Input::GetInstance()->IsPushKey(DIK_RSHIFT) == true) {
+			isPlayerDash_ = true;
+		}
+		else {
+			isPlayerDash_ = false;
+		}
+		
+
 	}
+	//動いていない時
 	else {
 		uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
 		player_->SetPlayerMoveCondition(newCondition);
@@ -546,22 +560,15 @@ void SampleScene::PlayerMove(){
 	ImGui::Begin("Player");
 	ImGui::InputFloat3("Direction", &playerMoveDirection_.x);
 	ImGui::Checkbox("IsPlayerMove", &isPlayerMove_);
-	ImGui::InputFloat3("playerDirection", &playerDirection.x);
 	ImGui::End();
 
 #endif // _DEBUG
 
-
-
 	//プレイヤーの動く方向を入れる
 	player_->SetMoveDirection(playerMoveDirection_);
 
-
-
-
-
-
-
+	//ダッシュをしているかどうかの設定
+	player_->SetIsDash(isPlayerDash_);
 
 }
 
@@ -956,7 +963,6 @@ void SampleScene::PreDrawPostEffectFirst(){
 
 void SampleScene::DrawObject3D() {
 	
-	//testSphere_->Draw(testSphreShape_, testSphereTransform_, camera_.viewMatrix_, camera_.projectionMatrix_, {1.0f,1.0f,1.0f,1.0f});
 
 	//懐中電灯を取得
 	SpotLight spotLight = flashLight_->GetSpotLight();

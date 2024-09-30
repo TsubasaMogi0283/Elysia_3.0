@@ -155,12 +155,18 @@ private:
 
 	//プレイヤー
 	std::unique_ptr<Player> player_ = nullptr;
+	//座標
 	Vector3 playerPosition_ = {};
+	//向き
 	Vector3 playerMoveDirection_ = {};
-	Vector3 playerDirection = {};
+	//キーボードで動かしているかどうか
 	bool isPlayerMoveKey_ = false;
+	//動いているかどうか
 	bool isPlayerMove_ = false;
+	//ダッシュしているかどうか
+	bool isPlayerDash_ = false;
 
+	//Bボタンのトリガー
 	uint32_t bTriggerTime_ = 0u;
 	bool isBTrigger_ = false;
 
@@ -197,7 +203,7 @@ private:
 
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 
-
+	//強い敵と接触したかどうか
 	bool isTouchStrongEnemy_ = false;
 	
 #pragma region ゲーム中のUI
@@ -263,10 +269,6 @@ private:
 	uint32_t howToPlayTextureNumber_ = 0u;
 
 #pragma endregion
-
-	//Sphere* testSphere_ = nullptr;
-	//Transform testSphereTransform_ = {};
-	//SphereShape testSphreShape_ = {};
 
 
 #pragma region デバッグ用のオブジェクト

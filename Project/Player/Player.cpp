@@ -70,13 +70,24 @@ void Player::Initialize(){
 
 void Player::Update(){
 
-	const float MOVE_SPEED = 0.1f;
+	const float NORMAL_MOVE_SPEED = 0.1f;
+	const float DASH_MOVE_SPEED = 0.2f;
 
 
 
 	//動けるときだけ加算
 	if (isControll_ == true && moveCondition_==PlayerMoveCondition::OnPlayerMove) {
-		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, VectorCalculation::Multiply(moveDirection_,MOVE_SPEED));
+	
+
+		float moveSpeed = 0.0f;
+
+		if (isDash_ == true) {
+			moveSpeed = DASH_MOVE_SPEED;
+		}
+		else {
+			moveSpeed = NORMAL_MOVE_SPEED;
+		}
+		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, VectorCalculation::Multiply(moveDirection_, moveSpeed));
 
 	}
 	

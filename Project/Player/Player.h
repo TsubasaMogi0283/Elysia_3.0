@@ -60,14 +60,7 @@ public:
 	~Player() = default;
 
 public:
-	/// <summary>
-	/// 1人称または3人称かの設定
-	/// 1人称だったらモデルは表示させない
-	/// </summary>
-	/// <param name="pointOfView"></param>
-	inline void SetPointOfView(uint32_t pointOfView){
-		this->pointOfView_ = pointOfView;
-	}
+
 
 
 
@@ -126,8 +119,15 @@ public:
 	/// 動きの状態を設定
 	/// </summary>
 	/// <param name="condition"></param>
-	void SetPlayerMoveCondition(uint32_t& condition) {
+	inline void SetPlayerMoveCondition(uint32_t& condition) {
 		this->moveCondition_ = condition;
+	}
+
+	/// <summary>
+	/// 走るかどうか
+	/// </summary>
+	inline void SetIsDash(bool& isDash) {
+		this->isDash_ = isDash;
 	}
 
 	/// <summary>
@@ -176,8 +176,7 @@ private:
 	//ステージの四隅
 	StageRect stageRect_ = {};
 
-	//カメラ視点
-	uint32_t pointOfView_ = 0u;
+
 
 	//持っている鍵の数
 	//可算なのでQuantity
@@ -202,7 +201,8 @@ private:
 	//移動状態
 	uint32_t moveCondition_ = 0u;
 
-
+	//ダッシュ
+	bool isDash_ = false;
 
 
 
