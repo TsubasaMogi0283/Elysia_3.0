@@ -47,7 +47,7 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 	gameManager;
 
-	levelEditor_->Update();
+	levelEditor_->Update(dammyHandle_);
 
 	material_.Update();
 	directionalLight_.Update();
@@ -60,7 +60,7 @@ void LevelEditorSample::DrawSpriteBack()
 }
 
 void LevelEditorSample::DrawObject3D(){
-	levelEditor_->Draw(camera_, material_, directionalLight_);
+	levelEditor_->Draw(dammyHandle_,camera_, material_, directionalLight_);
 }
 
 void LevelEditorSample::PreDrawPostEffectFirst(){

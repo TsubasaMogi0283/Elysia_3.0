@@ -112,9 +112,16 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			models_[objectData.fileName] = model;
 		}
 
-		//座標を入れるのワールドトランスフォームしかないのでそれでやる
-		WorldTransform* worldTransform = new WorldTransform();
 
+		//モデル
+
+		//levelDatas_[filePathString]
+
+
+
+
+		//ワールドトランスフォームの初期化
+		WorldTransform* worldTransform = new WorldTransform();
 		worldTransform->Initialize();
 		worldTransform->translate_ = objectData.translation;
 		worldTransform->rotate_ = objectData.rotation;
