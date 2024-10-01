@@ -64,6 +64,10 @@ private:
 	DirectionalLight directionalLight_ = {};
 
 	LevelDataManager* levelEditor_ = nullptr;
-	uint32_t dammyHandle_ = 0u;
+	uint32_t levelHandle_ = 0u;
+
+
+
+
 };
 

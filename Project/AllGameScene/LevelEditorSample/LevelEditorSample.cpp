@@ -17,7 +17,7 @@ void LevelEditorSample::Initialize(){
 	levelEditor_ = new LevelDataManager();
 	//levelEditor_->Load("Resources/LevelData/LevelData1", "TL1TestFor13.json");
 
-	levelEditor_->Load("Test/Test.json");
+	levelHandle_=levelEditor_->Load("Test/Test.json");
 
 	directionalLight_.Initialize();
 	
@@ -42,13 +42,26 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	ImGui::SliderFloat3("Position", &camera_.translate_.x, -50.0f, 50.0f);
 	ImGui::SliderFloat3("Rotate", &camera_.rotate_.x , -3.0f, 3.0f);
 	ImGui::End();
+
+	ImGui::Begin("LevelEditor");
+	ImGui::Text("Rキーで指定した再読み込みするよ");
+	ImGui::End();
+
+	if (Input::GetInstance()->IsTriggerKey(DIK_R) == true) {
+		levelEditor_->Reload(levelHandle_);
+
+	}
+	
+
 #endif // _DEBUG
+
+
 
 
 
 	gameManager;
 
-	levelEditor_->Update(dammyHandle_);
+	levelEditor_->Update(levelHandle_);
 
 	material_.Update();
 	directionalLight_.Update();
@@ -61,7 +74,7 @@ void LevelEditorSample::DrawSpriteBack()
 }
 
 void LevelEditorSample::DrawObject3D(){
-	levelEditor_->Draw(dammyHandle_,camera_, material_, directionalLight_);
+	levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
 }
 
 void LevelEditorSample::PreDrawPostEffectFirst(){

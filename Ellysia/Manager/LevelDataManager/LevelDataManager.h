@@ -31,7 +31,7 @@ public:
 	/// レベルデータの読み込み
 	/// </summary>
 	/// <param name="filePath">jsonファイル</param>
-	void Load(const std::string& filePath);
+	uint32_t Load(const std::string& filePath);
 
 	/// <summary>
 	/// 再読み込み
