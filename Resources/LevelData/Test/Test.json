@@ -28,9 +28,9 @@
             "name": "Sphere",
             "transform": {
                 "translation": [
-                    0.0,
-                    0.0,
-                    2.1550323963165283
+                    4.140221118927002,
+                    3.634669542312622,
+                    1.714384913444519
                 ],
                 "rotation": [
                     0.0,
@@ -60,12 +60,12 @@
         },
         {
             "type": "MESH",
-            "name": "TD2_Enemy",
+            "name": "Cube",
             "transform": {
                 "translation": [
-                    -4.200106620788574,
                     0.0,
-                    0.0
+                    0.0,
+                    1.425978183746338
                 ],
                 "rotation": [
                     0.0,
@@ -78,20 +78,7 @@
                     1.0
                 ]
             },
-            "file_name": "TD2_Enemy",
-            "collider": {
-                "type": "BOX",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    2.0,
-                    2.0,
-                    2.0
-                ]
-            }
+            "file_name": "Test"
         }
     ]
 }

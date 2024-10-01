@@ -46,9 +46,9 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 			//そういえばBlenderは度数法だったね
 			//エンジンでは弧度法に直そう
 			const float DEREES_TO_RADIUS_ = (float)std::numbers::pi / 180.0f;
-			objectData.rotation.x = -(float)transform["rotation"][1]*DEREES_TO_RADIUS_;
-			objectData.rotation.y = -(float)transform["rotation"][2]*DEREES_TO_RADIUS_;
-			objectData.rotation.z = -(float)transform["rotation"][0]* DEREES_TO_RADIUS_;
+			objectData.rotation.x = -(float)transform["rotation"][1] * DEREES_TO_RADIUS_;
+			objectData.rotation.y = -(float)transform["rotation"][2] * DEREES_TO_RADIUS_;
+			objectData.rotation.z = -(float)transform["rotation"][0] * DEREES_TO_RADIUS_;
 
 			//スケール
 			objectData.scaling.x = (float)transform["scaling"][1];
@@ -64,7 +64,7 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 				// コライダーの種別を取得
 				if (collider.contains("type")) {
-					objectData.colliderType = collider["type"];  // ここで正しいコライダータイプを取得
+					objectData.colliderType = collider["type"];
 				}
 
 				//中心座標
@@ -154,8 +154,7 @@ void LevelDataManager::Load(const std::string& filePath){
 	//正しいレベルデータファイルはチェック
 	assert(name.compare("scene") == 0);
 
-	//レベルデータ格納用インスタンスを生成
-	levelDatas_[fullFilePath] = std::make_unique<LevelData>();
+	
 	
 	
 
@@ -170,17 +169,24 @@ void LevelDataManager::Load(const std::string& filePath){
 		fileName = filePath.substr(slashPosition + 1);
 	}
 	
+	if (levelDatas_[fullFilePath] == nullptr) {
+		//レベルデータ格納用インスタンスを生成
+		levelDatas_[fullFilePath] = std::make_unique<LevelData>();
 
-	//それぞれに情報を記録
-	levelDatas_[fullFilePath]->folderName = folderName;
-	levelDatas_[fullFilePath]->fileName = fileName;
-	levelDatas_[fullFilePath]->handle = handle_;
-	levelDatas_[fullFilePath]->fullPath = fullFilePath;
+		//それぞれに情報を記録
+		levelDatas_[fullFilePath]->folderName = folderName;
+		levelDatas_[fullFilePath]->fileName = fileName;
+		levelDatas_[fullFilePath]->handle = handle_;
+		levelDatas_[fullFilePath]->fullPath = fullFilePath;
 
+		//ハンドルの加算
+		++handle_;
+
+	}
+	
 	LevelData& levelData = *levelDatas_[fullFilePath];
 
-	//ハンドルの加算
-	++handle_;
+	
 
 	//読み込み(再帰機能付き)
 	Place(deserialized["objects"], levelData);
@@ -191,24 +197,18 @@ void LevelDataManager::Load(const std::string& filePath){
 }
 
 void LevelDataManager::Reload(uint32_t& levelDataHandle){
-	levelDataHandle;
 
 
+	std::string path = {};
+	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
+		LevelData* levelDataPtr = it->second.get();
+		if (levelDataPtr->handle == levelDataHandle) {
+			
 
-
-	LevelData& levelData = *levelDatas_[fullFilePath];
-
-	//ハンドルの加算
-	++handle_;
-
-	//読み込み(再帰機能付き)
-	Place(deserialized["objects"], levelData);
-
-	//生成
-	Ganarate(levelData);
-
-
-
+			break;
+		}
+	}
+	Load(path);
 
 }
 
