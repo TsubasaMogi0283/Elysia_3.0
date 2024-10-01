@@ -93,7 +93,7 @@ private:
 			//モデル
 			Model* model = nullptr;
 			//ワールドトランスフォーム
-			WorldTransform worldTransform = {};
+			WorldTransform* worldTransform = {};
 
 			//オブジェクトのファイル名
 			std::string fileName;
@@ -110,11 +110,13 @@ private:
 			Vector3 size;
 		};
 
+		nlohmann::json object;
+
 		//ハンドル
 		uint32_t handle = 0u;
 
 		//オブジェクト
-		std::vector<ObjectData> objects = {};
+		std::vector<ObjectData> objectDatas = {};
 
 		//フォルダ名
 		std::string folderName = {};

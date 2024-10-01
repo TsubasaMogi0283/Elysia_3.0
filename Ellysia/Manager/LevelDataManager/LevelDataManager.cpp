@@ -25,9 +25,9 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 		//MESHの場合
 		if (type.compare("MESH") == 0) {
 			//要素追加
-			levelData.objects.emplace_back(LevelData::ObjectData{});
+			levelData.objectDatas.emplace_back(LevelData::ObjectData{});
 			//今追加した要素の参照を得る
-			LevelData::ObjectData& objectData = levelData.objects.back();
+			LevelData::ObjectData& objectData = levelData.objectDatas.back();
 			//ここでのファイルネームはオブジェクトの名前
 			if (object.contains("file_name")) {
 				//ファイル名
@@ -91,7 +91,7 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 
 	std::string levelEditorDirectoryPath = "Resources/LevelData/"+ levelData.folderName;
 	
-	for (LevelData::ObjectData& objectData : levelData.objects) {
+	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
 
 		//モデルの生成
 		//まだ無い場合は生成する
@@ -106,19 +106,18 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 		
 		//ワールドトランスフォームの初期化
 		//空だったら生成する
-		if (objectData.worldTransform.bufferResource_ == nullptr) {
-			WorldTransform worldTransform; 
-			worldTransform.Initialize();
-			worldTransform.translate_ = objectData.translation;
-			worldTransform.rotate_ = objectData.rotation;
-			worldTransform.scale_ = objectData.scaling;
+		WorldTransform* worldTransform = new WorldTransform();
+		worldTransform->Initialize();
+		worldTransform->translate_ = objectData.translation;
+		worldTransform->rotate_ = objectData.rotation;
+		worldTransform->scale_ = objectData.scaling;
 
-			//配列に登録
-			objectData.worldTransform = worldTransform;
-		}
+		//配列に登録
+		objectData.worldTransform = worldTransform;
 		
 	}
 }
+
 
 
 uint32_t LevelDataManager::Load(const std::string& filePath){
@@ -127,29 +126,12 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 	std::ifstream file;
 	std::string fullFilePath;
 
-	//ファイルを開く
-	//空であれば記録
-	
-	//データを持っているか
-	bool isHavingData = false;
-
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get();
-		if ( filePath== levelData->fullPath) {
-			isHavingData = true;
-			fullFilePath = levelData->fullPath;
-			break;
-		}
-	}
 
 
-	if (isHavingData == true) {
 
-	}
-	else {
-		std::string levelEditorDirectoryPath = "Resources/LevelData/";
-		fullFilePath = levelEditorDirectoryPath + filePath;
-	}
+	std::string levelEditorDirectoryPath = "Resources/LevelData/";
+	fullFilePath = levelEditorDirectoryPath + filePath;
+
 
 
 	
@@ -197,42 +179,26 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 
 
 
+	//レベルデータ格納用インスタンスを生成
+	levelDatas_[fullFilePath] = std::make_unique<LevelData>();
 
+	//それぞれに情報を記録
+	levelDatas_[fullFilePath]->folderName = folderName;
+	levelDatas_[fullFilePath]->fileName = fileName;
+	levelDatas_[fullFilePath]->handle = handle_;
+	levelDatas_[fullFilePath]->fullPath = fullFilePath;
+	levelDatas_[fullFilePath]->object = deserialized;
+	//ハンドルの加算
+	++handle_;
+	LevelData& levelData = *levelDatas_[fullFilePath];
+
+	//読み込み
+	Place(deserialized["objects"], levelData);
+
+	//生成
+	Ganarate(levelData);
 	
 
-
-	//新規読み込み
-	if (isHavingData == false) {
-
-		//レベルデータ格納用インスタンスを生成
-		levelDatas_[fullFilePath] = std::make_unique<LevelData>();
-
-		//それぞれに情報を記録
-		levelDatas_[fullFilePath]->folderName = folderName;
-		levelDatas_[fullFilePath]->fileName = fileName;
-		levelDatas_[fullFilePath]->handle = handle_;
-		levelDatas_[fullFilePath]->fullPath = fullFilePath;
-
-		//ハンドルの加算
-		++handle_;
-		LevelData& levelData = *levelDatas_[fullFilePath];
-
-		//読み込み
-		Place(deserialized["objects"], levelData);
-
-		//生成
-		Ganarate(levelData);
-	}
-	//再読み込み用
-	else {
-
-
-		//読み込み
-		Place(deserialized["objects"], levelData);
-
-		//生成
-		Ganarate(levelData);
-	}
 
 
 
@@ -245,14 +211,26 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 
 	//一度全てのオブジェクトのデータを消す
 	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
+		//LevelDataを取得
 		LevelData* levelData = it->second.get();
+
+		//一致したら消す
 		if (levelData->handle == levelDataHandle) {
-			for (auto& object : levelData->objects) {
-				// Model の解放
+			//モデルを消す
+			for (auto& object : levelData->objectDatas) {
+				// Modelの解放
 				if (object.model != nullptr) {
 					delete object.model;
 				}
+				//ワールドトランスフォームの解放
+				delete object.worldTransform;
+
 			}
+
+			levelData->objectDatas.~vector();
+
+			//無駄な処理をしないようにする
+			break;
 		}
 	}
 
@@ -260,15 +238,36 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 
 
 	//引数から探す
-	std::string path = {};
+	std::string fullFilePath = {};
 	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
 		LevelData* levelData = it->second.get();
 		if (levelData->handle == levelDataHandle) {
-			path = levelData->fullPath;
+			fullFilePath = levelData->fullPath;
 			break;
 		}
 	}
-	Load(path);
+
+
+
+
+
+
+
+
+
+	LevelData& levelData = *levelDatas_[fullFilePath];
+
+	//読み込み
+	Place(levelData.object["objects"], levelData);
+
+	//生成
+	Ganarate(levelData);
+
+
+
+
+
+
 
 }
 
@@ -277,8 +276,8 @@ void LevelDataManager::Update(uint32_t& levelDataHandle){
 		LevelData* levelData = it->second.get(); 
 		if (levelData->handle == levelDataHandle) {
 			//更新
-			for (auto& object : levelData->objects) {
-				object.worldTransform.Update();
+			for (auto& object : levelData->objectDatas) {
+				object.worldTransform->Update();
 			}
 			break; 
 		}
@@ -294,8 +293,8 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
-			for (LevelData::ObjectData& object : levelData->objects) {
-				object.model->Draw(object.worldTransform, camera, material, directionalLight);
+			for (LevelData::ObjectData& object : levelData->objectDatas) {
+				object.model->Draw(*object.worldTransform, camera, material, directionalLight);
 			}
 			//無駄なループ処理を防ぐよ
 			break;
@@ -311,8 +310,8 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
-			for (LevelData::ObjectData& object : levelData->objects) {
-				object.model->Draw(object.worldTransform, camera, material, pointLight);
+			for (LevelData::ObjectData& object : levelData->objectDatas) {
+				object.model->Draw(*object.worldTransform, camera, material, pointLight);
 			}
 			//無駄なループ処理を防ぐよ
 			break;
@@ -328,8 +327,8 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
-			for (LevelData::ObjectData& object : levelData->objects) {
-				object.model->Draw(object.worldTransform, camera, material, spotLight);
+			for (LevelData::ObjectData& object : levelData->objectDatas) {
+				object.model->Draw(*object.worldTransform, camera, material, spotLight);
 			}
 			//無駄なループ処理を防ぐよ
 			break;
@@ -344,7 +343,7 @@ LevelDataManager::~LevelDataManager(){
 	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
 		LevelData* levelData = it->second.get(); 
 
-		for (auto& object : levelData->objects) {
+		for (auto& object : levelData->objectDatas) {
 			// Model の解放
 			if (object.model != nullptr) {
 				delete object.model;
