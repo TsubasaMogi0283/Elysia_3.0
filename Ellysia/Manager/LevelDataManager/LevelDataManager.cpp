@@ -13,7 +13,6 @@
 
 void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
-
 	//"objects"の全オブジェクトを走査
 	for (nlohmann::json& object : objects) {
 		//各オブジェクトに必ずtypeが入っているよ
@@ -26,7 +25,6 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 		//MESHの場合
 		if (type.compare("MESH") == 0) {
 			//要素追加
-			//emplace_backというとvectorだね！
 			levelData.objects.emplace_back(LevelData::ObjectData{});
 			//今追加した要素の参照を得る
 			LevelData::ObjectData& objectData = levelData.objects.back();
@@ -36,14 +34,9 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 				objectData.fileName = object["file_name"];
 			}
 
-			
-
-
-
 			//トランスフォームのパラメータ読み込み
 			nlohmann::json& transform = object["transform"];
 			//Blenderと軸の方向が違うので注意！
-			// 
 			//平行移動
 			objectData.translation.x = (float)transform["translation"][1];
 			objectData.translation.y = (float)transform["translation"][2];
@@ -84,6 +77,7 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 				objectData.size.z = (float)collider["size"][0];
 			}
 
+			//子オブジェクト
 			if (object.contains("children")) {
 				Place(object["children"], levelData);
 			}
@@ -96,41 +90,33 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 void LevelDataManager::Ganarate(LevelData& levelData) {
 
 	std::string levelEditorDirectoryPath = "Resources/LevelData/"+ levelData.folderName;
+	
+	for (LevelData::ObjectData& objectData : levelData.objects) {
 
-
-
-	for (auto& objectData : levelData.objects) {
-		//first,secondとあるからmapかも
-		decltype(models_)::iterator it = models_.find(objectData.fileName);
-
-		//まだ読み込みがされていない場合読み込む
-		if (it == models_.end()) {
-			Model* model = nullptr;
-			std::string modelPath = objectData.fileName ;
-			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, modelPath);
-			model = Model::Create(modelHandle);
-			models_[objectData.fileName] = model;
+		//モデルの生成
+		//まだ無い場合は生成する
+		if (objectData.model == nullptr) {
+			//モデルの読み込み
+			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.fileName);
+			//生成
+			Model* model = Model::Create(modelHandle);
+			//代入
+			objectData.model = model;
 		}
-
-
-		//モデル
-
-		//levelDatas_[filePathString]
-
-
-
-
+		
 		//ワールドトランスフォームの初期化
-		WorldTransform* worldTransform = new WorldTransform();
-		worldTransform->Initialize();
-		worldTransform->translate_ = objectData.translation;
-		worldTransform->rotate_ = objectData.rotation;
-		worldTransform->scale_ = objectData.scaling;
+		//空だったら生成する
+		if (objectData.worldTransform.bufferResource_ == nullptr) {
+			WorldTransform worldTransform; 
+			worldTransform.Initialize();
+			worldTransform.translate_ = objectData.translation;
+			worldTransform.rotate_ = objectData.rotation;
+			worldTransform.scale_ = objectData.scaling;
 
-
-
-		//配列に登録
-		worldTransforms_.push_back(worldTransform);
+			//配列に登録
+			objectData.worldTransform = worldTransform;
+		}
+		
 	}
 }
 
@@ -142,8 +128,8 @@ void LevelDataManager::Load(const std::string& filePath){
 
 	//ファイルを開く
 	std::string levelEditorDirectoryPath = "Resources/LevelData/";
-	std::string filePathString = levelEditorDirectoryPath + filePath ;
-	file.open(filePathString);
+	std::string fullFilePath = levelEditorDirectoryPath + filePath ;
+	file.open(fullFilePath);
 
 	if (file.fail()) {
 		assert(0);
@@ -169,7 +155,7 @@ void LevelDataManager::Load(const std::string& filePath){
 	assert(name.compare("scene") == 0);
 
 	//レベルデータ格納用インスタンスを生成
-	levelDatas_[filePathString] = new LevelData();
+	levelDatas_[fullFilePath] = std::make_unique<LevelData>();
 	
 	
 
@@ -186,11 +172,12 @@ void LevelDataManager::Load(const std::string& filePath){
 	
 
 	//それぞれに情報を記録
-	levelDatas_[filePathString]->folderName = folderName;
-	levelDatas_[filePathString]->fileName = fileName;
-	levelDatas_[filePathString]->handle = handle_;
+	levelDatas_[fullFilePath]->folderName = folderName;
+	levelDatas_[fullFilePath]->fileName = fileName;
+	levelDatas_[fullFilePath]->handle = handle_;
+	levelDatas_[fullFilePath]->fullPath = fullFilePath;
 
-	LevelData& levelData = *levelDatas_[filePathString];
+	LevelData& levelData = *levelDatas_[fullFilePath];
 
 	//ハンドルの加算
 	++handle_;
@@ -204,91 +191,85 @@ void LevelDataManager::Load(const std::string& filePath){
 }
 
 void LevelDataManager::Update(uint32_t& levelDataHandle){
-	levelDataHandle;
-	//ワールドトランスフォームの更新
-	for (WorldTransform* object : worldTransforms_) {
-		object->Update();
+	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
+		LevelData* levelDataPtr = it->second.get(); 
+		if (levelDataPtr->handle == levelDataHandle) {
+			//更新
+			for (auto& object : levelDataPtr->objects) {
+				object.worldTransform.Update();
+			}
+			break; 
+		}
 	}
-
 }
 
 #pragma region 描画
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, DirectionalLight& directionalLight){
-	levelDataHandle;
 	
-	uint32_t count = 0;
-	for (auto& objectData : levelDatas_.begin()->second->objects) {
-		//ファイル名から登録済みモデルを検索
-		Model* model = nullptr;
-		decltype(models_)::iterator it = models_.find(objectData.fileName);
-		//見つかったらmodelに入れる
-		if (it != models_.end()) {
-			model = it->second;
+	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
+		LevelData* levelData = it->second.get(); 
+		if (levelData->handle == levelDataHandle) {
+
+			//描画
+			for (LevelData::ObjectData& object : levelData->objects) {
+				object.model->Draw(object.worldTransform, camera, material, directionalLight);
+			}
+			//無駄なループ処理を防ぐよ
+			break;
+
 		}
-
-		model->Draw(*worldTransforms_[count], camera, material, directionalLight);
-
-		//数を増やしていく
-		count++;
 	}
 }
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, PointLight& pointLight){
-	levelDataHandle;
-	
-	uint32_t count = 0;
-	for (auto& objectData : levelDatas_.begin()->second->objects) {
-		//ファイル名から登録済みモデルを検索
-		Model* model = nullptr;
-		decltype(models_)::iterator it = models_.find(objectData.fileName);
-		//見つかったらmodelに入れる
-		if (it != models_.end()) {
-			model = it->second;
+
+	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
+		LevelData* levelData = it->second.get(); 
+		if (levelData->handle == levelDataHandle) {
+
+			//描画
+			for (LevelData::ObjectData& object : levelData->objects) {
+				object.model->Draw(object.worldTransform, camera, material, pointLight);
+			}
+			//無駄なループ処理を防ぐよ
+			break;
+
 		}
-
-		model->Draw(*worldTransforms_[count], camera, material, pointLight);
-
-		//数を増やしていく
-		count++;
 	}
 }
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, SpotLight& spotLight){
-	levelDataHandle;
-	
-	uint32_t count = 0;
-	for (auto& objectData : levelDatas_.begin()->second->objects) {
-		//ファイル名から登録済みモデルを検索
-		Model* model = nullptr;
-		decltype(models_)::iterator it = models_.find(objectData.fileName);
-		//見つかったらmodelに入れる
-		if (it != models_.end()) {
-			model = it->second;
+
+	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
+		LevelData* levelData = it->second.get();
+		if (levelData->handle == levelDataHandle) {
+
+			//描画
+			for (LevelData::ObjectData& object : levelData->objects) {
+				object.model->Draw(object.worldTransform, camera, material, spotLight);
+			}
+			//無駄なループ処理を防ぐよ
+			break;
+
 		}
-
-		model->Draw(*worldTransforms_[count], camera, material, spotLight);
-
-		//数を増やしていく
-		count++;
 	}
 }
 
 #pragma endregion
 
 LevelDataManager::~LevelDataManager(){
-	for (auto& pair : models_) {
-		delete pair.second;
-	}
-	models_.clear();
+	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
+		LevelData* levelDataPtr = it->second.get(); 
 
-	for (WorldTransform* object : worldTransforms_) {
-		delete object;
+		for (auto& object : levelDataPtr->objects) {
+			// Model の解放
+			if (object.model != nullptr) {
+				delete object.model;
+			}
+		}
 	}
-	worldTransforms_.clear();
 
-	for (auto& pair : levelDatas_) {
-		delete pair.second;
-	}
 	levelDatas_.clear();
+	
 }

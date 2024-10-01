@@ -3,13 +3,13 @@
 #include <vector>
 #include <array>
 #include <map>
-
+#include <memory>
 
 #include <Vector3.h>
 #include <json.hpp>
 #include <Model.h>
 #include "WorldTransform.h"
-
+#include "Collider/Collider.h"
 
 
 struct Camera;
@@ -85,9 +85,9 @@ private:
 	struct LevelData {
 		struct ObjectData {
 			//モデル
-			std::unique_ptr<Model>model_ = nullptr;
+			Model* model = nullptr;
 			//ワールドトランスフォーム
-			WorldTransform worldTransform_ = {};
+			WorldTransform worldTransform = {};
 
 			//オブジェクトのファイル名
 			std::string fileName;
@@ -98,30 +98,28 @@ private:
 			Vector3 translation;
 
 			//コライダー
+			Collider* collider;
 			std::string colliderType;
 			Vector3 center;
 			Vector3 size;
 		};
 
 		//ハンドル
-		uint32_t handle;
-
+		uint32_t handle = 0u;
 
 		//オブジェクト
-		std::vector<ObjectData> objects;
-
+		std::vector<ObjectData> objects = {};
 
 		//フォルダ名
-		std::string folderName;
+		std::string folderName = {};
 		//ファイル名
-		std::string fileName;
+		std::string fileName = {};
+		//フルパス
+		std::string fullPath = {};
+
 	};
 
 
-	//モデルのコンテナ
-	std::map<std::string,Model*> models_;
-
-	std::vector<WorldTransform*> worldTransforms_;
 
 private:
 	/// <summary>
@@ -139,7 +137,7 @@ private:
 private:
 
 	//ここにデータを入れていく
-	std::map<std::string ,LevelData*> levelDatas_;
+	std::map<std::string , std::unique_ptr<LevelData>> levelDatas_;
 
 	uint32_t handle_ = 0u;
 
