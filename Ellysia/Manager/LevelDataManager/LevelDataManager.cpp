@@ -190,6 +190,28 @@ void LevelDataManager::Load(const std::string& filePath){
 
 }
 
+void LevelDataManager::Reload(uint32_t& levelDataHandle){
+	levelDataHandle;
+
+
+
+
+	LevelData& levelData = *levelDatas_[fullFilePath];
+
+	//ハンドルの加算
+	++handle_;
+
+	//読み込み(再帰機能付き)
+	Place(deserialized["objects"], levelData);
+
+	//生成
+	Ganarate(levelData);
+
+
+
+
+}
+
 void LevelDataManager::Update(uint32_t& levelDataHandle){
 	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
 		LevelData* levelDataPtr = it->second.get(); 

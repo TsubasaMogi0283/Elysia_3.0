@@ -30,12 +30,12 @@
                 "translation": [
                     0.0,
                     0.0,
-                    0.0
+                    2.1550323963165283
                 ],
                 "rotation": [
-                    90.00000762939453,
+                    0.0,
                     -0.0,
-                    179.99998474121094
+                    0.0
                 ],
                 "scaling": [
                     1.0,
@@ -44,6 +44,41 @@
                 ]
             },
             "file_name": "Sphere",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "TD2_Enemy",
+            "transform": {
+                "translation": [
+                    -4.200106620788574,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "TD2_Enemy",
             "collider": {
                 "type": "BOX",
                 "center": [

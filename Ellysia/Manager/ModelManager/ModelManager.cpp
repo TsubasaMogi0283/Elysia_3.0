@@ -132,7 +132,7 @@ uint32_t ModelManager::LoadModelFileForLevelData(const std::string& directoryPat
 	//一度読み込んだものはその値を返す
 	//新規は勿論読み込みをする
 	//Resources\LevelData\Test\Ground\Ground.obj"
-	std::string filePath = directoryPath;
+	std::string filePath = directoryPath + "/" + fileName + "/" + fileName;
 	if (ModelManager::GetInstance()->modelInfromtion_.find(filePath) != ModelManager::GetInstance()->modelInfromtion_.end()) {
 		return ModelManager::GetInstance()->modelInfromtion_[filePath].handle;
 	}

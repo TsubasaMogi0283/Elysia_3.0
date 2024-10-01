@@ -34,6 +34,12 @@ public:
 	void Load(const std::string& filePath);
 
 	/// <summary>
+	/// 再読み込み
+	/// </summary>
+	/// <param name="levelDataHandle"></param>
+	void Reload(uint32_t& levelDataHandle);
+
+	/// <summary>
 	/// 更新
 	/// </summary>
 	/// <param name="levelDataHandle"></param>
