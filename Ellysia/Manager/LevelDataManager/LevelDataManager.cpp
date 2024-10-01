@@ -348,6 +348,8 @@ LevelDataManager::~LevelDataManager(){
 			if (object.model != nullptr) {
 				delete object.model;
 			}
+			delete object.worldTransform;
+
 		}
 	}
 
