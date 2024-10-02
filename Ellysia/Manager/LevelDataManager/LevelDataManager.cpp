@@ -208,6 +208,8 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 }
 
 void LevelDataManager::Reload(uint32_t& levelDataHandle){
+	levelDatas_;
+
 
 	//一度全てのオブジェクトのデータを消す
 	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
@@ -248,6 +250,31 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 	}
 
 
+	std::ifstream file;
+	file.open(fullFilePath);
+
+	if (file.fail()) {
+		assert(0);
+	}
+
+	//JSON文字列から解凍したデータ
+	nlohmann::json deserialized;
+
+	//解凍
+	file >> deserialized;
+
+	//正しいレベルデータファイルかチェック
+	//objectかどうか
+	assert(deserialized.is_object());
+	//namaeのキーワードがあるかどうか
+	assert(deserialized.contains("name"));
+	//nameはstring型かどうか
+	assert(deserialized["name"].is_string());
+
+	//"name"を文字列として取得
+	std::string name = deserialized["name"].get<std::string>();
+	//正しいレベルデータファイルはチェック
+	assert(name.compare("scene") == 0);
 
 
 
@@ -258,7 +285,7 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 	LevelData& levelData = *levelDatas_[fullFilePath];
 
 	//読み込み
-	Place(levelData.object["objects"], levelData);
+	Place(deserialized["objects"], levelData);
 
 	//生成
 	Ganarate(levelData);
