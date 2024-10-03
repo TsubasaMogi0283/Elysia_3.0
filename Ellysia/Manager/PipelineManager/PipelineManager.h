@@ -213,10 +213,26 @@ public:
 #pragma endregion
 
 
+
 private:
-	void GenaratePSO(ComPtr<ID3D12RootSignature>, ComPtr<IDxcBlob>,ComPtr<IDxcBlob> vertexShaderBlob, ComPtr<ID3D12PipelineState>);
+	struct PSOInformation {
+		ComPtr<ID3DBlob> signatureBlob_ = nullptr;
+		ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
+		ComPtr<IDxcBlob> pixelShaderBlob_ = nullptr;
+		ComPtr<IDxcBlob> vertexShaderBlob_ = nullptr;
+		ComPtr<ID3D12PipelineState> graphicsPipelineState_ = nullptr;
 
+	};
 
+private:
+	/// <summary>
+	/// PSOの生成
+	/// </summary>
+	/// <param name="psoInformation"></param>
+	/// <param name="inputLayoutDesc"></param>
+	/// <param name="blendDesc"></param>
+	/// <param name="rasterizerDesc"></param>
+	static void GenaratePSO(PSOInformation& psoInformation, D3D12_INPUT_LAYOUT_DESC& inputLayoutDesc, D3D12_BLEND_DESC& blendDesc, D3D12_RASTERIZER_DESC& rasterizerDesc);
 
 public:
 	/// <summary>
@@ -279,15 +295,7 @@ public:
 
 private:
 
-	struct PSOInformation {
-		ComPtr<ID3DBlob> signatureBlob_ = nullptr;
-		ComPtr<ID3DBlob> errorBlob_ = nullptr;
-		ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
-		ComPtr<IDxcBlob> pixelShaderBlob_ = nullptr;
-		ComPtr<IDxcBlob> vertexShaderBlob_ = nullptr;
-		ComPtr<ID3D12PipelineState> graphicsPipelineState_ = nullptr;
-
-	};
+	
 
 	//ライン用
 	PSOInformation linePSO_ = {};
