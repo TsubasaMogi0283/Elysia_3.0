@@ -48,10 +48,10 @@ void Ellysia::Initialize(){
 	///DirectX第2の初期化
 	DirectXSetup::GetInstance()->SecondInitialize();
 
-	//ImGuiManagerの初期化
-#ifdef _DEBUG
-	ImGuiManager::GetInstance()->Initialize();
 	
+#ifdef _DEBUG
+	//ImGuiManagerの初期化
+	ImGuiManager::GetInstance()->Initialize();
 #endif
 
 

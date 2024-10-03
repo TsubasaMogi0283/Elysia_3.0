@@ -11,7 +11,8 @@ struct Vignette
     float scale;
     //乗
     float pow;
-	
+	//色
+    float3 color; 
 };
 
 Texture2D<float4> gTexture : register(t0);
