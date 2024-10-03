@@ -1,9 +1,11 @@
 #include "Model.h"
 #include <Camera.h>
 #include <TextureManager.h>
+#include <ModelManager.h>
 #include <PipelineManager.h>
 #include "DirectXSetup.h"
 #include <numbers>
+#include <cassert>
 #include <SrvManager.h>
 
 #include "WorldTransform.h"
@@ -13,17 +15,14 @@
 #include <PointLight.h>
 #include <SpotLight.h>
 
+
 Model* Model::Create(uint32_t modelHandle) {
 	//新たなModel型のインスタンスのメモリを確保
 	Model* model = new Model();
 
-	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
-	PipelineManager::GetInstance()->SetModelBlendMode(1);
-	PipelineManager::GetInstance()->GenerateModelPSO();
+	
 	//テクスチャの読み込み
 	model->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
-	//Drawでも使いたいので取り入れる
-	model->modelHandle_ = modelHandle;
 
 	//モデルデータ
 	model->modelData_ = ModelManager::GetInstance()->GetModelData(modelHandle);

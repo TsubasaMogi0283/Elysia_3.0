@@ -1,4 +1,5 @@
 #include "Tree.h"
+#include <ModelManager.h>
 
 void Tree::Initialize(const uint32_t& modelHandle,const Vector3& position){
 	//モデルの作成

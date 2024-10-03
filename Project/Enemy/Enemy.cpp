@@ -6,6 +6,7 @@
 #include "SpotLight.h"
 #include <SingleCalculation.h>
 #include <numbers>
+#include <ModelManager.h>
 
 void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	

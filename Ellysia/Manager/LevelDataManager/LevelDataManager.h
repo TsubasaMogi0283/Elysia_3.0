@@ -4,6 +4,7 @@
 #include <array>
 #include <map>
 #include <memory>
+#include <fstream>
 
 #include <Vector3.h>
 #include <json.hpp>

@@ -1,13 +1,21 @@
 #include "PipelineManager.h"
 
 
-
+#include <vector>
 
 PipelineManager* PipelineManager::GetInstance() {
 	//関数内static変数として宣言する
 	static PipelineManager instance;
 
 	return &instance;
+}
+
+void PipelineManager::Initialize(){
+	
+	//モデル
+	PipelineManager::GetInstance()->SetModelBlendMode(1);
+	PipelineManager::GetInstance()->GenerateModelPSO();
+
 }
 
 //線
@@ -693,7 +701,6 @@ void PipelineManager::GenerateModelPSO() {
 	}
 
 	//バイナリを元に生成
-	//ID3D12RootSignature* rootSignature_ = nullptr;
 	hr = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->modelPSO_.rootSignature_));
 	assert(SUCCEEDED(hr));
@@ -707,21 +714,20 @@ void PipelineManager::GenerateModelPSO() {
 
 	////InputLayout
 	//InputLayout・・VertexShaderへ渡す頂点データがどのようなものかを指定するオブジェクト
-
-
-
-	//余分に読み込んでしまうけどこれしか方法が無かった
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
+	std::vector <D3D12_INPUT_ELEMENT_DESC> inputElementDescs = {};
+	inputElementDescs.push_back({});
 	inputElementDescs[0].SemanticName = "POSITION";
 	inputElementDescs[0].SemanticIndex = 0;
 	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
+	inputElementDescs.push_back({});
 	inputElementDescs[1].SemanticName = "TEXCOORD";
 	inputElementDescs[1].SemanticIndex = 0;
 	inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
+	inputElementDescs.push_back({});
 	inputElementDescs[2].SemanticName = "NORMAL";
 	inputElementDescs[2].SemanticIndex = 0;
 	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -731,8 +737,8 @@ void PipelineManager::GenerateModelPSO() {
 
 
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
-	inputLayoutDesc.pInputElementDescs = inputElementDescs;
-	inputLayoutDesc.NumElements = _countof(inputElementDescs);
+	inputLayoutDesc.pInputElementDescs = inputElementDescs.data();
+	inputLayoutDesc.NumElements = static_cast<UINT>(inputElementDescs.size());
 
 
 
@@ -817,13 +823,7 @@ void PipelineManager::GenerateModelPSO() {
 		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 
-
-
-
-
 		break;
-
-
 	}
 
 

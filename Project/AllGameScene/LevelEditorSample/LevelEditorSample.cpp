@@ -38,7 +38,6 @@ void LevelEditorSample::Initialize(){
 
 void LevelEditorSample::Update(GameManager* gameManager){
 
-
 #ifdef _DEBUG
 	ImGui::Begin("Camera"); 
 	ImGui::SliderFloat3("Position", &camera_.translate_.x, -50.0f, 50.0f);
@@ -56,10 +55,6 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	
 
 #endif // _DEBUG
-
-
-
-
 
 	gameManager;
 

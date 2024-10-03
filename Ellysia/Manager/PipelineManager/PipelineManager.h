@@ -212,8 +212,19 @@ public:
 
 #pragma endregion
 
+
+private:
+	void GenaratePSO(ComPtr<ID3D12RootSignature>, ComPtr<IDxcBlob>,ComPtr<IDxcBlob> vertexShaderBlob, ComPtr<ID3D12PipelineState>);
+
+
+
 public:
-	//アロー演算子の時邪魔になってしまうからここにいれよう
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize();
+
+
 	//ライン用
 	static void GenaratedLinePSO();
 

@@ -10,6 +10,7 @@
 #include "SampleScene/SampleScene.h"
 #include <SingleCalculation.h>
 #include <Collider/CollisionConfig.h>
+#include <ModelManager.h>
 
 void Player::Initialize(){
 

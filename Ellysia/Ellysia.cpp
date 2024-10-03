@@ -54,6 +54,10 @@ void Ellysia::Initialize(){
 	
 #endif
 
+
+	//パイプラインの初期化
+	PipelineManager::GetInstance()->Initialize();
+
 	//Inputの初期化
 	Input::GetInstance()->Initialize();
 	
