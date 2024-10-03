@@ -10,6 +10,7 @@
 #include "Material.h"
 #include <BackText.h>
 #include <LevelDataManager.h>
+#include <Vignette.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class GameManager;
@@ -58,7 +59,7 @@ public:
 
 
 private:
-	std::unique_ptr<BackText> back_ = nullptr;
+	std::unique_ptr<Vignette> back_ = nullptr;
 	Camera camera_ = {};
 	Material material_ = {};
 	DirectionalLight directionalLight_ = {};

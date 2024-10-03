@@ -31,7 +31,7 @@ void LevelEditorSample::Initialize(){
 	camera_.translate_ = {.x = 0.0f,.y = 2.0f,.z = -30.0f };
 
 	//ポストエフェクト
-	back_ = std::make_unique<BackText>();
+	back_ = std::make_unique<Vignette>();
 	back_->Initialize();
 
 }

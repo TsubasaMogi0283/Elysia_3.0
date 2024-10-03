@@ -57,6 +57,7 @@ public:
 	}
 
 private:
+	//送るデータ
 	struct VignetteData {
 		//倍
 		float scale;
@@ -64,6 +65,8 @@ private:
 		float pow;
 		//色
 		Vector3 color;
+		float padding[3];
+
 	};
 
 
