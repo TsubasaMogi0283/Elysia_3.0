@@ -18,12 +18,28 @@ struct DirectionalLight;
 struct PointLight;
 struct SpotLight;
 
-class LevelDataManager {
-public:
+class LevelDataManager final{
+private:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	LevelDataManager()=default;
+	LevelDataManager() = default;
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~LevelDataManager() = default;
+
+public:
+	//シングルインスタンス
+	static LevelDataManager* GetInstance();
+
+	//コピーコンストラクタ禁止
+	LevelDataManager(const LevelDataManager& levelDataManager) = delete;
+
+	//代入演算子を無効にする
+	LevelDataManager& operator=(const LevelDataManager& levelDataManager) = delete;
+
 
 public:
 
@@ -44,6 +60,12 @@ public:
 	/// </summary>
 	/// <param name="levelDataHandle"></param>
 	void Update(uint32_t&levelDataHandle);
+
+	/// <summary>
+	/// 消去
+	/// </summary>
+	/// <param name="levelDataHandle"></param>
+	void Delete(uint32_t& levelDataHandle);
 
 #pragma region 描画
 
@@ -78,9 +100,9 @@ public:
 #pragma endregion
 
 	/// <summary>
-	/// デストラクタ
+	/// デストラクタの代わり
 	/// </summary>
-	~LevelDataManager();
+	void Release();
 
 
 
@@ -110,7 +132,6 @@ private:
 			Vector3 size;
 		};
 
-		nlohmann::json object;
 
 		//ハンドル
 		uint32_t handle = 0u;
@@ -140,6 +161,15 @@ private:
 	/// </summary>
 	/// <param name="directoryPath"></param>
 	void Ganarate(LevelData& levelData);
+
+	
+	/// <summary>
+	/// JSONファイルを解凍
+	/// </summary>
+	/// <param name="file"></param>
+	/// <param name="fullFilePath"></param>
+	/// <returns></returns>
+	nlohmann::json Deserialize(std::ifstream& file,std::string& fullFilePath);
 
 
 private:

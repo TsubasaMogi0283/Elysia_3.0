@@ -14,14 +14,15 @@
 void LevelEditorSample::Initialize(){
 
 
-	levelEditor_ = new LevelDataManager();
-	//levelEditor_->Load("Resources/LevelData/LevelData1", "TL1TestFor13.json");
+	levelEditor_ = LevelDataManager::GetInstance();
 
-	levelHandle_=levelEditor_->Load("Test/Test.json");
+	//読み込み
+	levelHandle_= levelEditor_->Load("Test/Test.json");
 
+	//平行光源の初期化
 	directionalLight_.Initialize();
 	
-
+	//マテリアルの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = Directional;
 
@@ -29,6 +30,7 @@ void LevelEditorSample::Initialize(){
 	camera_.Initialize();
 	camera_.translate_ = {.x = 0.0f,.y = 2.0f,.z = -30.0f };
 
+	//ポストエフェクト
 	back_ = std::make_unique<BackText>();
 	back_->Initialize();
 
@@ -91,5 +93,4 @@ void LevelEditorSample::DrawSprite(){
 }
 
 LevelEditorSample::~LevelEditorSample(){
-	delete levelEditor_;
 }
