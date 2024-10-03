@@ -48,7 +48,7 @@ void PipelineManager::GenaratePSO(PSOInformation& psoInformation, D3D12_INPUT_LA
 
 	//実際に生成
 	HRESULT hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&PipelineManager::GetInstance()->modelPSO_.graphicsPipelineState_));
+		IID_PPV_ARGS(&psoInformation.graphicsPipelineState_));
 	assert(SUCCEEDED(hResult));
 
 
@@ -1727,54 +1727,8 @@ void PipelineManager::GenarateFullScreenPSO() {
 	assert(PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_ != nullptr);
 
 
-	////PSO生成
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->fullScreenPSO_.rootSignature_.Get();
-	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
-	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->fullScreenPSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->fullScreenPSO_.vertexShaderBlob_->GetBufferSize() };
-	//vertexShaderBlob_->GetBufferSize();
-	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_->GetBufferSize() };
-	//pixelShaderBlob_->GetBufferSize();
-	graphicsPipelineStateDesc.BlendState = blendDesc;
-	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
-
-	//書き込むRTVの情報
-	graphicsPipelineStateDesc.NumRenderTargets = 1;
-	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-
-	//利用するトポロジ(形状)のタイプ三角形
-	graphicsPipelineStateDesc.PrimitiveTopologyType =
-		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-
-	//どのように画面に色を打ち込むのか設定
-	graphicsPipelineStateDesc.SampleDesc.Count = 1;
-	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-
-	//どのように画面に色を打ち込むのか設定
-	graphicsPipelineStateDesc.SampleDesc.Count = 1;
-	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-
-	//DepthStencilStateの設定
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-	//Depthの機能を有効化する
-	depthStencilDesc.DepthEnable = false;
-	//書き込みします
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	//比較関数はLessEqual 近ければ描画される
-	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	//DepthStencilの設定
-	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
-	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-
-	//実際に生成
-	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&PipelineManager::GetInstance()->fullScreenPSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hResult));
-
-
-
-
+	//PSOの生成
+	GenaratePSO(PipelineManager::GetInstance()->fullScreenPSO_, inputLayoutDesc, blendDesc, rasterizerDesc);
 
 }
 
@@ -3607,7 +3561,6 @@ void PipelineManager::GenarateRandomEffectPSO() {
 
 }
 
-
 void PipelineManager::GenarateSkyBoxPSO() {
 
 	//PSO
@@ -3817,9 +3770,6 @@ void PipelineManager::GenarateSkyBoxPSO() {
 		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
 
-
-
-
 		break;
 
 	case BlendModeScreen:
@@ -3829,22 +3779,12 @@ void PipelineManager::GenarateSkyBoxPSO() {
 		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 
-
-
-
-
 		break;
-
-
 	}
 
 
 
 
-
-
-
-	////RasterizerState
 	//RasterizerState・・・Rasterizerに対する設定
 	//					  三角形の内部をピクセルに分解して、
 	//					  PixelShaderを起動することでこの処理への設定を行う
