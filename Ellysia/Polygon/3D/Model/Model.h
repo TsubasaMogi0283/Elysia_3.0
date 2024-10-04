@@ -1,12 +1,5 @@
 #pragma once
-#include <string>
-#include <cassert>
-#include <fstream>
-#include <sstream>
-#include <array>
-#include <memory>
-#include <DirectXTex.h>
-#include <d3dx12.h>
+
 #include "DirectXSetup.h"
 
 #include "Matrix4x4.h"
@@ -14,10 +7,8 @@
 #include "TransformationMatrix.h"
 #include "Matrix4x4Calculation.h"
 #include "VertexData.h"
-#include "ModelData.h"
-#include "ModelManager.h"
-
 #include "LightingType.h"
+#include "ModelData.h"
 
 struct WorldTransform;
 struct Camera;
@@ -39,6 +30,8 @@ public:
 	/// <param name="modelHandle">モデルハンドル</param>
 	/// <returns></returns>
 	static Model* Create(uint32_t modelHandle);
+
+	#pragma region 描画
 
 	/// <summary>
 	/// 描画
@@ -64,7 +57,7 @@ public:
 	/// <param name="spotLight"></param>
 	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight);
 
-
+#pragma endregion
 
 	/// <summary>
 	/// デストラクタ
@@ -93,7 +86,7 @@ public:
 	}
 
 
-private:
+
 
 private:
 	//頂点リソースを作る
@@ -122,7 +115,6 @@ private:
 	uint32_t eviromentTextureHandle_ = 0;
 
 	//モデルハンドル
-	uint32_t modelHandle_ = 0u;
 	ModelData modelData_ = {};
 
 	//デフォルトはα加算

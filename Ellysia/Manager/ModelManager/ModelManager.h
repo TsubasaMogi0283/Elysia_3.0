@@ -4,15 +4,21 @@
 #include <fstream>
 #include <sstream>
 #include <list>
-
+#include <map>
 
 #include <ModelData.h>
 #include "Animation.h"
 
 class ModelManager final{
 private:
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	ModelManager()=default;
 	
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~ModelManager()=default;
 
 public:
@@ -28,10 +34,21 @@ public:
 
 private:
 
-	//モデルデータの読み込み
+	/// <summary>
+	/// 通常のモデルデータの読み込み
+	/// </summary>
+	/// <param name="directoryPath"></param>
+	/// <param name="fileName"></param>
+	/// <returns></returns>
 	static ModelData LoadFile(const std::string& directoryPath, const std::string& fileName);
 
-	static ModelData LoadFileFotLeveldata(const std::string& fileNameFolder, const std::string& fileName);
+	/// <summary>
+	/// レベルエディタ専用のモデルデータの読み込み
+	/// </summary>
+	/// <param name="fileNameFolder"></param>
+	/// <param name="fileName"></param>
+	/// <returns></returns>
+	static ModelData LoadFileForLeveldata(const std::string& fileNameFolder, const std::string& fileName);
 
 public:
 
@@ -67,19 +84,47 @@ public:
 
 public:
 
+	//ModelData GetModelData(const std::string& filePath) {
+	//	auto it = modelInfromtion_.find(filePath);
+	//	if (it != modelInfromtion_.end()) {
+	//		return it->second.modelData;
+	//	}
+	//	// キーが存在しない場合のエラー処理
+	//	throw std::runtime_error("Model not found");
+	//}
+	//
+	//Animation GetModelAnimation(const std::string& filePath) {
+	//	auto it = modelInfromtion_.find(filePath);
+	//	if (it != modelInfromtion_.end()) {
+	//		return it->second.animationData;
+	//	}
+	//	// キーが存在しない場合のエラー処理
+	//	throw std::runtime_error("Model not found");
+	//}
+
+
 	ModelData GetModelData(uint32_t handle) {
-		return modelInfromtion_[handle].modelData;
-	}
-	Animation GetModelAnimation(uint32_t handle) {
-		return modelInfromtion_[handle].animationData;
+		for (const auto& [filePath, modelInfo] : modelInfromtion_) {
+			if (modelInfo.handle == handle) {
+				return modelInfo.modelData;
+			}
+		}
+		// 一致するhandleが見つからなかった場合のエラー処理
+		throw std::runtime_error("Model not found for given handle");
 	}
 
+	Animation GetModelAnimation(uint32_t handle) {
+		for (const auto& [filePath, modelInfo] : modelInfromtion_) {
+			if (modelInfo.handle == handle) {
+				return modelInfo.animationData;
+			}
+		}
+		// 一致するhandleが見つからなかった場合のエラー処理
+		throw std::runtime_error("Animation not found for given handle");
+	}
 
 
 private:
-
-	//読み込みの最大数
-	static const uint32_t MODEL_MAX_AMOUNT_ = 512;
 
 	struct ModelInformation {
 		//モデルデータ
@@ -100,7 +145,6 @@ private:
 
 
 
-	//mapにしたい
-	std::array<ModelInformation, MODEL_MAX_AMOUNT_> modelInfromtion_{};
-
+	//ここにどんどんデータを入れていく
+	std::map<std::string, ModelInformation> modelInfromtion_{};
 };

@@ -1,11 +1,26 @@
 #pragma once
 #include "Vector3.h"
 #include <cstdint>
+#include <string>
+#include "AABB.h"
+
+enum CollisionType {
+	//球
+	SphereType,
+	//AABB
+	AABBType,
+	//ボックス
+	BoxType,
+	//扇
+	FanType,
+
+};
 
 class Collider{
 public:
 	//衝突時に呼ばれる関数
 	virtual void OnCollision()=0;
+
 
 	//ワールド座標を取得
 	//純粋仮想関数
@@ -13,7 +28,6 @@ public:
 
 
 public:
-	//アクセッサ
 
 	//半径を取得
 	float GetRadius() {
@@ -23,6 +37,39 @@ public:
 	void SetRadius_(float radius) {
 		this->radius_ = radius;
 	}
+
+
+
+#pragma region AABB
+
+	/// <summary>
+	/// 上方のサイズ
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetUpSideSize() {
+		return upSideSize_;
+	}
+	
+	/// <summary>
+	/// 下方のサイズ
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetDownSideSize() {
+		return downSideSize_;
+	}
+
+#pragma endregion
+
+
+
+	/// <summary>
+	/// 衝突判定で使う形の種類の値を取得
+	/// </summary>
+	/// <returns></returns>
+	inline uint32_t GetCollisionType() {
+		return collisionType_;
+	}
+
 
 public:
 	//衝突属性(自分)を取得
@@ -44,9 +91,30 @@ public:
 	}
 
 protected:
+
+	//当たり判定の種類
+	uint32_t collisionType_ = CollisionType::SphereType;
+
+#pragma region 球
+
 	//衝突半径
 	float radius_ = 1.0f;
 
+#pragma endregion
+
+
+
+#pragma region AABB
+
+	//AABBのmax部分に加算する縦横高さのサイズ
+	Vector3 upSideSize_ = {};
+
+	//AABBのmax部分に加算する縦横高さのサイズ
+	Vector3 downSideSize_ = {};
+
+
+
+#pragma endregion
 
 private:
 	

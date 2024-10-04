@@ -45,6 +45,7 @@ void LightWeapon::OnCollision() {
 	isCollision_ = true;
 }
 
+
 Vector3 LightWeapon::GetWorldPosition() {
 	Vector3 result = {};
 	result.x = worldTransform_.worldMatrix_.m[3][0];

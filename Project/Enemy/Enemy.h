@@ -7,29 +7,15 @@
 #include <memory>
 #include "../../Ellysia/Line/Line.h"
 #include "Stage/Ground/StageRect.h"
+#include "EnemyAttackCollision.h"
+#include "AABB.h"
+#include "EnemyCondition.h"
 
 struct Camera;
 struct SpotLight;
 class Player;
 
-//後々StatePatternで分けるつもり
-enum EnemyCondition {
-	//何もしない
-	NoneMove,
-	//通常
-	Move,
-	//追いかけ始めるときの座標
-	PreTracking,
-	//追いかける
-	Tracking,
-	//攻撃
-	Attack,
 
-	//速度反転
-	InverseSpeed,
-
-
-};
 
 class Enemy :public Collider{
 public:
@@ -63,7 +49,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Enemy() = default;
+	~Enemy();
 
 
 
@@ -73,35 +59,19 @@ public:
 	/// </summary>
 	void OnCollision()override;
 
+
+
 	/// <summary>
 	/// ワールド座標
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetWorldPosition()override;
 
-	/// <summary>
-	/// 座標の指定
-	/// </summary>
-	/// <param name="translate"></param>
-	void SetTranslate(Vector3& translate);
-
 #pragma region 座標の設定
 
-	/// <summary>
-	/// X座標の設定
-	/// </summary>
-	/// <param name="posX"></param>
-	inline void SetPositionX(float& posX) {
-		this->worldTransform_.translate_.x = posX;
-	}
 
-	/// <summary>
-	/// Y座標の設定
-	/// </summary>
-	/// <param name="posX"></param>
-	inline void SetPositionY(float& posY) {
-		this->worldTransform_.translate_.y = posY;
-	}
+
+
 
 	/// <summary>
 	/// Z座標の設定
@@ -113,19 +83,6 @@ public:
 
 #pragma endregion
 
-
-#pragma region スピードの反転
-	inline void InvertSpeedX() {
-		this->speed_.x *= -1.0f;
-	}
-	inline void InvertSpeedY() {
-		this->speed_.y *= -1.0f;
-	}
-	inline void InvertSpeedZ() {
-		this->speed_.z *= -1.0f;
-	}
-
-#pragma endregion
 
 
 	/// <summary>
@@ -144,16 +101,6 @@ public:
 		return direction_;
 	}
 
-#pragma region EnemyManagerから取得
-
-	/// <summary>
-	/// プレイヤーの半径
-	/// </summary>
-	/// <param name="radius"></param>
-	void SetPlayerRadius(float& radius) {
-		this->playerRadius_ = radius;
-	}
-
 	/// <summary>
 	/// プレイヤーの座標を設定
 	/// </summary>
@@ -161,16 +108,11 @@ public:
 	void SetPlayerPosition(Vector3& position) {
 		this->playerPosition_ = position;
 	}
-#pragma endregion
 
-
-	/// <summary>
-	/// ステージの四隅
-	/// </summary>
-	/// <param name="stageRect"></param>
-	void SetStageRect(StageRect& stageRect) {
-		this->stageRect_ = stageRect;
+	inline AABB GetAABB() {
+		return aabb_;
 	}
+
 
 
 public:
@@ -200,6 +142,43 @@ public:
 		return condition_;
 	}
 
+
+
+	inline void InvertSpeedX() {
+		speed_.x *= -1.0f;
+	}
+	inline void InvertSpeedZ() {
+		speed_.z *= -1.0f;
+	}
+
+
+	inline void SaveSpeed() {
+		preSpeed_ = speed_;
+	}
+
+
+#pragma region 攻撃用
+
+	//攻撃用
+	inline EnemyAttackCollision* GetEnemyAttackCollision() {
+		return attackModel_;
+	}
+
+	/// <summary>
+	/// 攻撃しているかどうか
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsAttack()const {
+		return isAttack_;
+	}
+
+#pragma endregion
+
+
+	
+
+
+
 private:
 	uint32_t preCondition_ = EnemyCondition::NoneMove;
 	uint32_t condition_ = EnemyCondition::Move;
@@ -209,7 +188,7 @@ private:
 private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
-	const float SCALE_SIZE = 8.0f;
+	const float SCALE_SIZE = 10.0f;
 	//移動速度
 	Vector3 preSpeed_ = {};
 	Vector3 speed_ = {};
@@ -232,21 +211,23 @@ private:
 
 	//向き
 	Vector3 direction_ = {};
-	float t_ = 0.0f;
 
 	//攻撃
 	int32_t attackTime_ = 0;
 
+	//AABB
+	AABB aabb_ = {};
+
+
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
-	//プレイヤーの半径
-	float playerRadius_ = 0.0f;
-
-	//ステージの四隅座標
-	StageRect stageRect_ = {};
-
 
 	//モデル
 	std::unique_ptr<Model> debugModel_ = nullptr;
 	WorldTransform debugModelWorldTransform_ = {};
+
+	//攻撃用
+	EnemyAttackCollision* attackModel_ = nullptr;
+	bool isAttack_ = false;
+
 };

@@ -74,6 +74,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Manager\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\Manager\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Project\AllGameScene\GameManager;$(ProjectDir)Ellysia\Manager\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Manager\RtvManager;$(ProjectDir)Ellysia\Polygon\PostEffect\BackTest;$(ProjectDir)Ellysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Ellysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Ellysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Ellysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Ellysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Ellysia\Polygon\PostEffect\Vignette;$(ProjectDir)Ellysia\Polygon\PostEffect\BoxFilter;$(ProjectDir)Ellysia\Polygon\PostEffect\GaussianFilter;$(ProjectDir)Project;$(ProjectDir)Ellysia\Math\Single;$(ProjectDir)Ellysia\Manager\LevelDataManager</AdditionalIncludeDirectories>
+
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -143,6 +144,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Line\Line.cpp" />
     <ClCompile Include="Ellysia\main.cpp" />
     <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp" />
+    <ClCompile Include="Ellysia\Manager\AudioManager\AudioManager.cpp" />
     <ClCompile Include="Ellysia\Manager\ImGuiManager\ImGuiManager.cpp" />
     <ClCompile Include="Ellysia\Manager\LevelDataManager\LevelDataManager.cpp" />
     <ClCompile Include="Ellysia\Manager\ModelManager\Animation.cpp" />
@@ -183,23 +185,29 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Polygon\PostEffect\SepiaScale\SepiaScale.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\Vignette\Vignette.cpp" />
     <ClCompile Include="Project\AllGameScene\GameManager\GameManager.cpp" />
+    <ClCompile Include="Project\AllGameScene\LevelEditorSample\LevelEditorSample.cpp" />
+    <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp" />
     <ClCompile Include="Project\AllGameScene\SampleScene2\SampleScene2.cpp" />
     <ClCompile Include="Project\AllGameScene\SampleScene\SampleScene.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Project\Collider\CollisionManager.cpp" />
     <ClCompile Include="Project\Enemy\Enemy.cpp" />
+    <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp" />
     <ClCompile Include="Project\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="Project\Enemy\StrongEnemy.cpp" />
     <ClCompile Include="Project\Key\Key.cpp" />
     <ClCompile Include="Project\Key\KeyManager.cpp" />
     <ClCompile Include="Project\Level1\Level1.cpp" />
     <ClCompile Include="Project\LightWeapon\LightWeapon.cpp" />
     <ClCompile Include="Project\Light\FlashLight\FlashLight.cpp" />
     <ClCompile Include="Project\Player\Player.cpp" />
+    <ClCompile Include="Project\Player\PlayerCollisionToStrongEnemy.cpp" />
     <ClCompile Include="Project\Stage\DemoObject\DemoObject.cpp" />
     <ClCompile Include="Project\Stage\Gate\Gate.cpp" />
     <ClCompile Include="Project\Stage\Ground\Ground.cpp" />
     <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp" />
     <ClCompile Include="Project\Stage\Skydome\Skydome.cpp" />
+    <ClCompile Include="Project\Stage\StageObject\Tree\Tree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\AnimationObject3D\AnimationObject3D.PS.hlsl">
@@ -376,6 +384,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClInclude Include="Ellysia\AdjustmentItems\AdjustmentItems.h" />
     <ClInclude Include="Ellysia\Audio\Audio.h" />
+    <ClInclude Include="Ellysia\Audio\AudioScale.h" />
     <ClInclude Include="Ellysia\Audio\AudioStruct.h" />
     <ClInclude Include="Ellysia\Camera\Camera.h" />
     <ClInclude Include="Ellysia\Common\DirectX\DirectXSetup.h" />
@@ -391,6 +400,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Lighting\SpotLight.h" />
     <ClInclude Include="Ellysia\Line\Line.h" />
     <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h" />
+    <ClInclude Include="Ellysia\Manager\AudioManager\AudioManager.h" />
     <ClInclude Include="Ellysia\Manager\ImGuiManager\ImGuiManager.h" />
     <ClInclude Include="Ellysia\Manager\LevelDataManager\LevelDataManager.h" />
     <ClInclude Include="Ellysia\Manager\ModelManager\Animation.h" />
@@ -457,6 +467,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="External\nlohmann\json_fwd.hpp" />
     <ClInclude Include="Project\AllGameScene\GameManager\GameManager.h" />
     <ClInclude Include="Project\AllGameScene\GameManager\IGameScene.h" />
+    <ClInclude Include="Project\AllGameScene\LevelEditorSample\LevelEditorSample.h" />
+    <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h" />
     <ClInclude Include="Project\AllGameScene\SampleScene2\SampleScene2.h" />
     <ClInclude Include="Project\AllGameScene\SampleScene\SampleScene.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\TitleScene.h" />
@@ -464,19 +476,25 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Collider\CollisionConfig.h" />
     <ClInclude Include="Project\Collider\CollisionManager.h" />
     <ClInclude Include="Project\Enemy\Enemy.h" />
+    <ClInclude Include="Project\Enemy\EnemyAttackCollision.h" />
+    <ClInclude Include="Project\Enemy\EnemyCondition.h" />
     <ClInclude Include="Project\Enemy\EnemyManager.h" />
+    <ClInclude Include="Project\Enemy\StrongEnemy.h" />
     <ClInclude Include="Project\Key\Key.h" />
     <ClInclude Include="Project\Key\KeyManager.h" />
     <ClInclude Include="Project\Level1\Level1.h" />
     <ClInclude Include="Project\LightWeapon\LightWeapon.h" />
     <ClInclude Include="Project\Light\FlashLight\FlashLight.h" />
     <ClInclude Include="Project\Player\Player.h" />
+    <ClInclude Include="Project\Player\PlayerCollisionToStrongEnemy.h" />
     <ClInclude Include="Project\Stage\DemoObject\DemoObject.h" />
     <ClInclude Include="Project\Stage\Gate\Gate.h" />
     <ClInclude Include="Project\Stage\Ground\Ground.h" />
     <ClInclude Include="Project\Stage\Ground\StageRect.h" />
     <ClInclude Include="Project\Stage\ObjectManager\ObjectManager.h" />
     <ClInclude Include="Project\Stage\Skydome\Skydome.h" />
+    <ClInclude Include="Project\Stage\StageObject\StageObject.h" />
+    <ClInclude Include="Project\Stage\StageObject\Tree\Tree.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

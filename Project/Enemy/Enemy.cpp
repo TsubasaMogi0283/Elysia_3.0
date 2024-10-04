@@ -6,22 +6,10 @@
 #include "SpotLight.h"
 #include <SingleCalculation.h>
 #include <numbers>
+#include <ModelManager.h>
 
 void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	
-	//Stageの四隅が一つでも同じだったら引っかかるようにしている
-	//X軸
-	assert((stageRect_.leftBack.x != stageRect_.leftFront.x) ||
-		(stageRect_.leftBack.x != stageRect_.rightBack.x) ||
-		(stageRect_.leftBack.x != stageRect_.rightFront.x));
-
-	//Z軸
-	assert((stageRect_.leftBack.z != stageRect_.leftFront.z) ||
-		(stageRect_.leftBack.z != stageRect_.rightFront.z)||
-		(stageRect_.rightBack.z != stageRect_.rightFront.z));
-
-
-
 
 	model_.reset(Model::Create(modelHandle));
 	worldTransform_.Initialize();
@@ -46,8 +34,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	//追跡かどうか
 	isTracking_ = false;
 
-	//半径
-	radius_ = 1.0f;
+	
 	preSpeed_ = speed;
 	speed_ = speed;
 
@@ -60,22 +47,53 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	preCondition_ = EnemyCondition::NoneMove;
 	condition_ = EnemyCondition::Move;
 
+
+	//スピードが全て0になっていたらNoneMove
+	if (speed_.x == 0.0f &&
+		speed_.y == 0.0f &&
+		speed_.z == 0.0f) {
+		preCondition_ = EnemyCondition::NoneMove;
+		condition_ = EnemyCondition::NoneMove;
+	}
+	
 	//攻撃
 	attackTime_ = 0;
+
+
+#pragma region 当たり判定
+	//半径
+	radius_ = 1.0f;
+
+	//AABBのmax部分に加算する縦横高さのサイズ
+	upSideSize_ = {.x= radius_ ,.y= radius_ ,.z= radius_ };
+
+	//AABBのmin部分に加算する縦横高さのサイズ
+	downSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
 
 	//判定
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY);
 	//相手
-	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER);
-#ifdef _DEBUG
+	SetCollisionMask(COLLISION_ATTRIBUTE_NONE);
+
+#pragma endregion
+
 	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+#ifdef _DEBUG
+	
 	debugModel_.reset(Model::Create(debugModelHandle));
 
 	debugModelWorldTransform_.Initialize();
 	const float DEBUG_MODEL_SCALE = 0.25f;
 	debugModelWorldTransform_.scale_ = { .x= DEBUG_MODEL_SCALE,.y= DEBUG_MODEL_SCALE,.z= DEBUG_MODEL_SCALE };
+
+
+	
+
 #endif // _DEBUG
+	attackModel_ =new EnemyAttackCollision();
+	attackModel_->Initialize(debugModelHandle);
+	isAttack_ = false;
 
 	
 }
@@ -84,11 +102,8 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 void Enemy::Update(){
 	
-	//更新
-	worldTransform_.Update();
-	material_.Update();
-
-
+	const float SPEED_AMOUNT = 0.05f;
+	//状態
 	switch (condition_) {
 		//何もしない
 	case EnemyCondition::NoneMove:
@@ -97,7 +112,7 @@ void Enemy::Update(){
 		ImGui::End();
 		#endif // DEBUG
 		
-		t_ = 0.0f;
+		attackTime_ = 0;
 		preTrackingPlayerPosition_ = {};
 		preTrackingPosition_ = {};
 		speed_ = { 0.0f,0.0f,0.0f };
@@ -107,27 +122,13 @@ void Enemy::Update(){
 	case EnemyCondition::Move:
 
 		
-		//ステージの外に行けないようにいする
-		if ((GetWorldPosition().x < stageRect_.leftBack.x + radius_) || (GetWorldPosition().x > stageRect_.rightBack.x - radius_)) {
-			speed_.x *= -1.0f;
-		}
-		if ((GetWorldPosition().z < stageRect_.leftFront.z + radius_) || (GetWorldPosition().z > stageRect_.leftBack.z - radius_)) {
-			speed_.z *= -1.0f;
-		}
+		
+		attackTime_ = 0;
+		isAttack_ = false;
 
 
-		//if (preCondition_ == EnemyCondition::NoneMove) {
-		//	speed_ = preSpeed_;
-		//}
-		//else if (preCondition_ == EnemyCondition::NoneMove) {
-		//	speed_ = preSpeed_;
-		//}
-		#ifdef _DEBUG
-		ImGui::Begin("Move");
-		ImGui::End();
-		#endif // DEBUG
+
 		//通常の動き
-		t_ = 0.0f;
 		preTrackingPlayerPosition_ = {};
 		preTrackingPosition_ = {};
 		if (speed_.x != 0.0f ||
@@ -143,20 +144,20 @@ void Enemy::Update(){
 	
 	case EnemyCondition::PreTracking:
 	
+		attackTime_ = 0;
+		isAttack_ = false;
 		#pragma region 追跡準備
 	
-		#ifdef _DEBUG
-			ImGui::Begin("PreTracking");
-			ImGui::End();
-		#endif // DEBUG
 	
 		//取得したら追跡
 		preTrackingPlayerPosition_ = playerPosition_;
 		preTrackingPosition_ = GetWorldPosition();
 		
-	
+		
 		#pragma endregion
 
+
+		//強制的に追跡
 		preCondition_ = EnemyCondition::PreTracking;
 		condition_ = EnemyCondition::Tracking;
 
@@ -166,19 +167,22 @@ void Enemy::Update(){
 	case EnemyCondition::Tracking:
 		//追跡処理
 
+
 #ifdef _DEBUG
-			ImGui::Begin("Tracking");
-			ImGui::End();
+		ImGui::Begin("Tracking");
+		ImGui::End();
 #endif // DEBUG
 
-		//線形補間で移動する
-		t_ += 0.005f;
-		worldTransform_.translate_ = VectorCalculation::Lerp(preTrackingPosition_, preTrackingPlayerPosition_, t_);
 
 
 		//向きを求める
 		direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_, preTrackingPosition_);
 		direction_ = VectorCalculation::Normalize(direction_);
+
+		//加算
+		Vector3 speedVelocity = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
+		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speedVelocity);
+
 
 		break;
 	
@@ -186,17 +190,36 @@ void Enemy::Update(){
 	case EnemyCondition::Attack:
 		attackTime_ += 1;
 		
-		if (attackTime_ > 60 && attackTime_ <= 180) {
-		#ifdef _DEBUG
+
+		//2～4秒までが攻撃
+		if (attackTime_ > 120 && attackTime_ <= 240) {
+			if (attackTime_ == 121) {
+				isAttack_ = true;
+				
+			}
+			else {
+				isAttack_ = false;
+			}
+
+			
+#ifdef _DEBUG
 			ImGui::Begin("Attack");
 			ImGui::End();
-		#endif // DEBUG
+#endif // DEBUG
+
+		}
+		else {
+			isAttack_ = false;
 		}
 	
 		//4秒経ったらまた0になる
 		if (attackTime_ > 240) {
 			attackTime_ = 0;
+
 		}
+
+		break;
+
 	}
 
 
@@ -217,27 +240,51 @@ void Enemy::Update(){
 	
 
 #ifdef _DEBUG
-	const float INTERVAL = 3.0f;
-	Vector3 lineEnd = VectorCalculation::Add(GetWorldPosition(), { direction_.x * INTERVAL,direction_.y * INTERVAL,direction_.z * INTERVAL });
-	debugModelWorldTransform_.translate_ = lineEnd;
+	const float INTERVAL = 5.0f;
+	debugModelWorldTransform_.translate_ = VectorCalculation::Add(GetWorldPosition(), VectorCalculation::Multiply(direction_, INTERVAL));
 	debugModelWorldTransform_.Update();
 
-#endif // _DEBUG
-
 	
+
+#endif // _DEBUG
+	Vector3 enemyWorldPosition = GetWorldPosition();
+	attackModel_->SetEnemyPosition(enemyWorldPosition);
+	attackModel_->SetEnemyDirection(direction_);
+	attackModel_->Update();
+
+
 	//更新
 	worldTransform_.Update();
 	material_.Update();
+
+	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
+	aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
+
 
 
 #ifdef _DEBUG
 	float degreeRotateY = directionToRotateY * (180.0f / std::numbers::pi_v<float>);
 
-	ImGui::Begin("Enemy");
-	ImGui::InputFloat("T", &t_);
+	ImGui::Begin("敵");
 	ImGui::InputFloat3("direction_", &direction_.x);
 	ImGui::InputFloat("RotateY", &degreeRotateY);
+	
+	
 	ImGui::InputFloat3("Speed", &direction_.x);
+	if (ImGui::TreeNode("Condition")) {
+		int newCondition = static_cast<int>(condition_);
+		int newPreCondition = static_cast<int>(preCondition_);
+		ImGui::InputInt("Current", &newCondition);
+		ImGui::InputInt("Pre", &newPreCondition);
+		ImGui::TreePop();
+	}
+	
+	ImGui::Checkbox("isAttck", &isAttack_);
+	if (ImGui::TreeNode("AABB")) {
+		ImGui::InputFloat3("Max", &aabb_.max.x);
+		ImGui::InputFloat3("Min", &aabb_.min.x);
+		ImGui::TreePop();
+	}
 
 	ImGui::InputFloat3("Position", &worldTransform_.translate_.x);
 	ImGui::InputFloat3("preTrackingPlayerPosition", &preTrackingPlayerPosition_.x);
@@ -254,8 +301,8 @@ void Enemy::OnCollision() {
 	ImGui::Begin("EnemyCollision");
 	ImGui::InputFloat4("Color", &color_.x);
 	ImGui::End();
-
 #endif // _DEBUG
+
 	const float COLOR_CHANGE_INTERVAL = 0.005f;
 	color_.y -= COLOR_CHANGE_INTERVAL;
 	color_.z -= COLOR_CHANGE_INTERVAL;
@@ -263,6 +310,7 @@ void Enemy::OnCollision() {
 	//0になったら消す
 	if (color_.y < 0.0f &&
 		color_.z < 0.0f) {
+		isAttack_ = false;
 		isAlive_ = false;
 	}
 
@@ -270,6 +318,8 @@ void Enemy::OnCollision() {
 	material_.color_ = color_;
 	
 }
+
+
 
 Vector3 Enemy::GetWorldPosition() {
 	Vector3 result = {
@@ -281,13 +331,6 @@ Vector3 Enemy::GetWorldPosition() {
 	return result;
 }
 
-void Enemy::SetTranslate(Vector3& translate) {
-	this->worldTransform_.translate_.x = translate.x;
-	this->worldTransform_.translate_.y = translate.y;
-	this->worldTransform_.translate_.z = translate.z;
-
-}
-
 
 
 
@@ -297,10 +340,19 @@ void Enemy::Draw(Camera& camera,SpotLight&spotLight){
 
 #endif // _DEBUG
 
+	//攻撃用
+	if (isAttack_ == true) {
+		attackModel_->Draw(camera, spotLight);
+	}
+
 	//描画
 	if (isAlive_ == true) {
 		model_->Draw(worldTransform_, camera,material_, spotLight);
 	}
 	
+}
+
+Enemy::~Enemy(){
+	delete attackModel_;
 }
 

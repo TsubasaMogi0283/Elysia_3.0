@@ -1,9 +1,11 @@
 #include "Model.h"
 #include <Camera.h>
 #include <TextureManager.h>
+#include <ModelManager.h>
 #include <PipelineManager.h>
 #include "DirectXSetup.h"
 #include <numbers>
+#include <cassert>
 #include <SrvManager.h>
 
 #include "WorldTransform.h"
@@ -13,17 +15,14 @@
 #include <PointLight.h>
 #include <SpotLight.h>
 
+
 Model* Model::Create(uint32_t modelHandle) {
 	//新たなModel型のインスタンスのメモリを確保
 	Model* model = new Model();
 
-	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
-	PipelineManager::GetInstance()->SetModelBlendMode(1);
-	PipelineManager::GetInstance()->GenerateModelPSO();
+	
 	//テクスチャの読み込み
 	model->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
-	//Drawでも使いたいので取り入れる
-	model->modelHandle_ = modelHandle;
 
 	//モデルデータ
 	model->modelData_ = ModelManager::GetInstance()->GetModelData(modelHandle);
@@ -52,10 +51,6 @@ Model* Model::Create(uint32_t modelHandle) {
 	//カメラ
 	model->cameraResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraForGPU)).Get();
 
-
-
-	
-
 	return model;
 
 }
@@ -65,6 +60,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
+
 
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
@@ -148,6 +144,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
 
+
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
@@ -228,6 +225,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
+
 
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む

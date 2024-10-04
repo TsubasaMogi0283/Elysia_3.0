@@ -7,6 +7,7 @@
 #include "AnimationModel.h"
 #include "TextureManager.h"
 #include "Camera.h"
+#include "Audio.h"
 
 #include <memory>
 #include <Audio.h>
@@ -35,6 +36,7 @@
 
 #include "Input.h"
 #include <Stage/ObjectManager/ObjectManager.h>
+#include "../../../Ellysia/Polygon/3D/Sphere/Sphere.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -87,13 +89,28 @@ public:
 	~SampleScene();
 
 
+
 private:
+
+
 
 	/// <summary>
 	/// 鍵の取得の処理
 	/// </summary>
 	void KeyCollision();
 
+
+	/// <summary>
+	/// ステージオブジェクトとの当たり判定
+	/// </summary>
+	void ObjectCollision();
+
+	/// <summary>
+	/// プレイヤーの移動
+	/// </summary>
+	void PlayerMove();
+
+	void EscapeCondition();
 
 private:
 	enum GameCondition {
@@ -135,20 +152,27 @@ private:
 	std::unique_ptr<BackText> back_ = nullptr;
 
 
-	float t = 0.0f;
-	float p = 0.0f;
-	Vector3 pp = {};
 	
-	//プレイヤー
-	Player* player_ = nullptr;
-	Vector3 playerDirection_ = {0.0f,0.0f,0.0f};
-	bool isPlayerMoveKey_ = false;
 
-	uint32_t bTriggerTime_ = 0;
+	//プレイヤー
+	std::unique_ptr<Player> player_ = nullptr;
+	//座標
+	Vector3 playerPosition_ = {};
+	//向き
+	Vector3 playerMoveDirection_ = {};
+	//キーボードで動かしているかどうか
+	bool isPlayerMoveKey_ = false;
+	//動いているかどうか
+	bool isPlayerMove_ = false;
+	//ダッシュしているかどうか
+	bool isPlayerDash_ = false;
+
+	//Bボタンのトリガー
+	uint32_t bTriggerTime_ = 0u;
 	bool isBTrigger_ = false;
 
 	//オブジェクトマネージャー
-	std::unique_ptr<ObjectManager>objectManager_ = nullptr;
+	ObjectManager* objectManager_ = nullptr;
 
 
 	//地面
@@ -167,31 +191,29 @@ private:
 	
 	//敵
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
-	uint32_t enemyModelHandle_ = 0;
+	uint32_t enemyModelHandle_ = 0u;
 
 	//プレイヤーのライトの判定
 	LightWeapon* lightCollision_ = nullptr;
 	WorldTransform lightCollisionWorldTransform_ = {};
 
-	uint32_t viewOfPoint_ = 0;
+	uint32_t viewOfPoint_ = 0u;
 
 	float theta_ = 0.0f;
 	float originPhi_ = 0.0f;
 
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 
-
-
+	//強い敵と接触したかどうか
+	bool isTouchStrongEnemy_ = false;
 	
 #pragma region ゲーム中のUI
 
 	//UIManagerを作った方がよさそう
-	//ベタガキ過ぎるので
+	//ベタ書き過ぎるので
 
 	//UIを表示するかどうか
 	bool isDisplayUI_ = false;
-
-
 
 	//脱出テキスト
 	std::unique_ptr<Sprite> escapeText_ = nullptr;
@@ -202,16 +224,24 @@ private:
 	//鍵取得
 	std::unique_ptr<Sprite> pickUpKey_ = nullptr;
 
-
+	//プレイヤーの体力
+	static const uint32_t PLAYER_HP_MAX_QUANTITY_ = 3u;
+	uint32_t currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
+	std::unique_ptr<Sprite> playerHP_[PLAYER_HP_MAX_QUANTITY_] = { nullptr };
+	std::unique_ptr<Sprite> playerHPBackFrame_ = nullptr;
 
 	//鍵
 	std::unique_ptr<KeyManager> keyManager_ = {};
-	uint32_t keyQuantity_ = 0;
+	uint32_t keyQuantity_ = 0u;
 	bool isAbleToPickUpKey_ = false;
 
 	std::unique_ptr<Sprite>lackOfKeyesNumberSprite_[3] = { nullptr };
-	uint32_t lackOfKeyesNumber_ = 0;
+	uint32_t lackOfKeyesNumber_ = 0u;
 
+
+	std::unique_ptr<Sprite> toEscape_ = nullptr;
+
+#pragma endregion
 
 #pragma region フェード
 
@@ -230,17 +260,16 @@ private:
 
 
 #pragma region 説明
-	static const uint32_t EXPLANATION_QUANTITY_ = 2;
+	static const uint32_t EXPLANATION_QUANTITY_ = 2u;
 	std::unique_ptr<Sprite> explanation_[EXPLANATION_QUANTITY_] = { nullptr };
 
 	//Spaceで次に進むテキスト
-	static const uint32_t SPACE_TO_NEXT_QUANTITY_ = 2;
+	static const uint32_t SPACE_TO_NEXT_QUANTITY_ = 2u;
 	std::unique_ptr<Sprite> spaceToNext_[SPACE_TO_NEXT_QUANTITY_] = { nullptr };
 
-	uint32_t howToPlayTextureNumber_ = 0;
+	uint32_t howToPlayTextureNumber_ = 0u;
 
 #pragma endregion
-
 
 
 #pragma region デバッグ用のオブジェクト
@@ -254,7 +283,6 @@ private:
 	Material debugFanCollisionSphereMaterial_ = {};
 
 #pragma endregion
-
 
 
 };

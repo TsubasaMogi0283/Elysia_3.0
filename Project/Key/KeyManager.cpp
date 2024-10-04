@@ -20,7 +20,8 @@ void KeyManager::Initialize(uint32_t modelHandle){
 
 
 	uint32_t keySpriteHandle = TextureManager::GetInstance()->LoadTexture("Resources/Item/KeyList.png");
-	Vector3 keySpritePosition = { 0.0f,0.0f,0.0f };
+	const Vector2 INITIAL_POSITION = {.x= 20.0f,.y=10.0f };
+	Vector3 keySpritePosition = { .x= INITIAL_POSITION.x,.y= INITIAL_POSITION.y,.z=0.0f };
 	keySprite_.reset(Sprite::Create(keySpriteHandle, keySpritePosition));
 
 	uint32_t keyNumberQuantity[NUMBER_QUANTITY_] = {};
@@ -30,7 +31,7 @@ void KeyManager::Initialize(uint32_t modelHandle){
 		const std::string number = std::to_string(i);
 		const std::string filePath = "Resources/Number/" + number + ".png";
 		keyNumberQuantity[i] = TextureManager::GetInstance()->LoadTexture(filePath);
-		const Vector3 numberPosition = { 64.0f * 2.0f,0.0f,0.0f };
+		const Vector3 numberPosition = { 64.0f * 2.0f+ INITIAL_POSITION.x,INITIAL_POSITION.y,0.0f };
 		keyNumber[i].reset(Sprite::Create(keyNumberQuantity[i], numberPosition));
 	}
 

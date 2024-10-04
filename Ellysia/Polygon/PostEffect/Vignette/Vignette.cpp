@@ -10,11 +10,9 @@
 
 void Vignette::Initialize() {
 
-	//エフェクトごとにhlsl分けたい
-	//いずれやる
-	PipelineManager::GetInstance()->GenarateVignettePSO();
+	
 
-	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };
+	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.0f,0.0f,0.0f,1.0f };
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
 
 	const std::string postEffectName = "Vignette";
@@ -28,18 +26,19 @@ void Vignette::Initialize() {
 	SrvManager::GetInstance()->CreateSRVForRenderTexture(rtvResource_.Get(), srvHandle_);
 
 	
-	
+	//リソースの生成
 	valueResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VignetteData));
+	//初期化
 	scale_ = 16.0f;
 	pow_ = 0.8f;
-	
+	color_ = { .x = 0.0f,.y = 0.0f,.z = 1.0f };
 
 
 }
 
 void Vignette::PreDraw() {
 
-	const float RENDER_TARGET_CLEAR_VALUE[] = { 1.0f,0.0f,0.0f,1.0f };
+	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.0f,0.0f,0.0f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
 		1, &RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
@@ -67,14 +66,16 @@ void Vignette::Draw() {
 	DirectXSetup::GetInstance()->SetResourceBarrier(
 		rtvResource_.Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
 #ifdef _DEBUG
 	ImGui::Begin("Vignette");
 	ImGui::SliderFloat("Scale", &scale_, 0.0f, 100.0f);
 	ImGui::SliderFloat("Pow", &pow_, 0.01f, 10.0f);
+	ImGui::SliderFloat3("color", &color_.x, 0.0f, 1.0f);
+
 	ImGui::End();
 
 #endif
-
 
 
 
@@ -82,7 +83,8 @@ void Vignette::Draw() {
 
 	valueResource_->Map(0, nullptr, reinterpret_cast<void**>(&vignetteData_));
 	vignetteData_->scale = scale_;
-	vignetteData_->pow = pow_;;
+	vignetteData_->pow = pow_;
+	vignetteData_->color = color_;
 	valueResource_->Unmap(0, nullptr);
 
 

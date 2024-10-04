@@ -8,12 +8,18 @@
 #include <dxgidebug.h>
 #include <dxcapi.h>
 
+namespace ConvertString {
+	/// <summary>
+	///	ログの出力
+	/// </summary>
+	/// <param name="message"></param>
+	void Log(const std::string& message);
 
+	//string->wstring
+	std::wstring ToWString(const std::string& str);
 
-void Log(const std::string& message);
+	//wstring->string
+	std::string ToString(const std::wstring& str);
 
-//string->wstring
-std::wstring ConvertString(const std::string& str);
+}
 
-//wstring->string
-std::string ConvertString(const std::wstring& str);

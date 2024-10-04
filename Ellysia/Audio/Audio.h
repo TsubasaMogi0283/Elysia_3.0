@@ -1,6 +1,5 @@
 #pragma once
 
-
 #define XAUDIO2_HELPER_FUNCTIONS
 #include <xaudio2.h>
 #include "xaudio2fx.h"
@@ -35,15 +34,9 @@ using Microsoft::WRL::ComPtr;
 
 #include "AudioStruct.h"
 
-//LoadAudioの時に使う
-enum AudioEffectType {
-	Filter,
-	Reverb,
-};
 
-
-class Audio final {
-private:
+class Audio {
+public:
 	//コンストラクタ
 	Audio()=default;
 
@@ -53,11 +46,6 @@ public:
 	//インスタンスの取得
 	static Audio* GetInstance();
 
-	//コピーコンストラクタ禁止
-	Audio(const Audio& obj) = delete;
-
-	//代入演算子を無効にする
-	Audio& operator=(const Audio& obj) = delete;
 
 public:
 	/// <summary>
@@ -89,7 +77,6 @@ public:
 	/// <returns></returns>
 	static uint32_t LoadMP3(const WCHAR* fileName);
 
-
 	/// <summary>
 	/// 再生
 	/// </summary>
@@ -104,18 +91,18 @@ public:
 	/// <param name="loopCount"></param>
 	void PlayWave(uint32_t audioHandle, int32_t loopCount);
 
-	/// <summary>
-	/// MP3再生
-	/// </summary>
-	/// <param name="audioHandle"></param>
-	/// <param name="isLoop"></param>
+	// <summary>
+	// MP3再生
+	// </summary>
+	// <param name="audioHandle"></param>
+	// <param name="isLoop"></param>
 	void PlayMP3(uint32_t audioHandle,bool isLoop);
 
-	/// <summary>
-	/// MP3再生(ループ回数設定版)
-	/// </summary>
-	/// <param name="audioHandle"></param>
-	/// <param name="loopCount"></param>
+	// <summary>
+	// MP3再生(ループ回数設定版)
+	// </summary>
+	// <param name="audioHandle"></param>
+	// <param name="loopCount"></param>
 	void PlayMP3(uint32_t audioHandle, uint32_t loopCount);
 
 
@@ -282,7 +269,6 @@ public:
 #pragma endregion
 
 
-	static void CreateSubmixVoice(uint32_t channel);
 
 	void SendChannels(uint32_t audioHandle,uint32_t channelNumber);
 
@@ -296,87 +282,8 @@ public:
 	void OnEffect(uint32_t audioHandle);
 
 
-	//解放
-	void Release();
 
-private:
-	//音声データの開放
-	void SoundUnload(uint32_t soundDataHandle);
-
-
-private:
-	//IXAudio2はCOMオブジェクトなのでComPtr管理
-	ComPtr<IXAudio2> xAudio2_ = nullptr;
-	//マスターボイス
-	//最終的にここでまとめるよ(スピーカーみたいな感じだね)
-	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 	
-
-	//Panに必要な変数
-	DWORD dwChannelMask_ = {};
-	float outputMatrix_[8] = {};
-	float left_ = 0.0f;
-	float right_ = 0.0f;
-
-
-
-	//Reverb
-	IUnknown* pXAPO_ = nullptr;
-
-
-
-
-	//構造体版
-	//Texturemanagerとだいたい同じ感じにした
-	//音声データの最大数
-	static const int SOUND_DATE_MAX_ = 256;
-	std::array<AudioInformation, SOUND_DATE_MAX_> audioInformation_{};
-
-	//サブミックス(バス)
-	static const int SUBMIXVOICE_AMOUNT_ = 64;
-	std::array<IXAudio2SubmixVoice*, SUBMIXVOICE_AMOUNT_> submixVoice_{};
-
-
-private:
-
-
-
-
-	//自分のエンジンではA4は442Hz基準にする
-	//もちろん12段階で1オクターブ
-	static const int SCALE_AMOUNT_ = 13;
-	const float SEMITONE_RATIO_[SCALE_AMOUNT_] = {
-		1.00000f, //C4
-		1.05946f, //C#4
-		1.12246f, //D4
-		1.18921f, //D#4
-		1.25992f, //E4
-		1.33483f, //F4
-		1.41421f, //F#4
-		1.49831f, //G4
-		1.58740f, //G#4
-		1.68179f, //A4
-		1.78180f, //A#4
-		1.88775f, //B4
-		2.00000f  //C5
-	};
-
-	//低い方
-	const float MINUS_SEMITONE_RATION[SCALE_AMOUNT_] = {
-		1.00000f,	//C4
-		0.94387f,	//B3
-		0.89090f,	//A3#
-		0.84090f,	//A3
-		0.79370f,	//G#3
-		0.74915f,	//G3
-		0.70711f,	//F#3
-		0.66742f,	//F3
-		0.62996f,	//E3
-		0.59460f,	//D#3
-		0.56123f,	//D3
-		0.52973f,	//C#3
-		0.50000f,	//C3
-	};
 
 
 };

@@ -4,44 +4,60 @@
 #include <list>
 
 
-enum CollisionType {
-	//球
-	SphereType,
-	//箱(縦横指定)
-	BoxType,
-};
 
 
 class CollisionManager{
 public:
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	CollisionManager()=default;
 
-	//リストをクリアする
+	/// <summary>
+	/// リストをクリアする
+	/// </summary>
 	void ClearList();
 
-	//リストに登録する
+	/// <summary>
+	/// リストに登録
+	/// </summary>
+	/// <param name="collider"></param>
 	void RegisterList(Collider* collider);
 
-	//メインの当たり判定処理
+	/// <summary>
+	/// 当たり判定のチェック
+	/// </summary>
 	void CheckAllCollision();
 
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~CollisionManager()=default;
 
 private:
+
+	//StatePatternでやるのも良いかも
+
+	/// <summary>
+	/// 球同士
+	/// </summary>
+	/// <param name="colliderA"></param>
+	/// <param name="colliderB"></param>
 	void CheckSphereCollisionPair(Collider* colliderA, Collider* colliderB);
 
-private:
+	/// <summary>
+	/// AABB同士
+	/// </summary>
+	/// <param name="colliderA"></param>
+	/// <param name="colliderB"></param>
+	void CheckAABBCollisionPair(Collider* colliderA, Collider* colliderB);
 
-	struct AABB {
-		//奥左上
-		Vector3 leftTopUp;
-		//手前右下
-		Vector3 rightBottomDown;
-	};
-
-
+	/// <summary>
+	/// 扇と点
+	/// </summary>
+	/// <param name="colliderA"></param>
+	/// <param name="colliderB"></param>
+	void CheckFanAndPointPair(Collider* colliderA, Collider* colliderB);
 
 
 private:

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IGameScene.h"
-
+#include <cstdint>
 
 //main.cppにあるものを全部こっちに引っ越しする
 class GameManager {
@@ -53,7 +53,8 @@ private:
 
 	//StatePatternに必要な変数
 	IGameScene* currentGamaScene_ = nullptr;
-
+	//シーンの数
+	uint32_t SCENE_QUANTITY_ = 0;
 
 
 	

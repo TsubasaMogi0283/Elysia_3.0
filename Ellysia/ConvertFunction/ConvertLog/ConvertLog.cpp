@@ -1,17 +1,13 @@
 #include "ConvertLog.h"
-//使い方はこんな感じ
-//出力にちゃんと「WSTRING」が出る
-//Log(ConvertString(std::format(L"wstring\n", wstringValue)));
 
 
-
-void Log(const std::string& message) {
+void ConvertString::Log(const std::string& message) {
 	OutputDebugStringA(message.c_str());
 }
 
 
 //>string->wstring
-std::wstring ConvertString(const std::string& str) {
+std::wstring ConvertString::ToWString(const std::string& str) {
 	if (str.empty())
 	{
 		return std::wstring();
@@ -28,7 +24,7 @@ std::wstring ConvertString(const std::string& str) {
 }
 
 //wstring->string
-std::string ConvertString(const std::wstring& str) {
+std::string ConvertString::ToString(const std::wstring& str) {
 	if (str.empty())
 	{
 		return std::string();

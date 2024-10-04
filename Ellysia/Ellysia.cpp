@@ -8,18 +8,17 @@
 #include "RtvManager.h"
 #include <Audio.h>
 #include <AdjustmentItems.h>
+#include <LevelDataManager.h>
 
 
-//インスタンス
 Ellysia* Ellysia::GetInstance() {
 	static Ellysia instance;
-
 	return &instance;
 }
 
 void Ellysia::Initialize(){
 	//ここでタイトルバーの名前を決めてね
-	const wchar_t* titleBarName = L"Ellysia";
+	const wchar_t* titleBarName = L"静寂の霊園";
 	//ウィンドウのサイズを決める
 	const int WINDOW_SIZE_WIDTH_ = 1280;
 	const int WINDOW_SIZE_HEIGHT_ = 720;
@@ -31,15 +30,13 @@ void Ellysia::Initialize(){
 	//COMの初期化
 	//COM...ComponentObjectModel、Microsoftの提唱する設計技術の１つ
 	//		DirectX12も簡略化されたCOM(Nano-COM)という設計で作られている
-
 	//COMを使用して開発されたソフトウェア部品をCOMコンポーネントと呼ぶ
-	//Textureを読むにあたって、COMコンポーネントの１つを利用する
 	HRESULT hResult = {};
 	hResult=CoInitializeEx(0, COINIT_MULTITHREADED);
-
+	//初期化に失敗したら止める
 	assert(SUCCEEDED(hResult));
 
-	//DirectX
+	//DirectX第1初期化
 	DirectXSetup::GetInstance()->FirstInitialize();
 	
 	//SRV初期化
@@ -48,25 +45,30 @@ void Ellysia::Initialize(){
 	//RTVの初期化
 	RtvManager::GetInstance()->Initialize();
 
-	///DirectX
+	///DirectX第2の初期化
 	DirectXSetup::GetInstance()->SecondInitialize();
 
-	//ImGuiManager
-#ifdef _DEBUG
-	ImGuiManager::GetInstance()->Initialize();
 	
+#ifdef _DEBUG
+	//ImGuiManagerの初期化
+	ImGuiManager::GetInstance()->Initialize();
 #endif
 
-	//Input
+
+	//パイプラインの初期化
+	PipelineManager::GetInstance()->Initialize();
+
+	//Inputの初期化
 	Input::GetInstance()->Initialize();
 	
 	
-	//Audio
+	//Audioの初期化
 	Audio::GetInstance()->Initialize();
 
+	//JSON読み込みの初期化
 	AdjustmentItems::GetInstance()->LoadFile();
 
-	//GameManager
+	//GameManagerの初期化
 	gameManager_ = new GameManager();
 	gameManager_->Initialize();
 
@@ -88,11 +90,7 @@ void Ellysia::Update(){
 	//グローバル変数の更新
 	AdjustmentItems::GetInstance()->GetInstance()->Update();
 
-	//ImGuiの更新
-#ifdef _DEBUG
-	ImGuiManager::GetInstance()->Update();
-#endif
-	
+
 	//入力の更新
 	Input::GetInstance()->Update();
 	
@@ -130,7 +128,7 @@ void Ellysia::Draw(){
 
 	//ImGuiの描画
   #ifdef _DEBUG
-	ImGuiManager::GetInstance()->PreDraw();	
+
 	ImGuiManager::GetInstance()->Draw();
 	
 #endif
@@ -150,6 +148,8 @@ void Ellysia::EndFrame() {
 
 
 void Ellysia::Release() {
+
+	LevelDataManager::GetInstance()->Release();
 
 	Audio::GetInstance()->Release();
 #ifdef _DEBUG
@@ -199,16 +199,10 @@ void Ellysia::Operate(){
 		
 			//フレームの終わり
 			EndFrame();
-
-			
 		}
-		
 	}
-
 	//解放
 	Release();
-
-	
 
 }
 

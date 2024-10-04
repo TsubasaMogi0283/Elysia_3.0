@@ -3,11 +3,18 @@
 #include <Input.h>
 #include <AdjustmentItems.h>
 #include "SampleScene2/SampleScene2.h"
+#include "LoseScene/LoseScene.h"
 
 #include "ModelManager.h"
 #include "AnimationManager.h"
 #include <numbers>
 #include <TextureManager.h>
+#include <SingleCalculation.h>
+#include "SampleScene.h"
+#include <imgui.h>
+#include <Input.h>
+#include <AdjustmentItems.h>
+
 
 
 void SampleScene::Initialize() {
@@ -28,23 +35,10 @@ void SampleScene::Initialize() {
 
 #pragma endregion
 
-#pragma region プレイヤー
-	player_ = new Player();
-	player_->Initialize();
-	player_->SetIsAbleToControll(false);
 
-	playerDirection_ = { 0.0f,0.0f,0.0f };
-	isPlayerMoveKey_ = false;
-	bTriggerTime_ = 0;
-	isBTrigger_ = false;
-		
-	//初期は1人称視点
-	viewOfPoint_ = FirstPerson;
-	
-#pragma endregion
 	
 #pragma region オブジェクト
-	objectManager_ = std::make_unique<ObjectManager>();
+	objectManager_ = new ObjectManager();
 	objectManager_->Initialize();
 
 	#pragma region 地面
@@ -62,24 +56,42 @@ void SampleScene::Initialize() {
 
 
 
-
-	
-
-	uint32_t escapeTexturehandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/EscapeText.png");
-	escapeText_.reset(Sprite::Create(escapeTexturehandle, { .x = 0.0f,.y = 0.0f }));
+	uint32_t escapeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/EscapeText.png");
+	escapeText_.reset(Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	//最初は非表示にする
 	escapeText_->SetInvisible(true);
 	#pragma endregion
 
 #pragma endregion
 
-	#pragma region 鍵
-	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","Cube.obj");
+#pragma region プレイヤー
+	player_ = std::make_unique<Player>();
+	//ステージ
+	player_->SetStageRect(stageRect);
+	player_->Initialize();
+	player_->SetIsAbleToControll(false);
+
+	playerPosition_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
+	isPlayerMoveKey_ = false;
+	bTriggerTime_ = 0;
+	isBTrigger_ = false;
+
+	//初期は1人称視点
+	viewOfPoint_ = FirstPerson;
+
+
+
+#pragma endregion
+
+
+#pragma region 鍵
+	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/key","Key.obj");
 	
 	keyManager_ = std::make_unique<KeyManager>();
 	keyManager_->Initialize(keyModelHandle);
 	
-	#pragma endregion
+#pragma endregion
 	
 	uint32_t skydomeModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Game/Skydome","Skydome.obj");
 	skydome_ = std::make_unique<Skydome>();
@@ -89,19 +101,21 @@ void SampleScene::Initialize() {
 
 	#pragma region 敵
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
-#ifdef _DEBUG
-	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD2_Enemy", "TD2_Enemy.obj");
+	uint32_t strongEnemyModelHandle= ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
 
+#ifdef _DEBUG
+	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube", "Cube.obj");
 #endif // _DEBUG
 
 	
 	enemyManager_ = std::make_unique<EnemyManager>();
-	enemyManager_->SetPlayer(player_);
+	enemyManager_->SetPlayer(player_.get());
+	enemyManager_->SetObjectManager(objectManager_);
 	enemyManager_->SetStageRectangle(stageRect);
-	enemyManager_->Initialize(enemyModelHandle_);
+	enemyManager_->Initialize(enemyModelHandle_, strongEnemyModelHandle);
 	#pragma endregion
 
-
+	
 
 	#pragma region ライト確認用のタワー
 	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
@@ -156,7 +170,7 @@ void SampleScene::Initialize() {
 	explanationTextureHandle[0] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/Explanation1.png");
 	explanationTextureHandle[1] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/Explanation2.png");
 
-	for (uint32_t i = 0; i < EXPLANATION_QUANTITY_; ++i) {
+	for (uint32_t i = 0u; i < EXPLANATION_QUANTITY_; ++i) {
 		explanation_[i].reset(Sprite::Create(explanationTextureHandle[i], {.x=0.0f,.y=0.0f}));
 	}
 	
@@ -170,12 +184,12 @@ void SampleScene::Initialize() {
 	}
 
 	
-	howToPlayTextureNumber_ = 0;
+	howToPlayTextureNumber_ = 0u;
 
 	//常時表示
 	//操作
 	uint32_t operationTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Operation/Operation.png");
-	operation_.reset(Sprite::Create(operationTextureHandle, {.x=0.0f,.y=0.0f}));
+	operation_.reset(Sprite::Create(operationTextureHandle, {.x=20.0f,.y=0.0f}));
 	isGamePlay_ = false;
 
 	uint32_t pickUpTextureManager = TextureManager::GetInstance()->LoadTexture("Resources/Game/Key/PickUpKey.png");
@@ -183,11 +197,31 @@ void SampleScene::Initialize() {
 	
 #pragma endregion
 
+#pragma region UI
+	uint32_t playerHPTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Player/PlayerHP.png");
+	uint32_t playerHPBackFrameTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Player/PlayerHPBack.png");
+	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
+	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
+		playerHP_[i].reset(Sprite::Create(playerHPTextureHandle, {.x=static_cast<float>(i)*64+ INITIAL_POSITION.x,.y= INITIAL_POSITION .y}));
+	}
+	
+	playerHPBackFrame_.reset(Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
+	currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
+
+
+	//ゴールに向かえのテキスト
+	uint32_t toEscapeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/ToGoal.png");
+	toEscape_.reset(Sprite::Create(toEscapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
+
+#pragma endregion
+
+
+
+
 	isGamePlay_ = false;
 	isExplain_ = false;
-	//ステージ
-	player_->SetStageRect(stageRect);
 	
+
 	collisionManager_ = std::make_unique<CollisionManager>();
 	
 	theta_ = std::numbers::pi_v<float> / 2.0f;
@@ -197,7 +231,6 @@ void SampleScene::Initialize() {
 	
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
-	//material_.lightingKinds_ = Directional;
 	
 	//懐中電灯
 	flashLight_ = std::make_unique<FlashLight>();
@@ -230,6 +263,7 @@ void SampleScene::KeyCollision(){
 
 			float colissionDistance = sqrtf(distance.x + distance.y + distance.z);
 			
+
 
 			//範囲内にいれば入力を受け付ける
 			if (colissionDistance <= player_->GetRadius() + key->GetRadius()) {
@@ -291,8 +325,254 @@ void SampleScene::KeyCollision(){
 
 }
 
+void SampleScene::ObjectCollision(){
+	
+
+	//プレイヤーの移動方向
+	Vector3 direction = playerMoveDirection_;
+	//プレイヤーの当たり判定AABB
+	AABB playerAABB = player_->GetAABB();
 
 
+	//デモ用
+	std::list <StageObject*> stageObjects = objectManager_->GetStageObjets();
+	for (StageObject* stageObject : stageObjects) {
+		
+		//オブジェクトのAABB
+		AABB objectAABB = stageObject->GetAABB();
+
+		//オブジェクトとの差分ベクトル
+		Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(stageObject->GetWorldPosition(), playerPosition_);
+		
+		//オブジェクトとプレイヤーの距離
+		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
+		//内積
+		float dot  = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
+
+		//衝突判定
+		//だいたい内積は0.7くらいが良さそう
+		if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
+			(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z)&&
+			(dot > 0.7f)) {
+			uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+			player_->SetPlayerMoveCondition(newCondition);
+			//当たったらループを抜ける
+			break;
+
+		}
+		else {
+			//当たっていない
+			uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+			player_->SetPlayerMoveCondition(newCondition);
+
+		}
+
+	}
+	
+
+	
+}
+
+void SampleScene::EscapeCondition(){
+	//ゲート
+	if (gate_->isCollision(playerPosition_)) {
+#ifdef _DEBUG
+		ImGui::Begin("InSpaceGate");
+		ImGui::End();
+
+#endif // _DEBUG
+
+		//3個取得したら脱出できる
+		uint32_t playerKeyQuantity = player_->GetHavingKey();
+		if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
+			escapeText_->SetInvisible(false);
+
+
+
+			//コントローラーのBボタンを押したら脱出のフラグがたつ
+			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+
+				//Bボタンを押したとき
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+					bTriggerTime_ += 1;
+
+				}
+				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+					bTriggerTime_ = 0;
+				}
+
+				if (bTriggerTime_ == 1) {
+					//脱出
+					isEscape_ = true;
+				}
+
+			}
+			//SPACEキーを押したら脱出のフラグがたつ
+			if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
+				//脱出
+				isEscape_ = true;
+			}
+		}
+	}
+	else {
+		escapeText_->SetInvisible(true);
+	}
+
+	//脱出
+	if (isEscape_ == true) {
+		isFadeOut_ = true;
+	}
+
+}
+
+void SampleScene::PlayerMove(){
+
+
+	
+
+	//何も押していないの時つまり動いていないので
+	//通常はfalseにしておく
+	isPlayerMoveKey_ = false;
+	isPlayerMove_ = false;
+	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
+
+
+	#pragma region キーボード
+	//移動
+	if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
+		playerMoveDirection_.x = std::cosf(theta_ - std::numbers::pi_v<float> / 2.0f);
+		playerMoveDirection_.z = std::sinf(theta_ - std::numbers::pi_v<float> / 2.0f);
+		//キーボード入力をしている
+		isPlayerMoveKey_ = true;
+		//動いている
+		isPlayerMove_ = true;
+
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
+		playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float> / 2.0f);
+		playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float> / 2.0f);
+
+		//キーボード入力をしている
+		isPlayerMoveKey_ = true;
+		//動いている
+		isPlayerMove_ = true;
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+		playerMoveDirection_.x = std::cosf(theta_);
+		playerMoveDirection_.z = std::sinf(theta_);
+
+		//キーボード入力をしている
+		isPlayerMoveKey_ = true;
+		//動いている
+		isPlayerMove_ = true;
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+		playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float>);
+		playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float>);
+
+		//キーボード入力をしている
+		isPlayerMoveKey_ = true;
+		//動いている
+		isPlayerMove_ = true;
+	}
+
+
+	#pragma endregion
+
+	#pragma region コントローラー
+
+	//接続時
+	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+		//キーボード入力していない時・移動できる時に受け付ける
+		if (isPlayerMoveKey_ == false) {
+
+
+			//コントローラーの入力
+			bool isInput = false;
+			Vector3 leftStickInput = {
+				.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
+				.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
+			};
+
+
+			//デッドゾーン
+			const float DEAD_ZONE = 0.1f;
+			if (std::abs(leftStickInput.x) < DEAD_ZONE) {
+				leftStickInput.x = 0.0f;
+			}
+			else {
+				isInput = true;
+			}
+			if (std::abs(leftStickInput.z) < DEAD_ZONE) {
+				leftStickInput.z = 0.0f;
+			}
+			else {
+				isInput = true;
+			}
+		
+
+			//入力されていたら計算
+			if (isInput == true) {
+				//動いている
+				isPlayerMove_ = true;
+
+				//角度を求める
+				float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
+				//値を0～2πに直してtheta_に揃える
+				if (radian < 0.0f) {
+					radian += 2.0f * std::numbers::pi_v<float>;
+				}
+				const float OFFSET = std::numbers::pi_v<float> / 2.0f;
+				float resultTheta = theta_ + radian - OFFSET;
+
+
+				//向きを代入
+				playerMoveDirection_.x = std::cosf(resultTheta);
+				playerMoveDirection_.z = std::sinf(resultTheta);
+			}
+		}
+	}
+
+#pragma endregion
+
+
+	//プレイヤーが動いている時
+	if (isPlayerMove_ == true) {
+		//状態の設定
+		uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+		player_->SetPlayerMoveCondition(newCondition);
+
+		//ダッシュ
+		if (Input::GetInstance()->IsPushKey(DIK_RSHIFT) == true) {
+			isPlayerDash_ = true;
+		}
+		else {
+			isPlayerDash_ = false;
+		}
+		
+
+	}
+	//動いていない時
+	else {
+		uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+		player_->SetPlayerMoveCondition(newCondition);
+	}
+
+#ifdef _DEBUG
+	ImGui::Begin("Player");
+	ImGui::InputFloat3("Direction", &playerMoveDirection_.x);
+	ImGui::Checkbox("IsPlayerMove", &isPlayerMove_);
+	ImGui::End();
+
+#endif // _DEBUG
+
+	//プレイヤーの動く方向を入れる
+	player_->SetMoveDirection(playerMoveDirection_);
+
+	//ダッシュをしているかどうかの設定
+	player_->SetIsDash(isPlayerDash_);
+
+}
 
 /// <summary>
 /// 更新
@@ -300,11 +580,11 @@ void SampleScene::KeyCollision(){
 void SampleScene::Update(GameManager* gameManager) {
 
 	//フレーム初めに
-		//コリジョンリストのクリア
+	//コリジョンリストのクリア
 	collisionManager_->ClearList();
 
-
 	fadeSprite_->SetTransparency(fadeTransparency_);
+	//フェードイン
 	if (isFadeIn==true) {
 		const float FADE_IN_INTERVAL = 0.01f;
 		fadeTransparency_ -= FADE_IN_INTERVAL;
@@ -318,12 +598,10 @@ void SampleScene::Update(GameManager* gameManager) {
 		}
 	}
 
+	//ゲーム
 	if (isFadeIn == false && isFadeOut_ == false) {
-		
-
 		fadeTransparency_ = 0.0f;
 		
-
 		if (isExplain_ == true) {
 			if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
 				++howToPlayTextureNumber_;
@@ -354,7 +632,6 @@ void SampleScene::Update(GameManager* gameManager) {
 			//操作説明を追加
 			isDisplayUI_ = true;
 
-
 			//敵
 			enemyManager_->Update();
 
@@ -364,9 +641,9 @@ void SampleScene::Update(GameManager* gameManager) {
 		
 		
 
-#pragma region 回転
+		#pragma region 回転
 
-#pragma region Y軸に旋回
+		#pragma region Y軸に旋回
 
 		//+が左回り
 		const float ROTATE_OFFSET = 0.025f;
@@ -392,9 +669,9 @@ void SampleScene::Update(GameManager* gameManager) {
 			theta_ = 0.0f;
 		}
 
-#pragma endregion
+		#pragma endregion
 
-#pragma region X軸に旋回
+		#pragma region X軸に旋回
 
 		
 		//上を向く
@@ -420,9 +697,9 @@ void SampleScene::Update(GameManager* gameManager) {
 			originPhi_ = -std::numbers::pi_v<float> / 6.0f;
 		}
 
-#pragma endregion
+		#pragma endregion
 
-#pragma region コントローラーの回転
+		#pragma region コントローラーの回転
 
 		isRotateXKey_ = false;
 		isRotateYKey_ = false;
@@ -456,99 +733,13 @@ void SampleScene::Update(GameManager* gameManager) {
 		}
 
 
-#pragma endregion
+		#pragma endregion
 
-#pragma region プレイヤーの移動
-
-		playerDirection_ = { 0.0f,0.0f,0.0f };
-		isPlayerMoveKey_ = false;
-		//移動
-		if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
-			playerDirection_.x = std::cosf(theta_ - std::numbers::pi_v<float> / 2.0f);
-			playerDirection_.z = std::sinf(theta_ - std::numbers::pi_v<float> / 2.0f);
-			isPlayerMoveKey_ = true;
-		}
-		if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
-			playerDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float> / 2.0f);
-			playerDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float> / 2.0f);
-			isPlayerMoveKey_ = true;
-		}
-		if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
-			playerDirection_.x = std::cosf(theta_);
-			playerDirection_.z = std::sinf(theta_);
-			isPlayerMoveKey_ = true;
-		}
-		if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
-			playerDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float>);
-			playerDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float>);
-			isPlayerMoveKey_ = true;
-		}
-#ifdef _DEBUG
-		ImGui::Begin("Player");
-		ImGui::InputFloat3("Direction", &playerDirection_.x);
-		ImGui::End();
-
-#endif // _DEBUG
+		#pragma endregion
 
 
-		//コントローラーがある場合
-		if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-			//キーボード入力していない時に受け付ける
-			if (isPlayerMoveKey_ == false) {
-
-
-				//コントローラーの入力
-				bool isInput = false; 
-				Vector3 leftStickInput = {
-					.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
-					.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
-				};
-				
-
-
-				//デッドゾーン
-				const float DEAD_ZONE = 0.1f;
-				if (leftStickInput.x < DEAD_ZONE && leftStickInput.x > -DEAD_ZONE) {
-					leftStickInput.x = 0.0f;
-				}
-				else {
-					isInput = true;
-				}
-				if (leftStickInput.z < DEAD_ZONE && leftStickInput.z > -DEAD_ZONE) {
-					leftStickInput.z = 0.0f;
-				}
-				else {
-					isInput = true;
-				}
-
-				//入力されていたら計算
-				if (isInput == true) {
-					//角度を求める
-					float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
-					//値を0～2πに直してtheta_に揃える
-					if (radian < 0.0f) {
-						radian += 2.0f * std::numbers::pi_v<float>;
-					}
-					const float OFFSET = std::numbers::pi_v<float> / 2.0f;
-					float resultTheta = theta_ + radian-OFFSET;
-
-
-
-					//向きを代入
-					playerDirection_.x = std::cosf(resultTheta);
-					playerDirection_.z = std::sinf(resultTheta);
-
-				}
-				
-
-			}
-		}
-
-
-		//プレイヤーの動く方向を入れる
-		player_->SetMoveDirection(playerDirection_);
-
-#pragma endregion
+		//プレイヤーの移動
+		PlayerMove();
 
 
 
@@ -557,45 +748,66 @@ void SampleScene::Update(GameManager* gameManager) {
 		float phi = -originPhi_;
 
 		//懐中電灯
-		Vector3 playerPosition = player_->GetWorldPosition();
-		flashLight_->SetPlayerPosition(playerPosition);
+		playerPosition_ = player_->GetWorldPosition();
+		flashLight_->SetPlayerPosition(playerPosition_);
 		flashLight_->SetTheta(theta_);
 		flashLight_->SetPhi(phi);
 		flashLight_->Update();
 
 		collisionManager_->RegisterList(lightCollision_);
 
+
+		
+
+
 		Fan3D fan = flashLight_->GetFan3D();
 		//エネミーをコリジョンマネージャーに追加
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
-		for (std::list<Enemy*>::iterator it = enemyes.begin(); it != enemyes.end();) {
-			Enemy* enemy = *it;
-			if (enemy != nullptr) {
-				collisionManager_->RegisterList(enemy);
+		for (Enemy* enemy : enemyes) {
+			collisionManager_->RegisterList(enemy);
+
+			//攻撃用の判定が出ていたら登録
+			if (enemy->GetIsAttack() == true) {
+				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 
 
-				if (IsFanCollision(fan, enemy->GetWorldPosition())) {
-	
-					enemy->OnCollision();
-
-
-					#ifdef _DEBUG
-					ImGui::Begin("FanCollsion");
-					ImGui::End();
-					#endif // _DEBUG
-	
-					
-				}
 			}
-			it++;
 
 
 
+			
+			//いずれこれもCollisionManagerに入れるつもり
+			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
+
+				enemy->OnCollision();
+
+
+#ifdef _DEBUG
+				ImGui::Begin("FanCollsion");
+				ImGui::End();
+#endif // _DEBUG
+
+
+			}
+		}
+		collisionManager_->RegisterList(player_.get());
+		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
+
+		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
+		for (StrongEnemy* strongEnemy : strongEnemyes) {
+			collisionManager_->RegisterList(strongEnemy);
+			bool isTouch = strongEnemy->GetIsTouchPlayer();
+
+			if (isTouch == true) {
+				isTouchStrongEnemy_ = true;
+			}
 		}
 
 
 
+		
 
+		#pragma region 視点
 
 		//1人称視点へ変更
 		if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
@@ -620,7 +832,7 @@ void SampleScene::Update(GameManager* gameManager) {
 			camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
 			camera_.rotate_.z = 0.0f;
 
-			camera_.translate_ = VectorCalculation::Add(playerPosition, CAMERA_POSITION_OFFSET);
+			camera_.translate_ = VectorCalculation::Add(playerPosition_, CAMERA_POSITION_OFFSET);
 
 		}
 		else if (viewOfPoint_ == ThirdPersonBack) {
@@ -629,16 +841,19 @@ void SampleScene::Update(GameManager* gameManager) {
 			camera_.rotate_ = thirdPersonViewOfPointRotate_;
 			//camera_.rotate_ = {0.2f,0.0f,0.0f};
 
-			camera_.translate_ = VectorCalculation::Add(playerPosition, VectorCalculation::Add(cameraThirdPersonViewOfPointPosition_, cameraTranslate));
+			camera_.translate_ = VectorCalculation::Add(playerPosition_, VectorCalculation::Add(cameraThirdPersonViewOfPointPosition_, cameraTranslate));
 			//camera_.translate_ = {0.0f,5.0f,-15.0f};
 
 		}
 
 
+		#pragma endregion
+
+
 		#pragma region 鍵の取得処理
-		uint32_t keyQuantity = keyManager_->GetKeyQuantity();
+		keyQuantity_ = keyManager_->GetKeyQuantity();
 		//鍵が0より多ければ通る
-		if (keyQuantity > 0) {
+		if (keyQuantity_ > 0) {
 			KeyCollision();
 		}
 		else {
@@ -647,74 +862,34 @@ void SampleScene::Update(GameManager* gameManager) {
 
 		#pragma endregion
 
-
+		//脱出の仕組み
+		EscapeCondition();
 		
-
-
-		//ゲート
-		if (gate_->isCollision(playerPosition)) {
-#ifdef _DEBUG
-			ImGui::Begin("InSpaceGate");
-			ImGui::End();
-
-#endif // _DEBUG
-
-			//3個取得したら脱出できる
-			uint32_t playerKeyQuantity = player_->GetHavingKey();
-			if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
-				escapeText_->SetInvisible(false);
-
-
-
-				//コントローラーのBボタンを押したら脱出のフラグがたつ
-				if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-
-					//Bボタンを押したとき
-					if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-						bTriggerTime_ += 1;
-
-					}
-					if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-						bTriggerTime_ = 0;
-					}
-
-					if (bTriggerTime_ == 1) {
-						//脱出
-						isEscape_ = true;
-					}
-
-				}
-				//SPACEキーを押したら脱出のフラグがたつ
-				if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
-					//脱出
-					isEscape_ = true;
-				}
-
-			}
-
-
-			
-		}
-		else {
-			escapeText_->SetInvisible(true);
-		}
-
-		//脱出
-		if (isEscape_ == true) {
-			isFadeOut_ = true;
-			
-		}
-		#pragma endregion
-
-
+		
 		
 		//鍵
 		keyManager_->Update();
 
-		
+		//オブジェクトの当たり判定
+		ObjectCollision();
+
+
+
+		//体力が0になったら負け
+		//または一発アウトの敵
+		if (player_->GetHP() <= 0 || isTouchStrongEnemy_==true) {
+			gameManager->ChangeScene(new LoseScene());
+			return;
+		}
+
+
 		//ライト
 		Vector3 lightDirection = flashLight_->GetDirection();
-		lightCollision_->Update(player_->GetWorldPosition(), lightDirection);
+		lightCollision_->Update(playerPosition_, lightDirection);
+
+		//現在のプレイヤーの体力を取得
+		currentDisplayHP_ = player_->GetHP();
+		
 
 		//更新
 		material_.Update();
@@ -730,7 +905,6 @@ void SampleScene::Update(GameManager* gameManager) {
 		ImGui::InputFloat("Theta", &theta_);
 		ImGui::InputFloat("Phi", &phi);
 		ImGui::End();
-
 #endif
 
 	}
@@ -758,6 +932,7 @@ void SampleScene::Update(GameManager* gameManager) {
 	//オブジェクトマネージャーの更新
 	objectManager_->Update();
 
+	
 	//地面
 	ground_->Update();
 
@@ -769,6 +944,7 @@ void SampleScene::Update(GameManager* gameManager) {
 
 	//プレイヤーの更新
 	player_->Update();
+	playerPosition_ = player_->GetWorldPosition();
 
 	//ライト確認用のタワー
 	debugTowerWorldTransform_.Update();
@@ -789,6 +965,7 @@ void SampleScene::PreDrawPostEffectFirst(){
 
 void SampleScene::DrawObject3D() {
 	
+
 	//懐中電灯を取得
 	SpotLight spotLight = flashLight_->GetSpotLight();
 
@@ -811,7 +988,7 @@ void SampleScene::DrawObject3D() {
 	//懐中電灯
 	flashLight_->Draw(camera_);
 
-	
+	//ステージオブジェクト
 	objectManager_->Draw(camera_, spotLight);
 
 	//タワー
@@ -840,16 +1017,12 @@ void SampleScene::DrawPostEffect(){
 
 void SampleScene::DrawSprite(){
 	
-
-	
-
-	
 	//説明
-	if (howToPlayTextureNumber_ == 1) {
+	if (howToPlayTextureNumber_ == 1u) {
 		explanation_[0]->Draw();
 		spaceToNext_[0]->Draw();
 	}
-	if (howToPlayTextureNumber_ == 2) {
+	if (howToPlayTextureNumber_ == 2u) {
 		explanation_[1]->Draw();
 		spaceToNext_[1]->Draw();
 	}
@@ -870,6 +1043,20 @@ void SampleScene::DrawSprite(){
 
 		//脱出
 		escapeText_->Draw();
+
+		//プレイヤーの体力の枠
+		playerHPBackFrame_->Draw();
+
+		//プレイヤーの体力(アイコン型)
+		for (uint32_t i = 0u; i < currentDisplayHP_; ++i) {
+			playerHP_[i]->Draw();
+		}
+		if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
+			toEscape_->Draw();
+		}
+
+		
+
 	}
 
 	//フェード
@@ -883,6 +1070,8 @@ void SampleScene::DrawSprite(){
 
 
 SampleScene::~SampleScene() {
-	delete player_;
 	delete lightCollision_;
+	delete objectManager_;
 }
+
+

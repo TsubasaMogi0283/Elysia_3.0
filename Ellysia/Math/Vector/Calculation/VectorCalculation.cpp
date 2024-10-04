@@ -46,6 +46,35 @@ Vector3 VectorCalculation::Subtract(const Vector3& v1, const Vector3& v2){
 	return result;
 }
 
+Vector2 VectorCalculation::Multiply(const Vector2& v1, const Vector2& v2){
+	Vector2 result = {
+		.x = v1.x * v2.x,
+		.y = v1.y * v2.y,
+	};
+
+	return result;
+}
+
+Vector3 VectorCalculation::Multiply(const Vector3& v1, const Vector3& v2){
+	Vector3 result = {
+		.x = v1.x * v2.x,
+		.y = v1.y * v2.y,
+		.z = v1.z * v2.z
+	};
+
+	return result;
+}
+
+Vector3 VectorCalculation::Multiply(const Vector3& v1, const float& value){
+	Vector3 result = {
+		.x = v1.x * value,
+		.y = v1.y * value,
+		.z = v1.z * value
+	};
+
+	return result;
+}
+
 Vector2 VectorCalculation::Normalize(const Vector2& v){
 	Vector2 result = {};
 
@@ -95,12 +124,14 @@ Vector3 VectorCalculation::Normalize(const Vector3& v){
 }
 
 Vector3 VectorCalculation::Lerp(const Vector3& v1, const Vector3& v2, const float& t){
-	Vector3 result = {};
+	Vector3 result = {
+		.x = (1.0f - t) * v1.x + t * v2.x,
+		.y = (1.0f - t) * v1.y + t * v2.y,
+		.z = (1.0f - t) * v1.z + t * v2.z,
 
-	result.x = (1.0f - t) * v1.x + t * v2.x;
-	result.y = (1.0f - t) * v1.y + t * v2.y;
-	result.z = (1.0f - t) * v1.z + t * v2.z;
+	};
 
+	
 	return result;
 }
 
@@ -158,11 +189,11 @@ Vector3 VectorCalculation::Project(const Vector3& v1, const Vector3& v2) {
 
 	float t = dot / (length * length);
 
-	Vector3 result = {};
-	result.x = t * v2.x;
-	result.y = t * v2.y;
-	result.z = t * v2.z;
-
+	Vector3 result = {
+		.x = t * v2.x,
+		.y = t * v2.y,
+		.z = t * v2.z
+	};
 
 	return result;
 
