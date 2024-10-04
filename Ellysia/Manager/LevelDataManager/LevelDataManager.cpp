@@ -187,10 +187,6 @@ nlohmann::json LevelDataManager::Deserialize(std::ifstream& file, std::string& f
 
 }
 
-
-
-
-
 uint32_t LevelDataManager::Load(const std::string& filePath){
 
 	//ファイル
@@ -199,7 +195,6 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 	//パスの結合
 	std::string levelEditorDirectoryPath = "Resources/LevelData/";
 	std::string fullFilePath = levelEditorDirectoryPath + filePath;
-
 
 
 	//ファイルを開ける
