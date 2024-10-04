@@ -7,6 +7,7 @@
 #include "AnimationModel.h"
 #include "TextureManager.h"
 #include "Camera.h"
+#include "Audio.h"
 
 #include <memory>
 #include <Audio.h>
@@ -282,7 +283,6 @@ private:
 	Material debugFanCollisionSphereMaterial_ = {};
 
 #pragma endregion
-
 
 
 };
