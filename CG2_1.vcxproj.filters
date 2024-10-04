@@ -323,7 +323,7 @@
       <UniqueIdentifier>{53f59d92-040d-4e5f-a0f1-6da83d07e9ea}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Player\PlayerCollisionToStrongEnemy">
-      <UniqueIdentifier>{7432f915-4798-42a9-a5f0-8b71bd080803}</UniqueIdentifier
+      <UniqueIdentifier>{7432f915-4798-42a9-a5f0-8b71bd080803}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
