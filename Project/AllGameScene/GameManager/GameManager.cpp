@@ -11,8 +11,8 @@ void GameManager::Initialize() {
 	currentGamaScene_ = new TitleScene();
 
 #ifdef _DEBUG
-	currentGamaScene_ = new LevelEditorSample();
-	//currentGamaScene_ = new SampleScene();
+	//currentGamaScene_ = new LevelEditorSample();
+	currentGamaScene_ = new SampleScene();
 #endif // _DEBUG
 
 	//初期化
@@ -38,6 +38,7 @@ void GameManager::Update() {
 	
 	const char* sceneName[] = { "Title", "Game", "Win" };
 	//シーンファクトリー組み合わせたらデバッグがやりやすそう
+	//選択するだけでシーン遷移出来るから
 	ImGui::Begin("Scene");
 	if (ImGui::BeginCombo("SceneSelect", sceneName[SCENE_QUANTITY_])) {
 		for (uint32_t i = 0; i < IM_ARRAYSIZE(sceneName); i++) {

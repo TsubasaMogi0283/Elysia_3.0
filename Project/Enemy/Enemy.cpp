@@ -103,6 +103,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 void Enemy::Update(){
 	
 	const float SPEED_AMOUNT = 0.05f;
+	//StatePatternにするよ！！
 	//状態
 	switch (condition_) {
 		//何もしない
