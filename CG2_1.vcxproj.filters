@@ -130,9 +130,6 @@
     <Filter Include="Ellysia\Source File\Polygone\3D\Particle3DManager">
       <UniqueIdentifier>{3ec739a0-2572-47d0-a8e3-2884e559d8fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="External">
-      <UniqueIdentifier>{14a915d2-8493-4c0a-a515-545fd5a67d14}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Header File\AdjustmentItems">
       <UniqueIdentifier>{790ca7fe-3aed-4cdc-bdf7-edc3fdacdae6}</UniqueIdentifier>
     </Filter>
@@ -325,14 +322,26 @@
     <Filter Include="Project\Player\PlayerCollisionToStrongEnemy">
       <UniqueIdentifier>{7432f915-4798-42a9-a5f0-8b71bd080803}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\Line">
+      <UniqueIdentifier>{66a5b1a2-5e83-439d-a5d3-a9e1edd230f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Math\Single">
+      <UniqueIdentifier>{d6d7485a-a79a-4652-b5c8-355792b5a297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Line">
+      <UniqueIdentifier>{35b5a0ff-5b27-440a-bcc3-9d27a992b908}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Math\Single">
+      <UniqueIdentifier>{9e0c7e84-4a99-42b1-9836-67c9e39ee887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Math\Matrix">
+      <UniqueIdentifier>{ab760712-fadc-484b-9039-b8644a858d0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Math\Vector">
+      <UniqueIdentifier>{929f13fb-1c6e-45a3-bedc-381d7b8cb4a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
-      <Filter>Ellysia\Source File\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Math\Vector\Calculation\VectorCalculation.cpp">
-      <Filter>Ellysia\Source File\Math</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
       <Filter>Ellysia\Source File\Common</Filter>
     </ClCompile>
@@ -395,9 +404,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\Particle3DManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Line\Line.cpp">
-      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Math\Quaternion\Quaternion.cpp">
       <Filter>Ellysia\Source File\Math</Filter>
@@ -516,12 +522,6 @@
     <ClCompile Include="Project\Light\FlashLight\FlashLight.cpp">
       <Filter>Project\Light\FlashLight</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Math\Single\SingleCalculation.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Level1\Level1.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Stage\Skydome\Skydome.cpp">
       <Filter>Project\ObjectManager\StageObject\Skydome</Filter>
     </ClCompile>
@@ -562,7 +562,19 @@
       <Filter>Project\Enemy\StrongEnemy</Filter>
     </ClCompile>
     <ClCompile Include="Project\Player\PlayerCollisionToStrongEnemy.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Project\Player\PlayerCollisionToStrongEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Line\Line.cpp">
+      <Filter>Ellysia\Source File\Line</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Math\Single\SingleCalculation.cpp">
+      <Filter>Ellysia\Source File\Math\Single</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp">
+      <Filter>Ellysia\Source File\Math\Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Math\Vector\Calculation\VectorCalculation.cpp">
+      <Filter>Ellysia\Source File\Math\Vector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -772,9 +784,6 @@
     <ClInclude Include="Ellysia\Math\WorldTransform\WorldTransform.h">
       <Filter>Ellysia\Header File\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Line\Line.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Lighting\PointLight.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
     </ClInclude>
@@ -789,12 +798,6 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Audio\AudioStruct.h">
       <Filter>Ellysia\Header File\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="External\nlohmann\json_fwd.hpp">
-      <Filter>External</Filter>
-    </ClInclude>
-    <ClInclude Include="External\nlohmann\json.hpp">
-      <Filter>External</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Shape\SphereShape.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
@@ -949,14 +952,8 @@
     <ClInclude Include="Project\Stage\Ground\StageRect.h">
       <Filter>Project\ObjectManager\StageObject\Ground</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\Single\SingleCalculation.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Manager\LevelDataManager\LevelDataManager.h">
       <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Level1\Level1.h">
-      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
     <ClInclude Include="Project\Stage\Skydome\Skydome.h">
       <Filter>Project\ObjectManager\StageObject\Skydome</Filter>
@@ -1001,7 +998,13 @@
       <Filter>Project\Enemy\StrongEnemy</Filter>
     </ClInclude>
     <ClInclude Include="Project\Player\PlayerCollisionToStrongEnemy.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Project\Player\PlayerCollisionToStrongEnemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Line\Line.h">
+      <Filter>Ellysia\Header File\Line</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Single\SingleCalculation.h">
+      <Filter>Ellysia\Header File\Math\Single</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

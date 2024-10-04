@@ -195,7 +195,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Enemy\StrongEnemy.cpp" />
     <ClCompile Include="Project\Key\Key.cpp" />
     <ClCompile Include="Project\Key\KeyManager.cpp" />
-    <ClCompile Include="Project\Level1\Level1.cpp" />
     <ClCompile Include="Project\LightWeapon\LightWeapon.cpp" />
     <ClCompile Include="Project\Light\FlashLight\FlashLight.cpp" />
     <ClCompile Include="Project\Player\Player.cpp" />
@@ -459,8 +458,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\PostEffect\RandomEffect\RandomEffect.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\SepiaScale\SepiaScale.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\Vignette\Vignette.h" />
-    <ClInclude Include="External\nlohmann\json.hpp" />
-    <ClInclude Include="External\nlohmann\json_fwd.hpp" />
     <ClInclude Include="Project\AllGameScene\GameManager\GameManager.h" />
     <ClInclude Include="Project\AllGameScene\GameManager\IGameScene.h" />
     <ClInclude Include="Project\AllGameScene\LevelEditorSample\LevelEditorSample.h" />
@@ -478,7 +475,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Enemy\StrongEnemy.h" />
     <ClInclude Include="Project\Key\Key.h" />
     <ClInclude Include="Project\Key\KeyManager.h" />
-    <ClInclude Include="Project\Level1\Level1.h" />
     <ClInclude Include="Project\LightWeapon\LightWeapon.h" />
     <ClInclude Include="Project\Light\FlashLight\FlashLight.h" />
     <ClInclude Include="Project\Player\Player.h" />

@@ -1,5 +1,6 @@
 #pragma once
 
+
 #define XAUDIO2_HELPER_FUNCTIONS
 #include <xaudio2.h>
 #include "xaudio2fx.h"
@@ -13,20 +14,9 @@
 #pragma comment(lib,"xaudio2.lib")
 
 
-
-
-#include <mfapi.h>
-#include <mfidl.h>
-
-
-#pragma comment(lib, "Mf.lib")
-#pragma comment(lib, "mfplat.lib")
-#pragma comment(lib, "Mfreadwrite.lib")
-#pragma comment(lib, "mfuuid.lib")
-
 #include <wrl.h>
 using Microsoft::WRL::ComPtr;
-
+#include <cstdint>
 
 #include <complex>
 #include <vector>
@@ -34,20 +24,47 @@ using Microsoft::WRL::ComPtr;
 
 #include "AudioStruct.h"
 
+//LoadAudioの時に使う
+enum EffectType {
+	Filter,
+	Reverb,
+};
 
-class Audio {
-public:
-	//コンストラクタ
+
+class Audio final {
+private:
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Audio()=default;
 
-	//デストラクタ
-	~Audio()=default;
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Audio() = default;
 public:
-	//インスタンスの取得
+	
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
 	static Audio* GetInstance();
 
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="obj"></param>
+	Audio(const Audio& obj) = delete;
+
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="obj"></param>
+	/// <returns></returns>
+	Audio& operator=(const Audio& obj) = delete;
 
 public:
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -56,26 +73,20 @@ public:
 #pragma region 基本セット
 
 	/// <summary>
-	/// 読み込み
+	/// Waveの読み込み
 	/// </summary>
 	/// <param name="fileName"></param>
 	/// <returns></returns>
 	static uint32_t LoadWave(const char* fileName);
 
 	/// <summary>
-	/// エフェクト版の読み込み
+	/// Waveエフェクト版の読み込み
 	/// </summary>
 	/// <param name="fileName"></param>
 	/// <param name="effectType"></param>
 	/// <returns></returns>
 	static uint32_t LoadWave(const char* fileName, uint32_t effectType);
 
-	/// <summary>
-	/// MP3読み込み
-	/// </summary>
-	/// <param name="fileName"></param>
-	/// <returns></returns>
-	static uint32_t LoadMP3(const WCHAR* fileName);
 
 	/// <summary>
 	/// 再生
@@ -84,27 +95,13 @@ public:
 	/// <param name="isLoop"></param>
 	void PlayWave(uint32_t audioHandle, bool isLoop);
 	
+	
 	/// <summary>
-	/// 再生(ループ回数指定)
+	/// 再生(ループ回数あり)
 	/// </summary>
 	/// <param name="audioHandle"></param>
 	/// <param name="loopCount"></param>
 	void PlayWave(uint32_t audioHandle, int32_t loopCount);
-
-	// <summary>
-	// MP3再生
-	// </summary>
-	// <param name="audioHandle"></param>
-	// <param name="isLoop"></param>
-	void PlayMP3(uint32_t audioHandle,bool isLoop);
-
-	// <summary>
-	// MP3再生(ループ回数設定版)
-	// </summary>
-	// <param name="audioHandle"></param>
-	// <param name="loopCount"></param>
-	void PlayMP3(uint32_t audioHandle, uint32_t loopCount);
-
 
 	/// <summary>
 	/// 一時停止
@@ -189,7 +186,6 @@ public:
 	/// <param name="値"></param>
 	void ChangePitch(uint32_t audioHandle, int32_t scale);
 
-	void StretchAndPitch(uint32_t audioHandle, float timeRatio, float pitchRatio);
 
 #pragma endregion
 
@@ -200,7 +196,7 @@ public:
 	/// <param name="Panの値"></param>
 	void SetPan(uint32_t audioHandle, float_t pan);
 
-	
+
 #pragma region フィルター
 
 	//単極は必要無いかな
@@ -218,7 +214,7 @@ public:
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
 	/// <param name="oneOverQ"></param>
-	void SetLowPassFilter(uint32_t audioHandle, float cutOff,float oneOverQ);
+	void SetLowPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ);
 
 
 
@@ -268,11 +264,17 @@ public:
 
 #pragma endregion
 
+	/// <summary>
+	/// サブミックスボイスの作成
+	/// </summary>
+	/// <param name="channel"></param>
+	void CreateSubmixVoice(uint32_t channel);
 
 
-	void SendChannels(uint32_t audioHandle,uint32_t channelNumber);
+	void SendChannels(uint32_t audioHandle, uint32_t channelNumber);
 
 	//リバーブ
+	//まだ未完成だから使わないでね
 	void CreateReverb(uint32_t audioHandle, uint32_t channel);
 
 	//エフェクトの効果を無効にする
@@ -282,8 +284,89 @@ public:
 	void OnEffect(uint32_t audioHandle);
 
 
+	//解放
+	void Release();
 
-	
+private:
+	//音声データの開放
+	void SoundUnload(uint32_t soundDataHandle);
+
+
+private:
+	//IXAudio2はCOMオブジェクトなのでComPtr管理
+	ComPtr<IXAudio2> xAudio2_ = nullptr;
+	//マスターボイス
+	//最終的にここでまとめるよ(スピーカーみたいな感じだね)
+	IXAudio2MasteringVoice* masterVoice_ = nullptr;
+
+
+
+	//Panに必要な変数
+	DWORD dwChannelMask_ = {};
+	float outputMatrix_[8] = {};
+	float left_ = 0.0f;
+	float right_ = 0.0f;
+
+
+
+	//Reverb
+	IUnknown* pXAPO_ = nullptr;
+
+
+
+
+
+	//構造体版
+	//Texturemanagerとだいたい同じ感じにした
+	//音声データの最大数
+	static const int SOUND_DATE_MAX_ = 256;
+	std::array<AudioInformation, SOUND_DATE_MAX_> audioInformation_{};
+
+
+	static const int SUBMIXVOICE_AMOUNT_ = 64;
+	std::array<IXAudio2SubmixVoice*, SUBMIXVOICE_AMOUNT_> submixVoice_{};
+
+
+private:
+
+
+
+
+	//自分のエンジンではA4は442Hz基準にする
+	//もちろん12段階で1オクターブ
+	static const int SCALE_AMOUNT_ = 13;
+	const float SEMITONE_RATIO_[SCALE_AMOUNT_] = {
+		1.00000f, //C4
+		1.05946f, //C#4
+		1.12246f, //D4
+		1.18921f, //D#4
+		1.25992f, //E4
+		1.33483f, //F4
+		1.41421f, //F#4
+		1.49831f, //G4
+		1.58740f, //G#4
+		1.68179f, //A4
+		1.78180f, //A#4
+		1.88775f, //B4
+		2.00000f  //C5
+	};
+
+	//低い方
+	const float MINUS_SEMITONE_RATION[SCALE_AMOUNT_] = {
+		1.00000f,	//C4
+		0.94387f,	//B3
+		0.89090f,	//A3#
+		0.84090f,	//A3
+		0.79370f,	//G#3
+		0.74915f,	//G3
+		0.70711f,	//F#3
+		0.66742f,	//F3
+		0.62996f,	//E3
+		0.59460f,	//D#3
+		0.56123f,	//D3
+		0.52973f,	//C#3
+		0.50000f,	//C3
+	};
 
 
 };
