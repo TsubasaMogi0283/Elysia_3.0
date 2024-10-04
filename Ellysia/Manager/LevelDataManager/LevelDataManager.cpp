@@ -344,12 +344,15 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 }
 
 void LevelDataManager::Update(uint32_t& levelDataHandle){
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get(); 
-		if (levelData->handle == levelDataHandle) {
-			//更新
-			for (auto& object : levelData->objectDatas) {
-				object.worldTransform->Update();
+
+	//この書き方はC++17からの構造化束縛というものらしい
+	//イテレータではなく
+	for (auto& [key, levelDataPtr] : levelDatas_) {
+		if (levelDataPtr->handle == levelDataHandle) {
+			
+			for (auto& object : levelDataPtr->objects) {
+				//更新
+				object.worldTransform.Update();
 			}
 			break; 
 		}
@@ -358,14 +361,10 @@ void LevelDataManager::Update(uint32_t& levelDataHandle){
 
 void LevelDataManager::Delete(uint32_t& levelDataHandle){
 
-	//一度全てのオブジェクトのデータを消す
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
 
-		//LevelDataを取得
-		LevelData* levelData = it->second.get();
+	for (auto& [key, levelDataPtr] : levelDatas_) {
+		if (levelDataPtr->handle == levelDataHandle) {
 
-		//一致したら消す
-		if (levelData->handle == levelDataHandle) {
 			//モデルを消す
 			for (auto& object : levelData->objectDatas) {
 				// Modelの解放
