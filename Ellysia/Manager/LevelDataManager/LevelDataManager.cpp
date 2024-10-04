@@ -350,9 +350,9 @@ void LevelDataManager::Update(uint32_t& levelDataHandle){
 	for (auto& [key, levelDataPtr] : levelDatas_) {
 		if (levelDataPtr->handle == levelDataHandle) {
 			
-			for (auto& object : levelDataPtr->objects) {
+			for (auto& object : levelDataPtr->objectDatas) {
 				//更新
-				object.worldTransform.Update();
+				object.worldTransform->Update();
 			}
 			break; 
 		}
@@ -366,7 +366,7 @@ void LevelDataManager::Delete(uint32_t& levelDataHandle){
 		if (levelDataPtr->handle == levelDataHandle) {
 
 			//モデルを消す
-			for (auto& object : levelData->objectDatas) {
+			for (auto& object : levelDataPtr->objectDatas) {
 				// Modelの解放
 				if (object.model != nullptr) {
 					delete object.model;
@@ -377,7 +377,7 @@ void LevelDataManager::Delete(uint32_t& levelDataHandle){
 			}
 
 			//listにある情報を全て消す
-			levelData->objectDatas.~list();
+			levelDatas_->objectDatas.~list();
 
 			//無駄な処理をしないようにする
 			break;
