@@ -17,6 +17,7 @@ LevelDataManager* LevelDataManager::GetInstance(){
 	return &instance;
 }
 
+
 void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 	//"objects"の全オブジェクトを走査
@@ -73,14 +74,41 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 					objectData.colliderType = collider["type"];
 				}
 
-				//中心座標
-				objectData.center.x = (float)collider["center"][1];
-				objectData.center.y = (float)collider["center"][2];
-				objectData.center.z = -(float)collider["center"][0];
-				//サイズ
-				objectData.size.x = (float)collider["size"][1];
-				objectData.size.y = (float)collider["size"][2];
-				objectData.size.z = (float)collider["size"][0];
+				
+
+				if (objectData.colliderType == "BOX") {
+					//中心座標
+					objectData.center.x = (float)collider["center"][1] + objectData.translation.x;
+					objectData.center.y = (float)collider["center"][2] + objectData.translation.y;
+					objectData.center.z = -(float)collider["center"][0] + objectData.translation.z;
+					//サイズ
+					objectData.size.x = (float)collider["size"][1];
+					objectData.size.y = (float)collider["size"][2];
+					objectData.size.z = (float)collider["size"][0];
+
+				}
+				else if (objectData.colliderType == "AABB") {
+					//中心座標
+					objectData.center.x = (float)collider["center"][1] + objectData.translation.x;
+					objectData.center.y = (float)collider["center"][2] + objectData.translation.y;
+					objectData.center.z = -(float)collider["center"][0] + objectData.translation.z;
+					//サイズ
+					objectData.size.x = (float)collider["size"][1];
+					objectData.size.y = (float)collider["size"][2];
+					objectData.size.z = (float)collider["size"][0];
+
+					//右上奥
+					objectData.upSize.x = objectData.center.x + objectData.size.x;
+					objectData.upSize.y = objectData.center.y + objectData.size.y;
+					objectData.upSize.z = objectData.center.z + objectData.size.z;
+					//左下手前
+					objectData.downSize.x = objectData.center.x - objectData.size.x;
+					objectData.downSize.y = objectData.center.y - objectData.size.y;
+					objectData.downSize.z = objectData.center.z - objectData.size.z;
+
+
+				}
+
 			}
 
 			//子オブジェクト
@@ -260,7 +288,8 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 				delete object.worldTransform;
 			}
 
-			levelData->objectDatas.~vector();
+			//listにある情報を消す
+			levelData->objectDatas.~list();
 
 			//無駄なループ処理をしないようにする
 			break;
@@ -353,8 +382,8 @@ void LevelDataManager::Delete(uint32_t& levelDataHandle){
 
 			}
 
-			//vectorにある情報を全て消す
-			levelData->objectDatas.~vector();
+			//listにある情報を全て消す
+			levelData->objectDatas.~list();
 
 			//無駄な処理をしないようにする
 			break;

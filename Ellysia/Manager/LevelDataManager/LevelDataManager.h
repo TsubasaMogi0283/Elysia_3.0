@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <vector>
+#include <list>
 #include <array>
 #include <map>
 #include <memory>
@@ -68,6 +68,8 @@ public:
 	/// <param name="levelDataHandle"></param>
 	void Delete(uint32_t& levelDataHandle);
 
+
+
 #pragma region 描画
 
 	/// <summary>
@@ -126,11 +128,18 @@ private:
 			Vector3 rotation;
 			Vector3 translation;
 
-			//コライダー
-			Collider* collider;
+
 			std::string colliderType;
+			//Sphere,Box
 			Vector3 center;
 			Vector3 size;
+
+			//AABB
+			AABB aabb;
+			Vector3 upSize;
+			Vector3 downSize;
+
+
 		};
 
 
@@ -138,7 +147,7 @@ private:
 		uint32_t handle = 0u;
 
 		//オブジェクト
-		std::vector<ObjectData> objectDatas = {};
+		std::list<ObjectData> objectDatas = {};
 
 		//フォルダ名
 		std::string folderName = {};
@@ -149,6 +158,19 @@ private:
 
 	};
 
+	std::list<LevelData::ObjectData> GetObject(uint32_t& handle) {
+		
+		for (const auto& [key, levelData] : levelDatas_) {
+			
+			//一致したら返す
+			if (levelData->handle == handle) {
+				return levelData->objectDatas;
+			}
+		}
+
+		//見つからない
+		return {};
+	}
 
 
 private:
