@@ -226,9 +226,11 @@ void SampleScene::Initialize() {
 	
 	theta_ = std::numbers::pi_v<float> / 2.0f;
 	
+	//ポストエフェクトの初期化
 	back_ = std::make_unique< BackText>();
 	back_->Initialize();
 	
+	//マテリアルの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
 	
@@ -311,6 +313,7 @@ void SampleScene::KeyCollision(){
 	}
 
 	//listにあるKeyの中にある「isPrePickUp_」のどれか一つでもtrueになっていたらtrueを返す
+	//trueの時に取得するかどうかのUIが出る
 	isAbleToPickUpKey_ = std::any_of(keyes.begin(), keyes.end(), [](Key* key) {
 		return key->GetIsPrePickUp() == true;
 	});
@@ -584,6 +587,9 @@ void SampleScene::Update(GameManager* gameManager) {
 	collisionManager_->ClearList();
 
 	fadeSprite_->SetTransparency(fadeTransparency_);
+
+
+	//StatePaternにしたい
 	//フェードイン
 	if (isFadeIn==true) {
 		const float FADE_IN_INTERVAL = 0.01f;
@@ -815,10 +821,6 @@ void SampleScene::Update(GameManager* gameManager) {
 		}
 		
 
-		//3人称視点へ変更
-		else if (Input::GetInstance()->IsTriggerKey(DIK_3) == true) {
-			viewOfPoint_ = ThirdPersonBack;
-		}
 
 		//コントローラーだと
 		//十字ボタンで切り替えのが良いかも
@@ -833,16 +835,6 @@ void SampleScene::Update(GameManager* gameManager) {
 			camera_.rotate_.z = 0.0f;
 
 			camera_.translate_ = VectorCalculation::Add(playerPosition_, CAMERA_POSITION_OFFSET);
-
-		}
-		else if (viewOfPoint_ == ThirdPersonBack) {
-
-
-			camera_.rotate_ = thirdPersonViewOfPointRotate_;
-			//camera_.rotate_ = {0.2f,0.0f,0.0f};
-
-			camera_.translate_ = VectorCalculation::Add(playerPosition_, VectorCalculation::Add(cameraThirdPersonViewOfPointPosition_, cameraTranslate));
-			//camera_.translate_ = {0.0f,5.0f,-15.0f};
 
 		}
 
@@ -991,16 +983,12 @@ void SampleScene::DrawObject3D() {
 	//ステージオブジェクト
 	objectManager_->Draw(camera_, spotLight);
 
-	//タワー
-	//debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight);
-	
+
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
 
 #ifdef _DEBUG
 	lightCollision_->Draw(camera_, spotLight);
-
-	//debugFanCollisionSphereModel_->Draw(debugFanCollisionSphereWorldTransform_,camera_, debugFanCollisionSphereMaterial_,spotLight);
 
 #endif // _DEBUG
 

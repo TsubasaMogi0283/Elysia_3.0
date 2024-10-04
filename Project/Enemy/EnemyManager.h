@@ -14,6 +14,9 @@ class Player;
 class ObjectManager;
 
 
+
+//シングルトンパターンにしよう
+
 class EnemyManager{
 public:
 	/// <summary>

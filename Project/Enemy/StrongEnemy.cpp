@@ -64,6 +64,7 @@ void StrongEnemy::Update(){
 
 	const float SPEED_AMOUNT = 0.05f;
 	//状態
+	//こっちもStatePatternにするよ！！
 	switch (condition_) {
 	case EnemyCondition::NoneMove:
 		//何もしない
