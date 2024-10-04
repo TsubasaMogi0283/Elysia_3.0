@@ -35,8 +35,12 @@ public:
 
 private:
 	struct RandomValue {
+		//値
 		float value;
+		//テクスチャと乗算させるか
+		bool isUseTexture;
 	};
+	
 	ComPtr<ID3D12Resource> randomValueResource_ = nullptr;
 	RandomValue randomValue_ = {};
 	RandomValue* randomValueData_ = nullptr;

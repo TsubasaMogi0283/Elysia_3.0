@@ -3,9 +3,65 @@
 
 #include <imgui.h>
 
-#include "AudioManager.h"
-#include <AudioScale.h>
+static uint32_t audioIndex;
 
+Audio* Audio::GetInstance() {
+	static Audio instance;
+	return &instance;
+}
+
+void Audio::CreateSubmixVoice(uint32_t channel) {
+	uint32_t channels = channel;
+	uint32_t sampleRate = 44100;
+
+
+
+	HRESULT hr = {};
+	hr = Audio::GetInstance()->xAudio2_->CreateSubmixVoice(&Audio::GetInstance()->submixVoice_[channel], channels, sampleRate);
+	assert(SUCCEEDED(hr));
+
+}
+
+//初期化
+//これはDirecX初期化の後に入れてね
+void Audio::Initialize() {
+
+	//MediaFundationの初期化
+	HRESULT hr = {};
+	hr=MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
+	assert(SUCCEEDED(hr));
+
+	//XAudioのエンジンのインスタンスを生成
+	hr = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
+	assert(SUCCEEDED(hr));
+
+	//マスターボイスを生成
+	hr = xAudio2_->CreateMasteringVoice(&masterVoice_);
+	assert(SUCCEEDED(hr));
+
+	//スピーカ構成を取得
+	masterVoice_->GetChannelMask(&dwChannelMask_);
+
+	
+	
+
+	//一度全部0に初期化
+	for (int i = 0; i < 8; i++) {
+		outputMatrix_[i] = 0;
+	}
+
+	//サブミックスボイス(DTMでのバス)をここで作る
+	//64くらいあれば十分でしょう。多すぎてもメモリの無駄になってしまうし
+	//FLStudioと同じように128あれば良いなと思ったが
+	for (int i = 1; i < SUBMIXVOICE_AMOUNT_; ++i) {
+
+		CreateSubmixVoice(i);
+	}
+	
+
+
+
+}
 
 
 #pragma region 実際に使う関数
@@ -271,7 +327,7 @@ void Audio::PartlyLoopPlayWave(uint32_t audioHandle, float start, float lengthSe
 	//別名サスティンループというらしい
 	//シンセとかにあるサスティンと関係があるのかな
 	//この関数は部分ループ
-
+	
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buffer{};
 	AudioInformation audioInformation = AudioManager::GetInstance()->GetAudioInformation(audioHandle);
@@ -704,3 +760,38 @@ void Audio::OnEffect(uint32_t audioHandle) {
 
 
 #pragma endregion
+//音声データの開放
+//後ろにあるReleaseで使っているよ
+void Audio::SoundUnload(uint32_t soundDataHandle) {
+	//バッファのメモリを解放
+	delete[] Audio::GetInstance()->audioInformation_[soundDataHandle].soundData_.pBuffer;
+	Audio::GetInstance()->audioInformation_[soundDataHandle].soundData_.pBuffer = 0;
+	Audio::GetInstance()->audioInformation_[soundDataHandle].soundData_.bufferSize = 0;
+	Audio::GetInstance()->audioInformation_[soundDataHandle].soundData_.wfex = {};
+
+}
+
+//解放
+void Audio::Release() {
+	//解放
+	for (int i = 0; i < SOUND_DATE_MAX_; i++) {
+		//中身が入っていたらしっかり解放
+		if (audioInformation_[i].pSourceReader_ != nullptr) {
+			audioInformation_[i].pSourceReader_->Release();
+		}
+		if (audioInformation_[i].pSourceVoice_ != nullptr) {
+			audioInformation_[i].pSourceVoice_->DestroyVoice();
+		}
+	}
+
+
+	//XAudio2解放
+	xAudio2_.Reset();
+
+	for (int i = 0; i < SOUND_DATE_MAX_; i++) {
+		SoundUnload(i);
+	}
+	HRESULT hr{};
+	hr=MFShutdown();
+	assert(SUCCEEDED(hr));
+}

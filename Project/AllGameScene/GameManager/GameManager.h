@@ -1,43 +1,60 @@
 #pragma once
 
 #include "IGameScene.h"
-
+#include <cstdint>
 
 //main.cppにあるものを全部こっちに引っ越しする
 class GameManager {
 public:
-	//コンストラクタ
-	GameManager();
+	
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	GameManager()=default;
 
-	//初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
-	//シーンチェンジ
+	/// <summary>
+	/// シーンチェンジ
+	/// </summary>
+	/// <param name="newGameScene"></param>
 	void ChangeScene(IGameScene* newGameScene);
 
-	//更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	//描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void DrawSpriteBack();
 	void DrawObject3D();
 	void DrawSprite();
 
-	//PostEffect
+	/// <summary>
+	/// ポストエフェクト
+	/// </summary>
 	void PreDrawPostEffectFirst();
 	void DrawPostEffect();
 	
 
 
 
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~GameManager();
 
 private:
 
 	//StatePatternに必要な変数
 	IGameScene* currentGamaScene_ = nullptr;
-
+	//シーンの数
+	uint32_t SCENE_QUANTITY_ = 0;
 
 
 	

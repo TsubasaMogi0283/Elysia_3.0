@@ -14,6 +14,7 @@ void RandomEffect::Initialize() {
 
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
+	randomValue_.isUseTexture = false;
 	const std::string postEffectName = "RandomEffect";
 	rtvHandle_ = RtvManager::GetInstance()->Allocate(postEffectName);
 	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);
@@ -44,7 +45,7 @@ void RandomEffect::PreDraw() {
 		1, &RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
-		RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+		RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), {RENDER_TARGET_CLEAR_VALUE}, 0, nullptr);
 
 
 	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(
@@ -77,12 +78,14 @@ void RandomEffect::Draw() {
 #ifdef _DEBUG
 	ImGui::Begin("RandomEffect");
 	ImGui::InputFloat("threshold", &randomValue_.value);
+	ImGui::Checkbox("UseTexture", &randomValue_.isUseTexture);
 	ImGui::End();
 #endif
 	randomValueResource_->Map(0,nullptr,reinterpret_cast<void**>(&randomValueData_));
 	std::uniform_real_distribution<float> distribute(0.0f, 1.0f);
 	randomValue_.value = distribute(randomEngine_);
 	randomValueData_->value = randomValue_.value;
+	randomValueData_->isUseTexture = randomValue_.isUseTexture;
 	randomValueResource_->Unmap(0, nullptr);
 
 

@@ -87,7 +87,7 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 
 	materialData_->color = color;
 	materialData_->lightingKinds = 0;
-	materialData_->uvTransform = MakeIdentity4x4();
+	materialData_->uvTransform = Matrix4x4Calculation::MakeIdentity4x4();
 	
 	//materialResource_ = CreateBufferResource(directXSetup_->GetDevice(), sizeof(Vector4));
 	
@@ -96,18 +96,18 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 	//どれだけのサイズが必要なのか考えよう
 
 	//新しく引数作った方が良いかも
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale,transform.rotate,transform.translate);
+	Matrix4x4 worldMatrix = Matrix4x4Calculation::MakeAffineMatrix(transform.scale,transform.rotate,transform.translate);
 	//遠視投影行列
 	//Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.5f, float() / float(WINDOW_SIZE_HEIGHT), 0.1f, 100.0f);
 	//Matrix4x4 worldMatrix = MakeAffineMatrix();
 	//遠視投影行列
-	Matrix4x4 viewMatrixSprite = MakeIdentity4x4();
+	Matrix4x4 viewMatrixSprite = Matrix4x4Calculation::MakeIdentity4x4();
 	
-	Matrix4x4 projectionMatrixSprite = MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrixSprite = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 	
 
 	//WVP行列を作成
-	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrixSprite, projectionMatrixSprite));
+	Matrix4x4 worldViewProjectionMatrix = Matrix4x4Calculation::Multiply(worldMatrix, Matrix4x4Calculation::Multiply(viewMatrixSprite, projectionMatrixSprite));
 
 	//書き込む為のアドレスを取得
 	wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpData_));
@@ -116,7 +116,7 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 	
 	//さっき作ったworldMatrixの情報をここに入れる
 	wvpData_->WVP = worldViewProjectionMatrix;
-	wvpData_->World = MakeIdentity4x4();
+	wvpData_->World = Matrix4x4Calculation::MakeIdentity4x4();
 	
 
 

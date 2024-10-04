@@ -18,16 +18,12 @@ class Sphere {
 public:
 	
 	//コンストラクタ
-	Sphere();
+	Sphere()=default;
 
 	//初期化
 	void Initialize();
 
 	
-	//更新処理
-	//最終手段。ここにImGui入れる
-	void Update();
-
 
 	//描画
 	//左上、右上、左下、右下
@@ -38,7 +34,7 @@ public:
 	void Release();
 
 	//デストラクタ
-	~Sphere();
+	~Sphere()=default;
 
 
 private:

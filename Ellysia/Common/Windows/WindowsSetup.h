@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <WinUser.h>
 #include <cstdint>
-
+#include <string>
 
 #include <imgui.h>
 #include <imgui_impl_dx12.h>
@@ -23,10 +23,16 @@ class WindowsSetup final{
 private:
 	//インスタンスを作れないようにする
 	//コンストラクタをprivateに
-	WindowsSetup();
+	
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	WindowsSetup()=default;
 
-	//デストラクタも
-	~WindowsSetup();
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~WindowsSetup() = default;
 
 public:
 
@@ -47,10 +53,9 @@ public:
 	//Window Procedure
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-
+	static void OutputText(std::string& stringText);
 
 private:
-	//ここでしか使わない関数はprivateにした方がいい
 
 	//ウィンドウクラスを登録
 	void RegisterWindowsClass();
@@ -61,13 +66,23 @@ private:
 
 public:
 
-	//初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="title"></param>
+	/// <param name="clientWidth"></param>
+	/// <param name="clientHeight"></param>
 	void Initialize(const wchar_t* title, int32_t clientWidth,int32_t clientHeight);
 
-
+	/// <summary>
+	/// メッセージ
+	/// </summary>
+	/// <param name="msg"></param>
 	void WindowsMSG(MSG& msg);
 
-
+	/// <summary>
+	/// 閉じる
+	/// </summary>
 	void Close();
 
 #pragma region アクセッサ
@@ -88,9 +103,7 @@ public:
 		return wc_.hInstance;
 	}
 
-	wchar_t* SetClassName(wchar_t* name) {
-		title_ = name;
-	}
+
 
 #pragma endregion
 

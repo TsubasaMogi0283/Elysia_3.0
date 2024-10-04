@@ -135,7 +135,7 @@ Quaternion Inverse(const Quaternion& quaternion) {
 Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
 
     //q=(cosθ/2,n*sinθ/2)
-    Vector3 n = Normalize(axis);
+    Vector3 n = VectorCalculation::Normalize(axis);
 
     Quaternion result = {};
     result.w = std::cosf(angle / 2.0f);

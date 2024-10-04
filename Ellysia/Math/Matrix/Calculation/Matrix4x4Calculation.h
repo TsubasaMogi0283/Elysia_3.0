@@ -9,48 +9,128 @@
 #include <math.h>
 
 
-//コタンジェント
-float Cot(float theta);
+namespace Matrix4x4Calculation {
+	
+	/// <summary>
+	/// 単位行列を作成する。
+	/// 斜めに1が並ぶ行列
+	/// </summary>
+	/// <returns></returns>
+	Matrix4x4 MakeIdentity4x4();
 
-//単位行列を作成する
-Matrix4x4 MakeIdentity4x4();
-
-//乗算
-Matrix4x4 Multiply(const Matrix4x4 m1, const Matrix4x4 m2);
-
-//Scale
-//拡縮
-Matrix4x4 MakeScaleMatrix(const Vector3 scale);
-
-Matrix4x4 MakeRotateXMatrix(float radian);
-
-Matrix4x4 MakeRotateYMatrix(float radian);
-
-Matrix4x4 MakeRotateZMatrix(float radian);
-
-//AllRotate
-//回転
-Matrix4x4 MakeRotateXYZMatrix(float radianX, float radianY, float radianZ);
+	/// <summary>
+	/// 乗算
+	/// </summary>
+	/// <param name="m1"></param>
+	/// <param name="m2"></param>
+	/// <returns></returns>
+	Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 
 
-//Translate
-//移動
-Matrix4x4 MakeTranslateMatrix(Vector3 translate);
+	/// <summary>
+	/// 拡縮
+	/// </summary>
+	/// <param name="scale"></param>
+	/// <returns></returns>
+	Matrix4x4 MakeScaleMatrix(const Vector3& scale);
+
+#pragma region 個別の回転行列
+	/// <summary>
+	/// X回転
+	/// </summary>
+	/// <param name="radian"></param>
+	/// <returns></returns>
+	Matrix4x4 MakeRotateXMatrix(const float& radian);
+
+	/// <summary>
+	/// Y回転
+	/// </summary>
+	/// <param name="radian"></param>
+	/// <returns></returns>
+	Matrix4x4 MakeRotateYMatrix(const float& radian);
+
+	/// <summary>
+	/// Z回転
+	/// </summary>
+	/// <param name="radian"></param>
+	/// <returns></returns>
+	Matrix4x4 MakeRotateZMatrix(const float& radian);
+
+#pragma endregion
+
+	/// <summary>
+	/// 回転行列
+	/// </summary>
+	/// <param name="radianX"></param>
+	/// <param name="radianY"></param>
+	/// <param name="radianZ"></param>
+	/// <returns></returns>
+	Matrix4x4 MakeRotateXYZMatrix(const float& radianX, const float& radianY, const float& radianZ);
+
+
+	/// <summary>
+	/// 移動
+	/// </summary>
+	/// <param name="translate"></param>
+	/// <returns></returns>
+	Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
+
+
+	
+	/// <summary>
+	/// アフィン行列
+	/// </summary>
+	/// <param name="scale"></param>
+	/// <param name="rotate"></param>
+	/// <param name="translate"></param>
+	/// <returns></returns>
+	Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+
+	/// <summary>
+	/// 逆行列
+	/// </summary>
+	/// <param name="m"></param>
+	/// <returns></returns>
+	Matrix4x4 Inverse(const Matrix4x4& m);
+
+
+	/// <summary>
+	/// 遠視投影行列
+	/// </summary>
+	/// <param name="fovY"></param>
+	/// <param name="aspectRatio"></param>
+	/// <param name="nearClip"></param>
+	/// <param name="farClip"></param>
+	/// <returns></returns>
+	Matrix4x4 MakePerspectiveFovMatrix(const float& fovY, const float& aspectRatio, const float& nearClip, const float& farClip);
+	
+	/// <summary>
+	/// 正射影行列
+	/// </summary>
+	/// <param name="left"></param>
+	/// <param name="top"></param>
+	/// <param name="right"></param>
+	/// <param name="bottom"></param>
+	/// <param name="neaClip"></param>
+	/// <param name="farClip"></param>
+	/// <returns></returns>
+	Matrix4x4 MakeOrthographicMatrix(const float& left, const float& top, const float& right, const float& bottom, const float& neaClip, const float& farClip);
+
+	/// <summary>
+	/// 転置行列
+	/// </summary>
+	/// <param name="m"></param>
+	/// <returns></returns>
+	Matrix4x4 MakeTransposeMatrix(const Matrix4x4& m);
+}
 
 
 
-//AffineMatrix
-//SRTの融合
-//アフィン行列
-Matrix4x4 MakeAffineMatrix(const Vector3 scale, const Vector3 rotate, const Vector3 translate);
 
-//逆行列
-Matrix4x4 Inverse(const Matrix4x4 m);
 
-//遠視投影行列
-Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 
-Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float neaClip, float farClip);
 
-//転置行列
-Matrix4x4 MakeTransposeMatrix(const Matrix4x4 m);
+
+
+
+

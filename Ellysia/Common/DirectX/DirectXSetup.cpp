@@ -59,10 +59,6 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateBufferResource(size_t sizeInBytes) {
 	//バッファの場合はこれにする決まり
 	vertexResourceDesc_.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	//実際に頂点リソースを作る
-	//ID3D12Resource* vertexResource_ = nullptr;
-	
-	//次はここで問題
 	//hrは調査用
 	HRESULT hr;
 	hr = DirectXSetup::GetInstance()->GetDevice()->CreateCommittedResource(
@@ -171,7 +167,7 @@ void DirectXSetup::SelectAdapter() {
 		//ソフトウェアアダプタでなければ採用
 		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
 			//採用したアダプタの情報をログに出力.(wstring)
-			Log(ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
+			ConvertString::Log(ConvertString::ToString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
 			break;
 		}
 		//ソフトウェアアダプタだった場合無視
@@ -211,14 +207,14 @@ void DirectXSetup::GenerateD3D12Device() {
 		//指定した機能レベルでデバイスが生成できたか確認
 		if (SUCCEEDED(hr)) {
 			//生成できたのでログ出力を行ってループを抜ける
-			Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
+			ConvertString::Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
 			break;
 		}
 	}
 
 	//デバイスの生成が上手くいかなかったので起動できない
 	assert(DirectXSetup::GetInstance()->m_device_ != nullptr);
-	Log("Complete create D3D12Device!!!\n");
+	ConvertString::Log("Complete create D3D12Device!!!\n");
 
 }
 
@@ -515,7 +511,7 @@ void DirectXSetup::SetResourceBarrierForSwapChain(D3D12_RESOURCE_STATES beforeSt
 void DirectXSetup::InitializeFPS() {
 	//現在時間を記録する
 	//初期化前の時間を記録
-	DirectXSetup::GetInstance()->reference_ = std::chrono::steady_clock::now();
+	DirectXSetup::GetInstance()->frameEndTime_ = std::chrono::steady_clock::now();
 
 	//std::chrono::steady_clock...逆行しないタイマー
 }
@@ -596,17 +592,6 @@ void DirectXSetup::SecondInitialize() {
 	//RenderTargetViewの設定
 	GenarateFence();
 
-
-	//DXCの初期化
-	////ShaderCompile
-	//ShaderはHLSLによって記述されているが、GPUが解釈できる形ではない
-	//一度DXIL(DirectX Intermediate Language)というドライバ用の形式に変換され、
-	//ドライバがGPU用のバイナリに変更しやっと実行されるよ。手間だね。
-	// 
-	// DXC(DirectX Shader Compiler)がHLSLからDXILにするCompilerである
-	//
-
-
 	
 
 	
@@ -632,13 +617,13 @@ void DirectXSetup::UpdateFPS() {
 
 	//前回記録からの経過時間を取得する
 	//現在時間から前回の時間を引くことで前回からの経過時間を取得する
-	std::chrono::microseconds elapsed = std::chrono::duration_cast<std::chrono::microseconds>(now - DirectXSetup::GetInstance()->reference_);
+	std::chrono::microseconds elapsed = std::chrono::duration_cast<std::chrono::microseconds>(now - DirectXSetup::GetInstance()->frameEndTime_);
 
 	//前回から1/60秒経つまで待機する
 	//1/60秒(よりわずかに短い時間)経っていない場合
 	if (elapsed < MIN_CHECK_TIME) {
 		//1/60秒経過するまで微小なスリープを繰り返す
-		while (std::chrono::steady_clock::now() - DirectXSetup::GetInstance()->reference_ < MIN_TIME) {
+		while (std::chrono::steady_clock::now() - DirectXSetup::GetInstance()->frameEndTime_ < MIN_TIME) {
 			//1マイクロ秒スリープ
 			std::this_thread::sleep_for(std::chrono::microseconds(1));
 		}
@@ -646,7 +631,7 @@ void DirectXSetup::UpdateFPS() {
 
 	//次のフレームの計算に使うため、待機完了後の時間を記録しておく
 	//現在の時間を記録する
-	DirectXSetup::GetInstance()->reference_ = std::chrono::steady_clock::now();
+	DirectXSetup::GetInstance()->frameEndTime_ = std::chrono::steady_clock::now();
 
 
 

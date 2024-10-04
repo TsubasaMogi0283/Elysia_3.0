@@ -51,7 +51,7 @@ Node ReadNode::Read(aiNode* node){
     result.transform.translate = { -translate.x,translate.y,translate.z};
 
     Vector3 newRotate = { result.transform.rotate.x, result.transform.rotate.y, result.transform.rotate.z };
-    result.localMatrix = MakeAffineMatrix(result.transform.scale, newRotate, result.transform.translate);
+    result.localMatrix = Matrix4x4Calculation::MakeAffineMatrix(result.transform.scale, newRotate, result.transform.translate);
 
 
     //Node名を格納

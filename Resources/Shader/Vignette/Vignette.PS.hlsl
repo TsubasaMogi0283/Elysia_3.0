@@ -11,7 +11,8 @@ struct Vignette
     float scale;
     //乗
     float pow;
-	
+	//色
+    float3 color; 
 };
 
 Texture2D<float4> gTexture : register(t0);
@@ -25,13 +26,21 @@ PixelShaderOutput main(VertexShaderOutput input)
 {
     PixelShaderOutput output;
     output.color = gTexture.Sample(gSample, input.texcoord);
+    
     //周囲を0に、中心になるほど明るくなるように計算で調整
     float2 current = input.texcoord * (1.0f - input.texcoord.yx);
+    
     //currentだけで計算すると中心の最大値が0.0625で暗すぎるのでScaleで調整。
     float vignette = current.x * current.y * gVignette.scale;
     vignette = saturate(pow(vignette, gVignette.pow));
-    //係数として乗算
-    output.color.rgb *= vignette;
+    
+    //色の反映
+   // float3 vegnetteColor = gVignette.color * vignette;
+    float3 vignetteColor = lerp(gVignette.color, output.color.rgb, vignette);
 
+    //係数として乗算
+    output.color.rgb *= vignetteColor;
+    ////係数として乗算
+    //output.color.rgb *= vignette;
     return output;
 }

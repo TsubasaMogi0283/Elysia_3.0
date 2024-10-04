@@ -14,7 +14,7 @@ Input* Input::GetInstance() {
 void Input::Initialize() {
 	
 
-	HRESULT hr;
+	HRESULT hr = {};
 	
 
 	//DirectInputオブジェクトの生成
@@ -35,6 +35,14 @@ void Input::Initialize() {
 	//マウスデバイスの生成
 	hr = directInput_->CreateDevice(GUID_SysMouse, &mouseDevice_, NULL);
 	assert(SUCCEEDED(hr));
+	//コントローラーデバイスの生成
+	HRESULT joyStickDeviceHR = {};
+	joyStickDeviceHR = directInput_->CreateDevice(GUID_Joystick, &joyStickDevice_, NULL);
+	//コントローラーに接続していない時は作らない
+	if (SUCCEEDED(joyStickDeviceHR) != true) {
+		joyStickDevice_ = nullptr;
+	}
+
 
 	
 	//入力データの形式のセット
@@ -44,6 +52,13 @@ void Input::Initialize() {
 	//マウスの方の入力データ形式セット
 	hr = mouseDevice_->SetDataFormat(&c_dfDIMouse);
 	assert(SUCCEEDED(hr));
+	//コントローラーの方の入力データ形式セット
+	if (SUCCEEDED(joyStickDeviceHR) == true) {
+		joyStickDeviceHR = joyStickDevice_->SetDataFormat(&c_dfDIJoystick);
+		assert(SUCCEEDED(joyStickDeviceHR));
+
+	}
+	
 
 	//排他制御レベルのセット
 	//
@@ -55,6 +70,12 @@ void Input::Initialize() {
 	assert(SUCCEEDED(hr));
 	hr = mouseDevice_->SetCooperativeLevel(WindowsSetup::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	assert(SUCCEEDED(hr));
+	if (SUCCEEDED(joyStickDeviceHR) == true) {
+		joyStickDeviceHR = joyStickDevice_->SetCooperativeLevel(WindowsSetup::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+		assert(SUCCEEDED(joyStickDeviceHR));
+
+	}
+
 
 
 }
@@ -77,7 +98,6 @@ bool Input::IsTriggerKey(uint8_t keyNumber) {
 	if (currentKey_[keyNumber]!=0 && preKey_[keyNumber]==0) {
 		return true;
 	}
-
 	return false;
 }
 
@@ -127,6 +147,7 @@ bool Input::IsPushRight(XINPUT_STATE& state) {
 	return false;
 }
 
+
 void Input::SetVibration(float leftMotor, float rightMotor){
 	XINPUT_VIBRATION vibration;
 	ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
@@ -154,9 +175,27 @@ void Input::SetIsDisplayCursor(bool isDisplay){
 
 void Input::Update() {
 
+	// コントローラーの再初期化
+	//接続されたらまたデバイスを作り直す
+	if (joyStickDevice_ == nullptr) {
+		HRESULT hr = {};
+		hr = directInput_->CreateDevice(GUID_Joystick, &joyStickDevice_, NULL);
+		if (SUCCEEDED(hr)) {
+			hr = joyStickDevice_->SetDataFormat(&c_dfDIJoystick);
+			assert(SUCCEEDED(hr));
+			hr = joyStickDevice_->SetCooperativeLevel(WindowsSetup::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+			assert(SUCCEEDED(hr));
+		}
+	}
+
+	XINPUT_STATE state{};
 	//前回のキー入力を保存
 	memcpy(preKey_, currentKey_, sizeof(currentKey_));
-
+	memcpy(preControllerButtons_, currentControllerButtons_, sizeof(preControllerButtons_));
+	for (int i = 0; i < XUSER_MAX_COUNT; ++i) {
+		currentControllerButtons_[i][0] = state.Gamepad.wButtons & 0xFF;
+		currentControllerButtons_[i][1] = (state.Gamepad.wButtons >> 8) & 0xFF;
+	}
 	//Keyと違ってそのまま代入で大丈夫だよ
 	preMouse_ = currentMouse_;
 
@@ -164,8 +203,11 @@ void Input::Update() {
 	keyboard_->Acquire();
 	//マウス情報の取得開始
 	mouseDevice_->Acquire();
-
-
+	//コントローラー情報の取得開始
+	if (joyStickDevice_ != nullptr) {
+		joyStickDevice_->Acquire();
+	}
+	
 	keyboard_->GetDeviceState(sizeof(currentKey_), currentKey_);
 
 	//0から255番まであるよ
@@ -174,5 +216,8 @@ void Input::Update() {
 
 	mouseDevice_->GetDeviceState(sizeof(DIMOUSESTATE), &currentMouse_);
 	
-
+	if (joyStickDevice_ != nullptr) {
+		joyStickDevice_->GetDeviceState(sizeof(preControllerButtons_), currentControllerButtons_);
+	}
+	
 }

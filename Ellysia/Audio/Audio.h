@@ -42,16 +42,53 @@ public:
 
 	//デストラクタ
 	~Audio()=default;
-
+public:
+	//インスタンスの取得
+	static Audio* GetInstance();
 
 
 public:
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize();
+
 #pragma region 基本セット
 
+	/// <summary>
+	/// 読み込み
+	/// </summary>
+	/// <param name="fileName"></param>
+	/// <returns></returns>
+	static uint32_t LoadWave(const char* fileName);
 
-	//音声再生
+	/// <summary>
+	/// エフェクト版の読み込み
+	/// </summary>
+	/// <param name="fileName"></param>
+	/// <param name="effectType"></param>
+	/// <returns></returns>
+	static uint32_t LoadWave(const char* fileName, uint32_t effectType);
+
+	/// <summary>
+	/// MP3読み込み
+	/// </summary>
+	/// <param name="fileName"></param>
+	/// <returns></returns>
+	static uint32_t LoadMP3(const WCHAR* fileName);
+
+	/// <summary>
+	/// 再生
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	/// <param name="isLoop"></param>
 	void PlayWave(uint32_t audioHandle, bool isLoop);
-	//ループ回数あり
+	
+	/// <summary>
+	/// 再生(ループ回数指定)
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	/// <param name="loopCount"></param>
 	void PlayWave(uint32_t audioHandle, int32_t loopCount);
 
 	// <summary>

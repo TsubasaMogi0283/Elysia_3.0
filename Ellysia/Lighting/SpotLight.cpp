@@ -24,6 +24,7 @@ void SpotLight::Initialize(){
 	//スポットライトの余弦
 	cosAngle_ = std::cos(std::numbers::pi_v<float> / 3.0f);
 
+	aroundOffset_ = 0.0f;
 
 }
 
@@ -37,6 +38,7 @@ void SpotLight::Update(){
 	spotLightData_->decay = decay_;
 	spotLightData_->cosFallowoffStart = cosFallowoffStart_;
 	spotLightData_->cosAngle = cosAngle_;
+	spotLightData_->aroundOffset = aroundOffset_;
 
 	bufferResource_->Unmap(0, nullptr);
 

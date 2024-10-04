@@ -3,415 +3,1075 @@
 #include <Input.h>
 #include <AdjustmentItems.h>
 #include "SampleScene2/SampleScene2.h"
+#include "LoseScene/LoseScene.h"
 
 #include "ModelManager.h"
 #include "AnimationManager.h"
 #include <numbers>
 #include <TextureManager.h>
-#include <AudioManager.h>
-
-/// <summary>
-/// コンストラクタ
-/// </summary>
-SampleScene::SampleScene() {
-
-}
+#include <SingleCalculation.h>
+#include "SampleScene.h"
+#include <imgui.h>
+#include <Input.h>
+#include <AdjustmentItems.h>
 
 
 
-/// <summary>
-/// 初期化
-/// </summary>
 void SampleScene::Initialize() {
 
-	//GLTF2.0
-	//「GLTF Separate(.gltf+bin+Texture)」、「オリジナルを保持」で
-	//modelHandle =ModelManager::GetInstance()->LoadModelFile("Resources/CG4/AnimatedCube", "AnimatedCube.gltf",false);
-	modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/terrain", "terrain.obj");
-	worldTransform_.Initialize();
-	model_.reset(Model::Create(modelHandle));
-	//Walk
-	humanModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG4/human", "walk.gltf");
-	humanAnimationModel_ = AnimationManager::GetInstance()->LoadFile("Resources/CG4/human", "walk.gltf");
+#pragma region フェード
+	uint32_t fadeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/White.png");
+	fadeSprite_.reset(Sprite::Create(fadeTextureHandle, { .x = 0.0f,.y = 0.0f }));
+	fadeTransparency_ = 1.0f;
 
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		human_[i].reset(AnimationModel::Create(humanModelHandle));
-		humanWorldTransform_[i].Initialize();
-		humanAnimationTime_[i] = 0;
-		humanSkeleton_[i].Create(ModelManager::GetInstance()->GetModelData(humanModelHandle).rootNode);
-		humanSkinCluster_[i].Create(humanSkeleton_[i], ModelManager::GetInstance()->GetModelData(humanModelHandle));
-		humanWorldTransform_[i].translate_.x = 0.0f;
-		
-	}
-	humanMaterial_.Initialize();
-	humanMaterial_.lightingKinds_ = Point;
-	humanMaterial_.isEnviromentMap_ = true;
+	isFadeIn = true;
+	isFadeOut_ = false;
 
-	sphereMaterial.Initialize();
-	sphereMaterial.lightingKinds_ = Point;
-	sphereMaterial.isEnviromentMap_ = true;
+#ifdef _DEBUG
+	isFadeIn = false;
+	isFadeOut_ = false;
 
-	humanWorldTransform_[0].translate_.y = 0.0f;
-	
+#endif // _DEBUG
 
+#pragma endregion
 
-	//地面
-	uint32_t noneModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
-	noneAnimationModel_.reset(Model::Create(noneModelHandle));
-	noneAnimationWorldTransform_.Initialize();
-	const float SPHERE_SCALE = 1.0f;
-	noneAnimationWorldTransform_.scale_ = { SPHERE_SCALE,SPHERE_SCALE,SPHERE_SCALE };
-	noneAnimationWorldTransform_.translate_.x = 0.0f;
-	noneAnimationWorldTransform_.translate_.y = 0.0f;
 
 	
+#pragma region オブジェクト
+	objectManager_ = new ObjectManager();
+	objectManager_->Initialize();
 
+	#pragma region 地面
+	uint32_t groundModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
+	ground_ = std::make_unique<Ground>();
+	ground_->Initialize(groundModelHandle);
+	StageRect stageRect = ground_->GetStageRect();
+	#pragma endregion
+
+	
+	#pragma region ゲート
+	uint32_t gateModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Gate","Gate.obj");
+	gate_ = std::make_unique<Gate>();
+	gate_->Initialize(gateModelhandle);
+
+
+
+	uint32_t escapeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/EscapeText.png");
+	escapeText_.reset(Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
+	//最初は非表示にする
+	escapeText_->SetInvisible(true);
+	#pragma endregion
+
+#pragma endregion
+
+#pragma region プレイヤー
+	player_ = std::make_unique<Player>();
+	//ステージ
+	player_->SetStageRect(stageRect);
+	player_->Initialize();
+	player_->SetIsAbleToControll(false);
+
+	playerPosition_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
+	isPlayerMoveKey_ = false;
+	bTriggerTime_ = 0;
+	isBTrigger_ = false;
+
+	//初期は1人称視点
+	viewOfPoint_ = FirstPerson;
+
+
+
+#pragma endregion
+
+
+#pragma region 鍵
+	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/key","Key.obj");
+	
+	keyManager_ = std::make_unique<KeyManager>();
+	keyManager_->Initialize(keyModelHandle);
+	
+#pragma endregion
+	
+	uint32_t skydomeModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Game/Skydome","Skydome.obj");
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Initialize(skydomeModelHandle);
+
+
+
+	#pragma region 敵
+	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
+	uint32_t strongEnemyModelHandle= ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
+
+#ifdef _DEBUG
+	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube", "Cube.obj");
+#endif // _DEBUG
+
+	
+	enemyManager_ = std::make_unique<EnemyManager>();
+	enemyManager_->SetPlayer(player_.get());
+	enemyManager_->SetObjectManager(objectManager_);
+	enemyManager_->SetStageRectangle(stageRect);
+	enemyManager_->Initialize(enemyModelHandle_, strongEnemyModelHandle);
+	#pragma endregion
+
+	
+
+	#pragma region ライト確認用のタワー
+	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
+	debugTower_.reset(Model::Create(debugTowerModelhandle));
+	debugTowerWorldTransform_.Initialize();
+	debugTowerWorldTransform_.translate_ = { .x = 1.0f,.y = 0.0f,.z = 2.0f };
+	#pragma endregion
+	
+	
+	
+	
+	#pragma region カメラ
+	//カメラ
 	camera_.Initialize();
-	camera_.translate_ = { 0.0f,1.0f,-10.0f };
+	camera_.translate_.y = 1.0f;
+	camera_.translate_.z = -15.0f;
+	camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
+	cameraPosition_ = camera_.translate_;
+	
+	CAMERA_POSITION_OFFSET = { 0.0f,2.0f,0.0f };
+	
+	thirdPersonViewOfPointRotate_ = { 0.6f,0.0f,0.0f };
+	cameraThirdPersonViewOfPointPosition_ = { 0.0f,25.0f,-35.0f };
+	
+	
+	#pragma endregion
+	
+	
+	//プレイヤーのライト
+	uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	lightCollision_ = new LightWeapon();
+	lightCollision_->Initialize(weaponLightModel);
+	
+	
+	
+	#pragma region 扇の当たり判定用の球
+	debugFanCollisionSphereModel_.reset(Model::Create(weaponLightModel));
+	debugFanCollisionSphereWorldTransform_.Initialize();
+	debugFanCollisionSphereWorldTransform_.translate_ = { .x = 0.0f,.y = 0.0f,.z = 7.0f };
+	debugFanCollisionSphereMaterial_.Initialize();
+	debugFanCollisionSphereMaterial_.lightingKinds_ = Spot;
+	debugFanCollisionSphereMaterial_.color_ = { .x = 0.0f,.y = 1.0f,.z = 0.0f,.w = 1.0f };
+	
+	
+	
+	#pragma endregion
+	
 
 
-	uint32_t skyBoxTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG4/SkyBox/rostock_laage_airport_4k.dds");
-	skyBox_ = std::make_unique<SkyBox>();
-	skyBox_->Create(skyBoxTextureHandle);
-	skyBoxWorldTransform_.Initialize();
-	const float SKYBOX_SCALE = 20.0f;
-	skyBoxWorldTransform_.scale_ = { SKYBOX_SCALE ,SKYBOX_SCALE ,SKYBOX_SCALE };
+#pragma region 説明
+	uint32_t explanationTextureHandle[EXPLANATION_QUANTITY_] = {};
+	explanationTextureHandle[0] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/Explanation1.png");
+	explanationTextureHandle[1] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/Explanation2.png");
 
-	//noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
-	human_[0]->SetEviromentTexture(skyBoxTextureHandle);
-	noneAnimationModel_->SetEviromentTexture(skyBoxTextureHandle);
+	for (uint32_t i = 0u; i < EXPLANATION_QUANTITY_; ++i) {
+		explanation_[i].reset(Sprite::Create(explanationTextureHandle[i], {.x=0.0f,.y=0.0f}));
+	}
+	
 
-	uint32_t textureHandle = TextureManager::GetInstance()->LoadTexture("Resources/White.png");
-	sprite_.reset(Sprite::Create(textureHandle, { 0.0f,0.0f }));
-	sprite_->SetScale({0.5f, 0.5f});
+	uint32_t spaceToNextTextureHandle[SPACE_TO_NEXT_QUANTITY_] = {};
+	spaceToNextTextureHandle[0] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/ExplanationNext1.png");
+	spaceToNextTextureHandle[1] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/ExplanationNext2.png");
+
+	for (uint32_t i = 0; i < SPACE_TO_NEXT_QUANTITY_; ++i) {
+		spaceToNext_[i].reset(Sprite::Create(spaceToNextTextureHandle[i], { .x=0.0f,.y = 0.0f }));
+	}
+
+	
+	howToPlayTextureNumber_ = 0u;
+
+	//常時表示
+	//操作
+	uint32_t operationTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Operation/Operation.png");
+	operation_.reset(Sprite::Create(operationTextureHandle, {.x=20.0f,.y=0.0f}));
+	isGamePlay_ = false;
+
+	uint32_t pickUpTextureManager = TextureManager::GetInstance()->LoadTexture("Resources/Game/Key/PickUpKey.png");
+	pickUpKey_.reset(Sprite::Create(pickUpTextureManager, { .x = 0.0f,.y = 0.0f }));
+	
+#pragma endregion
+
+#pragma region UI
+	uint32_t playerHPTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Player/PlayerHP.png");
+	uint32_t playerHPBackFrameTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Player/PlayerHPBack.png");
+	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
+	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
+		playerHP_[i].reset(Sprite::Create(playerHPTextureHandle, {.x=static_cast<float>(i)*64+ INITIAL_POSITION.x,.y= INITIAL_POSITION .y}));
+	}
+	
+	playerHPBackFrame_.reset(Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
+	currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
+
+
+	//ゴールに向かえのテキスト
+	uint32_t toEscapeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/ToGoal.png");
+	toEscape_.reset(Sprite::Create(toEscapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
+
+#pragma endregion
+
+
+
+
+	isGamePlay_ = false;
+	isExplain_ = false;
+	
+
+	collisionManager_ = std::make_unique<CollisionManager>();
+	
+	theta_ = std::numbers::pi_v<float> / 2.0f;
 	
 	back_ = std::make_unique< BackText>();
 	back_->Initialize();
-
-	grayScale_ = std::make_unique<GrayScale>();
-	grayScale_->Initialize();
 	
-	sepiaScale_ = std::make_unique<SepiaScale>();
-	sepiaScale_->Initialize();
-
-	vignette_ = std::make_unique<Vignette>();
-	vignette_->Initialize();
-
-	boxFilter_ = std::make_unique<BoxFilter>();
-	boxFilter_->Initialize();
-
-	gaussianFilter_ = std::make_unique<GaussianFilter>();
-	gaussianFilter_->Initialize();
-
-	radialBlur_ = std::make_unique < RadialBlur>();
-	radialBlur_->Initialize();
+	material_.Initialize();
+	material_.lightingKinds_ = Spot;
 	
-	outLine_ = std::make_unique < LuminanceBasedOutline>();
-	outLine_->Initialize();
-	depthBasedOutline_ = std::make_unique<DepthBasedOutline>();
-	depthBasedOutline_->Initialize();
+	//懐中電灯
+	flashLight_ = std::make_unique<FlashLight>();
+	flashLight_->Initialize();
 	
-	
-	uint32_t dissolveTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise0.png");
-	dissolve_ = std::make_unique <Dissolve>();
-	dissolve_->Initialize(dissolveTextureHandle);
-	//
-	randomEffect_ = std::make_unique < RandomEffect>();
-	randomEffect_->Initialize();
-
-	directionalLight_.Initialize();
-	pointLight_.Initialize();
-	spotLight_.Initialize();
 
 
-	audio_ = std::make_unique<Audio>();
-	audioHandle_ = AudioManager::GetInstance()->LoadWave("Resources/Audio/Sample/Win.wav");
-	audio_->PlayWave(audioHandle_, true);
-	auto infoWav= AudioManager::GetInstance()->GetAudioInformation(audioHandle_);
-	infoWav;
-
-	pan1_ = 0.0f;
-	audio1_ = std::make_unique<Audio>();
-	audioHandle1_ = AudioManager::GetInstance()->LoadMP3(L"Resources/Audio/Sample/WIP.mp3");
-
-	auto info = AudioManager::GetInstance()->GetAudioInformation(audioHandle1_);
-	info;
-	auto name = AudioManager::GetInstance()->GetAudioInformation(audioHandle1_).mp3FileName_;
-	name;
-
-	audio1_->PlayMP3(audioHandle1_, true);
+#ifdef _DEBUG
+	isFadeIn = false;
+	isGamePlay_ = true;
+#endif // _DEBUG
 
 
 }
 
 
 
+void SampleScene::KeyCollision(){
+
+	//鍵
+	std::list<Key*> keyes = keyManager_->GetKeyes();
+	for (Key* key : keyes) {
+
+		//勿論取得されていない時だけ受け付ける
+		if (key->GetIsPickUp() == false) {
+			//判定は円で良いかも
+			Vector3 distance = {};
+			distance.x = std::powf((player_->GetWorldPosition().x - key->GetWorldPosition().x), 2.0f);
+			distance.z = std::powf((player_->GetWorldPosition().z - key->GetWorldPosition().z), 2.0f);
+
+			float colissionDistance = sqrtf(distance.x + distance.y + distance.z);
+			
 
 
+			//範囲内にいれば入力を受け付ける
+			if (colissionDistance <= player_->GetRadius() + key->GetRadius()) {
+
+#ifdef _DEBUG
+				ImGui::Begin("KeyCollision");
+				ImGui::End();
+#endif 
+
+				key->SetIsPrePickUp(true);
+
+				//
+				if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
+					//プレイヤーの持っているか鍵の数が増える
+					player_->AddHaveKeyQuantity();
+					//鍵が取得される
+					key->PickedUp();
+				}
+
+				//Bボタンを押したとき
+				if (Input::GetInstance()->GetJoystickState(joyState) == true){
+					if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+						bTriggerTime_ += 1;
+
+					}
+					if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+						bTriggerTime_ = 0;
+					}
+
+					if (bTriggerTime_ == 1) {
+						//プレイヤーの持っているか鍵の数が増える
+						player_->AddHaveKeyQuantity();
+						//鍵が取得される
+						key->PickedUp();
+					}
+				}
+
+			}
+			else {
+				key->SetIsPrePickUp(false);
+			}
+
+
+		}
+	}
+
+	//listにあるKeyの中にある「isPrePickUp_」のどれか一つでもtrueになっていたらtrueを返す
+	isAbleToPickUpKey_ = std::any_of(keyes.begin(), keyes.end(), [](Key* key) {
+		return key->GetIsPrePickUp() == true;
+	});
+
+
+#ifdef _DEBUG
+	ImGui::Begin("KeyPickUp"); 
+	ImGui::Checkbox("IsPickUp", &isAbleToPickUpKey_);
+	ImGui::End();
+#endif // _DEBUG
+
+
+}
+
+void SampleScene::ObjectCollision(){
+	
+
+	//プレイヤーの移動方向
+	Vector3 direction = playerMoveDirection_;
+	//プレイヤーの当たり判定AABB
+	AABB playerAABB = player_->GetAABB();
+
+
+	//デモ用
+	std::list <StageObject*> stageObjects = objectManager_->GetStageObjets();
+	for (StageObject* stageObject : stageObjects) {
+		
+		//オブジェクトのAABB
+		AABB objectAABB = stageObject->GetAABB();
+
+		//オブジェクトとの差分ベクトル
+		Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(stageObject->GetWorldPosition(), playerPosition_);
+		
+		//オブジェクトとプレイヤーの距離
+		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
+		//内積
+		float dot  = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
+
+		//衝突判定
+		//だいたい内積は0.7くらいが良さそう
+		if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
+			(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z)&&
+			(dot > 0.7f)) {
+			uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+			player_->SetPlayerMoveCondition(newCondition);
+			//当たったらループを抜ける
+			break;
+
+		}
+		else {
+			//当たっていない
+			uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+			player_->SetPlayerMoveCondition(newCondition);
+
+		}
+
+	}
+	
+
+	
+}
+
+void SampleScene::EscapeCondition(){
+	//ゲート
+	if (gate_->isCollision(playerPosition_)) {
+#ifdef _DEBUG
+		ImGui::Begin("InSpaceGate");
+		ImGui::End();
+
+#endif // _DEBUG
+
+		//3個取得したら脱出できる
+		uint32_t playerKeyQuantity = player_->GetHavingKey();
+		if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
+			escapeText_->SetInvisible(false);
+
+
+
+			//コントローラーのBボタンを押したら脱出のフラグがたつ
+			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+
+				//Bボタンを押したとき
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+					bTriggerTime_ += 1;
+
+				}
+				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+					bTriggerTime_ = 0;
+				}
+
+				if (bTriggerTime_ == 1) {
+					//脱出
+					isEscape_ = true;
+				}
+
+			}
+			//SPACEキーを押したら脱出のフラグがたつ
+			if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
+				//脱出
+				isEscape_ = true;
+			}
+		}
+	}
+	else {
+		escapeText_->SetInvisible(true);
+	}
+
+	//脱出
+	if (isEscape_ == true) {
+		isFadeOut_ = true;
+	}
+
+}
+
+void SampleScene::PlayerMove(){
+
+
+	
+
+	//何も押していないの時つまり動いていないので
+	//通常はfalseにしておく
+	isPlayerMoveKey_ = false;
+	isPlayerMove_ = false;
+	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
+
+
+	#pragma region キーボード
+	//移動
+	if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
+		playerMoveDirection_.x = std::cosf(theta_ - std::numbers::pi_v<float> / 2.0f);
+		playerMoveDirection_.z = std::sinf(theta_ - std::numbers::pi_v<float> / 2.0f);
+		//キーボード入力をしている
+		isPlayerMoveKey_ = true;
+		//動いている
+		isPlayerMove_ = true;
+
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
+		playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float> / 2.0f);
+		playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float> / 2.0f);
+
+		//キーボード入力をしている
+		isPlayerMoveKey_ = true;
+		//動いている
+		isPlayerMove_ = true;
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
+		playerMoveDirection_.x = std::cosf(theta_);
+		playerMoveDirection_.z = std::sinf(theta_);
+
+		//キーボード入力をしている
+		isPlayerMoveKey_ = true;
+		//動いている
+		isPlayerMove_ = true;
+	}
+	if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
+		playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float>);
+		playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float>);
+
+		//キーボード入力をしている
+		isPlayerMoveKey_ = true;
+		//動いている
+		isPlayerMove_ = true;
+	}
+
+
+	#pragma endregion
+
+	#pragma region コントローラー
+
+	//接続時
+	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+		//キーボード入力していない時・移動できる時に受け付ける
+		if (isPlayerMoveKey_ == false) {
+
+
+			//コントローラーの入力
+			bool isInput = false;
+			Vector3 leftStickInput = {
+				.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
+				.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
+			};
+
+
+			//デッドゾーン
+			const float DEAD_ZONE = 0.1f;
+			if (std::abs(leftStickInput.x) < DEAD_ZONE) {
+				leftStickInput.x = 0.0f;
+			}
+			else {
+				isInput = true;
+			}
+			if (std::abs(leftStickInput.z) < DEAD_ZONE) {
+				leftStickInput.z = 0.0f;
+			}
+			else {
+				isInput = true;
+			}
+		
+
+			//入力されていたら計算
+			if (isInput == true) {
+				//動いている
+				isPlayerMove_ = true;
+
+				//角度を求める
+				float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
+				//値を0～2πに直してtheta_に揃える
+				if (radian < 0.0f) {
+					radian += 2.0f * std::numbers::pi_v<float>;
+				}
+				const float OFFSET = std::numbers::pi_v<float> / 2.0f;
+				float resultTheta = theta_ + radian - OFFSET;
+
+
+				//向きを代入
+				playerMoveDirection_.x = std::cosf(resultTheta);
+				playerMoveDirection_.z = std::sinf(resultTheta);
+			}
+		}
+	}
+
+#pragma endregion
+
+
+	//プレイヤーが動いている時
+	if (isPlayerMove_ == true) {
+		//状態の設定
+		uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+		player_->SetPlayerMoveCondition(newCondition);
+
+		//ダッシュ
+		if (Input::GetInstance()->IsPushKey(DIK_RSHIFT) == true) {
+			isPlayerDash_ = true;
+		}
+		else {
+			isPlayerDash_ = false;
+		}
+		
+
+	}
+	//動いていない時
+	else {
+		uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+		player_->SetPlayerMoveCondition(newCondition);
+	}
+
+#ifdef _DEBUG
+	ImGui::Begin("Player");
+	ImGui::InputFloat3("Direction", &playerMoveDirection_.x);
+	ImGui::Checkbox("IsPlayerMove", &isPlayerMove_);
+	ImGui::End();
+
+#endif // _DEBUG
+
+	//プレイヤーの動く方向を入れる
+	player_->SetMoveDirection(playerMoveDirection_);
+
+	//ダッシュをしているかどうかの設定
+	player_->SetIsDash(isPlayerDash_);
+
+}
 
 /// <summary>
 /// 更新
 /// </summary>
 void SampleScene::Update(GameManager* gameManager) {
-	gameManager;
 
-	audio_->SetPan(audioHandle_, pan_);
-	//audio1_->SetPan(audioHandle1_, pan1_);
+	//フレーム初めに
+	//コリジョンリストのクリア
+	collisionManager_->ClearList();
+
+	fadeSprite_->SetTransparency(fadeTransparency_);
+	//フェードイン
+	if (isFadeIn==true) {
+		const float FADE_IN_INTERVAL = 0.01f;
+		fadeTransparency_ -= FADE_IN_INTERVAL;
+		
+		//完全に透明になったらゲームが始まる
+		if (fadeTransparency_ < 0.0f) {
+			fadeTransparency_ = 0.0f;
+			isFadeIn = false;
+			isExplain_ = true;
+			howToPlayTextureNumber_ = 1;
+		}
+	}
+
+	//ゲーム
+	if (isFadeIn == false && isFadeOut_ == false) {
+		fadeTransparency_ = 0.0f;
+		
+		if (isExplain_ == true) {
+			if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
+				++howToPlayTextureNumber_;
+			}
+			//Bボタンを押したとき
+			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+					bTriggerTime_ += 1;
+
+				}
+				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+					bTriggerTime_ = 0;
+				}
+
+				if (bTriggerTime_ == 1) {
+					++howToPlayTextureNumber_;
+				}
+			}
+
+			if (howToPlayTextureNumber_ > 2) {
+				isExplain_ = false;
+				isGamePlay_ = true;
+			}
+		}
+		if (isGamePlay_ == true) {
+			player_->SetIsAbleToControll(true);
+
+			//操作説明を追加
+			isDisplayUI_ = true;
+
+			//敵
+			enemyManager_->Update();
+
+			//敵を消す
+			enemyManager_->DeleteEnemy();
+		}
+		
+		
+
+		#pragma region 回転
+
+		#pragma region Y軸に旋回
+
+		//+が左回り
+		const float ROTATE_OFFSET = 0.025f;
+		//左を向く
+		if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
+			theta_ += ROTATE_OFFSET;
+			isRotateYKey_ = true;
+		}
+		//右を向く
+		if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
+			theta_ -= ROTATE_OFFSET;
+			isRotateYKey_ = true;
+		}
+
+		
+
+		//2πより大きくなったら0にまた戻す
+		if (theta_ > 2.0f * std::numbers::pi_v<float>) {
+			theta_ = 0.0f;
+		}
+		//-2πより大きくなったら0にまた戻す
+		if (theta_ < -2.0f * std::numbers::pi_v<float>) {
+			theta_ = 0.0f;
+		}
+
+		#pragma endregion
+
+		#pragma region X軸に旋回
+
+		
+		//上を向く
+		if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
+			originPhi_ -= ROTATE_OFFSET;
+			isRotateXKey_ = true;
+		}
+		//下を向く
+		if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
+			originPhi_ += ROTATE_OFFSET;
+			isRotateXKey_ = true;
+		}
+
+
+		
+
+		//±π/6くらいに制限を掛けておきたい
+		//それ以下以上だと首が大変なことになっているように見えるからね
+		if (originPhi_ > std::numbers::pi_v<float> / 6.0f) {
+			originPhi_ = std::numbers::pi_v<float> / 6.0f;
+		}
+		if (originPhi_ < -std::numbers::pi_v<float> / 6.0f) {
+			originPhi_ = -std::numbers::pi_v<float> / 6.0f;
+		}
+
+		#pragma endregion
+
+		#pragma region コントローラーの回転
+
+		isRotateXKey_ = false;
+		isRotateYKey_ = false;
+
+		//コントローラーがある場合
+		if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+			const float MOVE_LIMITATION = 0.02f;
+
+			//キーボード入力していない時
+			if (isRotateYKey_ == false && isRotateXKey_ == false) {
+
+				//入力
+				float rotateMoveX = (float)joyState.Gamepad.sThumbRY / SHRT_MAX * ROTATE_OFFSET;
+				float rotateMoveY = (float)joyState.Gamepad.sThumbRX / SHRT_MAX * ROTATE_OFFSET;
+				
+				//勝手に動くので制限を掛ける
+				if (rotateMoveY < MOVE_LIMITATION && rotateMoveY > -MOVE_LIMITATION) {
+					rotateMoveY = 0.0f;
+				}
+				if (rotateMoveX < MOVE_LIMITATION && rotateMoveX > -MOVE_LIMITATION) {
+					rotateMoveX = 0.0f;
+				}
+
+				//補正後の値を代入する
+				theta_ -= rotateMoveY;
+				originPhi_ -= rotateMoveX;
+			}
+
+
+
+		}
+
+
+		#pragma endregion
+
+		#pragma endregion
+
+
+		//プレイヤーの移動
+		PlayerMove();
+
+
+
+		//数学とプログラムで回る向きが違うことに煩わしさを感じます・・
+		//無理矢理直して楽になろう！！
+		float phi = -originPhi_;
+
+		//懐中電灯
+		playerPosition_ = player_->GetWorldPosition();
+		flashLight_->SetPlayerPosition(playerPosition_);
+		flashLight_->SetTheta(theta_);
+		flashLight_->SetPhi(phi);
+		flashLight_->Update();
+
+		collisionManager_->RegisterList(lightCollision_);
+
+
+		
+
+
+		Fan3D fan = flashLight_->GetFan3D();
+		//エネミーをコリジョンマネージャーに追加
+		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
+		for (Enemy* enemy : enemyes) {
+			collisionManager_->RegisterList(enemy);
+
+			//攻撃用の判定が出ていたら登録
+			if (enemy->GetIsAttack() == true) {
+				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
+
+
+			}
+
+
+
+			
+			//いずれこれもCollisionManagerに入れるつもり
+			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
+
+				enemy->OnCollision();
+
 
 #ifdef _DEBUG
-	ImGui::Begin("Audio");
-	ImGui::SliderFloat("Pan",&pan_,-1.0f,1.0f);
-	ImGui::SliderFloat("Pan1", &pan1_, -1.0f, 1.0f);
-
-	ImGui::End();
-#endif
-	
-	
-#pragma region アニメーションモデル
-	
-	humanAnimationTime_[0] += 1.0f / 60.0f;
-
-	
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		AnimationManager::GetInstance()->ApplyAnimation(humanSkeleton_[i], humanAnimationModel_, humanModelHandle, humanAnimationTime_[i]);
-	}
-	
-	//現在の骨ごとのLocal情報を基にSkeletonSpaceの情報を更新する
-	//読み込むのは最初だけで良いと気づいた
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		humanSkeleton_[i].Update();
-	}
-	//SkeletonSpaceの情報を基に、SkinClusterのMatrixPaletteを更新する
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		humanSkinCluster_[i].Update(humanSkeleton_[i]);
-	}
+				ImGui::Begin("FanCollsion");
+				ImGui::End();
+#endif // _DEBUG
 
 
-	sprite_->SetPosition(position);
+			}
+		}
+		collisionManager_->RegisterList(player_.get());
+		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		humanWorldTransform_[i].Update();
-	}
-#pragma endregion
+		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
+		for (StrongEnemy* strongEnemy : strongEnemyes) {
+			collisionManager_->RegisterList(strongEnemy);
+			bool isTouch = strongEnemy->GetIsTouchPlayer();
 
+			if (isTouch == true) {
+				isTouchStrongEnemy_ = true;
+			}
+		}
+
+
+
+		
+
+		#pragma region 視点
+
+		//1人称視点へ変更
+		if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
+			viewOfPoint_ = FirstPerson;
+		}
+		
+
+		//3人称視点へ変更
+		else if (Input::GetInstance()->IsTriggerKey(DIK_3) == true) {
+			viewOfPoint_ = ThirdPersonBack;
+		}
+
+		//コントローラーだと
+		//十字ボタンで切り替えのが良いかも
+		//マイクラはそれだったから
+
+		//1人称
+		if (viewOfPoint_ == FirstPerson) {
+
+			//もとに戻す
+			camera_.rotate_.x = -phi;
+			camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
+			camera_.rotate_.z = 0.0f;
+
+			camera_.translate_ = VectorCalculation::Add(playerPosition_, CAMERA_POSITION_OFFSET);
+
+		}
+		else if (viewOfPoint_ == ThirdPersonBack) {
+
+
+			camera_.rotate_ = thirdPersonViewOfPointRotate_;
+			//camera_.rotate_ = {0.2f,0.0f,0.0f};
+
+			camera_.translate_ = VectorCalculation::Add(playerPosition_, VectorCalculation::Add(cameraThirdPersonViewOfPointPosition_, cameraTranslate));
+			//camera_.translate_ = {0.0f,5.0f,-15.0f};
+
+		}
+
+
+		#pragma endregion
+
+
+		#pragma region 鍵の取得処理
+		keyQuantity_ = keyManager_->GetKeyQuantity();
+		//鍵が0より多ければ通る
+		if (keyQuantity_ > 0) {
+			KeyCollision();
+		}
+		else {
+			isAbleToPickUpKey_ = false;
+		}
+
+		#pragma endregion
+
+		//脱出の仕組み
+		EscapeCondition();
+		
+		
+		
+		//鍵
+		keyManager_->Update();
+
+		//オブジェクトの当たり判定
+		ObjectCollision();
+
+
+
+		//体力が0になったら負け
+		//または一発アウトの敵
+		if (player_->GetHP() <= 0 || isTouchStrongEnemy_==true) {
+			gameManager->ChangeScene(new LoseScene());
+			return;
+		}
+
+
+		//ライト
+		Vector3 lightDirection = flashLight_->GetDirection();
+		lightCollision_->Update(playerPosition_, lightDirection);
+
+		//現在のプレイヤーの体力を取得
+		currentDisplayHP_ = player_->GetHP();
+		
+
+		//更新
+		material_.Update();
+
+		//当たり判定
+		collisionManager_->CheckAllCollision();
 
 #ifdef _DEBUG
-	ImGui::Begin("Camera");
-	ImGui::SliderFloat3("Position", &camera_.translate_.x, -40.0f, 20.0f);
-	ImGui::End();
-
-
-	ImGui::Begin("Sprite");
-	ImGui::SliderFloat3("Z",&position.x,0.0f,1280.0f);
-	ImGui::End();
-	
+		ImGui::Begin("Camera");
+		ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
+		ImGui::SliderFloat3("Traslate", &cameraTranslate.x, -100.0f, 100.0f);
+		ImGui::SliderFloat3("PosOffset", &CAMERA_POSITION_OFFSET.x, -30.0f, 30.0f);
+		ImGui::InputFloat("Theta", &theta_);
+		ImGui::InputFloat("Phi", &phi);
+		ImGui::End();
 #endif
-	const float CAMERA_MOVE_SPEED = 0.2f;
-	Vector3 move = {};
-	Vector3 rotateMove = {};
 
-	//Y
-	if (Input::GetInstance()->IsPushKey(DIK_UP) == true) {
-		move.y = 1.0f;
 	}
-	else if (Input::GetInstance()->IsPushKey(DIK_DOWN) == true) {
-		move.y = -1.0f;
-	}
-	//X
-	else if (Input::GetInstance()->IsPushKey(DIK_RIGHT) == true) {
-		move.x = 1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_LEFT) == true) {
-		move.x = -1.0f;
-	}
-	//Z
-	else if (Input::GetInstance()->IsPushKey(DIK_O) == true) {
-		move.z = 1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_L) == true) {
-		move.z = -1.0f;
+	
+	//ホワイトアウト
+	if (isFadeOut_ == true) {
+		escapeText_->SetInvisible(true);
+
+		player_->SetIsAbleToControll(false);
+		const float FADE_OUT_INTERVAL = 0.01f;
+		fadeTransparency_ += FADE_OUT_INTERVAL;
+		fadeSprite_->SetTransparency(fadeTransparency_);
+
+		if (fadeTransparency_ > 1.0f) {
+			gameManager->ChangeScene(new SampleScene2());
+			return;
+		}
+		
 	}
 
-
-	else {
-		move.x = 0.0f;
-		move.y = 0.0f;
-		move.z = 0.0f;
-	}
-
-	//回転
-	const float ROTATE_MOVE_SPEED = 0.01f;
-	if (Input::GetInstance()->IsPushKey(DIK_A) == true) {
-		rotateMove.y = -1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_D) == true) {
-		rotateMove.y = 1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_W) == true) {
-		rotateMove.x = -1.0f;
-	}
-	else if (Input::GetInstance()->IsPushKey(DIK_S) == true) {
-		rotateMove.x = 1.0f;
-	}
-
-	else {
-		rotateMove.y = 0.0f;
-		rotateMove.x = 0.0f;
-	}
-
-	camera_.translate_ = Add(camera_.translate_, { move.x* CAMERA_MOVE_SPEED,move.y* CAMERA_MOVE_SPEED,move.z*CAMERA_MOVE_SPEED });
-	camera_.rotate_ = Add(camera_.rotate_, { rotateMove.x * ROTATE_MOVE_SPEED,rotateMove.y * ROTATE_MOVE_SPEED,rotateMove.z * ROTATE_MOVE_SPEED });
-
-
-	//コントローラー
-	XINPUT_STATE joyState{};
-
-	//コントローラーがある場合
-	if (Input::GetInstance()->IsPushKey(DIK_V)==true) {
-		Input::GetInstance()->SetVibration(1.0f, 1.0f);
-	}
-	else {
-		Input::GetInstance()->StopVibration();
-	}
-
-
-
-	humanMaterial_.Update();
-	sphereMaterial.Update();
-
-	directionalLight_.Update();
-	pointLight_.Update();
-	spotLight_.Update();
+	
+	//カメラの更新
 	camera_.Update();
-	worldTransform_.Update();
-	noneAnimationWorldTransform_.Update();
-	skyBoxWorldTransform_.Update();
-#ifdef _DEBUG
-	ImGui::Begin("Camera");
-	ImGui::SliderFloat3("Translate", &camera_.translate_.x, -100.0f, 100.0f);
-	ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
-	ImGui::End();
 
-	ImGui::Begin("DirectionalLight");
-	ImGui::SliderFloat4("Color", &directionalLight_.color_.x, 0.0f, 1.0f);
-	ImGui::SliderFloat3("Direction", &directionalLight_.direction_.x, -1.0f, 1.0f);
-	ImGui::SliderFloat("intensity", &directionalLight_.intensity_, 0.0f, 1.0f);
-	ImGui::End();
-
-
-
-	ImGui::Begin("PointLight");
-	ImGui::SliderFloat4("Color", &pointLight_.color_.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("Decay", &pointLight_.decay_, 0.0f, 10.0f);
-	ImGui::SliderFloat("intensity", &pointLight_.intensity_, 0.0f, 10.0f);
-	ImGui::SliderFloat3("Position", &pointLight_.position_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("Radius", &pointLight_.radius_, 0.0f, 10.0f);
-	ImGui::End();
-
-	ImGui::Begin("SpotLight");
-	ImGui::SliderFloat4("Color", &spotLight_.color_.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("Decay", &spotLight_.decay_, 0.0f, 10.0f);
-	ImGui::SliderFloat("intensity", &spotLight_.intensity_, 0.0f, 10.0f);
-	ImGui::SliderFloat3("Position", &spotLight_.position_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("Radius", &spotLight_.cosAngle_, 0.0f, 10.0f);
-	ImGui::SliderFloat("CosFallowStart", &spotLight_.cosFallowoffStart_, 0.0f, 10.0f);
-	ImGui::SliderFloat("Distance", &spotLight_.distance_, 0.0f, 10.0f);
-	ImGui::End();
-	
-
-	ImGui::Begin("HumanMaterial");
-	ImGui::SliderFloat4("Color", &humanMaterial_.color_.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("Shininess", &humanMaterial_.shininess_, 0.0f, 200.0f);
-	ImGui::End();
-
-	ImGui::Begin("SphereMaterial");
-	ImGui::SliderFloat4("Color", &sphereMaterial.color_.x, 0.0f, 1.0f);
-	ImGui::SliderFloat("Shininess", &sphereMaterial.shininess_, 0.0f, 200.0f);
-	ImGui::End();
-
-
-
-#endif
-	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
-		AdjustmentItems::GetInstance()->SaveFile(GroupName);
-		gameManager->ChangeScene(new SampleScene2());
-	}
-
+	//オブジェクトマネージャーの更新
+	objectManager_->Update();
 
 	
+	//地面
+	ground_->Update();
+
+	//門
+	gate_->Update();
+
+	//天球
+	skydome_->Update();
+
+	//プレイヤーの更新
+	player_->Update();
+	playerPosition_ = player_->GetWorldPosition();
+
+	//ライト確認用のタワー
+	debugTowerWorldTransform_.Update();
+
+	debugFanCollisionSphereWorldTransform_.Update();
+	debugFanCollisionSphereMaterial_.Update();
+
 }
 
 void SampleScene::DrawSpriteBack(){
 
-	//sprite_->Draw();
 }
 
 void SampleScene::PreDrawPostEffectFirst(){
-	
-	
-	//back_->PreDraw();
-	//grayScale_->PreDraw();
-	//sepiaScale_->PreDraw();
-	//vignette_->PreDraw();
-	//boxFilter_->PreDraw();
-	gaussianFilter_->PreDraw();
-	//radialBlur_->PreDraw();
-	//outLine_->PreDraw();
-	//dissolve_->PreDraw();
-	//randomEffect_->PreDraw();
-
-	//depthBasedOutline_->PreDraw();
+	back_->PreDraw();
 }
 
-/// <summary>
-/// 描画
-/// </summary>
+
 void SampleScene::DrawObject3D() {
 	
-	skyBox_->Draw(skyBoxWorldTransform_,camera_);
-	//SimpleSkin
-	//Walk
-	for (int i = 0; i < WALK_HUMAN_AMOUNT_; ++i) {
-		human_[i]->Draw(humanWorldTransform_[i], camera_, humanSkinCluster_[i],humanMaterial_, pointLight_);
+
+	//懐中電灯を取得
+	SpotLight spotLight = flashLight_->GetSpotLight();
+
+	//プレイヤー
+	//1人称だったらモデルは表示させない
+	//自分の目から自分の全身が見えるのはおかしいからね
+	if (viewOfPoint_ != FirstPerson) {
+		player_->Draw(camera_, material_, spotLight);
 	}
+	
+	//地面
+	ground_->Draw(camera_, spotLight);
+	//ゲート
+	gate_->Draw(camera_, spotLight);
+	//敵
+	enemyManager_->Draw(camera_, spotLight);
+	//天球
+	skydome_->Draw(camera_);
 
+	//懐中電灯
+	flashLight_->Draw(camera_);
 
+	//ステージオブジェクト
+	objectManager_->Draw(camera_, spotLight);
 
+	//タワー
+	//debugTower_->Draw(debugTowerWorldTransform_, camera_, material_, spotLight);
+	
+	//鍵
+	keyManager_->DrawObject3D(camera_, spotLight);
 
-	noneAnimationModel_->Draw(noneAnimationWorldTransform_,camera_, sphereMaterial, pointLight_);
-	//model_->Draw(worldTransform_, camera_, humanMaterial_, pointLight_);
+#ifdef _DEBUG
+	lightCollision_->Draw(camera_, spotLight);
 
+	//debugFanCollisionSphereModel_->Draw(debugFanCollisionSphereWorldTransform_,camera_, debugFanCollisionSphereMaterial_,spotLight);
+
+#endif // _DEBUG
 
 	
+
 }
 
 
 
 void SampleScene::DrawPostEffect(){
 	
-	
-	//back_->Draw();
-	//grayScale_->Draw();
-	//sepiaScale_->Draw();
-	//vignette_->Draw();
-	//boxFilter_->Draw();
-	gaussianFilter_->Draw();
-	//radialBlur_->Draw();
-	//outLine_->Draw();
-	//dissolve_->Draw();
-	//randomEffect_->Draw();
-	//depthBasedOutline_->Draw(camera_);
+	back_->Draw();
 }
 
 void SampleScene::DrawSprite(){
-	sprite_->Draw();
+	
+	//説明
+	if (howToPlayTextureNumber_ == 1u) {
+		explanation_[0]->Draw();
+		spaceToNext_[0]->Draw();
+	}
+	if (howToPlayTextureNumber_ == 2u) {
+		explanation_[1]->Draw();
+		spaceToNext_[1]->Draw();
+	}
+	
+	//UIを表示するかどうか
+	if (isDisplayUI_ == true) {
+		//操作説明
+		operation_->Draw();
+
+		//鍵の取得
+		if (isAbleToPickUpKey_ == true) {
+			pickUpKey_->Draw();
+		}
+		
+		//鍵
+		uint32_t keyQuantity = player_->GetHavingKey();
+		keyManager_->DrawSprite(keyQuantity);
+
+		//脱出
+		escapeText_->Draw();
+
+		//プレイヤーの体力の枠
+		playerHPBackFrame_->Draw();
+
+		//プレイヤーの体力(アイコン型)
+		for (uint32_t i = 0u; i < currentDisplayHP_; ++i) {
+			playerHP_[i]->Draw();
+		}
+		if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
+			toEscape_->Draw();
+		}
+
+		
+
+	}
+
+	//フェード
+	if (isFadeIn == true || isFadeOut_ == true) {
+		fadeSprite_->Draw();
+	}
+
+
 }
 
 
 
-
-/// <summary>
-/// デストラクタ
-/// </summary>
 SampleScene::~SampleScene() {
+	delete lightCollision_;
+	delete objectManager_;
 }
+
+

@@ -1,13 +1,74 @@
 #include "PipelineManager.h"
 
 
-
+#include <vector>
 
 PipelineManager* PipelineManager::GetInstance() {
 	//関数内static変数として宣言する
 	static PipelineManager instance;
 
 	return &instance;
+}
+
+void PipelineManager::GenaratePSO(PSOInformation& psoInformation, D3D12_INPUT_LAYOUT_DESC& inputLayoutDesc, D3D12_BLEND_DESC& blendDesc, D3D12_RASTERIZER_DESC& rasterizerDesc){
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
+	graphicsPipelineStateDesc.pRootSignature = psoInformation.rootSignature_.Get();
+	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
+	graphicsPipelineStateDesc.VS = { psoInformation.vertexShaderBlob_->GetBufferPointer(),psoInformation.vertexShaderBlob_->GetBufferSize() };
+	//vertexShaderBlob_->GetBufferSize();
+	graphicsPipelineStateDesc.PS = { psoInformation.pixelShaderBlob_->GetBufferPointer(),psoInformation.pixelShaderBlob_->GetBufferSize() };
+	//pixelShaderBlob_->GetBufferSize();
+	graphicsPipelineStateDesc.BlendState = blendDesc;
+	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
+
+	//書き込むRTVの情報
+	graphicsPipelineStateDesc.NumRenderTargets = 1;
+	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+	//利用するトポロジ(形状)のタイプ三角形
+	graphicsPipelineStateDesc.PrimitiveTopologyType =
+		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	//どのように画面に色を打ち込むのか設定
+	graphicsPipelineStateDesc.SampleDesc.Count = 1;
+	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+
+	//DepthStencilStateの設定
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
+	//Depthの機能を有効化する
+	depthStencilDesc.DepthEnable = true;
+	//書き込みします
+	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	//比較関数はLessEqual 近ければ描画される
+	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	//DepthStencilの設定
+	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	//実際に生成
+	HRESULT hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+		IID_PPV_ARGS(&psoInformation.graphicsPipelineState_));
+	assert(SUCCEEDED(hResult));
+
+
+
+
+
+}
+
+void PipelineManager::Initialize(){
+	
+	//モデル
+	PipelineManager::GetInstance()->SetModelBlendMode(1);
+	PipelineManager::GetInstance()->GenerateModelPSO();
+
+
+
+	//エフェクトごとにhlsl分けたい
+	//いずれやる
+	PipelineManager::GetInstance()->GenarateVignettePSO();
+
 }
 
 //線
@@ -83,18 +144,18 @@ void PipelineManager::GenaratedLinePSO() {
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->linePSO_.signatureBlob_, &PipelineManager::GetInstance()->linePSO_.errorBlob_);
-	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->linePSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->linePSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
 	//バイナリを元に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->linePSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->linePSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->linePSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->linePSO_.rootSignature_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -212,9 +273,9 @@ void PipelineManager::GenaratedLinePSO() {
 	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	//実際に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->linePSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 }
@@ -301,18 +362,18 @@ void PipelineManager::GenerateSpritePSO() {
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->spritePSO_.signatureBlob_, &PipelineManager::GetInstance()->spritePSO_.errorBlob_);
-	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->spritePSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->spritePSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
 	//バイナリを元に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->spritePSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->spritePSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->spritePSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->spritePSO_.rootSignature_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -510,9 +571,9 @@ void PipelineManager::GenerateSpritePSO() {
 
 	//実際に生成
 	//ID3D12PipelineState* graphicsPipelineState_ = nullptr;
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->spritePSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -651,19 +712,6 @@ void PipelineManager::GenerateModelPSO() {
 	descriptionRootSignature_.NumParameters = _countof(rootParameters);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
 	//バイリニアフィルタ
 	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
@@ -684,19 +732,18 @@ void PipelineManager::GenerateModelPSO() {
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr = {};
-	hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->modelPSO_.signatureBlob_, &PipelineManager::GetInstance()->modelPSO_.errorBlob_);
-	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->modelPSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob=nullptr;
+	HRESULT hrResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->modelPSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hrResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
 	//バイナリを元に生成
-	//ID3D12RootSignature* rootSignature_ = nullptr;
-	hr = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferPointer(),
+	hrResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->modelPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->modelPSO_.rootSignature_));
-	assert(SUCCEEDED(hr));
+	assert(SUCCEEDED(hrResult));
 
 
 
@@ -707,21 +754,20 @@ void PipelineManager::GenerateModelPSO() {
 
 	////InputLayout
 	//InputLayout・・VertexShaderへ渡す頂点データがどのようなものかを指定するオブジェクト
-
-
-
-	//余分に読み込んでしまうけどこれしか方法が無かった
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
+	std::vector <D3D12_INPUT_ELEMENT_DESC> inputElementDescs = {};
+	inputElementDescs.push_back({});
 	inputElementDescs[0].SemanticName = "POSITION";
 	inputElementDescs[0].SemanticIndex = 0;
 	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
+	inputElementDescs.push_back({});
 	inputElementDescs[1].SemanticName = "TEXCOORD";
 	inputElementDescs[1].SemanticIndex = 0;
 	inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
+	inputElementDescs.push_back({});
 	inputElementDescs[2].SemanticName = "NORMAL";
 	inputElementDescs[2].SemanticIndex = 0;
 	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -731,8 +777,8 @@ void PipelineManager::GenerateModelPSO() {
 
 
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
-	inputLayoutDesc.pInputElementDescs = inputElementDescs;
-	inputLayoutDesc.NumElements = _countof(inputElementDescs);
+	inputLayoutDesc.pInputElementDescs = inputElementDescs.data();
+	inputLayoutDesc.NumElements = static_cast<UINT>(inputElementDescs.size());
 
 
 
@@ -805,9 +851,6 @@ void PipelineManager::GenerateModelPSO() {
 		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
 
-
-
-
 		break;
 
 	case BlendModeScreen:
@@ -817,22 +860,10 @@ void PipelineManager::GenerateModelPSO() {
 		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 
-
-
-
-
 		break;
-
-
 	}
 
 
-
-
-
-
-
-	////RasterizerState
 	//RasterizerState・・・Rasterizerに対する設定
 	//					  三角形の内部をピクセルに分解して、
 	//					  PixelShaderを起動することでこの処理への設定を行う
@@ -856,50 +887,8 @@ void PipelineManager::GenerateModelPSO() {
 	assert(PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ != nullptr);
 
 
-
-
-
-	////PSO生成
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->modelPSO_.rootSignature_.Get();
-	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
-	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_->GetBufferSize() };
-	//vertexShaderBlob_->GetBufferSize();
-	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_->GetBufferSize() };
-	//pixelShaderBlob_->GetBufferSize();
-	graphicsPipelineStateDesc.BlendState = blendDesc;
-	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
-
-	//書き込むRTVの情報
-	graphicsPipelineStateDesc.NumRenderTargets = 1;
-	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-
-	//利用するトポロジ(形状)のタイプ三角形
-	graphicsPipelineStateDesc.PrimitiveTopologyType =
-		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-
-	//どのように画面に色を打ち込むのか設定
-	graphicsPipelineStateDesc.SampleDesc.Count = 1;
-	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-
-	//DepthStencilStateの設定
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-	//Depthの機能を有効化する
-	depthStencilDesc.DepthEnable = true;
-	//書き込みします
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	//比較関数はLessEqual 近ければ描画される
-	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	//DepthStencilの設定
-	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
-	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-	//実際に生成
-	hr = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&PipelineManager::GetInstance()->modelPSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr));
-
-
+	//PSOの生成
+	GenaratePSO(PipelineManager::GetInstance()->modelPSO_, inputLayoutDesc, blendDesc, rasterizerDesc);
 
 }
 
@@ -1085,11 +1074,11 @@ void PipelineManager::GenerateAnimationModelPSO() {
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr = {};
-	hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->animationModelPSO_.signatureBlob_, &PipelineManager::GetInstance()->animationModelPSO_.errorBlob_);
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->animationModelPSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->animationModelPSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
@@ -1440,19 +1429,19 @@ void PipelineManager::GenerateParticle3DPSO() {
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr = {};
-	hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->particle3DPSO_.signatureBlob_, &PipelineManager::GetInstance()->particle3DPSO_.errorBlob_);
-	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->particle3DPSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->particle3DPSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
 	//バイナリを元に生成
 	//ID3D12RootSignature* rootSignature_ = nullptr;
-	hr = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->particle3DPSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->particle3DPSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->particle3DPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->particle3DPSO_.rootSignature_));
-	assert(SUCCEEDED(hr));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -1578,9 +1567,9 @@ void PipelineManager::GenerateParticle3DPSO() {
 	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	//実際に生成
-	hr = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->particle3DPSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -1681,17 +1670,17 @@ void PipelineManager::GenarateFullScreenPSO() {
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->fullScreenPSO_.signatureBlob_, &PipelineManager::GetInstance()->fullScreenPSO_.errorBlob_);
-	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->fullScreenPSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->fullScreenPSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->fullScreenPSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->fullScreenPSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->fullScreenPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->fullScreenPSO_.rootSignature_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -1744,54 +1733,8 @@ void PipelineManager::GenarateFullScreenPSO() {
 	assert(PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_ != nullptr);
 
 
-	////PSO生成
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->fullScreenPSO_.rootSignature_.Get();
-	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
-	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->fullScreenPSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->fullScreenPSO_.vertexShaderBlob_->GetBufferSize() };
-	//vertexShaderBlob_->GetBufferSize();
-	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_->GetBufferSize() };
-	//pixelShaderBlob_->GetBufferSize();
-	graphicsPipelineStateDesc.BlendState = blendDesc;
-	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
-
-	//書き込むRTVの情報
-	graphicsPipelineStateDesc.NumRenderTargets = 1;
-	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-
-	//利用するトポロジ(形状)のタイプ三角形
-	graphicsPipelineStateDesc.PrimitiveTopologyType =
-		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-
-	//どのように画面に色を打ち込むのか設定
-	graphicsPipelineStateDesc.SampleDesc.Count = 1;
-	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-
-	//どのように画面に色を打ち込むのか設定
-	graphicsPipelineStateDesc.SampleDesc.Count = 1;
-	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-
-	//DepthStencilStateの設定
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-	//Depthの機能を有効化する
-	depthStencilDesc.DepthEnable = false;
-	//書き込みします
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	//比較関数はLessEqual 近ければ描画される
-	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	//DepthStencilの設定
-	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
-	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-
-	//実際に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&PipelineManager::GetInstance()->fullScreenPSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr_));
-
-
-
-
+	//PSOの生成
+	GenaratePSO(PipelineManager::GetInstance()->fullScreenPSO_, inputLayoutDesc, blendDesc, rasterizerDesc);
 
 }
 
@@ -1853,11 +1796,11 @@ void PipelineManager::GenarateGrayScalePSO(){
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->grayScalePSO_.signatureBlob_, &PipelineManager::GetInstance()->grayScalePSO_.errorBlob_);
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->grayScalePSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->grayScalePSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -2022,17 +1965,17 @@ void PipelineManager::GenarateSepiaScalePSO(){
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->sepiaScalePSO_.signatureBlob_, &PipelineManager::GetInstance()->sepiaScalePSO_.errorBlob_);
-	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->sepiaScalePSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->sepiaScalePSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->sepiaScalePSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->sepiaScalePSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->sepiaScalePSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->sepiaScalePSO_.rootSignature_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -2126,9 +2069,9 @@ void PipelineManager::GenarateSepiaScalePSO(){
 
 
 	//実際に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->sepiaScalePSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 }
 
@@ -2200,17 +2143,17 @@ void PipelineManager::GenarateVignettePSO(){
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->vignettePSO_.signatureBlob_, &PipelineManager::GetInstance()->vignettePSO_.errorBlob_);
-	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->vignettePSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->vignettePSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->vignettePSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->vignettePSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->vignettePSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->vignettePSO_.rootSignature_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -2263,50 +2206,7 @@ void PipelineManager::GenarateVignettePSO(){
 	assert(PipelineManager::GetInstance()->vignettePSO_.pixelShaderBlob_ != nullptr);
 
 
-	////PSO生成
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->vignettePSO_.rootSignature_.Get();
-	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
-	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->vignettePSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->vignettePSO_.vertexShaderBlob_->GetBufferSize() };
-	//vertexShaderBlob_->GetBufferSize();
-	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->vignettePSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->vignettePSO_.pixelShaderBlob_->GetBufferSize() };
-	//pixelShaderBlob_->GetBufferSize();
-	graphicsPipelineStateDesc.BlendState = blendDesc;
-	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
-
-	//書き込むRTVの情報
-	graphicsPipelineStateDesc.NumRenderTargets = 1;
-	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-
-	//利用するトポロジ(形状)のタイプ三角形
-	graphicsPipelineStateDesc.PrimitiveTopologyType =
-		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-
-	//どのように画面に色を打ち込むのか設定
-	graphicsPipelineStateDesc.SampleDesc.Count = 1;
-	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-
-	//どのように画面に色を打ち込むのか設定
-	graphicsPipelineStateDesc.SampleDesc.Count = 1;
-	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-
-	//DepthStencilStateの設定
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-	//Depthの機能を有効化する
-	depthStencilDesc.DepthEnable = false;
-	//書き込みします
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	//比較関数はLessEqual 近ければ描画される
-	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	//DepthStencilの設定
-	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
-	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-
-	//実際に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
-		IID_PPV_ARGS(&PipelineManager::GetInstance()->vignettePSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr_));
+	GenaratePSO(PipelineManager::GetInstance()->vignettePSO_, inputLayoutDesc, blendDesc, rasterizerDesc);
 
 }
 
@@ -2378,17 +2278,17 @@ void PipelineManager::GenarateBoxFilterPSO(){
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->boxFilterPSO_.signatureBlob_, &PipelineManager::GetInstance()->boxFilterPSO_.errorBlob_);
-	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->boxFilterPSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->boxFilterPSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->boxFilterPSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->boxFilterPSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->boxFilterPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->boxFilterPSO_.rootSignature_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -2482,9 +2382,9 @@ void PipelineManager::GenarateBoxFilterPSO(){
 
 
 	//実際に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->boxFilterPSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 	
@@ -2560,17 +2460,17 @@ void PipelineManager::GenarateGaussianFilterPSO(){
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->gaussianFilterPSO_.signatureBlob_, &PipelineManager::GetInstance()->gaussianFilterPSO_.errorBlob_);
-	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->gaussianFilterPSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult  = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->gaussianFilterPSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->gaussianFilterPSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->gaussianFilterPSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->gaussianFilterPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->gaussianFilterPSO_.rootSignature_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -2664,9 +2564,9 @@ void PipelineManager::GenarateGaussianFilterPSO(){
 
 
 	//実際に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->gaussianFilterPSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 }
 
 void PipelineManager::GenarateLuminanceBasedOutlinePSO() {
@@ -2733,17 +2633,17 @@ void PipelineManager::GenarateLuminanceBasedOutlinePSO() {
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.signatureBlob_, &PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.errorBlob_);
-	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.rootSignature_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -2837,9 +2737,9 @@ void PipelineManager::GenarateLuminanceBasedOutlinePSO() {
 
 
 	//実際に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -2959,17 +2859,17 @@ void PipelineManager::GenarateDepthBasedOutlinePSO() {
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->depthBasedOutlinePSO_.signatureBlob_, &PipelineManager::GetInstance()->depthBasedOutlinePSO_.errorBlob_);
-	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->depthBasedOutlinePSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->depthBasedOutlinePSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->depthBasedOutlinePSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->depthBasedOutlinePSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->depthBasedOutlinePSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->depthBasedOutlinePSO_.rootSignature_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -3063,9 +2963,9 @@ void PipelineManager::GenarateDepthBasedOutlinePSO() {
 
 
 	//実際に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->depthBasedOutlinePSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -3134,17 +3034,17 @@ void PipelineManager::GenerateRadialBlurPSO() {
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->radialBlurPSO_.signatureBlob_, &PipelineManager::GetInstance()->radialBlurPSO_.errorBlob_);
-	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->radialBlurPSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult= D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->radialBlurPSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->radialBlurPSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->radialBlurPSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->radialBlurPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->radialBlurPSO_.rootSignature_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -3238,9 +3138,9 @@ void PipelineManager::GenerateRadialBlurPSO() {
 
 
 	//実際に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->radialBlurPSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -3255,7 +3155,6 @@ void PipelineManager::GenarateDissolvePSO() {
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 	//rootParameter生成。複数設定できるので配列。
-	//今回は結果一つだけなので長さ１の配列
 	D3D12_ROOT_PARAMETER rootParameters[3] = {};
 
 
@@ -3334,17 +3233,17 @@ void PipelineManager::GenarateDissolvePSO() {
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->dissolvePSO_.signatureBlob_, &PipelineManager::GetInstance()->dissolvePSO_.errorBlob_);
-	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->dissolvePSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult= D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->dissolvePSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->dissolvePSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->dissolvePSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->dissolvePSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->dissolvePSO_.rootSignature_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -3438,9 +3337,9 @@ void PipelineManager::GenarateDissolvePSO() {
 
 
 	//実際に生成
-	hr_ = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->dissolvePSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr_));
+	assert(SUCCEEDED(hResult));
 
 }
 
@@ -3515,11 +3414,11 @@ void PipelineManager::GenarateRandomEffectPSO() {
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr_ = {};
-	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->randomEffectPSO_.signatureBlob_, &PipelineManager::GetInstance()->randomEffectPSO_.errorBlob_);
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hr_= D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->randomEffectPSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hr_)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->randomEffectPSO_.errorBlob_->GetBufferPointer()));
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -3625,7 +3524,6 @@ void PipelineManager::GenarateRandomEffectPSO() {
 
 }
 
-
 void PipelineManager::GenarateSkyBoxPSO() {
 
 	//PSO
@@ -3723,18 +3621,18 @@ void PipelineManager::GenarateSkyBoxPSO() {
 
 
 	//シリアライズしてバイナリにする
-	HRESULT hr = {};
-	hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
-		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->skyBoxPSO_.signatureBlob_, &PipelineManager::GetInstance()->skyBoxPSO_.errorBlob_);
-	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(PipelineManager::GetInstance()->skyBoxPSO_.errorBlob_->GetBufferPointer()));
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->skyBoxPSO_.signatureBlob_, &errorBlob);
+	if (FAILED(hResult)) {
+		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
 	//バイナリを元に生成
-	hr = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->skyBoxPSO_.signatureBlob_->GetBufferPointer(),
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->skyBoxPSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->skyBoxPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->skyBoxPSO_.rootSignature_));
-	assert(SUCCEEDED(hr));
+	assert(SUCCEEDED(hResult));
 
 
 
@@ -3835,9 +3733,6 @@ void PipelineManager::GenarateSkyBoxPSO() {
 		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
 
-
-
-
 		break;
 
 	case BlendModeScreen:
@@ -3847,22 +3742,12 @@ void PipelineManager::GenarateSkyBoxPSO() {
 		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 
-
-
-
-
 		break;
-
-
 	}
 
 
 
 
-
-
-
-	////RasterizerState
 	//RasterizerState・・・Rasterizerに対する設定
 	//					  三角形の内部をピクセルに分解して、
 	//					  PixelShaderを起動することでこの処理への設定を行う
@@ -3934,9 +3819,9 @@ void PipelineManager::GenarateSkyBoxPSO() {
 
 
 	//実際に生成
-	hr = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->skyBoxPSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hr));
+	assert(SUCCEEDED(hResult));
 
 
 }

@@ -7,7 +7,7 @@ void Material::Initialize(){
 	//Lightingの種類
 	lightingKinds_ = Directional;
 	//UV行列
-	uvTransform_= MakeIdentity4x4();
+	uvTransform_= Matrix4x4Calculation::MakeIdentity4x4();
 	//輝度
 	//かなり大きくしないと変になる。
 	shininess_=1000.0f;

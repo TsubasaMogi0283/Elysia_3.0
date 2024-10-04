@@ -21,8 +21,13 @@ struct SpotLightData {
 	float cosFallowoffStart;
 	//スポットライトの余弦
 	float cosAngle;
-	float padding[2];
+	
+	//当たっていない所をこれで明るくする
+	float aroundOffset;
 
+	float padding[2];
+	
+	
 
 };
 
@@ -58,6 +63,8 @@ public:
 	float cosFallowoffStart_;
 	//スポットライトの余弦
 	float cosAngle_;
+	//当たっていない所をこれで明るくする
+	float aroundOffset_;
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> bufferResource_=nullptr;
