@@ -267,29 +267,28 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 
 
 	//一度全てのオブジェクトのデータを消す
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		//LevelDataを取得
-		LevelData* levelData = it->second.get();
+	for (auto& [key, levelDataPtr] : levelDatas_) {
+		if (levelDataPtr->handle == levelDataHandle) {
 
-		//一致したら消す
-		if (levelData->handle == levelDataHandle) {
 			//モデルを消す
-			for (auto& object : levelData->objectDatas) {
+			for (auto& object : levelDataPtr->objectDatas) {
 				// Modelの解放
 				if (object.model != nullptr) {
 					delete object.model;
 				}
 				//ワールドトランスフォームの解放
 				delete object.worldTransform;
+
 			}
 
-			//listにある情報を消す
-			levelData->objectDatas.~list();
+			//listにある情報を全て消す
+			levelDataPtr->objectDatas.clear();
 
-			//無駄なループ処理をしないようにする
+			//無駄な処理をしないようにする
 			break;
 		}
 	}
+
 
 
 	//引数から探す
@@ -347,10 +346,10 @@ void LevelDataManager::Update(uint32_t& levelDataHandle){
 
 	//この書き方はC++17からの構造化束縛というものらしい
 	//イテレータではなく
-	for (auto& [key, levelDataPtr] : levelDatas_) {
-		if (levelDataPtr->handle == levelDataHandle) {
+	for (auto& [key, levelData] : levelDatas_) {
+		if (levelData->handle == levelDataHandle) {
 			
-			for (auto& object : levelDataPtr->objectDatas) {
+			for (auto& object : levelData->objectDatas) {
 				//更新
 				object.worldTransform->Update();
 			}
@@ -377,7 +376,7 @@ void LevelDataManager::Delete(uint32_t& levelDataHandle){
 			}
 
 			//listにある情報を全て消す
-			levelDatas_->objectDatas.~list();
+			levelDataPtr->objectDatas.clear();
 
 			//無駄な処理をしないようにする
 			break;
@@ -389,53 +388,55 @@ void LevelDataManager::Delete(uint32_t& levelDataHandle){
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, DirectionalLight& directionalLight){
 	
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get(); 
-		if (levelData->handle == levelDataHandle) {
+	for (auto& [key, levelDataPtr] : levelDatas_) {
+		if (levelDataPtr->handle == levelDataHandle) {
 
 			//描画
-			for (LevelData::ObjectData& object : levelData->objectDatas) {
+			for (LevelData::ObjectData& object : levelDataPtr->objectDatas) {
 				object.model->Draw(*object.worldTransform, camera, material, directionalLight);
 			}
 			//無駄なループ処理を防ぐよ
 			break;
 
 		}
+
 	}
 }
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, PointLight& pointLight){
 
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get(); 
-		if (levelData->handle == levelDataHandle) {
+	for (auto& [key, levelDataPtr] : levelDatas_) {
+		if (levelDataPtr->handle == levelDataHandle) {
 
 			//描画
-			for (LevelData::ObjectData& object : levelData->objectDatas) {
+			for (LevelData::ObjectData& object : levelDataPtr->objectDatas) {
 				object.model->Draw(*object.worldTransform, camera, material, pointLight);
 			}
 			//無駄なループ処理を防ぐよ
 			break;
 
 		}
+
 	}
 }
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, SpotLight& spotLight){
 
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get();
-		if (levelData->handle == levelDataHandle) {
+
+	for (auto& [key, levelDataPtr] : levelDatas_) {
+		if (levelDataPtr->handle == levelDataHandle) {
 
 			//描画
-			for (LevelData::ObjectData& object : levelData->objectDatas) {
+			for (LevelData::ObjectData& object : levelDataPtr->objectDatas) {
 				object.model->Draw(*object.worldTransform, camera, material, spotLight);
 			}
 			//無駄なループ処理を防ぐよ
 			break;
 
 		}
+
 	}
+
 }
 
 #pragma endregion
@@ -443,10 +444,10 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 
 void LevelDataManager::Release(){
 	//全て消す
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get();
 
-		for (auto& object : levelData->objectDatas) {
+
+	for (auto& [key, levelDataPtr] : levelDatas_) {
+		for (auto& object : levelDataPtr->objectDatas) {
 			// Model の解放
 			if (object.model != nullptr) {
 				delete object.model;
@@ -454,6 +455,7 @@ void LevelDataManager::Release(){
 			delete object.worldTransform;
 
 		}
+
 	}
 
 	levelDatas_.clear();
