@@ -14,9 +14,20 @@
 #pragma comment(lib,"xaudio2.lib")
 
 
+
+
+#include <mfapi.h>
+#include <mfidl.h>
+
+
+#pragma comment(lib, "Mf.lib")
+#pragma comment(lib, "mfplat.lib")
+#pragma comment(lib, "Mfreadwrite.lib")
+#pragma comment(lib, "mfuuid.lib")
+
 #include <wrl.h>
 using Microsoft::WRL::ComPtr;
-#include <cstdint>
+
 
 #include <complex>
 #include <vector>
@@ -77,7 +88,7 @@ public:
 	/// </summary>
 	/// <param name="fileName"></param>
 	/// <returns></returns>
-	static uint32_t LoadWave(const char* fileName);
+	static uint32_t LoadWave(std::string& fileName);
 
 	/// <summary>
 	/// Waveエフェクト版の読み込み
@@ -85,9 +96,14 @@ public:
 	/// <param name="fileName"></param>
 	/// <param name="effectType"></param>
 	/// <returns></returns>
-	static uint32_t LoadWave(const char* fileName, uint32_t effectType);
+	static uint32_t LoadWave(std::string& fileName, uint32_t effectType);
 
+	/// <summary>
+	/// 
+	/// </summary>
+	static uint32_t LoadMP3(std::string& fileName);
 
+	
 	/// <summary>
 	/// 再生
 	/// </summary>
@@ -102,6 +118,12 @@ public:
 	/// <param name="audioHandle"></param>
 	/// <param name="loopCount"></param>
 	void PlayWave(uint32_t audioHandle, int32_t loopCount);
+
+
+	void PlayMP3(uint32_t audioHandle, bool isLoop);
+
+	void PlayMP3(uint32_t audioHandle, uint32_t loopCount);
+
 
 	/// <summary>
 	/// 一時停止
@@ -299,7 +321,7 @@ private:
 	//最終的にここでまとめるよ(スピーカーみたいな感じだね)
 	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 
-
+	uint32_t audioIndex = 0u;
 
 	//Panに必要な変数
 	DWORD dwChannelMask_ = {};

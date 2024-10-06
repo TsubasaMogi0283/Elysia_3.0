@@ -1,11 +1,12 @@
 #include "Audio.h"
+#include <ConvertLog.h>
 
 
 
 
 
 
-static uint32_t audioIndex;
+
 
 
 Audio* Audio::GetInstance() {
@@ -66,7 +67,7 @@ void Audio::Initialize() {
 
 #pragma region 基本セット
 //読み込み
-uint32_t Audio::LoadWave(const char* fileName) {
+uint32_t Audio::LoadWave(std::string& fileName) {
 
 	//16,24,32bitは読み込み出来た
 	//64bitも読み込み出来るようにしたいと思ったが一般的に使われないらしい
@@ -76,16 +77,17 @@ uint32_t Audio::LoadWave(const char* fileName) {
 
 	//一度読み込んだものは２度読み込まず返すだけ
 	for (int i = 0; i < SOUND_DATE_MAX_; i++) {
-		if (Audio::GetInstance()->audioInformation_[i].name_ == fileName) {
-			return Audio::GetInstance()->audioInformation_[i].handle_;
+		if (Audio::GetInstance()->audioInformation_[i].fileName == fileName) {
+			return Audio::GetInstance()->audioInformation_[i].handle;
 		}
 	}
-	//audioHandle_++;
-	audioIndex++;
+
+
+	Audio::GetInstance()->audioIndex++;
 
 	//記録
-	Audio::GetInstance()->audioInformation_[audioIndex].name_ = fileName;
-	Audio::GetInstance()->audioInformation_[audioIndex].handle_ = audioIndex;
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].fileName = fileName;
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].handle = Audio::GetInstance()->audioIndex;
 
 
 #pragma region １,ファイルオープン
@@ -160,25 +162,25 @@ uint32_t Audio::LoadWave(const char* fileName) {
 
 #pragma region 読み込んだ音声データを返す
 
-	Audio::GetInstance()->audioInformation_[audioIndex].soundData_.wfex = format.fmt;
-	Audio::GetInstance()->audioInformation_[audioIndex].soundData_.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
-	Audio::GetInstance()->audioInformation_[audioIndex].soundData_.bufferSize = data.size;
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.wfex = format.fmt;
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.bufferSize = data.size;
 
 
 	//波形フォーマットを基にSourceVoiceの生成
 	HRESULT hr{};
 	hr = Audio::GetInstance()->xAudio2_->CreateSourceVoice(
-		&Audio::GetInstance()->audioInformation_[audioIndex].pSourceVoice_,
-		&Audio::GetInstance()->audioInformation_[audioIndex].soundData_.wfex);
+		&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceVoice,
+		&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.wfex);
 	assert(SUCCEEDED(hr));
 
 	hr = Audio::GetInstance()->xAudio2_->CreateSourceVoice(
-		&Audio::GetInstance()->audioInformation_[audioIndex].pSourceVoice_,
-		&Audio::GetInstance()->audioInformation_[audioIndex].soundData_.wfex, XAUDIO2_VOICE_USEFILTER, 16.0f);
+		&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceVoice,
+		&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.wfex, XAUDIO2_VOICE_USEFILTER, 16.0f);
 
 	assert(SUCCEEDED(hr));
 
-	return audioIndex;
+	return Audio::GetInstance()->audioIndex;
 
 #pragma endregion
 
@@ -186,7 +188,7 @@ uint32_t Audio::LoadWave(const char* fileName) {
 
 }
 
-uint32_t Audio::LoadWave(const char* fileName, uint32_t effectType) {
+uint32_t Audio::LoadWave(std::string& fileName, uint32_t effectType) {
 	//16,24,32bitは読み込み出来た
 	//64bitも読み込み出来るようにしたいと思ったが一般的に使われないらしい
 	//だから32が最大で良いかも。
@@ -195,16 +197,16 @@ uint32_t Audio::LoadWave(const char* fileName, uint32_t effectType) {
 	effectType;
 	//一度読み込んだものは２度読み込まず返すだけ
 	for (int i = 0; i < SOUND_DATE_MAX_; i++) {
-		if (Audio::GetInstance()->audioInformation_[i].name_ == fileName) {
-			return Audio::GetInstance()->audioInformation_[i].handle_;
+		if (Audio::GetInstance()->audioInformation_[i].fileName == fileName) {
+			return Audio::GetInstance()->audioInformation_[i].handle;
 		}
 	}
-	//audioHandle_++;
-	audioIndex++;
+
+	Audio::GetInstance()->audioIndex++;
 
 	//記録
-	Audio::GetInstance()->audioInformation_[audioIndex].name_ = fileName;
-	Audio::GetInstance()->audioInformation_[audioIndex].handle_ = audioIndex;
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].fileName = fileName;
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].handle = Audio::GetInstance()->audioIndex;
 
 
 #pragma region １,ファイルオープン
@@ -279,36 +281,194 @@ uint32_t Audio::LoadWave(const char* fileName, uint32_t effectType) {
 
 #pragma region 読み込んだ音声データを返す
 
-	Audio::GetInstance()->audioInformation_[audioIndex].soundData_.wfex = format.fmt;
-	Audio::GetInstance()->audioInformation_[audioIndex].soundData_.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
-	Audio::GetInstance()->audioInformation_[audioIndex].soundData_.bufferSize = data.size;
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.wfex = format.fmt;
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.bufferSize = data.size;
 
 
 	//波形フォーマットを基にSourceVoiceの生成
-	HRESULT hr{};
+	HRESULT hResult = Audio::GetInstance()->xAudio2_->CreateSourceVoice(
+		&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceVoice,
+		&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.wfex, XAUDIO2_VOICE_USEFILTER, 16.0f);
 
-	hr = Audio::GetInstance()->xAudio2_->CreateSourceVoice(
-		&Audio::GetInstance()->audioInformation_[audioIndex].pSourceVoice_,
-		&Audio::GetInstance()->audioInformation_[audioIndex].soundData_.wfex, XAUDIO2_VOICE_USEFILTER, 16.0f);
+	assert(SUCCEEDED(hResult));
 
-	assert(SUCCEEDED(hr));
-
-	return audioIndex;
+	return Audio::GetInstance()->audioIndex;
 
 #pragma endregion
 
 
 }
 
+
+
+
+
+uint32_t Audio::LoadMP3(std::string& fileName) {
+
+
+	//一度読み込んだものは２度読み込まず返すだけ
+	for (int i = 0; i < SOUND_DATE_MAX_; i++) {
+		if (Audio::GetInstance()->audioInformation_[i].fileName == fileName) {
+			return Audio::GetInstance()->audioInformation_[i].handle;
+		}
+	}
+
+	Audio::GetInstance()->audioIndex++;
+
+	//記録
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].fileName = fileName;
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].handle = Audio::GetInstance()->audioIndex;
+
+
+	//ソースリーダーの作成
+	LPCWSTR wFilename = ConvertString::ToWString(fileName).c_str();
+	HRESULT hResult = MFCreateSourceReaderFromURL(wFilename, nullptr, &Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceReader);
+	assert(SUCCEEDED(hResult));
+
+
+
+	//メディアタイプの取得
+	IMFMediaType* pMFMediaType{ nullptr };
+	MFCreateMediaType(&pMFMediaType);
+	pMFMediaType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+	pMFMediaType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceReader->SetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), nullptr, pMFMediaType);
+
+	pMFMediaType->Release();
+	pMFMediaType = nullptr;
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceReader->GetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), &pMFMediaType);
+
+	//オーディオデータ形式の作成
+	WAVEFORMATEX* waveFormat{};
+	MFCreateWaveFormatExFromMFMediaType(pMFMediaType, &waveFormat, nullptr);
+
+
+
+	while (true)
+	{
+		IMFSample* pMFSample{ nullptr };
+		DWORD dwStreamFlags{ 0 };
+		Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceReader->ReadSample(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), 0, nullptr, &dwStreamFlags, nullptr, &pMFSample);
+
+		if (dwStreamFlags & MF_SOURCE_READERF_ENDOFSTREAM)
+		{
+			break;
+		}
+
+		IMFMediaBuffer* pMFMediaBuffer{ nullptr };
+		pMFSample->ConvertToContiguousBuffer(&pMFMediaBuffer);
+
+		BYTE* pBuffer{ nullptr };
+		DWORD cbCurrentLength{ 0 };
+		pMFMediaBuffer->Lock(&pBuffer, nullptr, &cbCurrentLength);
+
+		Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].mediaData.resize(Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].mediaData.size() + cbCurrentLength);
+		memcpy(Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].mediaData.data() + Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].mediaData.size() - cbCurrentLength, pBuffer, cbCurrentLength);
+
+		pMFMediaBuffer->Unlock();
+
+		pMFMediaBuffer->Release();
+		pMFSample->Release();
+	}
+
+	Audio::GetInstance()->xAudio2_->CreateSourceVoice(&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceVoice, waveFormat);
+
+
+	return Audio::GetInstance()->audioIndex;
+}
+
 //音声再生
 void Audio::PlayWave(uint32_t audioHandle, bool isLoop) {
 	HRESULT hr{};
-	hr = audioInformation_[audioHandle].pSourceVoice_->FlushSourceBuffers();
+	hr = audioInformation_[audioHandle].sourceVoice->FlushSourceBuffers();
 	assert(SUCCEEDED(hr));
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buffer{};
-	buffer.pAudioData = audioInformation_[audioHandle].soundData_.pBuffer;
-	buffer.AudioBytes = audioInformation_[audioHandle].soundData_.bufferSize;
+	buffer.pAudioData = audioInformation_[audioHandle].soundData.pBuffer;
+	buffer.AudioBytes = audioInformation_[audioHandle].soundData.bufferSize;
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	if (isLoop == true) {
+		//ずっとループさせたいならLoopCountにXAUDIO2_LOOP_INFINITEをいれよう
+		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+	}
+	else {
+		buffer.LoopCount = XAUDIO2_NO_LOOP_REGION;
+	}
+	//Buffer登録
+	hr = audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
+	//波形データの再生
+	hr = audioInformation_[audioHandle].sourceVoice->Start(0);
+
+
+
+	assert(SUCCEEDED(hr));
+}
+
+void Audio::PlayMP3(uint32_t audioHandle, bool isLoop) {
+	//MP3はループしない方が良いとのこと
+	//一応用意するけど使わないかも
+	HRESULT hr{};
+	hr = audioInformation_[audioHandle].sourceVoice->FlushSourceBuffers();
+	assert(SUCCEEDED(hr));
+
+	XAUDIO2_BUFFER buffer{};
+	buffer.pAudioData = Audio::GetInstance()->audioInformation_[audioHandle].mediaData.data();
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	buffer.AudioBytes = sizeof(BYTE) * static_cast<UINT32>(Audio::GetInstance()->audioInformation_[audioHandle].mediaData.size());
+	if (isLoop == true) {
+		//ずっとループさせたいならLoopCountにXAUDIO2_LOOP_INFINITEをいれよう
+		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+	}
+	else {
+		buffer.LoopCount = XAUDIO2_NO_LOOP_REGION;
+	}
+
+
+	hr = Audio::GetInstance()->audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
+
+	//波形データの再生
+	hr = audioInformation_[audioHandle].sourceVoice->Start(0);
+	assert(SUCCEEDED(hr));
+}
+
+void Audio::PlayMP3(uint32_t audioHandle, uint32_t loopCount) {
+	//MP3はループしない方が良いとのこと
+	//一応用意するけど使わないかも
+
+	HRESULT hr{};
+	hr = audioInformation_[audioHandle].sourceVoice->FlushSourceBuffers();
+	assert(SUCCEEDED(hr));
+	XAUDIO2_BUFFER buffer{};
+	buffer.pAudioData = Audio::GetInstance()->audioInformation_[audioHandle].mediaData.data();
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	buffer.AudioBytes = sizeof(BYTE) * static_cast<UINT32>(Audio::GetInstance()->audioInformation_[audioHandle].mediaData.size());
+	//ここでループ回数を設定
+	//1回多くなっているので-1してあげた方が良いかも
+	//1でfalseの場合と同じ
+	buffer.LoopCount = loopCount - 1;
+
+
+
+	hr = Audio::GetInstance()->audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
+
+	//波形データの再生
+	hr = audioInformation_[audioHandle].sourceVoice->Start(0);
+	assert(SUCCEEDED(hr));
+}
+
+
+
+
+//音声再生
+void Audio::PlayWave(uint32_t audioHandle, bool isLoop) {
+	HRESULT hr{};
+	hr = audioInformation_[audioHandle].sourceVoice->FlushSourceBuffers();
+	assert(SUCCEEDED(hr));
+	//再生する波形データの設定
+	XAUDIO2_BUFFER buffer{};
+	buffer.pAudioData = audioInformation_[audioHandle].soundData.pBuffer;
+	buffer.AudioBytes = audioInformation_[audioHandle].soundData.bufferSize;
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
 	if (isLoop == true) {
 		//ずっとループさせたいならLoopCountにXAUDIO2_LOOP_INFINITEをいれよう
@@ -320,10 +480,10 @@ void Audio::PlayWave(uint32_t audioHandle, bool isLoop) {
 
 
 	//Buffer登録
-	hr = audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
+	hr = audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
 	assert(SUCCEEDED(hr));
 	//波形データの再生
-	hr = audioInformation_[audioHandle].pSourceVoice_->Start();
+	hr = audioInformation_[audioHandle].sourceVoice->Start();
 
 
 
@@ -336,8 +496,8 @@ void Audio::PlayWave(uint32_t audioHandle, int32_t loopCount) {
 
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buffer{};
-	buffer.pAudioData = audioInformation_[audioHandle].soundData_.pBuffer;
-	buffer.AudioBytes = audioInformation_[audioHandle].soundData_.bufferSize;
+	buffer.pAudioData = audioInformation_[audioHandle].soundData.pBuffer;
+	buffer.AudioBytes = audioInformation_[audioHandle].soundData.bufferSize;
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
 	//ここでループ回数を設定
 	//1回多くなっているので-1してあげた方が良いかも
@@ -346,9 +506,9 @@ void Audio::PlayWave(uint32_t audioHandle, int32_t loopCount) {
 
 	HRESULT hr{};
 	//Buffer登録
-	hr = audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
+	hr = audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
 	//波形データの再生
-	hr = audioInformation_[audioHandle].pSourceVoice_->Start();
+	hr = audioInformation_[audioHandle].sourceVoice->Start();
 
 
 
@@ -359,21 +519,21 @@ void Audio::PauseWave(uint32_t audioHandle) {
 	HRESULT hr{};
 	//いきなり停止させて残響とかのエフェクトも停止させたら違和感ある
 	//だからXAUDIO2_PLAY_TAILSを入れて余韻も残す
-	hr = audioInformation_[audioHandle].pSourceVoice_->Stop(XAUDIO2_PLAY_TAILS);
+	hr = audioInformation_[audioHandle].sourceVoice->Stop(XAUDIO2_PLAY_TAILS);
 	assert(SUCCEEDED(hr));
 }
 
 void Audio::ResumeWave(uint32_t audioHandle) {
 	HRESULT hr{};
 	//波形データの再生
-	hr = audioInformation_[audioHandle].pSourceVoice_->Start(0);
+	hr = audioInformation_[audioHandle].sourceVoice->Start(0);
 	assert(SUCCEEDED(hr));
 }
 
 //音声停止
 void Audio::StopWave(uint32_t audioHandle) {
 	HRESULT hr{};
-	hr = audioInformation_[audioHandle].pSourceVoice_->Stop();
+	hr = audioInformation_[audioHandle].sourceVoice->Stop();
 	assert(SUCCEEDED(hr));
 }
 
@@ -384,7 +544,7 @@ void Audio::StopWave(uint32_t audioHandle) {
 void Audio::ExitLoop(uint32_t audioHandle) {
 	HRESULT hr{};
 	//ExitLoop関数でループを抜ける
-	hr = audioInformation_[audioHandle].pSourceVoice_->ExitLoop();
+	hr = audioInformation_[audioHandle].sourceVoice->ExitLoop();
 	assert(SUCCEEDED(hr));
 }
 
@@ -396,14 +556,14 @@ void Audio::AfterLoopPlayWave(uint32_t audioHandle, float second) {
 	//後半ループするよ
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buffer{};
-	buffer.pAudioData = audioInformation_[audioHandle].soundData_.pBuffer;
-	buffer.AudioBytes = audioInformation_[audioHandle].soundData_.bufferSize;
+	buffer.pAudioData = audioInformation_[audioHandle].soundData.pBuffer;
+	buffer.AudioBytes = audioInformation_[audioHandle].soundData.bufferSize;
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
 	//ここでループ回数を設定
 	buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
 	//長いので新しく変数を作って分かりやすくする
-	int samplingRate = Audio::GetInstance()->audioInformation_[audioIndex].soundData_.wfex.nSamplesPerSec;
+	int samplingRate = Audio::GetInstance()->audioInformation_[audioIndex].soundData.wfex.nSamplesPerSec;
 
 	//ここでループしたい位置を設定してあげる
 	buffer.LoopBegin = uint32_t(second * samplingRate);
@@ -412,9 +572,9 @@ void Audio::AfterLoopPlayWave(uint32_t audioHandle, float second) {
 
 	HRESULT hr{};
 	//Buffer登録
-	hr = audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
+	hr = audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
 	//波形データの再生
-	hr = audioInformation_[audioHandle].pSourceVoice_->Start(0);
+	hr = audioInformation_[audioHandle].sourceVoice->Start(0);
 
 
 
@@ -430,14 +590,14 @@ void Audio::BeforeLoopPlayWave(uint32_t audioHandle, float lengthSecond) {
 
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buffer{};
-	buffer.pAudioData = audioInformation_[audioHandle].soundData_.pBuffer;
-	buffer.AudioBytes = audioInformation_[audioHandle].soundData_.bufferSize;
+	buffer.pAudioData = audioInformation_[audioHandle].soundData.pBuffer;
+	buffer.AudioBytes = audioInformation_[audioHandle].soundData.bufferSize;
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
 	//ここでループ回数を設定
 	buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
 	//長いので新しく変数を作って分かりやすくする
-	int samplingRate = Audio::GetInstance()->audioInformation_[audioIndex].soundData_.wfex.nSamplesPerSec;
+	int samplingRate = Audio::GetInstance()->audioInformation_[audioIndex].soundData.wfex.nSamplesPerSec;
 
 	//ここでループしたい位置を設定してあげる
 	//ここfloatにしたいけど元々がuint32だから無理そう
@@ -448,10 +608,10 @@ void Audio::BeforeLoopPlayWave(uint32_t audioHandle, float lengthSecond) {
 
 	HRESULT hr{};
 	//Buffer登録
-	hr = audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
+	hr = audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
 	assert(SUCCEEDED(hr));
 	//波形データの再生
-	hr = audioInformation_[audioHandle].pSourceVoice_->Start(0);
+	hr = audioInformation_[audioHandle].sourceVoice->Start(0);
 
 
 
@@ -467,14 +627,14 @@ void Audio::PartlyLoopPlayWave(uint32_t audioHandle, float start, float lengthSe
 
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buffer{};
-	buffer.pAudioData = audioInformation_[audioHandle].soundData_.pBuffer;
-	buffer.AudioBytes = audioInformation_[audioHandle].soundData_.bufferSize;
+	buffer.pAudioData = audioInformation_[audioHandle].soundData.pBuffer;
+	buffer.AudioBytes = audioInformation_[audioHandle].soundData.bufferSize;
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
 	//ここでループ回数を設定
 	buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
 	//長いので新しく変数を作って分かりやすくする
-	int samplingRate = Audio::GetInstance()->audioInformation_[audioIndex].soundData_.wfex.nSamplesPerSec;
+	int samplingRate = Audio::GetInstance()->audioInformation_[audioIndex].soundData.wfex.nSamplesPerSec;
 
 	//ここでループしたい位置を設定してあげる
 	//ここfloatにしたいけど元々がuint32だから無理そう
@@ -485,11 +645,11 @@ void Audio::PartlyLoopPlayWave(uint32_t audioHandle, float start, float lengthSe
 
 	
 	//Buffer登録
-	HRESULT hResult = audioInformation_[audioHandle].pSourceVoice_->SubmitSourceBuffer(&buffer);
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
 	assert(SUCCEEDED(hResult));
 	
 	//波形データの再生
-	hResult = audioInformation_[audioHandle].pSourceVoice_->Start(0);
+	hResult = audioInformation_[audioHandle].sourceVoice->Start(0);
 	assert(SUCCEEDED(hResult));
 
 
@@ -503,7 +663,7 @@ void Audio::PartlyLoopPlayWave(uint32_t audioHandle, float start, float lengthSe
 //音量を変える
 void Audio::ChangeVolume(uint32_t audioHandle, float volume) {
 
-	 HRESULT hResult = audioInformation_[audioHandle].pSourceVoice_->SetVolume(volume);
+	 HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SetVolume(volume);
 	assert(SUCCEEDED(hResult));
 }
 
@@ -518,7 +678,7 @@ void Audio::ChangeFrequency(uint32_t audioHandle, float ratio) {
 	ratio = min(ratio, 0.0f);
 
 
-	hr = audioInformation_[audioHandle].pSourceVoice_->SetFrequencyRatio(ratio);
+	hr = audioInformation_[audioHandle].sourceVoice->SetFrequencyRatio(ratio);
 	assert(SUCCEEDED(hr));
 }
 
@@ -562,7 +722,7 @@ void Audio::ChangePitch(uint32_t audioHandle, int32_t scale) {
 	}
 
 
-	hr = audioInformation_[audioHandle].pSourceVoice_->SetFrequencyRatio(ratio);
+	hr = audioInformation_[audioHandle].sourceVoice->SetFrequencyRatio(ratio);
 	assert(SUCCEEDED(hr));
 }
 
@@ -636,12 +796,12 @@ void Audio::SetPan(uint32_t audioHandle, float_t pan) {
 #pragma endregion
 
 	XAUDIO2_VOICE_DETAILS voiceDetails;
-	audioInformation_[audioHandle].pSourceVoice_->GetVoiceDetails(&voiceDetails);
+	audioInformation_[audioHandle].sourceVoice->GetVoiceDetails(&voiceDetails);
 
 	XAUDIO2_VOICE_DETAILS masterVoiiceDetails;
 	masterVoice_->GetVoiceDetails(&masterVoiiceDetails);
 
-	audioInformation_[audioHandle].pSourceVoice_->SetOutputMatrix(
+	audioInformation_[audioHandle].sourceVoice->SetOutputMatrix(
 		NULL, voiceDetails.InputChannels,
 		masterVoiiceDetails.InputChannels,
 		outputMatrix_);
@@ -664,7 +824,7 @@ void Audio::SetLowPassFilter(uint32_t audioHandle, float cutOff) {
 	FilterParams.Type = XAUDIO2_FILTER_TYPE::LowPassFilter;
 	FilterParams.Frequency = newCutOff;
 	FilterParams.OneOverQ = 1.4142f;
-	audioInformation_[audioHandle].pSourceVoice_->SetFilterParameters(&FilterParams);
+	audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
 }
 
 void Audio::SetLowPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
@@ -683,7 +843,7 @@ void Audio::SetLowPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ)
 	FilterParams.Type = XAUDIO2_FILTER_TYPE::LowPassFilter;
 	FilterParams.Frequency = newCutOff;
 	FilterParams.OneOverQ = oneOverQ;
-	audioInformation_[audioHandle].pSourceVoice_->SetFilterParameters(&FilterParams);
+	audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
 }
 
 void Audio::SetHighPassFilter(uint32_t audioHandle, float cutOff) {
@@ -703,7 +863,7 @@ void Audio::SetHighPassFilter(uint32_t audioHandle, float cutOff) {
 	FilterParams.Type = XAUDIO2_FILTER_TYPE::HighPassFilter;
 	FilterParams.Frequency = newCutOff;
 	FilterParams.OneOverQ = 1.4142f;
-	audioInformation_[audioHandle].pSourceVoice_->SetFilterParameters(&FilterParams);
+	audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
 }
 
 void Audio::SetHighPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
@@ -723,7 +883,7 @@ void Audio::SetHighPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ
 	FilterParams.Type = XAUDIO2_FILTER_TYPE::HighPassFilter;
 	FilterParams.Frequency = newCutOff;
 	FilterParams.OneOverQ = oneOverQ;
-	audioInformation_[audioHandle].pSourceVoice_->SetFilterParameters(&FilterParams);
+	audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
 }
 
 void Audio::SetBandPassFilter(uint32_t audioHandle, float cutOff) {
@@ -742,7 +902,7 @@ void Audio::SetBandPassFilter(uint32_t audioHandle, float cutOff) {
 	//0.5f
 	FilterParams.Frequency = newCutOff;
 	FilterParams.OneOverQ = 1.0f;
-	audioInformation_[audioHandle].pSourceVoice_->SetFilterParameters(&FilterParams);
+	audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
 }
 
 void Audio::SetBandPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
@@ -763,7 +923,7 @@ void Audio::SetBandPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ
 	FilterParams.OneOverQ = oneOverQ;
 
 	//パラメーターの設定
-	HRESULT hResult=audioInformation_[audioHandle].pSourceVoice_->SetFilterParameters(&FilterParams);
+	HRESULT hResult=audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
 	assert(SUCCEEDED(hResult));
 }
 
@@ -785,7 +945,7 @@ void Audio::SetNotchFilter(uint32_t audioHandle, float cutOff) {
 	FilterParams.OneOverQ = 1.0f;
 
 	//パラメーターの設定
-	HRESULT hResult = audioInformation_[audioHandle].pSourceVoice_->SetFilterParameters(&FilterParams);
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
 	assert(SUCCEEDED(hResult));
 }
 
@@ -806,7 +966,7 @@ void Audio::SetNotchFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
 	FilterParams.OneOverQ = oneOverQ;
 
 	//パラメーターの設定
-	HRESULT hResult=audioInformation_[audioHandle].pSourceVoice_->SetFilterParameters(&FilterParams);
+	HRESULT hResult=audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
 	assert(SUCCEEDED(hResult));
 }
 
@@ -816,7 +976,7 @@ void Audio::SendChannels(uint32_t audioHandle, uint32_t channelNumber) {
 	XAUDIO2_SEND_DESCRIPTOR send = { 0, Audio::GetInstance()->submixVoice_[0] };
 	XAUDIO2_VOICE_SENDS sendlist = { channelNumber, &send };
 
-	HRESULT hResult=audioInformation_[audioHandle].pSourceVoice_->SetOutputVoices(&sendlist);
+	HRESULT hResult=audioInformation_[audioHandle].sourceVoice->SetOutputVoices(&sendlist);
 	assert(SUCCEEDED(hResult));
 }
 
@@ -828,13 +988,13 @@ void Audio::CreateReverb(uint32_t audioHandle, uint32_t channel) {
 
 //エフェクトの効果を無効にする
 void Audio::OffEffect(uint32_t audioHandle) {
-	HRESULT hResult = audioInformation_[audioHandle].pSourceVoice_->DisableEffect(0);
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->DisableEffect(0);
 	assert(SUCCEEDED(hResult));
 }
 
 //エフェクトの効果を有効にする
 void Audio::OnEffect(uint32_t audioHandle) {
-	HRESULT hResult = audioInformation_[audioHandle].pSourceVoice_->EnableEffect(0);
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->EnableEffect(0);
 	assert(SUCCEEDED(hResult));
 }
 
@@ -847,10 +1007,10 @@ void Audio::OnEffect(uint32_t audioHandle) {
 //後ろにあるReleaseで使っているよ
 void Audio::SoundUnload(uint32_t soundDataHandle) {
 	//バッファのメモリを解放
-	delete[] Audio::GetInstance()->audioInformation_[soundDataHandle].soundData_.pBuffer;
-	Audio::GetInstance()->audioInformation_[soundDataHandle].soundData_.pBuffer = 0;
-	Audio::GetInstance()->audioInformation_[soundDataHandle].soundData_.bufferSize = 0;
-	Audio::GetInstance()->audioInformation_[soundDataHandle].soundData_.wfex = {};
+	delete[] Audio::GetInstance()->audioInformation_[soundDataHandle].soundData.pBuffer;
+	Audio::GetInstance()->audioInformation_[soundDataHandle].soundData.pBuffer = 0;
+	Audio::GetInstance()->audioInformation_[soundDataHandle].soundData.bufferSize = 0;
+	Audio::GetInstance()->audioInformation_[soundDataHandle].soundData.wfex = {};
 
 }
 
@@ -859,8 +1019,8 @@ void Audio::Release() {
 
 	//pXAPO_->Release();
 	for (int i = 0; i < SOUND_DATE_MAX_; i++) {
-		if (audioInformation_[i].pSourceVoice_ != nullptr) {
-			audioInformation_[i].pSourceVoice_->DestroyVoice();
+		if (audioInformation_[i].sourceVoice != nullptr) {
+			audioInformation_[i].sourceVoice->DestroyVoice();
 		}
 	}
 
