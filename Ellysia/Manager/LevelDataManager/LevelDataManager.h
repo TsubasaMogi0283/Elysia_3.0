@@ -189,10 +189,9 @@ private:
 	/// <summary>
 	/// JSONファイルを解凍
 	/// </summary>
-	/// <param name="file"></param>
 	/// <param name="fullFilePath"></param>
 	/// <returns></returns>
-	nlohmann::json Deserialize(std::ifstream& file,std::string& fullFilePath);
+	nlohmann::json Deserialize(std::string& fullFilePath);
 
 
 private:
