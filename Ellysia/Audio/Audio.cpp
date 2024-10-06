@@ -8,7 +8,6 @@
 
 
 
-
 Audio* Audio::GetInstance() {
 	static Audio instance;
 	return &instance;
@@ -29,10 +28,11 @@ void Audio::CreateSubmixVoice(uint32_t channel) {
 //初期化
 //これはDirecX初期化の後に入れてね
 void Audio::Initialize() {
-
+	// Media Foundation の初期化
+	HRESULT hr = MFStartup(MF_VERSION);
+	assert(SUCCEEDED(hr));
 
 	//XAudioのエンジンのインスタンスを生成
-	HRESULT hr;
 	hr = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
 	assert(SUCCEEDED(hr));
 
@@ -67,7 +67,7 @@ void Audio::Initialize() {
 
 #pragma region 基本セット
 //読み込み
-uint32_t Audio::LoadWave(std::string& fileName) {
+uint32_t Audio::LoadWave(const std::string& fileName) {
 
 	//16,24,32bitは読み込み出来た
 	//64bitも読み込み出来るようにしたいと思ったが一般的に使われないらしい
@@ -75,6 +75,8 @@ uint32_t Audio::LoadWave(std::string& fileName) {
 	//64bitを書き出せるCakewslkすご
 
 
+
+	//mapにしたい
 	//一度読み込んだものは２度読み込まず返すだけ
 	for (int i = 0; i < SOUND_DATE_MAX_; i++) {
 		if (Audio::GetInstance()->audioInformation_[i].fileName == fileName) {
@@ -83,11 +85,17 @@ uint32_t Audio::LoadWave(std::string& fileName) {
 	}
 
 
-	Audio::GetInstance()->audioIndex++;
+	//indexを取得
+	uint32_t handle = Audio::GetInstance()->index_;
+	//加算
+	Audio::GetInstance()->index_++;
+
+
+
 
 	//記録
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].fileName = fileName;
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].handle = Audio::GetInstance()->audioIndex;
+	Audio::GetInstance()->audioInformation_[handle].fileName = fileName;
+	Audio::GetInstance()->audioInformation_[handle].handle = handle;
 
 
 #pragma region １,ファイルオープン
@@ -162,25 +170,20 @@ uint32_t Audio::LoadWave(std::string& fileName) {
 
 #pragma region 読み込んだ音声データを返す
 
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.wfex = format.fmt;
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.bufferSize = data.size;
+	Audio::GetInstance()->audioInformation_[handle].soundData.wfex = format.fmt;
+	Audio::GetInstance()->audioInformation_[handle].soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
+	Audio::GetInstance()->audioInformation_[handle].soundData.bufferSize = data.size;
 
 
 	//波形フォーマットを基にSourceVoiceの生成
 	HRESULT hr{};
 	hr = Audio::GetInstance()->xAudio2_->CreateSourceVoice(
-		&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceVoice,
-		&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.wfex);
+		&Audio::GetInstance()->audioInformation_[handle].sourceVoice,
+		&Audio::GetInstance()->audioInformation_[handle].soundData.wfex);
 	assert(SUCCEEDED(hr));
 
-	hr = Audio::GetInstance()->xAudio2_->CreateSourceVoice(
-		&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceVoice,
-		&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.wfex, XAUDIO2_VOICE_USEFILTER, 16.0f);
 
-	assert(SUCCEEDED(hr));
-
-	return Audio::GetInstance()->audioIndex;
+	return handle;
 
 #pragma endregion
 
@@ -188,123 +191,10 @@ uint32_t Audio::LoadWave(std::string& fileName) {
 
 }
 
-uint32_t Audio::LoadWave(std::string& fileName, uint32_t effectType) {
-	//16,24,32bitは読み込み出来た
-	//64bitも読み込み出来るようにしたいと思ったが一般的に使われないらしい
-	//だから32が最大で良いかも。
-	//64bitを書き出せるCakewslkすご
-
-	effectType;
-	//一度読み込んだものは２度読み込まず返すだけ
-	for (int i = 0; i < SOUND_DATE_MAX_; i++) {
-		if (Audio::GetInstance()->audioInformation_[i].fileName == fileName) {
-			return Audio::GetInstance()->audioInformation_[i].handle;
-		}
-	}
-
-	Audio::GetInstance()->audioIndex++;
-
-	//記録
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].fileName = fileName;
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].handle = Audio::GetInstance()->audioIndex;
-
-
-#pragma region １,ファイルオープン
-	//ファイル入力ストリームのインスタンス
-	std::ifstream file;
-	//.wavファイルをバイナリモードで開く
-	file.open(fileName, std::ios_base::binary);
-	//ファイルオープン失敗を検出する
-	assert(file.is_open());
-
-#pragma endregion
-
-#pragma region ２,wavデータ読み込み
-
-	//RIFFヘッダーの読み込み
-	RiffHeader riff;
-	file.read((char*)&riff, sizeof(riff));
-	//ファイルがRIFFかチェック
-	if (strncmp(riff.chunk.id, "RIFF", 4) != 0) {
-		assert(0);
-	}
-	//タイプがWAVEかチェック
-	if (strncmp(riff.type, "WAVE", 4) != 0) {
-		assert(0);
-	}
-
-	//Formatチャンクの読み込み
-	FormatChunk format = {};
-	//チャンクヘッダーの確認
-	file.read((char*)&format, sizeof(ChunkHeader));
-	//何かここ空白入れないとダメらしい
-	//後ろが4だからかな・・
-	if (strncmp(format.chunk.id, "fmt ", 4) != 0) {
-		assert(0);
-	}
-
-	//チャンク本体の読み込み
-	assert(format.chunk.size <= sizeof(format.fmt));
-	file.read((char*)&format.fmt, format.chunk.size);
-
-
-	//Dataチャンクの読み込み
-	ChunkHeader data;
-	file.read((char*)&data, sizeof(data));
-	//JUNKチャンクを検出した場合
-	if (strncmp(data.id, "JUNK", 4) == 0) {
-		//読み込み位置をJUNKチャンクの終わりまで進める
-		file.seekg(data.size, std::ios_base::cur);
-		//再読み込み
-		file.read((char*)&data, sizeof(data));
-
-	}
-
-	//メインのデータチャンク
-	if (strncmp(data.id, "data", 4) != 0) {
-		assert(0);
-	}
-
-	//Dataチャンクのデータ部(波形データ)の読み込み
-	char* pBuffer = new char[data.size];
-	file.read(pBuffer, data.size);
-#pragma endregion
-
-#pragma region ３,Waveファイルを閉じる
-	file.close();
-
-
-#pragma endregion
 
 
 
-
-#pragma region 読み込んだ音声データを返す
-
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.wfex = format.fmt;
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.bufferSize = data.size;
-
-
-	//波形フォーマットを基にSourceVoiceの生成
-	HRESULT hResult = Audio::GetInstance()->xAudio2_->CreateSourceVoice(
-		&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceVoice,
-		&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].soundData.wfex, XAUDIO2_VOICE_USEFILTER, 16.0f);
-
-	assert(SUCCEEDED(hResult));
-
-	return Audio::GetInstance()->audioIndex;
-
-#pragma endregion
-
-
-}
-
-
-
-
-
-uint32_t Audio::LoadMP3(std::string& fileName) {
+uint32_t Audio::LoadMP3(const std::string& fileName) {
 
 
 	//一度読み込んだものは２度読み込まず返すだけ
@@ -314,16 +204,21 @@ uint32_t Audio::LoadMP3(std::string& fileName) {
 		}
 	}
 
-	Audio::GetInstance()->audioIndex++;
+	Audio::GetInstance()->index_++;
 
 	//記録
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].fileName = fileName;
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].handle = Audio::GetInstance()->audioIndex;
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].fileName = fileName;
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].handle = Audio::GetInstance()->index_;
 
 
 	//ソースリーダーの作成
-	LPCWSTR wFilename = ConvertString::ToWString(fileName).c_str();
-	HRESULT hResult = MFCreateSourceReaderFromURL(wFilename, nullptr, &Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceReader);
+	int size_needed = MultiByteToWideChar(CP_UTF8, 0, fileName.c_str(), (int)fileName.size(), NULL, 0);
+	std::wstring wstr(size_needed, 0);
+	MultiByteToWideChar(CP_UTF8, 0, fileName.c_str(), (int)fileName.size(), &wstr[0], size_needed);
+
+
+	LPCWSTR lpcWString = wstr.c_str();
+	HRESULT hResult = MFCreateSourceReaderFromURL(lpcWString, nullptr, &Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].sourceReader);
 	assert(SUCCEEDED(hResult));
 
 
@@ -333,11 +228,11 @@ uint32_t Audio::LoadMP3(std::string& fileName) {
 	MFCreateMediaType(&pMFMediaType);
 	pMFMediaType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
 	pMFMediaType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceReader->SetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), nullptr, pMFMediaType);
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].sourceReader->SetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), nullptr, pMFMediaType);
 
 	pMFMediaType->Release();
 	pMFMediaType = nullptr;
-	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceReader->GetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), &pMFMediaType);
+	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].sourceReader->GetCurrentMediaType(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), &pMFMediaType);
 
 	//オーディオデータ形式の作成
 	WAVEFORMATEX* waveFormat{};
@@ -349,7 +244,7 @@ uint32_t Audio::LoadMP3(std::string& fileName) {
 	{
 		IMFSample* pMFSample{ nullptr };
 		DWORD dwStreamFlags{ 0 };
-		Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceReader->ReadSample(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), 0, nullptr, &dwStreamFlags, nullptr, &pMFSample);
+		Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].sourceReader->ReadSample(DWORD(MF_SOURCE_READER_FIRST_AUDIO_STREAM), 0, nullptr, &dwStreamFlags, nullptr, &pMFSample);
 
 		if (dwStreamFlags & MF_SOURCE_READERF_ENDOFSTREAM)
 		{
@@ -363,8 +258,8 @@ uint32_t Audio::LoadMP3(std::string& fileName) {
 		DWORD cbCurrentLength{ 0 };
 		pMFMediaBuffer->Lock(&pBuffer, nullptr, &cbCurrentLength);
 
-		Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].mediaData.resize(Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].mediaData.size() + cbCurrentLength);
-		memcpy(Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].mediaData.data() + Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].mediaData.size() - cbCurrentLength, pBuffer, cbCurrentLength);
+		Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].mediaData.resize(Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].mediaData.size() + cbCurrentLength);
+		memcpy(Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].mediaData.data() + Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].mediaData.size() - cbCurrentLength, pBuffer, cbCurrentLength);
 
 		pMFMediaBuffer->Unlock();
 
@@ -372,42 +267,14 @@ uint32_t Audio::LoadMP3(std::string& fileName) {
 		pMFSample->Release();
 	}
 
-	Audio::GetInstance()->xAudio2_->CreateSourceVoice(&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->audioIndex].sourceVoice, waveFormat);
+	Audio::GetInstance()->xAudio2_->CreateSourceVoice(&Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].sourceVoice, waveFormat);
 
 
-	return Audio::GetInstance()->audioIndex;
+	return Audio::GetInstance()->index_;
 }
 
-//音声再生
-void Audio::PlayWave(uint32_t audioHandle, bool isLoop) {
-	HRESULT hr{};
-	hr = audioInformation_[audioHandle].sourceVoice->FlushSourceBuffers();
-	assert(SUCCEEDED(hr));
-	//再生する波形データの設定
-	XAUDIO2_BUFFER buffer{};
-	buffer.pAudioData = audioInformation_[audioHandle].soundData.pBuffer;
-	buffer.AudioBytes = audioInformation_[audioHandle].soundData.bufferSize;
-	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	if (isLoop == true) {
-		//ずっとループさせたいならLoopCountにXAUDIO2_LOOP_INFINITEをいれよう
-		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
-	}
-	else {
-		buffer.LoopCount = XAUDIO2_NO_LOOP_REGION;
-	}
-	//Buffer登録
-	hr = audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
-	//波形データの再生
-	hr = audioInformation_[audioHandle].sourceVoice->Start(0);
-
-
-
-	assert(SUCCEEDED(hr));
-}
 
 void Audio::PlayMP3(uint32_t audioHandle, bool isLoop) {
-	//MP3はループしない方が良いとのこと
-	//一応用意するけど使わないかも
 	HRESULT hr{};
 	hr = audioInformation_[audioHandle].sourceVoice->FlushSourceBuffers();
 	assert(SUCCEEDED(hr));
@@ -433,9 +300,6 @@ void Audio::PlayMP3(uint32_t audioHandle, bool isLoop) {
 }
 
 void Audio::PlayMP3(uint32_t audioHandle, uint32_t loopCount) {
-	//MP3はループしない方が良いとのこと
-	//一応用意するけど使わないかも
-
 	HRESULT hr{};
 	hr = audioInformation_[audioHandle].sourceVoice->FlushSourceBuffers();
 	assert(SUCCEEDED(hr));
@@ -516,25 +380,22 @@ void Audio::PlayWave(uint32_t audioHandle, int32_t loopCount) {
 }
 
 void Audio::PauseWave(uint32_t audioHandle) {
-	HRESULT hr{};
 	//いきなり停止させて残響とかのエフェクトも停止させたら違和感ある
 	//だからXAUDIO2_PLAY_TAILSを入れて余韻も残す
-	hr = audioInformation_[audioHandle].sourceVoice->Stop(XAUDIO2_PLAY_TAILS);
-	assert(SUCCEEDED(hr));
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->Stop(XAUDIO2_PLAY_TAILS);
+	assert(SUCCEEDED(hResult));
 }
 
 void Audio::ResumeWave(uint32_t audioHandle) {
-	HRESULT hr{};
 	//波形データの再生
-	hr = audioInformation_[audioHandle].sourceVoice->Start(0);
-	assert(SUCCEEDED(hr));
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->Start(0);
+	assert(SUCCEEDED(hResult));
 }
 
 //音声停止
 void Audio::StopWave(uint32_t audioHandle) {
-	HRESULT hr{};
-	hr = audioInformation_[audioHandle].sourceVoice->Stop();
-	assert(SUCCEEDED(hr));
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->Stop();
+	assert(SUCCEEDED(hResult));
 }
 
 #pragma endregion
@@ -563,7 +424,7 @@ void Audio::AfterLoopPlayWave(uint32_t audioHandle, float second) {
 	buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
 	//長いので新しく変数を作って分かりやすくする
-	int samplingRate = Audio::GetInstance()->audioInformation_[audioIndex].soundData.wfex.nSamplesPerSec;
+	int samplingRate = Audio::GetInstance()->audioInformation_[index_].soundData.wfex.nSamplesPerSec;
 
 	//ここでループしたい位置を設定してあげる
 	buffer.LoopBegin = uint32_t(second * samplingRate);
@@ -597,7 +458,7 @@ void Audio::BeforeLoopPlayWave(uint32_t audioHandle, float lengthSecond) {
 	buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
 	//長いので新しく変数を作って分かりやすくする
-	int samplingRate = Audio::GetInstance()->audioInformation_[audioIndex].soundData.wfex.nSamplesPerSec;
+	int samplingRate = Audio::GetInstance()->audioInformation_[index_].soundData.wfex.nSamplesPerSec;
 
 	//ここでループしたい位置を設定してあげる
 	//ここfloatにしたいけど元々がuint32だから無理そう
@@ -634,7 +495,7 @@ void Audio::PartlyLoopPlayWave(uint32_t audioHandle, float start, float lengthSe
 	buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
 	//長いので新しく変数を作って分かりやすくする
-	int samplingRate = Audio::GetInstance()->audioInformation_[audioIndex].soundData.wfex.nSamplesPerSec;
+	int samplingRate = Audio::GetInstance()->audioInformation_[index_].soundData.wfex.nSamplesPerSec;
 
 	//ここでループしたい位置を設定してあげる
 	//ここfloatにしたいけど元々がuint32だから無理そう

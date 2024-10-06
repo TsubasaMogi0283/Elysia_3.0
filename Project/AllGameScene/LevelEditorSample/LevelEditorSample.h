@@ -12,20 +12,29 @@
 #include <LevelDataManager.h>
 #include <Vignette.h>
 
+#include "Audio.h"
+
 //StatePatternを使う時は必ず前方宣言をするように
 class GameManager;
 
 class LevelEditorSample : public IGameScene {
 public:
 
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	LevelEditorSample()=default;
 
 
+	/// <summary>
 	/// 初期化
+	/// </summary>
 	void Initialize()override;
 
+	/// <summary>
 	/// 更新
+	/// </summary>
+	/// <param name="gameManager"></param>
 	void Update(GameManager* gameManager)override;
 
 #pragma region 描画
@@ -52,7 +61,9 @@ public:
 	void DrawSprite()override;
 
 #pragma endregion
+	/// <summary>
 	/// デストラクタ
+	/// </summary>
 	~LevelEditorSample();
 
 
@@ -68,6 +79,11 @@ private:
 	uint32_t levelHandle_ = 0u;
 
 
+
+	uint32_t audioHandle_ = 0u; 
+	uint32_t audioHandle2_ = 0u;
+	uint32_t audioHandleMP3_ = 0u;
+	Audio* audio_ = nullptr;
 
 
 };

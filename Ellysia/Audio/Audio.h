@@ -88,20 +88,13 @@ public:
 	/// </summary>
 	/// <param name="fileName"></param>
 	/// <returns></returns>
-	static uint32_t LoadWave(std::string& fileName);
+	static uint32_t LoadWave(const std::string& fileName);
 
-	/// <summary>
-	/// Waveエフェクト版の読み込み
-	/// </summary>
-	/// <param name="fileName"></param>
-	/// <param name="effectType"></param>
-	/// <returns></returns>
-	static uint32_t LoadWave(std::string& fileName, uint32_t effectType);
 
 	/// <summary>
 	/// 
 	/// </summary>
-	static uint32_t LoadMP3(std::string& fileName);
+	static uint32_t LoadMP3(const std::string& fileName);
 
 	
 	/// <summary>
@@ -321,7 +314,7 @@ private:
 	//最終的にここでまとめるよ(スピーカーみたいな感じだね)
 	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 
-	uint32_t audioIndex = 0u;
+	uint32_t index_ = 0u;
 
 	//Panに必要な変数
 	DWORD dwChannelMask_ = {};
