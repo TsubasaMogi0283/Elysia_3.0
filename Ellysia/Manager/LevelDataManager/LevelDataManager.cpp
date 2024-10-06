@@ -32,9 +32,9 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 		//MESHの場合
 		if (type.compare("MESH") == 0) {
 			//要素追加
-			levelData.objectDatas.emplace_back(LevelData::ObjectData{});
+			levelData.objectDatas.emplace_back(LevelData::ModelObjectData{});
 			//今追加した要素の参照を得る
-			LevelData::ObjectData& objectData = levelData.objectDatas.back();
+			LevelData::ModelObjectData& objectData = levelData.objectDatas.back();
 			//ここでのファイルネームはオブジェクトの名前
 			if (object.contains("file_name")) {
 				//ファイル名
@@ -125,7 +125,7 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 
 	std::string levelEditorDirectoryPath = "Resources/LevelData/"+ levelData.folderName;
 	
-	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
+	for (LevelData::ModelObjectData& objectData : levelData.objectDatas) {
 
 		//モデルの生成
 		//まだ無い場合は生成する
@@ -348,7 +348,7 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
-			for (LevelData::ObjectData& object : levelData->objectDatas) {
+			for (LevelData::ModelObjectData& object : levelData->objectDatas) {
 				object.model->Draw(*object.worldTransform, camera, material, directionalLight);
 			}
 			//無駄なループ処理を防ぐよ
@@ -365,7 +365,7 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
-			for (LevelData::ObjectData& object : levelData->objectDatas) {
+			for (LevelData::ModelObjectData& object : levelData->objectDatas) {
 				object.model->Draw(*object.worldTransform, camera, material, pointLight);
 			}
 			//無駄なループ処理を防ぐよ
@@ -377,13 +377,11 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 }
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, SpotLight& spotLight){
-
-
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
-			for (LevelData::ObjectData& object : levelData->objectDatas) {
+			for (LevelData::ModelObjectData& object : levelData->objectDatas) {
 				object.model->Draw(*object.worldTransform, camera, material, spotLight);
 			}
 			//無駄なループ処理を防ぐよ
@@ -399,9 +397,6 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 
 
 void LevelDataManager::Release(){
-	//全て消す
-
-
 	for (auto& [key, levelData] : levelDatas_) {
 		for (auto& object : levelData->objectDatas) {
 			// Model の解放

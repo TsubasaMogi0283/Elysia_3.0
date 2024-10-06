@@ -48,8 +48,8 @@ void Audio::Initialize() {
 	}
 
 	//サブミックスボイス(DTMでのバス)をここで作る
-	//64くらいあれば十分でしょう。多すぎてもメモリの無駄になってしまうし
 	//FLStudioと同じように128あれば良いなと思ったが
+	//64くらいあれば十分でしょう。多すぎてもメモリの無駄になってしまうし
 	for (int i = 1; i < SUBMIXVOICE_AMOUNT_; ++i) {
 
 		CreateSubmixVoice(i);
