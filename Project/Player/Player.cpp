@@ -141,6 +141,7 @@ void Player::Update(){
 		//振動を止める
 		if (vibeStrength_ < 0.0f) {
 			Input::GetInstance()->StopVibration();
+			vibeTime_ = 0.0f;
 			isVibe_ = false;
 		}
 	}
@@ -199,3 +200,6 @@ void Player::OnCollision(){
 	isVibe_ = true;
 }
 
+Player::~Player() {
+	Input::GetInstance()->StopVibration();
+}

@@ -57,7 +57,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Player() = default;
+	~Player();
 
 public:
 
