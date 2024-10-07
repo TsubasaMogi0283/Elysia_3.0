@@ -83,11 +83,7 @@ public:
 
 #pragma region 基本セット
 
-	/// <summary>
-	/// Waveの読み込み
-	/// </summary>
-	/// <param name="fileName"></param>
-	/// <returns></returns>
+
 	static uint32_t LoadWave(const std::string& fileName);
 
 
@@ -194,11 +190,8 @@ public:
 
 
 	/// <summary>
-	/// ピッチの変更
-	/// シンセのように出来るよ
+	/// ピッチの設定(段階的)
 	/// </summary>
-	/// <param name="ハンドル名"></param>
-	/// <param name="値"></param>
 	void ChangePitch(uint32_t audioHandle, int32_t scale);
 
 
@@ -299,7 +292,9 @@ public:
 	void OnEffect(uint32_t audioHandle);
 
 
-	//解放
+	/// <summary>
+	/// 解放
+	/// </summary>
 	void Release();
 
 private:

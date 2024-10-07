@@ -211,13 +211,14 @@ uint32_t Audio::LoadMP3(const std::string& fileName) {
 	Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].handle = Audio::GetInstance()->index_;
 
 
-	//ソースリーダーの作成
+	//stringからLPCWCHARに変換する
 	int size_needed = MultiByteToWideChar(CP_UTF8, 0, fileName.c_str(), (int)fileName.size(), NULL, 0);
 	std::wstring wstr(size_needed, 0);
 	MultiByteToWideChar(CP_UTF8, 0, fileName.c_str(), (int)fileName.size(), &wstr[0], size_needed);
-
-
 	LPCWSTR lpcWString = wstr.c_str();
+
+
+	//ソースリーダーの作成
 	HRESULT hResult = MFCreateSourceReaderFromURL(lpcWString, nullptr, &Audio::GetInstance()->audioInformation_[Audio::GetInstance()->index_].sourceReader);
 	assert(SUCCEEDED(hResult));
 
@@ -275,10 +276,11 @@ uint32_t Audio::LoadMP3(const std::string& fileName) {
 
 
 void Audio::PlayMP3(uint32_t audioHandle, bool isLoop) {
-	HRESULT hr{};
-	hr = audioInformation_[audioHandle].sourceVoice->FlushSourceBuffers();
-	assert(SUCCEEDED(hr));
+	
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->FlushSourceBuffers();
+	assert(SUCCEEDED(hResult));
 
+	//bufferの設定
 	XAUDIO2_BUFFER buffer{};
 	buffer.pAudioData = Audio::GetInstance()->audioInformation_[audioHandle].mediaData.data();
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
@@ -292,17 +294,19 @@ void Audio::PlayMP3(uint32_t audioHandle, bool isLoop) {
 	}
 
 
-	hr = Audio::GetInstance()->audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
+	hResult = Audio::GetInstance()->audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
+	assert(SUCCEEDED(hResult));
 
 	//波形データの再生
-	hr = audioInformation_[audioHandle].sourceVoice->Start(0);
-	assert(SUCCEEDED(hr));
+	hResult = audioInformation_[audioHandle].sourceVoice->Start(0);
+	assert(SUCCEEDED(hResult));
 }
 
 void Audio::PlayMP3(uint32_t audioHandle, uint32_t loopCount) {
-	HRESULT hr{};
-	hr = audioInformation_[audioHandle].sourceVoice->FlushSourceBuffers();
-	assert(SUCCEEDED(hr));
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->FlushSourceBuffers();
+	assert(SUCCEEDED(hResult));
+
+	//bufferの設定
 	XAUDIO2_BUFFER buffer{};
 	buffer.pAudioData = Audio::GetInstance()->audioInformation_[audioHandle].mediaData.data();
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
@@ -312,13 +316,12 @@ void Audio::PlayMP3(uint32_t audioHandle, uint32_t loopCount) {
 	//1でfalseの場合と同じ
 	buffer.LoopCount = loopCount - 1;
 
-
-
-	hr = Audio::GetInstance()->audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
+	hResult = Audio::GetInstance()->audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
+	assert(SUCCEEDED(hResult));
 
 	//波形データの再生
-	hr = audioInformation_[audioHandle].sourceVoice->Start(0);
-	assert(SUCCEEDED(hr));
+	hResult = audioInformation_[audioHandle].sourceVoice->Start(0);
+	assert(SUCCEEDED(hResult));
 }
 
 
@@ -403,9 +406,8 @@ void Audio::StopWave(uint32_t audioHandle) {
 
 #pragma region ループ
 void Audio::ExitLoop(uint32_t audioHandle) {
-	HRESULT hr{};
 	//ExitLoop関数でループを抜ける
-	hr = audioInformation_[audioHandle].sourceVoice->ExitLoop();
+	HRESULT hr = audioInformation_[audioHandle].sourceVoice->ExitLoop();
 	assert(SUCCEEDED(hr));
 }
 
@@ -431,15 +433,13 @@ void Audio::AfterLoopPlayWave(uint32_t audioHandle, float second) {
 
 
 
-	HRESULT hr{};
 	//Buffer登録
-	hr = audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
+	assert(SUCCEEDED(hResult));
+
 	//波形データの再生
-	hr = audioInformation_[audioHandle].sourceVoice->Start(0);
-
-
-
-	assert(SUCCEEDED(hr));
+	hResult = audioInformation_[audioHandle].sourceVoice->Start(0);
+	assert(SUCCEEDED(hResult));
 
 }
 
@@ -461,22 +461,18 @@ void Audio::BeforeLoopPlayWave(uint32_t audioHandle, float lengthSecond) {
 	int samplingRate = Audio::GetInstance()->audioInformation_[index_].soundData.wfex.nSamplesPerSec;
 
 	//ここでループしたい位置を設定してあげる
-	//ここfloatにしたいけど元々がuint32だから無理そう
 	buffer.LoopBegin = 0;
-	buffer.LoopLength = uint32_t(lengthSecond * samplingRate);
+	buffer.LoopLength = static_cast<uint32_t>(lengthSecond * samplingRate);
 
 
 
-	HRESULT hr{};
 	//Buffer登録
-	hr = audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
-	assert(SUCCEEDED(hr));
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SubmitSourceBuffer(&buffer);
+	assert(SUCCEEDED(hResult));
+
 	//波形データの再生
-	hr = audioInformation_[audioHandle].sourceVoice->Start(0);
-
-
-
-	assert(SUCCEEDED(hr));
+	hResult = audioInformation_[audioHandle].sourceVoice->Start(0);
+	assert(SUCCEEDED(hResult));
 
 }
 
@@ -498,9 +494,8 @@ void Audio::PartlyLoopPlayWave(uint32_t audioHandle, float start, float lengthSe
 	int samplingRate = Audio::GetInstance()->audioInformation_[index_].soundData.wfex.nSamplesPerSec;
 
 	//ここでループしたい位置を設定してあげる
-	//ここfloatにしたいけど元々がuint32だから無理そう
-	buffer.LoopBegin = uint32_t(start * samplingRate);;
-	buffer.LoopLength = uint32_t(lengthSecond * samplingRate);
+	buffer.LoopBegin = static_cast<uint32_t>(start * samplingRate);
+	buffer.LoopLength = static_cast<uint32_t>(lengthSecond * samplingRate);
 
 
 
@@ -530,24 +525,25 @@ void Audio::ChangeVolume(uint32_t audioHandle, float volume) {
 
 //ピッチの変更(滑らか)
 void Audio::ChangeFrequency(uint32_t audioHandle, float ratio) {
-	HRESULT hr{};
 
-	//これより上がらなかった
+	//2.0fより上がらなかった
 	ratio = max(ratio, 2.0f);
 
-	//これより下がらなかった
+	//0.0fより下がらなかった
 	ratio = min(ratio, 0.0f);
 
 
-	hr = audioInformation_[audioHandle].sourceVoice->SetFrequencyRatio(ratio);
-	assert(SUCCEEDED(hr));
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SetFrequencyRatio(ratio);
+	assert(SUCCEEDED(hResult));
 }
 
-//ピッチの変更
-//シンセとかのように段階的に出来るよ
+
+
+
+
 void Audio::ChangePitch(uint32_t audioHandle, int32_t scale) {
 
-	HRESULT hr{};
+	
 	float ratio = 1.0f;
 
 	//入力された値がプラスだった場合
@@ -582,9 +578,9 @@ void Audio::ChangePitch(uint32_t audioHandle, int32_t scale) {
 		}
 	}
 
-
-	hr = audioInformation_[audioHandle].sourceVoice->SetFrequencyRatio(ratio);
-	assert(SUCCEEDED(hr));
+	//比率の設定
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SetFrequencyRatio(ratio);
+	assert(SUCCEEDED(hResult));
 }
 
 //Pan振り
@@ -637,7 +633,7 @@ void Audio::SetPan(uint32_t audioHandle, float_t pan) {
 
 
 #pragma region 解説
-	//調べても良く分からなかったのでChatGPTに聞いた
+	//調べてもよく分からなかったのでChatGPTに聞いた
 	//outputMatrix_[0]: 主にモノラル音声の場合に使用され、すべての音声を単一のスピーカーに送信します。
 	//outputMatrix_[1] : ステレオ音声の場合、左側のスピーカーに対する音声の振幅を指定します。
 	//outputMatrix_[2] : ステレオ音声の場合、右側のスピーカーに対する音声の振幅を指定します。
@@ -651,21 +647,26 @@ void Audio::SetPan(uint32_t audioHandle, float_t pan) {
 
 	//公式嘘ついてる・・
 	//0,1だけだと左しかできないし。
+	//要約するとそれぞれのスピーカーの位置的なやつだと。
 
-	//普通のスピーカーは1,2を使う。
+	//普通のスピーカーは1,2を使う。L,Rだから2つだね。
 
 #pragma endregion
 
+	//詳細の取得
 	XAUDIO2_VOICE_DETAILS voiceDetails;
 	audioInformation_[audioHandle].sourceVoice->GetVoiceDetails(&voiceDetails);
 
+	//マスターの詳細を取得
 	XAUDIO2_VOICE_DETAILS masterVoiiceDetails;
 	masterVoice_->GetVoiceDetails(&masterVoiiceDetails);
 
-	audioInformation_[audioHandle].sourceVoice->SetOutputMatrix(
+	//OutPutMatrixに設定
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SetOutputMatrix(
 		NULL, voiceDetails.InputChannels,
 		masterVoiiceDetails.InputChannels,
 		outputMatrix_);
+	assert(SUCCEEDED(hResult));
 
 }
 
@@ -680,12 +681,15 @@ void Audio::SetLowPassFilter(uint32_t audioHandle, float cutOff) {
 		newCutOff = 0.0f;
 	}
 
-	//このままだとは7500Hzから下しか掛けられないらしい
-	XAUDIO2_FILTER_PARAMETERS FilterParams; //フィルタ指示構造体
+	XAUDIO2_FILTER_PARAMETERS FilterParams;
 	FilterParams.Type = XAUDIO2_FILTER_TYPE::LowPassFilter;
 	FilterParams.Frequency = newCutOff;
 	FilterParams.OneOverQ = 1.4142f;
-	audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
+
+	//パラメータの設定
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
+	assert(SUCCEEDED(hResult));
+
 }
 
 void Audio::SetLowPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
@@ -699,12 +703,15 @@ void Audio::SetLowPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ)
 		newCutOff = 0.0f;
 	}
 
-	//このままだとは7500Hzから下しか掛けられないらしい
-	XAUDIO2_FILTER_PARAMETERS FilterParams; //フィルタ指示構造体
+
+	XAUDIO2_FILTER_PARAMETERS FilterParams; 
 	FilterParams.Type = XAUDIO2_FILTER_TYPE::LowPassFilter;
 	FilterParams.Frequency = newCutOff;
 	FilterParams.OneOverQ = oneOverQ;
-	audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
+
+	//パラメータの設定
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
+	assert(SUCCEEDED(hResult));
 }
 
 void Audio::SetHighPassFilter(uint32_t audioHandle, float cutOff) {
@@ -724,63 +731,54 @@ void Audio::SetHighPassFilter(uint32_t audioHandle, float cutOff) {
 	FilterParams.Type = XAUDIO2_FILTER_TYPE::HighPassFilter;
 	FilterParams.Frequency = newCutOff;
 	FilterParams.OneOverQ = 1.4142f;
-	audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
+
+	//パラメータの設定
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
+	assert(SUCCEEDED(hResult));
 }
 
 void Audio::SetHighPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
-	//いきなり効果アリにすると違和感あるよね
-	//HighPassは最初「0.0f」にした方が良いかも
+	
+	cutOff = max(cutOff,1.0f);
+	cutOff = min(cutOff, 0.0f);
 
-
-	float newCutOff = cutOff;
-	if (cutOff > 1.0f) {
-		newCutOff = 1.0f;
-	}
-	else if (cutOff < 0.0f) {
-		newCutOff = 0.0f;
-	}
 
 	XAUDIO2_FILTER_PARAMETERS FilterParams;
 	FilterParams.Type = XAUDIO2_FILTER_TYPE::HighPassFilter;
-	FilterParams.Frequency = newCutOff;
+	FilterParams.Frequency = cutOff;
 	FilterParams.OneOverQ = oneOverQ;
-	audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
+
+	//パラメータの設定
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
+	assert(SUCCEEDED(hResult));
 }
 
 void Audio::SetBandPassFilter(uint32_t audioHandle, float cutOff) {
-	//いきなり効果アリにすると違和感あるよね
+	
 
-	float newCutOff = cutOff;
-	if (cutOff > 1.0f) {
-		newCutOff = 1.0f;
-	}
-	else if (cutOff < 0.0f) {
-		newCutOff = 0.0f;
-	}
+	cutOff = max(cutOff, 1.0f);
+	cutOff = min(cutOff, 0.0f);
+
 
 	XAUDIO2_FILTER_PARAMETERS FilterParams;
 	FilterParams.Type = XAUDIO2_FILTER_TYPE::BandPassFilter;
 	//0.5f
-	FilterParams.Frequency = newCutOff;
+	FilterParams.Frequency = cutOff;
 	FilterParams.OneOverQ = 1.0f;
-	audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
+	HRESULT hResult = audioInformation_[audioHandle].sourceVoice->SetFilterParameters(&FilterParams);
+	assert(SUCCEEDED(hResult));
 }
 
 void Audio::SetBandPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
-	//いきなり効果アリにすると違和感あるよね
+	
+	cutOff = max(cutOff, 1.0f);
+	cutOff = min(cutOff, 0.0f);
 
-	float newCutOff = cutOff;
-	if (cutOff > 1.0f) {
-		newCutOff = 1.0f;
-	}
-	else if (cutOff < 0.0f) {
-		newCutOff = 0.0f;
-	}
 
 	XAUDIO2_FILTER_PARAMETERS FilterParams;
 	FilterParams.Type = XAUDIO2_FILTER_TYPE::NotchFilter;;
 	//0.5f
-	FilterParams.Frequency = newCutOff;
+	FilterParams.Frequency = cutOff;
 	FilterParams.OneOverQ = oneOverQ;
 
 	//パラメーターの設定
@@ -789,20 +787,13 @@ void Audio::SetBandPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ
 }
 
 void Audio::SetNotchFilter(uint32_t audioHandle, float cutOff) {
+	cutOff = max(cutOff, 1.0f);
+	cutOff = min(cutOff, 0.0f);
 
-
-	float newCutOff = cutOff;
-	if (cutOff > 1.0f) {
-		newCutOff = 1.0f;
-	}
-	else if (cutOff < 0.0f) {
-		newCutOff = 0.0f;
-	}
 
 	XAUDIO2_FILTER_PARAMETERS FilterParams;
 	FilterParams.Type = XAUDIO2_FILTER_TYPE::BandPassFilter;
-	//0.5f
-	FilterParams.Frequency = newCutOff;
+	FilterParams.Frequency = cutOff;
 	FilterParams.OneOverQ = 1.0f;
 
 	//パラメーターの設定
@@ -812,18 +803,13 @@ void Audio::SetNotchFilter(uint32_t audioHandle, float cutOff) {
 
 void Audio::SetNotchFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
 
-	float newCutOff = cutOff;
-	if (cutOff > 1.0f) {
-		newCutOff = 1.0f;
-	}
-	else if (cutOff < 0.0f) {
-		newCutOff = 0.0f;
-	}
+	cutOff = max(cutOff, 1.0f);
+	cutOff = min(cutOff, 0.0f);
+
 
 	XAUDIO2_FILTER_PARAMETERS FilterParams;
 	FilterParams.Type = XAUDIO2_FILTER_TYPE::BandPassFilter;
-	//0.5f
-	FilterParams.Frequency = newCutOff;
+	FilterParams.Frequency = cutOff;
 	FilterParams.OneOverQ = oneOverQ;
 
 	//パラメーターの設定
