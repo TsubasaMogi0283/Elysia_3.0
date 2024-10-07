@@ -43,6 +43,12 @@ void Audio::Initialize() {
 	//スピーカ構成を取得
 	masterVoice_->GetChannelMask(&dwChannelMask_);
 
+
+	X3DAUDIO_HANDLE X3DInstance;
+	hr=X3DAudioInitialize(dwChannelMask, X3DAUDIO_SPEED_OF_SOUND, X3DInstance);
+	assert(SUCCEEDED(hr));
+
+
 	//一度全部0に初期化
 	for (int i = 0; i < 8; i++) {
 		outputMatrix_[i] = 0;
