@@ -11,8 +11,8 @@ void GameManager::Initialize() {
 	currentGamaScene_ = new TitleScene();
 
 #ifdef _DEBUG
-	currentGamaScene_ = new LevelEditorSample();
-	//currentGamaScene_ = new SampleScene();
+	//currentGamaScene_ = new LevelEditorSample();
+	currentGamaScene_ = new SampleScene();
 #endif // _DEBUG
 
 	//初期化
