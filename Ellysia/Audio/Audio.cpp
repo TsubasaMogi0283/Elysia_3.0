@@ -44,8 +44,8 @@ void Audio::Initialize() {
 	masterVoice_->GetChannelMask(&dwChannelMask_);
 
 
-	X3DAUDIO_HANDLE X3DInstance;
-	hr=X3DAudioInitialize(dwChannelMask, X3DAUDIO_SPEED_OF_SOUND, X3DInstance);
+	//X3DAudioを初期化
+	hr=X3DAudioInitialize(dwChannelMask_, X3DAUDIO_SPEED_OF_SOUND, x3DInstance_);
 	assert(SUCCEEDED(hr));
 
 
@@ -62,9 +62,17 @@ void Audio::Initialize() {
 		CreateSubmixVoice(i);
 	}
 
+	//聞き手
+	emitter_.ChannelCount = 1;
+	emitter_.CurveDistanceScaler = emitter_.DopplerScaler = 1.0f;
 
 
 
+	//X3DAUDIO_DSP_SETTINGS DSPSettings = {};
+	//FLOAT32* matrix = new FLOAT32[deviceDetails.OutputFormat.Format.nChannels];
+	//DSPSettings.SrcChannelCount = 1;
+	//DSPSettings.DstChannelCount = deviceDetails.OutputFormat.Format.nChannels;
+	//DSPSettings.pMatrixCoefficients = matrix;
 }
 
 

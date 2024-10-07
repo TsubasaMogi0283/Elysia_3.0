@@ -323,6 +323,10 @@ private:
 	IUnknown* pXAPO_ = nullptr;
 
 
+	//3Dオーディオ
+	X3DAUDIO_HANDLE x3DInstance_;
+	X3DAUDIO_LISTENER listener_ = {};
+	X3DAUDIO_EMITTER emitter_ = {};
 
 
 
