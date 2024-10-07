@@ -32,6 +32,12 @@ void LevelEditorSample::Initialize(){
 	back_ = std::make_unique<BackText>();
 	back_->Initialize();
 
+
+	//TL2
+	uint32_t ellysiaTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Sample/TL2/Ellysia.dds");
+	Vector3 position = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+	ellysia_.reset(Sprite::Create(ellysiaTextureHandle, position));
+
 }
 
 void LevelEditorSample::Update(GameManager* gameManager){
@@ -60,7 +66,7 @@ void LevelEditorSample::DrawSpriteBack()
 }
 
 void LevelEditorSample::DrawObject3D(){
-	levelEditor_->Draw(camera_, material_, directionalLight_);
+	//levelEditor_->Draw(camera_, material_, directionalLight_);
 }
 
 void LevelEditorSample::PreDrawPostEffectFirst(){
@@ -72,7 +78,7 @@ void LevelEditorSample::DrawPostEffect(){
 }
 
 void LevelEditorSample::DrawSprite(){
-
+	ellysia_->Draw();
 
 }
 

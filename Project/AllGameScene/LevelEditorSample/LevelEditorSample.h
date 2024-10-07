@@ -65,5 +65,8 @@ private:
 
 	LevelDataManager* levelEditor_ = nullptr;
 
+
+	std::unique_ptr<Sprite>ellysia_ = nullptr;
+
 };
 
