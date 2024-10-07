@@ -39,7 +39,7 @@ void LevelEditorSample::Initialize(){
 	audioHandle_ = audio_->LoadWave("Resources/Audio/Sample/Win.wav");
 	audioHandle2_= audio_->LoadWave("Resources/Audio/Sample/Hit.wav");
 	audioHandleMP3_ = audio_->LoadMP3("Resources/Audio/Sample/WIP.mp3");
-	audio_->PlayMP3(audioHandleMP3_, true);
+	//audio_->PlayMP3(audioHandleMP3_, true);
 
 }
 
