@@ -17,14 +17,21 @@ class GameManager;
 class LevelEditorSample : public IGameScene {
 public:
 
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	LevelEditorSample()=default;
 
 
+	/// <summary>
 	/// 初期化
+	/// </summary>
 	void Initialize()override;
 
+	/// <summary>
 	/// 更新
+	/// </summary>
+	/// <param name="gameManager"></param>
 	void Update(GameManager* gameManager)override;
 
 #pragma region 描画
