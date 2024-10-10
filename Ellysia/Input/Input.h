@@ -33,7 +33,6 @@ private:
 	~Input()=default;
 
 public:
-	//シングルインスタンスにするための関数
 	
 	//コピーコンストラクタ禁止
 	Input(const Input& input) = delete;
@@ -58,6 +57,12 @@ public:
 	void Update();
 
 
+	inline XINPUT_STATE GetState()const {
+		return state_;
+	}
+
+
+
 #pragma region キーボード
 	//Push状態
 	bool IsPushKey(uint8_t keyNumber);
@@ -72,8 +77,7 @@ public:
 
 #pragma region マウス
 
-	//intがいいのかな
-	//Noviceではint32_tだった
+
 	//Push状態
 	bool IsPushMouse(int32_t keyNumber);
 
@@ -83,12 +87,18 @@ public:
 #pragma endregion
 
 #pragma region コントローラー
+	/// <summary>
+	/// コントローラーと繋がっているかどうか
+	/// </summary>
+	/// <returns></returns>
+	bool IsConnetGamePad();
 
-	bool GetJoystickState(XINPUT_STATE& state);
-
-
-	bool IsPushLeft(XINPUT_STATE& state);
-	bool IsPushRight(XINPUT_STATE& state);
+	/// <summary>
+	/// Push状態
+	/// </summary>
+	/// <param name="button"></param>
+	/// <returns></returns>
+	bool IsPushButton(int32_t button);
 
 	void SetVibration(float leftMotor,float rightMotor);
 	void StopVibration();
@@ -123,8 +133,8 @@ private:
 	//コントローラーのボタン
 	//16の4乗
 	static const uint32_t XINPUT_GAMEPAD_NUMBER_ = 16 * 16 * 16 * 16;
-	BYTE preControllerButtons_[XUSER_MAX_COUNT][XINPUT_GAMEPAD_TRIGGER_THRESHOLD];
-	BYTE currentControllerButtons_[XUSER_MAX_COUNT][XINPUT_GAMEPAD_TRIGGER_THRESHOLD];
+	BYTE preControllerButtons_[XUSER_MAX_COUNT][XINPUT_GAMEPAD_TRIGGER_THRESHOLD] = {};
+	BYTE currentControllerButtons_[XUSER_MAX_COUNT][XINPUT_GAMEPAD_TRIGGER_THRESHOLD] = {};
 
 
 

@@ -52,16 +52,14 @@ void LoseScene::Update(GameManager* gameManager){
 		flashTime_ = 0;
 	}
 
-
-	XINPUT_STATE joyState{};
-	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+	if (Input::GetInstance()->IsConnetGamePad() == true) {
 
 		//Bボタンを押したとき
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+		if (Input::GetInstance()->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 			bTriggerTime_ += 1;
 
 		}
-		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+		if ((Input::GetInstance()->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
 			bTriggerTime_ = 0;
 		}
 

@@ -12,6 +12,11 @@
 #include <SingleCalculation.h>
 
 
+
+GameScene::GameScene(){
+	input_ = Input::GetInstance();
+}
+
 void GameScene::Initialize() {
 
 #pragma region フェード
@@ -265,15 +270,11 @@ void GameScene::KeyCollision(){
 			//範囲内にいれば入力を受け付ける
 			if (colissionDistance <= player_->GetRadius() + key->GetRadius()) {
 
-#ifdef _DEBUG
-				ImGui::Begin("KeyCollision");
-				ImGui::End();
-#endif 
-
+				//取得可能
 				key->SetIsPrePickUp(true);
 
-				//
-				if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
+				//SPACEキーで取得
+				if (input_->IsPushKey(DIK_SPACE) == true) {
 					//プレイヤーの持っているか鍵の数が増える
 					player_->AddHaveKeyQuantity();
 					//鍵が取得される
@@ -281,12 +282,12 @@ void GameScene::KeyCollision(){
 				}
 
 				//Bボタンを押したとき
-				if (Input::GetInstance()->GetJoystickState(joyState) == true){
-					if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+				if (input_->IsConnetGamePad() == true){
+					if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 						bTriggerTime_ += 1;
 
 					}
-					if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+					if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
 						bTriggerTime_ = 0;
 					}
 
@@ -382,19 +383,20 @@ void GameScene::EscapeCondition(){
 		//3個取得したら脱出できる
 		uint32_t playerKeyQuantity = player_->GetHavingKey();
 		if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
+			//「脱出せよ」が表示
 			escapeText_->SetInvisible(false);
 
 
 
 			//コントローラーのBボタンを押したら脱出のフラグがたつ
-			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+			if (Input::GetInstance()->IsConnetGamePad() == true) {
 
 				//Bボタンを押したとき
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+				if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 					bTriggerTime_ += 1;
 
 				}
-				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
 					bTriggerTime_ = 0;
 				}
 
@@ -412,6 +414,7 @@ void GameScene::EscapeCondition(){
 		}
 	}
 	else {
+		//まだ脱出できない
 		escapeText_->SetInvisible(true);
 	}
 
@@ -423,9 +426,6 @@ void GameScene::EscapeCondition(){
 }
 
 void GameScene::PlayerMove(){
-
-
-	
 
 	//何も押していないの時つまり動いていないので
 	//通常はfalseにしておく
@@ -479,7 +479,7 @@ void GameScene::PlayerMove(){
 	#pragma region コントローラー
 
 	//接続時
-	if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+	if (Input::GetInstance()->IsConnetGamePad() == true) {
 		//キーボード入力していない時・移動できる時に受け付ける
 		if (isPlayerMoveKey_ == false) {
 
@@ -487,8 +487,8 @@ void GameScene::PlayerMove(){
 			//コントローラーの入力
 			bool isInput = false;
 			Vector3 leftStickInput = {
-				.x = (static_cast<float>(joyState.Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
-				.z = (static_cast<float>(joyState.Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
+				.x = (static_cast<float>(input_->GetState().Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
+				.z = (static_cast<float>(input_->GetState().Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
 			};
 
 
@@ -553,8 +553,8 @@ void GameScene::PlayerMove(){
 		}
 		//コントローラー接続時
 		else {
-			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-				if (Input::GetInstance()->(DIK_RSHIFT) == true) {
+			if (Input::GetInstance()->IsConnetGamePad() == true) {
+				if (Input::GetInstance()->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER) == true) {
 					isPlayerDash_ = true;
 				}
 				else {
@@ -622,16 +622,16 @@ void GameScene::Update(GameManager* gameManager) {
 		fadeTransparency_ = 0.0f;
 		
 		if (isExplain_ == true) {
-			if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
+			if (input_->IsTriggerKey(DIK_SPACE) == true) {
 				++howToPlayTextureNumber_;
 			}
 			//Bボタンを押したとき
-			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+			if (input_->IsConnetGamePad() == true) {
+				if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 					bTriggerTime_ += 1;
 
 				}
-				if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
 					bTriggerTime_ = 0;
 				}
 
@@ -724,15 +724,15 @@ void GameScene::Update(GameManager* gameManager) {
 		isRotateYKey_ = false;
 
 		//コントローラーがある場合
-		if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+		if (Input::GetInstance()->IsConnetGamePad() == true) {
 			const float MOVE_LIMITATION = 0.02f;
 
 			//キーボード入力していない時
 			if (isRotateYKey_ == false && isRotateXKey_ == false) {
 
 				//入力
-				float rotateMoveX = (float)joyState.Gamepad.sThumbRY / SHRT_MAX * ROTATE_OFFSET;
-				float rotateMoveY = (float)joyState.Gamepad.sThumbRX / SHRT_MAX * ROTATE_OFFSET;
+				float rotateMoveX = (float)input_->GetState().Gamepad.sThumbRY / SHRT_MAX * ROTATE_OFFSET;
+				float rotateMoveY = (float)input_->GetState().Gamepad.sThumbRX / SHRT_MAX * ROTATE_OFFSET;
 				
 				//勝手に動くので制限を掛ける
 				if (rotateMoveY < MOVE_LIMITATION && rotateMoveY > -MOVE_LIMITATION) {
@@ -924,7 +924,7 @@ void GameScene::Update(GameManager* gameManager) {
 		fadeSprite_->SetTransparency(fadeTransparency_);
 
 		if (fadeTransparency_ > 1.0f) {
-			gameManager->ChangeScene(new SampleScene2());
+			gameManager->ChangeScene(new LoseScene());
 			return;
 		}
 		
