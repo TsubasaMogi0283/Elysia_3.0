@@ -13,14 +13,7 @@ struct Material;
 class GameScene;
 class ObjectManager;
 
-enum PlayerViewOfPoint {
-	//未定
-	NonePerson = 0,
-	//1人称視点
-	FirstPerson = 1,
-	//3人称後方
-	ThirdPersonBack = 2,
-};
+
 
 enum PlayerMoveCondition {
 	//動かない

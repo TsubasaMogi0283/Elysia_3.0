@@ -11,10 +11,17 @@
 #include <TextureManager.h>
 
 
+LevelEditorSample::LevelEditorSample(){
+	//レベルエディタのインスタンスを取得
+	levelEditor_ = LevelDataManager::GetInstance();
+	//オーディオのインスタンスを取得
+	audio_ = Audio::GetInstance();
+}
+
 void LevelEditorSample::Initialize(){
 
 
-	levelEditor_ = LevelDataManager::GetInstance();
+	
 
 	//読み込み
 	levelHandle_= levelEditor_->Load("Test/Test.json");
@@ -35,7 +42,7 @@ void LevelEditorSample::Initialize(){
 	back_->Initialize();
 
 
-	audio_ = Audio::GetInstance();
+	//オーディオの読み込み
 	audioHandle_ = audio_->LoadWave("Resources/Audio/Sample/Win.wav");
 	audioHandle2_= audio_->LoadWave("Resources/Audio/Sample/Hit.wav");
 	audioHandleMP3_ = audio_->LoadMP3("Resources/Audio/Sample/WIP.mp3");
@@ -65,6 +72,7 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 	gameManager;
 
+	//更新
 	levelEditor_->Update(levelHandle_);
 
 	material_.Update();

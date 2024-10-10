@@ -77,8 +77,7 @@ void GameScene::Initialize() {
 	bTriggerTime_ = 0;
 	isBTrigger_ = false;
 
-	//初期は1人称視点
-	viewOfPoint_ = FirstPerson;
+	
 
 
 
@@ -826,33 +825,14 @@ void GameScene::Update(GameManager* gameManager) {
 
 		
 
-		#pragma region 視点
+		//もとに戻す
+		camera_.rotate_.x = -phi;
+		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
+		camera_.rotate_.z = 0.0f;
 
-		//1人称視点へ変更
-		if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
-			viewOfPoint_ = FirstPerson;
-		}
-		
-
-
-		//コントローラーだと
-		//十字ボタンで切り替えのが良いかも
-		//マイクラはそれだったから
-
-		//1人称
-		if (viewOfPoint_ == FirstPerson) {
-
-			//もとに戻す
-			camera_.rotate_.x = -phi;
-			camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
-			camera_.rotate_.z = 0.0f;
-
-			camera_.translate_ = VectorCalculation::Add(playerPosition_, CAMERA_POSITION_OFFSET);
-
-		}
+		camera_.translate_ = VectorCalculation::Add(playerPosition_, CAMERA_POSITION_OFFSET);
 
 
-		#pragma endregion
 
 
 		#pragma region 鍵の取得処理
@@ -974,13 +954,8 @@ void GameScene::DrawObject3D() {
 	//懐中電灯を取得
 	SpotLight spotLight = flashLight_->GetSpotLight();
 
-	//プレイヤー
-	//1人称だったらモデルは表示させない
-	//自分の目から自分の全身が見えるのはおかしいからね
-	if (viewOfPoint_ != FirstPerson) {
-		player_->Draw(camera_, material_, spotLight);
-	}
 	
+
 	//地面
 	ground_->Draw(camera_, spotLight);
 	//ゲート

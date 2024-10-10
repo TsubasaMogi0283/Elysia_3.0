@@ -23,7 +23,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	LevelEditorSample()=default;
+	LevelEditorSample();
 
 
 	/// <summary>
