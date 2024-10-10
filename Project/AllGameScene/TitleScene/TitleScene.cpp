@@ -2,7 +2,7 @@
 #include <imgui.h>
 #include <Input.h>
 #include <AdjustmentItems.h>
-#include "SampleScene/SampleScene.h"
+#include "GameScene/GameScene.h"
 
 #include "GameManager.h"
 #include "ModelManager.h"
@@ -111,7 +111,7 @@ void TitleScene::Update(GameManager* gameManager){
 
 	//脱出
 	if (isStart_ == true) {
-		gameManager->ChangeScene(new SampleScene());
+		gameManager->ChangeScene(new GameScene());
 	}
 }
 

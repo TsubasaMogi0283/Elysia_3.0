@@ -10,7 +10,7 @@
 struct Camera;
 struct SpotLight;
 struct Material;
-class SampleScene;
+class GameScene;
 class ObjectManager;
 
 enum PlayerViewOfPoint {

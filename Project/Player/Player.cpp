@@ -7,7 +7,7 @@
 #include <numbers>
 
 #include "Stage/ObjectManager/ObjectManager.h"
-#include "SampleScene/SampleScene.h"
+#include "GameScene/GameScene.h"
 #include <SingleCalculation.h>
 #include <Collider/CollisionConfig.h>
 #include <ModelManager.h>

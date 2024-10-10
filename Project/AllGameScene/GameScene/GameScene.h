@@ -41,11 +41,11 @@
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
 
-class SampleScene : public IGameScene {
+class GameScene : public IGameScene {
 public:
 
 	//コンストラクタ
-	SampleScene()=default;
+	GameScene()=default;
 
 	
 	/// <summary>
@@ -86,7 +86,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~SampleScene();
+	~GameScene();
 
 
 

@@ -1,5 +1,5 @@
 #include "GameManager.h"
-#include "SampleScene/SampleScene.h"
+#include "GameScene/GameScene.h"
 #include "SampleScene2/SampleScene2.h"
 #include "TitleScene/TitleScene.h"
 #include "LevelEditorSample/LevelEditorSample.h"

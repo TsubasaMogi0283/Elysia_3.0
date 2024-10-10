@@ -1,4 +1,4 @@
-#include "SampleScene.h"
+#include "GameScene.h"
 #include <imgui.h>
 #include <Input.h>
 #include <AdjustmentItems.h>
@@ -10,14 +10,13 @@
 #include <numbers>
 #include <TextureManager.h>
 #include <SingleCalculation.h>
-#include "SampleScene.h"
 #include <imgui.h>
 #include <Input.h>
 #include <AdjustmentItems.h>
 
 
 
-void SampleScene::Initialize() {
+void GameScene::Initialize() {
 
 #pragma region フェード
 	uint32_t fadeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/White.png");
@@ -250,7 +249,7 @@ void SampleScene::Initialize() {
 
 
 
-void SampleScene::KeyCollision(){
+void GameScene::KeyCollision(){
 
 	//鍵
 	std::list<Key*> keyes = keyManager_->GetKeyes();
@@ -328,7 +327,7 @@ void SampleScene::KeyCollision(){
 
 }
 
-void SampleScene::ObjectCollision(){
+void GameScene::ObjectCollision(){
 	
 
 	//プレイヤーの移動方向
@@ -376,7 +375,7 @@ void SampleScene::ObjectCollision(){
 	
 }
 
-void SampleScene::EscapeCondition(){
+void GameScene::EscapeCondition(){
 	//ゲート
 	if (gate_->isCollision(playerPosition_)) {
 #ifdef _DEBUG
@@ -428,7 +427,7 @@ void SampleScene::EscapeCondition(){
 
 }
 
-void SampleScene::PlayerMove(){
+void GameScene::PlayerMove(){
 
 
 	
@@ -580,7 +579,7 @@ void SampleScene::PlayerMove(){
 /// <summary>
 /// 更新
 /// </summary>
-void SampleScene::Update(GameManager* gameManager) {
+void GameScene::Update(GameManager* gameManager) {
 
 	//フレーム初めに
 	//コリジョンリストのクリア
@@ -946,16 +945,16 @@ void SampleScene::Update(GameManager* gameManager) {
 
 }
 
-void SampleScene::DrawSpriteBack(){
+void GameScene::DrawSpriteBack(){
 
 }
 
-void SampleScene::PreDrawPostEffectFirst(){
+void GameScene::PreDrawPostEffectFirst(){
 	back_->PreDraw();
 }
 
 
-void SampleScene::DrawObject3D() {
+void GameScene::DrawObject3D() {
 	
 
 	//懐中電灯を取得
@@ -998,12 +997,12 @@ void SampleScene::DrawObject3D() {
 
 
 
-void SampleScene::DrawPostEffect(){
+void GameScene::DrawPostEffect(){
 	
 	back_->Draw();
 }
 
-void SampleScene::DrawSprite(){
+void GameScene::DrawSprite(){
 	
 	//説明
 	if (howToPlayTextureNumber_ == 1u) {
@@ -1057,7 +1056,7 @@ void SampleScene::DrawSprite(){
 
 
 
-SampleScene::~SampleScene() {
+GameScene::~GameScene() {
 	delete lightCollision_;
 	delete objectManager_;
 }
