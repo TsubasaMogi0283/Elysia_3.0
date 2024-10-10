@@ -41,11 +41,12 @@
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
 
-class SampleScene : public IGameScene {
+
+class GameScene : public IGameScene {
 public:
 
 	//コンストラクタ
-	SampleScene()=default;
+	GameScene();
 
 	
 	/// <summary>
@@ -86,7 +87,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~SampleScene();
+	~GameScene();
 
 
 
@@ -122,12 +123,19 @@ private:
 
 	GameCondition gameCondition_ = GameCondition::GameFadeIn;
 
+
+private:
+
+	Input* input_=nullptr;
+
+
+
+
 private:
 
 
 	//操作は全部ゲームシーンで統一させたい
 	//コマンドパターンですっきりさせても良さそう
-	XINPUT_STATE joyState{};
 
 	//カメラ
 	Camera camera_ = {};
@@ -239,6 +247,7 @@ private:
 	uint32_t lackOfKeyesNumber_ = 0u;
 
 
+
 	std::unique_ptr<Sprite> toEscape_ = nullptr;
 
 #pragma endregion
@@ -283,6 +292,5 @@ private:
 	Material debugFanCollisionSphereMaterial_ = {};
 
 #pragma endregion
-
 
 };

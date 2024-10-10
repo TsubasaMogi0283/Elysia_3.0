@@ -38,21 +38,21 @@ void EnemyManager::Initialize(uint32_t& normalEnemyModel, uint32_t& strongEnemyM
 	enemyes_.push_back(enemy1);
 
 		
-	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = { -20.0f,0.0f,10.0f };
-	enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
-	enemy2->Initialize(normalEnemyModelHandle_, position2, { 0.01f,0.0f,0.0f });
-	enemyes_.push_back(enemy2);
-	
-	Enemy* enemy3 = new Enemy();
-	Vector3 position3 = { -10.0f,0.0f,4.0f };
-	enemy3->Initialize(normalEnemyModelHandle_, position3, { 0.01f,0.0f,0.01f });
-	uint32_t condition = EnemyCondition::Move;
-	enemy3->SetCondition(condition);
-	enemy3->SetRadius_(player_->GetRadius());
-	enemyes_.push_back(enemy3);
-	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\TD2_Enemy\TD2_Enemy.obj"
-
+	//Enemy* enemy2 = new Enemy();
+	//Vector3 position2 = { -20.0f,0.0f,10.0f };
+	//enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
+	//enemy2->Initialize(normalEnemyModelHandle_, position2, { 0.01f,0.0f,0.0f });
+	//enemyes_.push_back(enemy2);
+	//
+	//Enemy* enemy3 = new Enemy();
+	//Vector3 position3 = { -10.0f,0.0f,4.0f };
+	//enemy3->Initialize(normalEnemyModelHandle_, position3, { 0.01f,0.0f,0.01f });
+	//uint32_t condition = EnemyCondition::Move;
+	//enemy3->SetCondition(condition);
+	//enemy3->SetRadius_(player_->GetRadius());
+	//enemyes_.push_back(enemy3);
+	////"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\TD2_Enemy\TD2_Enemy.obj"
+	//
 	//生成
 	StrongEnemy* enemy = new StrongEnemy();
 	std::random_device seedGenerator;

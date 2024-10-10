@@ -2,7 +2,7 @@
 #include <imgui.h>
 #include <Input.h>
 #include <AdjustmentItems.h>
-#include "SampleScene/SampleScene.h"
+#include "GameScene/GameScene.h"
 
 #include "GameManager.h"
 #include "ModelManager.h"
@@ -33,6 +33,13 @@ void LevelEditorSample::Initialize(){
 	//ポストエフェクト
 	back_ = std::make_unique<Vignette>();
 	back_->Initialize();
+
+
+	audio_ = Audio::GetInstance();
+	audioHandle_ = audio_->LoadWave("Resources/Audio/Sample/Win.wav");
+	audioHandle2_= audio_->LoadWave("Resources/Audio/Sample/Hit.wav");
+	audioHandleMP3_ = audio_->LoadMP3("Resources/Audio/Sample/WIP.mp3");
+	//audio_->PlayMP3(audioHandleMP3_, true);
 
 }
 

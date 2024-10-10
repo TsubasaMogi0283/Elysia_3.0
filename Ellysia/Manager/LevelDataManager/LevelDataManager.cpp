@@ -32,9 +32,9 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 		//MESHの場合
 		if (type.compare("MESH") == 0) {
 			//要素追加
-			levelData.objectDatas.emplace_back(LevelData::ObjectData{});
+			levelData.objectDatas.emplace_back(LevelData::ModelObjectData{});
 			//今追加した要素の参照を得る
-			LevelData::ObjectData& objectData = levelData.objectDatas.back();
+			LevelData::ModelObjectData& objectData = levelData.objectDatas.back();
 			//ここでのファイルネームはオブジェクトの名前
 			if (object.contains("file_name")) {
 				//ファイル名
@@ -125,7 +125,7 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 
 	std::string levelEditorDirectoryPath = "Resources/LevelData/"+ levelData.folderName;
 	
-	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
+	for (LevelData::ModelObjectData& objectData : levelData.objectDatas) {
 
 		//モデルの生成
 		//まだ無い場合は生成する
@@ -152,8 +152,8 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 	}
 }
 
-nlohmann::json LevelDataManager::Deserialize(std::ifstream& file, std::string& fullFilePath){
-
+nlohmann::json LevelDataManager::Deserialize(std::string& fullFilePath){
+	std::ifstream file;
 	//ファイルを開ける
 	file.open(fullFilePath);
 
@@ -189,40 +189,16 @@ nlohmann::json LevelDataManager::Deserialize(std::ifstream& file, std::string& f
 
 uint32_t LevelDataManager::Load(const std::string& filePath){
 
-	//ファイル
-	std::ifstream file;
 
 	//パスの結合
 	std::string levelEditorDirectoryPath = "Resources/LevelData/";
 	std::string fullFilePath = levelEditorDirectoryPath + filePath;
 
 
-	//ファイルを開ける
-	file.open(fullFilePath);
-
-	//読み込めなかったら引っかかる
-	if (file.fail()) {
-		assert(0);
-	}
 
 	//JSON文字列から解凍したデータ
-	nlohmann::json deserialized;
+	nlohmann::json deserialized= Deserialize(fullFilePath);
 
-	//解凍
-	file >> deserialized;
-
-	//正しいレベルデータファイルかチェック
-	//objectかどうか
-	assert(deserialized.is_object());
-	//namaeのキーワードがあるかどうか
-	assert(deserialized.contains("name"));
-	//nameはstring型かどうか
-	assert(deserialized["name"].is_string());
-
-	//"name"を文字列として取得
-	std::string name = deserialized["name"].get<std::string>();
-	//正しいレベルデータファイルはチェック
-	assert(name.compare("scene") == 0);
 
 	
 	//ファイルパスの分解
@@ -267,29 +243,28 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 
 
 	//一度全てのオブジェクトのデータを消す
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		//LevelDataを取得
-		LevelData* levelData = it->second.get();
+	for (auto& [key, levelDataPtr] : levelDatas_) {
+		if (levelDataPtr->handle == levelDataHandle) {
 
-		//一致したら消す
-		if (levelData->handle == levelDataHandle) {
 			//モデルを消す
-			for (auto& object : levelData->objectDatas) {
+			for (auto& object : levelDataPtr->objectDatas) {
 				// Modelの解放
 				if (object.model != nullptr) {
 					delete object.model;
 				}
 				//ワールドトランスフォームの解放
 				delete object.worldTransform;
+
 			}
 
-			//listにある情報を消す
-			levelData->objectDatas.~list();
+			//listにある情報を全て消す
+			levelDataPtr->objectDatas.clear();
 
-			//無駄なループ処理をしないようにする
+			//無駄な処理をしないようにする
 			break;
 		}
 	}
+
 
 
 	//引数から探す
@@ -305,31 +280,11 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 	}
 
 
-	std::ifstream file;
-	file.open(fullFilePath);
-
-	if (file.fail()) {
-		assert(0);
-	}
 
 	//JSON文字列から解凍したデータ
-	nlohmann::json deserialized;
+	nlohmann::json deserialized= Deserialize(fullFilePath);
 
-	//解凍
-	file >> deserialized;
 
-	//正しいレベルデータファイルかチェック
-	//objectかどうか
-	assert(deserialized.is_object());
-	//namaeのキーワードがあるかどうか
-	assert(deserialized.contains("name"));
-	//nameはstring型かどうか
-	assert(deserialized["name"].is_string());
-
-	//"name"を文字列として取得
-	std::string name = deserialized["name"].get<std::string>();
-	//正しいレベルデータファイルはチェック
-	assert(name.compare("scene") == 0);
 
 	//元々あったデータを取得する
 	//オブジェクトは全部消したけどここにファイルパスの情報が残っているよ
@@ -344,11 +299,14 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 }
 
 void LevelDataManager::Update(uint32_t& levelDataHandle){
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get(); 
+
+	//この書き方はC++17からの構造化束縛というものらしい
+	//イテレータではなくこっちでやった方が良いかな
+	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
-			//更新
+			
 			for (auto& object : levelData->objectDatas) {
+				//更新
 				object.worldTransform->Update();
 			}
 			break; 
@@ -358,14 +316,10 @@ void LevelDataManager::Update(uint32_t& levelDataHandle){
 
 void LevelDataManager::Delete(uint32_t& levelDataHandle){
 
-	//一度全てのオブジェクトのデータを消す
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
 
-		//LevelDataを取得
-		LevelData* levelData = it->second.get();
-
-		//一致したら消す
+	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
+
 			//モデルを消す
 			for (auto& object : levelData->objectDatas) {
 				// Modelの解放
@@ -378,7 +332,7 @@ void LevelDataManager::Delete(uint32_t& levelDataHandle){
 			}
 
 			//listにある情報を全て消す
-			levelData->objectDatas.~list();
+			levelData->objectDatas.clear();
 
 			//無駄な処理をしないようにする
 			break;
@@ -390,63 +344,60 @@ void LevelDataManager::Delete(uint32_t& levelDataHandle){
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, DirectionalLight& directionalLight){
 	
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get(); 
+	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
-			for (LevelData::ObjectData& object : levelData->objectDatas) {
+			for (LevelData::ModelObjectData& object : levelData->objectDatas) {
 				object.model->Draw(*object.worldTransform, camera, material, directionalLight);
 			}
 			//無駄なループ処理を防ぐよ
 			break;
 
 		}
+
 	}
 }
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, PointLight& pointLight){
 
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get(); 
+	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
-			for (LevelData::ObjectData& object : levelData->objectDatas) {
+			for (LevelData::ModelObjectData& object : levelData->objectDatas) {
 				object.model->Draw(*object.worldTransform, camera, material, pointLight);
 			}
 			//無駄なループ処理を防ぐよ
 			break;
 
 		}
+
 	}
 }
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, SpotLight& spotLight){
-
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get();
+	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
-			for (LevelData::ObjectData& object : levelData->objectDatas) {
+			for (LevelData::ModelObjectData& object : levelData->objectDatas) {
 				object.model->Draw(*object.worldTransform, camera, material, spotLight);
 			}
 			//無駄なループ処理を防ぐよ
 			break;
 
 		}
+
 	}
+
 }
 
 #pragma endregion
 
 
 void LevelDataManager::Release(){
-	//全て消す
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get();
-
+	for (auto& [key, levelData] : levelDatas_) {
 		for (auto& object : levelData->objectDatas) {
 			// Model の解放
 			if (object.model != nullptr) {
@@ -455,6 +406,7 @@ void LevelDataManager::Release(){
 			delete object.worldTransform;
 
 		}
+
 	}
 
 	levelDatas_.clear();

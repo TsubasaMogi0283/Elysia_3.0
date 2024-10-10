@@ -10,7 +10,7 @@
 struct Camera;
 struct SpotLight;
 struct Material;
-class SampleScene;
+class GameScene;
 class ObjectManager;
 
 enum PlayerViewOfPoint {
@@ -57,7 +57,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Player() = default;
+	~Player();
 
 public:
 
@@ -200,13 +200,17 @@ private:
 	bool isControll_ = false;
 	//移動状態
 	uint32_t moveCondition_ = 0u;
-
 	//ダッシュ
 	bool isDash_ = false;
 
 
 
-
+	//振動
+	bool isVibe_ = false;
+	//強さ
+	float vibeStrength_ = 0.0f;
+	//時間
+	float vibeTime_ = 0u;
 
 	//当たり判定(一発アウトの敵用)
 	std::unique_ptr<PlayerCollisionToStrongEnemy>collisionToStrongEnemy_ = nullptr;

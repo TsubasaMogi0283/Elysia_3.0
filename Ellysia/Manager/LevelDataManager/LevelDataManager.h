@@ -114,13 +114,14 @@ private:
 	
 
 	struct LevelData {
-		struct ObjectData {
+		//モデル
+		struct ModelObjectData {
 			//モデル
 			Model* model = nullptr;
 			//ワールドトランスフォーム
 			WorldTransform* worldTransform = {};
 
-			//オブジェクトのファイル名
+			//ファイル名
 			std::string fileName;
 			
 			//Transform
@@ -142,12 +143,22 @@ private:
 
 		};
 
+		//オーディオ
+		struct AudioObjectData {
+
+
+			//ファイル名
+			std::string fileName;
+
+
+		};
+
 
 		//ハンドル
 		uint32_t handle = 0u;
 
 		//オブジェクト
-		std::list<ObjectData> objectDatas = {};
+		std::list<ModelObjectData> objectDatas = {};
 
 		//フォルダ名
 		std::string folderName = {};
@@ -158,7 +169,7 @@ private:
 
 	};
 
-	std::list<LevelData::ObjectData> GetObject(uint32_t& handle) {
+	std::list<LevelData::ModelObjectData> GetObject(uint32_t& handle) {
 		
 		for (const auto& [key, levelData] : levelDatas_) {
 			
@@ -189,10 +200,9 @@ private:
 	/// <summary>
 	/// JSONファイルを解凍
 	/// </summary>
-	/// <param name="file"></param>
 	/// <param name="fullFilePath"></param>
 	/// <returns></returns>
-	nlohmann::json Deserialize(std::ifstream& file,std::string& fullFilePath);
+	nlohmann::json Deserialize(std::string& fullFilePath);
 
 
 private:

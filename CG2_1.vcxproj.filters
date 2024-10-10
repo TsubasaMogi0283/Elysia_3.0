@@ -109,17 +109,11 @@
     <Filter Include="Project\GameScene">
       <UniqueIdentifier>{d00a8998-a08f-48ce-850f-96c0eddb4980}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\GameScene\Sample">
-      <UniqueIdentifier>{e3a0acb5-08b3-41f0-a41e-4357a3698e46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\GameManager">
       <UniqueIdentifier>{6783ae0e-f5a0-4867-a365-1d65f9d0e07e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ellysia\Header File\Math\Shape">
       <UniqueIdentifier>{4de1d903-5e8b-49b9-b9c0-f0d9591a86c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\GameScene\Sample2">
-      <UniqueIdentifier>{c0575fdd-b572-4e5a-8413-fa3cf96d3880}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ellysia\Header File\Lighting">
       <UniqueIdentifier>{6894304a-98cd-4168-b852-c62f99047467}</UniqueIdentifier>
@@ -340,6 +334,9 @@
     <Filter Include="Ellysia\Source File\Math\Vector">
       <UniqueIdentifier>{929f13fb-1c6e-45a3-bedc-381d7b8cb4a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\GameScene\GameScene">
+      <UniqueIdentifier>{e3a0acb5-08b3-41f0-a41e-4357a3698e46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -362,9 +359,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Common\Windows\WindowsSetup.cpp">
       <Filter>Ellysia\Source File\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\SampleScene\SampleScene.cpp">
-      <Filter>Project\GameScene\Sample</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Camera\Camera.cpp">
       <Filter>Ellysia\Source File\Camera</Filter>
@@ -395,9 +389,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\main.cpp">
       <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\SampleScene2\SampleScene2.cpp">
-      <Filter>Project\GameScene\Sample2</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Math\WorldTransform\WorldTransform.cpp">
       <Filter>Ellysia\Source File\Math</Filter>
@@ -576,6 +567,9 @@
     <ClCompile Include="Ellysia\Math\Vector\Calculation\VectorCalculation.cpp">
       <Filter>Ellysia\Source File\Math\Vector</Filter>
     </ClCompile>
+    <ClCompile Include="Project\AllGameScene\GameScene\GameScene.cpp">
+      <Filter>Project\GameScene\GameScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -730,9 +724,6 @@
     <ClInclude Include="Project\AllGameScene\GameManager\GameManager.h">
       <Filter>Project\GameManager</Filter>
     </ClInclude>
-    <ClInclude Include="Project\AllGameScene\SampleScene\SampleScene.h">
-      <Filter>Project\GameScene\Sample</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Camera\Camera.h">
       <Filter>Ellysia\Header File\Camera</Filter>
     </ClInclude>
@@ -777,9 +768,6 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Shape\AABB.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\SampleScene2\SampleScene2.h">
-      <Filter>Project\GameScene\Sample2</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Math\WorldTransform\WorldTransform.h">
       <Filter>Ellysia\Header File\Math</Filter>
@@ -1005,6 +993,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Single\SingleCalculation.h">
       <Filter>Ellysia\Header File\Math\Single</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\GameScene\GameScene.h">
+      <Filter>Project\GameScene\GameScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,9 +14,20 @@
 #pragma comment(lib,"xaudio2.lib")
 
 
+
+
+#include <mfapi.h>
+#include <mfidl.h>
+
+
+#pragma comment(lib, "Mf.lib")
+#pragma comment(lib, "mfplat.lib")
+#pragma comment(lib, "Mfreadwrite.lib")
+#pragma comment(lib, "mfuuid.lib")
+
 #include <wrl.h>
 using Microsoft::WRL::ComPtr;
-#include <cstdint>
+
 
 #include <complex>
 #include <vector>
@@ -72,22 +83,16 @@ public:
 
 #pragma region 基本セット
 
-	/// <summary>
-	/// Waveの読み込み
-	/// </summary>
-	/// <param name="fileName"></param>
-	/// <returns></returns>
-	static uint32_t LoadWave(const char* fileName);
+
+	static uint32_t LoadWave(const std::string& fileName);
+
 
 	/// <summary>
-	/// Waveエフェクト版の読み込み
+	/// 
 	/// </summary>
-	/// <param name="fileName"></param>
-	/// <param name="effectType"></param>
-	/// <returns></returns>
-	static uint32_t LoadWave(const char* fileName, uint32_t effectType);
+	static uint32_t LoadMP3(const std::string& fileName);
 
-
+	
 	/// <summary>
 	/// 再生
 	/// </summary>
@@ -102,6 +107,12 @@ public:
 	/// <param name="audioHandle"></param>
 	/// <param name="loopCount"></param>
 	void PlayWave(uint32_t audioHandle, int32_t loopCount);
+
+
+	void PlayMP3(uint32_t audioHandle, bool isLoop);
+
+	void PlayMP3(uint32_t audioHandle, uint32_t loopCount);
+
 
 	/// <summary>
 	/// 一時停止
@@ -179,11 +190,8 @@ public:
 
 
 	/// <summary>
-	/// ピッチの変更
-	/// シンセのように出来るよ
+	/// ピッチの設定(段階的)
 	/// </summary>
-	/// <param name="ハンドル名"></param>
-	/// <param name="値"></param>
 	void ChangePitch(uint32_t audioHandle, int32_t scale);
 
 
@@ -284,7 +292,9 @@ public:
 	void OnEffect(uint32_t audioHandle);
 
 
-	//解放
+	/// <summary>
+	/// 解放
+	/// </summary>
 	void Release();
 
 private:
@@ -299,7 +309,7 @@ private:
 	//最終的にここでまとめるよ(スピーカーみたいな感じだね)
 	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 
-
+	uint32_t index_ = 0u;
 
 	//Panに必要な変数
 	DWORD dwChannelMask_ = {};
@@ -313,6 +323,10 @@ private:
 	IUnknown* pXAPO_ = nullptr;
 
 
+	//3Dオーディオ
+	X3DAUDIO_HANDLE x3DInstance_;
+	X3DAUDIO_LISTENER listener_ = {};
+	X3DAUDIO_EMITTER emitter_ = {};
 
 
 
