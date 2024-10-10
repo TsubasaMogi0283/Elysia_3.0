@@ -10,10 +10,6 @@
 #include <numbers>
 #include <TextureManager.h>
 #include <SingleCalculation.h>
-#include <imgui.h>
-#include <Input.h>
-#include <AdjustmentItems.h>
-
 
 
 void GameScene::Initialize() {
@@ -329,7 +325,6 @@ void GameScene::KeyCollision(){
 
 void GameScene::ObjectCollision(){
 	
-
 	//プレイヤーの移動方向
 	Vector3 direction = playerMoveDirection_;
 	//プレイヤーの当たり判定AABB
@@ -532,6 +527,9 @@ void GameScene::PlayerMove(){
 				playerMoveDirection_.x = std::cosf(resultTheta);
 				playerMoveDirection_.z = std::sinf(resultTheta);
 			}
+
+
+
 		}
 	}
 
@@ -545,13 +543,29 @@ void GameScene::PlayerMove(){
 		player_->SetPlayerMoveCondition(newCondition);
 
 		//ダッシュ
-		if (Input::GetInstance()->IsPushKey(DIK_RSHIFT) == true) {
-			isPlayerDash_ = true;
+		if (isPlayerMoveKey_ == true) {
+			if (Input::GetInstance()->IsPushKey(DIK_RSHIFT) == true) {
+				isPlayerDash_ = true;
+			}
+			else {
+				isPlayerDash_ = false;
+			}
 		}
+		//コントローラー接続時
 		else {
-			isPlayerDash_ = false;
+			if (Input::GetInstance()->GetJoystickState(joyState) == true) {
+				if (Input::GetInstance()->(DIK_RSHIFT) == true) {
+					isPlayerDash_ = true;
+				}
+				else {
+					isPlayerDash_ = false;
+				}
+
+			}
 		}
 		
+		
+
 
 	}
 	//動いていない時
