@@ -24,7 +24,7 @@ void LevelEditorSample::Initialize(){
 	
 
 	//読み込み
-	levelHandle_= levelEditor_->Load("Test/Test.json");
+	levelHandle_= levelEditor_->Load("Test/AudioTest.json");
 
 	//平行光源の初期化
 	directionalLight_.Initialize();

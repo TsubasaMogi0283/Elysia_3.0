@@ -10,6 +10,7 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include <Audio.h>
 
 
 LevelDataManager* LevelDataManager::GetInstance(){
@@ -38,7 +39,7 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 			//ここでのファイルネームはオブジェクトの名前
 			if (object.contains("file_name")) {
 				//ファイル名
-				objectData.fileName = object["file_name"];
+				objectData.modelFileName = object["file_name"];
 			}
 
 			//トランスフォームのパラメータ読み込み
@@ -111,6 +112,35 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 			}
 
+
+			//コライダーの読み込み
+			//まずあるかどうか
+			if (object.contains("audio")) {
+				nlohmann::json& audio = object["audio"];
+
+				// コライダーの種別を取得
+				if (audio.contains("type")) {
+					objectData.audioType = audio["type"];
+				}
+
+
+				//場所を決めずに鳴らす場合
+				if (objectData.audioType == "BGM") {
+					objectData.audioFleName = audio["file_name"];
+					objectData.audioHandle = Audio::GetInstance()->LoadWave(objectData.audioFleName);
+					
+
+				}
+				//指定した場所のサウンド
+				else if (objectData.audioType == "Action") {
+					
+					objectData.audioFleName = audio["file_name"];
+					objectData.audioHandle = Audio::GetInstance()->LoadWave(objectData.audioFleName);
+
+				}
+
+			}
+
 			//子オブジェクト
 			if (object.contains("children")) {
 				Place(object["children"], levelData);
@@ -131,7 +161,7 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 		//まだ無い場合は生成する
 		if (objectData.model == nullptr) {
 			//モデルの読み込み
-			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.fileName);
+			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
 			//生成
 			Model* model = Model::Create(modelHandle);
 			//代入
@@ -302,6 +332,7 @@ void LevelDataManager::Update(uint32_t& levelDataHandle){
 
 	//この書き方はC++17からの構造化束縛というものらしい
 	//イテレータではなくこっちでやった方が良いかな
+	//ファイル名で指定したい時はkeyを漬かったら楽だね。ハンドルだけどこれは。
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 			

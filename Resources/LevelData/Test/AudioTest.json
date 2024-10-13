@@ -2,7 +2,7 @@
     "name": "scene",
     "objects": [
         {
-            "type": "BGM",
+            "type": "MESH",
             "name": "Cube",
             "transform": {
                 "translation": [
@@ -21,8 +21,11 @@
                     1.0
                 ]
             },
-            "file_name": "Audio",
-            "audio_file_name": "Audio",
+            "file_name": "ddd",
+            "audio": {
+                "file_name": "ffff",
+                "type": "Action"
+            },
             "collider": {
                 "type": "BOX",
                 "center": [

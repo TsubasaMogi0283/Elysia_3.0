@@ -70,6 +70,11 @@ public:
 
 
 
+
+
+
+
+
 #pragma region 描画
 
 	/// <summary>
@@ -110,11 +115,22 @@ public:
 
 
 
+
+
+
+
+
 private:
-	
+	//
+	struct Listener {
+		//位置
+		Vector3 position;
+		//動き
+		Vector3 move;
+	};
 
 	struct LevelData {
-		//モデル
+		//モデルオブジェクト
 		struct ModelObjectData {
 			//モデル
 			Model* model = nullptr;
@@ -122,14 +138,15 @@ private:
 			WorldTransform* worldTransform = {};
 
 			//ファイル名
-			std::string fileName;
+			std::string modelFileName;
 			
 			//Transform
 			Vector3 scaling;
 			Vector3 rotation;
 			Vector3 translation;
 
-
+			//Colliderの種類
+#pragma region コライダー
 			std::string colliderType;
 			//Sphere,Box
 			Vector3 center;
@@ -139,26 +156,33 @@ private:
 			AABB aabb;
 			Vector3 upSize;
 			Vector3 downSize;
+#pragma endregion
 
-
-		};
-
-		//オーディオ
-		struct AudioObjectData {
-
+#pragma region オーディオ
 
 			//ファイル名
-			std::string fileName;
+			std::string audioFleName;
+			//種類
+			std::string audioType;
 
+			uint32_t audioHandle;
+#pragma endregion
 
 		};
 
+
+
+
+		//リスナー(通常はプレイヤーを入れる)
+		Listener listener_ = {};
 
 		//ハンドル
 		uint32_t handle = 0u;
 
 		//オブジェクト
 		std::list<ModelObjectData> objectDatas = {};
+
+
 
 		//フォルダ名
 		std::string folderName = {};
