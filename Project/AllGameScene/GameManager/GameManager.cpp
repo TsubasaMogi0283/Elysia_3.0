@@ -49,10 +49,10 @@ void GameManager::Update() {
 			}
 
 			// 現在選択されているアイテムにフォーカスを設定
-			if (isSelected) {
+			if (isSelected==true) {
 				ImGui::SetItemDefaultFocus();
 			}
-				
+			
 		}
 
 		ImGui::EndCombo();

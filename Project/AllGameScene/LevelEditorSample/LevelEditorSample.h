@@ -79,7 +79,7 @@ private:
 	uint32_t levelHandle_ = 0u;
 
 
-
+	//サンプル
 	uint32_t audioHandle_ = 0u; 
 	uint32_t audioHandle2_ = 0u;
 	uint32_t audioHandleMP3_ = 0u;
