@@ -84,23 +84,6 @@ public:
 
 public:
 
-	//ModelData GetModelData(const std::string& filePath) {
-	//	auto it = modelInfromtion_.find(filePath);
-	//	if (it != modelInfromtion_.end()) {
-	//		return it->second.modelData;
-	//	}
-	//	// キーが存在しない場合のエラー処理
-	//	throw std::runtime_error("Model not found");
-	//}
-	//
-	//Animation GetModelAnimation(const std::string& filePath) {
-	//	auto it = modelInfromtion_.find(filePath);
-	//	if (it != modelInfromtion_.end()) {
-	//		return it->second.animationData;
-	//	}
-	//	// キーが存在しない場合のエラー処理
-	//	throw std::runtime_error("Model not found");
-	//}
 
 
 	ModelData GetModelData(uint32_t handle) {

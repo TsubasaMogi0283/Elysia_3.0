@@ -38,7 +38,7 @@ struct SoundData {
 	BYTE* pBuffer;
 
 	//バッファのサイズ
-	unsigned int bufferSize;
+	int32_t bufferSize;
 };
 
 

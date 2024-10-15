@@ -9,6 +9,7 @@
 #include <mmsystem.h>
 #include <cassert>
 #include <array>
+#include <map>
 #include <XAPOFX.h>
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib,"xaudio2.lib")
@@ -76,13 +77,16 @@ public:
 
 public:
 
+
 	/// <summary>
-	/// 初期化
+	/// 初期化。これはDirecX初期化の後に入れてね
 	/// </summary>
 	void Initialize();
 
 #pragma region 基本セット
 
+
+	static uint32_t Load(const std::string& fileName);
 
 	static uint32_t LoadWave(const std::string& fileName);
 
@@ -298,9 +302,21 @@ public:
 	void Release();
 
 private:
-	//音声データの開放
-	void SoundUnload(uint32_t soundDataHandle);
 
+	/// <summary>
+	/// 指定したハンドルが入っているfilePathを取得する
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
+	inline std::string GetAudioInformationKey(uint32_t handle) {
+		for (const auto& [filePath, modelInfo] : audioInformation_) {
+			if (modelInfo.handle == handle) {
+				return filePath;
+			}
+		}
+		// 一致するhandleが見つからなかった場合のエラー処理
+		throw std::runtime_error("Animation not found for given handle");
+	}
 
 private:
 	//IXAudio2はCOMオブジェクトなのでComPtr管理
@@ -309,7 +325,8 @@ private:
 	//最終的にここでまとめるよ(スピーカーみたいな感じだね)
 	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 
-	uint32_t index_ = 0u;
+
+	static uint32_t index_;
 
 	//Panに必要な変数
 	DWORD dwChannelMask_ = {};
@@ -324,7 +341,7 @@ private:
 
 
 	//3Dオーディオ
-	X3DAUDIO_HANDLE x3DInstance_;
+	X3DAUDIO_HANDLE x3DInstance_ = {};
 	X3DAUDIO_LISTENER listener_ = {};
 	X3DAUDIO_EMITTER emitter_ = {};
 
@@ -333,9 +350,9 @@ private:
 	//構造体版
 	//Texturemanagerとだいたい同じ感じにした
 	//音声データの最大数
-	static const int SOUND_DATE_MAX_ = 256;
-	std::array<AudioInformation, SOUND_DATE_MAX_> audioInformation_{};
-
+	//static const int SOUND_DATE_MAX_ = 256;
+	//std::array<AudioInformation, SOUND_DATE_MAX_> audioInformation_{};
+	std::map<std::string, AudioInformation>audioInformation_{};
 
 	static const int SUBMIXVOICE_AMOUNT_ = 64;
 	std::array<IXAudio2SubmixVoice*, SUBMIXVOICE_AMOUNT_> submixVoice_{};
