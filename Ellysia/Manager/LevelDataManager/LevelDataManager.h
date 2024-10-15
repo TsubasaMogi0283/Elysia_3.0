@@ -237,5 +237,9 @@ private:
 	uint32_t handle_ = 0u;
 
 
+	//Resourceにあるレベルデータの場所
+	const std::string leveldataPath_ = "Resources/LevelData/";
+
+
 };
 

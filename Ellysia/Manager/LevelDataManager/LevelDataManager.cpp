@@ -153,7 +153,7 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 void LevelDataManager::Ganarate(LevelData& levelData) {
 
-	std::string levelEditorDirectoryPath = "Resources/LevelData/"+ levelData.folderName;
+	std::string levelEditorDirectoryPath = leveldataPath_ + levelData.folderName;
 	
 	for (LevelData::ModelObjectData& objectData : levelData.objectDatas) {
 
@@ -221,8 +221,7 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 
 
 	//パスの結合
-	std::string levelEditorDirectoryPath = "Resources/LevelData/";
-	std::string fullFilePath = levelEditorDirectoryPath + filePath;
+	std::string fullFilePath = leveldataPath_ + filePath;
 
 
 
