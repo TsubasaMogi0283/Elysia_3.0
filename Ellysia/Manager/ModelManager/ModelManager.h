@@ -92,8 +92,9 @@ public:
 				return modelInfo.modelData;
 			}
 		}
-		// 一致するhandleが見つからなかった場合のエラー処理
-		throw std::runtime_error("Model not found for given handle");
+		
+		//無かったら空のデータを返す
+		return{};
 	}
 
 	Animation GetModelAnimation(uint32_t handle) {
@@ -102,8 +103,9 @@ public:
 				return modelInfo.animationData;
 			}
 		}
-		// 一致するhandleが見つからなかった場合のエラー処理
-		throw std::runtime_error("Animation not found for given handle");
+		
+		//無かったら空のデータを返す
+		return{};
 	}
 
 
