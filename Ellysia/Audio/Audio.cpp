@@ -51,8 +51,6 @@ void Audio::Initialize() {
 	}
 
 	//サブミックスボイス(DTMでのバス)をここで作る
-	//FLStudioと同じように128あれば良いなと思ったが
-	//64くらいあれば十分でしょう。多すぎてもメモリの無駄になってしまうし
 	for (int i = 1; i < SUBMIXVOICE_AMOUNT_; ++i) {
 
 		CreateSubmixVoice(i);
@@ -78,10 +76,35 @@ void Audio::Initialize() {
 #pragma region 基本セット
 uint32_t Audio::Load(const std::string& fileName){
 
+	//一度読み込んだものは２度読み込まず返すだけ
+	if (Audio::GetInstance()->audioInformation_.find(fileName) != Audio::GetInstance()->audioInformation_.end()) {
+		return Audio::GetInstance()->audioInformation_[fileName].handle;
+	}
+
+	//拡張子を探す
+	size_t dotPosition = fileName.find('.');
+	std::string extension = {};
+	if (dotPosition != std::string::npos) {
+		//「/」から最後まで
+		extension = fileName.substr(dotPosition + 1);
+	}
 
 
-	fileName;
-	return 0;
+	//返す値
+	uint32_t result = 0u;
+
+	//wavの場合
+	if (extension == "wav") {
+		return result = LoadWave(fileName);
+	}
+	//mp3の場合
+	else if (extension == "mp3") {
+		return result = LoadMP3(fileName);
+	}
+
+
+	//無かったら空を返す
+	return result;
 
 }
 //読み込み
@@ -92,7 +115,7 @@ uint32_t Audio::LoadWave(const std::string& fileName) {
 	//だから32bitが最大で良いかも。
 	//64bitを書き出せるCakewalkすご
 
-
+	
 
 	//一度読み込んだものは２度読み込まず返すだけ
 	if (Audio::GetInstance()->audioInformation_.find(fileName) != Audio::GetInstance()->audioInformation_.end()) {
@@ -105,10 +128,6 @@ uint32_t Audio::LoadWave(const std::string& fileName) {
 	//加算
 	index_++;
 
-
-
-
-	
 
 #pragma region １,ファイルオープン
 	//ファイル入力ストリームのインスタンス

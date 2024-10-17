@@ -45,10 +45,12 @@ void LevelEditorSample::Initialize(){
 	levelHandle_ = levelEditor_->Load("Test/AudioTest.json");
 
 	//オーディオの読み込み
+	uint32_t a = audio_->Load("Resources/Audio/Sample/WIP.mp3");
+	a;
 	audioHandle_ = audio_->LoadWave("Resources/Audio/Sample/Win.wav");
 	audioHandle2_= audio_->LoadWave("Resources/Audio/Sample/Hit.wav");
-	audioHandleMP3_ = audio_->LoadMP3("Resources/Audio/Sample/WIP.mp3");
-	//audio_->PlayMP3(audioHandleMP3_, true);
+	audioHandleMP3_ = audio_->Load("Resources/Audio/Sample/WIP.mp3");
+	audio_->PlayMP3(audioHandleMP3_, true);
 
 }
 

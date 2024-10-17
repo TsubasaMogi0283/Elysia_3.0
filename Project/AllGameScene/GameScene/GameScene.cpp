@@ -228,7 +228,14 @@ void GameScene::Initialize() {
 	//ポストエフェクトの初期化
 	back_ = std::make_unique< BackText>();
 	back_->Initialize();
-	
+	//ビネット
+	vignette_ = std::make_unique<Vignette>();
+	vignette_->Initialize();
+	const float vignetteScale = 17.0f;
+	vignettePow_ = 0.0f;
+	vignette_->SetScale(vignetteScale);
+	vignette_->SetPow(vignettePow_);
+
 	//マテリアルの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;

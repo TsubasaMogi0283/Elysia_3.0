@@ -337,6 +337,9 @@
     <Filter Include="Project\GameScene\GameScene">
       <UniqueIdentifier>{e3a0acb5-08b3-41f0-a41e-4357a3698e46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\Audio\Load">
+      <UniqueIdentifier>{33835e23-f94b-4c9d-8fb5-860a23e2cbf5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -996,6 +999,9 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\GameScene\GameScene.h">
       <Filter>Project\GameScene\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Audio\Load\IAudioLoad.h">
+      <Filter>Ellysia\Header File\Audio\Load</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

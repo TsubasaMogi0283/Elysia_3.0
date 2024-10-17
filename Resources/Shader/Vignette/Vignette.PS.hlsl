@@ -40,7 +40,5 @@ PixelShaderOutput main(VertexShaderOutput input)
 
     //係数として乗算
     output.color.rgb *= vignetteColor;
-    ////係数として乗算
-    //output.color.rgb *= vignette;
     return output;
 }

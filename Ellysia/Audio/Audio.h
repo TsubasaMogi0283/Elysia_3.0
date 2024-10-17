@@ -35,6 +35,7 @@ using Microsoft::WRL::ComPtr;
 
 
 #include "AudioStruct.h"
+#include <Load/IAudioLoad.h>
 
 //LoadAudioの時に使う
 enum EffectType {
@@ -65,15 +66,15 @@ public:
 	/// <summary>
 	/// コピーコンストラクタ禁止
 	/// </summary>
-	/// <param name="obj"></param>
-	Audio(const Audio& obj) = delete;
+	/// <param name="audio"></param>
+	Audio(const Audio& audio) = delete;
 
 	/// <summary>
 	/// 代入演算子を無効にする
 	/// </summary>
-	/// <param name="obj"></param>
+	/// <param name="audio"></param>
 	/// <returns></returns>
-	Audio& operator=(const Audio& obj) = delete;
+	Audio& operator=(const Audio& audio) = delete;
 
 public:
 
@@ -112,8 +113,18 @@ public:
 	/// <param name="loopCount"></param>
 	void PlayWave(uint32_t audioHandle, int32_t loopCount);
 
-
+	/// <summary>
+	/// 再生
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	/// <param name="isLoop"></param>
 	void PlayMP3(uint32_t audioHandle, bool isLoop);
+
+	/// <summary>
+	/// 再生(ループ回数あり)
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	/// <param name="loopCount"></param>
 
 	void PlayMP3(uint32_t audioHandle, uint32_t loopCount);
 
@@ -347,15 +358,13 @@ private:
 
 
 
-	//構造体版
-	//Texturemanagerとだいたい同じ感じにした
-	//音声データの最大数
-	//static const int SOUND_DATE_MAX_ = 256;
-	//std::array<AudioInformation, SOUND_DATE_MAX_> audioInformation_{};
 	std::map<std::string, AudioInformation>audioInformation_{};
 
 	static const int SUBMIXVOICE_AMOUNT_ = 64;
 	std::array<IXAudio2SubmixVoice*, SUBMIXVOICE_AMOUNT_> submixVoice_{};
+
+	//読み込み
+	IAudioLoad* iAudioLoad_ = nullptr;
 
 
 private:

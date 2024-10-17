@@ -36,7 +36,7 @@
 
 #include "Input.h"
 #include <Stage/ObjectManager/ObjectManager.h>
-#include "../../../Ellysia/Polygon/3D/Sphere/Sphere.h"
+#include <Vignette.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -156,10 +156,9 @@ private:
 	Material material_ = {};
 
 	//ポストエフェクト
-	//今は使わない
 	std::unique_ptr<BackText> back_ = nullptr;
-
-
+	std::unique_ptr<Vignette> vignette_ = nullptr;
+	float vignettePow_ = 17.0f;
 	
 
 	//プレイヤー

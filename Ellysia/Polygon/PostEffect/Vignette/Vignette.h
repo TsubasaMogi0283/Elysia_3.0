@@ -36,7 +36,7 @@ public:
 	/// 何倍にするかの設定
 	/// </summary>
 	/// <param name="scale"></param>
-	inline void SetScale(float scale) {
+	inline void SetScale(const float& scale) {
 		this->scale_ = scale;
 	}
 
@@ -44,7 +44,7 @@ public:
 	/// 何乗するかの設定
 	/// </summary>
 	/// <param name="pow"></param>
-	inline void SetPow(float pow) {
+	inline void SetPow(const float& pow) {
 		this->pow_ = pow;
 	}
 
@@ -52,7 +52,7 @@ public:
 	/// 色の設定
 	/// </summary>
 	/// <param name="color"></param>
-	inline void SetColor(Vector3& color) {
+	inline void SetColor(const Vector3& color) {
 		this->color_ = color;
 	}
 
