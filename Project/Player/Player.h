@@ -85,6 +85,8 @@ public:
 		return radius_;
 	}
 
+public:
+
 	/// <summary>
 	/// 持っている鍵の数を増やす
 	/// </summary>
@@ -148,7 +150,13 @@ public:
 		return hp_;
 	}
 
-	
+	/// <summary>
+	/// ダメージを受けたかどうかを取得
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsDamaged()const {
+		return isDameged_;
+	}
 
 	/// <summary>
 	/// 一発アウトの敵用の当たり判定
@@ -198,8 +206,8 @@ private:
 
 
 
-	//振動
-	bool isVibe_ = false;
+	//攻撃されたか
+	bool isDameged_ = false;
 	//強さ
 	float vibeStrength_ = 0.0f;
 	//時間

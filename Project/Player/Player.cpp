@@ -65,7 +65,7 @@ void Player::Initialize(){
 
 
 	
-	isVibe_ = false;
+	isDameged_ = false;
 	
 }
 
@@ -130,8 +130,8 @@ void Player::Update(){
 	collisionToStrongEnemy_->Update();
 
 
-
-	if (isVibe_ == true) {
+	//攻撃された場合
+	if (isDameged_ == true) {
 		//線形補間で振動処理をする
 		const float DELTA_TIME = 1.0f/60.0f;
 		vibeTime_ += DELTA_TIME;
@@ -142,7 +142,7 @@ void Player::Update(){
 		if (vibeStrength_ < 0.0f) {
 			Input::GetInstance()->StopVibration();
 			vibeTime_ = 0.0f;
-			isVibe_ = false;
+			isDameged_ = false;
 		}
 	}
 
@@ -159,7 +159,7 @@ void Player::Update(){
 		ImGui::InputInt("体力", &hp_);
 		ImGui::Checkbox("acceptDamage_", &acceptDamage_);
 		ImGui::Checkbox("isDamage_", &isDamage_);
-		ImGui::Checkbox("振動", &isVibe_);
+		ImGui::Checkbox("振動", &isDameged_);
 
 		ImGui::TreePop();
 	}
@@ -197,7 +197,7 @@ void Player::OnCollision(){
 	--hp_;
 
 	//振動させる
-	isVibe_ = true;
+	isDameged_ = true;
 }
 
 Player::~Player() {

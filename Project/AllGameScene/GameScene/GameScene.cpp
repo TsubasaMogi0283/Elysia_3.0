@@ -604,11 +604,11 @@ void GameScene::Update(GameManager* gameManager) {
 	//フレーム初めに
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
-
+	//フェードの透明度の設定
 	fadeSprite_->SetTransparency(fadeTransparency_);
 
 
-	//StatePaternにしたい
+	//StatePatternにしたい
 	//フェードイン
 	if (isFadeIn==true) {
 		const float FADE_IN_INTERVAL = 0.01f;
@@ -624,6 +624,7 @@ void GameScene::Update(GameManager* gameManager) {
 	}
 
 	//ゲーム
+	//StatePatternにしたい
 	if (isFadeIn == false && isFadeOut_ == false) {
 		fadeTransparency_ = 0.0f;
 		
@@ -774,6 +775,9 @@ void GameScene::Update(GameManager* gameManager) {
 
 		//懐中電灯
 		playerPosition_ = player_->GetWorldPosition();
+
+		//ライトはプレイヤーが持っているという関係にしたいので
+		//包含の関係なのでPlayerに入れた方が良いかも。ここでやるべきではないと思う。
 		flashLight_->SetPlayerPosition(playerPosition_);
 		flashLight_->SetTheta(theta_);
 		flashLight_->SetPhi(phi);
@@ -815,9 +819,12 @@ void GameScene::Update(GameManager* gameManager) {
 
 			}
 		}
+		//プレイヤーをコリジョンマネージャーへ
 		collisionManager_->RegisterList(player_.get());
-		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 
+		//当たると一発アウトの敵をコリジョンマネージャーへ
+		//1体しか出さないのにリストにする必要はあったのでしょうか・・
+		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
 		for (StrongEnemy* strongEnemy : strongEnemyes) {
 			collisionManager_->RegisterList(strongEnemy);
@@ -868,7 +875,8 @@ void GameScene::Update(GameManager* gameManager) {
 
 
 		//体力が0になったら負け
-		//または一発アウトの敵
+		//または一発アウトの敵に接触した場合
+		//負け専用のクラスを作りたい
 		if (player_->GetHP() <= 0 || isTouchStrongEnemy_==true) {
 			gameManager->ChangeScene(new LoseScene());
 			return;
@@ -886,7 +894,7 @@ void GameScene::Update(GameManager* gameManager) {
 		//更新
 		material_.Update();
 
-		//当たり判定
+		//当たり判定チェック
 		collisionManager_->CheckAllCollision();
 
 #ifdef _DEBUG
@@ -902,6 +910,7 @@ void GameScene::Update(GameManager* gameManager) {
 	}
 	
 	//ホワイトアウト
+	//StatePatternにしたい
 	if (isFadeOut_ == true) {
 		escapeText_->SetInvisible(true);
 
@@ -938,6 +947,35 @@ void GameScene::Update(GameManager* gameManager) {
 	player_->Update();
 	playerPosition_ = player_->GetWorldPosition();
 
+
+	//ポストエフェクト
+	//プレイヤーがダメージを受けた場合ビネット
+	if (player_->GetIsDamaged() == true) {
+		//時間の加算
+		const float DELTA_TIME = 1.0f / 60.0f;
+		vignetteChangeTime_ += DELTA_TIME;
+		
+		//線形補間で滑らかに変化
+		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
+	}
+	//HPが1でピンチの場合
+	else if (player_->GetHP() == 1u) {
+
+	}
+	//通常時は
+	else {
+		vignettePow_ = 0.0f;
+	}
+	vignette_->SetPow(vignettePow_);
+
+#ifdef _DEBUG
+	ImGui::Begin("VignetteCheck");
+	ImGui::InputFloat("vignettePow", &vignettePow_);
+	ImGui::End();
+#endif // _DEBUG
+
+
+
 	//ライト確認用のタワー
 	debugTowerWorldTransform_.Update();
 
@@ -951,7 +989,15 @@ void GameScene::DrawSpriteBack(){
 }
 
 void GameScene::PreDrawPostEffectFirst(){
-	back_->PreDraw();
+	//ダメージを受けた時
+	if (player_->GetIsDamaged() == true) {
+		vignette_->PreDraw();
+	}
+	//通常
+	else {
+		back_->PreDraw();
+	}
+	
 }
 
 
@@ -995,7 +1041,14 @@ void GameScene::DrawObject3D() {
 
 void GameScene::DrawPostEffect(){
 	
-	back_->Draw();
+	//ダメージを受けた時
+	if (player_->GetIsDamaged() == true) {
+		vignette_->PreDraw();
+	}
+	//通常
+	else {
+		back_->PreDraw();
+	}
 }
 
 void GameScene::DrawSprite(){
