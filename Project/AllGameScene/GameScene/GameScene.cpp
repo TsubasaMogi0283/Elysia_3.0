@@ -231,9 +231,9 @@ void GameScene::Initialize() {
 	//ビネット
 	vignette_ = std::make_unique<Vignette>();
 	vignette_->Initialize();
-	const float vignetteScale = 17.0f;
+	//const float vignetteScale = 17.0f;
 	vignettePow_ = 0.0f;
-	vignette_->SetScale(vignetteScale);
+	//vignette_->SetScale(vignetteScale);
 	vignette_->SetPow(vignettePow_);
 
 	//マテリアルの初期化
@@ -960,17 +960,19 @@ void GameScene::Update(GameManager* gameManager) {
 	}
 	//HPが1でピンチの場合
 	else if (player_->GetHP() == 1u) {
-
+		
 	}
-	//通常時は
+	//通常時の場合
 	else {
 		vignettePow_ = 0.0f;
+		vignetteChangeTime_ = 0.0f;
 	}
 	vignette_->SetPow(vignettePow_);
 
 #ifdef _DEBUG
 	ImGui::Begin("VignetteCheck");
-	ImGui::InputFloat("vignettePow", &vignettePow_);
+	ImGui::InputFloat("POW", &vignettePow_);
+	ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
 	ImGui::End();
 #endif // _DEBUG
 
@@ -989,15 +991,7 @@ void GameScene::DrawSpriteBack(){
 }
 
 void GameScene::PreDrawPostEffectFirst(){
-	//ダメージを受けた時
-	if (player_->GetIsDamaged() == true) {
-		vignette_->PreDraw();
-	}
-	//通常
-	else {
-		back_->PreDraw();
-	}
-	
+	vignette_->PreDraw();
 }
 
 
@@ -1040,15 +1034,7 @@ void GameScene::DrawObject3D() {
 
 
 void GameScene::DrawPostEffect(){
-	
-	//ダメージを受けた時
-	if (player_->GetIsDamaged() == true) {
-		vignette_->PreDraw();
-	}
-	//通常
-	else {
-		back_->PreDraw();
-	}
+	vignette_->Draw();
 }
 
 void GameScene::DrawSprite(){

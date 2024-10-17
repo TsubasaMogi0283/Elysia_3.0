@@ -300,7 +300,7 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 	Ganarate(levelData);
 	
 	//オーディオの再生
-	AudioPlay(levelData);
+	//AudioPlay(levelData);
 
 
 
