@@ -961,6 +961,13 @@ void GameScene::Update(GameManager* gameManager) {
 	//HPが1でピンチの場合
 	else if (player_->GetHP() == 1u) {
 		
+		const float DELTA_TIME = 1.0f / 60.0f;
+		warningTime_ += DELTA_TIME;
+		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
+		if (warningTime_ > 1.0f) {
+			warningTime_ = 0.0f;
+		}
+
 	}
 	//通常時の場合
 	else {

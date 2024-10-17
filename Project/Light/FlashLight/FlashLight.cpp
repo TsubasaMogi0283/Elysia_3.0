@@ -87,7 +87,7 @@ void FlashLight::Update() {
 	//片方の角度
 	spotLight_.cosAngle_ = std::cosf(lightSideTheta);
 
-	spotLight_.aroundOffset_ = 0.01f;
+	spotLight_.aroundOffset_ = 0.05f;
 	//扇
 	fan_.centerRadian = theta_;
 	fan_.leftSideRadian = theta_ + lightSideTheta;

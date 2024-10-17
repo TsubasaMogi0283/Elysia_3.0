@@ -161,6 +161,7 @@ private:
 	const float MAX_VIGNETTE_POW_ = 1.6f;
 	float vignettePow_ = 17.0f;
 	float vignetteChangeTime_ = 0.0f;
+	float warningTime_ = 0.0f;
 
 	//プレイヤー
 	std::unique_ptr<Player> player_ = nullptr;
