@@ -3,8 +3,11 @@
 #include <cstdint>
 #include <string>
 #include "AABB.h"
+#include <Fan.h>
 
 enum CollisionType {
+	//点
+	PointType,
 	//球
 	SphereType,
 	//AABB
@@ -61,6 +64,15 @@ public:
 #pragma endregion
 
 
+	//3D
+	inline Fan3D GetFan3D () { 
+		return fan3D_;
+	};
+
+	//2D
+	inline Fan2D GetFan2D() {
+		return fan2D_;
+	};
 
 	/// <summary>
 	/// 衝突判定で使う形の種類の値を取得
@@ -115,6 +127,22 @@ protected:
 
 
 #pragma endregion
+
+
+
+
+#pragma region 扇
+	//3D
+	Fan3D fan3D_ = {};
+
+	//2D
+	Fan2D fan2D_ = {};
+
+
+#pragma endregion
+
+
+
 
 private:
 	

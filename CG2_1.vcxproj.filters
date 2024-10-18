@@ -573,6 +573,9 @@
     <ClCompile Include="Project\AllGameScene\GameScene\GameScene.cpp">
       <Filter>Project\GameScene\GameScene</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Light\FlashLight\FlashLightCollision.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -1002,6 +1005,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Audio\Load\IAudioLoad.h">
       <Filter>Ellysia\Header File\Audio\Load</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Light\FlashLight\FlashLightCollision.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

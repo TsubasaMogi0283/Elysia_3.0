@@ -6,6 +6,7 @@
 #include <WorldTransform.h>
 #include <Model.h>
 #include "Material.h"
+#include "FlashLightCollision.h"
 
 struct Camera;
 
@@ -76,15 +77,15 @@ public:
 	/// 扇を取得
 	/// </summary>
 	/// <returns></returns>
-	inline Fan2D GetFan() const{
-		return fan_;
-	}
+	//inline Fan2D GetFan() const{
+	//	return fan_;
+	//}
 
 	/// <summary>
 	/// 扇の取得(3次元)
 	/// </summary>
 	/// <returns></returns>
-	inline Fan3D GetFan3D() const {
+	inline Fan3D GetFan3D() {
 		return fan3D_;
 	}
 
@@ -104,7 +105,7 @@ private:
 	float phi_ = 0.0f;
 
 	//扇
-	Fan2D fan_ = {};
+	//Fan2D fan_ = {};
 	Fan3D fan3D_ = {};
 
 
@@ -120,7 +121,10 @@ private:
 	//LightPosition
 	std::unique_ptr<Model>lightCenterModel_ = nullptr;
 	WorldTransform lightCenterWorldTransform_ = {};
-	Material lightCnterMaterial_ = {};
+	Material lightCenterMaterial_ = {};
+
+
+	FlashLightCollision* flashLightCollision_ = nullptr;
 
 };
 

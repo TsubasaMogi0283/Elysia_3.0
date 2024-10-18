@@ -2,6 +2,7 @@
 #include <VectorCalculation.h>
 
 #include "AABB.h"
+#include <Collision.h>
 
 void CollisionManager::RegisterList(Collider* collider){
 	//引数から登録
@@ -107,8 +108,21 @@ void CollisionManager::CheckAABBCollisionPair(Collider* colliderA, Collider* col
 
 
 void CollisionManager::CheckFanAndPointPair(Collider* colliderA, Collider* colliderB){
-	colliderA;
-	colliderB;
+
+	//衝突フィルタリング
+	//ビット演算だから&で
+	//当たらないなら計算する必要はないのでreturn
+	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
+		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0) {
+		return;
+	}
+
+
+	if (IsFanCollision(colliderA->GetFan3D(), colliderB->GetWorldPosition())) {
+		colliderA->OnCollision();
+		colliderB->OnCollision();
+	}
+
 }
 
 
@@ -143,7 +157,10 @@ void CollisionManager::CheckAllCollision(){
 			}
 
 			//扇と点
-
+			if (colliderA->GetCollisionType() == CollisionType::FanType &&
+				colliderB->GetCollisionType() == CollisionType::PointType) {
+				CheckAABBCollisionPair(colliderA, colliderB);
+			}
 			
 
 		}

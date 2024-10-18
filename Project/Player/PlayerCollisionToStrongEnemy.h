@@ -43,8 +43,6 @@ public:
 	~PlayerCollisionToStrongEnemy() = default;
 
 
-private:
-
 public:
 	/// <summary>
 	/// 敵のワールド座標の設定

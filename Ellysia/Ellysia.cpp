@@ -31,8 +31,7 @@ void Ellysia::Initialize(){
 	//COM...ComponentObjectModel、Microsoftの提唱する設計技術の１つ
 	//		DirectX12も簡略化されたCOM(Nano-COM)という設計で作られている
 	//COMを使用して開発されたソフトウェア部品をCOMコンポーネントと呼ぶ
-	HRESULT hResult = {};
-	hResult=CoInitializeEx(0, COINIT_MULTITHREADED);
+	HRESULT hResult=CoInitializeEx(0, COINIT_MULTITHREADED);
 	//初期化に失敗したら止める
 	assert(SUCCEEDED(hResult));
 
@@ -175,8 +174,7 @@ void Ellysia::Operate(){
 	while (msg.message != WM_QUIT) {
 		//Windowにメッセージが来てたら最優先で処理させる
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-			
-			//common_->WinMSG(msg);
+			//メッセージを送る
 			WindowsSetup::GetInstance()->WindowsMSG(msg);
 
 		}

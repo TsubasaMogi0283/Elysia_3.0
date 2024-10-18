@@ -22,6 +22,8 @@ enum PlayerMoveCondition {
 	OnPlayerMove,
 };
 
+
+//プレイヤーコリジョンを作りたい
 class Player :public Collider {
 public:
 	/// <summary>

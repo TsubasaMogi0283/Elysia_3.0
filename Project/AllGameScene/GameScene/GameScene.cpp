@@ -145,9 +145,6 @@ void GameScene::Initialize() {
 	
 	//プレイヤーのライト
 	uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
-	lightCollision_ = new LightWeapon();
-	lightCollision_->Initialize(weaponLightModel);
-	
 	
 	
 	#pragma region 扇の当たり判定用の球
@@ -783,7 +780,7 @@ void GameScene::Update(GameManager* gameManager) {
 		flashLight_->SetPhi(phi);
 		flashLight_->Update();
 
-		collisionManager_->RegisterList(lightCollision_);
+		//collisionManager_->RegisterList(lightCollision_);
 
 
 		
@@ -808,7 +805,7 @@ void GameScene::Update(GameManager* gameManager) {
 			//いずれこれもCollisionManagerに入れるつもり
 			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
 
-				//enemy->OnCollision();
+				enemy->OnCollision();
 
 
 #ifdef _DEBUG
@@ -885,7 +882,6 @@ void GameScene::Update(GameManager* gameManager) {
 
 		//ライト
 		Vector3 lightDirection = flashLight_->GetDirection();
-		lightCollision_->Update(playerPosition_, lightDirection);
 
 		//現在のプレイヤーの体力を取得
 		currentDisplayHP_ = player_->GetHP();
@@ -948,7 +944,7 @@ void GameScene::Update(GameManager* gameManager) {
 	playerPosition_ = player_->GetWorldPosition();
 
 
-	//ポストエフェクト
+#pragma region ポストエフェクト
 	//プレイヤーがダメージを受けた場合ビネット
 	if (player_->GetIsDamaged() == true) {
 		//時間の加算
@@ -984,6 +980,7 @@ void GameScene::Update(GameManager* gameManager) {
 #endif // _DEBUG
 
 
+#pragma endregion
 
 	//ライト確認用のタワー
 	debugTowerWorldTransform_.Update();
@@ -1008,8 +1005,6 @@ void GameScene::DrawObject3D() {
 	//懐中電灯を取得
 	SpotLight spotLight = flashLight_->GetSpotLight();
 
-	
-
 	//地面
 	ground_->Draw(camera_, spotLight);
 	//ゲート
@@ -1025,14 +1020,9 @@ void GameScene::DrawObject3D() {
 	//ステージオブジェクト
 	objectManager_->Draw(camera_, spotLight);
 
-
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
 
-#ifdef _DEBUG
-	lightCollision_->Draw(camera_, spotLight);
-
-#endif // _DEBUG
 
 	
 
@@ -1099,7 +1089,6 @@ void GameScene::DrawSprite(){
 
 
 GameScene::~GameScene() {
-	delete lightCollision_;
 	delete objectManager_;
 }
 

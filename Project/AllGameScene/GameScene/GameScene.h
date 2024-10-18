@@ -184,6 +184,8 @@ private:
 	ObjectManager* objectManager_ = nullptr;
 
 
+#pragma region レベルエディタに引っ越します
+
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;
 
@@ -196,15 +198,11 @@ private:
 	//天球
 	std::unique_ptr<Skydome> skydome_ = nullptr;
 
-	
+#pragma endregion
 	
 	//敵
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
 	uint32_t enemyModelHandle_ = 0u;
-
-	//プレイヤーのライトの判定
-	LightWeapon* lightCollision_ = nullptr;
-	WorldTransform lightCollisionWorldTransform_ = {};
 
 	uint32_t viewOfPoint_ = 0u;
 
