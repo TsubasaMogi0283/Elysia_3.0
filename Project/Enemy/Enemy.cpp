@@ -301,11 +301,7 @@ void Enemy::Update(){
 	ImGui::InputInt("AliveTive", &deleteTime_);
 	ImGui::End();
 #endif // _DEBUG
-}
 
-
-
-void Enemy::OnCollision() {
 #ifdef _DEBUG
 	ImGui::Begin("EnemyCollision");
 	ImGui::InputFloat4("Color", &color_.x);
@@ -313,13 +309,13 @@ void Enemy::OnCollision() {
 #endif // _DEBUG
 
 	//懐中電灯用の当たり判定に当たっていたら色が変わっていくよ
-	if(enemyFlashLightCollision_->GetIsTouched()==true) {
+	if (enemyFlashLightCollision_->GetIsTouched() == true) {
 		const float COLOR_CHANGE_INTERVAL = 0.005f;
 		color_.y -= COLOR_CHANGE_INTERVAL;
 		color_.z -= COLOR_CHANGE_INTERVAL;
 
 	}
-	
+
 	//0になったら消す
 	if (color_.y < 0.0f &&
 		color_.z < 0.0f) {
@@ -329,6 +325,13 @@ void Enemy::OnCollision() {
 
 
 	material_.color_ = color_;
+
+}
+
+
+
+void Enemy::OnCollision() {
+
 	
 }
 

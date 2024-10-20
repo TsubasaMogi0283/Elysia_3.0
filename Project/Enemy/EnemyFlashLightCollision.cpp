@@ -22,8 +22,7 @@ void EnemyFlashLightCollision::Initialize(){
 }
 
 void EnemyFlashLightCollision::Update(){
-	//通常時
-	isTouch_ = false;
+	
 
 
 #ifdef _DEBUG
@@ -52,5 +51,6 @@ void EnemyFlashLightCollision::OnCollision(){
 }
 
 void EnemyFlashLightCollision::OffCollision(){
-
+	//通常時
+	isTouch_ = false;
 }
