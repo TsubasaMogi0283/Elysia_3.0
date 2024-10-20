@@ -332,6 +332,10 @@ void Enemy::OnCollision() {
 	
 }
 
+void Enemy::OffCollision(){
+
+}
+
 
 
 Vector3 Enemy::GetWorldPosition() {

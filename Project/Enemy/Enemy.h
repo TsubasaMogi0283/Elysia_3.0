@@ -60,7 +60,10 @@ public:
 	/// </summary>
 	void OnCollision()override;
 
-
+	/// <summary>
+	/// 非衝突判定
+	/// </summary>
+	void OffCollision()override;
 
 	/// <summary>
 	/// ワールド座標

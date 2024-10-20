@@ -21,25 +21,36 @@ enum CollisionType {
 
 class Collider{
 public:
-	//衝突時に呼ばれる関数
+	/// <summary>
+	/// //衝突時
+	/// </summary>
 	virtual void OnCollision()=0;
 
+	/// <summary>
+	/// 衝突していない時
+	/// </summary>
+	virtual void OffCollision() = 0;
 
-	//ワールド座標を取得
-	//純粋仮想関数
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
 	virtual Vector3 GetWorldPosition() = 0;
+
+	
+
 
 
 public:
 
-	//半径を取得
+	/// <summary>
+	/// 半径を取得
+	/// </summary>
+	/// <returns></returns>
 	float GetRadius() {
 		return radius_;
 	}
-	//半径を設定
-	void SetRadius_(float radius) {
-		this->radius_ = radius;
-	}
+
 
 
 
@@ -64,12 +75,18 @@ public:
 #pragma endregion
 
 
-	//3D
+	/// <summary>
+	/// 3Dの扇の取得
+	/// </summary>
+	/// <returns></returns>
 	inline Fan3D GetFan3D () { 
 		return fan3D_;
 	};
 
-	//2D
+	/// <summary>
+	/// 2Dの扇の取得
+	/// </summary>
+	/// <returns></returns>
 	inline Fan2D GetFan2D() {
 		return fan2D_;
 	};

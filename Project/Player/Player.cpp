@@ -200,6 +200,10 @@ void Player::OnCollision(){
 	isDameged_ = true;
 }
 
+void Player::OffCollision()
+{
+}
+
 Player::~Player() {
 	Input::GetInstance()->StopVibration();
 }

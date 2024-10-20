@@ -39,11 +39,14 @@ void CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* c
 		(difference.z * difference.z));
 	
 	//当たった時
-	if (distance < colliderA->GetRadius() + colliderB->GetRadius()) {
+	if (distance <= colliderA->GetRadius() + colliderB->GetRadius()) {
 		colliderA->OnCollision();
 		colliderB->OnCollision();
 	}
-
+	else {
+		colliderA->OffCollision();
+		colliderB->OffCollision();
+	}
 
 #pragma endregion
 
@@ -101,7 +104,10 @@ void CollisionManager::CheckAABBCollisionPair(Collider* colliderA, Collider* col
 		colliderA->OnCollision();
 		colliderB->OnCollision();
 	}
-
+	else {
+		colliderA->OffCollision();
+		colliderB->OffCollision();
+	}
 
 }
 
@@ -117,10 +123,14 @@ void CollisionManager::CheckFanAndPointPair(Collider* colliderA, Collider* colli
 		return;
 	}
 
-
+	//衝突判定
 	if (IsFanCollision(colliderA->GetFan3D(), colliderB->GetWorldPosition())) {
 		colliderA->OnCollision();
 		colliderB->OnCollision();
+	}
+	else {
+		colliderA->OffCollision();
+		colliderB->OffCollision();
 	}
 
 }

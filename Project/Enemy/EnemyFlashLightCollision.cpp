@@ -50,3 +50,7 @@ void EnemyFlashLightCollision::OnCollision(){
 
 
 }
+
+void EnemyFlashLightCollision::OffCollision(){
+
+}

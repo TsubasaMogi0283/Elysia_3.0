@@ -38,3 +38,7 @@ void FlashLightCollision::OnCollision(){
 
 
 }
+
+void FlashLightCollision::OffCollision()
+{
+}

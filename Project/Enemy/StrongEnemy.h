@@ -48,9 +48,14 @@ public:
 
 public:
 	/// <summary>
-	/// 衝突判定
+	/// 接触
 	/// </summary>
 	void OnCollision()override;
+
+	/// <summary>
+	/// 非接触
+	/// </summary>
+	void OffCollision()override;
 
 	/// <summary>
 	/// ワールド座標

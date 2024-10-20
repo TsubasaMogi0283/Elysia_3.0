@@ -61,10 +61,14 @@ public:
 	Vector3 GetWorldPosition()override;
 
 	/// <summary>
-	/// 衝突
+	/// 接触
 	/// </summary>
 	void OnCollision()override;
 
+	/// <summary>
+	/// 非接触
+	/// </summary>
+	void OffCollision()override;
 
 
 private:

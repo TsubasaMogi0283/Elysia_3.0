@@ -159,6 +159,10 @@ void StrongEnemy::OnCollision(){
 
 }
 
+void StrongEnemy::OffCollision()
+{
+}
+
 
 Vector3 StrongEnemy::GetWorldPosition(){
 	Vector3 position = {

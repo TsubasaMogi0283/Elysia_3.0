@@ -2,6 +2,7 @@
 #include "Collider/Collider.h"
 #include "Vector3.h"
 
+//扇との当たり判定
 class EnemyFlashLightCollision : public Collider {
 public:
 	/// <summary>
@@ -35,9 +36,14 @@ public:
 	Vector3 GetWorldPosition()override;
 
 	/// <summary>
-	/// 衝突
+	/// 接触
 	/// </summary>
 	void OnCollision()override;
+
+	/// <summary>
+	/// 非接触
+	/// </summary>
+	void OffCollision()override;
 
 
 	/// <summary>

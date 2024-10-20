@@ -33,7 +33,6 @@ void EnemyManager::Initialize(uint32_t& normalEnemyModel, uint32_t& strongEnemyM
 	////TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
 	Vector3 position1 = { 0.0f,0.0f,21.0f };
-	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
 	enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,0.01f });
 	enemyes_.push_back(enemy1);
 
@@ -103,7 +102,6 @@ void EnemyManager::GenarateEnemy() {
 	std::uniform_real_distribution<float> distribute(-30.0f, 30.0f);
 	Vector3 position1 = { distribute(randomEngine),0.0f,distribute(randomEngine) };
 	enemy->Initialize(normalEnemyModelHandle_, position1, { 0.0f,0.0f,0.0f });
-	enemy->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy);
 }
 
@@ -132,7 +130,6 @@ void EnemyManager::GenarateStrongEnemy(){
 
 
 	enemy->Initialize(strongEnemyModelHandle_, position, speed);
-	enemy->SetRadius_(player_->GetRadius());
 	strongEnemyes_.push_back(enemy);
 }
 
