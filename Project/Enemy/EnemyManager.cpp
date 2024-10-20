@@ -468,8 +468,7 @@ void EnemyManager::Update(){
 
 			//前方にいた場合
 			if (enemyAndEnemyDot >= 0.8f && condition == EnemyCondition::Move) {
-				//接触した場合
-				//止まる
+				//接触した場合止まる
 				if ((aabb[0].min.x < aabb[1].max.x && aabb[0].max.x > aabb[1].min.x) &&
 					(aabb[0].min.y < aabb[1].max.y && aabb[0].max.y > aabb[1].min.y) &&
 					(aabb[0].min.z < aabb[1].max.z && aabb[0].max.z > aabb[1].min.z)) {
@@ -495,7 +494,7 @@ void EnemyManager::Update(){
 			//動いていない場合
 			else if (condition == EnemyCondition::NoneMove) {
 
-
+				//前方にいない場合
 				if (enemyAndEnemyDot < 0.8f) {
 					uint32_t preCondition = EnemyCondition::NoneMove;
 					uint32_t newCondition = EnemyCondition::Move;

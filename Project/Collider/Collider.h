@@ -1,10 +1,12 @@
 #pragma once
-#include "Vector3.h"
 #include <cstdint>
 #include <string>
-#include "AABB.h"
-#include <Fan.h>
 
+#include "Vector3.h"
+#include "AABB.h"
+#include "Fan.h"
+
+//衝突の種類
 enum CollisionType {
 	//点
 	PointType,
@@ -19,15 +21,16 @@ enum CollisionType {
 
 };
 
+//衝突判定
 class Collider{
 public:
 	/// <summary>
-	/// //衝突時
+	/// 接触
 	/// </summary>
 	virtual void OnCollision()=0;
 
 	/// <summary>
-	/// 衝突していない時
+	/// 非接触
 	/// </summary>
 	virtual void OffCollision() = 0;
 
@@ -36,10 +39,6 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	virtual Vector3 GetWorldPosition() = 0;
-
-	
-
-
 
 public:
 
@@ -50,8 +49,6 @@ public:
 	float GetRadius() {
 		return radius_;
 	}
-
-
 
 
 #pragma region AABB
