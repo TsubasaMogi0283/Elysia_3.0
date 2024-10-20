@@ -9,8 +9,6 @@ void FlashLightCollision::Initialize(){
 	//種類
 	collisionType_ = CollisionType::FanType;
 
-	//半径
-	radius_ = 1.0f;
 
 
 

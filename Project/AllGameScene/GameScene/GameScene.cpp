@@ -767,7 +767,6 @@ void GameScene::Update(GameManager* gameManager) {
 
 
 		//数学とプログラムで回る向きが違うことに煩わしさを感じます・・
-		//無理矢理直して楽になろう！！
 		float phi = -originPhi_;
 
 		//懐中電灯
@@ -780,7 +779,7 @@ void GameScene::Update(GameManager* gameManager) {
 		flashLight_->SetPhi(phi);
 		flashLight_->Update();
 
-		collisionManager_->RegisterList(flashLight_->GetFanCollision());
+		//collisionManager_->RegisterList(flashLight_->GetFanCollision());
 
 
 		
@@ -800,21 +799,6 @@ void GameScene::Update(GameManager* gameManager) {
 			}
 
 
-//
-//			
-//			//いずれこれもCollisionManagerに入れるつもり
-//			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
-//
-//				enemy->OnCollision();
-//
-//
-//#ifdef _DEBUG
-//				ImGui::Begin("FanCollsion");
-//				ImGui::End();
-//#endif // _DEBUG
-//
-//
-//			}
 		}
 		//プレイヤーをコリジョンマネージャーへ
 		collisionManager_->RegisterList(player_.get());

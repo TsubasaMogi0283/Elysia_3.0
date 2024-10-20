@@ -149,15 +149,19 @@ public:
 
 
 	inline void InvertSpeedX() {
-		speed_.x *= -1.0f;
+		this->speed_.x *= -1.0f;
 	}
 	inline void InvertSpeedZ() {
-		speed_.z *= -1.0f;
+		this->speed_.z *= -1.0f;
 	}
 
 
 	inline void SaveSpeed() {
-		preSpeed_ = speed_;
+		this->preSpeed_ = this->speed_;
+	}
+
+	inline void MoveAgain() {
+
 	}
 
 

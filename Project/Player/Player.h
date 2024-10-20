@@ -112,7 +112,7 @@ public:
 	/// 動く方向の設定
 	/// </summary>
 	/// <param name="move"></param>
-	inline void SetMoveDirection(Vector3& moveDirection) {
+	inline void SetMoveDirection(const Vector3& moveDirection) {
 		this->moveDirection_ = moveDirection;
 	}
 
@@ -120,14 +120,14 @@ public:
 	/// 動きの状態を設定
 	/// </summary>
 	/// <param name="condition"></param>
-	inline void SetPlayerMoveCondition(uint32_t& condition) {
+	inline void SetPlayerMoveCondition(const uint32_t& condition) {
 		this->moveCondition_ = condition;
 	}
 
 	/// <summary>
 	/// 走るかどうか
 	/// </summary>
-	inline void SetIsDash(bool& isDash) {
+	inline void SetIsDash(const bool& isDash) {
 		this->isDash_ = isDash;
 	}
 
@@ -136,7 +136,7 @@ public:
 	/// </summary>
 	/// <param name="stageRect"></param>
 	/// <returns></returns>
-	inline void SetStageRect(StageRect stageRect) {
+	inline void SetStageRect(const StageRect& stageRect) {
 		this->stageRect_ = stageRect;
 	}
 
@@ -144,7 +144,7 @@ public:
 	/// 操作を受け付けるか受け付けないかの設定
 	/// </summary>
 	/// <param name="isControll"></param>
-	inline void SetIsAbleToControll(bool isControll) {
+	inline void SetIsAbleToControll(const bool& isControll) {
 		this->isControll_ = isControll;
 	}
 

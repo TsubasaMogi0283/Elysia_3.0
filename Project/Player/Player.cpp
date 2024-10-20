@@ -200,8 +200,8 @@ void Player::OnCollision(){
 	isDameged_ = true;
 }
 
-void Player::OffCollision()
-{
+void Player::OffCollision(){
+
 }
 
 Player::~Player() {

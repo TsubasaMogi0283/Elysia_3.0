@@ -53,7 +53,7 @@ public:
 	/// プレイヤーの座標を取得
 	/// </summary>
 	/// <param name="position"></param>
-	inline void SetPlayerPosition(Vector3 position) {
+	inline void SetPlayerPosition(const Vector3& position) {
 		this->playerPosition_ = position;
 	}
 
