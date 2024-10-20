@@ -146,22 +146,32 @@ public:
 		return condition_;
 	}
 
-
-
+	
+	/// <summary>
+	/// X軸反転
+	/// </summary>
 	inline void InvertSpeedX() {
 		this->speed_.x *= -1.0f;
 	}
+	/// <summary>
+	/// Z軸反転
+	/// </summary>
 	inline void InvertSpeedZ() {
 		this->speed_.z *= -1.0f;
 	}
 
-
+	/// <summary>
+	/// 止まる前にスピードを記録する
+	/// </summary>
 	inline void SaveSpeed() {
 		this->preSpeed_ = this->speed_;
 	}
 
+	/// <summary>
+	/// 再度動くとき
+	/// </summary>
 	inline void MoveAgain() {
-
+		this->speed_ = this->preSpeed_;
 	}
 
 

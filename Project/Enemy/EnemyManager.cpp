@@ -462,9 +462,12 @@ void EnemyManager::Update(){
 			Vector3 playerEnemyDifference = VectorCalculation::Subtract(playerPosition, (*it1)->GetWorldPosition());
 			float playerEnemyDistance = SingleCalculation::Length(playerEnemyDifference);
 
+			
+
+
 
 			//前方にいた場合
-			if (enemyAndEnemyDot > 0.8f && condition == EnemyCondition::Move) {
+			if (enemyAndEnemyDot >= 0.8f && condition == EnemyCondition::Move) {
 				//接触した場合
 				//止まる
 				if ((aabb[0].min.x < aabb[1].max.x && aabb[0].max.x > aabb[1].min.x) &&
@@ -488,6 +491,25 @@ void EnemyManager::Update(){
 					//状態の変更
 					(*it1)->SetCondition(newCondition);
 				}
+			}
+			//動いていない場合
+			else if (condition == EnemyCondition::NoneMove) {
+
+
+				if (enemyAndEnemyDot < 0.8f) {
+					uint32_t preCondition = EnemyCondition::NoneMove;
+					uint32_t newCondition = EnemyCondition::Move;
+					//動き出す
+					(*it1)->MoveAgain();
+
+					//前の状態を保存
+					(*it1)->SetPreCondition(preCondition);
+					//状態の変更
+					(*it1)->SetCondition(newCondition);
+
+				}
+				
+
 			}
 			//前方にいない場合
 			else {
@@ -546,9 +568,6 @@ void EnemyManager::Update(){
 			}
 		}
 	}
-
-
-
 
 	for (StrongEnemy* strongEnemy : strongEnemyes_) {
 		//一発アウトの敵の更新
