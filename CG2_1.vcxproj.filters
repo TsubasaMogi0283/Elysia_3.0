@@ -340,6 +340,9 @@
     <Filter Include="Ellysia\Header File\Audio\Load">
       <UniqueIdentifier>{33835e23-f94b-4c9d-8fb5-860a23e2cbf5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Enemy\EnemyFlashLightCollision">
+      <UniqueIdentifier>{94a9085e-5e7c-4aca-abdd-af0623868eeb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -574,6 +577,9 @@
       <Filter>Project\GameScene\GameScene</Filter>
     </ClCompile>
     <ClCompile Include="Project\Light\FlashLight\FlashLightCollision.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\EnemyFlashLightCollision.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1007,6 +1013,9 @@
       <Filter>Ellysia\Header File\Audio\Load</Filter>
     </ClInclude>
     <ClInclude Include="Project\Light\FlashLight\FlashLightCollision.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\EnemyFlashLightCollision.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>

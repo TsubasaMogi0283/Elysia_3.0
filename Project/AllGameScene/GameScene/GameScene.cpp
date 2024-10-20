@@ -773,14 +773,14 @@ void GameScene::Update(GameManager* gameManager) {
 		//懐中電灯
 		playerPosition_ = player_->GetWorldPosition();
 
-		//ライトはプレイヤーが持っているという関係にしたいので
-		//包含の関係なのでPlayerに入れた方が良いかも。ここでやるべきではないと思う。
+		//ライトはプレイヤーが持っているという包含の関係なのでPlayerに入れた方が良いかも。
+		//ここでやるべきではないと思う。
 		flashLight_->SetPlayerPosition(playerPosition_);
 		flashLight_->SetTheta(theta_);
 		flashLight_->SetPhi(phi);
 		flashLight_->Update();
 
-		//collisionManager_->RegisterList(lightCollision_);
+		collisionManager_->RegisterList(flashLight_->GetFanCollision());
 
 
 		
@@ -791,7 +791,7 @@ void GameScene::Update(GameManager* gameManager) {
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
 			collisionManager_->RegisterList(enemy);
-
+			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 			//攻撃用の判定が出ていたら登録
 			if (enemy->GetIsAttack() == true) {
 				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
@@ -800,21 +800,21 @@ void GameScene::Update(GameManager* gameManager) {
 			}
 
 
-
-			
-			//いずれこれもCollisionManagerに入れるつもり
-			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
-
-				enemy->OnCollision();
-
-
-#ifdef _DEBUG
-				ImGui::Begin("FanCollsion");
-				ImGui::End();
-#endif // _DEBUG
-
-
-			}
+//
+//			
+//			//いずれこれもCollisionManagerに入れるつもり
+//			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
+//
+//				enemy->OnCollision();
+//
+//
+//#ifdef _DEBUG
+//				ImGui::Begin("FanCollsion");
+//				ImGui::End();
+//#endif // _DEBUG
+//
+//
+//			}
 		}
 		//プレイヤーをコリジョンマネージャーへ
 		collisionManager_->RegisterList(player_.get());

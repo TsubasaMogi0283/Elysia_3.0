@@ -190,6 +190,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Collider\CollisionManager.cpp" />
     <ClCompile Include="Project\Enemy\Enemy.cpp" />
     <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp" />
+    <ClCompile Include="Project\Enemy\EnemyFlashLightCollision.cpp" />
     <ClCompile Include="Project\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Project\Enemy\StrongEnemy.cpp" />
     <ClCompile Include="Project\Key\Key.cpp" />
@@ -471,6 +472,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Enemy\Enemy.h" />
     <ClInclude Include="Project\Enemy\EnemyAttackCollision.h" />
     <ClInclude Include="Project\Enemy\EnemyCondition.h" />
+    <ClInclude Include="Project\Enemy\EnemyFlashLightCollision.h" />
     <ClInclude Include="Project\Enemy\EnemyManager.h" />
     <ClInclude Include="Project\Enemy\StrongEnemy.h" />
     <ClInclude Include="Project\Key\Key.h" />

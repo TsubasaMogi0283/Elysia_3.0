@@ -68,7 +68,7 @@ void Ellysia::Initialize(){
 	AdjustmentItems::GetInstance()->LoadFile();
 
 	//GameManagerの初期化
-	gameManager_ = new GameManager();
+	gameManager_ = std::make_unique<GameManager>();
 	gameManager_->Initialize();
 
 
@@ -125,9 +125,9 @@ void Ellysia::Draw(){
 	gameManager_->DrawSprite();
 	
 
+	
+#ifdef _DEBUG
 	//ImGuiの描画
-  #ifdef _DEBUG
-
 	ImGuiManager::GetInstance()->Draw();
 	
 #endif
@@ -148,13 +148,21 @@ void Ellysia::EndFrame() {
 
 void Ellysia::Release() {
 
+	//レベルエディタの解放
 	LevelDataManager::GetInstance()->Release();
 
+	//オーディオの解放
 	Audio::GetInstance()->Release();
+
 #ifdef _DEBUG
+	//ImGuiの解放	
 	ImGuiManager::GetInstance()->Release();
 #endif
+
+	//DirectXの解放
 	DirectXSetup::GetInstance()->Release();
+	
+	//Windowsの解放
 	WindowsSetup::GetInstance()->Close();
 
 	//ゲーム終了時にはCOMの終了処理を行っておく
@@ -163,15 +171,17 @@ void Ellysia::Release() {
 }
 
 
-void Ellysia::Operate(){
+void Ellysia::Run(){
 	//初期化
 	Initialize();
 	
-	MSG msg{};
+	
 
-	////メインループ
+	//メインループ
 	//ウィンドウの✕ボタンが押されるまでループ
+	MSG msg = {};
 	while (msg.message != WM_QUIT) {
+
 		//Windowにメッセージが来てたら最優先で処理させる
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			//メッセージを送る
@@ -199,6 +209,7 @@ void Ellysia::Operate(){
 			EndFrame();
 		}
 	}
+
 	//解放
 	Release();
 
@@ -207,5 +218,4 @@ void Ellysia::Operate(){
 
 
 Ellysia::~Ellysia(){
-	delete gameManager_;
 }

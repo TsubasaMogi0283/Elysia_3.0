@@ -10,6 +10,7 @@
 #include "EnemyAttackCollision.h"
 #include "AABB.h"
 #include "EnemyCondition.h"
+#include "EnemyFlashLightCollision.h"
 
 struct Camera;
 struct SpotLight;
@@ -175,6 +176,16 @@ public:
 #pragma endregion
 
 
+
+#pragma region 懐中電灯
+
+	//懐中電灯用の当たり判定
+	inline EnemyFlashLightCollision* GetEnemyFlashLightCollision() {
+		return enemyFlashLightCollision_;
+	}
+
+#pragma endregion
+
 	
 
 
@@ -226,8 +237,11 @@ private:
 	std::unique_ptr<Model> debugModel_ = nullptr;
 	WorldTransform debugModelWorldTransform_ = {};
 
-	//攻撃用
+	//攻撃用の当たり判定
 	EnemyAttackCollision* attackModel_ = nullptr;
 	bool isAttack_ = false;
+
+	//懐中電灯用の当たり判定
+	EnemyFlashLightCollision* enemyFlashLightCollision_ = nullptr;
 
 };

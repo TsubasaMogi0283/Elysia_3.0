@@ -48,15 +48,15 @@ void WindowsSetup::OutputText(std::string& stringText){
 void  WindowsSetup::RegisterWindowsClass() {
 	
 	//ウィンドウプロシャージャ
-	wc_.lpfnWndProc = WindowProc;
+	windowClass_.lpfnWndProc = WindowProc;
 	//ウィンドウクラス名
-	wc_.lpszClassName = L"%s",title_;
+	windowClass_.lpszClassName = L"%s",title_;
 	//インスタンドハンドル
-	wc_.hInstance = GetModuleHandle(nullptr);
+	windowClass_.hInstance = GetModuleHandle(nullptr);
 	//カーソル
-	wc_.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	windowClass_.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	//ウィンドウクラス登録
-	RegisterClass(&wc_);
+	RegisterClass(&windowClass_);
 
 	//クライアント領域サイズ
 	//ウィンドウサイズを表す構造体にクライアント領域を入れる
@@ -65,7 +65,7 @@ void  WindowsSetup::RegisterWindowsClass() {
 	AdjustWindowRect(&wrc_, WS_OVERLAPPEDWINDOW, false);
 	// ウィンドウ生成
 	hwnd_ = CreateWindow(
-		wc_.lpszClassName,		//クラス名
+		windowClass_.lpszClassName,		//クラス名
 		title_,					//タイトルバーの文字
 		WS_OVERLAPPEDWINDOW,	//標準的なウィンドウスタイル
 		CW_USEDEFAULT,			//標準X座標
@@ -74,7 +74,7 @@ void  WindowsSetup::RegisterWindowsClass() {
 		wrc_.bottom - wrc_.top, //縦幅
 		nullptr,				//親ハンドル
 		nullptr,				//メニューハンドル
-		wc_.hInstance,			//インスタンスハンドル
+		windowClass_.hInstance,			//インスタンスハンドル
 		nullptr					//オプション
 	);
 

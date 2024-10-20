@@ -159,7 +159,7 @@ void CollisionManager::CheckAllCollision(){
 			//扇と点
 			if (colliderA->GetCollisionType() == CollisionType::FanType &&
 				colliderB->GetCollisionType() == CollisionType::PointType) {
-				CheckAABBCollisionPair(colliderA, colliderB);
+				CheckFanAndPointPair(colliderA, colliderB);
 			}
 			
 

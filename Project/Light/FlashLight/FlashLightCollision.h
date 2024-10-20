@@ -8,8 +8,15 @@ public:
 	/// </summary>
 	FlashLightCollision() = default;
 
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update();
 
 	/// <summary>
 	/// デストラクタ
@@ -17,7 +24,7 @@ public:
 	~FlashLightCollision() = default;
 
 public:
-	inline Fan3D SetFan3D(Fan3D& fan3D) {
+	inline void SetFan3D(Fan3D& fan3D) {
 		this->fan3D_ = fan3D;
 	}
 
@@ -35,10 +42,6 @@ public:
 	/// </summary>
 	void OnCollision()override;
 
-
-
-
-private:
 
 
 };

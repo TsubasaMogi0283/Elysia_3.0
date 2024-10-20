@@ -24,11 +24,17 @@ void FlashLightCollision::Initialize(){
 
 }
 
+void FlashLightCollision::Update()
+{
+}
+
 Vector3 FlashLightCollision::GetWorldPosition()
 {
 	return Vector3();
 }
 
-void FlashLightCollision::OnCollision()
-{
+void FlashLightCollision::OnCollision(){
+
+
+
 }

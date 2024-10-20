@@ -73,13 +73,6 @@ public:
 		return lightDirection_;
 	}
 
-	/// <summary>
-	/// 扇を取得
-	/// </summary>
-	/// <returns></returns>
-	//inline Fan2D GetFan() const{
-	//	return fan_;
-	//}
 
 	/// <summary>
 	/// 扇の取得(3次元)
@@ -89,6 +82,16 @@ public:
 		return fan3D_;
 	}
 
+
+	/// <summary>
+	/// 当たり判定の取得
+	/// </summary>
+	/// <returns></returns>
+	inline FlashLightCollision* GetFanCollision()const {
+		return flashLightCollision_.get();
+	}
+
+
 private:
 	//ここに値を入れてゲームシーンで他のオブジェクトに適用させる
 	SpotLight spotLight_ = {};
@@ -96,6 +99,8 @@ private:
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
 
+	//光の届く距離
+	const float LIGHT_DISTANCE = 22.0f;
 	Vector3 lightPosition = {};
 	Vector3 lightDirection_ = {};
 	float lightSideTheta = 0.0f;
@@ -105,10 +110,10 @@ private:
 	float phi_ = 0.0f;
 
 	//扇
-	//Fan2D fan_ = {};
 	Fan3D fan3D_ = {};
 
-
+	//デバッグ用のモデル
+	//左右
 	enum Side {
 		Right,
 		Left,
@@ -118,13 +123,13 @@ private:
 	WorldTransform worldTransform_[SIDE_QUANTITY_] = {};
 	Material material_ = {};
 
-	//LightPosition
+	//中心
 	std::unique_ptr<Model>lightCenterModel_ = nullptr;
 	WorldTransform lightCenterWorldTransform_ = {};
 	Material lightCenterMaterial_ = {};
 
-
-	FlashLightCollision* flashLightCollision_ = nullptr;
+	//当たり判定
+	std::unique_ptr<FlashLightCollision> flashLightCollision_ = nullptr;
 
 };
 

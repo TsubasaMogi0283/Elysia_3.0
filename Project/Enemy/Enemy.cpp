@@ -96,6 +96,9 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	isAttack_ = false;
 
 	
+	enemyFlashLightCollision_ = new EnemyFlashLightCollision();
+	enemyFlashLightCollision_->Initialize();
+
 }
 
 
@@ -263,6 +266,11 @@ void Enemy::Update(){
 
 
 
+	//当たり判定
+	enemyFlashLightCollision_->Update();
+	enemyFlashLightCollision_->SetEnemyPosition(GetWorldPosition());
+	
+
 #ifdef _DEBUG
 	float degreeRotateY = directionToRotateY * (180.0f / std::numbers::pi_v<float>);
 
@@ -304,10 +312,14 @@ void Enemy::OnCollision() {
 	ImGui::End();
 #endif // _DEBUG
 
-	const float COLOR_CHANGE_INTERVAL = 0.005f;
-	color_.y -= COLOR_CHANGE_INTERVAL;
-	color_.z -= COLOR_CHANGE_INTERVAL;
+	//懐中電灯用の当たり判定に当たっていたら色が変わっていくよ
+	if(enemyFlashLightCollision_->GetIsTouched()==true) {
+		const float COLOR_CHANGE_INTERVAL = 0.005f;
+		color_.y -= COLOR_CHANGE_INTERVAL;
+		color_.z -= COLOR_CHANGE_INTERVAL;
 
+	}
+	
 	//0になったら消す
 	if (color_.y < 0.0f &&
 		color_.z < 0.0f) {
