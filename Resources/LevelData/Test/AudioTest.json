@@ -23,7 +23,7 @@
             },
             "file_name": "Ground",
             "audio": {
-                "file_name": "House",
+                "file_name": "Win",
                 "type": "BGM",
                 "loop": true
             }
