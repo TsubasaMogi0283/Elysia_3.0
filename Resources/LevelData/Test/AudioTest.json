@@ -23,7 +23,7 @@
             },
             "file_name": "Ground",
             "audio": {
-                "file_name": "Win",
+                "file_name": "House",
                 "type": "BGM",
                 "loop": true
             }
@@ -48,20 +48,7 @@
                     1.0
                 ]
             },
-            "file_name": "Sphere",
-            "collider": {
-                "type": "BOX",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    2.0,
-                    2.0,
-                    2.0
-                ]
-            }
+            "file_name": "Sphere"
         },
         {
             "type": "MESH",

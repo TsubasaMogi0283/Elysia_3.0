@@ -41,12 +41,6 @@ Vector3 EnemyFlashLightCollision::GetWorldPosition(){
 
 void EnemyFlashLightCollision::OnCollision(){
 	isTouch_ = true;
-#ifdef _DEBUG
-	ImGui::Begin("aaaaaa");
-	ImGui::Checkbox("接触", &isTouch_);
-	ImGui::End();
-#endif // _DEBUG
-
 
 }
 
