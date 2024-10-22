@@ -64,7 +64,6 @@ struct AudioInformation {
 	uint32_t handle = 0;
 
 	//Pan用
-	float outputMatrix[8] = {};
 	float left = 0.0f;
 	float right = 0.0f;
 

@@ -103,7 +103,7 @@ public:
 	/// </summary>
 	/// <param name="audioHandle"></param>
 	/// <param name="isLoop"></param>
-	void PlayWave(uint32_t audioHandle, bool isLoop);
+	void PlayWave(const uint32_t& audioHandle, bool isLoop);
 	
 	
 	/// <summary>
@@ -111,14 +111,14 @@ public:
 	/// </summary>
 	/// <param name="audioHandle"></param>
 	/// <param name="loopCount"></param>
-	void PlayWave(uint32_t audioHandle, int32_t loopCount);
+	void PlayWave(const uint32_t& audioHandle, int32_t loopCount);
 
 	/// <summary>
 	/// 再生
 	/// </summary>
 	/// <param name="audioHandle"></param>
 	/// <param name="isLoop"></param>
-	void PlayMP3(uint32_t audioHandle, bool isLoop);
+	void PlayMP3(const uint32_t& audioHandle, bool isLoop);
 
 	/// <summary>
 	/// 再生(ループ回数あり)
@@ -126,26 +126,26 @@ public:
 	/// <param name="audioHandle"></param>
 	/// <param name="loopCount"></param>
 
-	void PlayMP3(uint32_t audioHandle, uint32_t loopCount);
+	void PlayMP3(const uint32_t& audioHandle, uint32_t loopCount);
 
 
 	/// <summary>
 	/// 一時停止
 	/// </summary>
 	/// <param name="ハンドル名"></param>
-	void PauseWave(uint32_t audioHandle);
+	void PauseWave(const uint32_t& audioHandle);
 
 	/// <summary>
 	/// 再開
 	/// </summary>
 	/// <param name="ハンドル名"></param>
-	void ResumeWave(uint32_t audioHandle);
+	void ResumeWave(const uint32_t& audioHandle);
 
 	/// <summary>
 	/// 停止
 	/// </summary>
 	/// <param name="ハンドル名"></param>
-	void StopWave(uint32_t audioHandle);
+	void StopWave(const uint32_t& audioHandle);
 
 
 #pragma endregion
@@ -158,7 +158,7 @@ public:
 	/// ループから抜ける
 	/// </summary>
 	/// <param name="ハンドル名"></param>
-	void ExitLoop(uint32_t audioHandle);
+	void ExitLoop(const uint32_t& audioHandle);
 
 
 	/// <summary>
@@ -166,14 +166,14 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="始まる位置(秒)"></param>
-	void AfterLoopPlayWave(uint32_t audioHandle, float second);
+	void AfterLoopPlayWave(const uint32_t& audioHandle, float second);
 
 	/// <summary>
 	/// 再生(前半ループ)
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="ループ間の長さ(秒)"></param>
-	void BeforeLoopPlayWave(uint32_t audioHandle, float lengthSecond);
+	void BeforeLoopPlayWave(const uint32_t& audioHandle, float lengthSecond);
 
 
 	/// <summary>
@@ -182,7 +182,7 @@ public:
 	/// <param name="ハンドル名"></param>
 	/// <param name="開始位置(秒)"></param>
 	/// <param name="ループの長さ(秒)"></param>
-	void PartlyLoopPlayWave(uint32_t audioHandle, float start, float lengthSecond);
+	void PartlyLoopPlayWave(const uint32_t& audioHandle, float start, float lengthSecond);
 
 
 #pragma endregion
@@ -192,7 +192,7 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="音量"></param>
-	void ChangeVolume(uint32_t audioHandle, float volume);
+	void ChangeVolume(const uint32_t& audioHandle, float volume);
 
 #pragma region ピッチ系
 
@@ -201,13 +201,13 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="値"></param>
-	void ChangeFrequency(uint32_t audioHandle, float ratio);
+	void ChangeFrequency(const uint32_t& audioHandle, float ratio);
 
 
 	/// <summary>
 	/// ピッチの設定(段階的)
 	/// </summary>
-	void ChangePitch(uint32_t audioHandle, int32_t scale);
+	void ChangePitch(const uint32_t& audioHandle, int32_t scale);
 
 
 #pragma endregion
@@ -217,7 +217,7 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="Panの値"></param>
-	void SetPan(uint32_t audioHandle, float_t pan);
+	void SetPan(const uint32_t& audioHandle, float_t pan);
 
 
 #pragma region フィルター
@@ -229,7 +229,7 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
-	void SetLowPassFilter(uint32_t audioHandle, float cutOff);
+	void SetLowPassFilter(const uint32_t& audioHandle, float cutOff);
 
 	/// <summary>
 	/// ローパスフィルター(Qあり)
@@ -237,7 +237,7 @@ public:
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
 	/// <param name="oneOverQ"></param>
-	void SetLowPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ);
+	void SetLowPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ);
 
 
 
@@ -246,7 +246,7 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
-	void SetHighPassFilter(uint32_t audioHandle, float cutOff);
+	void SetHighPassFilter(const uint32_t& audioHandlee, float cutOff);
 
 	/// <summary>
 	/// ハイパスフィルター(Qあり)
@@ -254,21 +254,21 @@ public:
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
 	/// <param name="oneOverQ"></param>
-	void SetHighPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ);
+	void SetHighPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ);
 
 	/// <summary>
 	/// バンドパス
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
-	void SetBandPassFilter(uint32_t audioHandle, float cutOff);
+	void SetBandPassFilter(const uint32_t& audioHandle, float cutOff);
 
 	/// <summary>
 	/// バンドパス(Qあり)
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
-	void SetBandPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ);
+	void SetBandPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ);
 
 
 	/// <summary>
@@ -276,14 +276,14 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
-	void SetNotchFilter(uint32_t audioHandle, float cutOff);
+	void SetNotchFilter(const uint32_t& audioHandle, float cutOff);
 
 	/// <summary>
 	/// ノッチフィルター
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
-	void SetNotchFilter(uint32_t audioHandle, float cutOff, float oneOverQ);
+	void SetNotchFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ);
 
 #pragma endregion
 
@@ -294,17 +294,17 @@ public:
 	void CreateSubmixVoice(uint32_t channel);
 
 
-	void SendChannels(uint32_t audioHandle, uint32_t channelNumber);
+	void SendChannels(const uint32_t& audioHandle, uint32_t channelNumber);
 
 	//リバーブ
 	//まだ未完成だから使わないでね
-	void CreateReverb(uint32_t audioHandle, uint32_t channel);
+	void CreateReverb(const uint32_t& audioHandle, uint32_t channel);
 
 	//エフェクトの効果を無効にする
-	void OffEffect(uint32_t audioHandle);
+	void OffEffect(const uint32_t& audioHandle);
 
 	//エフェクトの効果を有効にする
-	void OnEffect(uint32_t audioHandle);
+	void OnEffect(const uint32_t& audioHandle);
 
 
 	/// <summary>
@@ -342,8 +342,7 @@ private:
 	//Panに必要な変数
 	DWORD dwChannelMask_ = {};
 	float outputMatrix_[8] = {};
-	float left_ = 0.0f;
-	float right_ = 0.0f;
+	
 
 
 

@@ -25,24 +25,24 @@ void Audio::CreateSubmixVoice(uint32_t channel) {
 
 void Audio::Initialize() {
 	// Media Foundation の初期化
-	HRESULT hr = MFStartup(MF_VERSION);
-	assert(SUCCEEDED(hr));
+	HRESULT hResult = MFStartup(MF_VERSION);
+	assert(SUCCEEDED(hResult));
 
 	//XAudioのエンジンのインスタンスを生成
-	hr = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
-	assert(SUCCEEDED(hr));
+	hResult = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
+	assert(SUCCEEDED(hResult));
 
 	//マスターボイスを生成
-	hr = xAudio2_->CreateMasteringVoice(&masterVoice_);
-	assert(SUCCEEDED(hr));
+	hResult = xAudio2_->CreateMasteringVoice(&masterVoice_);
+	assert(SUCCEEDED(hResult));
 
 	//スピーカ構成を取得
 	masterVoice_->GetChannelMask(&dwChannelMask_);
 
 
 	//X3DAudioを初期化
-	hr=X3DAudioInitialize(dwChannelMask_, X3DAUDIO_SPEED_OF_SOUND, x3DInstance_);
-	assert(SUCCEEDED(hr));
+	hResult=X3DAudioInitialize(dwChannelMask_, X3DAUDIO_SPEED_OF_SOUND, x3DInstance_);
+	assert(SUCCEEDED(hResult));
 
 
 	//一度全部0に初期化
@@ -51,7 +51,7 @@ void Audio::Initialize() {
 	}
 
 	//サブミックスボイス(DTMでのバス)をここで作る
-	for (int i = 1; i < SUBMIXVOICE_AMOUNT_; ++i) {
+	for (int i = 0; i < SUBMIXVOICE_AMOUNT_; ++i) {
 
 		CreateSubmixVoice(i);
 	}
@@ -202,12 +202,7 @@ uint32_t Audio::LoadWave(const std::string& fileName) {
 #pragma region 読み込んだ音声データを返す
 
 
-	
-
-	
-
-
-	////波形フォーマットを基にSourceVoiceの生成
+	//波形フォーマットを基にSourceVoiceの生成
 	HRESULT hResult = Audio::GetInstance()->xAudio2_->CreateSourceVoice(
 		&Audio::GetInstance()->audioInformation_[fileName].sourceVoice,
 		&format.fmt);
@@ -227,7 +222,7 @@ uint32_t Audio::LoadWave(const std::string& fileName) {
 
 	
 
-
+	//handleを返す
 	return handle;
 
 #pragma endregion
@@ -322,7 +317,7 @@ uint32_t Audio::LoadMP3(const std::string& fileName) {
 }
 
 
-void Audio::PlayMP3(uint32_t audioHandle, bool isLoop) {
+void Audio::PlayMP3(const uint32_t& audioHandle, bool isLoop) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
@@ -351,7 +346,7 @@ void Audio::PlayMP3(uint32_t audioHandle, bool isLoop) {
 	assert(SUCCEEDED(hResult));
 }
 
-void Audio::PlayMP3(uint32_t audioHandle, uint32_t loopCount) {
+void Audio::PlayMP3(const uint32_t& audioHandle, uint32_t loopCount) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 	HRESULT hResult = audioInformation_[fileKey].sourceVoice->FlushSourceBuffers();
@@ -379,7 +374,7 @@ void Audio::PlayMP3(uint32_t audioHandle, uint32_t loopCount) {
 
 
 //音声再生
-void Audio::PlayWave(uint32_t audioHandle, bool isLoop) {
+void Audio::PlayWave(const uint32_t& audioHandle, bool isLoop) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
@@ -411,7 +406,7 @@ void Audio::PlayWave(uint32_t audioHandle, bool isLoop) {
 }
 
 //ループ回数設定版
-void Audio::PlayWave(uint32_t audioHandle, int32_t loopCount) {
+void Audio::PlayWave(const uint32_t& audioHandle, int32_t loopCount) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
@@ -437,7 +432,7 @@ void Audio::PlayWave(uint32_t audioHandle, int32_t loopCount) {
 	assert(SUCCEEDED(hr));
 }
 
-void Audio::PauseWave(uint32_t audioHandle) {
+void Audio::PauseWave(const uint32_t& audioHandle) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
@@ -447,7 +442,7 @@ void Audio::PauseWave(uint32_t audioHandle) {
 	assert(SUCCEEDED(hResult));
 }
 
-void Audio::ResumeWave(uint32_t audioHandle) {
+void Audio::ResumeWave(const uint32_t& audioHandle) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
@@ -457,7 +452,7 @@ void Audio::ResumeWave(uint32_t audioHandle) {
 }
 
 //音声停止
-void Audio::StopWave(uint32_t audioHandle) {
+void Audio::StopWave(const uint32_t& audioHandle) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
@@ -469,7 +464,7 @@ void Audio::StopWave(uint32_t audioHandle) {
 
 
 #pragma region ループ
-void Audio::ExitLoop(uint32_t audioHandle) {
+void Audio::ExitLoop(const uint32_t& audioHandle) {
 
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
@@ -479,7 +474,7 @@ void Audio::ExitLoop(uint32_t audioHandle) {
 }
 
 
-void Audio::AfterLoopPlayWave(uint32_t audioHandle, float second) {
+void Audio::AfterLoopPlayWave(const uint32_t& audioHandle, float second) {
 	//別名サスティンループというらしい
 	//シンセとかにあるサスティンと関係があるのかな
 
@@ -514,7 +509,7 @@ void Audio::AfterLoopPlayWave(uint32_t audioHandle, float second) {
 }
 
 
-void Audio::BeforeLoopPlayWave(uint32_t audioHandle, float lengthSecond) {
+void Audio::BeforeLoopPlayWave(const uint32_t& audioHandle, float lengthSecond) {
 	//別名サスティンループというらしい
 	//シンセとかにあるサスティンと関係があるのかな
 	//こっちは前半でループ
@@ -550,7 +545,7 @@ void Audio::BeforeLoopPlayWave(uint32_t audioHandle, float lengthSecond) {
 }
 
 
-void Audio::PartlyLoopPlayWave(uint32_t audioHandle, float start, float lengthSecond) {
+void Audio::PartlyLoopPlayWave(const uint32_t& audioHandle, float start, float lengthSecond) {
 	//別名サスティンループというらしい
 	//シンセとかにあるサスティンと関係があるのかな
 	//こっちは前半でループ
@@ -594,7 +589,7 @@ void Audio::PartlyLoopPlayWave(uint32_t audioHandle, float start, float lengthSe
 //一応マイナスにも出来るらしい
 //位相の反転するために使うらしい。使い道は分からない。
 //音量を変える
-void Audio::ChangeVolume(uint32_t audioHandle, float volume) {
+void Audio::ChangeVolume(const uint32_t& audioHandle, float volume) {
 
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
@@ -604,7 +599,7 @@ void Audio::ChangeVolume(uint32_t audioHandle, float volume) {
 }
 
 //ピッチの変更(滑らか)
-void Audio::ChangeFrequency(uint32_t audioHandle, float ratio) {
+void Audio::ChangeFrequency(const uint32_t& audioHandle, float ratio) {
 
 	//2.0fより上がらなかった
 	ratio = max(ratio, 2.0f);
@@ -623,7 +618,7 @@ void Audio::ChangeFrequency(uint32_t audioHandle, float ratio) {
 
 
 
-void Audio::ChangePitch(uint32_t audioHandle, int32_t scale) {
+void Audio::ChangePitch(const uint32_t& audioHandle, int32_t scale) {
 
 	
 	float ratio = 1.0f;
@@ -670,11 +665,14 @@ void Audio::ChangePitch(uint32_t audioHandle, int32_t scale) {
 }
 
 //Pan振り
-void Audio::SetPan(uint32_t audioHandle, float_t pan) {
+void Audio::SetPan(const uint32_t& audioHandle, float_t pan) {
+
+	//ファイルキーの取得
+	std::string fileKey = GetAudioInformationKey(audioHandle);
 
 	//左右のスピーカー間の目的のパンに基づき送信レベルを計算
-	left_ = 0.5f - pan / 2.0f;
-	right_ = 0.5f + pan / 2.0f;
+	audioInformation_[fileKey].left = 0.5f - pan / 2.0f;
+	audioInformation_[fileKey].right = 0.5f + pan / 2.0f;
 	switch (dwChannelMask_)
 	{
 	case SPEAKER_MONO:
@@ -683,37 +681,37 @@ void Audio::SetPan(uint32_t audioHandle, float_t pan) {
 	case SPEAKER_STEREO:
 	case SPEAKER_2POINT1:
 	case SPEAKER_SURROUND:
-		outputMatrix_[1] = left_;
-		outputMatrix_[2] = right_;
+		outputMatrix_[1] = audioInformation_[fileKey].left;
+		outputMatrix_[2] = audioInformation_[fileKey].right;
 
 		break;
 	case SPEAKER_QUAD:
-		outputMatrix_[0] = left_;
-		outputMatrix_[1] = right_;
-		outputMatrix_[2] = left_;
-		outputMatrix_[3] = right_;
+		outputMatrix_[0] = audioInformation_[fileKey].left;
+		outputMatrix_[1] = audioInformation_[fileKey].right;
+		outputMatrix_[2] = audioInformation_[fileKey].left;
+		outputMatrix_[3] = audioInformation_[fileKey].right;
 		break;
 	case SPEAKER_4POINT1:
-		outputMatrix_[0] = left_;
-		outputMatrix_[1] = right_;
-		outputMatrix_[3] = left_;
-		outputMatrix_[4] = right_;
+		outputMatrix_[0] = audioInformation_[fileKey].left;
+		outputMatrix_[1] = audioInformation_[fileKey].right;
+		outputMatrix_[3] = audioInformation_[fileKey].left;
+		outputMatrix_[4] = audioInformation_[fileKey].right;
 		break;
 	case SPEAKER_5POINT1:
 	case SPEAKER_7POINT1:
 	case SPEAKER_5POINT1_SURROUND:
-		outputMatrix_[0] = left_;
-		outputMatrix_[1] = right_;
-		outputMatrix_[4] = left_;
-		outputMatrix_[5] = right_;
+		outputMatrix_[0] = audioInformation_[fileKey].left;
+		outputMatrix_[1] = audioInformation_[fileKey].right;
+		outputMatrix_[4] = audioInformation_[fileKey].left;
+		outputMatrix_[5] = audioInformation_[fileKey].right;
 		break;
 	case SPEAKER_7POINT1_SURROUND:
-		outputMatrix_[0] = left_;
-		outputMatrix_[1] = right_;
-		outputMatrix_[4] = left_;
-		outputMatrix_[5] = right_;
-		outputMatrix_[6] = left_;
-		outputMatrix_[7] = right_;
+		outputMatrix_[0] = audioInformation_[fileKey].left;
+		outputMatrix_[1] = audioInformation_[fileKey].right;
+		outputMatrix_[4] = audioInformation_[fileKey].left;
+		outputMatrix_[5] = audioInformation_[fileKey].right;
+		outputMatrix_[6] = audioInformation_[fileKey].left;
+		outputMatrix_[7] = audioInformation_[fileKey].right;
 		break;
 	}
 
@@ -739,8 +737,7 @@ void Audio::SetPan(uint32_t audioHandle, float_t pan) {
 
 #pragma endregion
 
-	//ファイルキーの取得
-	std::string fileKey = GetAudioInformationKey(audioHandle);
+	
 
 
 	//詳細の取得
@@ -760,106 +757,97 @@ void Audio::SetPan(uint32_t audioHandle, float_t pan) {
 
 }
 
-void Audio::SetLowPassFilter(uint32_t audioHandle, float cutOff) {
+void Audio::SetLowPassFilter(const uint32_t& audioHandle, float cutOff) {
 	//いきなり効果アリにすると違和感あるよね
 	//LowPassは最初「1.0f」にした方が良いかも
-	float newCutOff = cutOff;
-	if (cutOff > 1.0f) {
-		newCutOff = 1.0f;
-	}
-	else if (cutOff < 0.0f) {
-		newCutOff = 0.0f;
-	}
+	cutOff = max(cutOff, 1.0f);
+	cutOff = min(cutOff, 0.0f);
 
-	XAUDIO2_FILTER_PARAMETERS FilterParams;
-	FilterParams.Type = XAUDIO2_FILTER_TYPE::LowPassFilter;
-	FilterParams.Frequency = newCutOff;
-	FilterParams.OneOverQ = 1.4142f;
+	//パラメータの詳細設定
+	XAUDIO2_FILTER_PARAMETERS filterParams = {
+		.Type = XAUDIO2_FILTER_TYPE::LowPassFilter,
+		.Frequency = cutOff,
+		.OneOverQ = 1.4142f,
+	};
 
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
 
 	//パラメータの設定
-	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFilterParameters(&FilterParams);
+	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFilterParameters(&filterParams);
 	assert(SUCCEEDED(hResult));
 
 }
 
-void Audio::SetLowPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
+void Audio::SetLowPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ) {
 	//いきなり効果アリにすると違和感あるよね
 	//LowPassは最初「1.0f」にした方が良いかも
-	float newCutOff = cutOff;
-	if (cutOff > 1.0f) {
-		newCutOff = 1.0f;
-	}
-	else if (cutOff < 0.0f) {
-		newCutOff = 0.0f;
-	}
-
-
-	XAUDIO2_FILTER_PARAMETERS FilterParams; 
-	FilterParams.Type = XAUDIO2_FILTER_TYPE::LowPassFilter;
-	FilterParams.Frequency = newCutOff;
-	FilterParams.OneOverQ = oneOverQ;
-
-	//ファイルキーの取得
-	std::string fileKey = GetAudioInformationKey(audioHandle);
-
-
-	//パラメータの設定
-	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFilterParameters(&FilterParams);
-	assert(SUCCEEDED(hResult));
-}
-
-void Audio::SetHighPassFilter(uint32_t audioHandle, float cutOff) {
-	//いきなり効果アリにすると違和感あるよね
-	//HighPassは最初「0.0f」にした方が良いかも
-
-
-	float newCutOff = cutOff;
-	if (cutOff > 1.0f) {
-		newCutOff = 1.0f;
-	}
-	else if (cutOff < 0.0f) {
-		newCutOff = 0.0f;
-	}
-
-	XAUDIO2_FILTER_PARAMETERS FilterParams;
-	FilterParams.Type = XAUDIO2_FILTER_TYPE::HighPassFilter;
-	FilterParams.Frequency = newCutOff;
-	FilterParams.OneOverQ = 1.4142f;
-
-	//ファイルキーの取得
-	std::string fileKey = GetAudioInformationKey(audioHandle);
-
-
-	//パラメータの設定
-	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFilterParameters(&FilterParams);
-	assert(SUCCEEDED(hResult));
-}
-
-void Audio::SetHighPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
-	
-	cutOff = max(cutOff,1.0f);
+	cutOff = max(cutOff, 1.0f);
 	cutOff = min(cutOff, 0.0f);
 
 
-	XAUDIO2_FILTER_PARAMETERS FilterParams;
-	FilterParams.Type = XAUDIO2_FILTER_TYPE::HighPassFilter;
-	FilterParams.Frequency = cutOff;
-	FilterParams.OneOverQ = oneOverQ;
+	//パラメータの詳細設定
+	XAUDIO2_FILTER_PARAMETERS filterParams = {
+		.Type = XAUDIO2_FILTER_TYPE::LowPassFilter,
+		.Frequency = cutOff,
+		.OneOverQ = oneOverQ,
+	};
 
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
 
 	//パラメータの設定
-	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFilterParameters(&FilterParams);
+	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFilterParameters(&filterParams);
 	assert(SUCCEEDED(hResult));
 }
 
-void Audio::SetBandPassFilter(uint32_t audioHandle, float cutOff) {
+void Audio::SetHighPassFilter(const uint32_t& audioHandle, float cutOff) {
+	//いきなり効果アリにすると違和感あるよね
+	//HighPassは最初「0.0f」にした方が良いかも
+
+	cutOff = max(cutOff, 1.0f);
+	cutOff = min(cutOff, 0.0f);
+
+	//パラメータの詳細設定
+	XAUDIO2_FILTER_PARAMETERS filterParams = {
+		.Type = XAUDIO2_FILTER_TYPE::HighPassFilter,
+		.Frequency = cutOff,
+		.OneOverQ = 1.4142f,
+	};
+
+	//ファイルキーの取得
+	std::string fileKey = GetAudioInformationKey(audioHandle);
+
+
+	//パラメータの設定
+	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFilterParameters(&filterParams);
+	assert(SUCCEEDED(hResult));
+}
+
+void Audio::SetHighPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ) {
+	
+	cutOff = max(cutOff, 1.0f);
+	cutOff = min(cutOff, 0.0f);
+
+	//パラメータの詳細設定
+	XAUDIO2_FILTER_PARAMETERS filterParams = {
+		.Type = XAUDIO2_FILTER_TYPE::HighPassFilter,
+		.Frequency = cutOff,
+		.OneOverQ = oneOverQ,
+	};
+	
+	//ファイルキーの取得
+	std::string fileKey = GetAudioInformationKey(audioHandle);
+
+
+	//パラメータの設定
+	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFilterParameters(&filterParams);
+	assert(SUCCEEDED(hResult));
+}
+
+void Audio::SetBandPassFilter(const uint32_t& audioHandle, float cutOff) {
 	
 
 	cutOff = max(cutOff, 1.0f);
@@ -880,7 +868,7 @@ void Audio::SetBandPassFilter(uint32_t audioHandle, float cutOff) {
 	assert(SUCCEEDED(hResult));
 }
 
-void Audio::SetBandPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
+void Audio::SetBandPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ) {
 	
 	cutOff = max(cutOff, 1.0f);
 	cutOff = min(cutOff, 0.0f);
@@ -902,7 +890,7 @@ void Audio::SetBandPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ
 	assert(SUCCEEDED(hResult));
 }
 
-void Audio::SetNotchFilter(uint32_t audioHandle, float cutOff) {
+void Audio::SetNotchFilter(const uint32_t& audioHandle, float cutOff) {
 	cutOff = max(cutOff, 1.0f);
 	cutOff = min(cutOff, 0.0f);
 
@@ -920,7 +908,7 @@ void Audio::SetNotchFilter(uint32_t audioHandle, float cutOff) {
 	assert(SUCCEEDED(hResult));
 }
 
-void Audio::SetNotchFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
+void Audio::SetNotchFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ) {
 
 	cutOff = max(cutOff, 1.0f);
 	cutOff = min(cutOff, 0.0f);
@@ -941,7 +929,7 @@ void Audio::SetNotchFilter(uint32_t audioHandle, float cutOff, float oneOverQ) {
 
 
 
-void Audio::SendChannels(uint32_t audioHandle, uint32_t channelNumber) {
+void Audio::SendChannels(const uint32_t& audioHandle, uint32_t channelNumber) {
 	XAUDIO2_SEND_DESCRIPTOR send = { 0, Audio::GetInstance()->submixVoice_[0] };
 	XAUDIO2_VOICE_SENDS sendlist = { channelNumber, &send };
 
@@ -952,14 +940,14 @@ void Audio::SendChannels(uint32_t audioHandle, uint32_t channelNumber) {
 	assert(SUCCEEDED(hResult));
 }
 
-void Audio::CreateReverb(uint32_t audioHandle, uint32_t channel) {
+void Audio::CreateReverb(const uint32_t& audioHandle, uint32_t channel) {
 	audioHandle;
 	channel;
 }
 
 
 //エフェクトの効果を無効にする
-void Audio::OffEffect(uint32_t audioHandle) {
+void Audio::OffEffect(const uint32_t& audioHandle) {
 
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
@@ -969,7 +957,7 @@ void Audio::OffEffect(uint32_t audioHandle) {
 }
 
 //エフェクトの効果を有効にする
-void Audio::OnEffect(uint32_t audioHandle) {
+void Audio::OnEffect(const uint32_t& audioHandle) {
 
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
@@ -977,8 +965,6 @@ void Audio::OnEffect(uint32_t audioHandle) {
 	HRESULT hResult = audioInformation_[fileKey].sourceVoice->EnableEffect(0);
 	assert(SUCCEEDED(hResult));
 }
-
-
 
 #pragma endregion
 
@@ -1000,10 +986,7 @@ void Audio::Release() {
 	//残りを消す
 	audioInformation_.clear();
 
-
-	//XAudio2解放
+	//XAudio2の解放
 	xAudio2_.Reset();
-
-
 }
 
