@@ -14,12 +14,9 @@
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib,"xaudio2.lib")
 
-
-
-
+//MediaFundation
 #include <mfapi.h>
 #include <mfidl.h>
-
 
 #pragma comment(lib, "Mf.lib")
 #pragma comment(lib, "mfplat.lib")
@@ -35,7 +32,6 @@ using Microsoft::WRL::ComPtr;
 
 
 #include "AudioStruct.h"
-#include <Load/IAudioLoad.h>
 
 //LoadAudioの時に使う
 enum EffectType {
@@ -293,17 +289,27 @@ public:
 	/// <param name="channel"></param>
 	void CreateSubmixVoice(uint32_t channel);
 
-
+	/// <summary>
+	/// 指定したチャンネルに送る
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	/// <param name="channelNumber"></param>
 	void SendChannels(const uint32_t& audioHandle, uint32_t channelNumber);
 
 	//リバーブ
 	//まだ未完成だから使わないでね
 	void CreateReverb(const uint32_t& audioHandle, uint32_t channel);
 
-	//エフェクトの効果を無効にする
+	/// <summary>
+	/// エフェクトの効果を無効にする
+	/// </summary>
+	/// <param name="audioHandle"></param>
 	void OffEffect(const uint32_t& audioHandle);
 
-	//エフェクトの効果を有効にする
+	/// <summary>
+	/// エフェクトの効果を有効にする
+	/// </summary>
+	/// <param name="audioHandle"></param>
 	void OnEffect(const uint32_t& audioHandle);
 
 
@@ -325,8 +331,9 @@ private:
 				return filePath;
 			}
 		}
-		// 一致するhandleが見つからなかった場合のエラー処理
-		throw std::runtime_error("Animation not found for given handle");
+		
+		//無かったら空を返す
+		return {};
 	}
 
 private:
@@ -356,20 +363,15 @@ private:
 	X3DAUDIO_EMITTER emitter_ = {};
 
 
-
+	//オーディオに関するものが入っている
 	std::map<std::string, AudioInformation>audioInformation_{};
 
+	//サブミックスボイス
 	static const int SUBMIXVOICE_AMOUNT_ = 64;
 	std::array<IXAudio2SubmixVoice*, SUBMIXVOICE_AMOUNT_> submixVoice_{};
 
-	//読み込み
-	IAudioLoad* iAudioLoad_ = nullptr;
-
 
 private:
-
-
-
 
 	//自分のエンジンではA4は442Hz基準にする
 	//もちろん12段階で1オクターブ

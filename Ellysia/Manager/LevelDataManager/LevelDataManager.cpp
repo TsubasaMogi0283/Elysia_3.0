@@ -21,18 +21,19 @@ LevelDataManager* LevelDataManager::GetInstance(){
 
 
 
-std::string LevelDataManager::findAudioFileWithExtension(const std::string& directory, const std::string& baseFileName) {
+std::string LevelDataManager::FindExtension(const std::string& directory, const std::string& baseFileName) {
 	namespace fs = std::filesystem;
 
 	for (const auto& entry : fs::directory_iterator(directory)) {
 		if (entry.is_regular_file()) {
-			std::string fileName = entry.path().stem().string();  // 拡張子なしのファイル名
+			std::string fileName = entry.path().stem().string(); 
+			//見つかった場合
 			if (fileName == baseFileName) {
-				return entry.path().string();  // フルパスを返す
+				return entry.path().string();  
 			}
 		}
 	}
-	return "";  // 見つからなければ空文字を返す
+	return {};  // 見つからなければ空文字を返す
 }
 
 void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
@@ -153,7 +154,7 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 				std::string audioFilePath = leveldataPath_ + levelData.folderName+"/Audio"+ objectData.levelAudioData.fileName +"/" + objectData.levelAudioData.fileName;
 				
 				std::string audioDir = leveldataPath_ + levelData.folderName + "/Audio/"+objectData.levelAudioData.type+"/"  ;
-				std::string a = findAudioFileWithExtension(audioDir, objectData.levelAudioData.fileName);
+				std::string a = FindExtension(audioDir, objectData.levelAudioData.fileName);
 
 
 

@@ -11,13 +11,13 @@ Audio* Audio::GetInstance() {
 }
 
 void Audio::CreateSubmixVoice(uint32_t channel) {
-	uint32_t channels = channel;
+	
 	//44100Hz固定で良いでしょう
 	uint32_t sampleRate = 44100u;
 
 
-
-	HRESULT hResult = Audio::GetInstance()->xAudio2_->CreateSubmixVoice(&Audio::GetInstance()->submixVoice_[channel], channels, sampleRate);
+	//サブミックスボイスの作成
+	HRESULT hResult = Audio::GetInstance()->xAudio2_->CreateSubmixVoice(&Audio::GetInstance()->submixVoice_[channel], channel, sampleRate);
 	assert(SUCCEEDED(hResult));
 
 }
@@ -51,7 +51,7 @@ void Audio::Initialize() {
 	}
 
 	//サブミックスボイス(DTMでのバス)をここで作る
-	for (int i = 0; i < SUBMIXVOICE_AMOUNT_; ++i) {
+	for (int i = 1; i < SUBMIXVOICE_AMOUNT_; ++i) {
 
 		CreateSubmixVoice(i);
 	}

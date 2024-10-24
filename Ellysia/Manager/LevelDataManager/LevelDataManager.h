@@ -254,8 +254,13 @@ private:
 	/// </summary>
 	void AudioPlay(LevelData& levelData);
 
-
-	std::string findAudioFileWithExtension(const std::string& directory, const std::string& baseFileName);
+	/// <summary>
+	/// 拡張子を取得
+	/// </summary>
+	/// <param name="directory"></param>
+	/// <param name="baseFileName"></param>
+	/// <returns></returns>
+	std::string FindExtension(const std::string& directory, const std::string& baseFileName);
 private:
 
 	//ここにデータを入れていく
