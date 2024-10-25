@@ -124,24 +124,17 @@ bool Input::IsTriggerMouse(int32_t mouseNumber) {
 #pragma region コントローラー
 
 //状態を取得
-bool Input::GetJoystickState(XINPUT_STATE& state){
-	DWORD dwResult = XInputGetState(0, &state);
+bool Input::IsConnetGamePad(){
+	//trueだと繋がっているよ
+	DWORD dwResult = XInputGetState(0, &state_);
 	if (dwResult == ERROR_SUCCESS){
 		return true;
 	}
 	return false;
-	
 }
 
-bool Input::IsPushLeft(XINPUT_STATE& state) {
-	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
-		return true;
-	}
-	return false;
-}
-
-bool Input::IsPushRight(XINPUT_STATE& state) {
-	if (state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+bool Input::IsPushButton(int32_t button) {
+	if (state_.Gamepad.wButtons & button) {
 		return true;
 	}
 	return false;
@@ -188,13 +181,12 @@ void Input::Update() {
 		}
 	}
 
-	XINPUT_STATE state{};
 	//前回のキー入力を保存
 	memcpy(preKey_, currentKey_, sizeof(currentKey_));
 	memcpy(preControllerButtons_, currentControllerButtons_, sizeof(preControllerButtons_));
 	for (int i = 0; i < XUSER_MAX_COUNT; ++i) {
-		currentControllerButtons_[i][0] = state.Gamepad.wButtons & 0xFF;
-		currentControllerButtons_[i][1] = (state.Gamepad.wButtons >> 8) & 0xFF;
+		currentControllerButtons_[i][0] = state_.Gamepad.wButtons & 0xFF;
+		currentControllerButtons_[i][1] = (state_.Gamepad.wButtons >> 8) & 0xFF;
 	}
 	//Keyと違ってそのまま代入で大丈夫だよ
 	preMouse_ = currentMouse_;

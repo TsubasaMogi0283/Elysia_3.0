@@ -7,7 +7,7 @@
 #include <numbers>
 
 #include "Stage/ObjectManager/ObjectManager.h"
-#include "SampleScene/SampleScene.h"
+#include "GameScene/GameScene.h"
 #include <SingleCalculation.h>
 #include <Collider/CollisionConfig.h>
 #include <ModelManager.h>
@@ -65,7 +65,7 @@ void Player::Initialize(){
 
 
 	
-
+	isDameged_ = false;
 	
 }
 
@@ -81,13 +81,15 @@ void Player::Update(){
 	
 
 		float moveSpeed = 0.0f;
-
+		//走っている時
 		if (isDash_ == true) {
 			moveSpeed = DASH_MOVE_SPEED;
 		}
+		//通常の動きの時
 		else {
 			moveSpeed = NORMAL_MOVE_SPEED;
 		}
+		//加算
 		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, VectorCalculation::Multiply(moveDirection_, moveSpeed));
 
 	}
@@ -128,6 +130,22 @@ void Player::Update(){
 	collisionToStrongEnemy_->Update();
 
 
+	//攻撃された場合
+	if (isDameged_ == true) {
+		//線形補間で振動処理をする
+		const float DELTA_TIME = 1.0f/60.0f;
+		vibeTime_ += DELTA_TIME;
+		vibeStrength_ = SingleCalculation::Lerp(1.0f, 0.0f, vibeTime_);
+		Input::GetInstance()->SetVibration(vibeStrength_, vibeStrength_);
+
+		//振動を止める
+		if (vibeStrength_ < 0.0f) {
+			Input::GetInstance()->StopVibration();
+			vibeTime_ = 0.0f;
+			isDameged_ = false;
+		}
+	}
+
 	
 #ifdef _DEBUG
 	//ImGuiにInputUintが無いの不便・・
@@ -136,11 +154,12 @@ void Player::Update(){
 
 
 	ImGui::Begin("プレイヤー");
-	if (ImGui::TreeNode("Condition")) {
-		ImGui::InputInt("KeyQuantity", &keyQuantity);
-		ImGui::InputInt("HP", &hp_);
+	if (ImGui::TreeNode("状態")) {
+		ImGui::InputInt("鍵の数", &keyQuantity);
+		ImGui::InputInt("体力", &hp_);
 		ImGui::Checkbox("acceptDamage_", &acceptDamage_);
 		ImGui::Checkbox("isDamage_", &isDamage_);
+		ImGui::Checkbox("振動", &isDameged_);
 
 		ImGui::TreePop();
 	}
@@ -176,5 +195,15 @@ Vector3 Player::GetWorldPosition() {
 void Player::OnCollision(){
 	//体力を1減らす
 	--hp_;
+
+	//振動させる
+	isDameged_ = true;
 }
 
+void Player::OffCollision(){
+
+}
+
+Player::~Player() {
+	Input::GetInstance()->StopVibration();
+}

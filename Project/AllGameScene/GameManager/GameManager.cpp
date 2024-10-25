@@ -1,5 +1,5 @@
 #include "GameManager.h"
-#include "SampleScene/SampleScene.h"
+#include "GameScene/GameScene.h"
 #include "SampleScene2/SampleScene2.h"
 #include "TitleScene/TitleScene.h"
 #include "LevelEditorSample/LevelEditorSample.h"
@@ -12,7 +12,7 @@ void GameManager::Initialize() {
 
 #ifdef _DEBUG
 	//currentGamaScene_ = new LevelEditorSample();
-	currentGamaScene_ = new SampleScene();
+	currentGamaScene_ = new GameScene();
 #endif // _DEBUG
 
 	//初期化
@@ -49,10 +49,10 @@ void GameManager::Update() {
 			}
 
 			// 現在選択されているアイテムにフォーカスを設定
-			if (isSelected) {
+			if (isSelected==true) {
 				ImGui::SetItemDefaultFocus();
 			}
-				
+			
 		}
 
 		ImGui::EndCombo();

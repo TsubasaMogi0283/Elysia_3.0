@@ -120,20 +120,20 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 //1.TextureデータそのものをCPUで読み込む
 DirectX::ScratchImage TextureManager::LoadTextureData(const std::string& filePath) {
 
-	HRESULT hr = {};
+	HRESULT hResult = {};
 
 	//テクスチャファイルを読んでプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
 	std::wstring filePathW = ConvertString::ToWString(filePath);
 	//dssファイルの場合
 	if (filePathW.ends_with(L".dds")) {
-		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
-		assert(SUCCEEDED(hr));
+		hResult = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
+		assert(SUCCEEDED(hResult));
 	}
 	//その他のpngやjpegなど
 	else {
-		hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
-		assert(SUCCEEDED(hr));
+		hResult = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+		assert(SUCCEEDED(hResult));
 
 	}
 
@@ -146,8 +146,8 @@ DirectX::ScratchImage TextureManager::LoadTextureData(const std::string& filePat
 		mipImages = std::move(image);
 	}
 	else {
-		hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 4, mipImages);
-		assert(SUCCEEDED(hr));
+		hResult = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 4, mipImages);
+		assert(SUCCEEDED(hResult));
 
 	}
 
@@ -192,14 +192,14 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 
 	//3.Resourceを生成する
 
-	HRESULT hr = DirectXSetup::GetInstance()->GetDevice()->CreateCommittedResource(
+	HRESULT hResult = DirectXSetup::GetInstance()->GetDevice()->CreateCommittedResource(
 		&heapProperties,					//Heapの設定
 		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定
 		&resourceDesc,						//Resourceの設定
 		D3D12_RESOURCE_STATE_COPY_DEST,		//初回のResourceState。データの転送を受け入れられるようにする
 		nullptr,							//Clear最適値。使わないのでnullptr
 		IID_PPV_ARGS(&resource));			//作成するResourceポインタへのポインタ
-	assert(SUCCEEDED(hr));
+	assert(SUCCEEDED(hResult));
 
 	return resource;
 

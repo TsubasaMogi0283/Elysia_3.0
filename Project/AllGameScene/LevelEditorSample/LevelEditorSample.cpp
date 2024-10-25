@@ -2,7 +2,7 @@
 #include <imgui.h>
 #include <Input.h>
 #include <AdjustmentItems.h>
-#include "SampleScene/SampleScene.h"
+#include "GameScene/GameScene.h"
 
 #include "GameManager.h"
 #include "ModelManager.h"
@@ -11,13 +11,19 @@
 #include <TextureManager.h>
 
 
+LevelEditorSample::LevelEditorSample(){
+	//レベルエディタのインスタンスを取得
+	levelEditor_ = LevelDataManager::GetInstance();
+	//オーディオのインスタンスを取得
+	audio_ = Audio::GetInstance();
+}
+
 void LevelEditorSample::Initialize(){
 
 
-	levelEditor_ = LevelDataManager::GetInstance();
+	
 
-	//読み込み
-	levelHandle_= levelEditor_->Load("Test/Test.json");
+	
 
 	//平行光源の初期化
 	directionalLight_.Initialize();
@@ -33,6 +39,19 @@ void LevelEditorSample::Initialize(){
 	//ポストエフェクト
 	back_ = std::make_unique<Vignette>();
 	back_->Initialize();
+
+
+
+	//読み込み
+	levelHandle_ = levelEditor_->Load("Test/AudioTest.json");
+
+	//オーディオの読み込み
+	uint32_t mp3Test = audio_->Load("Resources/Audio/Sample/WIP.mp3");
+	mp3Test;
+	audioHandle_ = audio_->Load("Resources/Audio/Sample/Win.wav");
+	audioHandle2_= audio_->Load("Resources/Audio/Sample/Hit.wav");
+	audioHandleMP3_ = audio_->Load("Resources/Audio/Sample/WIP.mp3");
+	//audio_->PlayMP3(audioHandleMP3_, true);
 
 }
 
@@ -58,6 +77,7 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 	gameManager;
 
+	//更新
 	levelEditor_->Update(levelHandle_);
 
 	material_.Update();

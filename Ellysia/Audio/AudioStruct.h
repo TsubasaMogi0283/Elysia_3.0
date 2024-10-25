@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <xaudio2.h>
 #include <string>
+#include <mfreadwrite.h>
 
 //チャンク...データの塊みたいなもの
 	//チャンクヘッダ
@@ -37,25 +38,33 @@ struct SoundData {
 	BYTE* pBuffer;
 
 	//バッファのサイズ
-	unsigned int bufferSize;
+	int32_t bufferSize;
 };
 
 
 struct AudioInformation {
 
 	//読み込んだテクスチャの名前
-	std::string name_ = {};
+	std::string fileName = {};
 
 	//サウンドデータ
-	SoundData soundData_ = {};
+	SoundData soundData = {};
 
-	//波形フォーマットを基にSourceVoiceの生成
-	IXAudio2SourceVoice* pSourceVoice_ = nullptr;
+	//サウンドボイス
+	IXAudio2SourceVoice* sourceVoice = nullptr;
+
+
+	
+	//ソースリーダー
+	IMFSourceReader* sourceReader = nullptr;
+
+	std::vector<BYTE> mediaData;
 
 	//ハンドル
-	uint32_t audioHandle_ = 0;
+	uint32_t handle = 0;
 
-	//テクスチャハンドル
-	uint32_t handle_ = 0;
+	//Pan用
+	float left = 0.0f;
+	float right = 0.0f;
 
 };

@@ -15,10 +15,20 @@
 //その他自分で作ったものは""でインクルードさせてね
 
 //extern...グローバル変数を共有する
+
+/// <summary>
+/// ImGuiで使うもの
+/// </summary>
+/// <param name="hwnd"></param>
+/// <param name="msg"></param>
+/// <param name="wParam"></param>
+/// <param name="lParam"></param>
+/// <returns></returns>
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam);
 
-//シングルでやりたい
-//finalで継承禁止
+/// <summary>
+/// Windowsの設定(シングルトン)
+/// </summary>
 class WindowsSetup final{
 private:
 	//インスタンスを作れないようにする
@@ -37,6 +47,7 @@ private:
 public:
 
 	#pragma region 禁止事項
+
 	//コピーコンストラクタ禁止
 	WindowsSetup(const WindowsSetup& winApp) = delete;
 
@@ -50,17 +61,32 @@ public:
 	static WindowsSetup* GetInstance();
 
 
-	//Window Procedure
+	/// <summary>
+	/// ウィンドウプロシージャ(コールバック関数だよ)
+	/// </summary>
+	/// <param name="hwnd"></param>
+	/// <param name="msg"></param>
+	/// <param name="wparam"></param>
+	/// <param name="lparam"></param>
+	/// <returns></returns>
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
+	/// <summary>
+	/// 出力の所に文字を出す
+	/// </summary>
+	/// <param name="stringText"></param>
 	static void OutputText(std::string& stringText);
 
 private:
 
-	//ウィンドウクラスを登録
+	/// <summary>
+	/// //ウィンドウクラスを登録
+	/// </summary>
 	void RegisterWindowsClass();
 
-	//WINodwを表示
+	/// <summary>
+	/// Windowを表示
+	/// </summary>
 	void DisplayWindow();
 
 
@@ -85,40 +111,56 @@ public:
 	/// </summary>
 	void Close();
 
-#pragma region アクセッサ
+public:
 
-	//Getter
-	uint32_t GetClientWidth() {
+	/// <summary>
+	/// クライアントの横幅
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetClientWidth() const{
 		return clientWidth_;
 	}
-	uint32_t GetClientHeight() {
+
+	/// <summary>
+	/// クライアントの縦幅
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetClientHeight() const{
 		return clientHeight_;
 	}
 
-	HWND GetHwnd() {
+	/// <summary>
+	/// Hwndの取得
+	/// </summary>
+	/// <returns></returns>
+	HWND GetHwnd()const {
 		return hwnd_;
 	}
 
-	HINSTANCE GetHInstance() {
-		return wc_.hInstance;
+	/// <summary>
+	/// hInstanceの取得
+	/// </summary>
+	/// <returns></returns>
+	HINSTANCE GetHInstance() const{
+		return windowClass_.hInstance;
 	}
 
 
 
-#pragma endregion
-
 private:
 
-	////ウィンドウクラスを登録する
+	//タイトルバー
 	const wchar_t* title_=L"Ellysia";
 	
+	//クライアントのサイズ
 	uint32_t clientWidth_=0;
 	uint32_t clientHeight_=0;
 	
-
+	//ウィンドウハンドル
 	HWND hwnd_=0;
 
-	WNDCLASS wc_{};
+	//ウィンドウクラス
+	WNDCLASS windowClass_{};
 
 	
 

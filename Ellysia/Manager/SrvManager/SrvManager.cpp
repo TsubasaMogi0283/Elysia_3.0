@@ -36,7 +36,6 @@ uint32_t SrvManager::Allocate(){
 	useIndex_++;
 	
 	//上で記録した番号をreturn
-	
 	return index;;
 }
 

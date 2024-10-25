@@ -2,7 +2,8 @@
 
 #include <cassert>
 #include <numbers>
-
+#include <filesystem>
+#include <iostream>
 
 #include "ModelManager.h"
 #include "Camera.h"
@@ -10,6 +11,7 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include <Audio.h>
 
 
 LevelDataManager* LevelDataManager::GetInstance(){
@@ -17,6 +19,22 @@ LevelDataManager* LevelDataManager::GetInstance(){
 	return &instance;
 }
 
+
+
+std::string LevelDataManager::FindExtension(const std::string& directory, const std::string& baseFileName) {
+	namespace fs = std::filesystem;
+
+	for (const auto& entry : fs::directory_iterator(directory)) {
+		if (entry.is_regular_file()) {
+			std::string fileName = entry.path().stem().string(); 
+			//見つかった場合
+			if (fileName == baseFileName) {
+				return entry.path().string();  
+			}
+		}
+	}
+	return {};  // 見つからなければ空文字を返す
+}
 
 void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
@@ -38,29 +56,29 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 			//ここでのファイルネームはオブジェクトの名前
 			if (object.contains("file_name")) {
 				//ファイル名
-				objectData.fileName = object["file_name"];
+				objectData.modelFileName = object["file_name"];
 			}
 
 			//トランスフォームのパラメータ読み込み
 			nlohmann::json& transform = object["transform"];
 			//Blenderと軸の方向が違うので注意！
 			//平行移動
-			objectData.translation.x = (float)transform["translation"][1];
-			objectData.translation.y = (float)transform["translation"][2];
-			objectData.translation.z = (float)transform["translation"][0];
+			objectData.transform.translate.x = (float)transform["translation"][1];
+			objectData.transform.translate.y = (float)transform["translation"][2];
+			objectData.transform.translate.z = (float)transform["translation"][0];
 			
 			//回転角
 			//そういえばBlenderは度数法だったね
 			//エンジンでは弧度法に直そう
 			const float DEREES_TO_RADIUS_ = (float)std::numbers::pi / 180.0f;
-			objectData.rotation.x = -(float)transform["rotation"][1] * DEREES_TO_RADIUS_;
-			objectData.rotation.y = -(float)transform["rotation"][2] * DEREES_TO_RADIUS_;
-			objectData.rotation.z = -(float)transform["rotation"][0] * DEREES_TO_RADIUS_;
+			objectData.transform.rotate.x = -(float)transform["rotation"][1] * DEREES_TO_RADIUS_;
+			objectData.transform.rotate.y = -(float)transform["rotation"][2] * DEREES_TO_RADIUS_;
+			objectData.transform.rotate.z = -(float)transform["rotation"][0] * DEREES_TO_RADIUS_;
 
 			//スケール
-			objectData.scaling.x = (float)transform["scaling"][1];
-			objectData.scaling.y = (float)transform["scaling"][2];
-			objectData.scaling.z = (float)transform["scaling"][0];
+			objectData.transform.scale.x = (float)transform["scaling"][1];
+			objectData.transform.scale.y = (float)transform["scaling"][2];
+			objectData.transform.scale.z = (float)transform["scaling"][0];
 
 
 
@@ -75,23 +93,24 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 				}
 
 				
-
+				//BOX
 				if (objectData.colliderType == "BOX") {
 					//中心座標
-					objectData.center.x = (float)collider["center"][1] + objectData.translation.x;
-					objectData.center.y = (float)collider["center"][2] + objectData.translation.y;
-					objectData.center.z = -(float)collider["center"][0] + objectData.translation.z;
+					objectData.center.x = (float)collider["center"][1] + objectData.transform.translate.x;
+					objectData.center.y = (float)collider["center"][2] + objectData.transform.translate.y;
+					objectData.center.z = -(float)collider["center"][0] + objectData.transform.translate.z;
 					//サイズ
 					objectData.size.x = (float)collider["size"][1];
 					objectData.size.y = (float)collider["size"][2];
 					objectData.size.z = (float)collider["size"][0];
 
 				}
+				//AABB
 				else if (objectData.colliderType == "AABB") {
 					//中心座標
-					objectData.center.x = (float)collider["center"][1] + objectData.translation.x;
-					objectData.center.y = (float)collider["center"][2] + objectData.translation.y;
-					objectData.center.z = -(float)collider["center"][0] + objectData.translation.z;
+					objectData.center.x = (float)collider["center"][1] + objectData.transform.translate.x;
+					objectData.center.y = (float)collider["center"][2] + objectData.transform.translate.y;
+					objectData.center.z = -(float)collider["center"][0] + objectData.transform.translate.z;
 					//サイズ
 					objectData.size.x = (float)collider["size"][1];
 					objectData.size.y = (float)collider["size"][2];
@@ -111,6 +130,38 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 			}
 
+
+			//オーディオの読み込み
+			//まずあるかどうか
+			if (object.contains("audio")) {
+				nlohmann::json& audio = object["audio"];
+
+				//Audioを持っているよ
+				objectData.levelAudioData.isHavingAudio = true;
+
+				//種類を記録
+				if (audio.contains("type")) {
+					objectData.levelAudioData.type = audio["type"];
+				}
+
+				//ファイル名を記録
+				objectData.levelAudioData.fileName = audio["file_name"];
+
+				//ループをするかどうか
+				objectData.levelAudioData.isLoop = audio["loop"];
+
+				//Audioフォルダの中で読み込み
+				std::string audioFilePath = leveldataPath_ + levelData.folderName+"/Audio"+ objectData.levelAudioData.fileName +"/" + objectData.levelAudioData.fileName;
+				
+				std::string audioDir = leveldataPath_ + levelData.folderName + "/Audio/"+objectData.levelAudioData.type+"/"  ;
+				std::string a = FindExtension(audioDir, objectData.levelAudioData.fileName);
+
+
+
+				objectData.levelAudioData.handle = Audio::GetInstance()->LoadWave(a);
+
+			}
+
 			//子オブジェクト
 			if (object.contains("children")) {
 				Place(object["children"], levelData);
@@ -123,7 +174,7 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 void LevelDataManager::Ganarate(LevelData& levelData) {
 
-	std::string levelEditorDirectoryPath = "Resources/LevelData/"+ levelData.folderName;
+	std::string levelEditorDirectoryPath = leveldataPath_ + levelData.folderName;
 	
 	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
 
@@ -131,7 +182,7 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 		//まだ無い場合は生成する
 		if (objectData.model == nullptr) {
 			//モデルの読み込み
-			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.fileName);
+			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
 			//生成
 			Model* model = Model::Create(modelHandle);
 			//代入
@@ -139,21 +190,24 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 		}
 		
 		//ワールドトランスフォームの初期化
-		//空だったら生成する
 		WorldTransform* worldTransform = new WorldTransform();
 		worldTransform->Initialize();
-		worldTransform->translate_ = objectData.translation;
-		worldTransform->rotate_ = objectData.rotation;
-		worldTransform->scale_ = objectData.scaling;
+		worldTransform->scale_ = objectData.transform.scale;
+		worldTransform->rotate_ = objectData.transform.rotate;
+		worldTransform->translate_ = objectData.transform.translate;
 
 		//配列に登録
 		objectData.worldTransform = worldTransform;
 		
 	}
+
+
+
+
 }
 
-nlohmann::json LevelDataManager::Deserialize(std::ifstream& file, std::string& fullFilePath){
-
+nlohmann::json LevelDataManager::Deserialize(std::string& fullFilePath){
+	std::ifstream file;
 	//ファイルを開ける
 	file.open(fullFilePath);
 
@@ -187,44 +241,32 @@ nlohmann::json LevelDataManager::Deserialize(std::ifstream& file, std::string& f
 
 }
 
-uint32_t LevelDataManager::Load(const std::string& filePath){
+void LevelDataManager::AudioPlay(LevelData& levelData){
+	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
 
-	//ファイル
-	std::ifstream file;
-
-	//パスの結合
-	std::string levelEditorDirectoryPath = "Resources/LevelData/";
-	std::string fullFilePath = levelEditorDirectoryPath + filePath;
-
-
-	//ファイルを開ける
-	file.open(fullFilePath);
-
-	//読み込めなかったら引っかかる
-	if (file.fail()) {
-		assert(0);
+		//オーディオ機能を持っていたら通るよ
+		if (objectData.levelAudioData.isHavingAudio == true) {
+			//ハンドル
+			uint32_t handle = objectData.levelAudioData.handle;
+			//ループするかどうか
+			bool isLoop = objectData.levelAudioData.isLoop;
+			//再生
+			Audio::GetInstance()->PlayWave(handle, isLoop);
+		}
 	}
 
+
+
+}
+
+uint32_t LevelDataManager::Load(const std::string& filePath){
+
+	//パスの結合
+	std::string fullFilePath = leveldataPath_ + filePath;
+
 	//JSON文字列から解凍したデータ
-	nlohmann::json deserialized;
+	nlohmann::json deserialized= Deserialize(fullFilePath);
 
-	//解凍
-	file >> deserialized;
-
-	//正しいレベルデータファイルかチェック
-	//objectかどうか
-	assert(deserialized.is_object());
-	//namaeのキーワードがあるかどうか
-	assert(deserialized.contains("name"));
-	//nameはstring型かどうか
-	assert(deserialized["name"].is_string());
-
-	//"name"を文字列として取得
-	std::string name = deserialized["name"].get<std::string>();
-	//正しいレベルデータファイルはチェック
-	assert(name.compare("scene") == 0);
-
-	
 	//ファイルパスの分解
 	std::string folderName = {};
 	std::string fileName = {};
@@ -258,6 +300,11 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 	//生成
 	Ganarate(levelData);
 	
+	//オーディオの再生
+	//AudioPlay(levelData);
+
+
+
 	//番号を返す
 	return levelDatas_[fullFilePath]->handle;
 
@@ -267,29 +314,28 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 
 
 	//一度全てのオブジェクトのデータを消す
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		//LevelDataを取得
-		LevelData* levelData = it->second.get();
+	for (auto& [key, levelDataPtr] : levelDatas_) {
+		if (levelDataPtr->handle == levelDataHandle) {
 
-		//一致したら消す
-		if (levelData->handle == levelDataHandle) {
 			//モデルを消す
-			for (auto& object : levelData->objectDatas) {
+			for (auto& object : levelDataPtr->objectDatas) {
 				// Modelの解放
 				if (object.model != nullptr) {
 					delete object.model;
 				}
 				//ワールドトランスフォームの解放
 				delete object.worldTransform;
+
 			}
 
-			//listにある情報を消す
-			levelData->objectDatas.~list();
+			//listにある情報を全て消す
+			levelDataPtr->objectDatas.clear();
 
-			//無駄なループ処理をしないようにする
+			//無駄な処理をしないようにする
 			break;
 		}
 	}
+
 
 
 	//引数から探す
@@ -305,31 +351,11 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 	}
 
 
-	std::ifstream file;
-	file.open(fullFilePath);
-
-	if (file.fail()) {
-		assert(0);
-	}
 
 	//JSON文字列から解凍したデータ
-	nlohmann::json deserialized;
+	nlohmann::json deserialized= Deserialize(fullFilePath);
 
-	//解凍
-	file >> deserialized;
 
-	//正しいレベルデータファイルかチェック
-	//objectかどうか
-	assert(deserialized.is_object());
-	//namaeのキーワードがあるかどうか
-	assert(deserialized.contains("name"));
-	//nameはstring型かどうか
-	assert(deserialized["name"].is_string());
-
-	//"name"を文字列として取得
-	std::string name = deserialized["name"].get<std::string>();
-	//正しいレベルデータファイルはチェック
-	assert(name.compare("scene") == 0);
 
 	//元々あったデータを取得する
 	//オブジェクトは全部消したけどここにファイルパスの情報が残っているよ
@@ -344,11 +370,15 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 }
 
 void LevelDataManager::Update(uint32_t& levelDataHandle){
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get(); 
+
+	//この書き方はC++17からの構造化束縛というものらしい
+	//イテレータではなくこっちでやった方が良いかな
+	//ファイル名で指定したい時はkeyを使ったら楽だね。ハンドルだけどねこれは。
+	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
-			//更新
+			
 			for (auto& object : levelData->objectDatas) {
+				//更新
 				object.worldTransform->Update();
 			}
 			break; 
@@ -358,14 +388,10 @@ void LevelDataManager::Update(uint32_t& levelDataHandle){
 
 void LevelDataManager::Delete(uint32_t& levelDataHandle){
 
-	//一度全てのオブジェクトのデータを消す
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
 
-		//LevelDataを取得
-		LevelData* levelData = it->second.get();
-
-		//一致したら消す
+	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
+
 			//モデルを消す
 			for (auto& object : levelData->objectDatas) {
 				// Modelの解放
@@ -378,7 +404,7 @@ void LevelDataManager::Delete(uint32_t& levelDataHandle){
 			}
 
 			//listにある情報を全て消す
-			levelData->objectDatas.~list();
+			levelData->objectDatas.clear();
 
 			//無駄な処理をしないようにする
 			break;
@@ -390,8 +416,7 @@ void LevelDataManager::Delete(uint32_t& levelDataHandle){
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, DirectionalLight& directionalLight){
 	
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get(); 
+	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
@@ -402,13 +427,13 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 			break;
 
 		}
+
 	}
 }
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, PointLight& pointLight){
 
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get(); 
+	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
@@ -419,13 +444,12 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 			break;
 
 		}
+
 	}
 }
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, SpotLight& spotLight){
-
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get();
+	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
@@ -436,17 +460,16 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 			break;
 
 		}
+
 	}
+
 }
 
 #pragma endregion
 
 
 void LevelDataManager::Release(){
-	//全て消す
-	for (std::map<std::string, std::unique_ptr<LevelData>>::iterator it = levelDatas_.begin(); it != levelDatas_.end(); ++it) {
-		LevelData* levelData = it->second.get();
-
+	for (auto& [key, levelData] : levelDatas_) {
 		for (auto& object : levelData->objectDatas) {
 			// Model の解放
 			if (object.model != nullptr) {
@@ -455,6 +478,7 @@ void LevelDataManager::Release(){
 			delete object.worldTransform;
 
 		}
+
 	}
 
 	levelDatas_.clear();

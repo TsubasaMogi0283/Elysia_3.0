@@ -15,7 +15,6 @@ WindowsSetup* WindowsSetup::GetInstance() {
 
 
 
-//
 LRESULT WindowsSetup::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam){
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
@@ -48,17 +47,16 @@ void WindowsSetup::OutputText(std::string& stringText){
 //ウィンドウに情報を入れる
 void  WindowsSetup::RegisterWindowsClass() {
 	
-	
 	//ウィンドウプロシャージャ
-	wc_.lpfnWndProc = WindowProc;
+	windowClass_.lpfnWndProc = WindowProc;
 	//ウィンドウクラス名
-	wc_.lpszClassName = L"%s",title_;
+	windowClass_.lpszClassName = L"%s",title_;
 	//インスタンドハンドル
-	wc_.hInstance = GetModuleHandle(nullptr);
+	windowClass_.hInstance = GetModuleHandle(nullptr);
 	//カーソル
-	wc_.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	windowClass_.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	//ウィンドウクラス登録
-	RegisterClass(&wc_);
+	RegisterClass(&windowClass_);
 
 	//クライアント領域サイズ
 	//ウィンドウサイズを表す構造体にクライアント領域を入れる
@@ -67,26 +65,23 @@ void  WindowsSetup::RegisterWindowsClass() {
 	AdjustWindowRect(&wrc_, WS_OVERLAPPEDWINDOW, false);
 	// ウィンドウ生成
 	hwnd_ = CreateWindow(
-		wc_.lpszClassName,//　クラス名
-		title_,                //　タイトルバーの文字
-		WS_OVERLAPPEDWINDOW,  //　標準的なウィンドウスタイル
-		CW_USEDEFAULT,        //　標準X座標
-		CW_USEDEFAULT,        //　標準Y座標
-		wrc_.right - wrc_.left, //　横幅
-		wrc_.bottom - wrc_.top, //　縦幅ti
-		nullptr,              //　親ハンドル
-		nullptr,              //　メニューハンドル
-		wc_.hInstance,         //　インスタンスハンドル
-		nullptr               //　オプション
+		windowClass_.lpszClassName,		//クラス名
+		title_,					//タイトルバーの文字
+		WS_OVERLAPPEDWINDOW,	//標準的なウィンドウスタイル
+		CW_USEDEFAULT,			//標準X座標
+		CW_USEDEFAULT,			//標準Y座標
+		wrc_.right - wrc_.left, //横幅
+		wrc_.bottom - wrc_.top, //縦幅
+		nullptr,				//親ハンドル
+		nullptr,				//メニューハンドル
+		windowClass_.hInstance,			//インスタンスハンドル
+		nullptr					//オプション
 	);
 
 		
-	std::string a = "あ";
-	OutputText(a);
 	
 }
 
-//ウィンドウを表示
 void WindowsSetup::DisplayWindow() {
 	//ウィンドウを表示
 	ShowWindow(hwnd_, SW_SHOW);
@@ -114,7 +109,7 @@ void WindowsSetup::Initialize(const wchar_t* title, int32_t clientWidth,int32_t 
 
 
 
-//メッセージを送る
+
 void WindowsSetup::WindowsMSG(MSG& msg) {
 	TranslateMessage(&msg);
 	DispatchMessage(&msg);

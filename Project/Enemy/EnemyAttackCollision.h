@@ -9,6 +9,7 @@
 struct Camera;
 struct SpotLight;
 
+//敵の攻撃用の当たり判定
 class EnemyAttackCollision :public Collider {
 public:
 
@@ -69,7 +70,10 @@ public:
 	/// </summary>
 	void OnCollision()override;
 
-
+	/// <summary>
+	/// 非接触
+	/// </summary>
+	void OffCollision()override;
 
 private:
 	std::unique_ptr<Model> model_ = nullptr;

@@ -10,17 +10,10 @@
 struct Camera;
 struct SpotLight;
 struct Material;
-class SampleScene;
+class GameScene;
 class ObjectManager;
 
-enum PlayerViewOfPoint {
-	//未定
-	NonePerson = 0,
-	//1人称視点
-	FirstPerson = 1,
-	//3人称後方
-	ThirdPersonBack = 2,
-};
+
 
 enum PlayerMoveCondition {
 	//動かない
@@ -29,6 +22,8 @@ enum PlayerMoveCondition {
 	OnPlayerMove,
 };
 
+
+//プレイヤーコリジョンを作りたい
 class Player :public Collider {
 public:
 	/// <summary>
@@ -57,7 +52,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Player() = default;
+	~Player();
 
 public:
 
@@ -71,10 +66,14 @@ public:
 	Vector3 GetWorldPosition()override;
 
 	/// <summary>
-	///	衝突
+	///	接触
 	/// </summary>
 	void OnCollision()override;
 	
+	/// <summary>
+	/// 非接触
+	/// </summary>
+	void OffCollision()override;
 
 	/// <summary>
 	/// AABBの取得
@@ -91,6 +90,8 @@ public:
 	inline float GetRadius() const {
 		return radius_;
 	}
+
+public:
 
 	/// <summary>
 	/// 持っている鍵の数を増やす
@@ -111,7 +112,7 @@ public:
 	/// 動く方向の設定
 	/// </summary>
 	/// <param name="move"></param>
-	inline void SetMoveDirection(Vector3& moveDirection) {
+	inline void SetMoveDirection(const Vector3& moveDirection) {
 		this->moveDirection_ = moveDirection;
 	}
 
@@ -119,14 +120,14 @@ public:
 	/// 動きの状態を設定
 	/// </summary>
 	/// <param name="condition"></param>
-	inline void SetPlayerMoveCondition(uint32_t& condition) {
+	inline void SetPlayerMoveCondition(const uint32_t& condition) {
 		this->moveCondition_ = condition;
 	}
 
 	/// <summary>
 	/// 走るかどうか
 	/// </summary>
-	inline void SetIsDash(bool& isDash) {
+	inline void SetIsDash(const bool& isDash) {
 		this->isDash_ = isDash;
 	}
 
@@ -135,7 +136,7 @@ public:
 	/// </summary>
 	/// <param name="stageRect"></param>
 	/// <returns></returns>
-	inline void SetStageRect(StageRect stageRect) {
+	inline void SetStageRect(const StageRect& stageRect) {
 		this->stageRect_ = stageRect;
 	}
 
@@ -143,7 +144,7 @@ public:
 	/// 操作を受け付けるか受け付けないかの設定
 	/// </summary>
 	/// <param name="isControll"></param>
-	inline void SetIsAbleToControll(bool isControll) {
+	inline void SetIsAbleToControll(const bool& isControll) {
 		this->isControll_ = isControll;
 	}
 
@@ -155,7 +156,13 @@ public:
 		return hp_;
 	}
 
-	
+	/// <summary>
+	/// ダメージを受けたかどうかを取得
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsDamaged()const {
+		return isDameged_;
+	}
 
 	/// <summary>
 	/// 一発アウトの敵用の当たり判定
@@ -200,13 +207,17 @@ private:
 	bool isControll_ = false;
 	//移動状態
 	uint32_t moveCondition_ = 0u;
-
 	//ダッシュ
 	bool isDash_ = false;
 
 
 
-
+	//攻撃されたか
+	bool isDameged_ = false;
+	//強さ
+	float vibeStrength_ = 0.0f;
+	//時間
+	float vibeTime_ = 0u;
 
 	//当たり判定(一発アウトの敵用)
 	std::unique_ptr<PlayerCollisionToStrongEnemy>collisionToStrongEnemy_ = nullptr;

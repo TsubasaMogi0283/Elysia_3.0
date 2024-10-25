@@ -10,17 +10,28 @@
 
 //崩〇3〇dじゃないよ
 
-
+/// <summary>
+/// エンジン
+/// mainにベタ書きではなくこっちに書いてあるよ
+/// </summary>
 class Ellysia final{
 private:
-	//コンストラクタ
+	
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Ellysia() = default;
 		
-	//デストラクタ
-	~Ellysia();
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Ellysia()=default;
 
 public:
-	//インスタンス
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
 	static Ellysia* GetInstance();
 
 	//コピーコンストラクタ禁止
@@ -31,32 +42,46 @@ public:
 
 
 public:
-	//基本の動作
-	void Operate();
+	/// <summary>
+	/// 実行
+	/// </summary>
+	void Run();
 
 
 private:
-	//初期化処理に入れる関数
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
- 	//更新処理の中に入る関数
+	/// <summary>
+	/// フレーム開始
+	/// </summary>
 	void BeginFrame();
 
-	//更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	//描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	//描画処理の中に入る関数
+	/// <summary>
+	/// フレーム終わり
+	/// </summary>
 	void EndFrame();
 
-	//解放
+	/// <summary>
+	/// 解放
+	/// </summary>
 	void Release();
 
 private:
 	
-	
-	GameManager* gameManager_ = nullptr;
+	//ゲームの管理クラス
+	std::unique_ptr<GameManager> gameManager_ = nullptr;
 
 };
