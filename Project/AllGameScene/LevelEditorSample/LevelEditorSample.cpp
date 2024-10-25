@@ -77,11 +77,13 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 	gameManager;
 
-	//更新
+	//レベルエディタの更新
 	levelEditor_->Update(levelHandle_);
-
+	//マテリアルの更新
 	material_.Update();
+	//平行光源の更新
 	directionalLight_.Update();
+	//カメラの更新
 	camera_.Update();
 
 }
@@ -91,6 +93,7 @@ void LevelEditorSample::DrawSpriteBack()
 }
 
 void LevelEditorSample::DrawObject3D(){
+	//レベルエディタのモデルを描画
 	levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
 }
 
