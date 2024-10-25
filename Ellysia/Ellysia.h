@@ -10,7 +10,10 @@
 
 //崩〇3〇dじゃないよ
 
-
+/// <summary>
+/// エンジン
+/// mainにベタ書きではなくこっちに書いてあるよ
+/// </summary>
 class Ellysia final{
 private:
 	
@@ -22,7 +25,7 @@ private:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Ellysia();
+	~Ellysia()=default;
 
 public:
 	/// <summary>

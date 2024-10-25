@@ -23,6 +23,9 @@ void Ellysia::Initialize(){
 	const int WINDOW_SIZE_WIDTH_ = 1280;
 	const int WINDOW_SIZE_HEIGHT_ = 720;
 
+	//ひなに聞いたけどわざわざ一個ずつGetInstanceするの止めた方が良いとのこと
+	//取得に時間がかかる
+
 	//初期化
 	//ウィンドウ
 	WindowsSetup::GetInstance()->Initialize(titleBarName,WINDOW_SIZE_WIDTH_,WINDOW_SIZE_HEIGHT_);
@@ -78,8 +81,12 @@ void Ellysia::Initialize(){
 #pragma region ゲームループ内の関数
 
 void Ellysia::BeginFrame(){
+	
+	//SRVの更新
 	SrvManager::GetInstance()->PreDraw();
+
 #ifdef _DEBUG
+	//ImGuiの開始
 	ImGuiManager::GetInstance()->BeginFrame();
 #endif
 }
@@ -136,6 +143,7 @@ void Ellysia::Draw(){
 
 void Ellysia::EndFrame() {
 #ifdef _DEBUG
+	////ImGuiのフレーム終わり
 	ImGuiManager::GetInstance()->EndDraw();
 #endif
 	//最後で切り替える
@@ -216,6 +224,3 @@ void Ellysia::Run(){
 }
 
 
-
-Ellysia::~Ellysia(){
-}

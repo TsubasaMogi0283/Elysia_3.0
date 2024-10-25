@@ -15,11 +15,20 @@
 //その他自分で作ったものは""でインクルードさせてね
 
 //extern...グローバル変数を共有する
-//ImGuiで使うもの
+
+/// <summary>
+/// ImGuiで使うもの
+/// </summary>
+/// <param name="hwnd"></param>
+/// <param name="msg"></param>
+/// <param name="wParam"></param>
+/// <param name="lParam"></param>
+/// <returns></returns>
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam);
 
-//シングルトンでやりたい
-//finalで継承禁止
+/// <summary>
+/// Windowsの設定(シングルトン)
+/// </summary>
 class WindowsSetup final{
 private:
 	//インスタンスを作れないようにする

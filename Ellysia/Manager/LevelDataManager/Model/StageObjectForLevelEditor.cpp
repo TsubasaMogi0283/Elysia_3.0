@@ -5,7 +5,7 @@ void StageObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Ve
 	model_.reset(Model::Create(modelhandle));
 
 	worldTransform_.Initialize();
-
+	worldTransform_.translate_ = position;
 }
 
 void StageObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight) {
