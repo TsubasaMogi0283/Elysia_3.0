@@ -1,10 +1,15 @@
 #pragma once
-#include "Vector3.h"
 #include <cstdint>
 #include <string>
-#include "AABB.h"
 
+#include "Vector3.h"
+#include "AABB.h"
+#include "Fan.h"
+
+//衝突の種類
 enum CollisionType {
+	//点
+	PointType,
 	//球
 	SphereType,
 	//AABB
@@ -16,28 +21,34 @@ enum CollisionType {
 
 };
 
+//衝突判定
 class Collider{
 public:
-	//衝突時に呼ばれる関数
+	/// <summary>
+	/// 接触
+	/// </summary>
 	virtual void OnCollision()=0;
 
+	/// <summary>
+	/// 非接触
+	/// </summary>
+	virtual void OffCollision() = 0;
 
-	//ワールド座標を取得
-	//純粋仮想関数
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
 	virtual Vector3 GetWorldPosition() = 0;
-
 
 public:
 
-	//半径を取得
+	/// <summary>
+	/// 半径を取得
+	/// </summary>
+	/// <returns></returns>
 	float GetRadius() {
 		return radius_;
 	}
-	//半径を設定
-	void SetRadius_(float radius) {
-		this->radius_ = radius;
-	}
-
 
 
 #pragma region AABB
@@ -61,6 +72,21 @@ public:
 #pragma endregion
 
 
+	/// <summary>
+	/// 3Dの扇の取得
+	/// </summary>
+	/// <returns></returns>
+	inline Fan3D GetFan3D () { 
+		return fan3D_;
+	};
+
+	/// <summary>
+	/// 2Dの扇の取得
+	/// </summary>
+	/// <returns></returns>
+	inline Fan2D GetFan2D() {
+		return fan2D_;
+	};
 
 	/// <summary>
 	/// 衝突判定で使う形の種類の値を取得
@@ -115,6 +141,22 @@ protected:
 
 
 #pragma endregion
+
+
+
+
+#pragma region 扇
+	//3D
+	Fan3D fan3D_ = {};
+
+	//2D
+	Fan2D fan2D_ = {};
+
+
+#pragma endregion
+
+
+
 
 private:
 	

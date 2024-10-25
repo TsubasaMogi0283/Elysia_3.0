@@ -3,11 +3,14 @@
 //staticはdeleteの後に解放されるよ
 static D3DResourceLeakChecker checker;
 
-//Winodwsアプリでもエントリーポイント(main関数)
+//main関数
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+
+	//インスタンスを取得
 	Ellysia* myEngine = Ellysia::GetInstance();
 
-	myEngine->Operate();
+	//実行
+	myEngine->Run();
 
 	return 0;
 }

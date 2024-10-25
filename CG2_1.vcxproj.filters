@@ -337,6 +337,9 @@
     <Filter Include="Project\GameScene\GameScene">
       <UniqueIdentifier>{e3a0acb5-08b3-41f0-a41e-4357a3698e46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Enemy\EnemyFlashLightCollision">
+      <UniqueIdentifier>{94a9085e-5e7c-4aca-abdd-af0623868eeb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -569,6 +572,18 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\GameScene\GameScene.cpp">
       <Filter>Project\GameScene\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\EnemyFlashLightCollision.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditor.cpp">
+      <Filter>Ellysia\Source File\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Light\FlashLight\FlashLightCollision.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.cpp">
+      <Filter>Ellysia\Source File\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -996,6 +1011,21 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\GameScene\GameScene.h">
       <Filter>Project\GameScene\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Light\FlashLight\FlashLightCollision.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\EnemyFlashLightCollision.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditor.h">
+      <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.h">
+      <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditor.h">
+      <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

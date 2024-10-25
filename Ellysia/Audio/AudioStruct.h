@@ -38,7 +38,7 @@ struct SoundData {
 	BYTE* pBuffer;
 
 	//バッファのサイズ
-	unsigned int bufferSize;
+	int32_t bufferSize;
 };
 
 
@@ -64,7 +64,6 @@ struct AudioInformation {
 	uint32_t handle = 0;
 
 	//Pan用
-	float outputMatrix[8] = {};
 	float left = 0.0f;
 	float right = 0.0f;
 

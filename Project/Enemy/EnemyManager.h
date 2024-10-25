@@ -118,15 +118,14 @@ private:
 	uint32_t normalEnemyModelHandle_ = 0u;
 	uint32_t strongEnemyModelHandle_ = 0u;
 
-	const float ENEMY_SCALE_SIZE_ = 1.0f;
 	
 
 
 	
 
-	AABB aabb[2] = {};
+	
 
-	Vector3 enemyPosition[2] = {};
+	
 
 	StageRect stageRect_ = {};
 

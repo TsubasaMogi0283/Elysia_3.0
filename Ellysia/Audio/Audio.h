@@ -9,16 +9,14 @@
 #include <mmsystem.h>
 #include <cassert>
 #include <array>
+#include <map>
 #include <XAPOFX.h>
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib,"xaudio2.lib")
 
-
-
-
+//MediaFundation
 #include <mfapi.h>
 #include <mfidl.h>
-
 
 #pragma comment(lib, "Mf.lib")
 #pragma comment(lib, "mfplat.lib")
@@ -64,25 +62,28 @@ public:
 	/// <summary>
 	/// コピーコンストラクタ禁止
 	/// </summary>
-	/// <param name="obj"></param>
-	Audio(const Audio& obj) = delete;
+	/// <param name="audio"></param>
+	Audio(const Audio& audio) = delete;
 
 	/// <summary>
 	/// 代入演算子を無効にする
 	/// </summary>
-	/// <param name="obj"></param>
+	/// <param name="audio"></param>
 	/// <returns></returns>
-	Audio& operator=(const Audio& obj) = delete;
+	Audio& operator=(const Audio& audio) = delete;
 
 public:
 
+
 	/// <summary>
-	/// 初期化
+	/// 初期化。これはDirecX初期化の後に入れてね
 	/// </summary>
 	void Initialize();
 
 #pragma region 基本セット
 
+
+	static uint32_t Load(const std::string& fileName);
 
 	static uint32_t LoadWave(const std::string& fileName);
 
@@ -98,7 +99,7 @@ public:
 	/// </summary>
 	/// <param name="audioHandle"></param>
 	/// <param name="isLoop"></param>
-	void PlayWave(uint32_t audioHandle, bool isLoop);
+	void PlayWave(const uint32_t& audioHandle, bool isLoop);
 	
 	
 	/// <summary>
@@ -106,31 +107,41 @@ public:
 	/// </summary>
 	/// <param name="audioHandle"></param>
 	/// <param name="loopCount"></param>
-	void PlayWave(uint32_t audioHandle, int32_t loopCount);
+	void PlayWave(const uint32_t& audioHandle, int32_t loopCount);
 
+	/// <summary>
+	/// 再生
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	/// <param name="isLoop"></param>
+	void PlayMP3(const uint32_t& audioHandle, bool isLoop);
 
-	void PlayMP3(uint32_t audioHandle, bool isLoop);
+	/// <summary>
+	/// 再生(ループ回数あり)
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	/// <param name="loopCount"></param>
 
-	void PlayMP3(uint32_t audioHandle, uint32_t loopCount);
+	void PlayMP3(const uint32_t& audioHandle, uint32_t loopCount);
 
 
 	/// <summary>
 	/// 一時停止
 	/// </summary>
 	/// <param name="ハンドル名"></param>
-	void PauseWave(uint32_t audioHandle);
+	void PauseWave(const uint32_t& audioHandle);
 
 	/// <summary>
 	/// 再開
 	/// </summary>
 	/// <param name="ハンドル名"></param>
-	void ResumeWave(uint32_t audioHandle);
+	void ResumeWave(const uint32_t& audioHandle);
 
 	/// <summary>
 	/// 停止
 	/// </summary>
 	/// <param name="ハンドル名"></param>
-	void StopWave(uint32_t audioHandle);
+	void StopWave(const uint32_t& audioHandle);
 
 
 #pragma endregion
@@ -143,7 +154,7 @@ public:
 	/// ループから抜ける
 	/// </summary>
 	/// <param name="ハンドル名"></param>
-	void ExitLoop(uint32_t audioHandle);
+	void ExitLoop(const uint32_t& audioHandle);
 
 
 	/// <summary>
@@ -151,14 +162,14 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="始まる位置(秒)"></param>
-	void AfterLoopPlayWave(uint32_t audioHandle, float second);
+	void AfterLoopPlayWave(const uint32_t& audioHandle, float second);
 
 	/// <summary>
 	/// 再生(前半ループ)
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="ループ間の長さ(秒)"></param>
-	void BeforeLoopPlayWave(uint32_t audioHandle, float lengthSecond);
+	void BeforeLoopPlayWave(const uint32_t& audioHandle, float lengthSecond);
 
 
 	/// <summary>
@@ -167,7 +178,7 @@ public:
 	/// <param name="ハンドル名"></param>
 	/// <param name="開始位置(秒)"></param>
 	/// <param name="ループの長さ(秒)"></param>
-	void PartlyLoopPlayWave(uint32_t audioHandle, float start, float lengthSecond);
+	void PartlyLoopPlayWave(const uint32_t& audioHandle, float start, float lengthSecond);
 
 
 #pragma endregion
@@ -177,7 +188,7 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="音量"></param>
-	void ChangeVolume(uint32_t audioHandle, float volume);
+	void ChangeVolume(const uint32_t& audioHandle, float volume);
 
 #pragma region ピッチ系
 
@@ -186,13 +197,13 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="値"></param>
-	void ChangeFrequency(uint32_t audioHandle, float ratio);
+	void ChangeFrequency(const uint32_t& audioHandle, float ratio);
 
 
 	/// <summary>
 	/// ピッチの設定(段階的)
 	/// </summary>
-	void ChangePitch(uint32_t audioHandle, int32_t scale);
+	void ChangePitch(const uint32_t& audioHandle, int32_t scale);
 
 
 #pragma endregion
@@ -202,7 +213,7 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="Panの値"></param>
-	void SetPan(uint32_t audioHandle, float_t pan);
+	void SetPan(const uint32_t& audioHandle, float_t pan);
 
 
 #pragma region フィルター
@@ -214,7 +225,7 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
-	void SetLowPassFilter(uint32_t audioHandle, float cutOff);
+	void SetLowPassFilter(const uint32_t& audioHandle, float cutOff);
 
 	/// <summary>
 	/// ローパスフィルター(Qあり)
@@ -222,7 +233,7 @@ public:
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
 	/// <param name="oneOverQ"></param>
-	void SetLowPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ);
+	void SetLowPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ);
 
 
 
@@ -231,7 +242,7 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
-	void SetHighPassFilter(uint32_t audioHandle, float cutOff);
+	void SetHighPassFilter(const uint32_t& audioHandlee, float cutOff);
 
 	/// <summary>
 	/// ハイパスフィルター(Qあり)
@@ -239,21 +250,21 @@ public:
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
 	/// <param name="oneOverQ"></param>
-	void SetHighPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ);
+	void SetHighPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ);
 
 	/// <summary>
 	/// バンドパス
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
-	void SetBandPassFilter(uint32_t audioHandle, float cutOff);
+	void SetBandPassFilter(const uint32_t& audioHandle, float cutOff);
 
 	/// <summary>
 	/// バンドパス(Qあり)
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
-	void SetBandPassFilter(uint32_t audioHandle, float cutOff, float oneOverQ);
+	void SetBandPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ);
 
 
 	/// <summary>
@@ -261,14 +272,14 @@ public:
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
-	void SetNotchFilter(uint32_t audioHandle, float cutOff);
+	void SetNotchFilter(const uint32_t& audioHandle, float cutOff);
 
 	/// <summary>
 	/// ノッチフィルター
 	/// </summary>
 	/// <param name="ハンドル名"></param>
 	/// <param name="CutOffの値"></param>
-	void SetNotchFilter(uint32_t audioHandle, float cutOff, float oneOverQ);
+	void SetNotchFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ);
 
 #pragma endregion
 
@@ -278,18 +289,28 @@ public:
 	/// <param name="channel"></param>
 	void CreateSubmixVoice(uint32_t channel);
 
-
-	void SendChannels(uint32_t audioHandle, uint32_t channelNumber);
+	/// <summary>
+	/// 指定したチャンネルに送る
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	/// <param name="channelNumber"></param>
+	void SendChannels(const uint32_t& audioHandle, uint32_t channelNumber);
 
 	//リバーブ
 	//まだ未完成だから使わないでね
-	void CreateReverb(uint32_t audioHandle, uint32_t channel);
+	void CreateReverb(const uint32_t& audioHandle, uint32_t channel);
 
-	//エフェクトの効果を無効にする
-	void OffEffect(uint32_t audioHandle);
+	/// <summary>
+	/// エフェクトの効果を無効にする
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	void OffEffect(const uint32_t& audioHandle);
 
-	//エフェクトの効果を有効にする
-	void OnEffect(uint32_t audioHandle);
+	/// <summary>
+	/// エフェクトの効果を有効にする
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	void OnEffect(const uint32_t& audioHandle);
 
 
 	/// <summary>
@@ -298,9 +319,22 @@ public:
 	void Release();
 
 private:
-	//音声データの開放
-	void SoundUnload(uint32_t soundDataHandle);
 
+	/// <summary>
+	/// 指定したハンドルが入っているfilePathを取得する
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
+	inline std::string GetAudioInformationKey(uint32_t handle) {
+		for (const auto& [filePath, modelInfo] : audioInformation_) {
+			if (modelInfo.handle == handle) {
+				return filePath;
+			}
+		}
+		
+		//無かったら空を返す
+		return {};
+	}
 
 private:
 	//IXAudio2はCOMオブジェクトなのでComPtr管理
@@ -309,13 +343,13 @@ private:
 	//最終的にここでまとめるよ(スピーカーみたいな感じだね)
 	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 
-	uint32_t index_ = 0u;
+
+	static uint32_t index_;
 
 	//Panに必要な変数
 	DWORD dwChannelMask_ = {};
 	float outputMatrix_[8] = {};
-	float left_ = 0.0f;
-	float right_ = 0.0f;
+	
 
 
 
@@ -324,27 +358,20 @@ private:
 
 
 	//3Dオーディオ
-	X3DAUDIO_HANDLE x3DInstance_;
+	X3DAUDIO_HANDLE x3DInstance_ = {};
 	X3DAUDIO_LISTENER listener_ = {};
 	X3DAUDIO_EMITTER emitter_ = {};
 
 
+	//オーディオに関するものが入っている
+	std::map<std::string, AudioInformation>audioInformation_{};
 
-	//構造体版
-	//Texturemanagerとだいたい同じ感じにした
-	//音声データの最大数
-	static const int SOUND_DATE_MAX_ = 256;
-	std::array<AudioInformation, SOUND_DATE_MAX_> audioInformation_{};
-
-
+	//サブミックスボイス
 	static const int SUBMIXVOICE_AMOUNT_ = 64;
 	std::array<IXAudio2SubmixVoice*, SUBMIXVOICE_AMOUNT_> submixVoice_{};
 
 
 private:
-
-
-
 
 	//自分のエンジンではA4は442Hz基準にする
 	//もちろん12段階で1オクターブ

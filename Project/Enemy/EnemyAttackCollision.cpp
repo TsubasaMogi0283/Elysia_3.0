@@ -66,3 +66,7 @@ void EnemyAttackCollision::OnCollision(){
 
 }
 
+void EnemyAttackCollision::OffCollision()
+{
+}
+

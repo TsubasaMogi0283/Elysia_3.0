@@ -92,7 +92,7 @@ void Vignette::Draw() {
 
 
 
-	//PSoの設定
+	//PSOの設定
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetVignetteRootSignature().Get());
 	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetVignetteGraphicsPipelineState().Get());
 

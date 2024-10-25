@@ -6,6 +6,7 @@
 #include <WorldTransform.h>
 #include <Model.h>
 #include "Material.h"
+#include "FlashLightCollision.h"
 
 struct Camera;
 
@@ -52,7 +53,7 @@ public:
 	/// プレイヤーの座標を取得
 	/// </summary>
 	/// <param name="position"></param>
-	inline void SetPlayerPosition(Vector3 position) {
+	inline void SetPlayerPosition(const Vector3& position) {
 		this->playerPosition_ = position;
 	}
 
@@ -72,21 +73,24 @@ public:
 		return lightDirection_;
 	}
 
-	/// <summary>
-	/// 扇を取得
-	/// </summary>
-	/// <returns></returns>
-	inline Fan2D GetFan() const{
-		return fan_;
-	}
 
 	/// <summary>
 	/// 扇の取得(3次元)
 	/// </summary>
 	/// <returns></returns>
-	inline Fan3D GetFan3D() const {
+	inline Fan3D GetFan3D() {
 		return fan3D_;
 	}
+
+
+	/// <summary>
+	/// 当たり判定の取得
+	/// </summary>
+	/// <returns></returns>
+	inline FlashLightCollision* GetFanCollision()const {
+		return flashLightCollision_.get();
+	}
+
 
 private:
 	//ここに値を入れてゲームシーンで他のオブジェクトに適用させる
@@ -95,6 +99,8 @@ private:
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
 
+	//光の届く距離
+	const float LIGHT_DISTANCE = 22.0f;
 	Vector3 lightPosition = {};
 	Vector3 lightDirection_ = {};
 	float lightSideTheta = 0.0f;
@@ -104,10 +110,10 @@ private:
 	float phi_ = 0.0f;
 
 	//扇
-	Fan2D fan_ = {};
 	Fan3D fan3D_ = {};
 
-
+	//デバッグ用のモデル
+	//左右
 	enum Side {
 		Right,
 		Left,
@@ -117,10 +123,13 @@ private:
 	WorldTransform worldTransform_[SIDE_QUANTITY_] = {};
 	Material material_ = {};
 
-	//LightPosition
+	//中心
 	std::unique_ptr<Model>lightCenterModel_ = nullptr;
 	WorldTransform lightCenterWorldTransform_ = {};
-	Material lightCnterMaterial_ = {};
+	Material lightCenterMaterial_ = {};
+
+	//当たり判定
+	std::unique_ptr<FlashLightCollision> flashLightCollision_ = nullptr;
 
 };
 

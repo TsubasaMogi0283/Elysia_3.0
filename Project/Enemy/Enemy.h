@@ -10,6 +10,7 @@
 #include "EnemyAttackCollision.h"
 #include "AABB.h"
 #include "EnemyCondition.h"
+#include "EnemyFlashLightCollision.h"
 
 struct Camera;
 struct SpotLight;
@@ -59,7 +60,10 @@ public:
 	/// </summary>
 	void OnCollision()override;
 
-
+	/// <summary>
+	/// 非衝突判定
+	/// </summary>
+	void OffCollision()override;
 
 	/// <summary>
 	/// ワールド座標
@@ -142,18 +146,32 @@ public:
 		return condition_;
 	}
 
-
-
+	
+	/// <summary>
+	/// X軸反転
+	/// </summary>
 	inline void InvertSpeedX() {
-		speed_.x *= -1.0f;
+		this->speed_.x *= -1.0f;
 	}
+	/// <summary>
+	/// Z軸反転
+	/// </summary>
 	inline void InvertSpeedZ() {
-		speed_.z *= -1.0f;
+		this->speed_.z *= -1.0f;
 	}
 
-
+	/// <summary>
+	/// 止まる前にスピードを記録する
+	/// </summary>
 	inline void SaveSpeed() {
-		preSpeed_ = speed_;
+		this->preSpeed_ = this->speed_;
+	}
+
+	/// <summary>
+	/// 再度動くとき
+	/// </summary>
+	inline void MoveAgain() {
+		this->speed_ = this->preSpeed_;
 	}
 
 
@@ -174,6 +192,16 @@ public:
 
 #pragma endregion
 
+
+
+#pragma region 懐中電灯
+
+	//懐中電灯用の当たり判定
+	inline EnemyFlashLightCollision* GetEnemyFlashLightCollision() {
+		return enemyFlashLightCollision_;
+	}
+
+#pragma endregion
 
 	
 
@@ -226,8 +254,11 @@ private:
 	std::unique_ptr<Model> debugModel_ = nullptr;
 	WorldTransform debugModelWorldTransform_ = {};
 
-	//攻撃用
+	//攻撃用の当たり判定
 	EnemyAttackCollision* attackModel_ = nullptr;
 	bool isAttack_ = false;
+
+	//懐中電灯用の当たり判定
+	EnemyFlashLightCollision* enemyFlashLightCollision_ = nullptr;
 
 };

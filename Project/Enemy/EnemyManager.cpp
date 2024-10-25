@@ -32,18 +32,16 @@ void EnemyManager::Initialize(uint32_t& normalEnemyModel, uint32_t& strongEnemyM
 
 	////TLのレベルエディターでやってもいいかも！
 	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = { 0.0f,0.0f,21.0f };
-	enemy1->SetRadius_(ENEMY_SCALE_SIZE_);
+	Vector3 position1 = { 0.0f,0.0f,11.0f };
 	enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,0.01f });
 	enemyes_.push_back(enemy1);
 
 		
-	//Enemy* enemy2 = new Enemy();
-	//Vector3 position2 = { -20.0f,0.0f,10.0f };
-	//enemy2->SetRadius_(ENEMY_SCALE_SIZE_);
-	//enemy2->Initialize(normalEnemyModelHandle_, position2, { 0.01f,0.0f,0.0f });
-	//enemyes_.push_back(enemy2);
-	//
+	Enemy* enemy2 = new Enemy();
+	Vector3 position2 = { -5.0f,0.0f,15.0f };
+	enemy2->Initialize(normalEnemyModelHandle_, position2, { 0.01f,0.0f,0.0f });
+	enemyes_.push_back(enemy2);
+	
 	//Enemy* enemy3 = new Enemy();
 	//Vector3 position3 = { -10.0f,0.0f,4.0f };
 	//enemy3->Initialize(normalEnemyModelHandle_, position3, { 0.01f,0.0f,0.01f });
@@ -54,6 +52,10 @@ void EnemyManager::Initialize(uint32_t& normalEnemyModel, uint32_t& strongEnemyM
 	////"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\TD2_Enemy\TD2_Enemy.obj"
 	//
 	//生成
+#ifdef _DEBUG
+
+#endif // _DEBUG
+
 	StrongEnemy* enemy = new StrongEnemy();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
@@ -72,7 +74,6 @@ void EnemyManager::Initialize(uint32_t& normalEnemyModel, uint32_t& strongEnemyM
 	
 	
 	enemy->Initialize(strongEnemyModelHandle_, position, speed);
-	enemy->SetRadius_(player_->GetRadius());
 	strongEnemyes_.push_back(enemy);
 
 
@@ -103,7 +104,6 @@ void EnemyManager::GenarateEnemy() {
 	std::uniform_real_distribution<float> distribute(-30.0f, 30.0f);
 	Vector3 position1 = { distribute(randomEngine),0.0f,distribute(randomEngine) };
 	enemy->Initialize(normalEnemyModelHandle_, position1, { 0.0f,0.0f,0.0f });
-	enemy->SetRadius_(player_->GetRadius());
 	enemyes_.push_back(enemy);
 }
 
@@ -132,7 +132,6 @@ void EnemyManager::GenarateStrongEnemy(){
 
 
 	enemy->Initialize(strongEnemyModelHandle_, position, speed);
-	enemy->SetRadius_(player_->GetRadius());
 	strongEnemyes_.push_back(enemy);
 }
 
@@ -157,6 +156,7 @@ void EnemyManager::Update(){
 	
 	
 	//敵はポリモーフィズムでやった方がよさそう
+	//通常の敵と強敵
 
 	//全ての敵
 	for (Enemy* enemy : enemyes_) {
@@ -413,14 +413,16 @@ void EnemyManager::Update(){
 		for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
 
 			//AABB
+			AABB aabb[2] = {};
+			Vector3 enemyPosition[2] = {};
 			aabb[0] = (*it1)->GetAABB();
 			
 			enemyPosition[0] = (*it1)->GetWorldPosition();
 			//向き
 			Vector3 direction = (*it1)->GetDirection();
 
-			//内積
-			float dot = 0.0f;
+			//敵同士の内積
+			float enemyAndEnemyDot = 0.0f;
 
 			for (std::list<Enemy*>::iterator it2 = enemyes_.begin(); it2 != enemyes_.end(); ++it2) {
 
@@ -446,7 +448,7 @@ void EnemyManager::Update(){
 					//内積
 					//進行方向の前にいると+
 					Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
-					dot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
+					enemyAndEnemyDot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
 
 
 					break;
@@ -463,16 +465,18 @@ void EnemyManager::Update(){
 			Vector3 playerEnemyDifference = VectorCalculation::Subtract(playerPosition, (*it1)->GetWorldPosition());
 			float playerEnemyDistance = SingleCalculation::Length(playerEnemyDifference);
 
+			
+
+
 
 			//前方にいた場合
-			if (dot > 0.0f && condition == EnemyCondition::Move) {
-				//接触した場合
-				//止まる
+			if (enemyAndEnemyDot >= 0.8f && condition == EnemyCondition::Move) {
+				//接触した場合止まる
 				if ((aabb[0].min.x < aabb[1].max.x && aabb[0].max.x > aabb[1].min.x) &&
 					(aabb[0].min.y < aabb[1].max.y && aabb[0].max.y > aabb[1].min.y) &&
 					(aabb[0].min.z < aabb[1].max.z && aabb[0].max.z > aabb[1].min.z)) {
 					uint32_t newCondition = EnemyCondition::NoneMove;
-
+					(*it1)->SaveSpeed();
 					//前の状態を保存
 					(*it1)->SetPreCondition(condition);
 					//状態の変更
@@ -483,12 +487,31 @@ void EnemyManager::Update(){
 				//接触していない場合
 				else {
 					uint32_t newCondition = EnemyCondition::Move;
-
+					
 					//前の状態を保存
 					(*it1)->SetPreCondition(condition);
 					//状態の変更
 					(*it1)->SetCondition(newCondition);
 				}
+			}
+			//動いていない場合
+			else if (condition == EnemyCondition::NoneMove) {
+
+				//前方にいない場合
+				if (enemyAndEnemyDot < 0.8f) {
+					uint32_t preCondition = EnemyCondition::NoneMove;
+					uint32_t newCondition = EnemyCondition::Move;
+					//動き出す
+					(*it1)->MoveAgain();
+
+					//前の状態を保存
+					(*it1)->SetPreCondition(preCondition);
+					//状態の変更
+					(*it1)->SetCondition(newCondition);
+
+				}
+				
+
 			}
 			//前方にいない場合
 			else {
@@ -547,9 +570,6 @@ void EnemyManager::Update(){
 			}
 		}
 	}
-
-
-
 
 	for (StrongEnemy* strongEnemy : strongEnemyes_) {
 		//一発アウトの敵の更新

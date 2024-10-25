@@ -77,8 +77,7 @@ void GameScene::Initialize() {
 	bTriggerTime_ = 0;
 	isBTrigger_ = false;
 
-	//初期は1人称視点
-	viewOfPoint_ = FirstPerson;
+	
 
 
 
@@ -146,9 +145,6 @@ void GameScene::Initialize() {
 	
 	//プレイヤーのライト
 	uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
-	lightCollision_ = new LightWeapon();
-	lightCollision_->Initialize(weaponLightModel);
-	
 	
 	
 	#pragma region 扇の当たり判定用の球
@@ -229,7 +225,14 @@ void GameScene::Initialize() {
 	//ポストエフェクトの初期化
 	back_ = std::make_unique< BackText>();
 	back_->Initialize();
-	
+	//ビネット
+	vignette_ = std::make_unique<Vignette>();
+	vignette_->Initialize();
+	//const float vignetteScale = 17.0f;
+	vignettePow_ = 0.0f;
+	//vignette_->SetScale(vignetteScale);
+	vignette_->SetPow(vignettePow_);
+
 	//マテリアルの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
@@ -598,11 +601,11 @@ void GameScene::Update(GameManager* gameManager) {
 	//フレーム初めに
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
-
+	//フェードの透明度の設定
 	fadeSprite_->SetTransparency(fadeTransparency_);
 
 
-	//StatePaternにしたい
+	//StatePatternにしたい
 	//フェードイン
 	if (isFadeIn==true) {
 		const float FADE_IN_INTERVAL = 0.01f;
@@ -618,6 +621,7 @@ void GameScene::Update(GameManager* gameManager) {
 	}
 
 	//ゲーム
+	//StatePatternにしたい
 	if (isFadeIn == false && isFadeOut_ == false) {
 		fadeTransparency_ = 0.0f;
 		
@@ -763,17 +767,19 @@ void GameScene::Update(GameManager* gameManager) {
 
 
 		//数学とプログラムで回る向きが違うことに煩わしさを感じます・・
-		//無理矢理直して楽になろう！！
 		float phi = -originPhi_;
 
 		//懐中電灯
 		playerPosition_ = player_->GetWorldPosition();
+
+		//ライトはプレイヤーが持っているという包含の関係なのでPlayerに入れた方が良いかも。
+		//ここでやるべきではないと思う。
 		flashLight_->SetPlayerPosition(playerPosition_);
 		flashLight_->SetTheta(theta_);
 		flashLight_->SetPhi(phi);
 		flashLight_->Update();
 
-		collisionManager_->RegisterList(lightCollision_);
+		//collisionManager_->RegisterList(flashLight_->GetFanCollision());
 
 
 		
@@ -784,7 +790,7 @@ void GameScene::Update(GameManager* gameManager) {
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
 			collisionManager_->RegisterList(enemy);
-
+			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 			//攻撃用の判定が出ていたら登録
 			if (enemy->GetIsAttack() == true) {
 				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
@@ -793,25 +799,13 @@ void GameScene::Update(GameManager* gameManager) {
 			}
 
 
-
-			
-			//いずれこれもCollisionManagerに入れるつもり
-			if (IsFanCollision(fan, enemy->GetWorldPosition())) {
-
-				//enemy->OnCollision();
-
-
-#ifdef _DEBUG
-				ImGui::Begin("FanCollsion");
-				ImGui::End();
-#endif // _DEBUG
-
-
-			}
 		}
+		//プレイヤーをコリジョンマネージャーへ
 		collisionManager_->RegisterList(player_.get());
-		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 
+		//当たると一発アウトの敵をコリジョンマネージャーへ
+		//1体しか出さないのにリストにする必要はあったのでしょうか・・
+		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
 		for (StrongEnemy* strongEnemy : strongEnemyes) {
 			collisionManager_->RegisterList(strongEnemy);
@@ -826,33 +820,14 @@ void GameScene::Update(GameManager* gameManager) {
 
 		
 
-		#pragma region 視点
+		//もとに戻す
+		camera_.rotate_.x = -phi;
+		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
+		camera_.rotate_.z = 0.0f;
 
-		//1人称視点へ変更
-		if (Input::GetInstance()->IsTriggerKey(DIK_1) == true) {
-			viewOfPoint_ = FirstPerson;
-		}
-		
-
-
-		//コントローラーだと
-		//十字ボタンで切り替えのが良いかも
-		//マイクラはそれだったから
-
-		//1人称
-		if (viewOfPoint_ == FirstPerson) {
-
-			//もとに戻す
-			camera_.rotate_.x = -phi;
-			camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
-			camera_.rotate_.z = 0.0f;
-
-			camera_.translate_ = VectorCalculation::Add(playerPosition_, CAMERA_POSITION_OFFSET);
-
-		}
+		camera_.translate_ = VectorCalculation::Add(playerPosition_, CAMERA_POSITION_OFFSET);
 
 
-		#pragma endregion
 
 
 		#pragma region 鍵の取得処理
@@ -881,7 +856,8 @@ void GameScene::Update(GameManager* gameManager) {
 
 
 		//体力が0になったら負け
-		//または一発アウトの敵
+		//または一発アウトの敵に接触した場合
+		//負け専用のクラスを作りたい
 		if (player_->GetHP() <= 0 || isTouchStrongEnemy_==true) {
 			gameManager->ChangeScene(new LoseScene());
 			return;
@@ -890,7 +866,6 @@ void GameScene::Update(GameManager* gameManager) {
 
 		//ライト
 		Vector3 lightDirection = flashLight_->GetDirection();
-		lightCollision_->Update(playerPosition_, lightDirection);
 
 		//現在のプレイヤーの体力を取得
 		currentDisplayHP_ = player_->GetHP();
@@ -899,7 +874,7 @@ void GameScene::Update(GameManager* gameManager) {
 		//更新
 		material_.Update();
 
-		//当たり判定
+		//当たり判定チェック
 		collisionManager_->CheckAllCollision();
 
 #ifdef _DEBUG
@@ -915,6 +890,7 @@ void GameScene::Update(GameManager* gameManager) {
 	}
 	
 	//ホワイトアウト
+	//StatePatternにしたい
 	if (isFadeOut_ == true) {
 		escapeText_->SetInvisible(true);
 
@@ -951,6 +927,45 @@ void GameScene::Update(GameManager* gameManager) {
 	player_->Update();
 	playerPosition_ = player_->GetWorldPosition();
 
+
+#pragma region ポストエフェクト
+	//プレイヤーがダメージを受けた場合ビネット
+	if (player_->GetIsDamaged() == true) {
+		//時間の加算
+		const float DELTA_TIME = 1.0f / 60.0f;
+		vignetteChangeTime_ += DELTA_TIME;
+		
+		//線形補間で滑らかに変化
+		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
+	}
+	//HPが1でピンチの場合
+	else if (player_->GetHP() == 1u) {
+		
+		const float DELTA_TIME = 1.0f / 60.0f;
+		warningTime_ += DELTA_TIME;
+		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
+		if (warningTime_ > 1.0f) {
+			warningTime_ = 0.0f;
+		}
+
+	}
+	//通常時の場合
+	else {
+		vignettePow_ = 0.0f;
+		vignetteChangeTime_ = 0.0f;
+	}
+	vignette_->SetPow(vignettePow_);
+
+#ifdef _DEBUG
+	ImGui::Begin("VignetteCheck");
+	ImGui::InputFloat("POW", &vignettePow_);
+	ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
+	ImGui::End();
+#endif // _DEBUG
+
+
+#pragma endregion
+
 	//ライト確認用のタワー
 	debugTowerWorldTransform_.Update();
 
@@ -964,7 +979,7 @@ void GameScene::DrawSpriteBack(){
 }
 
 void GameScene::PreDrawPostEffectFirst(){
-	back_->PreDraw();
+	vignette_->PreDraw();
 }
 
 
@@ -974,13 +989,6 @@ void GameScene::DrawObject3D() {
 	//懐中電灯を取得
 	SpotLight spotLight = flashLight_->GetSpotLight();
 
-	//プレイヤー
-	//1人称だったらモデルは表示させない
-	//自分の目から自分の全身が見えるのはおかしいからね
-	if (viewOfPoint_ != FirstPerson) {
-		player_->Draw(camera_, material_, spotLight);
-	}
-	
 	//地面
 	ground_->Draw(camera_, spotLight);
 	//ゲート
@@ -996,14 +1004,9 @@ void GameScene::DrawObject3D() {
 	//ステージオブジェクト
 	objectManager_->Draw(camera_, spotLight);
 
-
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
 
-#ifdef _DEBUG
-	lightCollision_->Draw(camera_, spotLight);
-
-#endif // _DEBUG
 
 	
 
@@ -1012,8 +1015,7 @@ void GameScene::DrawObject3D() {
 
 
 void GameScene::DrawPostEffect(){
-	
-	back_->Draw();
+	vignette_->Draw();
 }
 
 void GameScene::DrawSprite(){
@@ -1071,7 +1073,6 @@ void GameScene::DrawSprite(){
 
 
 GameScene::~GameScene() {
-	delete lightCollision_;
 	delete objectManager_;
 }
 

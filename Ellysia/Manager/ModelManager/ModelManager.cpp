@@ -267,6 +267,7 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			modelData.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
 		}
 	}
+
 	//ノードの読み込み
 	modelData.rootNode = ReadNode::GetInstance()->Read(scene->mRootNode);
 	//ModelDataを返す

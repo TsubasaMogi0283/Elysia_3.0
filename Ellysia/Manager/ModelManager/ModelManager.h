@@ -84,23 +84,6 @@ public:
 
 public:
 
-	//ModelData GetModelData(const std::string& filePath) {
-	//	auto it = modelInfromtion_.find(filePath);
-	//	if (it != modelInfromtion_.end()) {
-	//		return it->second.modelData;
-	//	}
-	//	// キーが存在しない場合のエラー処理
-	//	throw std::runtime_error("Model not found");
-	//}
-	//
-	//Animation GetModelAnimation(const std::string& filePath) {
-	//	auto it = modelInfromtion_.find(filePath);
-	//	if (it != modelInfromtion_.end()) {
-	//		return it->second.animationData;
-	//	}
-	//	// キーが存在しない場合のエラー処理
-	//	throw std::runtime_error("Model not found");
-	//}
 
 
 	ModelData GetModelData(uint32_t handle) {
@@ -109,8 +92,9 @@ public:
 				return modelInfo.modelData;
 			}
 		}
-		// 一致するhandleが見つからなかった場合のエラー処理
-		throw std::runtime_error("Model not found for given handle");
+		
+		//無かったら空のデータを返す
+		return{};
 	}
 
 	Animation GetModelAnimation(uint32_t handle) {
@@ -119,8 +103,9 @@ public:
 				return modelInfo.animationData;
 			}
 		}
-		// 一致するhandleが見つからなかった場合のエラー処理
-		throw std::runtime_error("Animation not found for given handle");
+		
+		//無かったら空のデータを返す
+		return{};
 	}
 
 

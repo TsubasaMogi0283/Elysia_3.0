@@ -1,0 +1,76 @@
+{
+    "name": "scene",
+    "objects": [
+        {
+            "type": "MESH",
+            "name": "平面",
+            "transform": {
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    20.0,
+                    20.0,
+                    20.0
+                ]
+            },
+            "file_name": "Ground",
+            "audio": {
+                "file_name": "Win",
+                "type": "BGM",
+                "loop": true
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Sphere",
+            "transform": {
+                "translation": [
+                    4.140221118927002,
+                    3.634669542312622,
+                    1.714384913444519
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Sphere"
+        },
+        {
+            "type": "MESH",
+            "name": "Cube",
+            "transform": {
+                "translation": [
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Test"
+        }
+    ]
+}

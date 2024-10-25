@@ -11,6 +11,7 @@
 #include <Model.h>
 #include "WorldTransform.h"
 #include "Collider/Collider.h"
+#include <Transform.h>
 
 
 struct Camera;
@@ -18,6 +19,13 @@ struct Material;
 struct DirectionalLight;
 struct PointLight;
 struct SpotLight;
+
+struct Listener {
+	//位置
+	Vector3 position;
+	//動き
+	Vector3 move;
+};
 
 class LevelDataManager final{
 private:
@@ -69,7 +77,6 @@ public:
 	void Delete(uint32_t& levelDataHandle);
 
 
-
 #pragma region 描画
 
 	/// <summary>
@@ -108,28 +115,41 @@ public:
 	void Release();
 
 
-
-
 private:
 	
 
+	struct LevelDataAudioData {
+		//オーディオデータを持っているかどうか
+		bool isHavingAudio;
+
+		//ファイル名
+		std::string fileName;
+		//種類
+		std::string type;
+
+		//ハンドル
+		uint32_t handle;
+
+		//ループ
+		bool isLoop;
+	};
+
 	struct LevelData {
-		//モデル
-		struct ModelObjectData {
+		//モデルオブジェクト
+		struct ObjectData {
 			//モデル
 			Model* model = nullptr;
 			//ワールドトランスフォーム
 			WorldTransform* worldTransform = {};
 
 			//ファイル名
-			std::string fileName;
+			std::string modelFileName;
 			
 			//Transform
-			Vector3 scaling;
-			Vector3 rotation;
-			Vector3 translation;
+			Transform transform;
 
-
+			//Colliderの種類
+#pragma region コライダー
 			std::string colliderType;
 			//Sphere,Box
 			Vector3 center;
@@ -139,26 +159,27 @@ private:
 			AABB aabb;
 			Vector3 upSize;
 			Vector3 downSize;
+#pragma endregion
+
+			//レベルデータのオーディオ
+			LevelDataAudioData levelAudioData;
 
 
 		};
 
-		//オーディオ
-		struct AudioObjectData {
 
 
-			//ファイル名
-			std::string fileName;
 
-
-		};
-
+		//リスナー(通常はプレイヤーを入れる)
+		Listener listener_ = {};
 
 		//ハンドル
 		uint32_t handle = 0u;
 
 		//オブジェクト
-		std::list<ModelObjectData> objectDatas = {};
+		std::list<ObjectData> objectDatas = {};
+
+
 
 		//フォルダ名
 		std::string folderName = {};
@@ -169,7 +190,14 @@ private:
 
 	};
 
-	std::list<LevelData::ModelObjectData> GetObject(uint32_t& handle) {
+
+
+	/// <summary>
+	/// 指定したオブジェクトの取得
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
+	inline std::list<LevelData::ObjectData> GetObject(uint32_t& handle) {
 		
 		for (const auto& [key, levelData] : levelDatas_) {
 			
@@ -183,10 +211,27 @@ private:
 		return {};
 	}
 
+	/// <summary>
+	/// リスナーの設定
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <param name="listener"></param>
+	inline void SetListener(uint32_t& handle,Listener &listener) {
+
+		for (const auto& [key, levelData] : levelDatas_) {
+			//一致したら値を代入
+			if (levelData->handle == handle) {
+				levelData->listener_ = listener;
+				break;
+			}
+		}
+
+
+	}
 
 private:
 	/// <summary>
-	/// 位置決め
+	/// 配置
 	/// </summary>
 	void Place(nlohmann::json& objects, LevelData& levelData);
 
@@ -204,13 +249,28 @@ private:
 	/// <returns></returns>
 	nlohmann::json Deserialize(std::string& fullFilePath);
 
+	/// <summary>
+	/// オーディオの再生
+	/// </summary>
+	void AudioPlay(LevelData& levelData);
 
+	/// <summary>
+	/// 拡張子を取得
+	/// </summary>
+	/// <param name="directory"></param>
+	/// <param name="baseFileName"></param>
+	/// <returns></returns>
+	std::string FindExtension(const std::string& directory, const std::string& baseFileName);
 private:
 
 	//ここにデータを入れていく
 	std::map<std::string , std::unique_ptr<LevelData>> levelDatas_;
 
+	//ハンドル
 	uint32_t handle_ = 0u;
+
+	//Resourceにあるレベルデータの場所
+	const std::string leveldataPath_ = "Resources/LevelData/";
 
 
 };

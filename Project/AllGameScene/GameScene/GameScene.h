@@ -36,7 +36,7 @@
 
 #include "Input.h"
 #include <Stage/ObjectManager/ObjectManager.h>
-#include "../../../Ellysia/Polygon/3D/Sphere/Sphere.h"
+#include <Vignette.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class Gamemanager;
@@ -156,11 +156,12 @@ private:
 	Material material_ = {};
 
 	//ポストエフェクト
-	//今は使わない
 	std::unique_ptr<BackText> back_ = nullptr;
-
-
-	
+	std::unique_ptr<Vignette> vignette_ = nullptr;
+	const float MAX_VIGNETTE_POW_ = 1.6f;
+	float vignettePow_ = 17.0f;
+	float vignetteChangeTime_ = 0.0f;
+	float warningTime_ = 0.0f;
 
 	//プレイヤー
 	std::unique_ptr<Player> player_ = nullptr;
@@ -183,6 +184,8 @@ private:
 	ObjectManager* objectManager_ = nullptr;
 
 
+#pragma region レベルエディタに引っ越します
+
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;
 
@@ -195,15 +198,11 @@ private:
 	//天球
 	std::unique_ptr<Skydome> skydome_ = nullptr;
 
-	
+#pragma endregion
 	
 	//敵
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
 	uint32_t enemyModelHandle_ = 0u;
-
-	//プレイヤーのライトの判定
-	LightWeapon* lightCollision_ = nullptr;
-	WorldTransform lightCollisionWorldTransform_ = {};
 
 	uint32_t viewOfPoint_ = 0u;
 
