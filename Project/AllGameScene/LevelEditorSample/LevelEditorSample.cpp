@@ -43,7 +43,7 @@ void LevelEditorSample::Initialize(){
 
 
 	//読み込み
-	levelHandle_ = levelEditor_->Load("Test/AudioTest.json");
+	levelHandle_ = levelEditor_->Load("Test/AudioAreaTestOne.json");
 
 	//オーディオの読み込み
 	uint32_t mp3Test = audio_->Load("Resources/Audio/Sample/WIP.mp3");

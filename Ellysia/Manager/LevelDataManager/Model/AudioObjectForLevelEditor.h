@@ -1,5 +1,12 @@
 #pragma once
+#include <memory>
+#include <cstdint>
+
 #include "IObjectForLevelEditor.h"
+#include "AudioObjectForLevelEditorCollider.h"
+
+
+#include <Audio.h>
 
 struct Camera;
 struct Material;
@@ -10,11 +17,26 @@ struct SpotLight;
 //オーディオ用のオブジェクト
 class AudioObjectForLevelEditor :public IObjectForLevelEditor {
 public:
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	AudioObjectForLevelEditor()=default;
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize(const uint32_t& modelhandle, const Vector3& position) override;
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update() override;
+
+	/// <summary>
+	/// オーディオのファイルパスを入力
+	/// </summary>
+	/// <param name="filePath"></param>
+	void SetAudio(const std::string& filePath);
 
 #pragma region 描画
 
@@ -45,10 +67,12 @@ public:
 
 
 private:
+	//オーディオ
+	std::unique_ptr<Audio>audio_ = nullptr;
+	//ハンドル
+	uint32_t audioHandle_ = 0u;
 
-
-
-
+	std::unique_ptr<AudioObjectForLevelEditorCollider> audioObjectForLevelEditorCollider_ = nullptr;
 
 };
 

@@ -124,11 +124,15 @@ private:
 
 		//ファイル名
 		std::string fileName;
+
 		//種類
 		std::string type;
 
 		//ハンドル
 		uint32_t handle;
+
+		//エリア上かどうか
+		bool isOnArea;
 
 		//ループ
 		bool isLoop;
@@ -179,6 +183,7 @@ private:
 		//オブジェクト
 		std::list<ObjectData> objectDatas = {};
 
+		//std::list<ObjectData> objectDatas = {};
 
 
 		//フォルダ名

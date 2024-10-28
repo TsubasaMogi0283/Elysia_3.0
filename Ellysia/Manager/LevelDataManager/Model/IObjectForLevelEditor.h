@@ -3,7 +3,12 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
-#include "Collider/Collider.h"
+
+//種類
+enum LevelEditorObjectType {
+	StageObject,
+	AudioObject,
+};
 
 
 //レベルエディタ用のモデル
@@ -14,6 +19,11 @@ public:
 	/// 初期化
 	/// </summary>
 	virtual void Initialize(const uint32_t& modelhandle,const Vector3& position)=0;
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	virtual void Update() = 0;
 
 	/// <summary>
 	/// デストラクタ
@@ -27,7 +37,7 @@ protected:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 
-	//コライダー
-	std::unique_ptr<Collider> collider_ = nullptr;
+
+	uint32_t objectType_ = 0u;
 
 };

@@ -5,26 +5,26 @@
             "type": "MESH",
             "name": "Ground",
             "transform": {
-                "translation": [
-                    0.0,
-                    0.0,
-                    0.0
+                "scaling": [
+                    20.0,
+                    20.0,
+                    20.0
                 ],
                 "rotation": [
                     0.0,
                     -0.0,
                     0.0
                 ],
-                "scaling": [
-                    20.0,
-                    20.0,
-                    20.0
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.0
                 ]
             },
             "file_name": "Plane",
             "object_type": "Stage",
             "audio": {
-                "file_name": "aaaaaa",
+                "file_name": "",
                 "type": "BGM",
                 "loop": true
             }
@@ -33,20 +33,20 @@
             "type": "MESH",
             "name": "Sphere",
             "transform": {
-                "translation": [
-                    4.140221118927002,
-                    3.634669542312622,
-                    1.714384913444519
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "rotation": [
                     0.0,
                     -0.0,
                     0.0
                 ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
+                "translation": [
+                    4.140221118927002,
+                    3.634669542312622,
+                    1.714384913444519
                 ]
             },
             "file_name": "Sphere",
@@ -69,9 +69,9 @@
             "type": "MESH",
             "name": "Sample",
             "transform": {
-                "translation": [
-                    0.0,
-                    7.126154899597168,
+                "scaling": [
+                    1.0,
+                    1.0,
                     1.0
                 ],
                 "rotation": [
@@ -79,9 +79,9 @@
                     -0.0,
                     0.0
                 ],
-                "scaling": [
-                    1.0,
-                    1.0,
+                "translation": [
+                    0.0,
+                    7.126154899597168,
                     1.0
                 ]
             },
@@ -92,20 +92,20 @@
             "type": "MESH",
             "name": "AudioGround",
             "transform": {
-                "translation": [
-                    0.0,
-                    0.0,
-                    0.19999998807907104
+                "scaling": [
+                    4.083300590515137,
+                    4.083300590515137,
+                    4.083300590515137
                 ],
                 "rotation": [
                     0.0,
                     -0.0,
                     0.0
                 ],
-                "scaling": [
-                    4.083300590515137,
-                    4.083300590515137,
-                    4.083300590515137
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.19999998807907104
                 ]
             },
             "file_name": "Plane",

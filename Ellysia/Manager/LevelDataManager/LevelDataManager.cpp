@@ -84,7 +84,11 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 			objectData.transform.translate.z = (float)transform["translation"][0];
 			
 			
-			
+			//オブジェクトのタイプを取得
+			nlohmann::json objectCondition = {};
+			if (object.contains("object_type")) {
+				objectCondition = object["object_type"];
+			}
 
 
 			//コライダーの読み込み
@@ -138,34 +142,37 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 			//オーディオの読み込み
 			//まずあるかどうか
-			if (object.contains("audio")) {
-				nlohmann::json& audio = object["audio"];
+			if (objectCondition == "Audio") {
+				if (object.contains("audio")) {
+					nlohmann::json& audio = object["audio"];
 
-				//Audioを持っているよ
-				objectData.levelAudioData.isHavingAudio = true;
+					//Audioを持っているよ
+					objectData.levelAudioData.isHavingAudio = true;
 
-				//種類を記録
-				if (audio.contains("type")) {
-					objectData.levelAudioData.type = audio["type"];
+					//種類を記録
+					if (audio.contains("type")) {
+						objectData.levelAudioData.type = audio["type"];
+					}
+
+					//ファイル名を記録
+					objectData.levelAudioData.fileName = audio["file_name"];
+
+					//ループをするかどうか
+					objectData.levelAudioData.isLoop = audio["loop"];
+
+					//エリア上かどうか
+					objectData.levelAudioData.isOnArea = audio["on_area"];
+
+
+					//Audioフォルダの中で読み込み
+					std::string audioDir = leveldataPath_ + levelData.folderName + "/Audio/" + objectData.levelAudioData.type + "/";
+					std::string fullPath = FindExtension(audioDir, objectData.levelAudioData.fileName);
+					objectData.levelAudioData.handle = Audio::GetInstance()->Load(fullPath);
+
 				}
-
-				//ファイル名を記録
-				objectData.levelAudioData.fileName = audio["file_name"];
-
-				//ループをするかどうか
-				objectData.levelAudioData.isLoop = audio["loop"];
-
-				//Audioフォルダの中で読み込み
-				std::string audioFilePath = leveldataPath_ + levelData.folderName+"/Audio"+ objectData.levelAudioData.fileName +"/" + objectData.levelAudioData.fileName;
-				
-				std::string audioDir = leveldataPath_ + levelData.folderName + "/Audio/"+objectData.levelAudioData.type+"/"  ;
-				std::string a = FindExtension(audioDir, objectData.levelAudioData.fileName);
-
-
-
-				objectData.levelAudioData.handle = Audio::GetInstance()->LoadWave(a);
-
 			}
+
+			
 
 			//子オブジェクト
 			if (object.contains("children")) {
@@ -194,6 +201,12 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			//代入
 			objectData.model = model;
 		}
+
+		//オーディオの場合
+		if (objectData.levelAudioData.isHavingAudio == true) {
+
+		}
+
 		
 		//ワールドトランスフォームの初期化
 		WorldTransform* worldTransform = new WorldTransform();

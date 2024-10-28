@@ -10,6 +10,7 @@ public:
 	/// </summary>
 	void Initialize(const uint32_t& modelhandle, const Vector3& position) override;
 
+
 #pragma region 描画
 
 	/// <summary>
