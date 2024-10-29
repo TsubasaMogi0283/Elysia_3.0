@@ -10,6 +10,7 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 
 	//初期化
 	worldTransform_.Initialize();
+	worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
 	playerWorldPosition_ = {};
 
 
@@ -20,7 +21,6 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 
 	//半径
 	radius_ = 1.0f;
-
 
 
 	//自分
