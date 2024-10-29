@@ -26,12 +26,12 @@ void ObjectManager::Initialize(){
 	uint32_t trunkModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/tree_3D/Tree1", "Trunk1.obj");
 
 	
-	StageObject* tree1 = new Tree();
+	StageObjectPre* tree1 = new Tree();
 	Vector3 treePosition = { 4.0,0.0f,5.0f };
 	tree1->Initialize(trunkModelHandle, treePosition);
 	stageObjects_.push_back(tree1);
 	
-	StageObject* tree2 = new Tree();
+	StageObjectPre* tree2 = new Tree();
 	Vector3 treePosition2 = { -4.0,0.0f,-8.0f };
 	tree2->Initialize(trunkModelHandle, treePosition2);
 	stageObjects_.push_back(tree2);
@@ -44,7 +44,7 @@ void ObjectManager::Initialize(){
 
 void ObjectManager::Update(){
 	//
-	for (StageObject* stageObject : stageObjects_) {
+	for (StageObjectPre* stageObject : stageObjects_) {
 		stageObject->Update();
 	}
 
@@ -55,7 +55,7 @@ void ObjectManager::Update(){
 void ObjectManager::Draw(Camera& camera, SpotLight& spotLight){
 
 	//ステージオブジェクト
-	for (StageObject* stageObject : stageObjects_) {
+	for (StageObjectPre* stageObject : stageObjects_) {
 		stageObject->Draw(camera, material_, spotLight);
 	}
 
@@ -64,7 +64,7 @@ void ObjectManager::Draw(Camera& camera, SpotLight& spotLight){
 ObjectManager::~ObjectManager(){
 
 
-	for (StageObject* stageObject : stageObjects_) {
+	for (StageObjectPre* stageObject : stageObjects_) {
 		delete stageObject;
 	}
 

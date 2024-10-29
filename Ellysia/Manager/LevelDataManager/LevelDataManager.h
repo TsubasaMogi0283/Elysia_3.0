@@ -12,6 +12,8 @@
 #include "WorldTransform.h"
 #include "Collider/Collider.h"
 #include <Transform.h>
+#include <Model/IObjectForLevelEditorCollider.h>
+#include <Model/IObjectForLevelEditor.h>
 
 
 struct Camera;
@@ -168,6 +170,12 @@ private:
 			//レベルデータのオーディオ
 			LevelDataAudioData levelAudioData;
 
+			//オブジェクト(ステージかオーディオ)
+			IObjectForLevelEditor* object_;
+
+			//当たり判定(ステージかオーディオ)
+			IObjectForLevelEditorCollider* objectCollider_;
+
 
 		};
 
@@ -183,7 +191,6 @@ private:
 		//オブジェクト
 		std::list<ObjectData> objectDatas = {};
 
-		//std::list<ObjectData> objectDatas = {};
 
 
 		//フォルダ名

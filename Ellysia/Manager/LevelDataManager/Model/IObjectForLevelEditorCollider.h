@@ -3,9 +3,15 @@
 #include "Collider/Collider.h"
 
 
-//レベルエディタ用のモデル
+/// <summary>
+/// レベルエディタ用のオブジェクトの当たり判定
+/// </summary>
 class IObjectForLevelEditorCollider:public Collider {
 public:
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	virtual void Initialize()=0;
 
 	/// <summary>
 	/// オブジェクトの座標を取得
@@ -15,7 +21,13 @@ public:
 		this->objectPosition_ = position;
 	};
 
-
+	/// <summary>
+	/// 衝突したかどうかのフラグを取得
+	/// </summary>
+	/// <returns></returns>
+	virtual bool GetIsTouch() const{
+		return isTouch_;
+	}
 
 	/// <summary>
 	/// デストラクタ
@@ -27,7 +39,8 @@ protected:
 	//オブジェクトの座標
 	Vector3 objectPosition_ = {};
 
-
+	//衝突したかどうか
+	bool isTouch_ = true;
 
 
 

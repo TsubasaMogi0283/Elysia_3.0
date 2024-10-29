@@ -336,8 +336,8 @@ void GameScene::ObjectCollision(){
 
 
 	//デモ用
-	std::list <StageObject*> stageObjects = objectManager_->GetStageObjets();
-	for (StageObject* stageObject : stageObjects) {
+	std::list <StageObjectPre*> stageObjects = objectManager_->GetStageObjets();
+	for (StageObjectPre* stageObject : stageObjects) {
 		
 		//オブジェクトのAABB
 		AABB objectAABB = stageObject->GetAABB();
@@ -779,9 +779,6 @@ void GameScene::Update(GameManager* gameManager) {
 		flashLight_->SetPhi(phi);
 		flashLight_->Update();
 
-		//collisionManager_->RegisterList(flashLight_->GetFanCollision());
-
-
 		
 
 
@@ -795,10 +792,7 @@ void GameScene::Update(GameManager* gameManager) {
 			if (enemy->GetIsAttack() == true) {
 				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 
-
 			}
-
-
 		}
 		//プレイヤーをコリジョンマネージャーへ
 		collisionManager_->RegisterList(player_.get());

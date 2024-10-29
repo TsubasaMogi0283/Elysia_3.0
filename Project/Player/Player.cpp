@@ -39,6 +39,7 @@ void Player::Initialize(){
 	#pragma region 当たり判定について
 
 	//種類
+	//AABBで統一させた方が良い気がしてきた
 	collisionType_ = CollisionType::SphereType;
 
 	//半径

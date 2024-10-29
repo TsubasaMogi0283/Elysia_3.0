@@ -4,9 +4,7 @@
 
 #include "IObjectForLevelEditor.h"
 #include "AudioObjectForLevelEditorCollider.h"
-
-
-#include <Audio.h>
+#include "Audio.h"
 
 struct Camera;
 struct Material;
@@ -14,7 +12,9 @@ struct DirectionalLight;
 struct PointLight;
 struct SpotLight;
 
-//オーディオ用のオブジェクト
+/// <summary>
+/// オーディオ用のオブジェクト
+/// </summary>
 class AudioObjectForLevelEditor :public IObjectForLevelEditor {
 public:
 	/// <summary>
@@ -46,7 +46,7 @@ public:
 	/// <param name="worldTransform">ワールドトランスフォーム</param>
 	/// <param name="camera">カメラ</param>
 	/// <param name="directionalLight">平行光源</param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight);
+	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight)override;
 
 	/// <summary>
 	/// 描画
@@ -54,7 +54,7 @@ public:
 	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="pointLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight);
+	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight)override;
 
 	/// <summary>
 	/// 描画
@@ -62,7 +62,7 @@ public:
 	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="spotLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight);
+	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight)override;
 
 
 
@@ -72,7 +72,7 @@ private:
 	//ハンドル
 	uint32_t audioHandle_ = 0u;
 
+	//当たり判定
 	std::unique_ptr<AudioObjectForLevelEditorCollider> audioObjectForLevelEditorCollider_ = nullptr;
 
 };
-

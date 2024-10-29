@@ -193,7 +193,8 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 
 		//モデルの生成
 		//まだ無い場合は生成する
-		if (objectData.model == nullptr) {
+		//一般のステージオブジェクトの場合
+		if (objectData.levelAudioData.isHavingAudio == false && objectData.model == nullptr) {
 			//モデルの読み込み
 			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
 			//生成
@@ -203,8 +204,12 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 		}
 
 		//オーディオの場合
-		if (objectData.levelAudioData.isHavingAudio == true) {
-
+		if (objectData.levelAudioData.isHavingAudio == true && objectData.model == nullptr) {
+			//モデルの読み込み
+			uint32_t modelHandleForAudio = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
+			//生成
+			Model* audioModel = Model::Create(modelHandleForAudio);
+			audioModel;
 		}
 
 		
@@ -219,10 +224,6 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 		objectData.worldTransform = worldTransform;
 		
 	}
-
-
-
-
 }
 
 nlohmann::json LevelDataManager::Deserialize(std::string& fullFilePath){

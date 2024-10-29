@@ -190,8 +190,8 @@ void EnemyManager::Update(){
 			#pragma region ステージオブジェクト
 
 			//仮置きのステージオブジェクト
-			std::list<StageObject*>stageObjects=objectManager_->GetStageObjets();
-			for (StageObject* stageObject : stageObjects) {
+			std::list<StageObjectPre*>stageObjects=objectManager_->GetStageObjets();
+			for (StageObjectPre* stageObject : stageObjects) {
 
 				//AABBを取得
 				AABB objectAABB = stageObject->GetAABB();
@@ -261,8 +261,8 @@ void EnemyManager::Update(){
 		if (enemy->GetCondition() == EnemyCondition::Tracking) {
 		
 			//仮置きのステージオブジェクト
-			std::list<StageObject*>stageObjects = objectManager_->GetStageObjets();
-			for (StageObject* stageObject : stageObjects) {
+			std::list<StageObjectPre*>stageObjects = objectManager_->GetStageObjets();
+			for (StageObjectPre* stageObject : stageObjects) {
 
 				//AABBを取得
 				AABB objectAABB = stageObject->GetAABB();

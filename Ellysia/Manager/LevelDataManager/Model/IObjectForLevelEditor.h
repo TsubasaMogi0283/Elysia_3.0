@@ -4,14 +4,18 @@
 #include "WorldTransform.h"
 #include "Material.h"
 
-//種類
+/// <summary>
+/// オブジェクトの種類
+/// </summary>
 enum LevelEditorObjectType {
 	StageObject,
 	AudioObject,
 };
 
 
-//レベルエディタ用のモデル
+/// <summary>
+/// レベルエディタ用のモデル(基底クラス)
+/// </summary>
 class IObjectForLevelEditor {
 public:
 
@@ -25,6 +29,38 @@ public:
 	/// </summary>
 	virtual void Update() = 0;
 
+
+
+	/// <summary>
+	/// 平行光源
+	/// </summary>
+	/// <param name="worldTransform"></param>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="directionalLight"></param>
+	virtual void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight)=0;
+
+	/// <summary>
+	/// 描画(点光源)
+	/// </summary>
+	/// <param name="worldTransform"></param>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="pointLight"></param>
+	virtual void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight) = 0;
+
+	/// <summary>
+	/// 描画(スポットライト)
+	/// </summary>
+	/// <param name="worldTransform"></param>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="spotLight"></param>
+	virtual void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight)=0;
+
+
+
+
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -37,7 +73,8 @@ protected:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 
-
+	//オブジェクトのタイプ
+	//LevelEditorObjectTypeから選ぶよ
 	uint32_t objectType_ = 0u;
 
 };

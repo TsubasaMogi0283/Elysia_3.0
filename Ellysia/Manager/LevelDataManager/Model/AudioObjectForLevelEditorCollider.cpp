@@ -6,12 +6,12 @@ void AudioObjectForLevelEditorCollider::Initialize(){
 
 }
 
-void AudioObjectForLevelEditorCollider::OnCollision()
-{
+void AudioObjectForLevelEditorCollider::OnCollision(){
+	isTouch_ = true;
 }
 
-void AudioObjectForLevelEditorCollider::OffCollision()
-{
+void AudioObjectForLevelEditorCollider::OffCollision(){
+	isTouch_ = false;;
 }
 
 Vector3 AudioObjectForLevelEditorCollider::GetWorldPosition(){

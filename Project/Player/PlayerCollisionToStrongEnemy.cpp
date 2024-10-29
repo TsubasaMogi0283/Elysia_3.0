@@ -54,12 +54,7 @@ void PlayerCollisionToStrongEnemy::Draw(Camera& camera, SpotLight& spotLight){
 }
 
 Vector3 PlayerCollisionToStrongEnemy::GetWorldPosition(){
-	Vector3 position = {
-		.x = worldTransform_.worldMatrix_.m[3][0],
-		.y = worldTransform_.worldMatrix_.m[3][1],
-		.z = worldTransform_.worldMatrix_.m[3][2],
-
-	};
+	Vector3 position = worldTransform_.GetWorldPosition();
 	return position;
 }
 
