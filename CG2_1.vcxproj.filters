@@ -340,6 +340,9 @@
     <Filter Include="Project\Enemy\EnemyFlashLightCollision">
       <UniqueIdentifier>{94a9085e-5e7c-4aca-abdd-af0623868eeb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Player\PlayerCollisionToNormalEnemyAttack">
+      <UniqueIdentifier>{a9a15912-dac9-4dd1-ae7b-ae03c83af842}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -584,6 +587,18 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.cpp">
       <Filter>Ellysia\Source File\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditorCollider.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\PlayerCollisionToNormalEnemyAttack.cpp">
+      <Filter>Project\Player\PlayerCollisionToNormalEnemyAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1026,6 +1041,21 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditor.h">
       <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditorCollider.h">
+      <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditorCollider.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\PlayerCollisionToNormalEnemyAttack.h">
+      <Filter>Project\Player\PlayerCollisionToNormalEnemyAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

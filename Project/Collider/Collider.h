@@ -10,6 +10,8 @@
 enum CollisionType {
 	//点
 	PointType,
+	//板
+	PlaneType,
 	//球
 	SphereType,
 	//AABB

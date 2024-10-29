@@ -5,33 +5,57 @@
 
 #include "DirectXSetup.h"
 
-//Wvpいらないかも
-//代わりに法線追加
+/// <summary>
+/// シェーダーに送るデータ
+/// </summary>
 struct WorldTransformData {
 	Matrix4x4 world;
 	Matrix4x4 normal;
 	Matrix4x4 worldInverseTranspose;
 };
 
-
-//Transformationクラスのものをこっちに移動させた方が良いかも
+/// <summary>
+/// ワールドトランスフォーム
+/// </summary>
 struct WorldTransform {
 public:
-
-	//初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
-	//行列を計算・転送する
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	//ペアレントの設定
-	void SetParent(const WorldTransform* parent) {
+	/// <summary>
+	/// ペアレントの設定
+	/// </summary>
+	/// <param name="parent"></param>
+	inline void SetParent(const WorldTransform* parent) {
 		parent = parent_;
+	}
+
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetWorldPosition()const {
+		Vector3 position = {
+			.x = worldMatrix_.m[3][0],
+			.y = worldMatrix_.m[3][1],
+			.z = worldMatrix_.m[3][2],
+		};
+
+		return position;
 	}
 
 
 private:
-	//転送
+	/// <summary>
+	/// 転送
+	/// </summary>
 	void Transfer();
 
 
@@ -48,7 +72,7 @@ public:
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> bufferResource_;
-
+	//送るデータ
 	WorldTransformData* tranceformationData_ = nullptr;
 
 	//ワールド行列へ

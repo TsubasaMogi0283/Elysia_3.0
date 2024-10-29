@@ -43,7 +43,7 @@ void LevelEditorSample::Initialize(){
 
 
 	//読み込み
-	levelHandle_ = levelEditor_->Load("Test/AudioTest.json");
+	levelHandle_ = levelEditor_->Load("Test/AudioAreaTestOne.json");
 
 	//オーディオの読み込み
 	uint32_t mp3Test = audio_->Load("Resources/Audio/Sample/WIP.mp3");
@@ -77,11 +77,13 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 	gameManager;
 
-	//更新
+	//レベルエディタの更新
 	levelEditor_->Update(levelHandle_);
-
+	//マテリアルの更新
 	material_.Update();
+	//平行光源の更新
 	directionalLight_.Update();
+	//カメラの更新
 	camera_.Update();
 
 }
@@ -91,6 +93,7 @@ void LevelEditorSample::DrawSpriteBack()
 }
 
 void LevelEditorSample::DrawObject3D(){
+	//レベルエディタのモデルを描画
 	levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
 }
 

@@ -22,9 +22,9 @@ LevelDataManager* LevelDataManager::GetInstance(){
 
 
 std::string LevelDataManager::FindExtension(const std::string& directory, const std::string& baseFileName) {
-	namespace fs = std::filesystem;
-
-	for (const auto& entry : fs::directory_iterator(directory)) {
+	
+	//指定したディレクトリから目的のものを探す
+	for (const auto& entry : std::filesystem::directory_iterator(directory)) {
 		if (entry.is_regular_file()) {
 			std::string fileName = entry.path().stem().string(); 
 			//見つかった場合
@@ -33,7 +33,8 @@ std::string LevelDataManager::FindExtension(const std::string& directory, const 
 			}
 		}
 	}
-	return {};  // 見つからなければ空文字を返す
+	// 見つからなければ空文字を返す
+	return {};  
 }
 
 void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
@@ -61,25 +62,33 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 			//トランスフォームのパラメータ読み込み
 			nlohmann::json& transform = object["transform"];
-			//Blenderと軸の方向が違うので注意！
-			//平行移動
-			objectData.transform.translate.x = (float)transform["translation"][1];
-			objectData.transform.translate.y = (float)transform["translation"][2];
-			objectData.transform.translate.z = (float)transform["translation"][0];
-			
-			//回転角
-			//そういえばBlenderは度数法だったね
-			//エンジンでは弧度法に直そう
-			const float DEREES_TO_RADIUS_ = (float)std::numbers::pi / 180.0f;
-			objectData.transform.rotate.x = -(float)transform["rotation"][1] * DEREES_TO_RADIUS_;
-			objectData.transform.rotate.y = -(float)transform["rotation"][2] * DEREES_TO_RADIUS_;
-			objectData.transform.rotate.z = -(float)transform["rotation"][0] * DEREES_TO_RADIUS_;
 
 			//スケール
 			objectData.transform.scale.x = (float)transform["scaling"][1];
 			objectData.transform.scale.y = (float)transform["scaling"][2];
 			objectData.transform.scale.z = (float)transform["scaling"][0];
 
+			//回転角
+			//そういえばBlenderは度数法だったね
+			//弧度法に直そう
+			const float DEREES_TO_RADIUS_ = (float)std::numbers::pi / 180.0f;
+			objectData.transform.rotate.x = -(float)transform["rotation"][1] * DEREES_TO_RADIUS_;
+			objectData.transform.rotate.y = -(float)transform["rotation"][2] * DEREES_TO_RADIUS_;
+			objectData.transform.rotate.z = -(float)transform["rotation"][0] * DEREES_TO_RADIUS_;
+
+
+			//Blenderと軸の方向が違うので注意！
+			//平行移動
+			objectData.transform.translate.x = (float)transform["translation"][1];
+			objectData.transform.translate.y = (float)transform["translation"][2];
+			objectData.transform.translate.z = (float)transform["translation"][0];
+			
+			
+			//オブジェクトのタイプを取得
+			nlohmann::json objectCondition = {};
+			if (object.contains("object_type")) {
+				objectCondition = object["object_type"];
+			}
 
 
 			//コライダーの読み込み
@@ -133,34 +142,37 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 			//オーディオの読み込み
 			//まずあるかどうか
-			if (object.contains("audio")) {
-				nlohmann::json& audio = object["audio"];
+			if (objectCondition == "Audio") {
+				if (object.contains("audio")) {
+					nlohmann::json& audio = object["audio"];
 
-				//Audioを持っているよ
-				objectData.levelAudioData.isHavingAudio = true;
+					//Audioを持っているよ
+					objectData.levelAudioData.isHavingAudio = true;
 
-				//種類を記録
-				if (audio.contains("type")) {
-					objectData.levelAudioData.type = audio["type"];
+					//種類を記録
+					if (audio.contains("type")) {
+						objectData.levelAudioData.type = audio["type"];
+					}
+
+					//ファイル名を記録
+					objectData.levelAudioData.fileName = audio["file_name"];
+
+					//ループをするかどうか
+					objectData.levelAudioData.isLoop = audio["loop"];
+
+					//エリア上かどうか
+					objectData.levelAudioData.isOnArea = audio["on_area"];
+
+
+					//Audioフォルダの中で読み込み
+					std::string audioDir = leveldataPath_ + levelData.folderName + "/Audio/" + objectData.levelAudioData.type + "/";
+					std::string fullPath = FindExtension(audioDir, objectData.levelAudioData.fileName);
+					objectData.levelAudioData.handle = Audio::GetInstance()->Load(fullPath);
+
 				}
-
-				//ファイル名を記録
-				objectData.levelAudioData.fileName = audio["file_name"];
-
-				//ループをするかどうか
-				objectData.levelAudioData.isLoop = audio["loop"];
-
-				//Audioフォルダの中で読み込み
-				std::string audioFilePath = leveldataPath_ + levelData.folderName+"/Audio"+ objectData.levelAudioData.fileName +"/" + objectData.levelAudioData.fileName;
-				
-				std::string audioDir = leveldataPath_ + levelData.folderName + "/Audio/"+objectData.levelAudioData.type+"/"  ;
-				std::string a = FindExtension(audioDir, objectData.levelAudioData.fileName);
-
-
-
-				objectData.levelAudioData.handle = Audio::GetInstance()->LoadWave(a);
-
 			}
+
+			
 
 			//子オブジェクト
 			if (object.contains("children")) {
@@ -174,13 +186,15 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 void LevelDataManager::Ganarate(LevelData& levelData) {
 
+	//ディレクトリパス
 	std::string levelEditorDirectoryPath = leveldataPath_ + levelData.folderName;
 	
 	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
 
 		//モデルの生成
 		//まだ無い場合は生成する
-		if (objectData.model == nullptr) {
+		//一般のステージオブジェクトの場合
+		if (objectData.levelAudioData.isHavingAudio == false && objectData.model == nullptr) {
 			//モデルの読み込み
 			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
 			//生成
@@ -188,6 +202,16 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			//代入
 			objectData.model = model;
 		}
+
+		//オーディオの場合
+		if (objectData.levelAudioData.isHavingAudio == true && objectData.model == nullptr) {
+			//モデルの読み込み
+			uint32_t modelHandleForAudio = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
+			//生成
+			Model* audioModel = Model::Create(modelHandleForAudio);
+			audioModel;
+		}
+
 		
 		//ワールドトランスフォームの初期化
 		WorldTransform* worldTransform = new WorldTransform();
@@ -200,10 +224,6 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 		objectData.worldTransform = worldTransform;
 		
 	}
-
-
-
-
 }
 
 nlohmann::json LevelDataManager::Deserialize(std::string& fullFilePath){
@@ -371,9 +391,10 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 
 void LevelDataManager::Update(uint32_t& levelDataHandle){
 
+
 	//この書き方はC++17からの構造化束縛というものらしい
 	//イテレータではなくこっちでやった方が良いかな
-	//ファイル名で指定したい時はkeyを使ったら楽だね。ハンドルだけどねこれは。
+	//ファイル名で指定したい時はkeyを使ったら楽だね。今回はハンドルだけどね。
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 			
@@ -400,7 +421,6 @@ void LevelDataManager::Delete(uint32_t& levelDataHandle){
 				}
 				//ワールドトランスフォームの解放
 				delete object.worldTransform;
-
 			}
 
 			//listにある情報を全て消す
@@ -416,6 +436,7 @@ void LevelDataManager::Delete(uint32_t& levelDataHandle){
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, DirectionalLight& directionalLight){
 	
+	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 
@@ -423,6 +444,7 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 			for (LevelData::ObjectData& object : levelData->objectDatas) {
 				object.model->Draw(*object.worldTransform, camera, material, directionalLight);
 			}
+
 			//無駄なループ処理を防ぐよ
 			break;
 
@@ -433,6 +455,7 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, PointLight& pointLight){
 
+	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 
@@ -449,6 +472,8 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 }
 
 void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, SpotLight& spotLight){
+	
+	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 
@@ -469,6 +494,8 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 
 
 void LevelDataManager::Release(){
+
+	//全て解放
 	for (auto& [key, levelData] : levelDatas_) {
 		for (auto& object : levelData->objectDatas) {
 			// Model の解放
@@ -481,6 +508,7 @@ void LevelDataManager::Release(){
 
 	}
 
+	//クリア
 	levelDatas_.clear();
 }
 

@@ -12,7 +12,11 @@ struct Camera;
 struct Material;
 struct SpotLight;
 
-class StageObject{
+/// <summary>
+/// ステージオブジェクト(仮)
+/// レベルエディタに引っ越しした後全て消すつもり
+/// </summary>
+class StageObjectPre{
 public:
 	/// <summary>
 	/// 初期化
@@ -37,7 +41,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	virtual ~StageObject() = default;
+	virtual ~StageObjectPre() = default;
 
 
 public:

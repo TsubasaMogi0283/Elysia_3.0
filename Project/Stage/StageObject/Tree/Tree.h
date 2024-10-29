@@ -3,7 +3,7 @@
 #include "Stage/StageObject/StageObject.h"
 
 
-class Tree :public StageObject{
+class Tree :public StageObjectPre {
 public:
 
 	/// <summary>

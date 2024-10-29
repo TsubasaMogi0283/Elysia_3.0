@@ -336,8 +336,8 @@ void GameScene::ObjectCollision(){
 
 
 	//デモ用
-	std::list <StageObject*> stageObjects = objectManager_->GetStageObjets();
-	for (StageObject* stageObject : stageObjects) {
+	std::list <StageObjectPre*> stageObjects = objectManager_->GetStageObjets();
+	for (StageObjectPre* stageObject : stageObjects) {
 		
 		//オブジェクトのAABB
 		AABB objectAABB = stageObject->GetAABB();
@@ -779,30 +779,25 @@ void GameScene::Update(GameManager* gameManager) {
 		flashLight_->SetPhi(phi);
 		flashLight_->Update();
 
-		//collisionManager_->RegisterList(flashLight_->GetFanCollision());
-
-
 		
 
 
-		Fan3D fan = flashLight_->GetFan3D();
 		//エネミーをコリジョンマネージャーに追加
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
 			collisionManager_->RegisterList(enemy);
 			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+
 			//攻撃用の判定が出ていたら登録
 			if (enemy->GetIsAttack() == true) {
 				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
+				collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
 
 
 			}
-
-
 		}
-		//プレイヤーをコリジョンマネージャーへ
-		collisionManager_->RegisterList(player_.get());
 
+		
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		//1体しか出さないのにリストにする必要はあったのでしょうか・・
 		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
