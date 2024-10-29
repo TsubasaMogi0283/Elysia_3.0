@@ -25,9 +25,6 @@
 
     キーボードまたはコントローラーを使って遊ぶ3Dホラーアクションゲームです。徘徊するお化けに襲われないよう気を付けながら、ステージ上にある鍵を探し脱出を目指します。
 
-
-    <img src="https://drive.google.com/file/d/1oILEj-ONgwoLgFLKqj8YmykW58Gk4Uul/view?usp=sharing" alt="ゲーム画面">
-
     <br>
 
 
