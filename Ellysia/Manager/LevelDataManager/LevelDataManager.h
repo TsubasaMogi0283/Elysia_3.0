@@ -14,6 +14,7 @@
 #include <Transform.h>
 #include <Model/IObjectForLevelEditorCollider.h>
 #include <Model/IObjectForLevelEditor.h>
+#include <Listener/ListenerForLevelEditor.h>
 
 
 struct Camera;
@@ -144,9 +145,9 @@ private:
 		//モデルオブジェクト
 		struct ObjectData {
 			//モデル
-			Model* model = nullptr;
+			Model* model;
 			//ワールドトランスフォーム
-			WorldTransform* worldTransform = {};
+			WorldTransform* worldTransform;
 
 			//ファイル名
 			std::string modelFileName;
@@ -181,17 +182,13 @@ private:
 
 
 
-
-		//リスナー(通常はプレイヤーを入れる)
-		Listener listener_ = {};
-
 		//ハンドル
 		uint32_t handle = 0u;
 
 		//オブジェクト
-		std::list<ObjectData> objectDatas = {};
+		std::list<ObjectData> objectDatas;
 
-
+		ListenerForLevelEditor* listener;
 
 		//フォルダ名
 		std::string folderName = {};
@@ -209,7 +206,7 @@ private:
 	/// </summary>
 	/// <param name="handle"></param>
 	/// <returns></returns>
-	inline std::list<LevelData::ObjectData> GetObject(uint32_t& handle) {
+	inline std::list<LevelData::ObjectData> GetObject(const uint32_t& handle) {
 		
 		for (const auto& [key, levelData] : levelDatas_) {
 			
@@ -228,17 +225,14 @@ private:
 	/// </summary>
 	/// <param name="handle"></param>
 	/// <param name="listener"></param>
-	inline void SetListener(uint32_t& handle,Listener &listener) {
-
+	inline void SetListener(const uint32_t& handle,ListenerForLevelEditor* listener) {
 		for (const auto& [key, levelData] : levelDatas_) {
-			//一致したら値を代入
+
+			//一致したら設定
 			if (levelData->handle == handle) {
-				levelData->listener_ = listener;
-				break;
+				levelData->listener = listener;
 			}
 		}
-
-
 	}
 
 private:
@@ -283,7 +277,6 @@ private:
 
 	//Resourceにあるレベルデータの場所
 	const std::string leveldataPath_ = "Resources/LevelData/";
-
 
 };
 

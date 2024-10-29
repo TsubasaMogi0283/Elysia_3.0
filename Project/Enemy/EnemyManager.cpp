@@ -56,25 +56,25 @@ void EnemyManager::Initialize(uint32_t& normalEnemyModel, uint32_t& strongEnemyM
 
 #endif // _DEBUG
 
-	StrongEnemy* enemy = new StrongEnemy();
-	std::random_device seedGenerator;
-	std::mt19937 randomEngine(seedGenerator());
-	
-	//位置を決める
-	std::uniform_real_distribution<float> positionDistribute(stageRect_.leftBack.x, stageRect_.rightBack.x);
-	Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
-	
-	
-	//位置を決める
-	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
-	Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
-	
-	position = { -4.0f,0.0f,5.0f };
-	speed = { 0.01f,0.0f,-0.03f };
-	
-	
-	enemy->Initialize(strongEnemyModelHandle_, position, speed);
-	strongEnemyes_.push_back(enemy);
+	//StrongEnemy* enemy = new StrongEnemy();
+	//std::random_device seedGenerator;
+	//std::mt19937 randomEngine(seedGenerator());
+	//
+	////位置を決める
+	//std::uniform_real_distribution<float> positionDistribute(stageRect_.leftBack.x, stageRect_.rightBack.x);
+	//Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
+	//
+	//
+	////位置を決める
+	//std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
+	//Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
+	//
+	//position = { -4.0f,0.0f,5.0f };
+	//speed = { 0.01f,0.0f,-0.03f };
+	//
+	//
+	//enemy->Initialize(strongEnemyModelHandle_, position, speed);
+	//strongEnemyes_.push_back(enemy);
 
 
 	material_.Initialize();
@@ -152,7 +152,7 @@ void EnemyManager::Update(){
 	//プレイヤーの座標
 	Vector3 playerPosition = player_->GetWorldPosition();
 	const float ATTACK_DISTANCE_OFFSET = 0.0f;
-	float MINIMUM_DISTANCE = player_->GetRadius() +1.0f + ATTACK_DISTANCE_OFFSET;
+	float MINIMUM_DISTANCE = 1.0f+1.0f + ATTACK_DISTANCE_OFFSET;
 	
 	
 	//敵はポリモーフィズムでやった方がよさそう
@@ -271,7 +271,6 @@ void EnemyManager::Update(){
 				Vector3 objectPosition = stageObject->GetWorldPosition();
 
 
-
 				//お互いのAABBが接触している場合
 				if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
 					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
@@ -282,8 +281,6 @@ void EnemyManager::Update(){
 
 					//敵の向いている方向
 					Vector3 enemyDirection = enemy->GetDirection();
-
-
 
 					//前にある場合だけ計算
 					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);

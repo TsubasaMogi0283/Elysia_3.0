@@ -1,27 +1,24 @@
 #pragma once
+#include "Collider/Collider.h"
+#include <WorldTransform.h>
 #include <memory>
+#include <Material.h>
+#include <Model.h>
 
-#include "Model.h"
-#include "WorldTransform.h"
-#include "Material.h"
-#include "../Collider/Collider.h"
-
-struct Camera;
-struct SpotLight;
-
-
-class PlayerCollisionToStrongEnemy :public Collider {
+/// <summary>
+/// 通常の敵の攻撃に対しての当たり判定
+/// </summary>
+class PlayerCollisionToNormalEnemyAttack :public Collider {
 public:
 
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	PlayerCollisionToStrongEnemy() = default;
+	PlayerCollisionToNormalEnemyAttack() = default;
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="modelHandle"></param>
 	void Initialize();
 
 	/// <summary>
@@ -35,12 +32,12 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void Draw(Camera& camera,Material & material, SpotLight& spotLight);
+	void Draw(Camera& camera,Material& material, SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~PlayerCollisionToStrongEnemy() = default;
+	~PlayerCollisionToNormalEnemyAttack() = default;
 
 
 public:
@@ -48,10 +45,17 @@ public:
 	/// 敵のワールド座標の設定
 	/// </summary>
 	/// <param name="position"></param>
-	inline void SetPlayerPosition(Vector3 position) {
+	inline void SetPlayerPosition(const Vector3& position) {
 		this->playerWorldPosition_ = position;
 	}
 
+	/// <summary>
+	/// 衝突したかどうか
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsTouch() {
+		return isTouch_;
+	}
 
 
 	/// <summary>
@@ -76,9 +80,11 @@ private:
 	std::unique_ptr<Model> model_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
-	//ワールド座標
+	//プレイヤーの座標
 	Vector3 playerWorldPosition_ = {};
 
 
-};
+	//通常の敵
+	bool isTouch_ = false;
 
+};

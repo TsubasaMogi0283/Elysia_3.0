@@ -3,9 +3,10 @@
 #include "Model.h"
 #include <memory>
 #include "Stage/Ground/StageRect.h"
-#include "../Collider/Collider.h"
 #include "AABB.h"
 #include "PlayerCollisionToStrongEnemy.h"
+#include "PlayerCollisionToNormalEnemyAttack.h"
+#include "Listener/ListenerForLevelEditor.h"
 
 struct Camera;
 struct SpotLight;
@@ -14,7 +15,9 @@ class GameScene;
 class ObjectManager;
 
 
-
+/// <summary>
+/// プレイヤーの移動状態
+/// </summary>
 enum PlayerMoveCondition {
 	//動かない
 	NonePlayerMove,
@@ -23,8 +26,11 @@ enum PlayerMoveCondition {
 };
 
 
-//プレイヤーコリジョンを作りたい
-class Player :public Collider {
+/// <summary>
+/// プレイヤー
+/// 「プレイヤー = Collider」というわけではないのでCollider継承させるのやめようよ
+/// </summary>
+class Player:public ListenerForLevelEditor {
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -55,25 +61,23 @@ public:
 	~Player();
 
 public:
-
-
-
-
 	/// <summary>
-	/// ワールド座標を所得
+	/// ワールド座標の取得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition()override;
+	inline Vector3 GetWorldPosition()override {
+		return worldTransform_.GetWorldPosition();
+	}
 
-	/// <summary>
-	///	接触
-	/// </summary>
-	void OnCollision()override;
-	
-	/// <summary>
-	/// 非接触
-	/// </summary>
-	void OffCollision()override;
+	inline float GetRadius()const {
+		return radius_;
+	}
+
+
+
+	inline Vector3 GetDirection()override {
+		return moveDirection_;
+	}
 
 	/// <summary>
 	/// AABBの取得
@@ -82,14 +86,6 @@ public:
 		return aabb_;
 	}
 
-
-	/// <summary>
-	/// 半径を取得
-	/// </summary>
-	/// <returns></returns>
-	inline float GetRadius() const {
-		return radius_;
-	}
 
 public:
 
@@ -165,12 +161,23 @@ public:
 	}
 
 	/// <summary>
-	/// 一発アウトの敵用の当たり判定
+	/// 通常の敵の当たり判定
+	/// </summary>
+	/// <returns></returns>
+	PlayerCollisionToNormalEnemyAttack* GetCollisionToNormalEnemy()const {
+		return colliderToNormalEnemy_.get();
+	}
+
+	/// <summary>
+	/// 強敵の当たり判定
 	/// </summary>
 	/// <returns></returns>
 	PlayerCollisionToStrongEnemy* GetCollisionToStrongEnemy()const {
 		return collisionToStrongEnemy_.get();
 	}
+
+	
+
 
 private:
 
@@ -194,6 +201,17 @@ private:
 
 	const float SIDE_SIZE = 1.0f;
 	AABB aabb_ = {};
+
+
+	//半径
+	float radius_ = 1.0f;
+
+	//AABBのmax部分に加算する縦横高さのサイズ
+	Vector3 upSideSize_ = { 1.0f,1.0f,1.0f };
+
+	//AABBのmin部分に加算する縦横高さのサイズ
+	Vector3 downSideSize_ = { 1.0f,1.0f,1.0f };
+
 
 	//体力
 	int32_t hp_ = 0;
@@ -219,6 +237,8 @@ private:
 	//時間
 	float vibeTime_ = 0u;
 
+	//当たり判定(通常の敵)
+	std::unique_ptr<PlayerCollisionToNormalEnemyAttack>colliderToNormalEnemy_ = nullptr;
 	//当たり判定(一発アウトの敵用)
 	std::unique_ptr<PlayerCollisionToStrongEnemy>collisionToStrongEnemy_ = nullptr;
 

@@ -15,7 +15,7 @@
 void Player::Initialize(){
 
 
-
+	//モデルの生成
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD3Player","Player.obj");
 	model_.reset(Model::Create(modelHandle));
 
@@ -36,12 +36,6 @@ void Player::Initialize(){
 	const Vector3 INITIAL_POSITION = { .x=0.0f,.y=0.0f,.z=-15.0f };
 	worldTransform_.translate_ = INITIAL_POSITION;
 
-	#pragma region 当たり判定について
-
-	//種類
-	//AABBで統一させた方が良い気がしてきた
-	collisionType_ = CollisionType::SphereType;
-
 	//半径
 	radius_ = 1.0f;
 
@@ -51,21 +45,19 @@ void Player::Initialize(){
 	//AABBのmin部分に加算する縦横高さのサイズ
 	downSideSize_ = {1.0f,1.0f,1.0f};
 
-	//判定
-	//自分
-	SetCollisionAttribute(COLLISION_ATTRIBUTE_PLAYER);
-	//相手
-	SetCollisionMask(COLLISION_ATTRIBUTE_ENEMY_ATTACK);
+
+	//通常
+	colliderToNormalEnemy_ = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
+	colliderToNormalEnemy_->Initialize();
 
 
-	//一発アウト用
+	//強敵
 	collisionToStrongEnemy_ = std::make_unique<PlayerCollisionToStrongEnemy>();
 	collisionToStrongEnemy_->Initialize();
 
-	#pragma endregion
 
 
-	
+	//ダメージを受けたかどうか
 	isDameged_ = false;
 	
 }
@@ -116,19 +108,36 @@ void Player::Update(){
 
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
+	Vector3 worldPosition = worldTransform_.GetWorldPosition();
 
 
-	aabb_.min.x = GetWorldPosition().x - downSideSize_.x;
-	aabb_.min.y = GetWorldPosition().y - downSideSize_.y;
-	aabb_.min.z = GetWorldPosition().z - downSideSize_.z;
+	aabb_.min.x = worldPosition.x - downSideSize_.x;
+	aabb_.min.y = worldPosition.y - downSideSize_.y;
+	aabb_.min.z = worldPosition.z - downSideSize_.z;
 
-	aabb_.max.x = GetWorldPosition().x + downSideSize_.x;
-	aabb_.max.y = GetWorldPosition().y + downSideSize_.y;
-	aabb_.max.z = GetWorldPosition().z + downSideSize_.z;
+	aabb_.max.x = worldPosition.x + downSideSize_.x;
+	aabb_.max.y = worldPosition.y + downSideSize_.y;
+	aabb_.max.z = worldPosition.z + downSideSize_.z;
+
+	//通常の敵用の当たり判定の更新
+	colliderToNormalEnemy_->SetPlayerPosition(worldPosition);
+	colliderToNormalEnemy_->Update();
 
 	//一発アウト用の当たり判定
-	collisionToStrongEnemy_->SetPlayerPosition(GetWorldPosition());
+	collisionToStrongEnemy_->SetPlayerPosition(worldPosition);
 	collisionToStrongEnemy_->Update();
+
+
+
+	////ここでずっと当たっているみたい
+	////通常の敵に当たった場合
+	//if (colliderToNormalEnemy_->GetIsTouch() == true) {
+	//	//体力を1減らす
+	//	--hp_;
+	//
+	//	//振動させる
+	//	isDameged_ = true;
+	//}
 
 
 	//攻撃された場合
@@ -174,36 +183,21 @@ void Player::Update(){
 }
 
 void Player::Draw(Camera& camera, Material& material, SpotLight& spotLight){
-	
-	model_->Draw(worldTransform_, camera,material,spotLight);
 
 #ifdef _DEBUG
-	collisionToStrongEnemy_->Draw(camera, spotLight);
+	//本体の描画
+	//1人称視点だからいらないかもね
+	model_->Draw(worldTransform_, camera,material,spotLight);
+
+	//通常
+	colliderToNormalEnemy_->Draw(camera, material, spotLight);
+	//強敵	
+	collisionToStrongEnemy_->Draw(camera, material, spotLight);
 #endif // _DEBUG
 
 
 }
 
-Vector3 Player::GetWorldPosition() {
-	Vector3 worldPosition = {
-		.x = worldTransform_.worldMatrix_.m[3][0],
-		.y = worldTransform_.worldMatrix_.m[3][1],
-		.z = worldTransform_.worldMatrix_.m[3][2],
-	};
-	return worldPosition;
-}
-
-void Player::OnCollision(){
-	//体力を1減らす
-	--hp_;
-
-	//振動させる
-	isDameged_ = true;
-}
-
-void Player::OffCollision(){
-
-}
 
 Player::~Player() {
 	Input::GetInstance()->StopVibration();

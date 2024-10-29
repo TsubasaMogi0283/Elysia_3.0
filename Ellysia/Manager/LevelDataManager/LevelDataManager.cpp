@@ -391,6 +391,7 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 
 void LevelDataManager::Update(uint32_t& levelDataHandle){
 
+
 	//この書き方はC++17からの構造化束縛というものらしい
 	//イテレータではなくこっちでやった方が良いかな
 	//ファイル名で指定したい時はkeyを使ったら楽だね。今回はハンドルだけどね。

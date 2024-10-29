@@ -782,21 +782,22 @@ void GameScene::Update(GameManager* gameManager) {
 		
 
 
-		Fan3D fan = flashLight_->GetFan3D();
 		//エネミーをコリジョンマネージャーに追加
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
 			collisionManager_->RegisterList(enemy);
 			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+
 			//攻撃用の判定が出ていたら登録
 			if (enemy->GetIsAttack() == true) {
 				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
+				collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
+
 
 			}
 		}
-		//プレイヤーをコリジョンマネージャーへ
-		collisionManager_->RegisterList(player_.get());
 
+		
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		//1体しか出さないのにリストにする必要はあったのでしょうか・・
 		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());

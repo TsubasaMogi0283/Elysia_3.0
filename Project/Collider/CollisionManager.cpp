@@ -11,6 +11,7 @@ void CollisionManager::RegisterList(Collider* collider){
 
 //コライダー2つの衝突判定と応答
 void CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* colliderB) {
+
 	//コライダーAのワールド座標を取得
 	Vector3 colliderPositionA = colliderA->GetWorldPosition();
 	
