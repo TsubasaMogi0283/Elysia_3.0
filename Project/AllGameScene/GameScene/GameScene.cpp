@@ -791,12 +791,10 @@ void GameScene::Update(GameManager* gameManager) {
 			//攻撃用の判定が出ていたら登録
 			if (enemy->GetIsAttack() == true) {
 				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
-				collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
-
-
+				
 			}
 		}
-
+		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
 		
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		//1体しか出さないのにリストにする必要はあったのでしょうか・・
