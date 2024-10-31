@@ -59,6 +59,23 @@ public:
 		this->enemyDirection_ = direction;
 	}
 
+
+	/// <summary>
+	/// 衝突の設定
+	/// </summary>
+	/// <param name="isTouch"></param>
+	inline void SetIsTouch(const bool& isTouch) {
+		this->isTouch_ = isTouch;
+	}
+
+	/// <summary>
+	/// 衝突の接触
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsTouch()const {
+		return isTouch_;
+	}
+
 	/// <summary>
 	/// ワールド座標の取得
 	/// </summary>
@@ -82,5 +99,8 @@ private:
 
 	Vector3 enemyWorldPosition_ = {};
 	Vector3 enemyDirection_ = {};
+
+
+	bool isTouch_ = false;
 };
 

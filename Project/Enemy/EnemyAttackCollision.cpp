@@ -48,7 +48,15 @@ void EnemyAttackCollision::Update(){
 }
 
 void EnemyAttackCollision::Draw(Camera& camera, SpotLight& spotLight){
-	model_->Draw(worldTransform_, camera, material_, spotLight);
+
+#ifdef _DEBUG
+	if (isTouch_ == true) {
+		model_->Draw(worldTransform_, camera, material_, spotLight);
+	}
+#endif // _DEBUG
+
+
+	
 }
 
 

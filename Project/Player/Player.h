@@ -160,6 +160,9 @@ public:
 		return isDameged_;
 	}
 
+
+
+
 	/// <summary>
 	/// 通常の敵の当たり判定
 	/// </summary>
@@ -239,6 +242,8 @@ private:
 
 	//当たり判定(通常の敵)
 	std::unique_ptr<PlayerCollisionToNormalEnemyAttack>colliderToNormalEnemy_ = nullptr;
+
+
 	//当たり判定(一発アウトの敵用)
 	std::unique_ptr<PlayerCollisionToStrongEnemy>collisionToStrongEnemy_ = nullptr;
 

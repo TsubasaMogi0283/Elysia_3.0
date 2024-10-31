@@ -113,6 +113,10 @@ public:
 		this->playerPosition_ = position;
 	}
 
+	/// <summary>
+	/// AABBの取得
+	/// </summary>
+	/// <returns></returns>
 	inline AABB GetAABB() {
 		return aabb_;
 	}
@@ -179,16 +183,9 @@ public:
 
 	//攻撃用
 	inline EnemyAttackCollision* GetEnemyAttackCollision() {
-		return attackModel_;
+		return attackCollision_;
 	}
 
-	/// <summary>
-	/// 攻撃しているかどうか
-	/// </summary>
-	/// <returns></returns>
-	inline bool GetIsAttack()const {
-		return isAttack_;
-	}
 
 #pragma endregion
 
@@ -255,9 +252,7 @@ private:
 	WorldTransform debugModelWorldTransform_ = {};
 
 	//攻撃用の当たり判定
-	EnemyAttackCollision* attackModel_ = nullptr;
-	bool isAttack_ = false;
-
+	EnemyAttackCollision* attackCollision_ = nullptr;
 	//懐中電灯用の当たり判定
 	EnemyFlashLightCollision* enemyFlashLightCollision_ = nullptr;
 

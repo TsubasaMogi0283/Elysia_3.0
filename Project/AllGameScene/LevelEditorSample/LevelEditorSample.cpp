@@ -1,14 +1,14 @@
 #include "LevelEditorSample.h"
 #include <imgui.h>
-#include <Input.h>
-#include <AdjustmentItems.h>
-#include "GameScene/GameScene.h"
+#include <numbers>
 
+#include "Input.h"
+#include "GameScene/GameScene.h"
+#include "AdjustmentItems.h"
 #include "GameManager.h"
 #include "ModelManager.h"
 #include "AnimationManager.h"
-#include <numbers>
-#include <TextureManager.h>
+#include "TextureManager.h"
 
 
 LevelEditorSample::LevelEditorSample(){
@@ -19,11 +19,6 @@ LevelEditorSample::LevelEditorSample(){
 }
 
 void LevelEditorSample::Initialize(){
-
-
-	
-
-	
 
 	//平行光源の初期化
 	directionalLight_.Initialize();

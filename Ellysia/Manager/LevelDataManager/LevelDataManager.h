@@ -65,19 +65,19 @@ public:
 	/// 再読み込み
 	/// </summary>
 	/// <param name="levelDataHandle"></param>
-	void Reload(uint32_t& levelDataHandle);
+	void Reload(const uint32_t& levelDataHandle);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
 	/// <param name="levelDataHandle"></param>
-	void Update(uint32_t&levelDataHandle);
+	void Update(const uint32_t&levelDataHandle);
 
 	/// <summary>
 	/// 消去
 	/// </summary>
 	/// <param name="levelDataHandle"></param>
-	void Delete(uint32_t& levelDataHandle);
+	void Delete(const uint32_t& levelDataHandle);
 
 
 #pragma region 描画
@@ -89,7 +89,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="directionalLight"></param>
-	void Draw(uint32_t& levelDataHandle,Camera& camera, Material& material, DirectionalLight& directionalLight);
+	void Draw(const uint32_t& levelDataHandle,Camera& camera, Material& material, DirectionalLight& directionalLight);
 
 	/// <summary>
 	/// 描画(点光源)
@@ -98,7 +98,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="pointLight"></param>
-	void Draw(uint32_t& levelDataHandle,Camera& camera, Material& material, PointLight& pointLight);
+	void Draw(const uint32_t& levelDataHandle,Camera& camera, Material& material, PointLight& pointLight);
 
 	/// <summary>
 	/// 描画(スポットライト)
@@ -107,7 +107,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void Draw(uint32_t& levelDataHandle,Camera& camera,Material & material,SpotLight& spotLight);
+	void Draw(const uint32_t& levelDataHandle,Camera& camera,Material & material,SpotLight& spotLight);
 
 
 #pragma endregion

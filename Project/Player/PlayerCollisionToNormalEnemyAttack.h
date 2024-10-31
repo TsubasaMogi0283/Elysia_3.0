@@ -53,9 +53,11 @@ public:
 	/// 衝突したかどうか
 	/// </summary>
 	/// <returns></returns>
-	inline bool GetIsTouch() {
+	inline bool GetIsTouch() const {
 		return isTouch_;
 	}
+
+	
 
 
 	/// <summary>

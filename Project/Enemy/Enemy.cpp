@@ -91,9 +91,8 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	
 
 #endif // _DEBUG
-	attackModel_ =new EnemyAttackCollision();
-	attackModel_->Initialize(debugModelHandle);
-	isAttack_ = false;
+	attackCollision_ =new EnemyAttackCollision();
+	attackCollision_->Initialize(debugModelHandle);
 
 	
 	enemyFlashLightCollision_ = new EnemyFlashLightCollision();
@@ -128,7 +127,6 @@ void Enemy::Update(){
 		
 		
 		attackTime_ = 0;
-		isAttack_ = false;
 
 
 
@@ -149,7 +147,6 @@ void Enemy::Update(){
 	case EnemyCondition::PreTracking:
 	
 		attackTime_ = 0;
-		isAttack_ = false;
 		#pragma region 追跡準備
 	
 	
@@ -198,11 +195,12 @@ void Enemy::Update(){
 		//2～4秒までが攻撃
 		if (attackTime_ > 120 && attackTime_ <= 240) {
 			if (attackTime_ == 121) {
-				isAttack_ = true;
+				attackCollision_->SetIsTouch(true);
 				
 			}
 			else {
-				isAttack_ = false;
+				attackCollision_->SetIsTouch(false);
+				
 			}
 
 			
@@ -213,7 +211,7 @@ void Enemy::Update(){
 
 		}
 		else {
-			isAttack_ = false;
+			attackCollision_->SetIsTouch(false);
 		}
 	
 		//4秒経ったらまた0になる
@@ -252,9 +250,9 @@ void Enemy::Update(){
 
 #endif // _DEBUG
 	Vector3 enemyWorldPosition = GetWorldPosition();
-	attackModel_->SetEnemyPosition(enemyWorldPosition);
-	attackModel_->SetEnemyDirection(direction_);
-	attackModel_->Update();
+	attackCollision_->SetEnemyPosition(enemyWorldPosition);
+	attackCollision_->SetEnemyDirection(direction_);
+	attackCollision_->Update();
 
 
 	//更新
@@ -288,7 +286,6 @@ void Enemy::Update(){
 		ImGui::TreePop();
 	}
 	
-	ImGui::Checkbox("isAttck", &isAttack_);
 	if (ImGui::TreeNode("AABB")) {
 		ImGui::InputFloat3("Max", &aabb_.max.x);
 		ImGui::InputFloat3("Min", &aabb_.min.x);
@@ -319,7 +316,6 @@ void Enemy::Update(){
 	//0になったら消す
 	if (color_.y < 0.0f &&
 		color_.z < 0.0f) {
-		isAttack_ = false;
 		isAlive_ = false;
 	}
 
@@ -359,11 +355,7 @@ void Enemy::Draw(Camera& camera,SpotLight&spotLight){
 	debugModel_->Draw(debugModelWorldTransform_, camera, material_, spotLight);
 
 #endif // _DEBUG
-
-	//攻撃用
-	if (isAttack_ == true) {
-		attackModel_->Draw(camera, spotLight);
-	}
+	attackCollision_->Draw(camera, spotLight);
 
 	//描画
 	if (isAlive_ == true) {
@@ -373,6 +365,6 @@ void Enemy::Draw(Camera& camera,SpotLight&spotLight){
 }
 
 Enemy::~Enemy(){
-	delete attackModel_;
+	delete attackCollision_;
 }
 

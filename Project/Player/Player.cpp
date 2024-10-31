@@ -129,15 +129,14 @@ void Player::Update(){
 
 
 
-	////ここでずっと当たっているみたい
-	////通常の敵に当たった場合
-	//if (colliderToNormalEnemy_->GetIsTouch() == true) {
-	//	//体力を1減らす
-	//	--hp_;
-	//
-	//	//振動させる
-	//	isDameged_ = true;
-	//}
+	//通常の敵に当たった場合
+	if (colliderToNormalEnemy_->GetIsTouch() == true) {
+		//体力を1減らす
+		--hp_;
+	
+		//振動させる
+		isDameged_ = true;
+	}
 
 
 	//攻撃された場合

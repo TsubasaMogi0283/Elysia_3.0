@@ -67,9 +67,18 @@ Vector3 PlayerCollisionToNormalEnemyAttack::GetWorldPosition(){
 }
 
 void PlayerCollisionToNormalEnemyAttack::OnCollision(){
-	isTouch_ = true;
+#ifdef _DEBUG
+	ImGui::Begin("敵攻撃");
+	ImGui::End();
+#endif // DEBUG
+
+	
+
 }
 
 void PlayerCollisionToNormalEnemyAttack::OffCollision(){
-	isTouch_ = false;
+#ifdef _DEBUG
+	ImGui::Begin("敵攻撃しない");
+	ImGui::End();
+#endif // DEBUG
 }

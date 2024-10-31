@@ -330,7 +330,7 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 
 }
 
-void LevelDataManager::Reload(uint32_t& levelDataHandle){
+void LevelDataManager::Reload(const uint32_t& levelDataHandle){
 
 
 	//一度全てのオブジェクトのデータを消す
@@ -389,7 +389,7 @@ void LevelDataManager::Reload(uint32_t& levelDataHandle){
 
 }
 
-void LevelDataManager::Update(uint32_t& levelDataHandle){
+void LevelDataManager::Update(const uint32_t& levelDataHandle){
 
 
 	//この書き方はC++17からの構造化束縛というものらしい
@@ -407,7 +407,7 @@ void LevelDataManager::Update(uint32_t& levelDataHandle){
 	}
 }
 
-void LevelDataManager::Delete(uint32_t& levelDataHandle){
+void LevelDataManager::Delete(const uint32_t& levelDataHandle){
 
 
 	for (auto& [key, levelData] : levelDatas_) {
@@ -434,7 +434,7 @@ void LevelDataManager::Delete(uint32_t& levelDataHandle){
 
 #pragma region 描画
 
-void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, DirectionalLight& directionalLight){
+void LevelDataManager::Draw(const uint32_t& levelDataHandle, Camera& camera, Material& material, DirectionalLight& directionalLight){
 	
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
@@ -453,7 +453,7 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 	}
 }
 
-void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, PointLight& pointLight){
+void LevelDataManager::Draw(const uint32_t& levelDataHandle, Camera& camera, Material& material, PointLight& pointLight){
 
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
@@ -471,7 +471,7 @@ void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material&
 	}
 }
 
-void LevelDataManager::Draw(uint32_t& levelDataHandle, Camera& camera, Material& material, SpotLight& spotLight){
+void LevelDataManager::Draw(const uint32_t& levelDataHandle, Camera& camera, Material& material, SpotLight& spotLight){
 	
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {

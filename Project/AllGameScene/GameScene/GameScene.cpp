@@ -789,10 +789,11 @@ void GameScene::Update(GameManager* gameManager) {
 			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 
 			//攻撃用の判定が出ていたら登録
-			if (enemy->GetIsAttack() == true) {
+			if (enemy->GetEnemyAttackCollision()->GetIsTouch() == true) {
 				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 				
 			}
+			
 		}
 		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
 		
@@ -809,9 +810,6 @@ void GameScene::Update(GameManager* gameManager) {
 			}
 		}
 
-
-
-		
 
 		//もとに戻す
 		camera_.rotate_.x = -phi;
@@ -863,7 +861,6 @@ void GameScene::Update(GameManager* gameManager) {
 		//現在のプレイヤーの体力を取得
 		currentDisplayHP_ = player_->GetHP();
 		
-
 		//更新
 		material_.Update();
 
