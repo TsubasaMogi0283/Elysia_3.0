@@ -1,17 +1,15 @@
-# 就職活動作品
+# 作品
 
-### タイトル: 静寂の霊園
-制作:茂木 翼
-
-
-<br>
+タイトル: 静寂の霊園  
+制作:茂木 翼  
 
 1. 開発環境
     * 内部
         * Visual Studio 2022
-        * DirectX12
+        * Ellysia Engine
+        * Blender
         * Windows SDK ver 8.0.10
-        * C++・HLSL・Python    
+        * C++、HLSL、Python    
       
     * 外部ライブラリ
         * DirectXTex
@@ -23,11 +21,114 @@
 
 2. ゲームについて
 
-    キーボードまたはコントローラーを使って遊ぶ3Dホラーアクションゲームです。徘徊するお化けに襲われないよう気を付けながら、ステージ上にある鍵を探し脱出を目指します。
+    キーボードまたはコントローラーを使って遊ぶ<span style="color: #dc143c; ">**3Dホラーアクションゲーム**</span>です。徘徊するお化けに襲われないよう気を付けながら、ステージ上にある鍵を探し脱出を目指します。
+
+    
+    https://youtu.be/Biu44fPONeg
 
     <br>
 
 
-3. 進捗について    
-    動画  
-    https://youtu.be/Biu44fPONeg
+3. 頑張ったところ
+    * **レベルエディタ**  
+        Blenderのアドオン開発をしました。モデルのファイル名を入力と配置をします。必要であれば衝突判定も追加できます。  
+        その他にオーディオも追加できます。衝突判定も追加すればそこに対応した音が流れます。
+
+        (画像入れたい)
+
+
+    * **衝突判定**  
+        特に敵同士の衝突判定を頑張りました。ただ座標と半径を取得するのではなく、進行方向に同じ敵がいたら止まる、いなくなったらまた進というものを実装しました。
+
+        (画像入れたい、図解がいいかも)
+
+
+
+<br>
+<br>
+
+# Ellysia Engine
+
+このエンジンは私がDirectX12を使い制作したものになります。
+
+<br>
+
+## 機能
+
+* スプライト、3Dモデル、パーティクルの描画  
+* スキニングアニメーションに対応した3Dモデル
+* キーボード、コントローラのボタン対応  
+* 音の機能
+* ポストエフェクト
+
+
+
+## 頑張った所
+
+音楽制作している所からオーディオ面を頑張りたいと思い力を入れました。  
+XAudio2を使い再生と停止の基本機能に加え、ループの細かい設定や様々なエフェクトを加えることが出来ます。
+
+
+
+1. 対応ファイル
+    * Wave
+    * MP3
+
+    MP3は**MediaFundation**を使い読み込んでいます。  
+    以下の関数を使って読み込みをします。拡張子によって自動的に振り分けられます。
+    
+
+    ```c++
+    uint32_t Audio::Load(const std::string& fileName){
+
+	//一度読み込んだものは２度読み込まず返すだけ
+    	if (Audio::GetInstance()->audioInformation_.find(fileName) != Audio::GetInstance()->audioInformation_.end()) {  
+    		return Audio::GetInstance()->audioInformation_[fileName].handle;
+    	}
+
+    	//拡張子を探す
+    	size_t dotPosition = fileName.find('.');
+    	std::string extension = {};
+    	if (dotPosition != std::string::npos) {
+    		//「/」から最後まで
+    		extension = fileName.substr(dotPosition + 1);
+    	}
+
+
+    	//返す値
+    	uint32_t result = 0u;
+
+    	//wavの場合
+    	if (extension == "wav") {
+    		return result = LoadWave(fileName);
+    	}
+    	//mp3の場合
+    	else if (extension == "mp3") {
+    		return result = LoadMP3(fileName);
+    	}
+
+
+    	//無かったら空を返す
+    	return result;
+
+    }
+
+    ```
+
+
+
+2. ループ機能について
+    1回だけまたはずっと繰り返すものと指定回数分ループする2つの再生があります。  
+    
+    しかし<span style="color: #00fa9a; ">XAUDIO2_BUFFER</span>にあるLoopCountが個人的に分かりずらいと感じました。
+    
+    <span style="color: #7b68ee; ">XAUDIO2_LOOP_INFINITE</span>はずっとループ、
+    <span style="color: #7b68ee; ">XAUDIO2_NO_LOOP_REGION</span>は1回だけ流れます。
+    中身の値はそれぞれ255,0となっています。
+    このことから直接何回ループさせたいと数を入力すると1回多くなってしまい直感的に分かりずらいです。
+    分かりやすくするために指定回数分再生する関数の中では「xAudio2Buffer.LoopCount = loopCount - 1;」としています。
+
+
+
+
+<br>

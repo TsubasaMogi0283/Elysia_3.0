@@ -65,10 +65,11 @@ void FlashLight::Initialize(){
 void FlashLight::Update() {
 
 	//ライトの方向ベクトル
-	Vector3 direction = {};
-	direction.x = std::cosf(theta_);
-	direction.z = std::sinf(theta_);
-
+	Vector3 direction = {
+		.x = std::cosf(theta_),
+		.y = 0.0f,
+		.z = std::sinf(theta_),
+	};
 
 	//上のdirectionから長さを求めてからatan2でyを出す
 	float lengthXZ = sqrtf(std::powf(direction.x, 2.0f) + std::powf(direction.z, 2.0f));

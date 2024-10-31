@@ -796,7 +796,8 @@ void GameScene::Update(GameManager* gameManager) {
 			
 		}
 		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
-		
+		collisionManager_->RegisterList(flashLight_->GetFanCollision());
+
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		//1体しか出さないのにリストにする必要はあったのでしょうか・・
 		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());

@@ -200,7 +200,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Enemy\StrongEnemy.cpp" />
     <ClCompile Include="Project\Key\Key.cpp" />
     <ClCompile Include="Project\Key\KeyManager.cpp" />
-    <ClCompile Include="Project\LightWeapon\LightWeapon.cpp" />
     <ClCompile Include="Project\Light\FlashLight\FlashLight.cpp" />
     <ClCompile Include="Project\Light\FlashLight\FlashLightCollision.cpp" />
     <ClCompile Include="Project\Player\Player.cpp" />
@@ -489,7 +488,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Enemy\StrongEnemy.h" />
     <ClInclude Include="Project\Key\Key.h" />
     <ClInclude Include="Project\Key\KeyManager.h" />
-    <ClInclude Include="Project\LightWeapon\LightWeapon.h" />
     <ClInclude Include="Project\Light\FlashLight\FlashLight.h" />
     <ClInclude Include="Project\Light\FlashLight\FlashLightCollision.h" />
     <ClInclude Include="Project\Player\Player.h" />

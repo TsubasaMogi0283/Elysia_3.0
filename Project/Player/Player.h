@@ -7,6 +7,7 @@
 #include "PlayerCollisionToStrongEnemy.h"
 #include "PlayerCollisionToNormalEnemyAttack.h"
 #include "Listener/ListenerForLevelEditor.h"
+#include "Light/FlashLight/FlashLight.h"
 
 struct Camera;
 struct SpotLight;
@@ -248,6 +249,8 @@ private:
 	std::unique_ptr<PlayerCollisionToStrongEnemy>collisionToStrongEnemy_ = nullptr;
 
 
+	//懐中電灯
+	std::unique_ptr<FlashLight>flashLight_ = nullptr;
 
 };
 

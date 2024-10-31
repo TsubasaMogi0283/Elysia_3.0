@@ -250,9 +250,6 @@
     <Filter Include="Project\Player">
       <UniqueIdentifier>{64043a22-c8f5-4bb5-9fd8-8f56b10eb819}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Player\LightWeapon">
-      <UniqueIdentifier>{d4541ffb-27ab-4165-84e8-d544c34cb2a7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Item">
       <UniqueIdentifier>{617e81c9-f892-40bf-92da-38799fc0e39e}</UniqueIdentifier>
     </Filter>
@@ -503,9 +500,6 @@
     </ClCompile>
     <ClCompile Include="Project\Player\Player.cpp">
       <Filter>Project\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\LightWeapon\LightWeapon.cpp">
-      <Filter>Project\Player\LightWeapon</Filter>
     </ClCompile>
     <ClCompile Include="Project\Stage\Ground\Ground.cpp">
       <Filter>Project\ObjectManager\StageObject\Ground</Filter>
@@ -948,9 +942,6 @@
     </ClInclude>
     <ClInclude Include="Project\Player\Player.h">
       <Filter>Project\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\LightWeapon\LightWeapon.h">
-      <Filter>Project\Player\LightWeapon</Filter>
     </ClInclude>
     <ClInclude Include="Project\Key\Key.h">
       <Filter>Project\Item\Key</Filter>

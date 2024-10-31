@@ -10,7 +10,8 @@
 
 struct Camera;
 
-class FlashLight{
+
+class FlashLight {
 public:
 	/// <summary>
 	/// コンストラクタ
