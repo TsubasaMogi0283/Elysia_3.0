@@ -250,7 +250,7 @@ private:
 
 
 	//懐中電灯
-	std::unique_ptr<FlashLight>flashLight_ = nullptr;
+	//std::unique_ptr<FlashLight>flashLight_ = nullptr;
 
 };
 
