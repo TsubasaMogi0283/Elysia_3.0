@@ -3,16 +3,18 @@
 #include "SampleScene2/SampleScene2.h"
 #include "TitleScene/TitleScene.h"
 #include "LevelEditorSample/LevelEditorSample.h"
+#include "GameSceneAudioTest/GameSceneAudioTest.h"
 
 //シーンファクトリー作った方がよさそう
 
 void GameManager::Initialize() {
 	//シーンごとに動作確認したいときはここを変えてね
 	currentGamaScene_ = new TitleScene();
-
+	
 #ifdef _DEBUG
 	//currentGamaScene_ = new LevelEditorSample();
-	currentGamaScene_ = new GameScene();
+	currentGamaScene_ = new GameSceneAudioTest();
+	//currentGamaScene_ = new GameScene();
 #endif // _DEBUG
 
 	//初期化
