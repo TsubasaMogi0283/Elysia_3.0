@@ -594,9 +594,6 @@
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
-    <ClCompile Include="Project\AllGameScene\GameSceneAudioTest\GameSceneAudioTest.cpp">
-      <Filter>Project\GameScene\GameScene</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -1050,9 +1047,6 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.h">
       <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\GameSceneAudioTest\GameSceneAudioTest.h">
-      <Filter>Project\GameScene\GameScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
