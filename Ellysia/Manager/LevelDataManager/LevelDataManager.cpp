@@ -13,6 +13,8 @@
 #include "SpotLight.h"
 #include <Audio.h>
 
+#include "Model/AudioObjectForLevelEditor.h"
+
 
 LevelDataManager* LevelDataManager::GetInstance(){
 	static LevelDataManager instance;
@@ -85,9 +87,9 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 			
 			
 			//オブジェクトのタイプを取得
-			nlohmann::json objectCondition = {};
+			//nlohmann::json objectCondition = {};
 			if (object.contains("object_type")) {
-				objectCondition = object["object_type"];
+				objectData.type = object["object_type"];
 			}
 
 
@@ -140,9 +142,17 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 			}
 
 
+			//ステージ
+			if (objectData.type == "Stage") {
+
+			}
+
+
+
+
 			//オーディオの読み込み
 			//まずあるかどうか
-			if (objectCondition == "Audio") {
+			if (objectData.type == "Audio") {
 				if (object.contains("audio")) {
 					nlohmann::json& audio = object["audio"];
 
@@ -191,28 +201,51 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 	
 	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
 
+		//std::unique_ptr<Model> model_ = nullptr;
+		//model_.~unique_ptr();
+
 		//モデルの生成
 		//まだ無い場合は生成する
-		//一般のステージオブジェクトの場合
-		if (objectData.levelAudioData.isHavingAudio == false && objectData.model == nullptr) {
+		if (objectData.model == nullptr) {
 			//モデルの読み込み
 			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
 			//生成
-			Model* model = Model::Create(modelHandle);
+			objectData.model = Model::Create(modelHandle);
+		}
+		else if(objectData.type=="Stage") {
+			uint32_t audioHandle = 0;
+			audioHandle;
+			AudioObjectForLevelEditor* model=new AudioObjectForLevelEditor();
+			
+			//引数は今の所仮置き
+			//ここに入れてね
+
+
+			//model->Initialize(1, {});
 			//代入
-			objectData.model = model;
+			//objectData.object = model;
+
+		}
+		else if (objectData.type == "Audio") {
+
 		}
 
-		//オーディオの場合
-		if (objectData.levelAudioData.isHavingAudio == true && objectData.model == nullptr) {
-			//モデルの読み込み
-			uint32_t modelHandleForAudio = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
-			//生成
-			Model* audioModel = Model::Create(modelHandleForAudio);
-			audioModel;
-		}
+		////オーディオの場合
+		//if (objectData.levelAudioData.isHavingAudio == true && objectData.model == nullptr) {
+		//	//モデルの読み込み
+		//	uint32_t modelHandleForAudio = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
+		//	//生成
+		//	Model* audioModel = Model::Create(modelHandleForAudio);
+		//	audioModel;
+		//}
 
 		
+
+		//よく考えてみたらオブジェクトのクラスの中に
+		//ワールドトランスフォーム入れた方が良いのではないでしょうか
+		//少し違和感を感じたので
+		//更新処理に全てぶっこんだ方が良いかもね
+
 		//ワールドトランスフォームの初期化
 		WorldTransform* worldTransform = new WorldTransform();
 		worldTransform->Initialize();
@@ -226,7 +259,7 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 	}
 }
 
-nlohmann::json LevelDataManager::Deserialize(std::string& fullFilePath){
+nlohmann::json LevelDataManager::Deserialize(const std::string& fullFilePath){
 	std::ifstream file;
 	//ファイルを開ける
 	file.open(fullFilePath);
@@ -312,6 +345,7 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 	//ハンドルの加算
 	++handle_;
 
+	//指定したファイルパスのレベルデータを持ってくる
 	LevelData& levelData = *levelDatas_[fullFilePath];
 
 	//読み込み
@@ -321,7 +355,7 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 	Ganarate(levelData);
 	
 	//オーディオの再生
-	//AudioPlay(levelData);
+	AudioPlay(levelData);
 
 
 
@@ -402,6 +436,26 @@ void LevelDataManager::Update(const uint32_t& levelDataHandle){
 				//更新
 				object.worldTransform->Update();
 			}
+
+
+
+#ifdef _DEBUG
+			ImGui::Begin("リスナー");
+			ImGui::InputFloat3("位置", &levelData->listener.position.x);
+			ImGui::InputFloat3("動き", &levelData->listener.move.x);
+			ImGui::End();
+#endif // _DEBUG
+
+
+
+			for (auto& object : levelData->objectDatas) {
+				//更新
+				object.object->Update();
+			}
+
+
+
+
 			break; 
 		}
 	}
@@ -434,7 +488,7 @@ void LevelDataManager::Delete(const uint32_t& levelDataHandle){
 
 #pragma region 描画
 
-void LevelDataManager::Draw(const uint32_t& levelDataHandle, Camera& camera, Material& material, DirectionalLight& directionalLight){
+void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material, const DirectionalLight& directionalLight){
 	
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
@@ -445,6 +499,12 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, Camera& camera, Mat
 				object.model->Draw(*object.worldTransform, camera, material, directionalLight);
 			}
 
+
+			for (auto& object : levelData->objectDatas) {
+				//更新
+				object.object->Draw(camera, material, directionalLight);
+			}
+
 			//無駄なループ処理を防ぐよ
 			break;
 
@@ -453,7 +513,7 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, Camera& camera, Mat
 	}
 }
 
-void LevelDataManager::Draw(const uint32_t& levelDataHandle, Camera& camera, Material& material, PointLight& pointLight){
+void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material,const PointLight& pointLight){
 
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
@@ -471,7 +531,7 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, Camera& camera, Mat
 	}
 }
 
-void LevelDataManager::Draw(const uint32_t& levelDataHandle, Camera& camera, Material& material, SpotLight& spotLight){
+void LevelDataManager::Draw(const uint32_t& levelDataHandle,const Camera& camera,const Material& material,const SpotLight& spotLight){
 	
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
@@ -503,7 +563,7 @@ void LevelDataManager::Release(){
 				delete object.model;
 			}
 			delete object.worldTransform;
-
+			
 		}
 
 	}

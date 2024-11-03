@@ -47,7 +47,7 @@ void EnemyAttackCollision::Update(){
 	material_.Update();
 }
 
-void EnemyAttackCollision::Draw(Camera& camera, SpotLight& spotLight){
+void EnemyAttackCollision::Draw(const Camera& camera,const SpotLight& spotLight){
 
 #ifdef _DEBUG
 	if (isTouch_ == true) {

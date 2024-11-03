@@ -8,7 +8,7 @@
 #include <SingleCalculation.h>
 #include <random>
 
-void EnemyManager::Initialize(uint32_t& normalEnemyModel, uint32_t& strongEnemyModel){
+void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& strongEnemyModel){
 	
 	//空だったら引っかかるようにしている
 	assert(player_!=nullptr);
@@ -253,8 +253,6 @@ void EnemyManager::Update(){
 			}
 
 			#pragma endregion
-
-
 		}
 
 
@@ -630,7 +628,7 @@ void EnemyManager::Update(){
 
 }
 
-void EnemyManager::Draw(Camera& camera, SpotLight& spotLight){
+void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 
 	//通常
 	for (Enemy* enemy : enemyes_) {

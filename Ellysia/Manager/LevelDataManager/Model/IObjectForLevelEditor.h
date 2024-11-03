@@ -34,29 +34,26 @@ public:
 	/// <summary>
 	/// 平行光源
 	/// </summary>
-	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="directionalLight"></param>
-	virtual void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight)=0;
+	virtual void Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight)=0;
 
 	/// <summary>
 	/// 描画(点光源)
 	/// </summary>
-	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="pointLight"></param>
-	virtual void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight) = 0;
+	virtual void Draw(const Camera& camera,const Material& material,const PointLight& pointLight) = 0;
 
 	/// <summary>
 	/// 描画(スポットライト)
 	/// </summary>
-	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	virtual void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight)=0;
+	virtual void Draw(const Camera& camera,const Material& material,const SpotLight& spotLight)=0;
 
 
 

@@ -9,6 +9,7 @@
 #include "ModelManager.h"
 #include "AnimationManager.h"
 #include "TextureManager.h"
+#include <VectorCalculation.h>
 
 
 LevelEditorSample::LevelEditorSample(){
@@ -16,6 +17,8 @@ LevelEditorSample::LevelEditorSample(){
 	levelEditor_ = LevelDataManager::GetInstance();
 	//オーディオのインスタンスを取得
 	audio_ = Audio::GetInstance();
+	//インプットのインスタンスを取得
+	input_ = Input::GetInstance();
 }
 
 void LevelEditorSample::Initialize(){
@@ -32,13 +35,16 @@ void LevelEditorSample::Initialize(){
 	camera_.translate_ = {.x = 0.0f,.y = 2.0f,.z = -30.0f };
 
 	//ポストエフェクト
-	back_ = std::make_unique<Vignette>();
+	back_ = std::make_unique<BackText>();
 	back_->Initialize();
 
 
+	player_ = std::make_unique<AudioTestPlayer>();
+	player_->Initialize();
+
 
 	//読み込み
-	levelHandle_ = levelEditor_->Load("Test/AudioAreaTestOne.json");
+	levelHandle_ = levelEditor_->Load("Test/AudioAreaTest.json");
 
 	//オーディオの読み込み
 	uint32_t mp3Test = audio_->Load("Resources/Audio/Sample/WIP.mp3");
@@ -72,13 +78,68 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 	gameManager;
 
+
+
+	//回転
+	if (input_->IsPushButton(DIK_RIGHT) == true) {
+
+	}
+	//左回り
+	else if (input_->IsPushButton(DIK_LEFT) == true) {
+
+	}
+
+
+
+	//移動
+	playerDirection_ = {};
+	//右
+	if (input_->IsPushKey(DIK_D) == true) {
+		playerDirection_.x += 1.0f;
+	}
+	//左
+	else if (input_->IsPushKey(DIK_A) == true) {
+		playerDirection_.x -= 1.0f;
+	}
+	//上
+	else if (input_->IsPushKey(DIK_W) == true) {
+		playerDirection_.z += 1.0f;
+	}
+	//下
+	else if (input_->IsPushKey(DIK_S) == true) {
+		playerDirection_.z -= 1.0f;
+	}
+
+
+	
+
+
+
+	//プレイヤーの更新
+	player_->SetDirection(playerDirection_);
+	player_->Update();
+
+
+	//レベルエディタで使うリスナーの設定
+	Listener listener = {
+		.position = player_->GetWorldPosition(),
+		.move = player_->GetDirection(),
+	};
+	levelEditor_->SetListener(levelHandle_, listener);
+
 	//レベルエディタの更新
 	levelEditor_->Update(levelHandle_);
 	//マテリアルの更新
 	material_.Update();
 	//平行光源の更新
 	directionalLight_.Update();
+
+
 	//カメラの更新
+	//高さの補正も足す
+	const Vector3 OFFSET = { .x = 0.0f,.y = 2.0f,.z = 0.0f };
+	Vector3 playerViewPoint = VectorCalculation::Add(player_->GetWorldPosition(), OFFSET);
+	camera_.translate_ = playerViewPoint;
 	camera_.Update();
 
 }
@@ -88,7 +149,7 @@ void LevelEditorSample::DrawSpriteBack()
 }
 
 void LevelEditorSample::DrawObject3D(){
-	//レベルエディタのモデルを描画
+	//レベルエディタのモデルを描画     
 	levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
 }
 

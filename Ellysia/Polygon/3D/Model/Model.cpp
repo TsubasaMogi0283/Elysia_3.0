@@ -56,7 +56,7 @@ Model* Model::Create(uint32_t modelHandle) {
 }
 
 //描画
-void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight) {
+void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const DirectionalLight& directionalLight) {
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
@@ -139,7 +139,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 
 }
 
-void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight){
+void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const PointLight& pointLight){
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
@@ -221,7 +221,7 @@ void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& mater
 
 }
 
-void Model::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight){
+void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const SpotLight& spotLight){
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと

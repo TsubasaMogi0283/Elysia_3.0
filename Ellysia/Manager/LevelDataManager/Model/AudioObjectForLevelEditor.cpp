@@ -29,26 +29,18 @@ void AudioObjectForLevelEditor::Update(){
 
 }
 
-void AudioObjectForLevelEditor::SetAudio(const std::string& filePath){
-	filePath;
-	//オーディオの生成
-	//audio_.reset(Audio::GetInstance());
-	//audioHandle_=audio_->Load(filePath);
 
-}
-
-void AudioObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight){
-
-	worldTransform;
+void AudioObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight){
+	//モデルの描画
 	model_->Draw(worldTransform_, camera, material, directionalLight);
 }
 
-void AudioObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight){
-	worldTransform;
+void AudioObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const PointLight& pointLight){
+	//モデルの描画
 	model_->Draw(worldTransform_, camera, material, pointLight);
 }
 
-void AudioObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight){
-	worldTransform;
+void AudioObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight){
+	//モデルの描画
 	model_->Draw(worldTransform_, camera, material, spotLight);
 }

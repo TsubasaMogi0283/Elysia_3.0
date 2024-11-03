@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "Sprite.h"
-
+#include "Input.h"
 #include "Model.h"
 #include "Camera.h"
 #include "Material.h"
@@ -13,6 +13,7 @@
 #include <Vignette.h>
 
 #include "Audio.h"
+#include <Player/AudioTestPlayer.h>
 
 //StatePatternを使う時は必ず前方宣言をするように
 class GameManager;
@@ -70,11 +71,19 @@ public:
 
 
 private:
-	std::unique_ptr<Vignette> back_ = nullptr;
+	//ビネット
+	std::unique_ptr<BackText> back_ = nullptr;
+	//カメラ
 	Camera camera_ = {};
+	//マテリアル
 	Material material_ = {};
+	//平行光源
 	DirectionalLight directionalLight_ = {};
+	//インプット
+	Input* input_ = nullptr;
 
+
+	//レベルエディタ
 	LevelDataManager* levelEditor_ = nullptr;
 	uint32_t levelHandle_ = 0u;
 
@@ -85,6 +94,9 @@ private:
 	uint32_t audioHandleMP3_ = 0u;
 	Audio* audio_ = nullptr;
 
+	//プレイヤー
+	std::unique_ptr<AudioTestPlayer>player_ = nullptr;
+	Vector3 playerDirection_ = {};
 
 };
 

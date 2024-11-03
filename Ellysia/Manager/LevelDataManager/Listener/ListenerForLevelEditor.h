@@ -4,13 +4,13 @@
 /// <summary>
 /// レベルエディタ用のリスナー
 /// </summary>
-class ListenerForLevelEditor{
+class ListenerForLevelEditor {
 public:
 	/// <summary>
 	/// ワールド座標の取得
 	/// </summary>
 	/// <returns></returns>
-	virtual Vector3 GetWorldPosition()=0;
+	virtual Vector3 GetWorldPosition() = 0;
 
 	/// <summary>
 	/// 向きの取得
@@ -22,6 +22,12 @@ public:
 	/// デストラクタ
 	/// </summary>
 	~ListenerForLevelEditor() = default;
+
+
+protected:
+
+	//方向
+	Vector3 direction_ = {};
 
 };
 

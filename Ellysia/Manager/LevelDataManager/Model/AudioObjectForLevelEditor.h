@@ -22,6 +22,15 @@ public:
 	/// </summary>
 	AudioObjectForLevelEditor()=default;
 
+
+	/// <summary>
+	/// オーディオのハンドルを設定
+	/// 初期化より先でやってね
+	/// </summary>
+	inline void SetAudio(uint32_t audioHandle) {
+		this->audioHandle_ = audioHandle;
+	}
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -32,46 +41,38 @@ public:
 	/// </summary>
 	void Update() override;
 
-	/// <summary>
-	/// オーディオのファイルパスを入力
-	/// </summary>
-	/// <param name="filePath"></param>
-	void SetAudio(const std::string& filePath);
+	
 
 #pragma region 描画
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="worldTransform">ワールドトランスフォーム</param>
-	/// <param name="camera">カメラ</param>
-	/// <param name="directionalLight">平行光源</param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight)override;
+	/// <param name="camera"></param>
+	/// <param name="directionalLight"></param>
+	void Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight)override;
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="pointLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight)override;
+	void Draw(const Camera& camera,const Material& material,const PointLight& pointLight)override;
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="spotLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight)override;
+	void Draw(const Camera& camera,const Material& material,const SpotLight& spotLight)override;
 
 
 
-private:
 	//オーディオ
-	std::unique_ptr<Audio>audio_ = nullptr;
+private:
+	Audio* audio_ = nullptr;
 	//ハンドル
 	uint32_t audioHandle_ = 0u;
-
 	//当たり判定
 	std::unique_ptr<AudioObjectForLevelEditorCollider> audioObjectForLevelEditorCollider_ = nullptr;
 

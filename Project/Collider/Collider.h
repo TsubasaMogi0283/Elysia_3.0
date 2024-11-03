@@ -20,7 +20,8 @@ enum CollisionType {
 	BoxType,
 	//扇
 	FanType,
-
+	//円
+	CircleType,
 };
 
 //衝突判定

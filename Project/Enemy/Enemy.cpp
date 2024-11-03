@@ -350,7 +350,7 @@ Vector3 Enemy::GetWorldPosition() {
 
 
 
-void Enemy::Draw(Camera& camera,SpotLight&spotLight){
+void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 #ifdef _DEBUG
 	debugModel_->Draw(debugModelWorldTransform_, camera, material_, spotLight);
 

@@ -149,7 +149,7 @@ void StrongEnemy::Update(){
 
 }
 
-void StrongEnemy::Draw(Camera& camera, SpotLight& spotLight){
+void StrongEnemy::Draw(const Camera& camera,const SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera, material_, spotLight);
 }
 

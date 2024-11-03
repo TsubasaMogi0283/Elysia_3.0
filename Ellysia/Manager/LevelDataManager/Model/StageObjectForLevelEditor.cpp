@@ -26,17 +26,15 @@ void StageObjectForLevelEditor::Update(){
 	stageObjectForLevelEditorCollider_->SetObjectPosition(worldTransform_.GetWorldPosition());
 }
 
-void StageObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight) {
-	worldTransform;
+void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight) {
+
 	model_->Draw(worldTransform_, camera, material, directionalLight);
 }
 
-void StageObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight) {
-	worldTransform;
+void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const PointLight& pointLight) {
 	model_->Draw(worldTransform_, camera, material, pointLight);
 }
 
-void StageObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight) {
-	worldTransform;
+void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight) {
 	model_->Draw(worldTransform_, camera, material, spotLight);
 }
