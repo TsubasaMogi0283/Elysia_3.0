@@ -159,11 +159,6 @@ private:
 	struct LevelData {
 		//モデルオブジェクト
 		struct ObjectData {
-			//モデル
-			Model* model;
-			//ワールドトランスフォーム
-			WorldTransform* worldTransform;
-			
 			//オブジェクトのタイプ
 			//今はステージかオーディオのどちらか
 			std::string type;
@@ -276,11 +271,6 @@ private:
 	/// <param name="fullFilePath"></param>
 	/// <returns></returns>
 	nlohmann::json Deserialize(const std::string& fullFilePath);
-
-	/// <summary>
-	/// オーディオの再生
-	/// </summary>
-	void AudioPlay(LevelData& levelData);
 
 	/// <summary>
 	/// 拡張子を取得

@@ -26,3 +26,8 @@ const uint32_t COLLISION_ATTRIBUTE_FLASH_LIGHT = 0b1 << 5;
 //敵2(懐中電灯用)
 const uint32_t COLLISION_ATTRIBUTE_ENEMY2 = 0b1 << 6;
 
+//プレイヤー(レベルエディタのオーディオオブジェクト)
+const uint32_t COLLISION_ATTRIBUTE_PLAYER3 = 0b1 << 7;
+
+//オーディオオブジェクト(レベルエディタ)
+const uint32_t COLLISION_ATTRIBUTE_AUDIO_OBJECT = 0b1 << 8;

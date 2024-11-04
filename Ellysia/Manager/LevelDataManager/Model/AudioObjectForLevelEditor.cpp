@@ -38,7 +38,7 @@ void AudioObjectForLevelEditor::Update(){
 		audio_->PlayMP3(audioHandle_, true);
 	}
 	else {
-
+		audio_->Stop(audioHandle_);
 	}
 
 }

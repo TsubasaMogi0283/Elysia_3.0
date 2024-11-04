@@ -3,6 +3,10 @@
 
 void AudioTestPlayer::Initialize(){
 	worldTransform_.Initialize();
+
+
+	collosion_ = std::make_unique<PlayerCollisionToAudioObject>();
+	collosion_->Initialize();
 }
 
 void AudioTestPlayer::Update(){
@@ -20,5 +24,8 @@ void AudioTestPlayer::Update(){
 	//位置の更新
 	worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, newDirection);
 	worldTransform_.Update();
+
+
+	collosion_->SetPlayerGetWorldPosition(worldTransform_.GetWorldPosition());
 }
 

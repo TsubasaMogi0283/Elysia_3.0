@@ -340,6 +340,9 @@
     <Filter Include="Project\Player\PlayerCollisionToNormalEnemyAttack">
       <UniqueIdentifier>{a9a15912-dac9-4dd1-ae7b-ae03c83af842}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Player\PlayerCollisionToAudioObject">
+      <UniqueIdentifier>{ce595378-51b4-489b-ad22-3bdf9f98219f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -595,6 +598,9 @@
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Project\Player\AudioTestPlayer.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\PlayerCollisionToAudioObject.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1052,6 +1058,9 @@
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
     <ClInclude Include="Project\Player\AudioTestPlayer.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\PlayerCollisionToAudioObject.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>

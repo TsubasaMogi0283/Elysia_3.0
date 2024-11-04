@@ -87,7 +87,6 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 			
 			
 			//オブジェクトのタイプを取得
-			//nlohmann::json objectCondition = {};
 			if (object.contains("object_type")) {
 				objectData.type = object["object_type"];
 			}
@@ -202,13 +201,13 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 
 		//モデルの生成
 		//まだ無い場合は生成する
-		if (objectData.model == nullptr) {
-			//モデルの読み込み
-			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
-			//生成
-			objectData.model = Model::Create(modelHandle);
-		}
-		else if(objectData.type=="Stage") {
+		//if (objectData.model == nullptr) {
+		//	//モデルの読み込み
+		//	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
+		//	//生成
+		//	objectData.model = Model::Create(modelHandle);
+		//}
+		if(objectData.type=="Stage") {
 			uint32_t audioHandle = 0;
 			audioHandle;
 			AudioObjectForLevelEditor* model=new AudioObjectForLevelEditor();
@@ -242,15 +241,15 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 		//少し違和感を感じたので
 		//更新処理に全てぶっこんだ方が良いかもね
 
-		//ワールドトランスフォームの初期化
-		WorldTransform* worldTransform = new WorldTransform();
-		worldTransform->Initialize();
-		worldTransform->scale = objectData.transform.scale;
-		worldTransform->rotate = objectData.transform.rotate;
-		worldTransform->translate = objectData.transform.translate;
-
-		//配列に登録
-		objectData.worldTransform = worldTransform;
+		////ワールドトランスフォームの初期化
+		//WorldTransform* worldTransform = new WorldTransform();
+		//worldTransform->Initialize();
+		//worldTransform->scale = objectData.transform.scale;
+		//worldTransform->rotate = objectData.transform.rotate;
+		//worldTransform->translate = objectData.transform.translate;
+		//
+		////配列に登録
+		//objectData.worldTransform = worldTransform;
 		
 	}
 }
@@ -290,14 +289,6 @@ nlohmann::json LevelDataManager::Deserialize(const std::string& fullFilePath){
 
 }
 
-void LevelDataManager::AudioPlay(LevelData& levelData){
-	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
-
-	}
-
-
-
-}
 
 uint32_t LevelDataManager::Load(const std::string& filePath){
 
@@ -341,9 +332,6 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 	//生成
 	Ganarate(levelData);
 	
-	//オーディオの再生
-	AudioPlay(levelData);
-
 
 
 	//番号を返す
@@ -358,16 +346,16 @@ void LevelDataManager::Reload(const uint32_t& levelDataHandle){
 	for (auto& [key, levelDataPtr] : levelDatas_) {
 		if (levelDataPtr->modelHandle == levelDataHandle) {
 
-			//モデルを消す
-			for (auto& object : levelDataPtr->objectDatas) {
-				// Modelの解放
-				if (object.model != nullptr) {
-					delete object.model;
-				}
-				//ワールドトランスフォームの解放
-				delete object.worldTransform;
+			////モデルを消す
+			//for (auto& object : levelDataPtr->objectDatas) {
+			//	// Modelの解放
+			//	if (object.model != nullptr) {
+			//		delete object.model;
+			//	}
+			//	//ワールドトランスフォームの解放
+			//	delete object.worldTransform;
+			//}
 
-			}
 
 			//listにある情報を全て消す
 			levelDataPtr->objectDatas.clear();
@@ -419,12 +407,6 @@ void LevelDataManager::Update(const uint32_t& levelDataHandle){
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->modelHandle == levelDataHandle) {
 			
-			for (auto& object : levelData->objectDatas) {
-				//更新
-				object.worldTransform->Update();
-			}
-
-
 
 #ifdef _DEBUG
 			ImGui::Begin("リスナー");
@@ -454,15 +436,15 @@ void LevelDataManager::Delete(const uint32_t& levelDataHandle){
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->modelHandle == levelDataHandle) {
 
-			//モデルを消す
-			for (auto& object : levelData->objectDatas) {
-				// Modelの解放
-				if (object.model != nullptr) {
-					delete object.model;
-				}
-				//ワールドトランスフォームの解放
-				delete object.worldTransform;
-			}
+			////モデルを消す
+			//for (auto& object : levelData->objectDatas) {
+			//	// Modelの解放
+			//	if (object.model != nullptr) {
+			//		delete object.model;
+			//	}
+			//	//ワールドトランスフォームの解放
+			//	delete object.worldTransform;
+			//}
 
 			//listにある情報を全て消す
 			levelData->objectDatas.clear();
@@ -481,10 +463,10 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->modelHandle == levelDataHandle) {
 
-			//描画
-			for (LevelData::ObjectData& object : levelData->objectDatas) {
-				object.model->Draw(*object.worldTransform, camera, material, directionalLight);
-			}
+			////描画
+			//for (LevelData::ObjectData& object : levelData->objectDatas) {
+			//	object.model->Draw(*object.worldTransform, camera, material, directionalLight);
+			//}
 
 
 			for (auto& object : levelData->objectDatas) {
@@ -506,10 +488,10 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->modelHandle == levelDataHandle) {
 
-			//描画
-			for (LevelData::ObjectData& object : levelData->objectDatas) {
-				object.model->Draw(*object.worldTransform, camera, material, pointLight);
-			}
+			////描画
+			//for (LevelData::ObjectData& object : levelData->objectDatas) {
+			//	object.model->Draw(*object.worldTransform, camera, material, pointLight);
+			//}
 			//無駄なループ処理を防ぐよ
 			break;
 
@@ -524,10 +506,10 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle,const Camera& camera
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->modelHandle == levelDataHandle) {
 
-			//描画
-			for (LevelData::ObjectData& object : levelData->objectDatas) {
-				object.model->Draw(*object.worldTransform, camera, material, spotLight);
-			}
+			////描画
+			//for (LevelData::ObjectData& object : levelData->objectDatas) {
+			//	object.model->Draw(*object.worldTransform, camera, material, spotLight);
+			//}
 			//無駄なループ処理を防ぐよ
 			break;
 
@@ -545,11 +527,11 @@ void LevelDataManager::Release(){
 	//全て解放
 	for (auto& [key, levelData] : levelDatas_) {
 		for (auto& object : levelData->objectDatas) {
-			// Model の解放
-			if (object.model != nullptr) {
-				delete object.model;
-			}
-			delete object.worldTransform;
+			//// Model の解放
+			//if (object.model != nullptr) {
+			//	delete object.model;
+			//}
+			//delete object.worldTransform;
 			
 		}
 

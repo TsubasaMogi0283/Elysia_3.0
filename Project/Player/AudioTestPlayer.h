@@ -2,6 +2,7 @@
 #include "WorldTransform.h"
 #include "Material.h"
 #include "Camera.h"
+#include "PlayerCollisionToAudioObject.h"
 
 struct SpotLight;
 
@@ -60,6 +61,9 @@ private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 
-
+	//方向
 	Vector3 direction_ = {};
+
+	std::unique_ptr<PlayerCollisionToAudioObject>collosion_ = nullptr;
+
 };
