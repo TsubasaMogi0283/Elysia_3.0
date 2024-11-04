@@ -42,7 +42,7 @@ void EnemyAttackCollision::Update(){
 	const float INTERVAL = 5.0f;
 	Vector3 newDirection = VectorCalculation::Multiply(enemyDirection_, INTERVAL);
 	//更新
-	worldTransform_.translate_ = VectorCalculation::Add(enemyWorldPosition_, newDirection);
+	worldTransform_.translate = VectorCalculation::Add(enemyWorldPosition_, newDirection);
 	worldTransform_.Update();
 	material_.Update();
 }
@@ -63,9 +63,9 @@ void EnemyAttackCollision::Draw(const Camera& camera,const SpotLight& spotLight)
 
 Vector3 EnemyAttackCollision::GetWorldPosition(){
 	Vector3 worldPosition = {
-		.x = worldTransform_.worldMatrix_.m[3][0],
-		.y = worldTransform_.worldMatrix_.m[3][1],
-		.z = worldTransform_.worldMatrix_.m[3][2],
+		.x = worldTransform_.worldMatrix.m[3][0],
+		.y = worldTransform_.worldMatrix.m[3][1],
+		.z = worldTransform_.worldMatrix.m[3][2],
 	};
 	return worldPosition;
 }

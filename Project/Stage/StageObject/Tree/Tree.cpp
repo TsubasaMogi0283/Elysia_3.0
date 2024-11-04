@@ -10,8 +10,8 @@ void Tree::Initialize(const uint32_t& modelHandle,const Vector3& position){
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	const float SIZE = 1.5f;
-	worldTransform_.scale_ = { .x = SIZE ,.y = SIZE ,.z = SIZE };
-	worldTransform_.translate_ = position;
+	worldTransform_.scale = { .x = SIZE ,.y = SIZE ,.z = SIZE };
+	worldTransform_.translate = position;
 
 	const float INTERVAL = 1.0f;
 	Vector3 min = { .x = INTERVAL,.y = INTERVAL,.z = INTERVAL };
@@ -40,9 +40,9 @@ void Tree::Draw(Camera& camera, Material& material, SpotLight& spotLight){
 
 Vector3 Tree::GetWorldPosition(){
 	Vector3 position = {
-		.x = worldTransform_.worldMatrix_.m[3][0],
-		.y = worldTransform_.worldMatrix_.m[3][1],
-		.z = worldTransform_.worldMatrix_.m[3][2],
+		.x = worldTransform_.worldMatrix.m[3][0],
+		.y = worldTransform_.worldMatrix.m[3][1],
+		.z = worldTransform_.worldMatrix.m[3][2],
 	};
 	return position;
 }

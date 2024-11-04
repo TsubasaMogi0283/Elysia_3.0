@@ -33,8 +33,8 @@ public:
 	/// ペアレントの設定
 	/// </summary>
 	/// <param name="parent"></param>
-	inline void SetParent(const WorldTransform* parent) {
-		parent = parent_;
+	inline void SetParent(const WorldTransform* newParent) {
+		parent = newParent;
 	}
 
 	/// <summary>
@@ -43,9 +43,9 @@ public:
 	/// <returns></returns>
 	inline Vector3 GetWorldPosition()const {
 		Vector3 position = {
-			.x = worldMatrix_.m[3][0],
-			.y = worldMatrix_.m[3][1],
-			.z = worldMatrix_.m[3][2],
+			.x = worldMatrix.m[3][0],
+			.y = worldMatrix.m[3][1],
+			.z = worldMatrix.m[3][2],
 		};
 
 		return position;
@@ -63,25 +63,25 @@ private:
 public:
 
 	//スケール
-	Vector3 scale_ = { 1.0f, 1.0f, 1.0f };
+	Vector3 scale = { 1.0f, 1.0f, 1.0f };
 	//回転
-	Vector3 rotate_ = { 0.0f, 0.0f, 0.0f };
+	Vector3 rotate = { 0.0f, 0.0f, 0.0f };
 	//座標
-	Vector3 translate_ = { 0.0f, 0.0f, 0.0f };
+	Vector3 translate = { 0.0f, 0.0f, 0.0f };
 
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> bufferResource_;
+	ComPtr<ID3D12Resource> bufferResource;
 	//送るデータ
-	WorldTransformData* tranceformationData_ = nullptr;
+	WorldTransformData* tranceformationData = nullptr;
 
-	//ワールド行列へ
-	Matrix4x4 worldMatrix_ = {};
+	//ワールド行列
+	Matrix4x4 worldMatrix = {};
 	//逆転置行列
-	Matrix4x4 worldInverseTransposeMatrix_ = {};
+	Matrix4x4 worldInverseTransposeMatrix = {};
 
 	//親となるワールド変換へのポインタ
-	const WorldTransform* parent_ = nullptr;
+	const WorldTransform* parent = nullptr;
 
 
 };

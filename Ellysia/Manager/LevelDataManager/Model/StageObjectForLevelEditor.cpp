@@ -10,7 +10,7 @@ void StageObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Ve
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
-	worldTransform_.translate_ = position;
+	worldTransform_.translate = position;
 
 	//当たり判定
 	stageObjectForLevelEditorCollider_ = std::make_unique<StageObjectForLevelEditorCollider>();

@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
+#include "Transform.h"
 
 /// <summary>
 /// オブジェクトの種類
@@ -22,7 +23,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	virtual void Initialize(const uint32_t& modelhandle,const Vector3& position)=0;
+	virtual void Initialize(const uint32_t& modelhandle,const Transform& position)=0;
 
 	/// <summary>
 	/// 更新

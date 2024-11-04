@@ -82,7 +82,7 @@ public:
 	/// </summary>
 	/// <param name="posX"></param>
 	inline void SetPositionZ(float& posZ) {
-		this->worldTransform_.translate_.z = posZ;
+		this->worldTransform_.translate.z = posZ;
 	}
 
 #pragma endregion

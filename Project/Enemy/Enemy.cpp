@@ -14,14 +14,14 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	model_.reset(Model::Create(modelHandle));
 	worldTransform_.Initialize();
 
-	worldTransform_.scale_ = { .x = SCALE_SIZE,.y = SCALE_SIZE ,.z = SCALE_SIZE };
+	worldTransform_.scale = { .x = SCALE_SIZE,.y = SCALE_SIZE ,.z = SCALE_SIZE };
 #ifdef _DEBUG
 	float DEBUG_SCALE = 1.0f;
-	worldTransform_.scale_ = { .x = DEBUG_SCALE,.y = DEBUG_SCALE ,.z = DEBUG_SCALE };
+	worldTransform_.scale = { .x = DEBUG_SCALE,.y = DEBUG_SCALE ,.z = DEBUG_SCALE };
 #endif // _DEBUG
 
 	//座標の代入
-	worldTransform_.translate_ = position;
+	worldTransform_.translate = position;
 
 	//マテリアルの初期化
 	material_.Initialize();
@@ -85,7 +85,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 	debugModelWorldTransform_.Initialize();
 	const float DEBUG_MODEL_SCALE = 0.25f;
-	debugModelWorldTransform_.scale_ = { .x= DEBUG_MODEL_SCALE,.y= DEBUG_MODEL_SCALE,.z= DEBUG_MODEL_SCALE };
+	debugModelWorldTransform_.scale = { .x= DEBUG_MODEL_SCALE,.y= DEBUG_MODEL_SCALE,.z= DEBUG_MODEL_SCALE };
 
 
 	
@@ -139,7 +139,7 @@ void Enemy::Update(){
 			direction_ = VectorCalculation::Normalize(speed_);
 		}
 		
-		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speed_);
+		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, speed_);
 	
 	
 		break;
@@ -182,7 +182,7 @@ void Enemy::Update(){
 
 		//加算
 		Vector3 speedVelocity = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
-		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, speedVelocity);
+		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, speedVelocity);
 
 
 		break;
@@ -231,11 +231,11 @@ void Enemy::Update(){
 	float directionToRotateY = std::atan2f(-direction_.z,direction_.x);
 
 	const float ROTATE_OFFSET = -std::numbers::pi_v<float>/2.0f;
-	worldTransform_.rotate_.y = directionToRotateY + ROTATE_OFFSET;
+	worldTransform_.rotate.y = directionToRotateY + ROTATE_OFFSET;
 
 #ifdef _DEBUG
 	const float DEBUG_MODEL_ROTATE_OFFSET = std::numbers::pi_v<float>;
-	worldTransform_.rotate_.y = directionToRotateY + DEBUG_MODEL_ROTATE_OFFSET;
+	worldTransform_.rotate.y = directionToRotateY + DEBUG_MODEL_ROTATE_OFFSET;
 #endif // _DEBUG
 
 
@@ -243,7 +243,7 @@ void Enemy::Update(){
 
 #ifdef _DEBUG
 	const float INTERVAL = 5.0f;
-	debugModelWorldTransform_.translate_ = VectorCalculation::Add(GetWorldPosition(), VectorCalculation::Multiply(direction_, INTERVAL));
+	debugModelWorldTransform_.translate = VectorCalculation::Add(GetWorldPosition(), VectorCalculation::Multiply(direction_, INTERVAL));
 	debugModelWorldTransform_.Update();
 
 	
@@ -292,7 +292,7 @@ void Enemy::Update(){
 		ImGui::TreePop();
 	}
 
-	ImGui::InputFloat3("Position", &worldTransform_.translate_.x);
+	ImGui::InputFloat3("Position", &worldTransform_.translate.x);
 	ImGui::InputFloat3("preTrackingPlayerPosition", &preTrackingPlayerPosition_.x);
 	ImGui::InputFloat3("preTrackingPosition_", &preTrackingPosition_.x);
 	ImGui::InputInt("AliveTive", &deleteTime_);
@@ -339,9 +339,9 @@ void Enemy::OffCollision(){
 
 Vector3 Enemy::GetWorldPosition() {
 	Vector3 result = {
-		.x= worldTransform_.worldMatrix_.m[3][0],
-		.y = worldTransform_.worldMatrix_.m[3][1],
-		.z = worldTransform_.worldMatrix_.m[3][2],
+		.x= worldTransform_.worldMatrix.m[3][0],
+		.y = worldTransform_.worldMatrix.m[3][1],
+		.z = worldTransform_.worldMatrix.m[3][2],
 	};
 
 	return result;

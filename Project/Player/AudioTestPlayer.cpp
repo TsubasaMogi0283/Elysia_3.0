@@ -9,7 +9,7 @@ void AudioTestPlayer::Update(){
 
 #ifdef _DEBUG
 	ImGui::Begin("音確認用のプレイヤー");
-	ImGui::InputFloat3("位置", &worldTransform_.translate_.x);
+	ImGui::InputFloat3("位置", &worldTransform_.translate.x);
 	ImGui::End();
 
 #endif // _DEBUG
@@ -18,7 +18,7 @@ void AudioTestPlayer::Update(){
 	Vector3 newDirection = VectorCalculation::Multiply(direction_, SPEED);
 
 	//位置の更新
-	worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, newDirection);
+	worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, newDirection);
 	worldTransform_.Update();
 }
 

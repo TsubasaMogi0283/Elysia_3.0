@@ -2,7 +2,7 @@
 
 
 
-void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Vector3& position){
+void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Transform& transform){
 	
 	//レベルエディタ用のオブジェクトのタイプ
 	objectType_ = LevelEditorObjectType::AudioObject;
@@ -10,13 +10,18 @@ void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Ve
 	//モデルの生成
 	model_.reset(Model::Create(modelhandle));
 
-	//ワールドトランスフォーム
+	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
-	worldTransform_.translate_ = position;
+	worldTransform_.scale = transform.scale;
+	worldTransform_.rotate = transform.rotate;
+	worldTransform_.translate = transform.translate;
 
 	//コライダーの生成
 	audioObjectForLevelEditorCollider_ = std::make_unique<AudioObjectForLevelEditorCollider>();
 	
+
+	audio_ = Audio::GetInstance();
+
 
 }
 
@@ -26,6 +31,15 @@ void AudioObjectForLevelEditor::Update(){
 
 	//コライダーに座標を送る
 	audioObjectForLevelEditorCollider_->SetObjectPosition(worldTransform_.GetWorldPosition());
+
+
+	//再生または停止
+	if (audioObjectForLevelEditorCollider_->GetIsTouch() == true) {
+		audio_->PlayMP3(audioHandle_, true);
+	}
+	else {
+
+	}
 
 }
 

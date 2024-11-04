@@ -1,0 +1,28 @@
+{
+    "name": "scene",
+    "objects": [
+        {
+            "type": "MESH",
+            "name": "Ground",
+            "transform": {
+                "scaling": [
+                    20.0,
+                    20.0,
+                    20.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.19999998807907104
+                ]
+            },
+            "file_name": "Plane",
+            "object_type": "Stage"
+        }
+    ]
+}

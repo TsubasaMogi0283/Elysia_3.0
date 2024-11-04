@@ -6,29 +6,29 @@
 
 void WorldTransform::Initialize() {
 	//Resource作成
-	bufferResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(WorldTransformData)).Get();
+	bufferResource = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(WorldTransformData)).Get();
 
 	//初期値
-	scale_ = { .x = 1.0f,.y = 1.0f,.z = 1.0f };
-	rotate_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
-	translate_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+	scale = { .x = 1.0f,.y = 1.0f,.z = 1.0f };
+	rotate = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+	translate = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
 }
 
 
 void WorldTransform::Update() {
 	//SRT合成
-	worldMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
+	worldMatrix = Matrix4x4Calculation::MakeAffineMatrix(scale, rotate, translate);
 
 	//逆転置行列
 	//ワールド行列を逆転置にする
-	Matrix4x4 worldInverseMatrix = Matrix4x4Calculation::Inverse(worldMatrix_);
+	Matrix4x4 worldInverseMatrix = Matrix4x4Calculation::Inverse(worldMatrix);
 	
 	//転置にした
-	worldInverseTransposeMatrix_ = Matrix4x4Calculation::MakeTransposeMatrix(worldInverseMatrix);
+	worldInverseTransposeMatrix = Matrix4x4Calculation::MakeTransposeMatrix(worldInverseMatrix);
 
 	//親があれば親のワールド行列を掛ける
-	if (parent_) {
-		worldMatrix_ = Matrix4x4Calculation::Multiply(worldMatrix_, parent_->worldMatrix_);
+	if (parent) {
+		worldMatrix = Matrix4x4Calculation::Multiply(worldMatrix, parent->worldMatrix);
 	}
 
 	//転送
@@ -37,11 +37,11 @@ void WorldTransform::Update() {
 
 
 void WorldTransform::Transfer() {
+
 	//Resourceに書き込む
-	//今までTransformationに書いていたものをこっちに引っ越す
-	bufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&tranceformationData_));
-	tranceformationData_->world = worldMatrix_;
-	tranceformationData_->normal = worldMatrix_;
-	tranceformationData_->worldInverseTranspose = worldInverseTransposeMatrix_;
-	bufferResource_->Unmap(0, nullptr);
+	bufferResource->Map(0, nullptr, reinterpret_cast<void**>(&tranceformationData));
+	tranceformationData->world = worldMatrix;
+	tranceformationData->normal = worldMatrix;
+	tranceformationData->worldInverseTranspose = worldInverseTransposeMatrix;
+	bufferResource->Unmap(0, nullptr);
 }

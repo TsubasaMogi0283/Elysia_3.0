@@ -46,14 +46,14 @@ void FlashLight::Initialize(){
 	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
 		model_[i].reset(Model::Create(modelHandle));
 		worldTransform_[i].Initialize();
-		worldTransform_[i].scale_ = { .x = SCALE,.y = SCALE ,.z = SCALE };
+		worldTransform_[i].scale = { .x = SCALE,.y = SCALE ,.z = SCALE };
 
 	}
 
 	//中心
 	lightCenterModel_.reset(Model::Create(modelHandle));
 	lightCenterWorldTransform_.Initialize();
-	lightCenterWorldTransform_.scale_ = { .x = SCALE,.y = SCALE ,.z = SCALE };
+	lightCenterWorldTransform_.scale = { .x = SCALE,.y = SCALE ,.z = SCALE };
 	lightCenterMaterial_.Initialize();
 	lightCenterMaterial_.lightingKinds_ = None;
 
@@ -130,11 +130,11 @@ void FlashLight::Update() {
 
 	
 	//端の位置を計算
-	worldTransform_[Left].translate_ = VectorCalculation::Add(playerPosition_,{ fanLeft.x ,0.0f,fanLeft.y });
-	worldTransform_[Right].translate_ = VectorCalculation::Add(playerPosition_,{ fanRight.x ,0.0f,fanRight.y });
+	worldTransform_[Left].translate = VectorCalculation::Add(playerPosition_,{ fanLeft.x ,0.0f,fanLeft.y });
+	worldTransform_[Right].translate = VectorCalculation::Add(playerPosition_,{ fanRight.x ,0.0f,fanRight.y });
 
 	//中心
-	lightCenterWorldTransform_.translate_ = lightPosition;
+	lightCenterWorldTransform_.translate = lightPosition;
 
 	//当たり判定用へ扇を入力
 	flashLightCollision_->SetFan3D(fan3D_);

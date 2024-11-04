@@ -11,7 +11,6 @@
 #include "WorldTransform.h"
 #include "Collider/Collider.h"
 #include <Transform.h>
-#include <Model/IObjectForLevelEditorCollider.h>
 #include <Model/IObjectForLevelEditor.h>
 
 
@@ -137,13 +136,11 @@ private:
 	
 
 	struct LevelDataAudioData {
-		//オーディオデータを持っているかどうか
-		bool isHavingAudio;
-
+		
 		//ファイル名
 		std::string fileName;
 
-		//種類
+		//種類(BGMかSE)
 		std::string type;
 
 		//ハンドル
@@ -195,10 +192,7 @@ private:
 			LevelDataAudioData levelAudioData;
 
 			//オブジェクト(ステージかオーディオ)
-			IObjectForLevelEditor* object;
-
-			//当たり判定(ステージかオーディオ)
-			IObjectForLevelEditorCollider* objectCollider;
+			std::unique_ptr<IObjectForLevelEditor> object;
 
 
 		};
@@ -206,7 +200,7 @@ private:
 
 
 		//ハンドル
-		uint32_t handle;
+		uint32_t modelHandle;
 
 		//オブジェクトのリスト
 		std::list<ObjectData> objectDatas;
@@ -237,7 +231,7 @@ private:
 		for (const auto& [key, levelData] : levelDatas_) {
 			
 			//一致したら返す
-			if (levelData->handle == handle) {
+			if (levelData->modelHandle == handle) {
 				return levelData->objectDatas;
 			}
 		}
@@ -256,7 +250,7 @@ public:
 		for (const auto& [key, levelData] : levelDatas_) {
 
 			//一致したら設定
-			if (levelData->handle == handle) {
+			if (levelData->modelHandle == handle) {
 				levelData->listener = listener;
 			}
 		}

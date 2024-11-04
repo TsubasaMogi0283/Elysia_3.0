@@ -156,8 +156,6 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 				if (object.contains("audio")) {
 					nlohmann::json& audio = object["audio"];
 
-					//Audioを持っているよ
-					objectData.levelAudioData.isHavingAudio = true;
 
 					//種類を記録
 					if (audio.contains("type")) {
@@ -201,8 +199,6 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 	
 	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
 
-		//std::unique_ptr<Model> model_ = nullptr;
-		//model_.~unique_ptr();
 
 		//モデルの生成
 		//まだ無い場合は生成する
@@ -249,9 +245,9 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 		//ワールドトランスフォームの初期化
 		WorldTransform* worldTransform = new WorldTransform();
 		worldTransform->Initialize();
-		worldTransform->scale_ = objectData.transform.scale;
-		worldTransform->rotate_ = objectData.transform.rotate;
-		worldTransform->translate_ = objectData.transform.translate;
+		worldTransform->scale = objectData.transform.scale;
+		worldTransform->rotate = objectData.transform.rotate;
+		worldTransform->translate = objectData.transform.translate;
 
 		//配列に登録
 		objectData.worldTransform = worldTransform;
@@ -297,15 +293,6 @@ nlohmann::json LevelDataManager::Deserialize(const std::string& fullFilePath){
 void LevelDataManager::AudioPlay(LevelData& levelData){
 	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
 
-		//オーディオ機能を持っていたら通るよ
-		if (objectData.levelAudioData.isHavingAudio == true) {
-			//ハンドル
-			uint32_t handle = objectData.levelAudioData.handle;
-			//ループするかどうか
-			bool isLoop = objectData.levelAudioData.isLoop;
-			//再生
-			Audio::GetInstance()->PlayWave(handle, isLoop);
-		}
 	}
 
 
@@ -339,7 +326,7 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 	//それぞれに情報を記録
 	levelDatas_[fullFilePath]->folderName = folderName;
 	levelDatas_[fullFilePath]->fileName = fileName;
-	levelDatas_[fullFilePath]->handle = handle_;
+	levelDatas_[fullFilePath]->modelHandle = handle_;
 	levelDatas_[fullFilePath]->fullPath = fullFilePath;
 
 	//ハンドルの加算
@@ -360,7 +347,7 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 
 
 	//番号を返す
-	return levelDatas_[fullFilePath]->handle;
+	return levelDatas_[fullFilePath]->modelHandle;
 
 }
 
@@ -369,7 +356,7 @@ void LevelDataManager::Reload(const uint32_t& levelDataHandle){
 
 	//一度全てのオブジェクトのデータを消す
 	for (auto& [key, levelDataPtr] : levelDatas_) {
-		if (levelDataPtr->handle == levelDataHandle) {
+		if (levelDataPtr->modelHandle == levelDataHandle) {
 
 			//モデルを消す
 			for (auto& object : levelDataPtr->objectDatas) {
@@ -398,7 +385,7 @@ void LevelDataManager::Reload(const uint32_t& levelDataHandle){
 		LevelData* levelData = it->second.get();
 
 		//見つけたらfullFilePathに入れる
-		if (levelData->handle == levelDataHandle) {
+		if (levelData->modelHandle == levelDataHandle) {
 			fullFilePath = levelData->fullPath;
 			break;
 		}
@@ -430,7 +417,7 @@ void LevelDataManager::Update(const uint32_t& levelDataHandle){
 	//イテレータではなくこっちでやった方が良いかな
 	//ファイル名で指定したい時はkeyを使ったら楽だね。今回はハンドルだけどね。
 	for (auto& [key, levelData] : levelDatas_) {
-		if (levelData->handle == levelDataHandle) {
+		if (levelData->modelHandle == levelDataHandle) {
 			
 			for (auto& object : levelData->objectDatas) {
 				//更新
@@ -465,7 +452,7 @@ void LevelDataManager::Delete(const uint32_t& levelDataHandle){
 
 
 	for (auto& [key, levelData] : levelDatas_) {
-		if (levelData->handle == levelDataHandle) {
+		if (levelData->modelHandle == levelDataHandle) {
 
 			//モデルを消す
 			for (auto& object : levelData->objectDatas) {
@@ -492,7 +479,7 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 	
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
-		if (levelData->handle == levelDataHandle) {
+		if (levelData->modelHandle == levelDataHandle) {
 
 			//描画
 			for (LevelData::ObjectData& object : levelData->objectDatas) {
@@ -517,7 +504,7 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
-		if (levelData->handle == levelDataHandle) {
+		if (levelData->modelHandle == levelDataHandle) {
 
 			//描画
 			for (LevelData::ObjectData& object : levelData->objectDatas) {
@@ -535,7 +522,7 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle,const Camera& camera
 	
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
-		if (levelData->handle == levelDataHandle) {
+		if (levelData->modelHandle == levelDataHandle) {
 
 			//描画
 			for (LevelData::ObjectData& object : levelData->objectDatas) {

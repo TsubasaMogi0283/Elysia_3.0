@@ -34,7 +34,9 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(const uint32_t& modelhandle, const Vector3& position) override;
+	/// <param name="modelhandle"></param>
+	/// <param name="transform"></param>
+	void Initialize(const uint32_t& modelhandle, const Transform& transform) override;
 
 	/// <summary>
 	/// 更新

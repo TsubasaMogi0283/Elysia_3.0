@@ -5,9 +5,9 @@ void Ground::Initialize(uint32_t modelhandle){
 
 	//ワールドトランスフォームの食器化
 	worldTransform_.Initialize();
-	worldTransform_.scale_ = { SCALE_SIZE_,SCALE_SIZE_,SCALE_SIZE_ };
-	worldTransform_.translate_.x = 0.0f;
-	worldTransform_.translate_.y = 0.0f;
+	worldTransform_.scale = { SCALE_SIZE_,SCALE_SIZE_,SCALE_SIZE_ };
+	worldTransform_.translate.x = 0.0f;
+	worldTransform_.translate.y = 0.0f;
 
 	//四隅
 	stageRect_.leftBack = { .x = -SCALE_SIZE_ ,.y = 0.0f ,.z = SCALE_SIZE_ };
