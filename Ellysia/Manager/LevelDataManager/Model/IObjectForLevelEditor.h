@@ -23,6 +23,8 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
+	/// <param name="modelhandle"></param>
+	/// <param name="position"></param>
 	virtual void Initialize(const uint32_t& modelhandle,const Transform& position)=0;
 
 	/// <summary>

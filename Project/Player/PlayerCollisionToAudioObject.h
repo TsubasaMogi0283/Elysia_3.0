@@ -39,10 +39,6 @@ public:
 	Vector3 GetWorldPosition()override;
 
 
-
-
-
-
 	/// <summary>
 	/// デストラクタ
 	/// </summary>

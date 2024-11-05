@@ -212,6 +212,17 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			audioHandle;
 			AudioObjectForLevelEditor* model=new AudioObjectForLevelEditor();
 			
+
+			AudioObjectForLevelEditor* audioObject = new AudioObjectForLevelEditor();
+
+			//モデルの読み込み
+			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
+
+			//オブジェクトの生成
+			objectData.object.reset(new AudioObjectForLevelEditor());
+			objectData.object->Initialize(modelHandle, objectData.transform);
+
+
 			//引数は今の所仮置き
 			//ここに入れてね
 
@@ -222,17 +233,38 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 
 		}
 		else if (objectData.type == "Audio") {
+			
 
+			//Audioフォルダの中で読み込み
+			objectData.levelAudioData.handle;
+
+			AudioDataForLevelEditor audioDataForLevelEditor = {};
+			//種類を記録
+			audioDataForLevelEditor.type= objectData.levelAudioData.type;
+
+
+			//ループをするかどうか
+			audioDataForLevelEditor.isLoop= objectData.levelAudioData.isLoop;
+
+
+			
+			//エリア上かどうか
+			audioDataForLevelEditor.isOnArea= objectData.levelAudioData.isOnArea;
+
+
+			//ファイル名を記録
+			audioDataForLevelEditor.fileName= objectData.levelAudioData.fileName;
+
+			AudioObjectForLevelEditor* audioObject = new AudioObjectForLevelEditor();
+			audioObject->SetLevelDataAudioData(audioDataForLevelEditor);
+
+			//モデルの読み込み
+			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
+
+			//オブジェクトの生成
+			objectData.object.reset(new AudioObjectForLevelEditor());
+			objectData.object->Initialize(modelHandle, objectData.transform);
 		}
-
-		////オーディオの場合
-		//if (objectData.levelAudioData.isHavingAudio == true && objectData.model == nullptr) {
-		//	//モデルの読み込み
-		//	uint32_t modelHandleForAudio = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
-		//	//生成
-		//	Model* audioModel = Model::Create(modelHandleForAudio);
-		//	audioModel;
-		//}
 
 		
 
@@ -492,6 +524,12 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 			//for (LevelData::ObjectData& object : levelData->objectDatas) {
 			//	object.model->Draw(*object.worldTransform, camera, material, pointLight);
 			//}
+			
+			for (auto& object : levelData->objectDatas) {
+				//描画
+				object.object->Draw(camera, material, pointLight);
+			}
+			
 			//無駄なループ処理を防ぐよ
 			break;
 
@@ -511,6 +549,12 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle,const Camera& camera
 			//	object.model->Draw(*object.worldTransform, camera, material, spotLight);
 			//}
 			//無駄なループ処理を防ぐよ
+			
+			
+			for (auto& object : levelData->objectDatas) {
+				//描画
+				object.object->Draw(camera, material, spotLight);
+			}
 			break;
 
 		}

@@ -1,8 +1,13 @@
 #include "AudioObjectForLevelEditorCollider.h"
+#include <Collider/CollisionConfig.h>
 
 void AudioObjectForLevelEditorCollider::Initialize(){
 	collisionType_ = CollisionType::PlaneType;
 
+	//自分
+	SetCollisionAttribute(COLLISION_ATTRIBUTE_PLAYER3);
+	//相手
+	SetCollisionMask(COLLISION_ATTRIBUTE_AUDIO_OBJECT);
 
 }
 

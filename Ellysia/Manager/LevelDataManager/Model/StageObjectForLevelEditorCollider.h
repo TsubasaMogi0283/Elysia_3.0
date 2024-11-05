@@ -10,8 +10,6 @@ public:
 	void Initialize()override;
 
 
-	
-
 	/// <summary>
 	/// 衝突
 	/// </summary>
@@ -30,14 +28,16 @@ public:
 	/// <returns></returns>
 	Vector3 GetWorldPosition()override;
 
-
-
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <param name="position"></param>
+	inline void SetWorldPosition(const Vector3& position) {
+		this->objectPosition_ = position;
+	}
 
 
 private:
-
-
-
 
 
 };

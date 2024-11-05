@@ -12,6 +12,25 @@ struct DirectionalLight;
 struct PointLight;
 struct SpotLight;
 
+
+struct AudioDataForLevelEditor {
+
+	//ファイル名
+	std::string fileName;
+
+	//種類(BGMかSE)
+	std::string type;
+
+	//ハンドル
+	uint32_t handle;
+
+	//エリア上かどうか
+	bool isOnArea;
+
+	//ループ
+	bool isLoop;
+};
+
 /// <summary>
 /// オーディオ用のオブジェクト
 /// </summary>
@@ -27,8 +46,8 @@ public:
 	/// オーディオのハンドルを設定
 	/// 初期化より先でやってね
 	/// </summary>
-	inline void SetAudio(uint32_t audioHandle) {
-		this->audioHandle_ = audioHandle;
+	inline void SetLevelDataAudioData(const AudioDataForLevelEditor& levelDataAudioData) {
+		this->audioDataForLevelEditor = levelDataAudioData;
 	}
 
 	/// <summary>
@@ -73,8 +92,8 @@ public:
 	//オーディオ
 private:
 	Audio* audio_ = nullptr;
-	//ハンドル
-	uint32_t audioHandle_ = 0u;
+	
+	AudioDataForLevelEditor audioDataForLevelEditor = {};
 	//当たり判定
 	std::unique_ptr<AudioObjectForLevelEditorCollider> audioObjectForLevelEditorCollider_ = nullptr;
 

@@ -35,10 +35,10 @@ void AudioObjectForLevelEditor::Update(){
 
 	//再生または停止
 	if (audioObjectForLevelEditorCollider_->GetIsTouch() == true) {
-		audio_->PlayMP3(audioHandle_, true);
+		audio_->Play(audioDataForLevelEditor.handle, audioDataForLevelEditor.isLoop);
 	}
 	else {
-		audio_->Stop(audioHandle_);
+		audio_->Stop(audioDataForLevelEditor.handle);
 	}
 
 }

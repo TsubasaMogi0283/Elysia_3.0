@@ -12,6 +12,7 @@
 #include "Collider/Collider.h"
 #include <Transform.h>
 #include <Model/IObjectForLevelEditor.h>
+#include <Model/AudioObjectForLevelEditor.h>
 
 
 struct Camera;
@@ -135,23 +136,7 @@ public:
 private:
 	
 
-	struct LevelDataAudioData {
-		
-		//ファイル名
-		std::string fileName;
-
-		//種類(BGMかSE)
-		std::string type;
-
-		//ハンドル
-		uint32_t handle;
-
-		//エリア上かどうか
-		bool isOnArea;
-
-		//ループ
-		bool isLoop;
-	};
+	
 
 	/// <summary>
 	/// レベルデータ
@@ -184,7 +169,7 @@ private:
 #pragma endregion
 
 			//レベルデータのオーディオ
-			LevelDataAudioData levelAudioData;
+			AudioDataForLevelEditor levelAudioData;
 
 			//オブジェクト(ステージかオーディオ)
 			std::unique_ptr<IObjectForLevelEditor> object;

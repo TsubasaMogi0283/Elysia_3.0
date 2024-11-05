@@ -31,3 +31,9 @@ const uint32_t COLLISION_ATTRIBUTE_PLAYER3 = 0b1 << 7;
 
 //オーディオオブジェクト(レベルエディタ)
 const uint32_t COLLISION_ATTRIBUTE_AUDIO_OBJECT = 0b1 << 8;
+
+//プレイヤー(レベルエディタのステージオブジェクト)
+const uint32_t COLLISION_ATTRIBUTE_PLAYER4 = 0b1 << 9;
+
+//ステージオブジェクト(レベルエディタ)
+const uint32_t COLLISION_ATTRIBUTE_STAGE_OBJECT = 0b1 << 10;

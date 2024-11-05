@@ -1,6 +1,6 @@
 #include "StageObjectForLevelEditor.h"
 
-void StageObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Vector3& position) {
+void StageObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Transform& transform) {
 	
 	//レベルエディタ用のオブジェクトのタイプ
 	objectType_ = LevelEditorObjectType::StageObject;
@@ -10,7 +10,9 @@ void StageObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Ve
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
-	worldTransform_.translate = position;
+	worldTransform_.scale = transform.scale;
+	worldTransform_.rotate = transform.rotate;
+	worldTransform_.translate = transform.translate;
 
 	//当たり判定
 	stageObjectForLevelEditorCollider_ = std::make_unique<StageObjectForLevelEditorCollider>();
