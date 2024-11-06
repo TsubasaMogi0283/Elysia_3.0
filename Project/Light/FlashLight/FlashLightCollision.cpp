@@ -1,5 +1,8 @@
 #include "FlashLightCollision.h"
+#include <imgui.h>
+
 #include <Collider/CollisionConfig.h>
+
 
 void FlashLightCollision::Initialize(){
 
@@ -8,7 +11,6 @@ void FlashLightCollision::Initialize(){
 
 	//種類
 	collisionType_ = CollisionType::FanType;
-
 
 
 
@@ -22,21 +24,33 @@ void FlashLightCollision::Initialize(){
 
 }
 
-void FlashLightCollision::Update()
-{
+void FlashLightCollision::Update(){
+
 }
 
-Vector3 FlashLightCollision::GetWorldPosition()
-{
-	return Vector3();
+Vector3 FlashLightCollision::GetWorldPosition(){
+
+	return playerWorldPosition_;
 }
 
 void FlashLightCollision::OnCollision(){
+#ifdef _DEBUG
+	ImGui::Begin("扇側衝突している");
+	ImGui::End();
 
+#endif // _DEBUG
 
+	
 
 }
 
-void FlashLightCollision::OffCollision()
-{
+void FlashLightCollision::OffCollision(){
+#ifdef _DEBUG
+	ImGui::Begin("扇側衝突していない");
+	ImGui::End();
+
+#endif // _DEBUG
+
+
+
 }

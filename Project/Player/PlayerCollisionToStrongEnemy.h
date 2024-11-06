@@ -11,7 +11,6 @@ struct SpotLight;
 
 
 class PlayerCollisionToStrongEnemy :public Collider {
-
 public:
 
 	/// <summary>
@@ -34,8 +33,9 @@ public:
 	/// 描画
 	/// </summary>
 	/// <param name="camera"></param>
+	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void Draw(Camera& camera, SpotLight& spotLight);
+	void Draw(Camera& camera,Material & material, SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ
@@ -72,10 +72,11 @@ public:
 
 
 private:
+	//モデル
 	std::unique_ptr<Model> model_ = nullptr;
+	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
-	Material material_ = {};
-
+	//ワールド座標
 	Vector3 playerWorldPosition_ = {};
 
 

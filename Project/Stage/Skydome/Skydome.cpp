@@ -6,7 +6,7 @@ void Skydome::Initialize(uint32_t modelHandle){
 
 	worldTransform_.Initialize();
 	const float SCALE_SIZE = 200.0f;
-	worldTransform_.scale_ = { .x = SCALE_SIZE ,.y = SCALE_SIZE ,.z = SCALE_SIZE };
+	worldTransform_.scale = { .x = SCALE_SIZE ,.y = SCALE_SIZE ,.z = SCALE_SIZE };
 
 
 	material_.Initialize();

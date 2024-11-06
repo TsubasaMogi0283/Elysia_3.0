@@ -6,7 +6,7 @@ void DemoObject::Initialize(const uint32_t& modelHandle,const Vector3& position)
 
 	//ワールドトランスフォーム
 	worldTransform_.Initialize();
-	worldTransform_.translate_ = position;
+	worldTransform_.translate = position;
 
 	const float INTERVAL = 1.0f;
 	Vector3 min = { .x = INTERVAL,.y = INTERVAL,.z = INTERVAL };
@@ -35,9 +35,9 @@ void DemoObject::Draw(Camera& camera, Material& material, SpotLight& spotLight){
 
 Vector3 DemoObject::GetWorldPosition(){
 	Vector3 position = {
-		.x = worldTransform_.worldMatrix_.m[3][0],
-		.y = worldTransform_.worldMatrix_.m[3][1],
-		.z = worldTransform_.worldMatrix_.m[3][2],
+		.x = worldTransform_.worldMatrix.m[3][0],
+		.y = worldTransform_.worldMatrix.m[3][1],
+		.z = worldTransform_.worldMatrix.m[3][2],
 	};
 	return position;
 }

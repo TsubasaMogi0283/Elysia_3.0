@@ -1,10 +1,8 @@
 #pragma once
 
-#include "Collider.h"
 #include <list>
 
-
-
+#include "Collider.h"
 
 class CollisionManager{
 public:
@@ -57,7 +55,15 @@ private:
 	/// </summary>
 	/// <param name="colliderA"></param>
 	/// <param name="colliderB"></param>
-	void CheckFanAndPointPair(Collider* colliderA, Collider* colliderB);
+	void CheckFanAndPoint(Collider* colliderA, Collider* colliderB);
+
+	/// <summary>
+	/// 平面と点
+	/// </summary>
+	/// <param name="colliderA"></param>
+	/// <param name="colliderB"></param>
+	void CheckPlaneAndPoint(Collider* colliderA, Collider* colliderB);
+
 
 
 private:

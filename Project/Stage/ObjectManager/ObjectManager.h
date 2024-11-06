@@ -48,7 +48,7 @@ public:
 	/// DemoObjectリストの取得
 	/// </summary>
 	/// <returns></returns>
-	inline std::list <StageObject*> GetStageObjets()const {
+	inline std::list <StageObjectPre*> GetStageObjets()const {
 		return stageObjects_;
 	}
 
@@ -58,7 +58,7 @@ private:
 	Material material_ = {};
 	
 	//ステージオブジェクト
-	std::list<StageObject*> stageObjects_{};
+	std::list<StageObjectPre*> stageObjects_{};
 
 
 

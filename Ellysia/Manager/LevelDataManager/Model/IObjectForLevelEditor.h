@@ -2,23 +2,79 @@
 
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Vector3.h"
 #include "Material.h"
-#include "Collider/Collider.h"
+#include "Transform.h"
+
+/// <summary>
+/// オブジェクトの種類
+/// </summary>
+enum LevelEditorObjectType {
+	StageObject,
+	AudioObject,
+};
 
 
-//レベルエディタ用のモデル
+/// <summary>
+/// レベルエディタ用のモデル(基底クラス)
+/// </summary>
 class IObjectForLevelEditor {
 public:
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	virtual void Initialize(const uint32_t& modelhandle,const Vector3& position)=0;
+	/// <param name="modelhandle"></param>
+	/// <param name="position"></param>
+	virtual void Initialize(const uint32_t& modelhandle,const Transform& position)=0;
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	virtual void Update() = 0;
+
+
+
+	/// <summary>
+	/// 平行光源
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="directionalLight"></param>
+	virtual void Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight)=0;
+
+	/// <summary>
+	/// 描画(点光源)
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="pointLight"></param>
+	virtual void Draw(const Camera& camera,const Material& material,const PointLight& pointLight) = 0;
+
+	/// <summary>
+	/// 描画(スポットライト)
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="spotLight"></param>
+	virtual void Draw(const Camera& camera,const Material& material,const SpotLight& spotLight)=0;
+
+
+
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
 	virtual ~IObjectForLevelEditor() = default;
+
+
+public:
+	/// <summary>
+	/// ワールド座標の取得
+	/// </summary>
+	/// <returns></returns>
+	virtual Vector3 GetWorldPosition() = 0;
+
 
 protected:
 	//モデル
@@ -27,7 +83,8 @@ protected:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 
-	//コライダー
-	std::unique_ptr<Collider> collider_ = nullptr;
+	//オブジェクトのタイプ
+	//LevelEditorObjectTypeから選ぶよ
+	uint32_t objectType_ = 0u;
 
 };

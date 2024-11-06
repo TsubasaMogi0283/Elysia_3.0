@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <list>
-#include <array>
 #include <map>
 #include <memory>
 #include <fstream>
@@ -12,6 +11,8 @@
 #include "WorldTransform.h"
 #include "Collider/Collider.h"
 #include <Transform.h>
+#include <Model/IObjectForLevelEditor.h>
+#include <Model/AudioObjectForLevelEditor.h>
 
 
 struct Camera;
@@ -20,6 +21,9 @@ struct DirectionalLight;
 struct PointLight;
 struct SpotLight;
 
+/// <summary>
+/// リスナー
+/// </summary>
 struct Listener {
 	//位置
 	Vector3 position;
@@ -27,6 +31,9 @@ struct Listener {
 	Vector3 move;
 };
 
+/// <summary>
+/// レベルデータ管理クラス
+/// </summary>
 class LevelDataManager final{
 private:
 	/// <summary>
@@ -40,18 +47,26 @@ private:
 	~LevelDataManager() = default;
 
 public:
-	//シングルインスタンス
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
 	static LevelDataManager* GetInstance();
 
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="levelDataManager"></param>
 	LevelDataManager(const LevelDataManager& levelDataManager) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="levelDataManager"></param>
+	/// <returns></returns>
 	LevelDataManager& operator=(const LevelDataManager& levelDataManager) = delete;
 
-
 public:
-
 	/// <summary>
 	/// レベルデータの読み込み
 	/// </summary>
@@ -62,19 +77,19 @@ public:
 	/// 再読み込み
 	/// </summary>
 	/// <param name="levelDataHandle"></param>
-	void Reload(uint32_t& levelDataHandle);
+	void Reload(const uint32_t& levelDataHandle);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
 	/// <param name="levelDataHandle"></param>
-	void Update(uint32_t&levelDataHandle);
+	void Update(const uint32_t&levelDataHandle);
 
 	/// <summary>
 	/// 消去
 	/// </summary>
 	/// <param name="levelDataHandle"></param>
-	void Delete(uint32_t& levelDataHandle);
+	void Delete(const uint32_t& levelDataHandle);
 
 
 #pragma region 描画
@@ -86,7 +101,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="directionalLight"></param>
-	void Draw(uint32_t& levelDataHandle,Camera& camera, Material& material, DirectionalLight& directionalLight);
+	void Draw(const uint32_t& levelDataHandle,const Camera& camera, const Material& material, const DirectionalLight& directionalLight);
 
 	/// <summary>
 	/// 描画(点光源)
@@ -95,7 +110,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="pointLight"></param>
-	void Draw(uint32_t& levelDataHandle,Camera& camera, Material& material, PointLight& pointLight);
+	void Draw(const uint32_t& levelDataHandle,const Camera& camera, const Material& material, const PointLight& pointLight);
 
 	/// <summary>
 	/// 描画(スポットライト)
@@ -104,43 +119,29 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void Draw(uint32_t& levelDataHandle,Camera& camera,Material & material,SpotLight& spotLight);
+	void Draw(const uint32_t& levelDataHandle,const Camera& camera,const Material & material,const SpotLight& spotLight);
 
 
 #pragma endregion
 
 	/// <summary>
+	/// 解放
 	/// デストラクタの代わり
 	/// </summary>
 	void Release();
 
 
 private:
-	
 
-	struct LevelDataAudioData {
-		//オーディオデータを持っているかどうか
-		bool isHavingAudio;
-
-		//ファイル名
-		std::string fileName;
-		//種類
-		std::string type;
-
-		//ハンドル
-		uint32_t handle;
-
-		//ループ
-		bool isLoop;
-	};
-
+	/// <summary>
+	/// レベルデータ
+	/// </summary>
 	struct LevelData {
 		//モデルオブジェクト
 		struct ObjectData {
-			//モデル
-			Model* model = nullptr;
-			//ワールドトランスフォーム
-			WorldTransform* worldTransform = {};
+			//オブジェクトのタイプ
+			//今はステージかオーディオのどちらか
+			std::string type;
 
 			//ファイル名
 			std::string modelFileName;
@@ -148,8 +149,12 @@ private:
 			//Transform
 			Transform transform;
 
-			//Colliderの種類
+			
 #pragma region コライダー
+			//コライダーを持っているかどうか
+			bool isHavingCollider=false;
+
+			//Colliderの種類
 			std::string colliderType;
 			//Sphere,Box
 			Vector3 center;
@@ -162,31 +167,36 @@ private:
 #pragma endregion
 
 			//レベルデータのオーディオ
-			LevelDataAudioData levelAudioData;
+			AudioDataForLevelEditor levelAudioData;
+
+			//オブジェクト(ステージかオーディオ)
+			IObjectForLevelEditor* objectForLeveEditor;
+
+			//コライダー
+			IObjectForLevelEditorCollider* levelDataObjectCollider;
 
 
 		};
 
 
 
-
-		//リスナー(通常はプレイヤーを入れる)
-		Listener listener_ = {};
-
 		//ハンドル
-		uint32_t handle = 0u;
+		uint32_t modelHandle;
 
-		//オブジェクト
-		std::list<ObjectData> objectDatas = {};
+		//オブジェクトのリスト
+		std::list<ObjectData> objectDatas;
 
 
+		//リスナー
+		//プレイヤーなどを設定してね
+		Listener listener;
 
 		//フォルダ名
-		std::string folderName = {};
+		std::string folderName;
 		//ファイル名
-		std::string fileName = {};
+		std::string fileName;
 		//フルパス
-		std::string fullPath = {};
+		std::string fullPath;
 
 	};
 
@@ -197,13 +207,14 @@ private:
 	/// </summary>
 	/// <param name="handle"></param>
 	/// <returns></returns>
-	inline std::list<LevelData::ObjectData> GetObject(uint32_t& handle) {
+	inline std::list<LevelData::ObjectData> GetObject(const uint32_t& handle) {
 		
 		for (const auto& [key, levelData] : levelDatas_) {
 			
 			//一致したら返す
-			if (levelData->handle == handle) {
+			if (levelData->modelHandle == handle) {
 				return levelData->objectDatas;
+				
 			}
 		}
 
@@ -211,23 +222,22 @@ private:
 		return {};
 	}
 
+public:
 	/// <summary>
 	/// リスナーの設定
 	/// </summary>
 	/// <param name="handle"></param>
 	/// <param name="listener"></param>
-	inline void SetListener(uint32_t& handle,Listener &listener) {
-
+	inline void SetListener(const uint32_t& handle, const Listener& listener) {
 		for (const auto& [key, levelData] : levelDatas_) {
-			//一致したら値を代入
-			if (levelData->handle == handle) {
-				levelData->listener_ = listener;
-				break;
+
+			//一致したら設定
+			if (levelData->modelHandle == handle) {
+				levelData->listener = listener;
 			}
 		}
-
-
 	}
+
 
 private:
 	/// <summary>
@@ -236,7 +246,7 @@ private:
 	void Place(nlohmann::json& objects, LevelData& levelData);
 
 	/// <summary>
-	/// 初期化
+	/// 生成
 	/// </summary>
 	/// <param name="directoryPath"></param>
 	void Ganarate(LevelData& levelData);
@@ -247,12 +257,7 @@ private:
 	/// </summary>
 	/// <param name="fullFilePath"></param>
 	/// <returns></returns>
-	nlohmann::json Deserialize(std::string& fullFilePath);
-
-	/// <summary>
-	/// オーディオの再生
-	/// </summary>
-	void AudioPlay(LevelData& levelData);
+	nlohmann::json Deserialize(const std::string& fullFilePath);
 
 	/// <summary>
 	/// 拡張子を取得
@@ -271,7 +276,6 @@ private:
 
 	//Resourceにあるレベルデータの場所
 	const std::string leveldataPath_ = "Resources/LevelData/";
-
 
 };
 

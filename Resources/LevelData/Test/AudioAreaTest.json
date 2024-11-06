@@ -3,118 +3,78 @@
     "objects": [
         {
             "type": "MESH",
-            "name": "Ground",
+            "name": "AudioGround",
             "transform": {
-                "translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
                 "scaling": [
                     20.0,
                     20.0,
                     20.0
-                ]
-            },
-            "file_name": "Plane",
-            "object_type": "Stage",
-            "audio": {
-                "file_name": "aaaaaa",
-                "type": "BGM",
-                "loop": true
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Sphere",
-            "transform": {
-                "translation": [
-                    4.140221118927002,
-                    3.634669542312622,
-                    1.714384913444519
                 ],
                 "rotation": [
                     0.0,
                     -0.0,
                     0.0
                 ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "Sphere",
-            "object_type": "Stage",
-            "collider": {
-                "type": "BOX",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    2.0,
-                    2.0,
-                    2.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Sample",
-            "transform": {
-                "translation": [
-                    0.0,
-                    7.126154899597168,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "file_name": "Test",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
-            "name": "AudioGround",
-            "transform": {
                 "translation": [
                     0.0,
                     0.0,
                     0.19999998807907104
+                ]
+            },
+            "file_name": "Plane",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "砂利",
+            "transform": {
+                "scaling": [
+                    5.0,
+                    5.0,
+                    5.0
                 ],
                 "rotation": [
                     0.0,
                     -0.0,
                     0.0
                 ],
-                "scaling": [
-                    4.083300590515137,
-                    4.083300590515137,
-                    4.083300590515137
+                "translation": [
+                    -11.37303352355957,
+                    0.0,
+                    0.25259268283843994
                 ]
             },
-            "file_name": "Plane",
+            "file_name": "Gravel",
             "object_type": "Audio",
             "audio": {
-                "file_name": "",
-                "type": "BGM",
+                "file_name": "Gravel",
+                "type": "Action",
+                "on_area": true,
                 "loop": true
             }
+        },
+        {
+            "type": "MESH",
+            "name": "草",
+            "transform": {
+                "scaling": [
+                    5.0,
+                    5.0,
+                    5.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    11.489142417907715,
+                    0.0,
+                    0.27000001072883606
+                ]
+            },
+            "file_name": "Grass",
+            "object_type": "Audio"
         }
     ]
 }

@@ -34,7 +34,7 @@ public:
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="spotLight"></param>
-	void Draw(Camera&camera,SpotLight& spotLight);
+	void Draw(const Camera&camera,const SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ
@@ -57,6 +57,23 @@ public:
 	/// <param name="direction"></param>
 	inline void SetEnemyDirection(Vector3& direction) {
 		this->enemyDirection_ = direction;
+	}
+
+
+	/// <summary>
+	/// 衝突の設定
+	/// </summary>
+	/// <param name="isTouch"></param>
+	inline void SetIsTouch(const bool& isTouch) {
+		this->isTouch_ = isTouch;
+	}
+
+	/// <summary>
+	/// 衝突の接触
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsTouch()const {
+		return isTouch_;
 	}
 
 	/// <summary>
@@ -82,5 +99,8 @@ private:
 
 	Vector3 enemyWorldPosition_ = {};
 	Vector3 enemyDirection_ = {};
+
+
+	bool isTouch_ = false;
 };
 

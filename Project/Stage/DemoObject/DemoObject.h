@@ -1,7 +1,7 @@
 #pragma once
 #include "Stage/StageObject/StageObject.h"
 
-class DemoObject : public StageObject {
+class DemoObject : public StageObjectPre {
 public:
 
 	/// <summary>

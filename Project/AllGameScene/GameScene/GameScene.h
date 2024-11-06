@@ -22,7 +22,6 @@
 
 #include <Player/Player.h>
 #include <Enemy/Enemy.h>
-#include <LightWeapon/LightWeapon.h>
 #include <Collider/CollisionManager.h>
 #include <Key/Key.h>
 #include <Stage/Ground/Ground.h>

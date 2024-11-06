@@ -1,0 +1,44 @@
+#pragma once
+#include "IObjectForLevelEditorCollider.h"
+
+class StageObjectForLevelEditorCollider :public IObjectForLevelEditorCollider {
+public:
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize()override;
+
+
+	/// <summary>
+	/// 衝突
+	/// </summary>
+	void OnCollision()override;
+
+
+	/// <summary>
+	/// 比衝突
+	/// </summary>
+	void OffCollision()override;
+
+
+	/// <summary>
+	/// ワールド座標の取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition()override;
+
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <param name="position"></param>
+	inline void SetWorldPosition(const Vector3& position) {
+		this->objectPosition_ = position;
+	}
+
+
+private:
+
+
+};
+

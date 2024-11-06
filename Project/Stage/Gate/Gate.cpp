@@ -11,12 +11,12 @@ void Gate::Initialize(uint32_t modelHandle){
 
 	//ワールドトランスフォーム
 	worldTransform_.Initialize();
-	worldTransform_.scale_.x = 8.0f;
-	worldTransform_.scale_.y = 5.0f;
+	worldTransform_.scale.x = 8.0f;
+	worldTransform_.scale.y = 5.0f;
 
-	worldTransform_.translate_.z = 40.0f;
+	worldTransform_.translate.z = 40.0f;
 
-	width_ = worldTransform_.scale_.x;
+	width_ = worldTransform_.scale.x;
 	distance_ = 10.0f;
 
 }
@@ -26,7 +26,7 @@ void Gate::Update(){
 
 #ifdef _DEBUG
 	ImGui::Begin("Gate");
-	ImGui::InputFloat3("Translate", &worldTransform_.translate_.x);
+	ImGui::InputFloat3("Translate", &worldTransform_.translate.x);
 	ImGui::End();
 #endif
 
@@ -42,9 +42,9 @@ void Gate::Draw(Camera& camera, SpotLight& spotLight){
 
 Vector3 Gate::GetWorldPosition() const{
 	Vector3 result = {};
-	result.x = worldTransform_.worldMatrix_.m[3][0];
-	result.y = worldTransform_.worldMatrix_.m[3][1];
-	result.z = worldTransform_.worldMatrix_.m[3][2];
+	result.x = worldTransform_.worldMatrix.m[3][0];
+	result.y = worldTransform_.worldMatrix.m[3][1];
+	result.z = worldTransform_.worldMatrix.m[3][2];
 
 	return result;
 }

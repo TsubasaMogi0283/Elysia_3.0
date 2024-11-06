@@ -9,10 +9,10 @@
 void GameManager::Initialize() {
 	//シーンごとに動作確認したいときはここを変えてね
 	currentGamaScene_ = new TitleScene();
-
+	
 #ifdef _DEBUG
-	//currentGamaScene_ = new LevelEditorSample();
-	currentGamaScene_ = new GameScene();
+	currentGamaScene_ = new LevelEditorSample();
+	//currentGamaScene_ = new GameScene();
 #endif // _DEBUG
 
 	//初期化
