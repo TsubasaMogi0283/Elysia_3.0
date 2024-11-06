@@ -44,7 +44,7 @@ void LevelEditorSample::Initialize(){
 
 
 	//読み込み
-	levelHandle_ = levelEditor_->Load("Test/AudioAreaTest.json");
+	levelHandle_ = levelEditor_->Load("Test/AudioAreaTestGroundOnly.json");
 
 	//オーディオの読み込み
 	uint32_t mp3Test = audio_->Load("Resources/Audio/Sample/WIP.mp3");
@@ -57,6 +57,8 @@ void LevelEditorSample::Initialize(){
 }
 
 void LevelEditorSample::Update(GameManager* gameManager){
+
+	collisionManager_->ClearList();
 
 #ifdef _DEBUG
 	ImGui::Begin("Camera"); 
@@ -79,15 +81,6 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	gameManager;
 
 
-
-	//回転
-	if (input_->IsPushButton(DIK_RIGHT) == true) {
-
-	}
-	//左回り
-	else if (input_->IsPushButton(DIK_LEFT) == true) {
-
-	}
 
 
 
@@ -118,7 +111,8 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	//プレイヤーの更新
 	player_->SetDirection(playerDirection_);
 	player_->Update();
-
+	//プレイヤーのコライダーを登録
+	collisionManager_->RegisterList(player_->GetCollosion());
 
 	//レベルエディタで使うリスナーの設定
 	Listener listener = {
@@ -133,6 +127,14 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	material_.Update();
 	//平行光源の更新
 	directionalLight_.Update();
+
+
+
+
+	//衝突判定の計算
+	collisionManager_->CheckAllCollision();
+
+
 
 
 	//カメラの更新

@@ -37,22 +37,24 @@ public:
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="pointLight"></param>
-	void Draw(const Camera& camera,const Material& material,const PointLight& pointLight);
+	void Draw(const Camera& camera,const Material& material,const PointLight& pointLight)override;
 
 	/// <summary>
 	/// 描画(スポットライト)
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="spotLight"></param>
-	void Draw(const Camera& camera,const Material& material,const SpotLight& spotLight);
+	void Draw(const Camera& camera,const Material& material,const SpotLight& spotLight)override;
 
 
 
-private:
+public:
+	/// <summary>
+	/// ワールド座標の取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition()override;
 
-
-	//当たり判定
-	std::unique_ptr<StageObjectForLevelEditorCollider>stageObjectForLevelEditorCollider_ = nullptr;
 
 
 };

@@ -2,6 +2,7 @@
 
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Vector3.h"
 #include "Material.h"
 #include "Transform.h"
 
@@ -65,6 +66,15 @@ public:
 	/// デストラクタ
 	/// </summary>
 	virtual ~IObjectForLevelEditor() = default;
+
+
+public:
+	/// <summary>
+	/// ワールド座標の取得
+	/// </summary>
+	/// <returns></returns>
+	virtual Vector3 GetWorldPosition() = 0;
+
 
 protected:
 	//モデル

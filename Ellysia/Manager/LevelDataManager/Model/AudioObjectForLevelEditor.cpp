@@ -16,9 +16,6 @@ void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Tr
 	worldTransform_.rotate = transform.rotate;
 	worldTransform_.translate = transform.translate;
 
-	//コライダーの生成
-	audioObjectForLevelEditorCollider_ = std::make_unique<AudioObjectForLevelEditorCollider>();
-	
 
 	audio_ = Audio::GetInstance();
 
@@ -29,17 +26,6 @@ void AudioObjectForLevelEditor::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
-	//コライダーに座標を送る
-	audioObjectForLevelEditorCollider_->SetObjectPosition(worldTransform_.GetWorldPosition());
-
-
-	//再生または停止
-	if (audioObjectForLevelEditorCollider_->GetIsTouch() == true) {
-		audio_->Play(audioDataForLevelEditor.handle, audioDataForLevelEditor.isLoop);
-	}
-	else {
-		audio_->Stop(audioDataForLevelEditor.handle);
-	}
 
 }
 
@@ -57,4 +43,8 @@ void AudioObjectForLevelEditor::Draw(const Camera& camera,const Material& materi
 void AudioObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight){
 	//モデルの描画
 	model_->Draw(worldTransform_, camera, material, spotLight);
+}
+
+Vector3 AudioObjectForLevelEditor::GetWorldPosition(){
+	return worldTransform_.GetWorldPosition();
 }

@@ -66,9 +66,7 @@ public:
 	/// <returns></returns>
 	LevelDataManager& operator=(const LevelDataManager& levelDataManager) = delete;
 
-
 public:
-
 	/// <summary>
 	/// レベルデータの読み込み
 	/// </summary>
@@ -134,9 +132,6 @@ public:
 
 
 private:
-	
-
-	
 
 	/// <summary>
 	/// レベルデータ
@@ -148,15 +143,18 @@ private:
 			//今はステージかオーディオのどちらか
 			std::string type;
 
-
 			//ファイル名
 			std::string modelFileName;
 			
 			//Transform
 			Transform transform;
 
-			//Colliderの種類
+			
 #pragma region コライダー
+			//コライダーを持っているかどうか
+			bool isHavingCollider=false;
+
+			//Colliderの種類
 			std::string colliderType;
 			//Sphere,Box
 			Vector3 center;
@@ -172,7 +170,10 @@ private:
 			AudioDataForLevelEditor levelAudioData;
 
 			//オブジェクト(ステージかオーディオ)
-			std::unique_ptr<IObjectForLevelEditor> object;
+			IObjectForLevelEditor* objectForLeveEditor;
+
+			//コライダー
+			IObjectForLevelEditorCollider* levelDataObjectCollider;
 
 
 		};
@@ -213,6 +214,7 @@ private:
 			//一致したら返す
 			if (levelData->modelHandle == handle) {
 				return levelData->objectDatas;
+				
 			}
 		}
 

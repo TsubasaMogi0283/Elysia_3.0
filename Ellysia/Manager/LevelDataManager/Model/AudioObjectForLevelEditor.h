@@ -89,12 +89,30 @@ public:
 
 
 
-	//オーディオ
+
+#pragma endregion
+public:
+	/// <summary>
+	/// ワールド座標の取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition()override;
+
+	/// <summary>
+	/// 衝突下かどうかの設定
+	/// </summary>
+	/// <param name="isTouch"></param>
+	void SetIsTouch(const bool& isTouch) {
+		this->isTouch_ = isTouch;
+	}
+
+	
 private:
+	//オーディオ
 	Audio* audio_ = nullptr;
 	
 	AudioDataForLevelEditor audioDataForLevelEditor = {};
-	//当たり判定
-	std::unique_ptr<AudioObjectForLevelEditorCollider> audioObjectForLevelEditorCollider_ = nullptr;
-
+	
+	//衝突
+	bool isTouch_ = false;
 };

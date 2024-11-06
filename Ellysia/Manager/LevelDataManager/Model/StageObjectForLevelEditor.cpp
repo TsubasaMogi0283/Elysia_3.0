@@ -14,9 +14,6 @@ void StageObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Tr
 	worldTransform_.rotate = transform.rotate;
 	worldTransform_.translate = transform.translate;
 
-	//当たり判定
-	stageObjectForLevelEditorCollider_ = std::make_unique<StageObjectForLevelEditorCollider>();
-
 }
 
 void StageObjectForLevelEditor::Update(){
@@ -24,8 +21,6 @@ void StageObjectForLevelEditor::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
-	//当たり判定用に座標を設定する
-	stageObjectForLevelEditorCollider_->SetObjectPosition(worldTransform_.GetWorldPosition());
 }
 
 void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight) {
@@ -39,4 +34,8 @@ void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& materi
 
 void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight) {
 	model_->Draw(worldTransform_, camera, material, spotLight);
+}
+
+Vector3 StageObjectForLevelEditor::GetWorldPosition(){
+	return worldTransform_.GetWorldPosition();
 }

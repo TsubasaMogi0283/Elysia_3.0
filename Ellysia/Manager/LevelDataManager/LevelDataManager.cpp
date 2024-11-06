@@ -14,6 +14,7 @@
 #include <Audio.h>
 
 #include "Model/AudioObjectForLevelEditor.h"
+#include <Model/StageObjectForLevelEditor.h>
 
 
 LevelDataManager* LevelDataManager::GetInstance(){
@@ -97,6 +98,8 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 			if (object.contains("collider")) {
 				nlohmann::json& collider = object["collider"];
 
+				objectData.isHavingCollider = true;
+
 				// コライダーの種別を取得
 				if (collider.contains("type")) {
 					objectData.colliderType = collider["type"];
@@ -141,10 +144,7 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 			}
 
 
-			//ステージ
-			if (objectData.type == "Stage") {
-
-			}
+			
 
 
 
@@ -168,8 +168,17 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 					objectData.levelAudioData.isLoop = audio["loop"];
 
 					//エリア上かどうか
-					objectData.levelAudioData.isOnArea = audio["on_area"];
+					//trueの場合エリア上でした音が鳴らない
+					//falseの場合リスナーと距離が離れると音が小さくなっていく
+					//この時コライダーいらない
+					if (objectData.isHavingCollider == true) {
+						objectData.levelAudioData.isOnArea = audio["on_area"];
 
+					}
+					else {
+						objectData.levelAudioData.isOnArea = false;
+					}
+					
 
 					//Audioフォルダの中で読み込み
 					std::string audioDir = leveldataPath_ + levelData.folderName + "/Audio/" + objectData.levelAudioData.type + "/";
@@ -198,39 +207,30 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 	
 	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
 
-
 		//モデルの生成
-		//まだ無い場合は生成する
-		//if (objectData.model == nullptr) {
-		//	//モデルの読み込み
-		//	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
-		//	//生成
-		//	objectData.model = Model::Create(modelHandle);
-		//}
 		if(objectData.type=="Stage") {
 			uint32_t audioHandle = 0;
 			audioHandle;
-			AudioObjectForLevelEditor* model=new AudioObjectForLevelEditor();
+
+			StageObjectForLevelEditor* stageObject = new StageObjectForLevelEditor();
 			
-
-			AudioObjectForLevelEditor* audioObject = new AudioObjectForLevelEditor();
-
 			//モデルの読み込み
 			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
-
+			
 			//オブジェクトの生成
-			objectData.object.reset(new AudioObjectForLevelEditor());
-			objectData.object->Initialize(modelHandle, objectData.transform);
+			stageObject->Initialize(modelHandle, objectData.transform);
+			objectData.objectForLeveEditor = stageObject;
 
 
-			//引数は今の所仮置き
-			//ここに入れてね
+			//コライダーがある場合
+			if (objectData.isHavingCollider == true) {
 
+				StageObjectForLevelEditorCollider* collider = new StageObjectForLevelEditorCollider();
+				collider->Initialize();
 
-			//model->Initialize(1, {});
-			//代入
-			//objectData.object = model;
+				objectData.levelDataObjectCollider = collider;
 
+			}
 		}
 		else if (objectData.type == "Audio") {
 			
@@ -255,33 +255,19 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			//ファイル名を記録
 			audioDataForLevelEditor.fileName= objectData.levelAudioData.fileName;
 
-			AudioObjectForLevelEditor* audioObject = new AudioObjectForLevelEditor();
-			audioObject->SetLevelDataAudioData(audioDataForLevelEditor);
-
-			//モデルの読み込み
-			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
-
-			//オブジェクトの生成
-			objectData.object.reset(new AudioObjectForLevelEditor());
-			objectData.object->Initialize(modelHandle, objectData.transform);
+			//AudioObjectForLevelEditor* audioObject = new AudioObjectForLevelEditor();
+			//audioObject->SetLevelDataAudioData(audioDataForLevelEditor);
+			//
+			////モデルの読み込み
+			//uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
+			//
+			////オブジェクトの生成
+			//objectData.object.reset(audioObject);
+			//objectData.object->Initialize(modelHandle, objectData.transform);
 		}
 
 		
 
-		//よく考えてみたらオブジェクトのクラスの中に
-		//ワールドトランスフォーム入れた方が良いのではないでしょうか
-		//少し違和感を感じたので
-		//更新処理に全てぶっこんだ方が良いかもね
-
-		////ワールドトランスフォームの初期化
-		//WorldTransform* worldTransform = new WorldTransform();
-		//worldTransform->Initialize();
-		//worldTransform->scale = objectData.transform.scale;
-		//worldTransform->rotate = objectData.transform.rotate;
-		//worldTransform->translate = objectData.transform.translate;
-		//
-		////配列に登録
-		//objectData.worldTransform = worldTransform;
 		
 	}
 }
@@ -451,12 +437,9 @@ void LevelDataManager::Update(const uint32_t& levelDataHandle){
 
 			for (auto& object : levelData->objectDatas) {
 				//更新
-				object.object->Update();
+				object.objectForLeveEditor->Update();
+				object.levelDataObjectCollider->SetObjectPosition(object.objectForLeveEditor->GetWorldPosition());
 			}
-
-
-
-
 			break; 
 		}
 	}
@@ -491,19 +474,18 @@ void LevelDataManager::Delete(const uint32_t& levelDataHandle){
 
 void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material, const DirectionalLight& directionalLight){
 	
+	camera;
+	material;
+	directionalLight;
+
+
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->modelHandle == levelDataHandle) {
 
-			////描画
-			//for (LevelData::ObjectData& object : levelData->objectDatas) {
-			//	object.model->Draw(*object.worldTransform, camera, material, directionalLight);
-			//}
-
-
+			//描画
 			for (auto& object : levelData->objectDatas) {
-				//更新
-				object.object->Draw(camera, material, directionalLight);
+				object.objectForLeveEditor->Draw(camera, material, directionalLight);
 			}
 
 			//無駄なループ処理を防ぐよ
@@ -515,19 +497,17 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 }
 
 void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material,const PointLight& pointLight){
+	camera;
+	material;
+	pointLight;
 
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->modelHandle == levelDataHandle) {
 
-			////描画
-			//for (LevelData::ObjectData& object : levelData->objectDatas) {
-			//	object.model->Draw(*object.worldTransform, camera, material, pointLight);
-			//}
-			
+			//描画
 			for (auto& object : levelData->objectDatas) {
-				//描画
-				object.object->Draw(camera, material, pointLight);
+				object.objectForLeveEditor->Draw(camera, material, pointLight);
 			}
 			
 			//無駄なループ処理を防ぐよ
@@ -540,21 +520,22 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 
 void LevelDataManager::Draw(const uint32_t& levelDataHandle,const Camera& camera,const Material& material,const SpotLight& spotLight){
 	
+	camera;
+	material;
+	spotLight;
+
+
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->modelHandle == levelDataHandle) {
 
-			////描画
-			//for (LevelData::ObjectData& object : levelData->objectDatas) {
-			//	object.model->Draw(*object.worldTransform, camera, material, spotLight);
-			//}
-			//無駄なループ処理を防ぐよ
-			
-			
+			//描画
 			for (auto& object : levelData->objectDatas) {
 				//描画
-				object.object->Draw(camera, material, spotLight);
+				object.objectForLeveEditor->Draw(camera, material, spotLight);
+				
 			}
+			//無駄なループ処理を防ぐよ
 			break;
 
 		}
@@ -576,7 +557,7 @@ void LevelDataManager::Release(){
 			//	delete object.model;
 			//}
 			//delete object.worldTransform;
-			
+			object;
 		}
 
 	}

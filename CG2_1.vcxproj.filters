@@ -573,9 +573,6 @@
     <ClCompile Include="Project\AllGameScene\GameScene\GameScene.cpp">
       <Filter>Project\GameScene\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Enemy\EnemyFlashLightCollision.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditor.cpp">
       <Filter>Ellysia\Source File\Manager</Filter>
     </ClCompile>
@@ -585,23 +582,26 @@
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.cpp">
       <Filter>Ellysia\Source File\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Player\PlayerCollisionToNormalEnemyAttack.cpp">
+      <Filter>Project\Player\PlayerCollisionToNormalEnemyAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\AudioTestPlayer.cpp">
+      <Filter>Project\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\EnemyFlashLightCollision.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.cpp">
+      <Filter>Ellysia\Source File\Manager</Filter>
+    </ClCompile>
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditorCollider.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Player\PlayerCollisionToNormalEnemyAttack.cpp">
-      <Filter>Project\Player\PlayerCollisionToNormalEnemyAttack</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Player\AudioTestPlayer.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Player\PlayerCollisionToAudioObject.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Project\Player\PlayerCollisionToAudioObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1027,12 +1027,6 @@
     <ClInclude Include="Project\AllGameScene\GameScene\GameScene.h">
       <Filter>Project\GameScene\GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Light\FlashLight\FlashLightCollision.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Enemy\EnemyFlashLightCollision.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditor.h">
       <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
     </ClInclude>
@@ -1045,23 +1039,32 @@
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditorCollider.h">
       <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditorCollider.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Player\PlayerCollisionToNormalEnemyAttack.h">
       <Filter>Project\Player\PlayerCollisionToNormalEnemyAttack</Filter>
     </ClInclude>
+    <ClInclude Include="Project\Enemy\EnemyFlashLightCollision.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.h">
+      <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Light\FlashLight\FlashLightCollision.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditorCollider.h">
+      <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
+    </ClInclude>
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
     </ClInclude>
     <ClInclude Include="Project\Player\AudioTestPlayer.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Project\Player</Filter>
     </ClInclude>
     <ClInclude Include="Project\Player\PlayerCollisionToAudioObject.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Project\Player\PlayerCollisionToAudioObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Shape\Plane.h">
+      <Filter>Ellysia\Header File\Math\Shape</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

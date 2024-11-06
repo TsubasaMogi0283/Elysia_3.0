@@ -1,13 +1,16 @@
 #include "StageObjectForLevelEditorCollider.h"
+#include <Collider/CollisionConfig.h>
 
 void StageObjectForLevelEditorCollider::Initialize() {
-	collisionType_ = CollisionType::PlaneType;
+	collisionType_ = CollisionType::AABBType;
 
-	//プレイヤー(レベルエディタのステージオブジェクト)
-	const uint32_t COLLISION_ATTRIBUTE_PLAYER4 = 0b1 << 9;
+	
+	//自分
+	SetCollisionAttribute(COLLISION_ATTRIBUTE_STAGE_OBJECT);
+	//相手
+	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER4);
 
-	//ステージオブジェクト(レベルエディタ)
-	const uint32_t COLLISION_ATTRIBUTE_STAGE_OBJECT = 0b1 << 10;
+
 
 }
 

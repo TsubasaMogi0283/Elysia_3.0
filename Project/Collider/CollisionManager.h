@@ -59,6 +59,14 @@ private:
 	/// <param name="colliderB"></param>
 	void CheckFanAndPointPair(Collider* colliderA, Collider* colliderB);
 
+	/// <summary>
+	/// 平面と点
+	/// </summary>
+	/// <param name="colliderA"></param>
+	/// <param name="colliderB"></param>
+	void CheckPlaneAndPoint(Collider* colliderA, Collider* colliderB);
+
+
 
 private:
 	std::list<Collider*>colliders_;

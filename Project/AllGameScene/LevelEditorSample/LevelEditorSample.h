@@ -9,7 +9,8 @@
 #include "Camera.h"
 #include "Material.h"
 #include <BackText.h>
-#include <LevelDataManager.h>
+#include "LevelDataManager.h"
+#include "Collider/CollisionManager.h"
 #include <Vignette.h>
 
 #include "Audio.h"
@@ -97,6 +98,11 @@ private:
 	//プレイヤー
 	std::unique_ptr<AudioTestPlayer>player_ = nullptr;
 	Vector3 playerDirection_ = {};
+
+
+	//コリジョンマネージャー
+	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+
 
 };
 

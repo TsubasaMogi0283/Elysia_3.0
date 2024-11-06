@@ -9,7 +9,7 @@ void CollisionManager::RegisterList(Collider* collider){
 	colliders_.push_back(collider);
 }
 
-//コライダー2つの衝突判定と応答
+
 void CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* colliderB) {
 
 	//コライダーAのワールド座標を取得
@@ -124,6 +124,9 @@ void CollisionManager::CheckFanAndPointPair(Collider* colliderA, Collider* colli
 		return;
 	}
 
+	
+
+
 	//衝突判定
 	if (IsFanCollision(colliderA->GetFan3D(), colliderB->GetWorldPosition())) {
 		colliderA->OnCollision();
@@ -134,6 +137,13 @@ void CollisionManager::CheckFanAndPointPair(Collider* colliderA, Collider* colli
 		colliderB->OffCollision();
 	}
 
+}
+
+void CollisionManager::CheckPlaneAndPoint(Collider* colliderA, Collider* colliderB){
+	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
+		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0) {
+		return;
+	}
 }
 
 
@@ -179,7 +189,7 @@ void CollisionManager::CheckAllCollision(){
 	}
 }
 
-//試しにclear抜いてみたら動作が凄く重くなった
+
 void CollisionManager::ClearList(){
 	colliders_.clear();
 }

@@ -56,14 +56,24 @@ public:
 		return direction_;
 	}
 
-private:
+	/// <summary>
+	/// コライダー取得
+	/// </summary>
+	/// <returns></returns>
+	PlayerCollisionToAudioObject* GetCollosion() const{
+		return collosion_.get();;
+	}
 
+
+
+private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 
 	//方向
 	Vector3 direction_ = {};
 
+	//コライダー
 	std::unique_ptr<PlayerCollisionToAudioObject>collosion_ = nullptr;
 
 };
