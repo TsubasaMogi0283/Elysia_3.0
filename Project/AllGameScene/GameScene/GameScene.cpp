@@ -120,7 +120,7 @@ void GameScene::Initialize() {
 	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
 	debugTower_.reset(Model::Create(debugTowerModelhandle));
 	debugTowerWorldTransform_.Initialize();
-	debugTowerWorldTransform_.translate_ = { .x = 1.0f,.y = 0.0f,.z = 2.0f };
+	debugTowerWorldTransform_.translate = { .x = 1.0f,.y = 0.0f,.z = 2.0f };
 	#pragma endregion
 	
 	
@@ -150,7 +150,7 @@ void GameScene::Initialize() {
 	#pragma region 扇の当たり判定用の球
 	debugFanCollisionSphereModel_.reset(Model::Create(weaponLightModel));
 	debugFanCollisionSphereWorldTransform_.Initialize();
-	debugFanCollisionSphereWorldTransform_.translate_ = { .x = 0.0f,.y = 0.0f,.z = 7.0f };
+	debugFanCollisionSphereWorldTransform_.translate = { .x = 0.0f,.y = 0.0f,.z = 7.0f };
 	debugFanCollisionSphereMaterial_.Initialize();
 	debugFanCollisionSphereMaterial_.lightingKinds_ = Spot;
 	debugFanCollisionSphereMaterial_.color_ = { .x = 0.0f,.y = 1.0f,.z = 0.0f,.w = 1.0f };
@@ -789,13 +789,15 @@ void GameScene::Update(GameManager* gameManager) {
 			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 
 			//攻撃用の判定が出ていたら登録
-			if (enemy->GetIsAttack() == true) {
+			if (enemy->GetEnemyAttackCollision()->GetIsTouch() == true) {
 				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 				
 			}
+			
 		}
 		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
-		
+		collisionManager_->RegisterList(flashLight_->GetFanCollision());
+
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		//1体しか出さないのにリストにする必要はあったのでしょうか・・
 		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
@@ -809,9 +811,6 @@ void GameScene::Update(GameManager* gameManager) {
 			}
 		}
 
-
-
-		
 
 		//もとに戻す
 		camera_.rotate_.x = -phi;
@@ -863,7 +862,6 @@ void GameScene::Update(GameManager* gameManager) {
 		//現在のプレイヤーの体力を取得
 		currentDisplayHP_ = player_->GetHP();
 		
-
 		//更新
 		material_.Update();
 

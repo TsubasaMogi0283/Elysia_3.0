@@ -82,24 +82,44 @@ public:
 
 #pragma region 基本セット
 
+	/// <summary>
+	/// 読み込み
+	/// </summary>
+	/// <param name="fileName"></param>
+	/// <returns></returns>
+	uint32_t Load(const std::string& fileName);
 
-	static uint32_t Load(const std::string& fileName);
-
-	static uint32_t LoadWave(const std::string& fileName);
+	/// <summary>
+	/// 読み込み(MP3)
+	/// </summary>
+	/// <param name="fileName"></param>
+	/// <returns></returns>
+	uint32_t LoadWave(const std::string& fileName);
 
 
 	/// <summary>
-	/// 
+	/// 読み込み(Wave)
 	/// </summary>
-	static uint32_t LoadMP3(const std::string& fileName);
+	uint32_t LoadMP3(const std::string& fileName);
 
-	
 	/// <summary>
 	/// 再生
 	/// </summary>
 	/// <param name="audioHandle"></param>
 	/// <param name="isLoop"></param>
-	void PlayWave(const uint32_t& audioHandle, bool isLoop);
+	void Play(const uint32_t& audioHandle,const bool& isLoop);
+
+	/// <summary>
+	/// 再生
+	/// </summary>
+	void Play(const uint32_t& audioHandle,const uint32_t& loopCount);
+
+	/// <summary>
+	/// 再生
+	/// </summary>
+	/// <param name="audioHandle"></param>
+	/// <param name="isLoop"></param>
+	void PlayWave(const uint32_t& audioHandle,const bool& isLoop);
 	
 	
 	/// <summary>
@@ -107,22 +127,21 @@ public:
 	/// </summary>
 	/// <param name="audioHandle"></param>
 	/// <param name="loopCount"></param>
-	void PlayWave(const uint32_t& audioHandle, int32_t loopCount);
+	void PlayWave(const uint32_t& audioHandle,const uint32_t& loopCount);
 
 	/// <summary>
 	/// 再生
 	/// </summary>
 	/// <param name="audioHandle"></param>
 	/// <param name="isLoop"></param>
-	void PlayMP3(const uint32_t& audioHandle, bool isLoop);
+	void PlayMP3(const uint32_t& audioHandle,const  bool& isLoop);
 
 	/// <summary>
 	/// 再生(ループ回数あり)
 	/// </summary>
 	/// <param name="audioHandle"></param>
 	/// <param name="loopCount"></param>
-
-	void PlayMP3(const uint32_t& audioHandle, uint32_t loopCount);
+	void PlayMP3(const uint32_t& audioHandle,const uint32_t& loopCount);
 
 
 	/// <summary>
@@ -137,12 +156,12 @@ public:
 	/// <param name="ハンドル名"></param>
 	void ResumeWave(const uint32_t& audioHandle);
 
+
 	/// <summary>
 	/// 停止
 	/// </summary>
-	/// <param name="ハンドル名"></param>
-	void StopWave(const uint32_t& audioHandle);
-
+	/// <param name="audioHandle"></param>
+	void Stop(const uint32_t& audioHandle);
 
 #pragma endregion
 

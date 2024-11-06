@@ -1,14 +1,15 @@
-#include "Collision.h"
-#include <VectorCalculation.h>
+#include "CollisionCalculation.h"
+
 #include <corecrt_math.h>
 #include <numbers>
 #include <cmath>
 #include <imgui.h>
-#include <SingleCalculation.h>
+
+#include "SingleCalculation.h"
+#include <VectorCalculation.h>
 
 
-//AABBとPointの当たり判定
-bool IsCollisionAABBAndPoint(const AABB& aabb, const Vector3& point){
+bool CollisionCalculation::IsCollisionAABBAndPoint(const AABB& aabb, const Vector3& point){
 #pragma region 手前
     //左上
     Vector3 frontLeftTop = { aabb.min.x,aabb .max.y,aabb .min.z};
@@ -48,7 +49,7 @@ bool IsCollisionAABBAndPoint(const AABB& aabb, const Vector3& point){
 
 }
 
-bool IsFanCollision(const Fan2D& fan, const Vector2& point){
+bool CollisionCalculation::IsFanCollision(const Fan2D& fan, const Vector2& point){
 
     //扇と点のベクトルを求める
     Vector2 vectorFanAndPont = { point.x - fan.position.x, point.y - fan.position.y };
@@ -146,7 +147,7 @@ bool IsFanCollision(const Fan2D& fan, const Vector2& point){
     return true;
 }
 
-bool IsFanCollision(const Fan3D& fan, const Vector3& point){
+bool CollisionCalculation::IsFanCollision(const Fan3D& fan, const Vector3& point){
     
     //扇と点のベクトルを求める
     Vector3 vectorFanAndPont = { 
@@ -304,12 +305,26 @@ bool IsFanCollision(const Fan3D& fan, const Vector3& point){
     }
     
 
+    return true;
+
+}
 
 
+bool CollisionCalculation::IsCollisionPlaneAndPoint(const Plane& plane, const Vector3& position){
+    //平面上にいない時除外する
+    if (position.y < plane.position.y) {
+        return false;
+    }
 
-    
+   //範囲外の時除外する
+    if(position.x < plane.position.x - plane.width / 2.0f ||
+        position.x > plane.position.x + plane.width / 2.0f ||
+        position.z < plane.position.z - plane.length / 2.0f ||
+        position.z > plane.position.z + plane.length / 2.0f){
+        
+        return false;
+    }
 
 
     return true;
-
 }

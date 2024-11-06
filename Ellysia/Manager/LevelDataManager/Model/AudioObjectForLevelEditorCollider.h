@@ -36,13 +36,7 @@ public:
 	/// <returns></returns>
 	Vector3 GetWorldPosition()override;
 
-
-
-
-
 private:
-
-
 
 
 

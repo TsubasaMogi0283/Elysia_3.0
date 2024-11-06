@@ -10,7 +10,7 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 
 	//初期化
 	worldTransform_.Initialize();
-	worldTransform_.scale_ = { 5.0f,5.0f,5.0f };
+	worldTransform_.scale = { 5.0f,5.0f,5.0f };
 	playerWorldPosition_ = {};
 
 
@@ -37,7 +37,7 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 void PlayerCollisionToNormalEnemyAttack::Update(){
 
 	//プレイヤーの座標を持ってくる
-	worldTransform_.translate_ = playerWorldPosition_;
+	worldTransform_.translate = playerWorldPosition_;
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
@@ -67,9 +67,18 @@ Vector3 PlayerCollisionToNormalEnemyAttack::GetWorldPosition(){
 }
 
 void PlayerCollisionToNormalEnemyAttack::OnCollision(){
-	isTouch_ = true;
+#ifdef _DEBUG
+	ImGui::Begin("敵攻撃");
+	ImGui::End();
+#endif // DEBUG
+
+	
+
 }
 
 void PlayerCollisionToNormalEnemyAttack::OffCollision(){
-	isTouch_ = false;
+#ifdef _DEBUG
+	ImGui::Begin("敵攻撃しない");
+	ImGui::End();
+#endif // DEBUG
 }

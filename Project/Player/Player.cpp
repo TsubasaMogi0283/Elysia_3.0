@@ -34,7 +34,7 @@ void Player::Initialize(){
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	const Vector3 INITIAL_POSITION = { .x=0.0f,.y=0.0f,.z=-15.0f };
-	worldTransform_.translate_ = INITIAL_POSITION;
+	worldTransform_.translate = INITIAL_POSITION;
 
 	//半径
 	radius_ = 1.0f;
@@ -83,27 +83,27 @@ void Player::Update(){
 			moveSpeed = NORMAL_MOVE_SPEED;
 		}
 		//加算
-		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, VectorCalculation::Multiply(moveDirection_, moveSpeed));
+		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, VectorCalculation::Multiply(moveDirection_, moveSpeed));
 
 	}
 	
 
 	//ステージの外には行けないようにする
 	//左
-	if (worldTransform_.translate_.x < stageRect_.leftBack.x + radius_) {
-		worldTransform_.translate_.x = stageRect_.leftBack.x + radius_;
+	if (worldTransform_.translate.x < stageRect_.leftBack.x + radius_) {
+		worldTransform_.translate.x = stageRect_.leftBack.x + radius_;
 	}
 	//右
-	if (worldTransform_.translate_.x > stageRect_.rightBack.x - radius_) {
-		worldTransform_.translate_.x = stageRect_.rightBack.x - radius_;
+	if (worldTransform_.translate.x > stageRect_.rightBack.x - radius_) {
+		worldTransform_.translate.x = stageRect_.rightBack.x - radius_;
 	}
 	//奥
-	if (worldTransform_.translate_.z > stageRect_.leftBack.z - radius_) {
-		worldTransform_.translate_.z = stageRect_.leftBack.z - radius_;
+	if (worldTransform_.translate.z > stageRect_.leftBack.z - radius_) {
+		worldTransform_.translate.z = stageRect_.leftBack.z - radius_;
 	}
 	//手前
-	if (worldTransform_.translate_.z < stageRect_.leftFront.z + radius_) {
-		worldTransform_.translate_.z = stageRect_.leftFront.z + radius_;
+	if (worldTransform_.translate.z < stageRect_.leftFront.z + radius_) {
+		worldTransform_.translate.z = stageRect_.leftFront.z + radius_;
 	}
 
 	//ワールドトランスフォームの更新
@@ -129,15 +129,14 @@ void Player::Update(){
 
 
 
-	////ここでずっと当たっているみたい
-	////通常の敵に当たった場合
-	//if (colliderToNormalEnemy_->GetIsTouch() == true) {
-	//	//体力を1減らす
-	//	--hp_;
-	//
-	//	//振動させる
-	//	isDameged_ = true;
-	//}
+	//通常の敵に当たった場合
+	if (colliderToNormalEnemy_->GetIsTouch() == true) {
+		//体力を1減らす
+		--hp_;
+	
+		//振動させる
+		isDameged_ = true;
+	}
 
 
 	//攻撃された場合
@@ -174,7 +173,7 @@ void Player::Update(){
 		ImGui::TreePop();
 	}
 	ImGui::InputInt("downTime", &downTime_);
-	ImGui::InputFloat3("Transrate", &worldTransform_.translate_.x);
+	ImGui::InputFloat3("Transrate", &worldTransform_.translate.x);
 	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
 	ImGui::InputInt("moveCondition_", &condition);
 	ImGui::End();

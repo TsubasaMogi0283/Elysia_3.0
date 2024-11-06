@@ -6,7 +6,9 @@
 #include "AABB.h"
 #include "Fan.h"
 
-//衝突の種類
+/// <summary>
+/// 衝突の種類
+/// </summary>
 enum CollisionType {
 	//点
 	PointType,
@@ -20,10 +22,13 @@ enum CollisionType {
 	BoxType,
 	//扇
 	FanType,
-
+	//円
+	CircleType,
 };
 
-//衝突判定
+/// <summary>
+/// 衝突
+/// </summary>
 class Collider{
 public:
 	/// <summary>
@@ -52,7 +57,6 @@ public:
 		return radius_;
 	}
 
-
 #pragma region AABB
 
 	/// <summary>
@@ -73,12 +77,11 @@ public:
 
 #pragma endregion
 
-
 	/// <summary>
 	/// 3Dの扇の取得
 	/// </summary>
 	/// <returns></returns>
-	inline Fan3D GetFan3D () { 
+	inline Fan3D GetFan3D () const{ 
 		return fan3D_;
 	};
 
@@ -86,9 +89,18 @@ public:
 	/// 2Dの扇の取得
 	/// </summary>
 	/// <returns></returns>
-	inline Fan2D GetFan2D() {
+	inline Fan2D GetFan2D() const{
 		return fan2D_;
 	};
+
+	/// <summary>
+	/// 平面の取得
+	/// </summary>
+	/// <returns></returns>
+	inline Plane GetPlane()const {
+		return plane_;
+	}
+
 
 	/// <summary>
 	/// 衝突判定で使う形の種類の値を取得
@@ -130,8 +142,6 @@ protected:
 
 #pragma endregion
 
-
-
 #pragma region AABB
 
 	//AABBのmax部分に加算する縦横高さのサイズ
@@ -144,9 +154,6 @@ protected:
 
 #pragma endregion
 
-
-
-
 #pragma region 扇
 	//3D
 	Fan3D fan3D_ = {};
@@ -157,8 +164,9 @@ protected:
 
 #pragma endregion
 
-
-
+#pragma region 平面
+	Plane plane_ = {};
+#pragma endregion
 
 private:
 	

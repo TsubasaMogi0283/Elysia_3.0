@@ -44,27 +44,31 @@ struct SoundData {
 
 struct AudioInformation {
 
-	//読み込んだテクスチャの名前
-	std::string fileName = {};
+	//読み込んだオーディオの名前
+	std::string fileName;
+
+	//拡張子
+	std::string extension;
 
 	//サウンドデータ
 	SoundData soundData = {};
 
 	//サウンドボイス
-	IXAudio2SourceVoice* sourceVoice = nullptr;
+	IXAudio2SourceVoice* sourceVoice;
 
 
 	
 	//ソースリーダー
-	IMFSourceReader* sourceReader = nullptr;
+	IMFSourceReader* sourceReader;
 
+	//メディアデータ
 	std::vector<BYTE> mediaData;
 
 	//ハンドル
-	uint32_t handle = 0;
+	uint32_t handle;
 
 	//Pan用
-	float left = 0.0f;
-	float right = 0.0f;
+	float left;
+	float right;
 
 };

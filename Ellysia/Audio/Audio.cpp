@@ -219,7 +219,7 @@ uint32_t Audio::LoadWave(const std::string& fileName) {
 	Audio::GetInstance()->audioInformation_[fileName].fileName = fileName;
 	Audio::GetInstance()->audioInformation_[fileName].handle = handle;
 	Audio::GetInstance()->audioInformation_[fileName].soundData = newSoundData;
-
+	Audio::GetInstance()->audioInformation_[fileName].extension = "wave";
 	
 
 	//handleを返す
@@ -229,8 +229,6 @@ uint32_t Audio::LoadWave(const std::string& fileName) {
 
 
 }
-
-
 
 
 uint32_t Audio::LoadMP3(const std::string& fileName) {
@@ -251,6 +249,7 @@ uint32_t Audio::LoadMP3(const std::string& fileName) {
 	//記録
 	Audio::GetInstance()->audioInformation_[fileName].fileName = fileName;
 	Audio::GetInstance()->audioInformation_[fileName].handle = handle;
+	Audio::GetInstance()->audioInformation_[fileName].extension = "mp3";
 
 
 	//stringからLPCWCHARに変換する
@@ -316,8 +315,33 @@ uint32_t Audio::LoadMP3(const std::string& fileName) {
 	return handle;
 }
 
+void Audio::Play(const uint32_t& audioHandle,const bool& isLoop){
+	//ファイルキーの取得
+	std::string fileKey = GetAudioInformationKey(audioHandle);
 
-void Audio::PlayMP3(const uint32_t& audioHandle, bool isLoop) {
+	if (audioInformation_[fileKey].extension == "wave") {
+		PlayWave(audioHandle, isLoop);
+	}
+	else if (audioInformation_[fileKey].extension == "mp3") {
+		PlayMP3(audioHandle, isLoop);
+	}
+}
+
+void Audio::Play(const uint32_t& audioHandle,const uint32_t& loopCount){
+	//ファイルキーの取得
+	std::string fileKey = GetAudioInformationKey(audioHandle);
+
+	if (audioInformation_[fileKey].extension == "wave") {
+		PlayWave(audioHandle, loopCount);
+	}
+	else if (audioInformation_[fileKey].extension == "mp3") {
+		PlayMP3(audioHandle, loopCount);
+	}
+	
+}
+
+
+void Audio::PlayMP3(const uint32_t& audioHandle,const bool& isLoop) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
@@ -346,7 +370,7 @@ void Audio::PlayMP3(const uint32_t& audioHandle, bool isLoop) {
 	assert(SUCCEEDED(hResult));
 }
 
-void Audio::PlayMP3(const uint32_t& audioHandle, uint32_t loopCount) {
+void Audio::PlayMP3(const uint32_t& audioHandle,const uint32_t& loopCount) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 	HRESULT hResult = audioInformation_[fileKey].sourceVoice->FlushSourceBuffers();
@@ -370,11 +394,7 @@ void Audio::PlayMP3(const uint32_t& audioHandle, uint32_t loopCount) {
 	assert(SUCCEEDED(hResult));
 }
 
-
-
-
-//音声再生
-void Audio::PlayWave(const uint32_t& audioHandle, bool isLoop) {
+void Audio::PlayWave(const uint32_t& audioHandle,const bool& isLoop) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
@@ -406,7 +426,7 @@ void Audio::PlayWave(const uint32_t& audioHandle, bool isLoop) {
 }
 
 //ループ回数設定版
-void Audio::PlayWave(const uint32_t& audioHandle, int32_t loopCount) {
+void Audio::PlayWave(const uint32_t& audioHandle,const uint32_t& loopCount) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
@@ -451,8 +471,7 @@ void Audio::ResumeWave(const uint32_t& audioHandle) {
 	assert(SUCCEEDED(hResult));
 }
 
-//音声停止
-void Audio::StopWave(const uint32_t& audioHandle) {
+void Audio::Stop(const uint32_t& audioHandle){
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 

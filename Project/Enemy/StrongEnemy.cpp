@@ -15,8 +15,8 @@ void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& 
 	//ワールドトランスフォーム
 	worldTransform_.Initialize();
 	const float SCALE_SIZE = 2.0f;
-	worldTransform_.scale_ = { .x = SCALE_SIZE ,.y = SCALE_SIZE ,.z = SCALE_SIZE };
-	worldTransform_.translate_ = position;
+	worldTransform_.scale = { .x = SCALE_SIZE ,.y = SCALE_SIZE ,.z = SCALE_SIZE };
+	worldTransform_.translate = position;
 
 
 	//スピード
@@ -90,7 +90,7 @@ void StrongEnemy::Update(){
 
 		//加算
 		Vector3 moveSpeedVelocity = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
-		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, moveSpeedVelocity);
+		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, moveSpeedVelocity);
 
 
 		break;
@@ -107,7 +107,7 @@ void StrongEnemy::Update(){
 
 		//加算
 		Vector3 newSpeed = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
-		worldTransform_.translate_ = VectorCalculation::Add(worldTransform_.translate_, newSpeed);
+		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, newSpeed);
 
 
 
@@ -130,7 +130,7 @@ void StrongEnemy::Update(){
 	//向きを計算しモデルを回転させる
 	float directionToRotateY = std::atan2f(-direction_.z, direction_.x);
 	const float ROTATE_OFFSET = -std::numbers::pi_v<float> / 2.0f;
-	worldTransform_.rotate_.y = directionToRotateY + ROTATE_OFFSET;
+	worldTransform_.rotate.y = directionToRotateY + ROTATE_OFFSET;
 
 	
 
@@ -149,7 +149,7 @@ void StrongEnemy::Update(){
 
 }
 
-void StrongEnemy::Draw(Camera& camera, SpotLight& spotLight){
+void StrongEnemy::Draw(const Camera& camera,const SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera, material_, spotLight);
 }
 
@@ -166,9 +166,9 @@ void StrongEnemy::OffCollision()
 
 Vector3 StrongEnemy::GetWorldPosition(){
 	Vector3 position = {
-		.x = worldTransform_.worldMatrix_.m[3][0],
-		.y = worldTransform_.worldMatrix_.m[3][1],
-		.z = worldTransform_.worldMatrix_.m[3][2]
+		.x = worldTransform_.worldMatrix.m[3][0],
+		.y = worldTransform_.worldMatrix.m[3][1],
+		.z = worldTransform_.worldMatrix.m[3][2]
 	};
 
 	return position;

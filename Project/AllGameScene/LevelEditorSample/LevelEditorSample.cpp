@@ -1,14 +1,15 @@
 #include "LevelEditorSample.h"
 #include <imgui.h>
-#include <Input.h>
-#include <AdjustmentItems.h>
-#include "GameScene/GameScene.h"
+#include <numbers>
 
+#include "Input.h"
+#include "GameScene/GameScene.h"
+#include "AdjustmentItems.h"
 #include "GameManager.h"
 #include "ModelManager.h"
 #include "AnimationManager.h"
-#include <numbers>
-#include <TextureManager.h>
+#include "TextureManager.h"
+#include <VectorCalculation.h>
 
 
 LevelEditorSample::LevelEditorSample(){
@@ -16,14 +17,11 @@ LevelEditorSample::LevelEditorSample(){
 	levelEditor_ = LevelDataManager::GetInstance();
 	//オーディオのインスタンスを取得
 	audio_ = Audio::GetInstance();
+	//インプットのインスタンスを取得
+	input_ = Input::GetInstance();
 }
 
 void LevelEditorSample::Initialize(){
-
-
-	
-
-	
 
 	//平行光源の初期化
 	directionalLight_.Initialize();
@@ -37,13 +35,16 @@ void LevelEditorSample::Initialize(){
 	camera_.translate_ = {.x = 0.0f,.y = 2.0f,.z = -30.0f };
 
 	//ポストエフェクト
-	back_ = std::make_unique<Vignette>();
+	back_ = std::make_unique<BackText>();
 	back_->Initialize();
 
 
+	player_ = std::make_unique<AudioTestPlayer>();
+	player_->Initialize();
+
 
 	//読み込み
-	levelHandle_ = levelEditor_->Load("Test/AudioAreaTestOne.json");
+	levelHandle_ = levelEditor_->Load("Test/AudioAreaTestGroundOnly.json");
 
 	//オーディオの読み込み
 	uint32_t mp3Test = audio_->Load("Resources/Audio/Sample/WIP.mp3");
@@ -56,6 +57,8 @@ void LevelEditorSample::Initialize(){
 }
 
 void LevelEditorSample::Update(GameManager* gameManager){
+
+	collisionManager_->ClearList();
 
 #ifdef _DEBUG
 	ImGui::Begin("Camera"); 
@@ -77,13 +80,68 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 	gameManager;
 
+
+
+
+
+	//移動
+	playerDirection_ = {};
+	//右
+	if (input_->IsPushKey(DIK_D) == true) {
+		playerDirection_.x += 1.0f;
+	}
+	//左
+	else if (input_->IsPushKey(DIK_A) == true) {
+		playerDirection_.x -= 1.0f;
+	}
+	//上
+	else if (input_->IsPushKey(DIK_W) == true) {
+		playerDirection_.z += 1.0f;
+	}
+	//下
+	else if (input_->IsPushKey(DIK_S) == true) {
+		playerDirection_.z -= 1.0f;
+	}
+
+
+	
+
+
+
+	//プレイヤーの更新
+	player_->SetDirection(playerDirection_);
+	player_->Update();
+	//プレイヤーのコライダーを登録
+	collisionManager_->RegisterList(player_->GetCollosion());
+
+	//レベルエディタで使うリスナーの設定
+	Listener listener = {
+		.position = player_->GetWorldPosition(),
+		.move = player_->GetDirection(),
+	};
+	levelEditor_->SetListener(levelHandle_, listener);
+
 	//レベルエディタの更新
 	levelEditor_->Update(levelHandle_);
 	//マテリアルの更新
 	material_.Update();
 	//平行光源の更新
 	directionalLight_.Update();
+
+
+
+
+	//衝突判定の計算
+	collisionManager_->CheckAllCollision();
+
+
+
+
 	//カメラの更新
+	//高さの補正も足す
+	const Vector3 OFFSET = { .x = 0.0f,.y = 2.0f,.z = 0.0f };
+	Vector3 playerViewPoint = VectorCalculation::Add(player_->GetWorldPosition(), OFFSET);
+	camera_.translate_ = playerViewPoint;
 	camera_.Update();
 
 }
@@ -93,7 +151,7 @@ void LevelEditorSample::DrawSpriteBack()
 }
 
 void LevelEditorSample::DrawObject3D(){
-	//レベルエディタのモデルを描画
+	//レベルエディタのモデルを描画     
 	levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
 }
 

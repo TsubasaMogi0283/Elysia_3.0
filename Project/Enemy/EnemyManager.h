@@ -28,7 +28,7 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="normalEnemymodel"></param>
-	void Initialize(uint32_t& normalEnemyModel, uint32_t &strongEnemyModel);
+	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel);
 	
 	/// <summary>
 	/// 更新
@@ -39,7 +39,7 @@ public:
 	/// 描画
 	/// </summary>
 	/// <param name="spotLight"></param>
-	void Draw(Camera& camera ,SpotLight& spotLight);
+	void Draw(const Camera& camera ,const SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ

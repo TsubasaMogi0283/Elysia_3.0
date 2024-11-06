@@ -39,7 +39,7 @@ public:
 	/// <param name="worldTransform">ワールドトランスフォーム</param>
 	/// <param name="camera">カメラ</param>
 	/// <param name="directionalLight">平行光源</param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight);
+	void Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const DirectionalLight& directionalLight);
 
 	/// <summary>
 	/// 描画
@@ -47,7 +47,7 @@ public:
 	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="pointLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight);
+	void Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const PointLight& pointLight);
 
 	/// <summary>
 	/// 描画
@@ -55,7 +55,7 @@ public:
 	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="spotLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight);
+	void Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const SpotLight& spotLight);
 
 #pragma endregion
 

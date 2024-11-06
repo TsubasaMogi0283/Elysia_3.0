@@ -1,6 +1,6 @@
 #include "StageObjectForLevelEditor.h"
 
-void StageObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Vector3& position) {
+void StageObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Transform& transform) {
 	
 	//レベルエディタ用のオブジェクトのタイプ
 	objectType_ = LevelEditorObjectType::StageObject;
@@ -10,10 +10,9 @@ void StageObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Ve
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
-	worldTransform_.translate_ = position;
-
-	//当たり判定
-	stageObjectForLevelEditorCollider_ = std::make_unique<StageObjectForLevelEditorCollider>();
+	worldTransform_.scale = transform.scale;
+	worldTransform_.rotate = transform.rotate;
+	worldTransform_.translate = transform.translate;
 
 }
 
@@ -22,21 +21,21 @@ void StageObjectForLevelEditor::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
-	//当たり判定用に座標を設定する
-	stageObjectForLevelEditorCollider_->SetObjectPosition(worldTransform_.GetWorldPosition());
 }
 
-void StageObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight) {
-	worldTransform;
+void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight) {
+
 	model_->Draw(worldTransform_, camera, material, directionalLight);
 }
 
-void StageObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight) {
-	worldTransform;
+void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const PointLight& pointLight) {
 	model_->Draw(worldTransform_, camera, material, pointLight);
 }
 
-void StageObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight) {
-	worldTransform;
+void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight) {
 	model_->Draw(worldTransform_, camera, material, spotLight);
+}
+
+Vector3 StageObjectForLevelEditor::GetWorldPosition(){
+	return worldTransform_.GetWorldPosition();
 }

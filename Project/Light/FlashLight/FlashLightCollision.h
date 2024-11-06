@@ -24,11 +24,21 @@ public:
 	~FlashLightCollision() = default;
 
 public:
+	/// <summary>
+	/// 3D扇の設定
+	/// </summary>
+	/// <param name="fan3D"></param>
 	inline void SetFan3D(Fan3D& fan3D) {
 		this->fan3D_ = fan3D;
 	}
 
-
+	/// <summary>
+	/// ワールド座標を設定
+	/// </summary>
+	/// <param name="position"></param>
+	void SetWorldPosition(const Vector3& position) {
+		this->playerWorldPosition_ = position;
+	}
 
 
 	/// <summary>
@@ -46,5 +56,9 @@ public:
 	/// 非接触
 	/// </summary>
 	void OffCollision()override;
+
+
+private:
+	Vector3 playerWorldPosition_ = {};
 
 };

@@ -234,7 +234,7 @@ void SkyBox::Draw(WorldTransform& worldTransform, Camera& camera) {
 	//IBVを設定
 	//DirectXSetup::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, worldTransform.bufferResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, worldTransform.bufferResource->GetGPUVirtualAddress());
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, camera.bufferResource_->GetGPUVirtualAddress());
 
 	if (textureHandle_ != 0) {

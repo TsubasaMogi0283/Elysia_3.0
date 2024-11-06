@@ -2,7 +2,7 @@
 
 
 
-void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Vector3& position){
+void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Transform& transform){
 	
 	//レベルエディタ用のオブジェクトのタイプ
 	objectType_ = LevelEditorObjectType::AudioObject;
@@ -10,13 +10,15 @@ void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Ve
 	//モデルの生成
 	model_.reset(Model::Create(modelhandle));
 
-	//ワールドトランスフォーム
+	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
-	worldTransform_.translate_ = position;
+	worldTransform_.scale = transform.scale;
+	worldTransform_.rotate = transform.rotate;
+	worldTransform_.translate = transform.translate;
 
-	//コライダーの生成
-	audioObjectForLevelEditorCollider_ = std::make_unique<AudioObjectForLevelEditorCollider>();
-	
+
+	audio_ = Audio::GetInstance();
+
 
 }
 
@@ -24,31 +26,25 @@ void AudioObjectForLevelEditor::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
-	//コライダーに座標を送る
-	audioObjectForLevelEditorCollider_->SetObjectPosition(worldTransform_.GetWorldPosition());
 
 }
 
-void AudioObjectForLevelEditor::SetAudio(const std::string& filePath){
-	filePath;
-	//オーディオの生成
-	//audio_.reset(Audio::GetInstance());
-	//audioHandle_=audio_->Load(filePath);
 
-}
-
-void AudioObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, DirectionalLight& directionalLight){
-
-	worldTransform;
+void AudioObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight){
+	//モデルの描画
 	model_->Draw(worldTransform_, camera, material, directionalLight);
 }
 
-void AudioObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, PointLight& pointLight){
-	worldTransform;
+void AudioObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const PointLight& pointLight){
+	//モデルの描画
 	model_->Draw(worldTransform_, camera, material, pointLight);
 }
 
-void AudioObjectForLevelEditor::Draw(WorldTransform& worldTransform, Camera& camera, Material& material, SpotLight& spotLight){
-	worldTransform;
+void AudioObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight){
+	//モデルの描画
 	model_->Draw(worldTransform_, camera, material, spotLight);
+}
+
+Vector3 AudioObjectForLevelEditor::GetWorldPosition(){
+	return worldTransform_.GetWorldPosition();
 }

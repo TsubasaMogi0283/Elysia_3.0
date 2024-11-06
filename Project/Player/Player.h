@@ -7,6 +7,7 @@
 #include "PlayerCollisionToStrongEnemy.h"
 #include "PlayerCollisionToNormalEnemyAttack.h"
 #include "Listener/ListenerForLevelEditor.h"
+#include "Light/FlashLight/FlashLight.h"
 
 struct Camera;
 struct SpotLight;
@@ -28,9 +29,8 @@ enum PlayerMoveCondition {
 
 /// <summary>
 /// プレイヤー
-/// 「プレイヤー = Collider」というわけではないのでCollider継承させるのやめようよ
 /// </summary>
-class Player:public ListenerForLevelEditor {
+class Player {
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -61,21 +61,25 @@ public:
 	~Player();
 
 public:
-	/// <summary>
-	/// ワールド座標の取得
-	/// </summary>
-	/// <returns></returns>
-	inline Vector3 GetWorldPosition()override {
-		return worldTransform_.GetWorldPosition();
-	}
 
 	inline float GetRadius()const {
 		return radius_;
 	}
 
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetWorldPosition()const {
+		return worldTransform_.GetWorldPosition();
+	}
 
 
-	inline Vector3 GetDirection()override {
+	/// <summary>
+	/// 方向
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetDirection() {
 		return moveDirection_;
 	}
 
@@ -160,6 +164,9 @@ public:
 		return isDameged_;
 	}
 
+
+
+
 	/// <summary>
 	/// 通常の敵の当たり判定
 	/// </summary>
@@ -239,10 +246,14 @@ private:
 
 	//当たり判定(通常の敵)
 	std::unique_ptr<PlayerCollisionToNormalEnemyAttack>colliderToNormalEnemy_ = nullptr;
+
+
 	//当たり判定(一発アウトの敵用)
 	std::unique_ptr<PlayerCollisionToStrongEnemy>collisionToStrongEnemy_ = nullptr;
 
 
+	//懐中電灯
+	//std::unique_ptr<FlashLight>flashLight_ = nullptr;
 
 };
 

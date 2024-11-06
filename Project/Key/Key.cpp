@@ -10,8 +10,8 @@ void Key::Initialize(uint32_t& modelhandle, Vector3& position){
 	const float SCALE = 0.4f;
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
-	worldTransform_.translate_ = position;
-	worldTransform_.scale_ = { SCALE ,SCALE ,SCALE };
+	worldTransform_.translate = position;
+	worldTransform_.scale = { SCALE ,SCALE ,SCALE };
 
 	//半径
 	//と言っても少しだけ大きくして取りやすくする
@@ -42,9 +42,9 @@ void Key::PickedUp(){
 
 Vector3 Key::GetWorldPosition()const{
 	Vector3 result = {};
-	result.x = worldTransform_.worldMatrix_.m[3][0];
-	result.y = worldTransform_.worldMatrix_.m[3][1];
-	result.z = worldTransform_.worldMatrix_.m[3][2];
+	result.x = worldTransform_.worldMatrix.m[3][0];
+	result.y = worldTransform_.worldMatrix.m[3][1];
+	result.z = worldTransform_.worldMatrix.m[3][2];
 
 	return result;
 }
