@@ -1,13 +1,14 @@
-#include "Collision.h"
-#include <VectorCalculation.h>
+#include "CollisionCalculation.h"
+
 #include <corecrt_math.h>
 #include <numbers>
 #include <cmath>
 #include <imgui.h>
-#include <SingleCalculation.h>
+
+#include "SingleCalculation.h"
+#include <VectorCalculation.h>
 
 
-//AABBとPointの当たり判定
 bool CollisionCalculation::IsCollisionAABBAndPoint(const AABB& aabb, const Vector3& point){
 #pragma region 手前
     //左上
@@ -310,12 +311,12 @@ bool CollisionCalculation::IsFanCollision(const Fan3D& fan, const Vector3& point
 
 
 bool CollisionCalculation::IsCollisionPlaneAndPoint(const Plane& plane, const Vector3& position){
-    //平面上にいない時除外
+    //平面上にいない時除外する
     if (position.y < plane.position.y) {
         return false;
     }
 
-   //範囲外は除外
+   //範囲外の時除外する
     if(position.x < plane.position.x - plane.width / 2.0f ||
         position.x > plane.position.x + plane.width / 2.0f ||
         position.z < plane.position.z - plane.length / 2.0f ||

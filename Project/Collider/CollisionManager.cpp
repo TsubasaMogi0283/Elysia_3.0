@@ -2,7 +2,7 @@
 #include <VectorCalculation.h>
 
 #include "AABB.h"
-#include <Collision.h>
+#include <CollisionCalculation.h>
 
 void CollisionManager::RegisterList(Collider* collider){
 	//引数から登録
@@ -114,7 +114,7 @@ void CollisionManager::CheckAABBCollisionPair(Collider* colliderA, Collider* col
 
 
 
-void CollisionManager::CheckFanAndPointPair(Collider* colliderA, Collider* colliderB){
+void CollisionManager::CheckFanAndPoint(Collider* colliderA, Collider* colliderB){
 
 	//衝突フィルタリング
 	//ビット演算だから&で
@@ -127,8 +127,8 @@ void CollisionManager::CheckFanAndPointPair(Collider* colliderA, Collider* colli
 	
 
 
-	//衝突判定
-	if (IsFanCollision(colliderA->GetFan3D(), colliderB->GetWorldPosition())) {
+	//衝突判定の計算
+	if (CollisionCalculation::IsFanCollision(colliderA->GetFan3D(), colliderB->GetWorldPosition())) {
 		colliderA->OnCollision();
 		colliderB->OnCollision();
 	}
@@ -143,6 +143,16 @@ void CollisionManager::CheckPlaneAndPoint(Collider* colliderA, Collider* collide
 	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
 		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0) {
 		return;
+	}
+
+	//衝突判定の計算
+	if (CollisionCalculation::IsCollisionPlaneAndPoint(colliderA->GetPlane(), colliderB->GetWorldPosition())) {
+		colliderA->OnCollision();
+		colliderB->OnCollision();
+	}
+	else {
+		colliderA->OffCollision();
+		colliderB->OffCollision();
 	}
 }
 
@@ -180,9 +190,13 @@ void CollisionManager::CheckAllCollision(){
 			//扇と点
 			if (colliderA->GetCollisionType() == CollisionType::FanType &&
 				colliderB->GetCollisionType() == CollisionType::PointType) {
-				CheckFanAndPointPair(colliderA, colliderB);
+				CheckFanAndPoint(colliderA, colliderB);
 			}
-			
+			//扇と点
+			if (colliderA->GetCollisionType() == CollisionType::PlaneType &&
+				colliderB->GetCollisionType() == CollisionType::PointType) {
+				CheckPlaneAndPoint(colliderA, colliderB);
+			}
 
 		}
 

@@ -495,7 +495,7 @@
     <ClCompile Include="Project\Enemy\Enemy.cpp">
       <Filter>Project\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Math\Collision\Collision.cpp">
+    <ClCompile Include="Ellysia\Math\Collision\CollisionCalculation.cpp">
       <Filter>Project\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Project\Collider\CollisionManager.cpp">
@@ -940,7 +940,7 @@
     <ClInclude Include="Project\Collider\Collider.h">
       <Filter>Project\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\Collision\Collision.h">
+    <ClInclude Include="Ellysia\Math\Collision\CollisionCalculation.h">
       <Filter>Project\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Project\Collider\CollisionConfig.h">
