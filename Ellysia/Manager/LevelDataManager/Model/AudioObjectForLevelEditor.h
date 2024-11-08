@@ -98,13 +98,7 @@ public:
 	/// <returns></returns>
 	Vector3 GetWorldPosition()override;
 
-	/// <summary>
-	/// 衝突下かどうかの設定
-	/// </summary>
-	/// <param name="isTouch"></param>
-	void SetIsTouch(const bool& isTouch) {
-		this->isTouch_ = isTouch;
-	}
+	
 
 	
 private:

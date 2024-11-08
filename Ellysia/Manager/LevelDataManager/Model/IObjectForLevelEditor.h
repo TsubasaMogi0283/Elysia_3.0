@@ -75,6 +75,14 @@ public:
 	/// <returns></returns>
 	virtual Vector3 GetWorldPosition() = 0;
 
+	/// <summary>
+	/// 衝突したかどうかの設定
+	/// Colliderから持ってくる
+	/// </summary>
+	/// <param name="isTouch"></param>
+	void SetIsTouch(const bool& isTouch) {
+		this->isTouch_ = isTouch;
+	}
 
 protected:
 	//モデル
@@ -86,5 +94,9 @@ protected:
 	//オブジェクトのタイプ
 	//LevelEditorObjectTypeから選ぶよ
 	uint32_t objectType_ = 0u;
+
+
+	//衝突
+	bool isTouch_ = false;
 
 };

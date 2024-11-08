@@ -26,6 +26,15 @@ void AudioObjectForLevelEditor::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
+#ifdef _DEBUG
+
+	Vector3 position = worldTransform_.GetWorldPosition();
+	ImGui::Begin("オーディオオブジェクト"); 
+	ImGui::InputFloat3("位置", &position.x);
+	ImGui::End();
+#endif // _DEBUG
+
+
 
 }
 

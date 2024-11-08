@@ -6,9 +6,6 @@ void PlayerCollisionToAudioObject::Initialize(){
 	//点の方が良いかも
 	collisionType_ = CollisionType::PointType;
 
-	
-
-
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_PLAYER3);
 	//相手

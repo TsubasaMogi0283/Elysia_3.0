@@ -44,7 +44,7 @@ void LevelEditorSample::Initialize(){
 
 
 	//読み込み
-	levelHandle_ = levelEditor_->Load("Test/AudioAreaTestGroundOnly.json");
+	levelHandle_ = levelEditor_->Load("Test/AudioAreaTestGroundAndGrass.json");
 
 	//オーディオの読み込み
 	uint32_t mp3Test = audio_->Load("Resources/Audio/Sample/WIP.mp3");
@@ -54,6 +54,9 @@ void LevelEditorSample::Initialize(){
 	audioHandleMP3_ = audio_->Load("Resources/Audio/Sample/WIP.mp3");
 	//audio_->PlayMP3(audioHandleMP3_, true);
 
+
+
+	collisionManager_ = std::make_unique<CollisionManager>();
 }
 
 void LevelEditorSample::Update(GameManager* gameManager){
@@ -129,6 +132,11 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	directionalLight_.Update();
 
 
+	//レベルエディタにあるコライダーを登録
+	std::vector<IObjectForLevelEditorCollider*> g = levelEditor_->GetCollider(levelHandle_);
+	for (auto it = g.begin(); it != g.end(); ++it) {
+		collisionManager_->RegisterList(*it);
+	}
 
 
 	//衝突判定の計算

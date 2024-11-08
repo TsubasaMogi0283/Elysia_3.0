@@ -131,6 +131,37 @@ public:
 	void Release();
 
 
+
+
+	/// <summary>
+	/// ある分だけColliderを取得する
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
+	inline std::vector<IObjectForLevelEditorCollider*> GetCollider(const uint32_t& handle) {
+		std::vector<IObjectForLevelEditorCollider*> colliders = {};
+
+		for (const auto& [key, levelData] : levelDatas_) {
+			if (levelData->handle == handle) {
+
+				//該当するLevelDataのobjectDatasを検索
+				for (auto& objectData : levelData->objectDatas) {
+
+					//コライダーを持っている場合、リストに追加
+					if (objectData.levelDataObjectCollider != nullptr) {
+						colliders.push_back(objectData.levelDataObjectCollider);
+					}
+				}
+
+				//無駄なループを防ぐ
+				break;
+			}
+		}
+
+		return colliders;
+	}
+
+
 private:
 
 	/// <summary>
@@ -181,15 +212,14 @@ private:
 
 
 		//ハンドル
-		uint32_t modelHandle;
+		uint32_t handle = 0u;
 
 		//オブジェクトのリスト
 		std::list<ObjectData> objectDatas;
 
-
 		//リスナー
 		//プレイヤーなどを設定してね
-		Listener listener;
+		Listener listener = {};
 
 		//フォルダ名
 		std::string folderName;
@@ -212,15 +242,17 @@ private:
 		for (const auto& [key, levelData] : levelDatas_) {
 			
 			//一致したら返す
-			if (levelData->modelHandle == handle) {
+			if (levelData->handle == handle) {
 				return levelData->objectDatas;
-				
 			}
 		}
 
 		//見つからない
 		return {};
 	}
+
+	
+
 
 public:
 	/// <summary>
@@ -232,7 +264,7 @@ public:
 		for (const auto& [key, levelData] : levelDatas_) {
 
 			//一致したら設定
-			if (levelData->modelHandle == handle) {
+			if (levelData->handle == handle) {
 				levelData->listener = listener;
 			}
 		}
@@ -260,12 +292,12 @@ private:
 	nlohmann::json Deserialize(const std::string& fullFilePath);
 
 	/// <summary>
-	/// 拡張子を取得
+	/// 拡張子を取得し結合する
 	/// </summary>
 	/// <param name="directory"></param>
 	/// <param name="baseFileName"></param>
 	/// <returns></returns>
-	std::string FindExtension(const std::string& directory, const std::string& baseFileName);
+	std::string FindExtensionAndFusion(const std::string& directory, const std::string& baseFileName);
 private:
 
 	//ここにデータを入れていく

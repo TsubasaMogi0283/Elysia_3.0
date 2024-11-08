@@ -27,5 +27,6 @@ void AudioTestPlayer::Update(){
 
 
 	collosion_->SetPlayerGetWorldPosition(worldTransform_.GetWorldPosition());
+	collosion_->Update();
 }
 

@@ -1,0 +1,57 @@
+{
+    "name": "scene",
+    "objects": [
+        {
+            "type": "MESH",
+            "name": "AudioGround",
+            "transform": {
+                "scaling": [
+                    20.0,
+                    20.0,
+                    20.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "file_name": "Plane",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "草",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    11.489142417907715,
+                    0.0,
+                    0.0
+                ]
+            },
+            "file_name": "Grass",
+            "object_type": "Audio",
+            "audio": {
+                "file_name": "Grass",
+                "type": "Action",
+                "on_area": true,
+                "loop": true
+            }
+        }
+    ]
+}

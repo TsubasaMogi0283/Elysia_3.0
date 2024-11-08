@@ -5,6 +5,7 @@
 #include "Vector3.h"
 #include "AABB.h"
 #include "Fan.h"
+#include <Plane.h>
 
 /// <summary>
 /// 衝突の種類

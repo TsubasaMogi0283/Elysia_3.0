@@ -24,7 +24,7 @@ LevelDataManager* LevelDataManager::GetInstance(){
 
 
 
-std::string LevelDataManager::FindExtension(const std::string& directory, const std::string& baseFileName) {
+std::string LevelDataManager::FindExtensionAndFusion(const std::string& directory, const std::string& baseFileName) {
 	
 	//指定したディレクトリから目的のものを探す
 	for (const auto& entry : std::filesystem::directory_iterator(directory)) {
@@ -180,11 +180,7 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 					}
 					
 
-					//Audioフォルダの中で読み込み
-					std::string audioDir = leveldataPath_ + levelData.folderName + "/Audio/" + objectData.levelAudioData.type + "/";
-					std::string fullPath = FindExtension(audioDir, objectData.levelAudioData.fileName);
-					objectData.levelAudioData.handle = Audio::GetInstance()->Load(fullPath);
-
+					
 				}
 			}
 
@@ -233,7 +229,15 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			}
 		}
 		else if (objectData.type == "Audio") {
+	
+			//Audioフォルダの中で読み込み
+			//std::string audioDir = leveldataPath_ + levelData.folderName + "/Audio/" + objectData.levelAudioData.type + "/";
+			std::string audioDir = levelEditorDirectoryPath + "/";
+			std::string fullPath = FindExtensionAndFusion(audioDir, objectData.levelAudioData.fileName);
+			objectData.levelAudioData.handle = Audio::GetInstance()->Load(fullPath);
+
 			
+
 
 			//Audioフォルダの中で読み込み
 			objectData.levelAudioData.handle;
@@ -246,8 +250,6 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			//ループをするかどうか
 			audioDataForLevelEditor.isLoop= objectData.levelAudioData.isLoop;
 
-
-			
 			//エリア上かどうか
 			audioDataForLevelEditor.isOnArea= objectData.levelAudioData.isOnArea;
 
@@ -255,15 +257,28 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			//ファイル名を記録
 			audioDataForLevelEditor.fileName= objectData.levelAudioData.fileName;
 
-			//AudioObjectForLevelEditor* audioObject = new AudioObjectForLevelEditor();
-			//audioObject->SetLevelDataAudioData(audioDataForLevelEditor);
-			//
-			////モデルの読み込み
-			//uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
-			//
-			////オブジェクトの生成
-			//objectData.object.reset(audioObject);
-			//objectData.object->Initialize(modelHandle, objectData.transform);
+			AudioObjectForLevelEditor* audioObject = new AudioObjectForLevelEditor();
+			audioObject->SetLevelDataAudioData(audioDataForLevelEditor);
+			
+			//モデルの読み込み
+			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
+			
+			//初期化
+			audioObject->Initialize(modelHandle, objectData.transform);
+			//オブジェクトの生成
+			objectData.objectForLeveEditor = audioObject;
+
+
+			//コライダーがある場合
+			if (objectData.isHavingCollider == true) {
+
+				AudioObjectForLevelEditorCollider* collider = new AudioObjectForLevelEditorCollider();
+				collider->Initialize();
+
+				objectData.levelDataObjectCollider = collider;
+
+			}
+
 		}
 
 		
@@ -335,7 +350,7 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 	//それぞれに情報を記録
 	levelDatas_[fullFilePath]->folderName = folderName;
 	levelDatas_[fullFilePath]->fileName = fileName;
-	levelDatas_[fullFilePath]->modelHandle = handle_;
+	levelDatas_[fullFilePath]->handle = handle_;
 	levelDatas_[fullFilePath]->fullPath = fullFilePath;
 
 	//ハンドルの加算
@@ -353,7 +368,7 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 
 
 	//番号を返す
-	return levelDatas_[fullFilePath]->modelHandle;
+	return levelDatas_[fullFilePath]->handle;
 
 }
 
@@ -362,7 +377,7 @@ void LevelDataManager::Reload(const uint32_t& levelDataHandle){
 
 	//一度全てのオブジェクトのデータを消す
 	for (auto& [key, levelDataPtr] : levelDatas_) {
-		if (levelDataPtr->modelHandle == levelDataHandle) {
+		if (levelDataPtr->handle == levelDataHandle) {
 
 			////モデルを消す
 			//for (auto& object : levelDataPtr->objectDatas) {
@@ -391,7 +406,7 @@ void LevelDataManager::Reload(const uint32_t& levelDataHandle){
 		LevelData* levelData = it->second.get();
 
 		//見つけたらfullFilePathに入れる
-		if (levelData->modelHandle == levelDataHandle) {
+		if (levelData->handle == levelDataHandle) {
 			fullFilePath = levelData->fullPath;
 			break;
 		}
@@ -423,22 +438,28 @@ void LevelDataManager::Update(const uint32_t& levelDataHandle){
 	//イテレータではなくこっちでやった方が良いかな
 	//ファイル名で指定したい時はkeyを使ったら楽だね。今回はハンドルだけどね。
 	for (auto& [key, levelData] : levelDatas_) {
-		if (levelData->modelHandle == levelDataHandle) {
+		if (levelData->handle == levelDataHandle) {
 			
 
-#ifdef _DEBUG
-			ImGui::Begin("リスナー");
-			ImGui::InputFloat3("位置", &levelData->listener.position.x);
-			ImGui::InputFloat3("動き", &levelData->listener.move.x);
-			ImGui::End();
-#endif // _DEBUG
 
 
 
 			for (auto& object : levelData->objectDatas) {
+
 				//更新
 				object.objectForLeveEditor->Update();
-				object.levelDataObjectCollider->SetObjectPosition(object.objectForLeveEditor->GetWorldPosition());
+				Vector3 objectWorldPosition = object.objectForLeveEditor->GetWorldPosition();
+
+				//衝突判定の設定
+
+				if (object.isHavingCollider == true) {
+					bool isTouch = object.levelDataObjectCollider->GetIsTouch();
+					object.objectForLeveEditor->SetIsTouch(isTouch);
+					object.levelDataObjectCollider->SetObjectPosition(objectWorldPosition);
+				}
+
+				
+				
 			}
 			break; 
 		}
@@ -449,7 +470,7 @@ void LevelDataManager::Delete(const uint32_t& levelDataHandle){
 
 
 	for (auto& [key, levelData] : levelDatas_) {
-		if (levelData->modelHandle == levelDataHandle) {
+		if (levelData->handle == levelDataHandle) {
 
 			////モデルを消す
 			//for (auto& object : levelData->objectDatas) {
@@ -481,7 +502,7 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
-		if (levelData->modelHandle == levelDataHandle) {
+		if (levelData->handle == levelDataHandle) {
 
 			//描画
 			for (auto& object : levelData->objectDatas) {
@@ -503,7 +524,7 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
-		if (levelData->modelHandle == levelDataHandle) {
+		if (levelData->handle == levelDataHandle) {
 
 			//描画
 			for (auto& object : levelData->objectDatas) {
@@ -527,7 +548,7 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle,const Camera& camera
 
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
-		if (levelData->modelHandle == levelDataHandle) {
+		if (levelData->handle == levelDataHandle) {
 
 			//描画
 			for (auto& object : levelData->objectDatas) {
@@ -552,12 +573,16 @@ void LevelDataManager::Release(){
 	//全て解放
 	for (auto& [key, levelData] : levelDatas_) {
 		for (auto& object : levelData->objectDatas) {
-			//// Model の解放
-			//if (object.model != nullptr) {
-			//	delete object.model;
-			//}
-			//delete object.worldTransform;
-			object;
+			//オブジェクトの解放
+			if (object.objectForLeveEditor != nullptr) {
+				delete object.objectForLeveEditor;
+			}
+			//コライダーの解放
+			if (object.levelDataObjectCollider != nullptr) {
+				delete object.levelDataObjectCollider;
+			}
+
+			
 		}
 
 	}
