@@ -10,7 +10,7 @@
 /// <summary>
 /// 衝突の種類
 /// </summary>
-enum CollisionType {
+enum ColliderType {
 	//点
 	PointType,
 	//板
@@ -134,7 +134,7 @@ public:
 protected:
 
 	//当たり判定の種類
-	uint32_t collisionType_ = CollisionType::SphereType;
+	uint32_t collisionType_ = ColliderType::SphereType;
 
 #pragma region 球
 

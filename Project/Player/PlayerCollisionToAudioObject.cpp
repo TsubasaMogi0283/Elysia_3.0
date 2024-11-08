@@ -4,7 +4,7 @@
 
 void PlayerCollisionToAudioObject::Initialize(){
 	//点の方が良いかも
-	collisionType_ = CollisionType::PointType;
+	collisionType_ = ColliderType::PointType;
 
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_PLAYER3);

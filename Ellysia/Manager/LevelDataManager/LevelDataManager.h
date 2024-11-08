@@ -187,6 +187,8 @@ private:
 
 			//Colliderの種類
 			std::string colliderType;
+
+			uint32_t colliderTypeNumber;
 			//Sphere,Box
 			Vector3 center;
 			Vector3 size;

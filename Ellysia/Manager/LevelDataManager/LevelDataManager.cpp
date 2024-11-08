@@ -102,6 +102,10 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 				// コライダーの種別を取得
 				if (collider.contains("type")) {
+
+
+					
+
 					objectData.colliderType = collider["type"];
 				}
 
@@ -109,13 +113,13 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 				//BOX
 				if (objectData.colliderType == "BOX") {
 					//中心座標
-					objectData.center.x = (float)collider["center"][1] + objectData.transform.translate.x;
-					objectData.center.y = (float)collider["center"][2] + objectData.transform.translate.y;
-					objectData.center.z = -(float)collider["center"][0] + objectData.transform.translate.z;
+					objectData.center.x = static_cast<float>(collider["center"][1]) + objectData.transform.translate.x;
+					objectData.center.y = static_cast<float>(collider["center"][2]) + objectData.transform.translate.y;
+					objectData.center.z = -static_cast<float>(collider["center"][0]) + objectData.transform.translate.z;
 					//サイズ
-					objectData.size.x = (float)collider["size"][1];
-					objectData.size.y = (float)collider["size"][2];
-					objectData.size.z = (float)collider["size"][0];
+					objectData.size.x = static_cast<float>(collider["size"][1]);
+					objectData.size.y = static_cast<float>(collider["size"][2]);
+					objectData.size.z = static_cast<float>(collider["size"][0]);
 
 				}
 				//AABB
@@ -273,6 +277,8 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			if (objectData.isHavingCollider == true) {
 
 				AudioObjectForLevelEditorCollider* collider = new AudioObjectForLevelEditorCollider();
+				
+				//CollisionType::PlaneType;
 				collider->Initialize();
 
 				objectData.levelDataObjectCollider = collider;
@@ -451,11 +457,11 @@ void LevelDataManager::Update(const uint32_t& levelDataHandle){
 				Vector3 objectWorldPosition = object.objectForLeveEditor->GetWorldPosition();
 
 				//衝突判定の設定
-
 				if (object.isHavingCollider == true) {
 					bool isTouch = object.levelDataObjectCollider->GetIsTouch();
 					object.objectForLeveEditor->SetIsTouch(isTouch);
 					object.levelDataObjectCollider->SetObjectPosition(objectWorldPosition);
+					object.levelDataObjectCollider->Update();
 				}
 
 				

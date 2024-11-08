@@ -14,6 +14,11 @@ public:
 	virtual void Initialize()=0;
 
 	/// <summary>
+	/// 更新
+	/// </summary>
+	virtual void Update() = 0;
+
+	/// <summary>
 	/// オブジェクトの座標を取得
 	/// </summary>
 	/// <param name="position"></param>
@@ -40,7 +45,7 @@ protected:
 	Vector3 objectPosition_ = {};
 
 	//衝突したかどうか
-	bool isTouch_ = true;
+	bool isTouch_ = false;
 
 
 

@@ -2,7 +2,7 @@
 #include <Collider/CollisionConfig.h>
 
 void StageObjectForLevelEditorCollider::Initialize() {
-	collisionType_ = CollisionType::AABBType;
+	collisionType_ = ColliderType::AABBType;
 
 	
 	//自分
@@ -11,6 +11,10 @@ void StageObjectForLevelEditorCollider::Initialize() {
 	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER4);
 
 
+
+}
+
+void StageObjectForLevelEditorCollider::Update(){
 
 }
 

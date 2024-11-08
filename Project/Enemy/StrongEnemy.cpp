@@ -37,7 +37,7 @@ void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& 
 #pragma region 当たり判定
 
 	//当たり判定で使う種類
-	collisionType_ = CollisionType::SphereType;
+	collisionType_ = ColliderType::SphereType;
 	//半径
 	radius_ = 2.0f;
 

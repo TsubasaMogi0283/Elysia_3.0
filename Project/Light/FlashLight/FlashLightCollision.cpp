@@ -10,7 +10,7 @@ void FlashLightCollision::Initialize(){
 #pragma region 当たり判定
 
 	//種類
-	collisionType_ = CollisionType::FanType;
+	collisionType_ = ColliderType::FanType;
 
 
 

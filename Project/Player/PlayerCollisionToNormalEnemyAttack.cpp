@@ -17,7 +17,7 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 #pragma region 当たり判定
 
 	//種類
-	collisionType_ = CollisionType::SphereType;
+	collisionType_ = ColliderType::SphereType;
 
 	//半径
 	radius_ = 1.0f;

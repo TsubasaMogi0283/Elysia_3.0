@@ -3,35 +3,12 @@
     "objects": [
         {
             "type": "MESH",
-            "name": "AudioGround",
-            "transform": {
-                "scaling": [
-                    20.0,
-                    20.0,
-                    20.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "file_name": "Plane",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
             "name": "草",
             "transform": {
                 "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
+                    5.0,
+                    5.0,
+                    5.0
                 ],
                 "rotation": [
                     0.0,
@@ -51,6 +28,19 @@
                 "type": "Action",
                 "on_area": true,
                 "loop": true
+            },
+            "collider": {
+                "type": "Plane",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             }
         }
     ]

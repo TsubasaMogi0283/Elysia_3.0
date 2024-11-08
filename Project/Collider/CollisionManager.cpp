@@ -140,13 +140,15 @@ void CollisionManager::CheckFanAndPoint(Collider* colliderA, Collider* colliderB
 }
 
 void CollisionManager::CheckPlaneAndPoint(Collider* colliderA, Collider* colliderB){
+
+
 	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
 		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0) {
 		return;
 	}
 
 	//衝突判定の計算
-	if (CollisionCalculation::IsCollisionPlaneAndPoint(colliderA->GetPlane(), colliderB->GetWorldPosition())) {
+	if (CollisionCalculation::IsCollisionPlaneAndPoint(colliderA->GetWorldPosition(), colliderB->GetPlane()) ){
 		colliderA->OnCollision();
 		colliderB->OnCollision();
 	}
@@ -176,25 +178,25 @@ void CollisionManager::CheckAllCollision(){
 			Collider* colliderB = *itrB;
 
 			//球同士
-			if (colliderA->GetCollisionType() == CollisionType::SphereType &&
-				colliderB->GetCollisionType() == CollisionType::SphereType) {
+			if (colliderA->GetCollisionType() == ColliderType::SphereType &&
+				colliderB->GetCollisionType() == ColliderType::SphereType) {
 				CheckSphereCollisionPair(colliderA, colliderB);
 			}
 
 			//AABB同士
-			if (colliderA->GetCollisionType() == CollisionType::AABBType &&
-				colliderB->GetCollisionType() == CollisionType::AABBType) {
+			if (colliderA->GetCollisionType() == ColliderType::AABBType &&
+				colliderB->GetCollisionType() == ColliderType::AABBType) {
 				CheckAABBCollisionPair(colliderA, colliderB);
 			}
 
 			//扇と点
-			if (colliderA->GetCollisionType() == CollisionType::FanType &&
-				colliderB->GetCollisionType() == CollisionType::PointType) {
+			if (colliderA->GetCollisionType() == ColliderType::FanType &&
+				colliderB->GetCollisionType() == ColliderType::PointType) {
 				CheckFanAndPoint(colliderA, colliderB);
 			}
 			//扇と点
-			if (colliderA->GetCollisionType() == CollisionType::PlaneType &&
-				colliderB->GetCollisionType() == CollisionType::PointType) {
+			if (colliderA->GetCollisionType() == ColliderType::PointType &&
+				colliderB->GetCollisionType() == ColliderType::PlaneType) {
 				CheckPlaneAndPoint(colliderA, colliderB);
 			}
 
