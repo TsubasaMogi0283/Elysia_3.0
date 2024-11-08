@@ -194,7 +194,7 @@ void CollisionManager::CheckAllCollision(){
 				colliderB->GetCollisionType() == ColliderType::PointType) {
 				CheckFanAndPoint(colliderA, colliderB);
 			}
-			//扇と点
+			//平面と点
 			if (colliderA->GetCollisionType() == ColliderType::PointType &&
 				colliderB->GetCollisionType() == ColliderType::PlaneType) {
 				CheckPlaneAndPoint(colliderA, colliderB);

@@ -26,11 +26,22 @@ void AudioObjectForLevelEditor::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
+
+	if (isTouch_ == true) {
+		audio_->Play(audioDataForLevelEditor.handle, audioDataForLevelEditor.isLoop);
+
+	}
+	else {
+		audio_->Stop(audioDataForLevelEditor.handle);
+	}
+
+
 #ifdef _DEBUG
 
 	Vector3 position = worldTransform_.GetWorldPosition();
 	ImGui::Begin("オーディオオブジェクト"); 
 	ImGui::InputFloat3("位置", &position.x);
+	ImGui::Checkbox("接触", &isTouch_);
 	ImGui::End();
 #endif // _DEBUG
 

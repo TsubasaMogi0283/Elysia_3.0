@@ -105,8 +105,7 @@ private:
 	//オーディオ
 	Audio* audio_ = nullptr;
 	
+	//レベルエディタ側で設定した値を持ってくる
 	AudioDataForLevelEditor audioDataForLevelEditor = {};
 	
-	//衝突
-	bool isTouch_ = false;
 };
