@@ -15,8 +15,6 @@
 LevelEditorSample::LevelEditorSample(){
 	//レベルエディタのインスタンスを取得
 	levelEditor_ = LevelDataManager::GetInstance();
-	//オーディオのインスタンスを取得
-	audio_ = Audio::GetInstance();
 	//インプットのインスタンスを取得
 	input_ = Input::GetInstance();
 }
@@ -46,12 +44,7 @@ void LevelEditorSample::Initialize(){
 	//読み込み
 	levelHandle_ = levelEditor_->Load("Test/AudioAreaTestGroundAndGrass.json");
 
-	//オーディオの読み込み
-	uint32_t mp3Test = audio_->Load("Resources/Audio/Sample/WIP.mp3");
-	mp3Test;
-	audioHandle_ = audio_->Load("Resources/Audio/Sample/Win.wav");
-	audioHandle2_= audio_->Load("Resources/Audio/Sample/Hit.wav");
-	audioHandleMP3_ = audio_->Load("Resources/Audio/Sample/WIP.mp3");
+	
 	//audio_->PlayMP3(audioHandleMP3_, true);
 
 

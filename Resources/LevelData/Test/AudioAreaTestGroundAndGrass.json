@@ -24,7 +24,7 @@
             "file_name": "Grass",
             "object_type": "Audio",
             "audio": {
-                "file_name": "Grass",
+                "file_name": "RunOnGrass",
                 "type": "Action",
                 "on_area": true,
                 "loop": true
