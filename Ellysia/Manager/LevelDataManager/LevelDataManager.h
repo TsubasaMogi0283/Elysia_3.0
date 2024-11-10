@@ -294,12 +294,12 @@ private:
 	nlohmann::json Deserialize(const std::string& fullFilePath);
 
 	/// <summary>
-	/// 拡張子を取得し結合する
+	/// 拡張子を取得
 	/// </summary>
 	/// <param name="directory"></param>
 	/// <param name="baseFileName"></param>
 	/// <returns></returns>
-	std::string FindExtensionAndFusion(const std::string& directory, const std::string& baseFileName);
+	std::string FindExtension(const std::string& directory, const std::string& baseFileName);
 private:
 
 	//ここにデータを入れていく
