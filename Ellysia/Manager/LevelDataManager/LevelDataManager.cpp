@@ -113,13 +113,13 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 				//BOX
 				if (objectData.colliderType == "BOX") {
 					//中心座標
-					objectData.center.x = static_cast<float>(collider["center"][1]) + objectData.transform.translate.x;
+					objectData.center.x = static_cast<float>(collider["center"][0]) + objectData.transform.translate.x;
 					objectData.center.y = static_cast<float>(collider["center"][2]) + objectData.transform.translate.y;
-					objectData.center.z = -static_cast<float>(collider["center"][0]) + objectData.transform.translate.z;
+					objectData.center.z = -static_cast<float>(collider["center"][1]) + objectData.transform.translate.z;
 					//サイズ
-					objectData.size.x = static_cast<float>(collider["size"][1]);
+					objectData.size.x = static_cast<float>(collider["size"][0]);
 					objectData.size.y = static_cast<float>(collider["size"][2]);
-					objectData.size.z = static_cast<float>(collider["size"][0]);
+					objectData.size.z = static_cast<float>(collider["size"][1]);
 
 				}
 				//AABB
