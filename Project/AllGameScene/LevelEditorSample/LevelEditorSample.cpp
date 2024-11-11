@@ -42,7 +42,7 @@ void LevelEditorSample::Initialize(){
 
 
 	//読み込み
-	levelHandle_ = levelEditor_->Load("Test/AudioAreaTestGroundAndGrass.json");
+	levelHandle_ = levelEditor_->Load("Test/AudioAreaTest.json");
 
 	
 	//audio_->PlayMP3(audioHandleMP3_, true);
@@ -140,20 +140,24 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 	//カメラの更新
 	//高さの補正も足す
-	const Vector3 OFFSET = { .x = 0.0f,.y = 2.0f,.z = 0.0f };
+	const Vector3 OFFSET = { .x = 0.0f,.y = 2.0f,.z = -	10.0f };
 	Vector3 playerViewPoint = VectorCalculation::Add(player_->GetWorldPosition(), OFFSET);
 	camera_.translate_ = playerViewPoint;
 	camera_.Update();
 
 }
 
-void LevelEditorSample::DrawSpriteBack()
-{
+void LevelEditorSample::DrawSpriteBack(){
+
 }
 
 void LevelEditorSample::DrawObject3D(){
-	//レベルエディタのモデルを描画     
+	//プレイヤー
+	player_->Draw(camera_, directionalLight_);
+
+	//レベルエディタ  
 	levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
+	
 }
 
 void LevelEditorSample::PreDrawPostEffectFirst(){

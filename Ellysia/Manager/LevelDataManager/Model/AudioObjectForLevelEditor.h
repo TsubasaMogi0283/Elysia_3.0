@@ -12,7 +12,17 @@ struct DirectionalLight;
 struct PointLight;
 struct SpotLight;
 
+/// <summary>
+/// オーディオオブジェクトのタイプ
+/// </summary>
+enum AudioObjectType {
+	BGMType,
+	ActionType,
+};
 
+/// <summary>
+/// オーディオオブジェクトのデータ
+/// </summary>
 struct AudioDataForLevelEditor {
 
 	//ファイル名
@@ -47,7 +57,7 @@ public:
 	/// 初期化より先でやってね
 	/// </summary>
 	inline void SetLevelDataAudioData(const AudioDataForLevelEditor& levelDataAudioData) {
-		this->audioDataForLevelEditor = levelDataAudioData;
+		this->audioDataForLevelEditor_ = levelDataAudioData;
 	}
 
 	/// <summary>
@@ -98,14 +108,26 @@ public:
 	/// <returns></returns>
 	Vector3 GetWorldPosition()override;
 
-	
+private:
+	/// <summary>
+	/// BGM
+	/// </summary>
+	void BackGround();
 
+	/// <summary>
+	/// アクションSE
+	/// </summary>
+	void Action();
+
+	
 	
 private:
 	//オーディオ
 	Audio* audio_ = nullptr;
 	
 	//レベルエディタ側で設定した値を持ってくる
-	AudioDataForLevelEditor audioDataForLevelEditor = {};
+	AudioDataForLevelEditor audioDataForLevelEditor_ = {};
 	
+	int32_t audioType_ = 0;
+
 };

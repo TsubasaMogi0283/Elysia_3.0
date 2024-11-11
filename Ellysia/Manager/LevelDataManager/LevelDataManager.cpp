@@ -262,6 +262,7 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			//ファイル名を記録
 			audioDataForLevelEditor.fileName= objectData.levelAudioData.fileName;
 
+			//オーディオオブジェクトの生成
 			AudioObjectForLevelEditor* audioObject = new AudioObjectForLevelEditor();
 			audioObject->SetLevelDataAudioData(audioDataForLevelEditor);
 			
@@ -279,7 +280,6 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 
 				AudioObjectForLevelEditorCollider* collider = new AudioObjectForLevelEditorCollider();
 				
-				//CollisionType::PlaneType;
 				collider->Initialize();
 
 				objectData.levelDataObjectCollider = collider;
@@ -288,9 +288,6 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 
 		}
 
-		
-
-		
 	}
 }
 
@@ -386,15 +383,17 @@ void LevelDataManager::Reload(const uint32_t& levelDataHandle){
 	for (auto& [key, levelDataPtr] : levelDatas_) {
 		if (levelDataPtr->handle == levelDataHandle) {
 
-			////モデルを消す
-			//for (auto& object : levelDataPtr->objectDatas) {
-			//	// Modelの解放
-			//	if (object.model != nullptr) {
-			//		delete object.model;
-			//	}
-			//	//ワールドトランスフォームの解放
-			//	delete object.worldTransform;
-			//}
+			//モデルを消す
+			for (auto& object : levelDataPtr->objectDatas) {
+				// Modelの解放
+				if (object.objectForLeveEditor != nullptr) {
+					delete object.objectForLeveEditor;
+				}
+				if (object.levelDataObjectCollider != nullptr) {
+					delete object.levelDataObjectCollider;
+				}
+
+			}
 
 
 			//listにある情報を全て消す
@@ -440,6 +439,8 @@ void LevelDataManager::Reload(const uint32_t& levelDataHandle){
 
 void LevelDataManager::Update(const uint32_t& levelDataHandle){
 
+	
+
 
 	//この書き方はC++17からの構造化束縛というものらしい
 	//イテレータではなくこっちでやった方が良いかな
@@ -447,13 +448,25 @@ void LevelDataManager::Update(const uint32_t& levelDataHandle){
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 			
+			//リスナーが動いているかどうか
+			bool isListenerMove = false;
 
+			//動いていなかった場合
+			if (levelData->listener.move.x == 0.0f &&
+				levelData->listener.move.y == 0.0f &&
+				levelData->listener.move.z == 0.0f) {
+				isListenerMove = false;
+			}
+			else {
+				isListenerMove = true;
+			}
 
 
 
 			for (auto& object : levelData->objectDatas) {
 
 				//更新
+				object.objectForLeveEditor->SetIsListenerMove(isListenerMove);
 				object.objectForLeveEditor->Update();
 				Vector3 objectWorldPosition = object.objectForLeveEditor->GetWorldPosition();
 

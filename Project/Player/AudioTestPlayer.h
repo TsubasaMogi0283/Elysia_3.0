@@ -1,10 +1,11 @@
 #pragma once
 #include "WorldTransform.h"
 #include "Material.h"
-#include "Camera.h"
+#include "Model.h"
 #include "PlayerCollisionToAudioObject.h"
 
-struct SpotLight;
+struct DirectionalLight;
+struct Camera;
 
 class AudioTestPlayer{
 public:
@@ -23,6 +24,14 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="directionalLight"></param>
+	void Draw(const Camera& camera, const DirectionalLight& directionalLight);
+
 
 	/// <summary>
 	/// デストラクタ
@@ -69,6 +78,13 @@ public:
 private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
+
+	//マテリアル
+	Material material_ = {};
+
+	//モデル
+	std::unique_ptr<Model>model_ = nullptr;
+
 
 	//方向
 	Vector3 direction_ = {};

@@ -80,8 +80,17 @@ public:
 	/// Colliderから持ってくる
 	/// </summary>
 	/// <param name="isTouch"></param>
-	void SetIsTouch(const bool& isTouch) {
+	inline void SetIsTouch(const bool& isTouch) {
 		this->isTouch_ = isTouch;
+	}
+
+	/// <summary>
+	/// リスナーが動いているかどうかの設定
+	/// </summary>
+	/// <param name="isMove"></param>
+	/// <returns></returns>
+	inline void SetIsListenerMove(const bool& isMove) {
+		this->isListenerMove_ = isMove;
 	}
 
 protected:
@@ -99,4 +108,6 @@ protected:
 	//衝突
 	bool isTouch_ = false;
 
+	//リスナーが動いているかどうか
+	bool isListenerMove_=false;
 };

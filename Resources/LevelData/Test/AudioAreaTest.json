@@ -3,58 +3,6 @@
     "objects": [
         {
             "type": "MESH",
-            "name": "AudioGround",
-            "transform": {
-                "scaling": [
-                    20.0,
-                    20.0,
-                    20.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    0.0,
-                    0.0,
-                    0.19999998807907104
-                ]
-            },
-            "file_name": "Plane",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
-            "name": "砂利",
-            "transform": {
-                "scaling": [
-                    5.0,
-                    5.0,
-                    5.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    -11.37303352355957,
-                    0.0,
-                    0.25259268283843994
-                ]
-            },
-            "file_name": "Gravel",
-            "object_type": "Audio",
-            "audio": {
-                "file_name": "Gravel",
-                "type": "Action",
-                "on_area": true,
-                "loop": true
-            }
-        },
-        {
-            "type": "MESH",
             "name": "草",
             "transform": {
                 "scaling": [
@@ -70,11 +18,53 @@
                 "translation": [
                     11.489142417907715,
                     0.0,
-                    0.27000001072883606
+                    0.7277135848999023
                 ]
             },
             "file_name": "Grass",
-            "object_type": "Audio"
+            "object_type": "Audio",
+            "audio": {
+                "file_name": "RunOnGrass",
+                "type": "Action",
+                "on_area": true,
+                "loop": true
+            },
+            "collider": {
+                "type": "Plane",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Ground",
+            "transform": {
+                "scaling": [
+                    20.0,
+                    20.0,
+                    20.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    0.0,
+                    0.0,
+                    -0.029999999329447746
+                ]
+            },
+            "file_name": "Ground",
+            "object_type": "Stage"
         }
     ]
 }
