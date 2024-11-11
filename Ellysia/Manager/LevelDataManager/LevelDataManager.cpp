@@ -67,24 +67,24 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 			nlohmann::json& transform = object["transform"];
 
 			//スケール
-			objectData.transform.scale.x = (float)transform["scaling"][1];
+			objectData.transform.scale.x = (float)transform["scaling"][0];
 			objectData.transform.scale.y = (float)transform["scaling"][2];
-			objectData.transform.scale.z = (float)transform["scaling"][0];
+			objectData.transform.scale.z = (float)transform["scaling"][1];
 
 			//回転角
 			//そういえばBlenderは度数法だったね
 			//弧度法に直そう
 			const float DEREES_TO_RADIUS_ = (float)std::numbers::pi / 180.0f;
-			objectData.transform.rotate.x = -(float)transform["rotation"][1] * DEREES_TO_RADIUS_;
+			objectData.transform.rotate.x = -(float)transform["rotation"][0] * DEREES_TO_RADIUS_;
 			objectData.transform.rotate.y = -(float)transform["rotation"][2] * DEREES_TO_RADIUS_;
-			objectData.transform.rotate.z = -(float)transform["rotation"][0] * DEREES_TO_RADIUS_;
+			objectData.transform.rotate.z = -(float)transform["rotation"][1] * DEREES_TO_RADIUS_;
 
 
 			//Blenderと軸の方向が違うので注意！
 			//平行移動
-			objectData.transform.translate.x = (float)transform["translation"][1];
+			objectData.transform.translate.x = (float)transform["translation"][0];
 			objectData.transform.translate.y = (float)transform["translation"][2];
-			objectData.transform.translate.z = (float)transform["translation"][0];
+			objectData.transform.translate.z = (float)transform["translation"][1];
 			
 			
 			//オブジェクトのタイプを取得
@@ -326,7 +326,6 @@ nlohmann::json LevelDataManager::Deserialize(const std::string& fullFilePath){
 
 }
 
-
 uint32_t LevelDataManager::Load(const std::string& filePath){
 
 	//パスの結合
@@ -399,7 +398,7 @@ void LevelDataManager::Reload(const uint32_t& levelDataHandle){
 			//listにある情報を全て消す
 			levelDataPtr->objectDatas.clear();
 
-			//無駄な処理をしないようにする
+			//無駄なループ処理をしないようにする
 			break;
 		}
 	}
@@ -438,9 +437,6 @@ void LevelDataManager::Reload(const uint32_t& levelDataHandle){
 }
 
 void LevelDataManager::Update(const uint32_t& levelDataHandle){
-
-	
-
 
 	//この書き方はC++17からの構造化束縛というものらしい
 	//イテレータではなくこっちでやった方が良いかな

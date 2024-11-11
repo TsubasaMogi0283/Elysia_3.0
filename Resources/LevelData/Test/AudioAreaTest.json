@@ -18,7 +18,7 @@
                 "translation": [
                     11.489142417907715,
                     0.0,
-                    0.7277135848999023
+                    0.0
                 ]
             },
             "file_name": "Grass",
@@ -64,6 +64,71 @@
                 ]
             },
             "file_name": "Ground",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "平面",
+            "transform": {
+                "scaling": [
+                    6.0,
+                    6.0,
+                    6.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    -7.916607856750488,
+                    8.033601760864258,
+                    0.0
+                ]
+            },
+            "file_name": "Gravel",
+            "object_type": "Audio",
+            "audio": {
+                "file_name": "RunOnGravel",
+                "type": "BGM",
+                "on_area": true,
+                "loop": true
+            },
+            "collider": {
+                "type": "Plane",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    0.0,
+                    0.0,
+                    2.5846142768859863
+                ]
+            },
+            "file_name": "Test",
             "object_type": "Stage"
         }
     ]
