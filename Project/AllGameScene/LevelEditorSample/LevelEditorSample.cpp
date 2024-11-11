@@ -100,13 +100,10 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	}
 
 
-	
-
-
-
 	//プレイヤーの更新
 	player_->SetDirection(playerDirection_);
 	player_->Update();
+
 	//プレイヤーのコライダーを登録
 	collisionManager_->RegisterList(player_->GetCollosion());
 
@@ -119,11 +116,12 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 	//レベルエディタの更新
 	levelEditor_->Update(levelHandle_);
+
 	//マテリアルの更新
 	material_.Update();
+	
 	//平行光源の更新
 	directionalLight_.Update();
-
 
 	//レベルエディタにあるコライダーを登録
 	std::vector<IObjectForLevelEditorCollider*> g = levelEditor_->GetCollider(levelHandle_);
@@ -131,17 +129,14 @@ void LevelEditorSample::Update(GameManager* gameManager){
 		collisionManager_->RegisterList(*it);
 	}
 
-
 	//衝突判定の計算
 	collisionManager_->CheckAllCollision();
 
-
-
-
 	//カメラの更新
 	//高さの補正も足す
-	const Vector3 OFFSET = { .x = 0.0f,.y = 2.0f,.z = -	10.0f };
+	const Vector3 OFFSET = { .x = 0.0f,.y = 5.0f,.z = -20.0f };
 	Vector3 playerViewPoint = VectorCalculation::Add(player_->GetWorldPosition(), OFFSET);
+	camera_.rotate_.x = 0.26f;
 	camera_.translate_ = playerViewPoint;
 	camera_.Update();
 

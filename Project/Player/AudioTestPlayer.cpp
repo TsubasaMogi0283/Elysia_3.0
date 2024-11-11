@@ -28,7 +28,7 @@ void AudioTestPlayer::Update(){
 
 #endif // _DEBUG
 	//方向とスピードを計算
-	const float SPEED = 0.4f;
+	const float SPEED = 0.1f;
 	Vector3 newDirection = VectorCalculation::Multiply(direction_, SPEED);
 
 	//位置の更新

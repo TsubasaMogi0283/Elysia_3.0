@@ -67,24 +67,24 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 			nlohmann::json& transform = object["transform"];
 
 			//スケール
-			objectData.transform.scale.x = (float)transform["scaling"][0];
-			objectData.transform.scale.y = (float)transform["scaling"][2];
-			objectData.transform.scale.z = (float)transform["scaling"][1];
+			objectData.transform.scale.x = static_cast<float>(transform["scaling"][0]);
+			objectData.transform.scale.y = static_cast<float>(transform["scaling"][2]);
+			objectData.transform.scale.z = static_cast<float>(transform["scaling"][1]);
 
 			//回転角
 			//そういえばBlenderは度数法だったね
 			//弧度法に直そう
-			const float DEREES_TO_RADIUS_ = (float)std::numbers::pi / 180.0f;
-			objectData.transform.rotate.x = -(float)transform["rotation"][0] * DEREES_TO_RADIUS_;
-			objectData.transform.rotate.y = -(float)transform["rotation"][2] * DEREES_TO_RADIUS_;
-			objectData.transform.rotate.z = -(float)transform["rotation"][1] * DEREES_TO_RADIUS_;
+			const float DEREES_TO_RADIUS_ = static_cast<float>(std::numbers::pi) / 180.0f;
+			objectData.transform.rotate.x = -static_cast<float>(transform["rotation"][0]) * DEREES_TO_RADIUS_;
+			objectData.transform.rotate.y = -static_cast<float>(transform["rotation"][2]) * DEREES_TO_RADIUS_;
+			objectData.transform.rotate.z = -static_cast<float>(transform["rotation"][1]) * DEREES_TO_RADIUS_;
 
 
 			//Blenderと軸の方向が違うので注意！
 			//平行移動
-			objectData.transform.translate.x = (float)transform["translation"][0];
-			objectData.transform.translate.y = (float)transform["translation"][2];
-			objectData.transform.translate.z = (float)transform["translation"][1];
+			objectData.transform.translate.x = static_cast<float>(transform["translation"][0]);
+			objectData.transform.translate.y = static_cast<float>(transform["translation"][2]);
+			objectData.transform.translate.z = static_cast<float>(transform["translation"][1]);
 			
 			
 			//オブジェクトのタイプを取得
@@ -102,10 +102,6 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 				// コライダーの種別を取得
 				if (collider.contains("type")) {
-
-
-					
-
 					objectData.colliderType = collider["type"];
 				}
 
@@ -115,7 +111,7 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 					//中心座標
 					objectData.center.x = static_cast<float>(collider["center"][0]) + objectData.transform.translate.x;
 					objectData.center.y = static_cast<float>(collider["center"][2]) + objectData.transform.translate.y;
-					objectData.center.z = -static_cast<float>(collider["center"][1]) + objectData.transform.translate.z;
+					objectData.center.z = static_cast<float>(collider["center"][1]) + objectData.transform.translate.z;
 					//サイズ
 					objectData.size.x = static_cast<float>(collider["size"][0]);
 					objectData.size.y = static_cast<float>(collider["size"][2]);
@@ -125,13 +121,13 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 				//AABB
 				else if (objectData.colliderType == "AABB") {
 					//中心座標
-					objectData.center.x = (float)collider["center"][1] + objectData.transform.translate.x;
-					objectData.center.y = (float)collider["center"][2] + objectData.transform.translate.y;
-					objectData.center.z = -(float)collider["center"][0] + objectData.transform.translate.z;
+					objectData.center.x = static_cast<float>(collider["center"][0]) + objectData.transform.translate.x;
+					objectData.center.y = static_cast<float>(collider["center"][2]) + objectData.transform.translate.y;
+					objectData.center.z = static_cast<float>(collider["center"][1]) + objectData.transform.translate.z;
 					//サイズ
-					objectData.size.x = (float)collider["size"][1];
-					objectData.size.y = (float)collider["size"][2];
-					objectData.size.z = (float)collider["size"][0];
+					objectData.size.x = static_cast<float>(collider["size"][0]);
+					objectData.size.y = static_cast<float>(collider["size"][2]);
+					objectData.size.z = static_cast<float>(collider["size"][1]);
 
 					//右上奥
 					objectData.upSize.x = objectData.center.x + objectData.size.x;
@@ -141,15 +137,8 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 					objectData.downSize.x = objectData.center.x - objectData.size.x;
 					objectData.downSize.y = objectData.center.y - objectData.size.y;
 					objectData.downSize.z = objectData.center.z - objectData.size.z;
-
-
 				}
-
 			}
-
-
-			
-
 
 
 
@@ -182,14 +171,10 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 					else {
 						objectData.levelAudioData.isOnArea = false;
 					}
-					
-
-					
 				}
 			}
 
 			
-
 			//子オブジェクト
 			if (object.contains("children")) {
 				Place(object["children"], levelData);
@@ -207,11 +192,10 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 	
 	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
 
-		//モデルの生成
-		if(objectData.type=="Stage") {
-			uint32_t audioHandle = 0;
-			audioHandle;
 
+		if(objectData.type=="Stage") {
+
+			//オブジェクトの生成
 			StageObjectForLevelEditor* stageObject = new StageObjectForLevelEditor();
 			
 			//モデルの読み込み
@@ -224,44 +208,42 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 
 			//コライダーがある場合
 			if (objectData.isHavingCollider == true) {
-
+				//生成
 				StageObjectForLevelEditorCollider* collider = new StageObjectForLevelEditorCollider();
 				collider->Initialize();
 
+				//代入
 				objectData.levelDataObjectCollider = collider;
-
 			}
 		}
 		else if (objectData.type == "Audio") {
 	
 			//Audioフォルダの中で読み込み
-			//std::string audioDir = leveldataPath_ + levelData.folderName + "/Audio/" + objectData.levelAudioData.type + "/";
 			std::string audioDir = levelEditorDirectoryPath + "/"+ objectData.modelFileName+"/";
 			std::string extension = FindExtension(audioDir, objectData.levelAudioData.fileName);
 			std::string fullPath = audioDir + objectData.levelAudioData.fileName +extension;
 			objectData.levelAudioData.handle = Audio::GetInstance()->Load(fullPath);
 
+			//オーディオデータ
+			AudioDataForLevelEditor audioDataForLevelEditor = {
+				//ファイル名を記録
+				.fileName = objectData.levelAudioData.fileName,
+
+				//種類を記録
+				.type = objectData.levelAudioData.type,
+
+				//ハンドルは後で入力する
+				.handle = 0u,
+
+				//エリア上かどうか
+				.isOnArea = objectData.levelAudioData.isOnArea,
+
+				//ループをするかどうか
+				.isLoop = objectData.levelAudioData.isLoop,
+
+			};
+
 			
-
-
-			//Audioフォルダの中で読み込み
-			objectData.levelAudioData.handle;
-
-			AudioDataForLevelEditor audioDataForLevelEditor = {};
-			//種類を記録
-			audioDataForLevelEditor.type= objectData.levelAudioData.type;
-
-
-			//ループをするかどうか
-			audioDataForLevelEditor.isLoop= objectData.levelAudioData.isLoop;
-
-			//エリア上かどうか
-			audioDataForLevelEditor.isOnArea= objectData.levelAudioData.isOnArea;
-
-
-			//ファイル名を記録
-			audioDataForLevelEditor.fileName= objectData.levelAudioData.fileName;
-
 			//オーディオオブジェクトの生成
 			AudioObjectForLevelEditor* audioObject = new AudioObjectForLevelEditor();
 			audioObject->SetLevelDataAudioData(audioDataForLevelEditor);
@@ -278,16 +260,15 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			//コライダーがある場合
 			if (objectData.isHavingCollider == true) {
 
+				//生成
 				AudioObjectForLevelEditorCollider* collider = new AudioObjectForLevelEditorCollider();
-				
 				collider->Initialize();
 
+				//代入
 				objectData.levelDataObjectCollider = collider;
 
 			}
-
 		}
-
 	}
 }
 

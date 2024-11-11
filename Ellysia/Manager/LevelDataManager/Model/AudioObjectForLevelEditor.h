@@ -128,6 +128,6 @@ private:
 	//レベルエディタ側で設定した値を持ってくる
 	AudioDataForLevelEditor audioDataForLevelEditor_ = {};
 	
-	int32_t audioType_ = 0;
+	int32_t audioType_ = -1;
 
 };

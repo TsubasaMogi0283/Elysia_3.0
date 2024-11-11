@@ -44,10 +44,10 @@ void AudioObjectForLevelEditor::BackGround(){
 }
 
 void AudioObjectForLevelEditor::Action(){
+
 	//接触かつ動いている時に鳴らす
 	if (isTouch_ == true && isListenerMove_==true) {
 		audio_->Play(audioDataForLevelEditor_.handle, audioDataForLevelEditor_.isLoop);
-
 	}
 	else {
 		audio_->Stop(audioDataForLevelEditor_.handle);
@@ -65,6 +65,7 @@ void AudioObjectForLevelEditor::Update(){
 	case AudioObjectType::BGMType:
 		//BGM用の処理
 		BackGround();
+
 		break;
 
 	case AudioObjectType::ActionType:
@@ -72,7 +73,6 @@ void AudioObjectForLevelEditor::Update(){
 		Action();
 
 		break;
-
 	}
 	
 
