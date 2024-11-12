@@ -42,6 +42,10 @@ public:
 
 private:
 
+	/// <summary>
+	/// 平面
+	/// </summary>
+	void Plane();
 
 
 };

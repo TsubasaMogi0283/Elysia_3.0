@@ -14,16 +14,17 @@ void AudioObjectForLevelEditorCollider::Initialize(){
 
 }
 
-void AudioObjectForLevelEditorCollider::Update(){
+
+void AudioObjectForLevelEditorCollider::Plane(){
 	plane_ = {
 		.position = objectPosition_,
-		.length= 5.0f,
-		.width= 5.0f,
+		.length = 5.0f,
+		.width = 5.0f,
 	};
 
 
 #ifdef _DEBUG
-	ImGui::Begin("AudioObjectCollider"); 
+	ImGui::Begin("AudioObjectCollider");
 	ImGui::InputFloat3("位置", &plane_.position.x);
 	ImGui::InputFloat("縦", &plane_.length);
 	ImGui::InputFloat("横", &plane_.width);
@@ -32,6 +33,15 @@ void AudioObjectForLevelEditorCollider::Update(){
 #endif // _DEBUG
 
 
+}
+
+void AudioObjectForLevelEditorCollider::Update(){
+	switch (collisionType_) {
+
+
+
+
+	}
 
 }
 
@@ -47,3 +57,5 @@ Vector3 AudioObjectForLevelEditorCollider::GetWorldPosition(){
 	
 	return objectPosition_;
 }
+
+
