@@ -187,6 +187,9 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 void LevelDataManager::Ganarate(LevelData& levelData) {
 
+	//オーディオのインスタンスを取得
+	Audio* audio = Audio::GetInstance();
+
 	//ディレクトリパス
 	std::string levelEditorDirectoryPath = leveldataPath_ + levelData.folderName;
 	
@@ -222,7 +225,6 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			std::string audioDir = levelEditorDirectoryPath + "/"+ objectData.modelFileName+"/";
 			std::string extension = FindExtension(audioDir, objectData.levelAudioData.fileName);
 			std::string fullPath = audioDir + objectData.levelAudioData.fileName +extension;
-			objectData.levelAudioData.handle = Audio::GetInstance()->Load(fullPath);
 
 			//オーディオデータ
 			AudioDataForLevelEditor audioDataForLevelEditor = {
@@ -233,7 +235,7 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 				.type = objectData.levelAudioData.type,
 
 				//ハンドルは後で入力する
-				.handle = 0u,
+				.handle = audio->Load(fullPath),
 
 				//エリア上かどうか
 				.isOnArea = objectData.levelAudioData.isOnArea,
