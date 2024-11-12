@@ -63,39 +63,10 @@ void CollisionManager::CheckAABBCollisionPair(Collider* colliderA, Collider* col
 		return;
 	}
 
+	//各AABBの取得
+	AABB aabb1 = colliderA->GetAABB();
+	AABB aabb2 = colliderB->GetAABB();
 
-	//コライダーAのワールド座標を取得
-	Vector3 colliderPosisionA = colliderA->GetWorldPosition();
-
-	//コライダーBのワールド座標を取得
-	Vector3 colliderPosisionB = colliderB->GetWorldPosition();
-
-	
-
-	//コライダーAの下方サイズ
-	Vector3 downSideSizeA = colliderA->GetDownSideSize();
-	//コライダーBの下方サイズ
-	Vector3 downSideSizeB = colliderB->GetDownSideSize();
-
-
-	//コライダーAの上方サイズ
-	Vector3 upSideSizeA = colliderA->GetUpSideSize();
-	//コライダーBの上方サイズ
-	Vector3 upSideSizeB = colliderB->GetUpSideSize();
-
-
-
-	//コライダーAのAABBを求める
-	AABB aabb1 = {
-		.min{.x = colliderPosisionA.x - downSideSizeA.x,.y = colliderPosisionA.y - downSideSizeA.y,.z = colliderPosisionA.z - downSideSizeA.z },
-		.max{.x = colliderPosisionA.x + upSideSizeA.x,.y = colliderPosisionA.y + upSideSizeA.y,.z = colliderPosisionA.z + upSideSizeA.z }
-	};
-
-	//コライダーBのAABBを求める
-	AABB aabb2 = {
-		.min{.x = colliderPosisionB.x - downSideSizeB.x,.y = colliderPosisionB.y - downSideSizeB.y,.z = colliderPosisionB.z - downSideSizeB.z },
-		.max{.x = colliderPosisionB.x + upSideSizeB.x,.y = colliderPosisionB.y + upSideSizeB.y,.z = colliderPosisionB.z + upSideSizeB.z }
-	};
 
 
 	//衝突判定

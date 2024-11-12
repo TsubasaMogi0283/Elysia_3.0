@@ -54,26 +54,19 @@ public:
 	/// 半径を取得
 	/// </summary>
 	/// <returns></returns>
-	float GetRadius() {
+	float GetRadius() const{
 		return radius_;
 	}
 
 #pragma region AABB
 
+
 	/// <summary>
-	/// 上方のサイズ
+	/// AABBの取得
 	/// </summary>
 	/// <returns></returns>
-	inline Vector3 GetUpSideSize() {
-		return upSideSize_;
-	}
-	
-	/// <summary>
-	/// 下方のサイズ
-	/// </summary>
-	/// <returns></returns>
-	inline Vector3 GetDownSideSize() {
-		return downSideSize_;
+	inline AABB GetAABB()const {
+		return aabb_;
 	}
 
 #pragma endregion
@@ -145,14 +138,8 @@ protected:
 
 #pragma region AABB
 
-	//AABBのmax部分に加算する縦横高さのサイズ
-	Vector3 upSideSize_ = {};
-
-	//AABBのmax部分に加算する縦横高さのサイズ
-	Vector3 downSideSize_ = {};
-
 	//AABB
-	AABB abb_ = {};
+	AABB aabb_ = {};
 
 #pragma endregion
 
