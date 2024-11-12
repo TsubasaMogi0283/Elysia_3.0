@@ -67,7 +67,7 @@
             "object_type": "Audio",
             "audio": {
                 "file_name": "RunOnGravel",
-                "type": "BGM",
+                "type": "Action",
                 "on_area": true,
                 "loop": true
             },
