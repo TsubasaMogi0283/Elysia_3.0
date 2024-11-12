@@ -492,11 +492,6 @@ void LevelDataManager::Delete(const uint32_t& levelDataHandle){
 
 void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material, const DirectionalLight& directionalLight){
 	
-	camera;
-	material;
-	directionalLight;
-
-
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
@@ -515,10 +510,6 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 }
 
 void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material,const PointLight& pointLight){
-	camera;
-	material;
-	pointLight;
-
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
@@ -538,11 +529,6 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 
 void LevelDataManager::Draw(const uint32_t& levelDataHandle,const Camera& camera,const Material& material,const SpotLight& spotLight){
 	
-	camera;
-	material;
-	spotLight;
-
-
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {

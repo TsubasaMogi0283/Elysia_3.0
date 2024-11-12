@@ -26,8 +26,6 @@ void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Tr
 	else if (audioDataForLevelEditor_.type == "Action") {
 		audioType_ = AudioObjectType::ActionType;
 	}
-
-
 }
 
 void AudioObjectForLevelEditor::BackGround(){
@@ -60,7 +58,6 @@ void AudioObjectForLevelEditor::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
-
 	switch (audioType_) {
 	case AudioObjectType::BGMType:
 		//BGM用の処理
@@ -75,16 +72,13 @@ void AudioObjectForLevelEditor::Update(){
 		break;
 	}
 	
-
-	
-	
-
-
 #ifdef _DEBUG
 
 	Vector3 position = worldTransform_.GetWorldPosition();
+	int32_t handleInt = static_cast<int32_t>(audioDataForLevelEditor_.handle);
 	ImGui::Begin("オーディオオブジェクト"); 
 	ImGui::InputFloat3("位置", &position.x);
+	ImGui::InputInt("ハンドル", &handleInt);
 	ImGui::Checkbox("接触", &isTouch_);
 	ImGui::Checkbox("リスナーが動いているかどうか", &isListenerMove_);
 	ImGui::End();

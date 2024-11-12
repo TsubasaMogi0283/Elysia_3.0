@@ -45,29 +45,6 @@
         },
         {
             "type": "MESH",
-            "name": "Ground",
-            "transform": {
-                "scaling": [
-                    20.0,
-                    20.0,
-                    20.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    0.0,
-                    0.0,
-                    -0.029999999329447746
-                ]
-            },
-            "file_name": "Ground",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
             "name": "平面",
             "transform": {
                 "scaling": [
@@ -107,29 +84,6 @@
                     1.0
                 ]
             }
-        },
-        {
-            "type": "MESH",
-            "name": "Cube",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    0.0,
-                    0.0,
-                    2.5846142768859863
-                ]
-            },
-            "file_name": "Test",
-            "object_type": "Stage"
         }
     ]
 }
