@@ -151,7 +151,8 @@ protected:
 	//AABBのmax部分に加算する縦横高さのサイズ
 	Vector3 downSideSize_ = {};
 
-
+	//AABB
+	AABB abb_ = {};
 
 #pragma endregion
 

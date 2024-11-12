@@ -42,7 +42,7 @@ void LevelEditorSample::Initialize(){
 
 
 	//読み込み
-	levelHandle_ = levelEditor_->Load("Test/AudioAreaTest.json");
+	levelHandle_ = levelEditor_->Load("Test/StageObjectTest.json");
 
 	
 	//audio_->PlayMP3(audioHandleMP3_, true);

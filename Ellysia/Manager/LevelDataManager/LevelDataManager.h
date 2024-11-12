@@ -134,7 +134,7 @@ public:
 
 
 	/// <summary>
-	/// ある分だけColliderを取得する
+	/// データにある分だけColliderを取得する
 	/// </summary>
 	/// <param name="handle"></param>
 	/// <returns></returns>
@@ -309,7 +309,7 @@ private:
 	uint32_t handle_ = 0u;
 
 	//Resourceにあるレベルデータの場所
-	const std::string leveldataPath_ = "Resources/LevelData/";
+	const std::string LEVEL_DATA_PATH_ = "Resources/LevelData/";
 
 };
 

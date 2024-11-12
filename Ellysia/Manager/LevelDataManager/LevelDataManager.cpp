@@ -191,10 +191,9 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 	Audio* audio = Audio::GetInstance();
 
 	//ディレクトリパス
-	std::string levelEditorDirectoryPath = leveldataPath_ + levelData.folderName;
+	std::string levelEditorDirectoryPath = LEVEL_DATA_PATH_ + levelData.folderName;
 	
 	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
-
 
 		if(objectData.type=="Stage") {
 
@@ -312,7 +311,7 @@ nlohmann::json LevelDataManager::Deserialize(const std::string& fullFilePath){
 uint32_t LevelDataManager::Load(const std::string& filePath){
 
 	//パスの結合
-	std::string fullFilePath = leveldataPath_ + filePath;
+	std::string fullFilePath = LEVEL_DATA_PATH_ + filePath;
 
 	//JSON文字列から解凍したデータ
 	nlohmann::json deserialized= Deserialize(fullFilePath);
