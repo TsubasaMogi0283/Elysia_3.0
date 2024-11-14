@@ -206,6 +206,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Player\Player.cpp" />
     <ClCompile Include="Project\Player\PlayerCollisionToAudioObject.cpp" />
     <ClCompile Include="Project\Player\PlayerCollisionToNormalEnemyAttack.cpp" />
+    <ClCompile Include="Project\Player\PlayerCollisionToStageObject.cpp" />
     <ClCompile Include="Project\Player\PlayerCollisionToStrongEnemy.cpp" />
     <ClCompile Include="Project\Stage\DemoObject\DemoObject.cpp" />
     <ClCompile Include="Project\Stage\Gate\Gate.cpp" />
@@ -497,6 +498,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Player\Player.h" />
     <ClInclude Include="Project\Player\PlayerCollisionToAudioObject.h" />
     <ClInclude Include="Project\Player\PlayerCollisionToNormalEnemyAttack.h" />
+    <ClInclude Include="Project\Player\PlayerCollisionToStageObject.h" />
     <ClInclude Include="Project\Player\PlayerCollisionToStrongEnemy.h" />
     <ClInclude Include="Project\Stage\DemoObject\DemoObject.h" />
     <ClInclude Include="Project\Stage\Gate\Gate.h" />

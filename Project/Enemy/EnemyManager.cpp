@@ -30,7 +30,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	normalEnemyModelHandle_ = normalEnemyModel;
 	strongEnemyModelHandle_ = strongEnemyModel;
 
-	////TLのレベルエディターでやってもいいかも！
+	//CSVでやった方が良いかも
 	Enemy* enemy1 = new Enemy();
 	Vector3 position1 = { 0.0f,0.0f,11.0f };
 	enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,0.01f });

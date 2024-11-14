@@ -15,8 +15,8 @@
 void Player::Initialize(){
 
 
-	//モデルの生成
-	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD3Player","Player.obj");
+	//モデルの生成 //"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\Cube\cube.obj"
+	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","cube.obj");
 	model_.reset(Model::Create(modelHandle));
 
 	isControll_ = false;

@@ -2,6 +2,10 @@
 
 
 void KeyManager::Initialize(uint32_t modelHandle){
+
+
+	//CSVにしたい
+
 	Key* key1 = new Key();
 	Vector3 keyPosition = { -10.0f,0.5f,1.0f };
 	key1->Initialize(modelHandle, keyPosition);

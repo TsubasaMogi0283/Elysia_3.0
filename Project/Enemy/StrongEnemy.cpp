@@ -9,6 +9,7 @@
 
 
 void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& speed){
+
 	//モデル
 	model_.reset(Model::Create(modelHandle));
 
@@ -42,10 +43,10 @@ void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& 
 	radius_ = 2.0f;
 
 	//AABBのmax部分に加算する縦横高さのサイズ
-	upSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
+	//upSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
 
 	//AABBのmin部分に加算する縦横高さのサイズ
-	downSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
+	//downSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
 
 	//判定
 	//自分
@@ -142,8 +143,8 @@ void StrongEnemy::Update(){
 
 
 	//AABBの計算
-	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
-	aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
+	//aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
+	//aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
 
 
 

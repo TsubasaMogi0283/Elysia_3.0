@@ -108,3 +108,9 @@ Vector3 AudioObjectForLevelEditor::GetWorldPosition(){
 	return worldTransform_.GetWorldPosition();
 }
 
+AABB AudioObjectForLevelEditor::GetAABB(){
+	//オーディオの場合は基本使わない
+	//必要あれば作るけどね
+	return aabb_;
+}
+

@@ -161,6 +161,67 @@ public:
 		return colliders;
 	}
 
+	/// <summary>
+	/// ステージオブジェクトの座標を取得
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
+	inline std::vector<Vector3> GetStageObjectPosition(const uint32_t& handle) {
+		std::vector<Vector3> positions = {};
+
+		for (const auto& [key, levelData] : levelDatas_) {
+			if (levelData->handle == handle) {
+
+
+				//該当するLevelDataのobjectDatasを検索
+				for (auto& objectData : levelData->objectDatas) {
+
+					//Stageだったら追加
+					if (objectData.type == "Stage") {
+						positions.push_back(objectData.objectForLeveEditor->GetWorldPosition());
+					}
+
+
+				}
+
+				//無駄なループを防ぐ
+				break;
+			}
+		}
+
+		return positions;
+	}
+	
+	/// <summary>
+	/// ステージオブジェクトのAABBを取得
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
+	inline std::vector<AABB> GetStageObjectAABB(const uint32_t& handle) {
+		std::vector<AABB> aabbs = {};
+
+		for (const auto& [key, levelData] : levelDatas_) {
+			if (levelData->handle == handle) {
+
+
+				//該当するLevelDataのobjectDatasを検索
+				for (auto& objectData : levelData->objectDatas) {
+
+					//Stageだったら追加
+					if (objectData.type == "Stage") {
+						aabbs.push_back(objectData.objectForLeveEditor->GetAABB());
+					}
+
+
+				}
+
+				//無駄なループを防ぐ
+				break;
+			}
+		}
+
+		return aabbs;
+	}
 
 private:
 

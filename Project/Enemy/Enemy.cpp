@@ -65,10 +65,10 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	radius_ = 1.0f;
 
 	//AABBのmax部分に加算する縦横高さのサイズ
-	upSideSize_ = {.x= radius_ ,.y= radius_ ,.z= radius_ };
+	//upSideSize_ = {.x= radius_ ,.y= radius_ ,.z= radius_ };
 
 	//AABBのmin部分に加算する縦横高さのサイズ
-	downSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
+	//downSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
 
 	//判定
 	//自分
@@ -78,7 +78,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 #pragma endregion
 
-	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
 #ifdef _DEBUG
 	
 	debugModel_.reset(Model::Create(debugModelHandle));
@@ -259,8 +259,8 @@ void Enemy::Update(){
 	worldTransform_.Update();
 	material_.Update();
 
-	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
-	aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
+	//aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
+	//aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
 
 
 

@@ -4,6 +4,7 @@
 #include "WorldTransform.h"
 #include "Vector3.h"
 #include "Material.h"
+#include "AABB.h"
 #include "Transform.h"
 
 /// <summary>
@@ -76,6 +77,12 @@ public:
 	virtual Vector3 GetWorldPosition() = 0;
 
 	/// <summary>
+	/// AABBの取得
+	/// </summary>
+	/// <returns></returns>
+	virtual AABB GetAABB() = 0;
+
+	/// <summary>
 	/// 衝突したかどうかの設定
 	/// Colliderから持ってくる
 	/// </summary>
@@ -104,6 +111,8 @@ protected:
 	//LevelEditorObjectTypeから選ぶよ
 	uint32_t objectType_ = 0u;
 
+	//基本オブジェクトはAABBにする
+	AABB aabb_ = {};
 
 	//衝突
 	bool isTouch_ = false;

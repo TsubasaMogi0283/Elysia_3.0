@@ -10,6 +10,7 @@
 #include "AnimationManager.h"
 #include "TextureManager.h"
 #include <VectorCalculation.h>
+#include <SingleCalculation.h>
 
 
 LevelEditorSample::LevelEditorSample(){
@@ -105,7 +106,9 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	player_->Update();
 
 	//プレイヤーのコライダーを登録
-	collisionManager_->RegisterList(player_->GetCollosion());
+	collisionManager_->RegisterList(player_->GetCollosionToAudioObject());
+	collisionManager_->RegisterList(player_->GetCollosionToStageObject());
+
 
 	//レベルエディタで使うリスナーの設定
 	Listener listener = {
@@ -124,10 +127,58 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	directionalLight_.Update();
 
 	//レベルエディタにあるコライダーを登録
-	std::vector<IObjectForLevelEditorCollider*> g = levelEditor_->GetCollider(levelHandle_);
-	for (auto it = g.begin(); it != g.end(); ++it) {
+	std::vector<IObjectForLevelEditorCollider*> colliders = levelEditor_->GetCollider(levelHandle_);
+	for (auto it = colliders.begin(); it != colliders.end(); ++it) {
 		collisionManager_->RegisterList(*it);
 	}
+
+	//プレイヤーのAABB
+	AABB playerAABB = player_->GetCollosionToStageObject()->GetAABB();
+	//プレイヤーの方向
+	Vector3 playerDirection = player_->GetDirection();
+
+	//ステージオブジェクト殿当たり判定(改)
+	//座標が取れなかったのでこっちでやる
+	//ObjectManagerでやっていたものをこっちに引っ越す
+	//上手くいったらGameSceneで実装する
+	std::vector<Vector3> positions = levelEditor_->GetStageObjectPosition(levelHandle_);
+	std::vector<AABB> aabbs = levelEditor_->GetStageObjectAABB(levelHandle_);
+	for (size_t i = 0; i < positions.size() && i < aabbs.size(); ++i) {
+
+		//オブジェクトのAABB
+		AABB objectAABB = aabbs[i];
+
+		//オブジェクトとの差分ベクトル
+		Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(positions[i], player_->GetWorldPosition());
+
+		//オブジェクトとプレイヤーの距離
+		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
+		//内積
+		//これが無いと接触下きりになってしまうので入れる
+		float dot = SingleCalculation::Dot(playerDirection, normalizedDemoAndPlayer);
+		const float DOT_OFFSET = 0.7f;
+
+
+		//衝突判定
+		if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
+			(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z) &&
+			(dot > DOT_OFFSET)) {
+			uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+			player_->SetMoveCondition(newCondition);
+
+			//当たったらループを抜ける
+			break;
+
+		}
+		else {
+			//当たっていない
+			uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+			player_->SetMoveCondition(newCondition);
+
+		}
+
+	}
+
 
 	//衝突判定の計算
 	collisionManager_->CheckAllCollision();

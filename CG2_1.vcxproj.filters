@@ -343,6 +343,9 @@
     <Filter Include="Project\Player\PlayerCollisionToAudioObject">
       <UniqueIdentifier>{ce595378-51b4-489b-ad22-3bdf9f98219f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Player\PlayerCollisionToStageObject">
+      <UniqueIdentifier>{34b331b7-5724-4602-b963-a385fdcd454a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -602,6 +605,9 @@
     </ClCompile>
     <ClCompile Include="Project\Player\PlayerCollisionToAudioObject.cpp">
       <Filter>Project\Player\PlayerCollisionToAudioObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\PlayerCollisionToStageObject.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1065,6 +1071,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Shape\Plane.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\PlayerCollisionToStageObject.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

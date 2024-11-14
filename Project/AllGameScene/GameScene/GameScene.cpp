@@ -144,7 +144,7 @@ void GameScene::Initialize() {
 	
 	
 	//プレイヤーのライト
-	uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
 	
 	
 	#pragma region 扇の当たり判定用の球

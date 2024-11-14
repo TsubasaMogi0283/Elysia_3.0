@@ -35,6 +35,16 @@ public:
 	}
 
 	/// <summary>
+	/// サイズの設定
+	/// </summary>
+	/// <param name="size"></param>
+	virtual void SetSize(const Vector3& size) {
+		this->size_ = size;
+	}
+
+
+
+	/// <summary>
 	/// デストラクタ
 	/// </summary>
 	virtual ~IObjectForLevelEditorCollider() = default;
@@ -43,6 +53,9 @@ public:
 protected:
 	//オブジェクトの座標
 	Vector3 objectPosition_ = {};
+
+	//サイズ
+	Vector3 size_ = {};
 
 	//衝突したかどうか
 	bool isTouch_ = false;

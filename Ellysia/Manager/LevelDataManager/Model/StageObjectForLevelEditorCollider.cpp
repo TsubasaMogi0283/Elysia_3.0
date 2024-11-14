@@ -8,9 +8,6 @@ void StageObjectForLevelEditorCollider::Initialize() {
 	collisionType_ = ColliderType::AABBType;
 
 	
-
-	
-
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_STAGE_OBJECT);
 	//相手
@@ -20,6 +17,18 @@ void StageObjectForLevelEditorCollider::Initialize() {
 
 void StageObjectForLevelEditorCollider::Update(){
 	
+
+
+	aabb_.max = {
+		.x = objectPosition_.x + size_.x/2.0f,
+		.y = objectPosition_.y + size_.y/2.0f,
+		.z = objectPosition_.z + size_.z/2.0f,
+	};
+	aabb_.min = {
+		.x = objectPosition_.x - size_.x/2.0f,
+		.y = objectPosition_.y - size_.y/2.0f,
+		.z = objectPosition_.z - size_.z/2.0f,
+	};
 
 #ifdef _DEBUG
 	ImGui::Begin("ステージオブジェクト");

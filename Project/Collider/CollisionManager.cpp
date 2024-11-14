@@ -67,8 +67,6 @@ void CollisionManager::CheckAABBCollisionPair(Collider* colliderA, Collider* col
 	AABB aabb1 = colliderA->GetAABB();
 	AABB aabb2 = colliderB->GetAABB();
 
-
-
 	//衝突判定
 	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
 		(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&

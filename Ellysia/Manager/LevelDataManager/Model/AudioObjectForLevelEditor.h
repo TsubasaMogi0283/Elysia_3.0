@@ -108,6 +108,12 @@ public:
 	/// <returns></returns>
 	Vector3 GetWorldPosition()override;
 
+	/// <summary>
+	/// AABBの取得
+	/// </summary>
+	/// <returns></returns>
+	AABB GetAABB()override;
+
 private:
 	/// <summary>
 	/// BGM

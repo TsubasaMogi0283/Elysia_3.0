@@ -204,6 +204,7 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFileForLevelData(levelEditorDirectoryPath, objectData.modelFileName);
 			
 			//オブジェクトの生成
+			stageObject->SetSize(objectData.size);
 			stageObject->Initialize(modelHandle, objectData.transform);
 			objectData.objectForLeveEditor = stageObject;
 
@@ -212,6 +213,7 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 			if (objectData.isHavingCollider == true) {
 				//生成
 				StageObjectForLevelEditorCollider* collider = new StageObjectForLevelEditorCollider();
+				collider->SetSize(objectData.size);
 				collider->Initialize();
 
 				//代入
@@ -263,6 +265,7 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 
 				//生成
 				AudioObjectForLevelEditorCollider* collider = new AudioObjectForLevelEditorCollider();
+				collider->SetSize(objectData.size);
 				collider->Initialize();
 
 				//代入
