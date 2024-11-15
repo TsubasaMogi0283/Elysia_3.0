@@ -145,23 +145,23 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	std::vector<AABB> aabbs = levelEditor_->GetStageObjectAABB(levelHandle_);
 	for (size_t i = 0; i < positions.size() && i < aabbs.size(); ++i) {
 
-		//オブジェクトのAABB
-		AABB objectAABB = aabbs[i];
 
 		//オブジェクトとの差分ベクトル
 		Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(positions[i], player_->GetWorldPosition());
 
 		//オブジェクトとプレイヤーの距離
 		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
+
 		//内積
-		//これが無いと接触下きりになってしまうので入れる
+		//これが無いと接触したまま動けなくなってしまうので入れる
 		float dot = SingleCalculation::Dot(playerDirection, normalizedDemoAndPlayer);
 		const float DOT_OFFSET = 0.7f;
 
 
 		//衝突判定
-		if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
-			(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z) &&
+		//今の所Yはいらない
+		if ((playerAABB.min.x <= aabbs[i].max.x && playerAABB.max.x >= aabbs[i].min.x) &&
+			(playerAABB.min.z <= aabbs[i].max.z && playerAABB.max.z >= aabbs[i].min.z) &&
 			(dot > DOT_OFFSET)) {
 			uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
 			player_->SetMoveCondition(newCondition);
@@ -170,7 +170,7 @@ void LevelEditorSample::Update(GameManager* gameManager){
 			break;
 
 		}
-		else {
+		else{
 			//当たっていない
 			uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
 			player_->SetMoveCondition(newCondition);

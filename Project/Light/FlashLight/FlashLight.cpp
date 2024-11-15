@@ -71,7 +71,7 @@ void FlashLight::Update() {
 		.z = std::sinf(theta_),
 	};
 
-	//上のdirectionから長さを求めてからatan2でyを出す
+	//上のdirectionから長さを求めてからtanfでyを出す
 	float lengthXZ = sqrtf(std::powf(direction.x, 2.0f) + std::powf(direction.z, 2.0f));
 	lightDirection_.x = direction.x;
 	lightDirection_.y = lengthXZ * std::tanf(phi_);

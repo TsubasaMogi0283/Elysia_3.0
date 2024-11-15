@@ -42,9 +42,9 @@ void AudioTestPlayer::Update(){
 
 		//位置の更新
 		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, newDirection);
-
+		worldTransform_.Update();
 	}
-	worldTransform_.Update();
+	
 	material_.Update();
 
 
