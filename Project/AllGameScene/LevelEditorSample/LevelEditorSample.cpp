@@ -43,7 +43,7 @@ void LevelEditorSample::Initialize(){
 
 
 	//読み込み
-	levelHandle_ = levelEditor_->Load("Test/StageObjectTest.json");
+	levelHandle_ = levelEditor_->Load("Test/AudioAreaTest.json");
 
 	
 	//audio_->PlayMP3(audioHandleMP3_, true);
@@ -137,7 +137,7 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	//プレイヤーの方向
 	Vector3 playerDirection = player_->GetDirection();
 
-	//ステージオブジェクト殿当たり判定(改)
+	//ステージオブジェクトとの当たり判定(改)
 	//座標が取れなかったのでこっちでやる
 	//ObjectManagerでやっていたものをこっちに引っ越す
 	//上手くいったらGameSceneで実装する

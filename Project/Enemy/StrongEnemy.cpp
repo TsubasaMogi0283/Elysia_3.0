@@ -8,7 +8,7 @@
 #include <Collider/CollisionConfig.h>
 
 
-void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& speed){
+void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position,const Vector3& speed){
 
 	//モデル
 	model_.reset(Model::Create(modelHandle));
@@ -58,6 +58,10 @@ void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& 
 
 
 
+
+	//接近BGMの設定
+	audio_ = Audio::GetInstance();
+	audioHandle_ = audio_->Load("Resources/Audio/Sample/House.wav");
 }
 
 void StrongEnemy::Update(){
@@ -65,7 +69,7 @@ void StrongEnemy::Update(){
 
 	const float SPEED_AMOUNT = 0.05f;
 	//状態
-	//こっちもStatePatternにするよ！！
+	//こっちもStatePatternにしたい！！
 	switch (condition_) {
 	case EnemyCondition::NoneMove:
 		//何もしない
@@ -128,6 +132,28 @@ void StrongEnemy::Update(){
 	}
 
 
+
+	//音の処理
+	float volume = 1.0f-(distanceFromPlayer_ / trackingStartDistance_);
+	//0だったら鳴らす意味はないので止めておく
+	if (volume < 0.0f) {
+		audio_->Stop(audioHandle_);
+	}
+	else {
+		audio_->Play(audioHandle_, true);
+	}
+
+	audio_->ChangeVolume(audioHandle_, volume);
+
+#ifdef _DEBUG
+	ImGui::Begin("強敵");
+	ImGui::InputFloat("距離", &volume);
+	ImGui::End();
+#endif // _DEBUG
+
+
+
+
 	//向きを計算しモデルを回転させる
 	float directionToRotateY = std::atan2f(-direction_.z, direction_.x);
 	const float ROTATE_OFFSET = -std::numbers::pi_v<float> / 2.0f;
@@ -160,17 +186,11 @@ void StrongEnemy::OnCollision(){
 
 }
 
-void StrongEnemy::OffCollision()
-{
+void StrongEnemy::OffCollision(){
+
 }
 
 
 Vector3 StrongEnemy::GetWorldPosition(){
-	Vector3 position = {
-		.x = worldTransform_.worldMatrix.m[3][0],
-		.y = worldTransform_.worldMatrix.m[3][1],
-		.z = worldTransform_.worldMatrix.m[3][2]
-	};
-
-	return position;
+	return worldTransform_.GetWorldPosition();;
 }

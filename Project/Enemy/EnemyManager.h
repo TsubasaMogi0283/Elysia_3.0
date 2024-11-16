@@ -112,6 +112,8 @@ private:
 	std::list<Enemy*>enemyes_ = {};
 	std::list<StrongEnemy*>strongEnemyes_ = {};
 
+	//追跡開始の距離
+	const float STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
 
 
 	//モデルハンドル

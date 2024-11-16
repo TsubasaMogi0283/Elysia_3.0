@@ -7,6 +7,7 @@
 
 #include "Enemy/EnemyCondition.h"
 #include "Collider/Collider.h"
+#include <Audio.h>
 
 struct Camera;
 struct SpotLight;
@@ -25,7 +26,7 @@ public:
 	/// <param name="modelHandle"></param>
 	/// <param name="position"></param>
 	/// <param name="speed"></param>
-	void Initialize(uint32_t& modelHandle,Vector3 &position,Vector3 &speed);
+	void Initialize(const uint32_t& modelHandle,const Vector3 &position,const Vector3 &speed);
 
 	/// <summary>
 	/// 更新
@@ -68,7 +69,7 @@ public:
 	/// プレイヤーの座標を設定
 	/// </summary>
 	/// <param name="position"></param>
-	inline void SetPlayerPosition(Vector3& position) {
+	inline void SetPlayerPosition(const Vector3& position) {
 		this->playerPosition_ = position;
 	}
 
@@ -113,6 +114,22 @@ public:
 	}
 
 
+	/// <summary>
+	/// 追跡開始距離
+	/// </summary>
+	/// <param name="distance"></param>
+	inline void SetTrackingStartDistance(const float& distance) {
+		this->trackingStartDistance_ = distance;
+	}
+
+
+	/// <summary>
+	/// プレイヤーとの距離
+	/// </summary>
+	/// <param name="distance"></param>
+	inline void SetDistanceFromPlayer(const float& distance) {
+		this->distanceFromPlayer_ = distance;
+	}
 
 private:
 	//状態
@@ -150,6 +167,13 @@ private:
 	//追跡
 	bool isTracking_ = false;
 
+	//追跡開始距離
+	float trackingStartDistance_ = 0.0f;
+	//プレイヤーとの距離
+	float distanceFromPlayer_ = 0.0f;
 
+	//接近BGM用
+	Audio* audio_ = nullptr;
+	uint32_t audioHandle_ = 0u;
 };
 
