@@ -77,10 +77,16 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
 	strongEnemyes_.push_back(enemy);
 
-
+	//マテリアルのの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
 
+
+
+
+	//接近BGMの設定
+	audio_ = Audio::GetInstance();
+	audioHandle_ = audio_->Load("Resources/Audio/Enemy/TrackingToPlayer.mp3");
 }
 
 
@@ -582,14 +588,41 @@ void EnemyManager::Update(){
 		//距離を求める
 		Vector3 playerStrongEnemyDifference = VectorCalculation::Subtract(playerPosition, strongEnemy->GetWorldPosition());
 		float playerStrongEnemyDistance = SingleCalculation::Length(playerStrongEnemyDifference);
-		strongEnemy->SetDistanceFromPlayer(playerStrongEnemyDistance);
+		Vector3 directionToPlayer = VectorCalculation::Normalize(playerStrongEnemyDifference);
+
+
+		//大きさの処理
+		float volume = 1.0f - (playerStrongEnemyDistance / STRONG_ENEMY_TRACKING_START_DISTANCE_);
+		//0だったら鳴らす意味はないので止めておく
+		if (volume < 0.0f) {
+			audio_->Stop(audioHandle_);
+		}
+		else {
+			audio_->Play(audioHandle_, true);
+		}
+
+		audio_->ChangeVolume(audioHandle_, volume);
+
+
+
+
+		//Panの処理
+		//方向からPanを振る
+		//基本左右だけなのでX軸成分だけとる
+		float pan = 1.0f- directionToPlayer.x;
+
+		audio_->SetPan(audioHandle_, pan);
 
 #ifdef _DEBUG
-		ImGui::Begin("強い敵");
+		ImGui::Begin("強敵");
+		ImGui::InputFloat("距離", &volume);
+		ImGui::InputFloat3("プレイヤーとの方向", &directionToPlayer.x);
 		ImGui::InputFloat3("プレイヤーとの差分", &playerStrongEnemyDifference.x);
 		ImGui::InputFloat("プレイヤーとの距離", &playerStrongEnemyDistance);
 		ImGui::End();
 #endif // _DEBUG
+
+
 
 
 
@@ -643,6 +676,11 @@ void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 }
 
 EnemyManager::~EnemyManager(){
+
+
+	audio_->Stop(audioHandle_);
+
+
 	//通常
 	for (Enemy* enemy : enemyes_) {
 		delete enemy;

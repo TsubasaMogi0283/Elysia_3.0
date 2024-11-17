@@ -1,13 +1,14 @@
 #pragma once
 
 #include <memory>
+
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
 
 #include "Enemy/EnemyCondition.h"
 #include "Collider/Collider.h"
-#include <Audio.h>
+
 
 struct Camera;
 struct SpotLight;
@@ -58,11 +59,14 @@ public:
 	/// </summary>
 	void OffCollision()override;
 
+
 	/// <summary>
 	/// ワールド座標
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition()override;
+	Vector3 GetWorldPosition()override {
+		return worldTransform_.GetWorldPosition();
+	}
 
 
 	/// <summary>
@@ -85,11 +89,11 @@ public:
 	/// 状態の設定
 	/// </summary>
 	/// <param name="condition"></param>
-	inline void SetCondition(uint32_t& condition) {
+	inline void SetCondition(const uint32_t& condition) {
 		this->condition_ = condition;
 	}
 
-	uint32_t GetCondition() const {
+	inline uint32_t GetCondition() const {
 		return condition_;
 	}
 
@@ -123,13 +127,12 @@ public:
 	}
 
 
+
+private: 
 	/// <summary>
-	/// プレイヤーとの距離
+	/// 追跡のオーディオのついての関数
 	/// </summary>
-	/// <param name="distance"></param>
-	inline void SetDistanceFromPlayer(const float& distance) {
-		this->distanceFromPlayer_ = distance;
-	}
+	void TrackingAudio();
 
 private:
 	//状態
@@ -169,11 +172,6 @@ private:
 
 	//追跡開始距離
 	float trackingStartDistance_ = 0.0f;
-	//プレイヤーとの距離
-	float distanceFromPlayer_ = 0.0f;
-
-	//接近BGM用
-	Audio* audio_ = nullptr;
-	uint32_t audioHandle_ = 0u;
+	
 };
 

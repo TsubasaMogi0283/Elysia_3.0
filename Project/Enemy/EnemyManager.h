@@ -5,6 +5,7 @@
 
 #include "Stage/Ground/StageRect.h"
 #include "StrongEnemy.h"
+#include <Audio.h>
 
 
 
@@ -114,24 +115,21 @@ private:
 
 	//追跡開始の距離
 	const float STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
-
+	
 
 	//モデルハンドル
 	uint32_t normalEnemyModelHandle_ = 0u;
 	uint32_t strongEnemyModelHandle_ = 0u;
 
-	
-
-
-	
-
-	
-
-	
-
 	StageRect stageRect_ = {};
 
 	//モデル
 	Material material_ = {};
+
+	
+	//接近BGM用
+	Audio* audio_ = nullptr;
+	uint32_t audioHandle_ = 0u;
+
 };
 

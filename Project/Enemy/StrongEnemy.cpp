@@ -59,10 +59,17 @@ void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position
 
 
 
-	//接近BGMの設定
-	audio_ = Audio::GetInstance();
-	audioHandle_ = audio_->Load("Resources/Audio/Sample/House.wav");
+	
 }
+
+
+
+
+void StrongEnemy::TrackingAudio(){
+	
+
+}
+
 
 void StrongEnemy::Update(){
 
@@ -133,23 +140,10 @@ void StrongEnemy::Update(){
 
 
 
-	//音の処理
-	float volume = 1.0f-(distanceFromPlayer_ / trackingStartDistance_);
-	//0だったら鳴らす意味はないので止めておく
-	if (volume < 0.0f) {
-		audio_->Stop(audioHandle_);
-	}
-	else {
-		audio_->Play(audioHandle_, true);
-	}
+	//追跡時のオーディオ処理
+	TrackingAudio();
 
-	audio_->ChangeVolume(audioHandle_, volume);
-
-#ifdef _DEBUG
-	ImGui::Begin("強敵");
-	ImGui::InputFloat("距離", &volume);
-	ImGui::End();
-#endif // _DEBUG
+	
 
 
 
@@ -180,6 +174,8 @@ void StrongEnemy::Draw(const Camera& camera,const SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera, material_, spotLight);
 }
 
+
+
 void StrongEnemy::OnCollision(){
 	//プレイヤーと接触した
 	isTouchPlayer_ = true;
@@ -188,9 +184,4 @@ void StrongEnemy::OnCollision(){
 
 void StrongEnemy::OffCollision(){
 
-}
-
-
-Vector3 StrongEnemy::GetWorldPosition(){
-	return worldTransform_.GetWorldPosition();;
 }
