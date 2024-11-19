@@ -4,7 +4,7 @@
 
 void PlayerCollisionToStrongEnemy::Initialize(){
 
-	uint32_t modelHandle= ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	uint32_t modelHandle= ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
 	model_.reset(Model::Create(modelHandle));
 
 
@@ -16,7 +16,7 @@ void PlayerCollisionToStrongEnemy::Initialize(){
 #pragma region 当たり判定
 
 	//種類
-	collisionType_ = CollisionType::SphereType;
+	collisionType_ = ColliderType::SphereType;
 
 	//半径
 	radius_ = 1.0f;
@@ -40,7 +40,7 @@ void PlayerCollisionToStrongEnemy::Update(){
 
 }
 
-void PlayerCollisionToStrongEnemy::Draw(Camera& camera, Material& material, SpotLight& spotLight){
+void PlayerCollisionToStrongEnemy::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight){
 
 #ifdef _DEBUG
 	model_->Draw(worldTransform_, camera, material, spotLight);

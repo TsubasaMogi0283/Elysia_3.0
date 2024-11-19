@@ -63,40 +63,9 @@ void CollisionManager::CheckAABBCollisionPair(Collider* colliderA, Collider* col
 		return;
 	}
 
-
-	//コライダーAのワールド座標を取得
-	Vector3 colliderPosisionA = colliderA->GetWorldPosition();
-
-	//コライダーBのワールド座標を取得
-	Vector3 colliderPosisionB = colliderB->GetWorldPosition();
-
-	
-
-	//コライダーAの下方サイズ
-	Vector3 downSideSizeA = colliderA->GetDownSideSize();
-	//コライダーBの下方サイズ
-	Vector3 downSideSizeB = colliderB->GetDownSideSize();
-
-
-	//コライダーAの上方サイズ
-	Vector3 upSideSizeA = colliderA->GetUpSideSize();
-	//コライダーBの上方サイズ
-	Vector3 upSideSizeB = colliderB->GetUpSideSize();
-
-
-
-	//コライダーAのAABBを求める
-	AABB aabb1 = {
-		.min{.x = colliderPosisionA.x - downSideSizeA.x,.y = colliderPosisionA.y - downSideSizeA.y,.z = colliderPosisionA.z - downSideSizeA.z },
-		.max{.x = colliderPosisionA.x + upSideSizeA.x,.y = colliderPosisionA.y + upSideSizeA.y,.z = colliderPosisionA.z + upSideSizeA.z }
-	};
-
-	//コライダーBのAABBを求める
-	AABB aabb2 = {
-		.min{.x = colliderPosisionB.x - downSideSizeB.x,.y = colliderPosisionB.y - downSideSizeB.y,.z = colliderPosisionB.z - downSideSizeB.z },
-		.max{.x = colliderPosisionB.x + upSideSizeB.x,.y = colliderPosisionB.y + upSideSizeB.y,.z = colliderPosisionB.z + upSideSizeB.z }
-	};
-
+	//各AABBの取得
+	AABB aabb1 = colliderA->GetAABB();
+	AABB aabb2 = colliderB->GetAABB();
 
 	//衝突判定
 	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
@@ -125,35 +94,67 @@ void CollisionManager::CheckFanAndPoint(Collider* colliderA, Collider* colliderB
 	}
 
 	
+	if (colliderA->GetCollisionType() == ColliderType::PointType) {
+		//衝突判定の計算
+		if (CollisionCalculation::IsFanCollision(colliderB->GetFan3D(), colliderA->GetWorldPosition()) == true) {
+			colliderA->OnCollision();
+			colliderB->OnCollision();
+		}
+		else {
+			colliderA->OffCollision();
+			colliderB->OffCollision();
+		}
+	}
+	else if (colliderA->GetCollisionType() == ColliderType::FanType) {
+		//衝突判定の計算
+		if (CollisionCalculation::IsFanCollision(colliderA->GetFan3D(), colliderB->GetWorldPosition()) == true) {
+			colliderA->OnCollision();
+			colliderB->OnCollision();
+		}
+		else {
+			colliderA->OffCollision();
+			colliderB->OffCollision();
+		}
+	}
 
 
-	//衝突判定の計算
-	if (CollisionCalculation::IsFanCollision(colliderA->GetFan3D(), colliderB->GetWorldPosition())) {
-		colliderA->OnCollision();
-		colliderB->OnCollision();
-	}
-	else {
-		colliderA->OffCollision();
-		colliderB->OffCollision();
-	}
+	
 
 }
 
 void CollisionManager::CheckPlaneAndPoint(Collider* colliderA, Collider* colliderB){
+
+
 	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
 		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0) {
 		return;
 	}
 
-	//衝突判定の計算
-	if (CollisionCalculation::IsCollisionPlaneAndPoint(colliderA->GetPlane(), colliderB->GetWorldPosition())) {
-		colliderA->OnCollision();
-		colliderB->OnCollision();
+
+	if (colliderA->GetCollisionType() == ColliderType::PointType) {
+		//衝突判定の計算
+		if (CollisionCalculation::IsCollisionPlaneAndPoint(colliderA->GetWorldPosition(), colliderB->GetPlane())==true) {
+			colliderA->OnCollision();
+			colliderB->OnCollision();
+		}
+		else {
+			colliderA->OffCollision();
+			colliderB->OffCollision();
+		}
 	}
-	else {
-		colliderA->OffCollision();
-		colliderB->OffCollision();
+	else if (colliderA->GetCollisionType() == ColliderType::PlaneType) {
+		//衝突判定の計算
+		if (CollisionCalculation::IsCollisionPlaneAndPoint(colliderB->GetWorldPosition(), colliderA->GetPlane())==true) {
+			colliderA->OnCollision();
+			colliderB->OnCollision();
+		}
+		else {
+			colliderA->OffCollision();
+			colliderB->OffCollision();
+		}
+
 	}
+	
 }
 
 
@@ -176,25 +177,25 @@ void CollisionManager::CheckAllCollision(){
 			Collider* colliderB = *itrB;
 
 			//球同士
-			if (colliderA->GetCollisionType() == CollisionType::SphereType &&
-				colliderB->GetCollisionType() == CollisionType::SphereType) {
+			if (colliderA->GetCollisionType() == ColliderType::SphereType &&
+				colliderB->GetCollisionType() == ColliderType::SphereType) {
 				CheckSphereCollisionPair(colliderA, colliderB);
 			}
 
 			//AABB同士
-			if (colliderA->GetCollisionType() == CollisionType::AABBType &&
-				colliderB->GetCollisionType() == CollisionType::AABBType) {
+			if (colliderA->GetCollisionType() == ColliderType::AABBType &&
+				colliderB->GetCollisionType() == ColliderType::AABBType) {
 				CheckAABBCollisionPair(colliderA, colliderB);
 			}
 
 			//扇と点
-			if (colliderA->GetCollisionType() == CollisionType::FanType &&
-				colliderB->GetCollisionType() == CollisionType::PointType) {
+			if ((colliderA->GetCollisionType() == ColliderType::FanType && colliderB->GetCollisionType() == ColliderType::PointType)||
+				(colliderA->GetCollisionType() == ColliderType::PointType && colliderB->GetCollisionType() == ColliderType::FanType)) {
 				CheckFanAndPoint(colliderA, colliderB);
 			}
-			//扇と点
-			if (colliderA->GetCollisionType() == CollisionType::PlaneType &&
-				colliderB->GetCollisionType() == CollisionType::PointType) {
+			//平面と点
+			if ((colliderA->GetCollisionType() == ColliderType::PointType && colliderB->GetCollisionType() == ColliderType::PlaneType)||
+				(colliderA->GetCollisionType() == ColliderType::PlaneType && colliderB->GetCollisionType() == ColliderType::PointType)) {
 				CheckPlaneAndPoint(colliderA, colliderB);
 			}
 

@@ -12,7 +12,17 @@ struct DirectionalLight;
 struct PointLight;
 struct SpotLight;
 
+/// <summary>
+/// オーディオオブジェクトのタイプ
+/// </summary>
+enum AudioObjectType {
+	BGMType,
+	ActionType,
+};
 
+/// <summary>
+/// オーディオオブジェクトのデータ
+/// </summary>
 struct AudioDataForLevelEditor {
 
 	//ファイル名
@@ -47,7 +57,7 @@ public:
 	/// 初期化より先でやってね
 	/// </summary>
 	inline void SetLevelDataAudioData(const AudioDataForLevelEditor& levelDataAudioData) {
-		this->audioDataForLevelEditor = levelDataAudioData;
+		this->audioDataForLevelEditor_ = levelDataAudioData;
 	}
 
 	/// <summary>
@@ -99,20 +109,31 @@ public:
 	Vector3 GetWorldPosition()override;
 
 	/// <summary>
-	/// 衝突下かどうかの設定
+	/// AABBの取得
 	/// </summary>
-	/// <param name="isTouch"></param>
-	void SetIsTouch(const bool& isTouch) {
-		this->isTouch_ = isTouch;
-	}
+	/// <returns></returns>
+	AABB GetAABB()override;
 
+private:
+	/// <summary>
+	/// BGM
+	/// </summary>
+	void BackGround();
+
+	/// <summary>
+	/// アクションSE
+	/// </summary>
+	void Action();
+
+	
 	
 private:
 	//オーディオ
 	Audio* audio_ = nullptr;
 	
-	AudioDataForLevelEditor audioDataForLevelEditor = {};
+	//レベルエディタ側で設定した値を持ってくる
+	AudioDataForLevelEditor audioDataForLevelEditor_ = {};
 	
-	//衝突
-	bool isTouch_ = false;
+	int32_t audioType_ = -1;
+
 };

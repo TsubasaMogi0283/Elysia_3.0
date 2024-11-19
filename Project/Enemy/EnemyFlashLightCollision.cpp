@@ -8,7 +8,7 @@ void EnemyFlashLightCollision::Initialize(){
 
 	//種類
 	//点。AABBとか球にしたら計算量多くなるので止めた
-	collisionType_ = CollisionType::PointType;
+	collisionType_ = ColliderType::PointType;
 
 
 	//自分

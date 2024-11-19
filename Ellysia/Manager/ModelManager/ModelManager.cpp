@@ -8,6 +8,7 @@
 #include <ReadNode.h>
 
 #include "Matrix4x4Calculation.h"
+#include <Calculation/QuaternionCalculation.h>
 
 static uint32_t modelhandle;
 
@@ -90,7 +91,7 @@ ModelData ModelManager::LoadFileForLeveldata(const std::string& fileNameFolder, 
 			Quaternion rotateQuaternion = { rotate.x,-rotate.y,-rotate.z,rotate.w };
 
 			Matrix4x4 scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(scaleAfter);
-			Matrix4x4 rotateMatrix = MakeRotateMatrix(rotateQuaternion);
+			Matrix4x4 rotateMatrix = QuaternionCalculation::MakeRotateMatrix(rotateQuaternion);
 			Matrix4x4 translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(translateAfter);
 
 
@@ -238,7 +239,7 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			Quaternion rotateQuaternion = { rotate.x,-rotate.y,-rotate.z,rotate.w };
 
 			Matrix4x4 scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(scaleAfter);
-			Matrix4x4 rotateMatrix = MakeRotateMatrix(rotateQuaternion);
+			Matrix4x4 rotateMatrix = QuaternionCalculation::MakeRotateMatrix(rotateQuaternion);
 			Matrix4x4 translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(translateAfter);
 
 

@@ -5,11 +5,12 @@
 #include "Vector3.h"
 #include "AABB.h"
 #include "Fan.h"
+#include <Plane.h>
 
 /// <summary>
 /// 衝突の種類
 /// </summary>
-enum CollisionType {
+enum ColliderType {
 	//点
 	PointType,
 	//板
@@ -53,26 +54,19 @@ public:
 	/// 半径を取得
 	/// </summary>
 	/// <returns></returns>
-	float GetRadius() {
+	float GetRadius() const{
 		return radius_;
 	}
 
 #pragma region AABB
 
+
 	/// <summary>
-	/// 上方のサイズ
+	/// AABBの取得
 	/// </summary>
 	/// <returns></returns>
-	inline Vector3 GetUpSideSize() {
-		return upSideSize_;
-	}
-	
-	/// <summary>
-	/// 下方のサイズ
-	/// </summary>
-	/// <returns></returns>
-	inline Vector3 GetDownSideSize() {
-		return downSideSize_;
+	inline AABB GetAABB()const {
+		return aabb_;
 	}
 
 #pragma endregion
@@ -133,7 +127,7 @@ public:
 protected:
 
 	//当たり判定の種類
-	uint32_t collisionType_ = CollisionType::SphereType;
+	uint32_t collisionType_ = ColliderType::SphereType;
 
 #pragma region 球
 
@@ -144,13 +138,8 @@ protected:
 
 #pragma region AABB
 
-	//AABBのmax部分に加算する縦横高さのサイズ
-	Vector3 upSideSize_ = {};
-
-	//AABBのmax部分に加算する縦横高さのサイズ
-	Vector3 downSideSize_ = {};
-
-
+	//AABB
+	AABB aabb_ = {};
 
 #pragma endregion
 

@@ -310,7 +310,7 @@ bool CollisionCalculation::IsFanCollision(const Fan3D& fan, const Vector3& point
 }
 
 
-bool CollisionCalculation::IsCollisionPlaneAndPoint(const Plane& plane, const Vector3& position){
+bool CollisionCalculation::IsCollisionPlaneAndPoint(const Vector3& position, const Plane& plane){
     //平面上にいない時除外する
     if (position.y < plane.position.y) {
         return false;

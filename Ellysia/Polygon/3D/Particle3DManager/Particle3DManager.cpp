@@ -6,16 +6,16 @@
 
 
 #include "DirectXSetup.h"
-#include <PipelineManager.h>
+#include "PipelineManager.h"
 
-#include <ModelManager.h>
+#include "ModelManager.h"
 #include "SrvManager.h"
-#include <Collision.h>
-#include <VectorCalculation.h>
-#include <Matrix4x4Calculation.h>
+#include "CollisionCalculation.h"
+#include "VectorCalculation.h"
+#include "Matrix4x4Calculation.h"
 #include <numbers>
-#include <TextureManager.h>
-#include <Material.h>
+#include "TextureManager.h"
+#include "Material.h"
 
 Particle3DManager* Particle3DManager::GetInstance(){
     static Particle3DManager instance;
@@ -204,7 +204,7 @@ void Particle3DManager::Update(Camera& camera) {
 			//フィールド設定すると風の影響を受ける
 			if (isSetField_ == true) {
 
-				if (IsCollisionAABBAndPoint(accelerationField_.area, (*particleIterator).transform.translate)) {
+				if (CollisionCalculation::IsCollisionAABBAndPoint(accelerationField_.area, (*particleIterator).transform.translate)) {
 					(*particleIterator).velocity.x += accelerationField_.acceleration.x * DELTA_TIME;
 					(*particleIterator).velocity.y += accelerationField_.acceleration.y * DELTA_TIME;
 					(*particleIterator).velocity.z += accelerationField_.acceleration.z * DELTA_TIME;

@@ -1,4 +1,5 @@
 #include "StageObjectForLevelEditor.h"
+#include <VectorCalculation.h>
 
 void StageObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Transform& transform) {
 	
@@ -21,6 +22,23 @@ void StageObjectForLevelEditor::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
+	//AABBの設定
+	aabb_ = {
+		.min = VectorCalculation::Subtract(worldTransform_.GetWorldPosition(),size_),
+		.max = VectorCalculation::Add(worldTransform_.GetWorldPosition(),size_)
+	};
+
+#ifdef _DEBUG
+	ImGui::Begin("ステージオブジェクト"); 
+	Vector3 position = worldTransform_.GetWorldPosition();
+	ImGui::InputFloat3("座標", &position.x);
+	ImGui::InputFloat3("AABB_Max", &aabb_.max.x);
+	ImGui::InputFloat3("AABB_Min", &aabb_.min.x);
+	ImGui::End();
+#endif // _DEBUG
+
+
+
 }
 
 void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight) {
@@ -34,8 +52,4 @@ void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& materi
 
 void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight) {
 	model_->Draw(worldTransform_, camera, material, spotLight);
-}
-
-Vector3 StageObjectForLevelEditor::GetWorldPosition(){
-	return worldTransform_.GetWorldPosition();
 }

@@ -24,7 +24,7 @@ namespace CollisionCalculation {
 	/// <param name="position"></param>
 	/// <param name="plane"></param>
 	/// <returns></returns>
-	bool IsCollisionPlaneAndPoint(const Plane& plane, const Vector3& position);
+	bool IsCollisionPlaneAndPoint(const Vector3& position, const Plane& plane);
 
 	/// <summary>
 	/// 扇形(2次元)

@@ -10,13 +10,12 @@
 #include "AnimationManager.h"
 #include "TextureManager.h"
 #include <VectorCalculation.h>
+#include <SingleCalculation.h>
 
 
 LevelEditorSample::LevelEditorSample(){
 	//レベルエディタのインスタンスを取得
 	levelEditor_ = LevelDataManager::GetInstance();
-	//オーディオのインスタンスを取得
-	audio_ = Audio::GetInstance();
 	//インプットのインスタンスを取得
 	input_ = Input::GetInstance();
 }
@@ -44,16 +43,14 @@ void LevelEditorSample::Initialize(){
 
 
 	//読み込み
-	levelHandle_ = levelEditor_->Load("Test/AudioAreaTestGroundOnly.json");
+	levelHandle_ = levelEditor_->Load("Test/AudioAreaTest.json");
 
-	//オーディオの読み込み
-	uint32_t mp3Test = audio_->Load("Resources/Audio/Sample/WIP.mp3");
-	mp3Test;
-	audioHandle_ = audio_->Load("Resources/Audio/Sample/Win.wav");
-	audioHandle2_= audio_->Load("Resources/Audio/Sample/Hit.wav");
-	audioHandleMP3_ = audio_->Load("Resources/Audio/Sample/WIP.mp3");
+	
 	//audio_->PlayMP3(audioHandleMP3_, true);
 
+
+
+	collisionManager_ = std::make_unique<CollisionManager>();
 }
 
 void LevelEditorSample::Update(GameManager* gameManager){
@@ -104,15 +101,14 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	}
 
 
-	
-
-
-
 	//プレイヤーの更新
 	player_->SetDirection(playerDirection_);
 	player_->Update();
+
 	//プレイヤーのコライダーを登録
-	collisionManager_->RegisterList(player_->GetCollosion());
+	collisionManager_->RegisterList(player_->GetCollosionToAudioObject());
+	collisionManager_->RegisterList(player_->GetCollosionToStageObject());
+
 
 	//レベルエディタで使うリスナーの設定
 	Listener listener = {
@@ -123,36 +119,91 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 	//レベルエディタの更新
 	levelEditor_->Update(levelHandle_);
+
 	//マテリアルの更新
 	material_.Update();
+	
 	//平行光源の更新
 	directionalLight_.Update();
 
+	//レベルエディタにあるコライダーを登録
+	std::vector<IObjectForLevelEditorCollider*> colliders = levelEditor_->GetCollider(levelHandle_);
+	for (auto it = colliders.begin(); it != colliders.end(); ++it) {
+		collisionManager_->RegisterList(*it);
+	}
 
+	//プレイヤーのAABB
+	AABB playerAABB = player_->GetCollosionToStageObject()->GetAABB();
+	//プレイヤーの方向
+	Vector3 playerDirection = player_->GetDirection();
+
+	//ステージオブジェクトとの当たり判定(改)
+	//座標が取れなかったのでこっちでやる
+	//ObjectManagerでやっていたものをこっちに引っ越す
+	//上手くいったらGameSceneで実装する
+	std::vector<Vector3> positions = levelEditor_->GetStageObjectPosition(levelHandle_);
+	std::vector<AABB> aabbs = levelEditor_->GetStageObjectAABB(levelHandle_);
+	for (size_t i = 0; i < positions.size() && i < aabbs.size(); ++i) {
+
+
+		//オブジェクトとの差分ベクトル
+		Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(positions[i], player_->GetWorldPosition());
+
+		//オブジェクトとプレイヤーの距離
+		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
+
+		//内積
+		//これが無いと接触したまま動けなくなってしまうので入れる
+		float dot = SingleCalculation::Dot(playerDirection, normalizedDemoAndPlayer);
+		const float DOT_OFFSET = 0.7f;
+
+
+		//衝突判定
+		//Y成分はいらない
+		if ((playerAABB.min.x <= aabbs[i].max.x && playerAABB.max.x >= aabbs[i].min.x) &&
+			(playerAABB.min.z <= aabbs[i].max.z && playerAABB.max.z >= aabbs[i].min.z) &&
+			(dot > DOT_OFFSET)) {
+			uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+			player_->SetMoveCondition(newCondition);
+
+			//当たったらループを抜ける
+			break;
+
+		}
+		else{
+			//当たっていない
+			uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+			player_->SetMoveCondition(newCondition);
+
+		}
+
+	}
 
 
 	//衝突判定の計算
 	collisionManager_->CheckAllCollision();
 
-
-
-
 	//カメラの更新
 	//高さの補正も足す
-	const Vector3 OFFSET = { .x = 0.0f,.y = 2.0f,.z = 0.0f };
+	const Vector3 OFFSET = { .x = 0.0f,.y = 5.0f,.z = -20.0f };
 	Vector3 playerViewPoint = VectorCalculation::Add(player_->GetWorldPosition(), OFFSET);
+	camera_.rotate_.x = 0.26f;
 	camera_.translate_ = playerViewPoint;
 	camera_.Update();
 
 }
 
-void LevelEditorSample::DrawSpriteBack()
-{
+void LevelEditorSample::DrawSpriteBack(){
+
 }
 
 void LevelEditorSample::DrawObject3D(){
-	//レベルエディタのモデルを描画     
+	//プレイヤー
+	player_->Draw(camera_, directionalLight_);
+
+	//レベルエディタ  
 	levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
+	
 }
 
 void LevelEditorSample::PreDrawPostEffectFirst(){

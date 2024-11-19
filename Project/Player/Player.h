@@ -8,9 +8,10 @@
 #include "PlayerCollisionToNormalEnemyAttack.h"
 #include "Listener/ListenerForLevelEditor.h"
 #include "Light/FlashLight/FlashLight.h"
+#include "SpotLight.h"
+
 
 struct Camera;
-struct SpotLight;
 struct Material;
 class GameScene;
 class ObjectManager;
@@ -53,7 +54,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void Draw(Camera& camera,Material& material,SpotLight& spotLight);
+	void Draw(const Camera& camera,const SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ
@@ -171,7 +172,7 @@ public:
 	/// 通常の敵の当たり判定
 	/// </summary>
 	/// <returns></returns>
-	PlayerCollisionToNormalEnemyAttack* GetCollisionToNormalEnemy()const {
+	inline PlayerCollisionToNormalEnemyAttack* GetCollisionToNormalEnemy()const {
 		return colliderToNormalEnemy_.get();
 	}
 
@@ -179,11 +180,25 @@ public:
 	/// 強敵の当たり判定
 	/// </summary>
 	/// <returns></returns>
-	PlayerCollisionToStrongEnemy* GetCollisionToStrongEnemy()const {
+	inline PlayerCollisionToStrongEnemy* GetCollisionToStrongEnemy()const {
 		return collisionToStrongEnemy_.get();
 	}
 
-	
+	/// <summary>
+	/// 懐中電灯の当たり判定
+	/// </summary>
+	/// <returns></returns>
+	inline FlashLightCollision* GetFlashLightCollision()const {
+		return flashLight_->GetFanCollision();
+	}
+
+	/// <summary>
+	/// 懐中電灯を取得
+	/// </summary>
+	/// <returns></returns>
+	inline FlashLight* GetFlashLight()const {
+		return flashLight_.get();
+	}
 
 
 private:
@@ -196,6 +211,10 @@ private:
 
 	//ステージの四隅
 	StageRect stageRect_ = {};
+
+
+	//マテリアル
+	Material material_ = {};
 
 
 
@@ -253,7 +272,7 @@ private:
 
 
 	//懐中電灯
-	//std::unique_ptr<FlashLight>flashLight_ = nullptr;
+	std::unique_ptr<FlashLight>flashLight_ = nullptr;
 
 };
 

@@ -3,36 +3,22 @@
 タイトル: 静寂の霊園  
 制作:茂木 翼  
 
-1. 開発環境
-    * 内部
-        * Visual Studio 2022
-        * Ellysia Engine
-        * Blender
-        * Windows SDK ver 8.0.10
-        * C++、HLSL、Python    
-      
-    * 外部ライブラリ
-        * DirectXTex
-        * nlohmann-json
-        * Assimp
-        * ImGui
+<br>
+
+## ゲームについて
+
+キーボードまたはコントローラーを使って遊ぶ<span style="color: #dc143c; ">**3Dホラーアクションゲーム**</span>です。徘徊するお化けに襲われないよう気を付けながら、ステージ上にある鍵を探し脱出を目指します。
+お化けはプレイヤーが持つライトで照らすことで倒すことが出来ます。
+
+
+
+![静寂の霊園_プレイ2](https://github.com/user-attachments/assets/05c114d1-279a-4c94-8006-91e9f91ad70f)
+https://youtu.be/Biu44fPONeg
 
 <br>
 
-2. ゲームについて
 
-    キーボードまたはコントローラーを使って遊ぶ<span style="color: #dc143c; ">**3Dホラーアクションゲーム**</span>です。徘徊するお化けに襲われないよう気を付けながら、ステージ上にある鍵を探し脱出を目指します。
-    お化けはプレイヤーが持つライトで照らすことで倒すことが出来ます。
-
-
-
-    ![静寂の霊園_プレイ2](https://github.com/user-attachments/assets/05c114d1-279a-4c94-8006-91e9f91ad70f)
-    https://youtu.be/Biu44fPONeg
-
-    <br>
-
-
-3. 頑張ったところ
+2. 頑張ったところ
     * **レベルエディタ**  
         Blenderのアドオン開発をしました。モデルのファイル名を入力と配置をします。必要であれば衝突判定も追加できます。  
         その他にオーディオも追加できます。衝突判定も追加すればそこに対応した音が流れます。
@@ -66,7 +52,7 @@
 
 
 
-## 頑張った所
+## 特徴
 
 音楽制作している所からオーディオ面を頑張りたいと思い力を入れました。  
 XAudio2を使い再生と停止の基本機能に加え、ループの細かい設定や様々なエフェクトを加えることが出来ます。
@@ -84,7 +70,7 @@ XAudio2を使い再生と停止の基本機能に加え、ループの細かい�
     ```c++
     uint32_t Audio::Load(const std::string& fileName){
 
-	//一度読み込んだものは２度読み込まず返すだけ
+	    //一度読み込んだものは２度読み込まず返すだけ
     	if (Audio::GetInstance()->audioInformation_.find(fileName) != Audio::GetInstance()->audioInformation_.end()) {  
     		return Audio::GetInstance()->audioInformation_[fileName].handle;
     	}
@@ -111,7 +97,7 @@ XAudio2を使い再生と停止の基本機能に加え、ループの細かい�
     	}
 
 
-    	//無かったら空を返す
+    	//無かったら0uを返す
     	return result;
 
     }
@@ -135,3 +121,11 @@ XAudio2を使い再生と停止の基本機能に加え、ループの細かい�
 
 
 <br>
+
+
+
+## 使用した外部ライブラリ
+* DirectXTex
+* nlohmann-json
+* Assimp
+* ImGui

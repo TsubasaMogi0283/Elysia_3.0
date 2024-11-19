@@ -38,7 +38,7 @@ void FlashLight::Initialize(){
 
 
 	//デバッグ用のモデルを生成する
-	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
 
 
 	const float SCALE = 0.4f;
@@ -71,7 +71,7 @@ void FlashLight::Update() {
 		.z = std::sinf(theta_),
 	};
 
-	//上のdirectionから長さを求めてからatan2でyを出す
+	//上のdirectionから長さを求めてからtanfでyを出す
 	float lengthXZ = sqrtf(std::powf(direction.x, 2.0f) + std::powf(direction.z, 2.0f));
 	lightDirection_.x = direction.x;
 	lightDirection_.y = lengthXZ * std::tanf(phi_);
@@ -80,7 +80,7 @@ void FlashLight::Update() {
 
 	//プレイヤーの座標と微調整分
 	//ライトを持つときの高さは地面と同じだと変だよね
-	const float LIGHT_HEIGHT = 1.0f;
+	const float LIGHT_HEIGHT = 2.0f;
 	const Vector3 OFFSET = { 0.0f, LIGHT_HEIGHT,0.0f };
 	lightPosition = VectorCalculation::Add(playerPosition_, OFFSET);
 
@@ -157,7 +157,6 @@ void FlashLight::Update() {
 	ImGui::End();
 #endif // _DEBUG
 
-	
 
 	//更新
 	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
@@ -169,7 +168,7 @@ void FlashLight::Update() {
 	spotLight_.Update();
 }
 
-void FlashLight::Draw(Camera& camera){
+void FlashLight::Draw(const Camera& camera){
 #ifdef _DEBUG
 
 

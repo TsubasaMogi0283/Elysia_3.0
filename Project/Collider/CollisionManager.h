@@ -67,6 +67,7 @@ private:
 
 
 private:
+	//コライダーのリスト
 	std::list<Collider*>colliders_;
 };
 
