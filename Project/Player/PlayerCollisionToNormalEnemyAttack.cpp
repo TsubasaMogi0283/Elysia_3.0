@@ -4,7 +4,7 @@
 
 void PlayerCollisionToNormalEnemyAttack::Initialize(){
 
-	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere","Sphere.obj");
 	model_.reset(Model::Create(modelHandle));
 
 
@@ -17,7 +17,7 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 #pragma region 当たり判定
 
 	//種類
-	collisionType_ = CollisionType::SphereType;
+	collisionType_ = ColliderType::SphereType;
 
 	//半径
 	radius_ = 1.0f;
@@ -53,7 +53,7 @@ void PlayerCollisionToNormalEnemyAttack::Update(){
 
 }
 
-void PlayerCollisionToNormalEnemyAttack::Draw(Camera& camera, Material& material, SpotLight& spotLight){
+void PlayerCollisionToNormalEnemyAttack::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight){
 #ifdef _DEBUG
 	model_->Draw(worldTransform_, camera, material, spotLight);
 #endif // _DEBUG

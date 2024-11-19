@@ -30,17 +30,17 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	normalEnemyModelHandle_ = normalEnemyModel;
 	strongEnemyModelHandle_ = strongEnemyModel;
 
-	////TLのレベルエディターでやってもいいかも！
+	//CSVでやった方が良いかも
 	Enemy* enemy1 = new Enemy();
 	Vector3 position1 = { 0.0f,0.0f,11.0f };
 	enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,0.01f });
 	enemyes_.push_back(enemy1);
-
+	
 		
-	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = { -5.0f,0.0f,15.0f };
-	enemy2->Initialize(normalEnemyModelHandle_, position2, { 0.01f,0.0f,0.0f });
-	enemyes_.push_back(enemy2);
+	//Enemy* enemy2 = new Enemy();
+	//Vector3 position2 = { -5.0f,0.0f,15.0f };
+	//enemy2->Initialize(normalEnemyModelHandle_, position2, { 0.01f,0.0f,0.0f });
+	//enemyes_.push_back(enemy2);
 	
 	//Enemy* enemy3 = new Enemy();
 	//Vector3 position3 = { -10.0f,0.0f,4.0f };
@@ -72,14 +72,21 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	//position = { -4.0f,0.0f,5.0f };
 	//speed = { 0.01f,0.0f,-0.03f };
 	//
-	//
+	////強い敵の初期化
 	//enemy->Initialize(strongEnemyModelHandle_, position, speed);
+	//enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
 	//strongEnemyes_.push_back(enemy);
 
-
+	//マテリアルのの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
 
+
+
+
+	//接近BGMの設定
+	audio_ = Audio::GetInstance();
+	audioHandle_ = audio_->Load("Resources/Audio/Enemy/TrackingToPlayer.mp3");
 }
 
 
@@ -576,16 +583,40 @@ void EnemyManager::Update(){
 		AABB strongEnemyAABB = strongEnemy->GetAABB();
 
 
-		//追跡開始の距離
-		const float TRACKING_START_DISTANCE = 30.0f;
+		
 
 		//距離を求める
 		Vector3 playerStrongEnemyDifference = VectorCalculation::Subtract(playerPosition, strongEnemy->GetWorldPosition());
 		float playerStrongEnemyDistance = SingleCalculation::Length(playerStrongEnemyDifference);
-		
+		Vector3 directionToPlayer = VectorCalculation::Normalize(playerStrongEnemyDifference);
+
+
+		//大きさの処理
+		float volume = 1.0f - (playerStrongEnemyDistance / STRONG_ENEMY_TRACKING_START_DISTANCE_);
+		//0だったら鳴らす意味はないので止めておく
+		if (volume < 0.0f) {
+			audio_->Stop(audioHandle_);
+		}
+		else {
+			audio_->Play(audioHandle_, true);
+		}
+
+		audio_->ChangeVolume(audioHandle_, volume);
+
+
+
+
+		//Panの処理
+		//方向からPanを振る
+		//基本左右だけなのでX軸成分だけとる
+		float pan = 1.0f- directionToPlayer.x;
+
+		audio_->SetPan(audioHandle_, pan);
 
 #ifdef _DEBUG
-		ImGui::Begin("強い敵");
+		ImGui::Begin("強敵");
+		ImGui::InputFloat("距離", &volume);
+		ImGui::InputFloat3("プレイヤーとの方向", &directionToPlayer.x);
 		ImGui::InputFloat3("プレイヤーとの差分", &playerStrongEnemyDifference.x);
 		ImGui::InputFloat("プレイヤーとの距離", &playerStrongEnemyDistance);
 		ImGui::End();
@@ -593,8 +624,10 @@ void EnemyManager::Update(){
 
 
 
+
+
 		//設定した距離より小さくなると追跡
-		if (playerStrongEnemyDistance <= TRACKING_START_DISTANCE) {
+		if (playerStrongEnemyDistance <= STRONG_ENEMY_TRACKING_START_DISTANCE_) {
 			
 			//追跡に移行
 			uint32_t newCondition = EnemyCondition::Tracking;
@@ -643,6 +676,11 @@ void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 }
 
 EnemyManager::~EnemyManager(){
+
+
+	//audio_->Stop(audioHandle_);
+
+
 	//通常
 	for (Enemy* enemy : enemyes_) {
 		delete enemy;

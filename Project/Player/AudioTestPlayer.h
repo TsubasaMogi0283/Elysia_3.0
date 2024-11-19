@@ -1,10 +1,19 @@
 #pragma once
 #include "WorldTransform.h"
 #include "Material.h"
-#include "Camera.h"
+#include "Model.h"
 #include "PlayerCollisionToAudioObject.h"
+#include "PlayerCollisionToStageObject.h"
 
-struct SpotLight;
+struct DirectionalLight;
+struct Camera;
+
+enum TestPlayerMoveCondition {
+	//動かない
+	NoneTestPlayerMove,
+	//動く
+	OnTestPlayerMove,
+};
 
 class AudioTestPlayer{
 public:
@@ -23,6 +32,14 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="directionalLight"></param>
+	void Draw(const Camera& camera, const DirectionalLight& directionalLight);
+
 
 	/// <summary>
 	/// デストラクタ
@@ -57,23 +74,54 @@ public:
 	}
 
 	/// <summary>
-	/// コライダー取得
+	/// コライダー(オーディオ用)取得
 	/// </summary>
 	/// <returns></returns>
-	PlayerCollisionToAudioObject* GetCollosion() const{
-		return collosion_.get();;
+	PlayerCollisionToAudioObject* GetCollosionToAudioObject() const{
+		return collosionToAudioObject_.get();
 	}
 
+	/// <summary>
+	/// コライダー(ステージ用)取得
+	/// </summary>
+	/// <returns></returns>
+	PlayerCollisionToStageObject* GetCollosionToStageObject() const {
+		return collosionToStageObject_.get();
+	}
+
+
+
+
+	/// <summary>
+	/// 動きの状態の設定
+	/// </summary>
+	/// <param name="condition"></param>
+	void SetMoveCondition(const uint32_t condition) {
+		this->moveCondition_ = condition;
+	}
 
 
 private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 
+	//マテリアル
+	Material material_ = {};
+
+	//モデル
+	std::unique_ptr<Model>model_ = nullptr;
+
+
+	//動きの状態
+	uint32_t moveCondition_ = 0u;
+
 	//方向
 	Vector3 direction_ = {};
 
 	//コライダー
-	std::unique_ptr<PlayerCollisionToAudioObject>collosion_ = nullptr;
+	//オーディオ用
+	std::unique_ptr<PlayerCollisionToAudioObject>collosionToAudioObject_ = nullptr;
+	//ステージ用
+	std::unique_ptr<PlayerCollisionToStageObject>collosionToStageObject_ = nullptr;
 
 };

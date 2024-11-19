@@ -1,8 +1,11 @@
 #include "StageObjectForLevelEditorCollider.h"
 #include <Collider/CollisionConfig.h>
+#include <imgui.h>
 
 void StageObjectForLevelEditorCollider::Initialize() {
-	collisionType_ = CollisionType::AABBType;
+	//基本AABB
+	//必要があれば追加していく
+	collisionType_ = ColliderType::AABBType;
 
 	
 	//自分
@@ -10,7 +13,29 @@ void StageObjectForLevelEditorCollider::Initialize() {
 	//相手
 	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER4);
 
+}
 
+void StageObjectForLevelEditorCollider::Update(){
+	
+
+
+	aabb_.max = {
+		.x = objectPosition_.x + size_.x/2.0f,
+		.y = objectPosition_.y + size_.y/2.0f,
+		.z = objectPosition_.z + size_.z/2.0f,
+	};
+	aabb_.min = {
+		.x = objectPosition_.x - size_.x/2.0f,
+		.y = objectPosition_.y - size_.y/2.0f,
+		.z = objectPosition_.z - size_.z/2.0f,
+	};
+
+#ifdef _DEBUG
+	ImGui::Begin("ステージオブジェクト");
+	ImGui::InputFloat3("位置", &objectPosition_.x);
+	ImGui::Checkbox("衝突", &isTouch_);
+	ImGui::End();
+#endif // _DEBUG
 
 }
 

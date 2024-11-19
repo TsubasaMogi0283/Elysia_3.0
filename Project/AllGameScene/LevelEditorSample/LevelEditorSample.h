@@ -93,7 +93,6 @@ private:
 	uint32_t audioHandle_ = 0u; 
 	uint32_t audioHandle2_ = 0u;
 	uint32_t audioHandleMP3_ = 0u;
-	Audio* audio_ = nullptr;
 
 	//プレイヤー
 	std::unique_ptr<AudioTestPlayer>player_ = nullptr;

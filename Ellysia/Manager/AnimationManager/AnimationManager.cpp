@@ -7,6 +7,7 @@
 #include <assimp/postprocess.h>
 #include <VectorCalculation.h>
 #include "ModelManager.h"
+#include <Calculation/QuaternionCalculation.h>
 
 
 
@@ -57,7 +58,7 @@ Quaternion AnimationManager::CalculationValue(const std::vector<KeyFrameQuaterni
             //範囲内を補間する
             float t = (time - keyFrames[index].time) / (keyFrames[nextIndex].time - keyFrames[index].time);
             //QuaternionだとSlerp
-            return QuaternionSlerp(keyFrames[index].value, keyFrames[nextIndex].value, t);
+            return QuaternionCalculation::QuaternionSlerp(keyFrames[index].value, keyFrames[nextIndex].value, t);
         }
     }
     //ここまで来た場合は一番後ろの時刻よりも後ろなので最後の値を返すことにする

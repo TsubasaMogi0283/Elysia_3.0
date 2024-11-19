@@ -3,6 +3,9 @@
 
 //AABB...Axis Aligned Bounding Box
 
+/// <summary>
+/// AABB
+/// </summary>
 struct AABB {
 	//最小点(手前の左下)
 	Vector3 min;

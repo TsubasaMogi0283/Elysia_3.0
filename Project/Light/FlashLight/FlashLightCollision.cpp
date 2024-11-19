@@ -10,7 +10,7 @@ void FlashLightCollision::Initialize(){
 #pragma region 当たり判定
 
 	//種類
-	collisionType_ = CollisionType::FanType;
+	collisionType_ = ColliderType::FanType;
 
 
 
@@ -39,18 +39,11 @@ void FlashLightCollision::OnCollision(){
 	ImGui::End();
 
 #endif // _DEBUG
-
-	
-
 }
 
 void FlashLightCollision::OffCollision(){
 #ifdef _DEBUG
 	ImGui::Begin("扇側衝突していない");
 	ImGui::End();
-
 #endif // _DEBUG
-
-
-
 }

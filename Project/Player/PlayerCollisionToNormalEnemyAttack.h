@@ -32,7 +32,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void Draw(Camera& camera,Material& material, SpotLight& spotLight);
+	void Draw(const Camera& camera,const Material& material,const  SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ

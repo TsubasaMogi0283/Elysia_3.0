@@ -8,7 +8,8 @@
 #include <Collider/CollisionConfig.h>
 
 
-void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& speed){
+void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position,const Vector3& speed){
+
 	//モデル
 	model_.reset(Model::Create(modelHandle));
 
@@ -37,15 +38,15 @@ void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& 
 #pragma region 当たり判定
 
 	//当たり判定で使う種類
-	collisionType_ = CollisionType::SphereType;
+	collisionType_ = ColliderType::SphereType;
 	//半径
 	radius_ = 2.0f;
 
 	//AABBのmax部分に加算する縦横高さのサイズ
-	upSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
+	//upSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
 
 	//AABBのmin部分に加算する縦横高さのサイズ
-	downSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
+	//downSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
 
 	//判定
 	//自分
@@ -57,14 +58,17 @@ void StrongEnemy::Initialize(uint32_t& modelHandle, Vector3& position, Vector3& 
 
 
 
+
+	
 }
+
 
 void StrongEnemy::Update(){
 
 
 	const float SPEED_AMOUNT = 0.05f;
 	//状態
-	//こっちもStatePatternにするよ！！
+	//こっちもStatePatternにしたい！！
 	switch (condition_) {
 	case EnemyCondition::NoneMove:
 		//何もしない
@@ -127,6 +131,9 @@ void StrongEnemy::Update(){
 	}
 
 
+
+
+
 	//向きを計算しモデルを回転させる
 	float directionToRotateY = std::atan2f(-direction_.z, direction_.x);
 	const float ROTATE_OFFSET = -std::numbers::pi_v<float> / 2.0f;
@@ -142,8 +149,8 @@ void StrongEnemy::Update(){
 
 
 	//AABBの計算
-	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
-	aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
+	//aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
+	//aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
 
 
 
@@ -153,23 +160,14 @@ void StrongEnemy::Draw(const Camera& camera,const SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera, material_, spotLight);
 }
 
+
+
 void StrongEnemy::OnCollision(){
 	//プレイヤーと接触した
 	isTouchPlayer_ = true;
 
 }
 
-void StrongEnemy::OffCollision()
-{
-}
+void StrongEnemy::OffCollision(){
 
-
-Vector3 StrongEnemy::GetWorldPosition(){
-	Vector3 position = {
-		.x = worldTransform_.worldMatrix.m[3][0],
-		.y = worldTransform_.worldMatrix.m[3][1],
-		.z = worldTransform_.worldMatrix.m[3][2]
-	};
-
-	return position;
 }

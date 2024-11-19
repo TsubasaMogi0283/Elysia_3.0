@@ -131,6 +131,98 @@ public:
 	void Release();
 
 
+
+
+	/// <summary>
+	/// データにある分だけColliderを取得する
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
+	inline std::vector<IObjectForLevelEditorCollider*> GetCollider(const uint32_t& handle) {
+		std::vector<IObjectForLevelEditorCollider*> colliders = {};
+
+		for (const auto& [key, levelData] : levelDatas_) {
+			if (levelData->handle == handle) {
+
+				//該当するLevelDataのobjectDatasを検索
+				for (auto& objectData : levelData->objectDatas) {
+
+					//コライダーを持っている場合、リストに追加
+					if (objectData.levelDataObjectCollider != nullptr) {
+						colliders.push_back(objectData.levelDataObjectCollider);
+					}
+				}
+
+				//無駄なループを防ぐ
+				break;
+			}
+		}
+
+		return colliders;
+	}
+
+	/// <summary>
+	/// ステージオブジェクトの座標を取得
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
+	inline std::vector<Vector3> GetStageObjectPosition(const uint32_t& handle) {
+		std::vector<Vector3> positions = {};
+
+		for (const auto& [key, levelData] : levelDatas_) {
+			if (levelData->handle == handle) {
+
+
+				//該当するLevelDataのobjectDatasを検索
+				for (auto& objectData : levelData->objectDatas) {
+
+					//Stageだったら追加
+					if (objectData.type == "Stage") {
+						positions.push_back(objectData.objectForLeveEditor->GetWorldPosition());
+					}
+
+
+				}
+
+				//無駄なループを防ぐ
+				break;
+			}
+		}
+
+		return positions;
+	}
+	
+	/// <summary>
+	/// ステージオブジェクトのAABBを取得
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
+	inline std::vector<AABB> GetStageObjectAABB(const uint32_t& handle) {
+		std::vector<AABB> aabbs = {};
+
+		for (const auto& [key, levelData] : levelDatas_) {
+			if (levelData->handle == handle) {
+
+
+				//該当するLevelDataのobjectDatasを検索
+				for (auto& objectData : levelData->objectDatas) {
+
+					//Stageだったら追加
+					if (objectData.type == "Stage") {
+						aabbs.push_back(objectData.objectForLeveEditor->GetAABB());
+					}
+
+
+				}
+
+				//無駄なループを防ぐ
+				break;
+			}
+		}
+
+		return aabbs;
+	}
+
 private:
 
 	/// <summary>
@@ -156,6 +248,8 @@ private:
 
 			//Colliderの種類
 			std::string colliderType;
+
+			uint32_t colliderTypeNumber;
 			//Sphere,Box
 			Vector3 center;
 			Vector3 size;
@@ -181,15 +275,14 @@ private:
 
 
 		//ハンドル
-		uint32_t modelHandle;
+		uint32_t handle = 0u;
 
 		//オブジェクトのリスト
 		std::list<ObjectData> objectDatas;
 
-
 		//リスナー
 		//プレイヤーなどを設定してね
-		Listener listener;
+		Listener listener = {};
 
 		//フォルダ名
 		std::string folderName;
@@ -212,15 +305,17 @@ private:
 		for (const auto& [key, levelData] : levelDatas_) {
 			
 			//一致したら返す
-			if (levelData->modelHandle == handle) {
+			if (levelData->handle == handle) {
 				return levelData->objectDatas;
-				
 			}
 		}
 
 		//見つからない
 		return {};
 	}
+
+	
+
 
 public:
 	/// <summary>
@@ -232,7 +327,7 @@ public:
 		for (const auto& [key, levelData] : levelDatas_) {
 
 			//一致したら設定
-			if (levelData->modelHandle == handle) {
+			if (levelData->handle == handle) {
 				levelData->listener = listener;
 			}
 		}
@@ -275,7 +370,7 @@ private:
 	uint32_t handle_ = 0u;
 
 	//Resourceにあるレベルデータの場所
-	const std::string leveldataPath_ = "Resources/LevelData/";
+	const std::string LEVEL_DATA_PATH_ = "Resources/LevelData/";
 
 };
 

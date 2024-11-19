@@ -15,8 +15,8 @@
 void Player::Initialize(){
 
 
-	//モデルの生成
-	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/TD3Player","Player.obj");
+	//モデルの生成 //"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\Cube\cube.obj"
+	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","cube.obj");
 	model_.reset(Model::Create(modelHandle));
 
 	isControll_ = false;
@@ -56,17 +56,23 @@ void Player::Initialize(){
 	collisionToStrongEnemy_->Initialize();
 
 
+	flashLight_ = std::make_unique<FlashLight>();
+	flashLight_->Initialize();
+
 
 	//ダメージを受けたかどうか
 	isDameged_ = false;
 	
+
+	//マテリアル
+	material_.Initialize();
+	material_.lightingKinds_ = Spot;
 }
 
 void Player::Update(){
 
 	const float NORMAL_MOVE_SPEED = 0.1f;
 	const float DASH_MOVE_SPEED = 0.2f;
-
 
 
 	//動けるときだけ加算
@@ -127,6 +133,14 @@ void Player::Update(){
 	collisionToStrongEnemy_->SetPlayerPosition(worldPosition);
 	collisionToStrongEnemy_->Update();
 
+	//懐中電灯の更新
+	//角度はゲームシーンで取得する
+	flashLight_->SetPlayerPosition(worldPosition);
+	flashLight_->Update();
+
+
+	//マテリアルの更新
+	material_.Update();
 
 
 	//通常の敵に当たった場合
@@ -181,17 +195,19 @@ void Player::Update(){
 
 }
 
-void Player::Draw(Camera& camera, Material& material, SpotLight& spotLight){
+void Player::Draw(const Camera& camera, const SpotLight& spotLight){
 
 #ifdef _DEBUG
 	//本体の描画
 	//1人称視点だからいらないかもね
-	model_->Draw(worldTransform_, camera,material,spotLight);
+	model_->Draw(worldTransform_, camera,material_,spotLight);
 
 	//通常
-	colliderToNormalEnemy_->Draw(camera, material, spotLight);
+	colliderToNormalEnemy_->Draw(camera, material_, spotLight);
 	//強敵	
-	collisionToStrongEnemy_->Draw(camera, material, spotLight);
+	collisionToStrongEnemy_->Draw(camera, material_, spotLight);
+	//懐中電灯
+	flashLight_->Draw(camera);
 #endif // _DEBUG
 
 

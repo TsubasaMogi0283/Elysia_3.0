@@ -1,5 +1,6 @@
 #include "Skeleton.h"
 #include <Matrix4x4Calculation.h>
+#include <Calculation/QuaternionCalculation.h>
 
 void Skeleton::Create(const Node& rootNode){
     root_ = CreateJoint(rootNode, {}, joints_);
@@ -17,7 +18,7 @@ void Skeleton::Update(){
     for (Joint& joint : joints_) {
 
         Matrix4x4 scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(joint.transform.scale);
-        Matrix4x4 rotateMatrix = MakeRotateMatrix(joint.transform.rotate);
+        Matrix4x4 rotateMatrix = QuaternionCalculation::MakeRotateMatrix(joint.transform.rotate);
         Matrix4x4 translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(joint.transform.translate);
         
 

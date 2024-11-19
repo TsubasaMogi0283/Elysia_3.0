@@ -144,7 +144,7 @@ void GameScene::Initialize() {
 	
 	
 	//プレイヤーのライト
-	uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/CG3/Sphere", "Sphere.obj");
+	uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
 	
 	
 	#pragma region 扇の当たり判定用の球
@@ -236,10 +236,6 @@ void GameScene::Initialize() {
 	//マテリアルの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
-	
-	//懐中電灯
-	flashLight_ = std::make_unique<FlashLight>();
-	flashLight_->Initialize();
 	
 
 
@@ -774,10 +770,14 @@ void GameScene::Update(GameManager* gameManager) {
 
 		//ライトはプレイヤーが持っているという包含の関係なのでPlayerに入れた方が良いかも。
 		//ここでやるべきではないと思う。
-		flashLight_->SetPlayerPosition(playerPosition_);
-		flashLight_->SetTheta(theta_);
-		flashLight_->SetPhi(phi);
-		flashLight_->Update();
+		
+		//flashLight_->SetTheta(theta_);
+		//flashLight_->SetPhi(phi);
+
+		player_->GetFlashLight()->SetTheta(theta_);
+		player_->GetFlashLight()->SetPhi(phi);
+		//flashLight_->SetPlayerPosition(playerPosition_);
+		//flashLight_->Update();
 
 		
 
@@ -785,7 +785,7 @@ void GameScene::Update(GameManager* gameManager) {
 		//エネミーをコリジョンマネージャーに追加
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
-			collisionManager_->RegisterList(enemy);
+			//collisionManager_->RegisterList(enemy);
 			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 
 			//攻撃用の判定が出ていたら登録
@@ -796,7 +796,9 @@ void GameScene::Update(GameManager* gameManager) {
 			
 		}
 		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
-		collisionManager_->RegisterList(flashLight_->GetFanCollision());
+
+
+		collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		//1体しか出さないのにリストにする必要はあったのでしょうか・・
@@ -856,8 +858,6 @@ void GameScene::Update(GameManager* gameManager) {
 		}
 
 
-		//ライト
-		Vector3 lightDirection = flashLight_->GetDirection();
 
 		//現在のプレイヤーの体力を取得
 		currentDisplayHP_ = player_->GetHP();
@@ -978,7 +978,9 @@ void GameScene::DrawObject3D() {
 	
 
 	//懐中電灯を取得
-	SpotLight spotLight = flashLight_->GetSpotLight();
+	SpotLight spotLight = player_->GetFlashLight()->GetSpotLight();
+
+
 
 	//地面
 	ground_->Draw(camera_, spotLight);
@@ -988,18 +990,14 @@ void GameScene::DrawObject3D() {
 	enemyManager_->Draw(camera_, spotLight);
 	//天球
 	skydome_->Draw(camera_);
-
-	//懐中電灯
-	flashLight_->Draw(camera_);
+	//プレイヤー
+	player_->Draw(camera_, spotLight);
 
 	//ステージオブジェクト
 	objectManager_->Draw(camera_, spotLight);
 
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
-
-
-	
 
 }
 

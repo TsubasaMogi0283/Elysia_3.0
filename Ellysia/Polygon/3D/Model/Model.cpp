@@ -17,6 +17,8 @@
 
 
 Model* Model::Create(uint32_t modelHandle) {
+	
+
 	//新たなModel型のインスタンスのメモリを確保
 	Model* model = new Model();
 

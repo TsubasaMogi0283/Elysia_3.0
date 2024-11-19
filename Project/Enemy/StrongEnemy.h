@@ -1,12 +1,14 @@
 #pragma once
 
 #include <memory>
+
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
 
 #include "Enemy/EnemyCondition.h"
 #include "Collider/Collider.h"
+
 
 struct Camera;
 struct SpotLight;
@@ -25,7 +27,7 @@ public:
 	/// <param name="modelHandle"></param>
 	/// <param name="position"></param>
 	/// <param name="speed"></param>
-	void Initialize(uint32_t& modelHandle,Vector3 &position,Vector3 &speed);
+	void Initialize(const uint32_t& modelHandle,const Vector3 &position,const Vector3 &speed);
 
 	/// <summary>
 	/// 更新
@@ -57,18 +59,21 @@ public:
 	/// </summary>
 	void OffCollision()override;
 
+
 	/// <summary>
 	/// ワールド座標
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition()override;
+	Vector3 GetWorldPosition()override {
+		return worldTransform_.GetWorldPosition();
+	}
 
 
 	/// <summary>
 	/// プレイヤーの座標を設定
 	/// </summary>
 	/// <param name="position"></param>
-	inline void SetPlayerPosition(Vector3& position) {
+	inline void SetPlayerPosition(const Vector3& position) {
 		this->playerPosition_ = position;
 	}
 
@@ -84,11 +89,11 @@ public:
 	/// 状態の設定
 	/// </summary>
 	/// <param name="condition"></param>
-	inline void SetCondition(uint32_t& condition) {
+	inline void SetCondition(const uint32_t& condition) {
 		this->condition_ = condition;
 	}
 
-	uint32_t GetCondition() const {
+	inline uint32_t GetCondition() const {
 		return condition_;
 	}
 
@@ -110,6 +115,15 @@ public:
 
 	inline AABB GetAABB() {
 		return aabb_;
+	}
+
+
+	/// <summary>
+	/// 追跡開始距離
+	/// </summary>
+	/// <param name="distance"></param>
+	inline void SetTrackingStartDistance(const float& distance) {
+		this->trackingStartDistance_ = distance;
 	}
 
 
@@ -150,6 +164,8 @@ private:
 	//追跡
 	bool isTracking_ = false;
 
-
+	//追跡開始距離
+	float trackingStartDistance_ = 0.0f;
+	
 };
 

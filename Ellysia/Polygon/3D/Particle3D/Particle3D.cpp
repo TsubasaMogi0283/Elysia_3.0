@@ -1,12 +1,12 @@
 #include "Particle3D.h" 
-#include <Camera.h>
-#include <TextureManager.h>
-#include <PipelineManager.h>
+#include "Camera.h"
+#include "TextureManager.h"
+#include "PipelineManager.h"
 #include "DirectXSetup.h"
 
 
 #include <numbers>
-#include <Collision.h>
+#include "CollisionCalculation.h"
 #include "SrvManager.h"
 static uint32_t modelIndex;
 static uint32_t descriptorSizeSRV_ = 0u;
@@ -163,7 +163,7 @@ void Particle3D::Update(Camera& camera){
 		
 		//フィールド設定すると風の影響を受ける
 		if (isSetField_ == true) {
-			if (IsCollisionAABBAndPoint(accelerationField_.area,(*particleIterator).transform.translate)) {
+			if (CollisionCalculation::IsCollisionAABBAndPoint(accelerationField_.area,(*particleIterator).transform.translate)) {
 				(*particleIterator).velocity.x += accelerationField_.acceleration.x * DELTA_TIME;
 				(*particleIterator).velocity.y += accelerationField_.acceleration.y * DELTA_TIME;
 				(*particleIterator).velocity.z += accelerationField_.acceleration.z * DELTA_TIME;

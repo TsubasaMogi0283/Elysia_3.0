@@ -17,6 +17,10 @@ public:
 	/// </summary>
 	void Initialize()override;
 
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update()override;
 
 	/// <summary>
 	/// 衝突
@@ -38,6 +42,10 @@ public:
 
 private:
 
+	/// <summary>
+	/// 平面
+	/// </summary>
+	void Plane();
 
 
 };

@@ -11,14 +11,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{01FA9138-E4C3-442A-A37D-8F982265D00D}"
-	ProjectSection(SolutionItems) = preProject
-		External\nlohmann\json.hpp = External\nlohmann\json.hpp
-		External\nlohmann\json_fwd.hpp = External\nlohmann\json_fwd.hpp
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTex", "External\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj", "{371B9FA9-4C90-4AC6-A123-ACED756D6C77}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "External\ImGui\ImGui.vcxproj", "{4A762DB2-1E1D-47D2-851F-DE22B87C24D0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JSON", "JSON", "{1780E670-33D2-48B6-8D7C-8A2A3103881E}"
+	ProjectSection(SolutionItems) = preProject
+		External\nlohmann\json.hpp = External\nlohmann\json.hpp
+		External\nlohmann\json_fwd.hpp = External\nlohmann\json_fwd.hpp
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +54,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77} = {01FA9138-E4C3-442A-A37D-8F982265D00D}
 		{4A762DB2-1E1D-47D2-851F-DE22B87C24D0} = {01FA9138-E4C3-442A-A37D-8F982265D00D}
+		{1780E670-33D2-48B6-8D7C-8A2A3103881E} = {01FA9138-E4C3-442A-A37D-8F982265D00D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD2403C0-06A0-41C6-8BD2-DC65C0B0133F}
