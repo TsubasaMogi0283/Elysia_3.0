@@ -678,7 +678,7 @@ void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 EnemyManager::~EnemyManager(){
 
 
-	audio_->Stop(audioHandle_);
+	//audio_->Stop(audioHandle_);
 
 
 	//通常

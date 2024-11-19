@@ -149,8 +149,6 @@ private:
 	bool isRotateXKey_ = false;
 
 
-	//スポットライト
-	std::unique_ptr<FlashLight> flashLight_ = nullptr;
 	//マテリアル
 	Material material_ = {};
 

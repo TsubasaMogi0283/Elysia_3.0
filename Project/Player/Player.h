@@ -193,20 +193,13 @@ public:
 	}
 
 	/// <summary>
-	/// スポットライトの取得
+	/// 懐中電灯を取得
 	/// </summary>
 	/// <returns></returns>
-	inline SpotLight GetSpotLight()const {
-		return flashLight_->GetSpotLight();
+	inline FlashLight* GetFlashLight()const {
+		return flashLight_.get();
 	}
 
-	/// <summary>
-	/// 扇の取得
-	/// </summary>
-	/// <returns></returns>
-	inline Fan3D GetFan3D()const {
-		return flashLight_->GetFan3D();
-	}
 
 private:
 
