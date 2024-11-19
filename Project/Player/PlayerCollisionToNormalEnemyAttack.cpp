@@ -53,7 +53,7 @@ void PlayerCollisionToNormalEnemyAttack::Update(){
 
 }
 
-void PlayerCollisionToNormalEnemyAttack::Draw(Camera& camera, Material& material, SpotLight& spotLight){
+void PlayerCollisionToNormalEnemyAttack::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight){
 #ifdef _DEBUG
 	model_->Draw(worldTransform_, camera, material, spotLight);
 #endif // _DEBUG

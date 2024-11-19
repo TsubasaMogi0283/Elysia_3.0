@@ -163,7 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Math\BPMCalculation\BPMSetting.cpp" />
     <ClCompile Include="Ellysia\Math\Collision\CollisionCalculation.cpp" />
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp" />
-    <ClCompile Include="Ellysia\Math\Quaternion\Quaternion.cpp" />
+    <ClCompile Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.cpp" />
     <ClCompile Include="Ellysia\Math\Single\SingleCalculation.cpp" />
     <ClCompile Include="Ellysia\Math\Vector\Calculation\VectorCalculation.cpp" />
     <ClCompile Include="Ellysia\Math\Vector\Material.cpp" />
@@ -438,6 +438,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Math\Matrix\Matrix3x3.h" />
     <ClInclude Include="Ellysia\Math\Matrix\Matrix4x4.h" />
     <ClInclude Include="Ellysia\Math\Matrix\TransformationMatrix.h" />
+    <ClInclude Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.h" />
     <ClInclude Include="Ellysia\Math\Quaternion\Quaternion.h" />
     <ClInclude Include="Ellysia\Math\Shape\AABB.h" />
     <ClInclude Include="Ellysia\Math\Shape\Fan.h" />

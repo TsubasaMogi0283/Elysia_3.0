@@ -30,13 +30,13 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	normalEnemyModelHandle_ = normalEnemyModel;
 	strongEnemyModelHandle_ = strongEnemyModel;
 
-	////CSVでやった方が良いかも
-	//Enemy* enemy1 = new Enemy();
-	//Vector3 position1 = { 0.0f,0.0f,11.0f };
-	//enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,0.01f });
-	//enemyes_.push_back(enemy1);
-	//
-	//	
+	//CSVでやった方が良いかも
+	Enemy* enemy1 = new Enemy();
+	Vector3 position1 = { 0.0f,0.0f,11.0f };
+	enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,0.01f });
+	enemyes_.push_back(enemy1);
+	
+		
 	//Enemy* enemy2 = new Enemy();
 	//Vector3 position2 = { -5.0f,0.0f,15.0f };
 	//enemy2->Initialize(normalEnemyModelHandle_, position2, { 0.01f,0.0f,0.0f });
@@ -56,26 +56,26 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 
 #endif // _DEBUG
 
-	StrongEnemy* enemy = new StrongEnemy();
-	std::random_device seedGenerator;
-	std::mt19937 randomEngine(seedGenerator());
-	
-	//位置を決める
-	std::uniform_real_distribution<float> positionDistribute(stageRect_.leftBack.x, stageRect_.rightBack.x);
-	Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
-	
-	
-	//位置を決める
-	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
-	Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
-	
-	position = { -4.0f,0.0f,5.0f };
-	speed = { 0.01f,0.0f,-0.03f };
-	
-	//強い敵の初期化
-	enemy->Initialize(strongEnemyModelHandle_, position, speed);
-	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
-	strongEnemyes_.push_back(enemy);
+	//StrongEnemy* enemy = new StrongEnemy();
+	//std::random_device seedGenerator;
+	//std::mt19937 randomEngine(seedGenerator());
+	//
+	////位置を決める
+	//std::uniform_real_distribution<float> positionDistribute(stageRect_.leftBack.x, stageRect_.rightBack.x);
+	//Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
+	//
+	//
+	////位置を決める
+	//std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
+	//Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
+	//
+	//position = { -4.0f,0.0f,5.0f };
+	//speed = { 0.01f,0.0f,-0.03f };
+	//
+	////強い敵の初期化
+	//enemy->Initialize(strongEnemyModelHandle_, position, speed);
+	//enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
+	//strongEnemyes_.push_back(enemy);
 
 	//マテリアルのの初期化
 	material_.Initialize();

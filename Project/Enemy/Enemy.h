@@ -2,10 +2,8 @@
 #include "Vector3.h"
 #include "WorldTransform.h"
 #include "Model.h"
-#include "../Collider/Collider.h"
 #include "Material.h"
 #include <memory>
-#include "../../Ellysia/Line/Line.h"
 #include "Stage/Ground/StageRect.h"
 #include "EnemyAttackCollision.h"
 #include "AABB.h"
@@ -16,9 +14,7 @@ struct Camera;
 struct SpotLight;
 class Player;
 
-
-
-class Enemy :public Collider{
+class Enemy{
 public:
 
 	/// <summary>
@@ -56,26 +52,12 @@ public:
 
 public:
 	/// <summary>
-	/// 衝突判定
-	/// </summary>
-	void OnCollision()override;
-
-	/// <summary>
-	/// 非衝突判定
-	/// </summary>
-	void OffCollision()override;
-
-	/// <summary>
 	/// ワールド座標
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition()override;
+	Vector3 GetWorldPosition();
 
 #pragma region 座標の設定
-
-
-
-
 
 	/// <summary>
 	/// Z座標の設定

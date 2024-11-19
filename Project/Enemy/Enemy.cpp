@@ -62,7 +62,7 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 
 #pragma region 当たり判定
 	//半径
-	radius_ = 1.0f;
+	//radius_ = 1.0f;
 
 	//AABBのmax部分に加算する縦横高さのサイズ
 	//upSideSize_ = {.x= radius_ ,.y= radius_ ,.z= radius_ };
@@ -70,11 +70,11 @@ void Enemy::Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed){
 	//AABBのmin部分に加算する縦横高さのサイズ
 	//downSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
 
-	//判定
-	//自分
-	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY);
-	//相手
-	SetCollisionMask(COLLISION_ATTRIBUTE_NONE);
+	////判定
+	////自分
+	//SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY);
+	////相手
+	//SetCollisionMask(COLLISION_ATTRIBUTE_NONE);
 
 #pragma endregion
 
@@ -123,12 +123,7 @@ void Enemy::Update(){
 	
 		//通常の動き
 	case EnemyCondition::Move:
-
-		
-		
 		attackTime_ = 0;
-
-
 
 		//通常の動き
 		preTrackingPlayerPosition_ = {};
@@ -265,8 +260,9 @@ void Enemy::Update(){
 
 
 	//当たり判定
-	enemyFlashLightCollision_->Update();
 	enemyFlashLightCollision_->SetEnemyPosition(GetWorldPosition());
+	enemyFlashLightCollision_->Update();
+	
 	
 
 #ifdef _DEBUG
@@ -326,25 +322,9 @@ void Enemy::Update(){
 
 
 
-void Enemy::OnCollision() {
-
-	
-}
-
-void Enemy::OffCollision(){
-
-}
-
-
 
 Vector3 Enemy::GetWorldPosition() {
-	Vector3 result = {
-		.x= worldTransform_.worldMatrix.m[3][0],
-		.y = worldTransform_.worldMatrix.m[3][1],
-		.z = worldTransform_.worldMatrix.m[3][2],
-	};
-
-	return result;
+	return worldTransform_.GetWorldPosition();
 }
 
 

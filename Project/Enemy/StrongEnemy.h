@@ -128,12 +128,6 @@ public:
 
 
 
-private: 
-	/// <summary>
-	/// 追跡のオーディオのついての関数
-	/// </summary>
-	void TrackingAudio();
-
 private:
 	//状態
 	uint32_t condition_ = EnemyCondition::Move;

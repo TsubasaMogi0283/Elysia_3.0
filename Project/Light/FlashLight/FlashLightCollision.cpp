@@ -39,18 +39,11 @@ void FlashLightCollision::OnCollision(){
 	ImGui::End();
 
 #endif // _DEBUG
-
-	
-
 }
 
 void FlashLightCollision::OffCollision(){
 #ifdef _DEBUG
 	ImGui::Begin("扇側衝突していない");
 	ImGui::End();
-
 #endif // _DEBUG
-
-
-
 }

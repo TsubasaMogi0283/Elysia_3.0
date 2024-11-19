@@ -157,7 +157,6 @@ void FlashLight::Update() {
 	ImGui::End();
 #endif // _DEBUG
 
-	
 
 	//更新
 	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
@@ -169,7 +168,7 @@ void FlashLight::Update() {
 	spotLight_.Update();
 }
 
-void FlashLight::Draw(Camera& camera){
+void FlashLight::Draw(const Camera& camera){
 #ifdef _DEBUG
 
 

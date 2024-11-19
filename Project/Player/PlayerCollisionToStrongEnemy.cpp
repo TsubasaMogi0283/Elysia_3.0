@@ -40,7 +40,7 @@ void PlayerCollisionToStrongEnemy::Update(){
 
 }
 
-void PlayerCollisionToStrongEnemy::Draw(Camera& camera, Material& material, SpotLight& spotLight){
+void PlayerCollisionToStrongEnemy::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight){
 
 #ifdef _DEBUG
 	model_->Draw(worldTransform_, camera, material, spotLight);

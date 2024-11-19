@@ -63,14 +63,6 @@ void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position
 }
 
 
-
-
-void StrongEnemy::TrackingAudio(){
-	
-
-}
-
-
 void StrongEnemy::Update(){
 
 
@@ -138,12 +130,6 @@ void StrongEnemy::Update(){
 		break;
 	}
 
-
-
-	//追跡時のオーディオ処理
-	TrackingAudio();
-
-	
 
 
 
