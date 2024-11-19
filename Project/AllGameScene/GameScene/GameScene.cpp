@@ -796,7 +796,9 @@ void GameScene::Update(GameManager* gameManager) {
 			
 		}
 		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
-		//collisionManager_->RegisterList(flashLight_->GetFanCollision());
+
+
+		collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		//1体しか出さないのにリストにする必要はあったのでしょうか・・
@@ -996,9 +998,6 @@ void GameScene::DrawObject3D() {
 
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
-
-
-	
 
 }
 

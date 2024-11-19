@@ -134,6 +134,7 @@ void Player::Update(){
 	collisionToStrongEnemy_->Update();
 
 	//懐中電灯の更新
+	//角度はゲームシーンで取得する
 	flashLight_->SetPlayerPosition(worldPosition);
 	flashLight_->Update();
 
