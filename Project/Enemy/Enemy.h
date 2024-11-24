@@ -28,7 +28,7 @@ public:
 	/// <param name="modelHandle"></param>
 	/// <param name="position"></param>
 	/// <param name="speed"></param>
-	void Initialize(uint32_t modelHandle, Vector3 position, Vector3 speed);
+	void Initialize(const uint32_t& modelHandle,const Vector3& position,const Vector3& speed);
 
 	/// <summary>
 	/// 更新
@@ -46,7 +46,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Enemy();
+	~Enemy()=default;
 
 
 
@@ -55,20 +55,25 @@ public:
 	/// ワールド座標
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition();
+	inline Vector3 GetWorldPosition()const {
+		return worldTransform_.GetWorldPosition();
+	};
 
-#pragma region 座標の設定
+	/// <summary>
+	/// AABBの取得
+	/// </summary>
+	/// <returns></returns>
+	inline AABB GetAABB()const {
+		return aabb_;
+	}
 
 	/// <summary>
 	/// Z座標の設定
 	/// </summary>
 	/// <param name="posX"></param>
-	inline void SetPositionZ(float& posZ) {
+	inline void SetPositionZ(const float& posZ) {
 		this->worldTransform_.translate.z = posZ;
 	}
-
-#pragma endregion
-
 
 
 	/// <summary>
@@ -91,48 +96,42 @@ public:
 	/// プレイヤーの座標を設定
 	/// </summary>
 	/// <param name="position"></param>
-	void SetPlayerPosition(Vector3& position) {
+	inline void SetPlayerPosition(const Vector3& position) {
 		this->playerPosition_ = position;
 	}
 
 	/// <summary>
-	/// AABBの取得
-	/// </summary>
-	/// <returns></returns>
-	inline AABB GetAABB() {
-		return aabb_;
-	}
-
-
-
-public:
-	
-	/// <summary>
 	/// 前の状態の設定
 	/// </summary>
 	/// <param name="condition"></param>
-	inline void SetPreCondition(uint32_t& preCondition) {
+	inline void SetPreCondition(const uint32_t& preCondition) {
 		this->preCondition_ = preCondition;
 	}
 
-	uint32_t GetPreCondition() const {
+	/// <summary>
+	/// 前の状態を取得
+	/// </summary>
+	/// <returns></returns>
+	inline uint32_t GetPreCondition() const {
 		return preCondition_;
 	}
-
 
 	/// <summary>
 	/// 状態の設定
 	/// </summary>
 	/// <param name="condition"></param>
-	inline void SetCondition(uint32_t& condition) {
+	inline void SetCondition(const uint32_t& condition) {
 		this->condition_ = condition;
 	}
 
-	uint32_t GetCondition() const {
+	/// <summary>
+	/// 状態の取得
+	/// </summary>
+	/// <returns></returns>
+	inline uint32_t GetCondition() const {
 		return condition_;
 	}
 
-	
 	/// <summary>
 	/// X軸反転
 	/// </summary>
@@ -161,32 +160,41 @@ public:
 	}
 
 
-#pragma region 攻撃用
+	/// <summary>
+	/// 攻撃しているかどうか
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsAttack()const {
+		return isAttack_;
+	}
 
-	//攻撃用
-	inline EnemyAttackCollision* GetEnemyAttackCollision() {
-		return attackCollision_;
+	/// <summary>
+	/// 攻撃用の当たり判定を取得
+	/// </summary>
+	/// <returns></returns>
+	inline EnemyAttackCollision* GetEnemyAttackCollision() const{
+		return attackCollision_.get();
 	}
 
 
-#pragma endregion
 
-
-
-#pragma region 懐中電灯
-
-	//懐中電灯用の当たり判定
-	inline EnemyFlashLightCollision* GetEnemyFlashLightCollision() {
-		return enemyFlashLightCollision_;
+	/// <summary>
+	/// 懐中電灯用の当たり判定を取得
+	/// </summary>
+	/// <returns></returns>
+	inline EnemyFlashLightCollision* GetEnemyFlashLightCollision() const{
+		return enemyFlashLightCollision_.get();
 	}
 
-#pragma endregion
-
-	
-
+private:
+	/// <summary>
+	/// 攻撃をライトで受ける
+	/// </summary>
+	void Damaged();
 
 
 private:
+	//状態
 	uint32_t preCondition_ = EnemyCondition::NoneMove;
 	uint32_t condition_ = EnemyCondition::Move;
 
@@ -195,6 +203,7 @@ private:
 private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
+	//スケールサイズ
 	const float SCALE_SIZE = 10.0f;
 	//移動速度
 	Vector3 preSpeed_ = {};
@@ -205,14 +214,25 @@ private:
 	
 	//マテリアル
 	Material material_ = {};
-	Vector4 color_ = {};
 	
-	//消滅
-	int32_t deleteTime_ = 0;
+	//生存
 	bool isAlive_ = true;
+
+	//AABB
+	AABB aabb_ = {};
+	//幅
+	const float RADIUS_ = 1.0f;
+	//幅(Vector3)
+	const Vector3 RADIUS_INTERVAL_ = { .x = RADIUS_,.y = RADIUS_,.z = RADIUS_ };
+
+	//消滅
+	//時間とフラグ
+	int32_t deleteTime_ = 0;
+	bool isDeleted_ = false;
 
 	//追跡
 	bool isTracking_ = false;
+	//追跡前の座標
 	Vector3 preTrackingPosition_ = {};
 	Vector3 preTrackingPlayerPosition_ = {};
 
@@ -221,21 +241,15 @@ private:
 
 	//攻撃
 	int32_t attackTime_ = 0;
-
-	//AABB
-	AABB aabb_ = {};
-
+	bool isAttack_ = false;
 
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
 
-	//モデル
-	std::unique_ptr<Model> debugModel_ = nullptr;
-	WorldTransform debugModelWorldTransform_ = {};
 
 	//攻撃用の当たり判定
-	EnemyAttackCollision* attackCollision_ = nullptr;
+	std::unique_ptr<EnemyAttackCollision> attackCollision_ = nullptr;
 	//懐中電灯用の当たり判定
-	EnemyFlashLightCollision* enemyFlashLightCollision_ = nullptr;
+	std::unique_ptr<EnemyFlashLightCollision> enemyFlashLightCollision_ = nullptr;
 
 };

@@ -115,15 +115,6 @@ void GameScene::Initialize() {
 	#pragma endregion
 
 	
-
-	#pragma region ライト確認用のタワー
-	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
-	debugTower_.reset(Model::Create(debugTowerModelhandle));
-	debugTowerWorldTransform_.Initialize();
-	debugTowerWorldTransform_.translate = { .x = 1.0f,.y = 0.0f,.z = 2.0f };
-	#pragma endregion
-	
-	
 	
 	
 	#pragma region カメラ
@@ -143,21 +134,7 @@ void GameScene::Initialize() {
 	#pragma endregion
 	
 	
-	//プレイヤーのライト
-	uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
 	
-	
-	#pragma region 扇の当たり判定用の球
-	debugFanCollisionSphereModel_.reset(Model::Create(weaponLightModel));
-	debugFanCollisionSphereWorldTransform_.Initialize();
-	debugFanCollisionSphereWorldTransform_.translate = { .x = 0.0f,.y = 0.0f,.z = 7.0f };
-	debugFanCollisionSphereMaterial_.Initialize();
-	debugFanCollisionSphereMaterial_.lightingKinds_ = Spot;
-	debugFanCollisionSphereMaterial_.color_ = { .x = 0.0f,.y = 1.0f,.z = 0.0f,.w = 1.0f };
-	
-	
-	
-	#pragma endregion
 	
 
 
@@ -956,12 +933,6 @@ void GameScene::Update(GameManager* gameManager) {
 
 
 #pragma endregion
-
-	//ライト確認用のタワー
-	debugTowerWorldTransform_.Update();
-
-	debugFanCollisionSphereWorldTransform_.Update();
-	debugFanCollisionSphereMaterial_.Update();
 
 }
 

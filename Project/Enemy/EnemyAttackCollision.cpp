@@ -3,11 +3,12 @@
 #include <VectorCalculation.h>
 
 
-void EnemyAttackCollision::Initialize(uint32_t modelHandle){
+void EnemyAttackCollision::Initialize(const uint32_t& modelHandle){
+	//モデルの生成
 	model_.reset(Model::Create(modelHandle));
 
 
-	//初期化
+	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
@@ -23,8 +24,6 @@ void EnemyAttackCollision::Initialize(uint32_t modelHandle){
 
 	//半径
 	radius_ = 1.0f;
-
-
 
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY_ATTACK);
@@ -62,19 +61,14 @@ void EnemyAttackCollision::Draw(const Camera& camera,const SpotLight& spotLight)
 
 
 Vector3 EnemyAttackCollision::GetWorldPosition(){
-	Vector3 worldPosition = {
-		.x = worldTransform_.worldMatrix.m[3][0],
-		.y = worldTransform_.worldMatrix.m[3][1],
-		.z = worldTransform_.worldMatrix.m[3][2],
-	};
-	return worldPosition;
+	return worldTransform_.GetWorldPosition();
 }
 
 void EnemyAttackCollision::OnCollision(){
-
+	isTouch_ = true;
 }
 
-void EnemyAttackCollision::OffCollision()
-{
+void EnemyAttackCollision::OffCollision(){
+	isTouch_ = false;
 }
 
