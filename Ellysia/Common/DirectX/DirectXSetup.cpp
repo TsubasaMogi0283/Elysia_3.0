@@ -459,7 +459,6 @@ void DirectXSetup::SetResourceBarrier(ComPtr<ID3D12Resource> resource, D3D12_RES
 }
 
 void DirectXSetup::SetResourceBarrierForSwapChain(D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState){
-	D3D12_RESOURCE_BARRIER barrier{};
 
 	//TransitionBarrierを張るコード
 	//現在のResourceStateを設定する必要がある → ResorceがどんなStateなのかを追跡する必要がある

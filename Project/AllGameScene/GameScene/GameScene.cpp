@@ -106,7 +106,7 @@ void GameScene::Initialize() {
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube", "Cube.obj");
 #endif // _DEBUG
 
-	
+	//敵管理システム
 	enemyManager_ = std::make_unique<EnemyManager>();
 	enemyManager_->SetPlayer(player_.get());
 	enemyManager_->SetObjectManager(objectManager_);
@@ -118,7 +118,8 @@ void GameScene::Initialize() {
 	
 	
 	#pragma region カメラ
-	//カメラ
+
+	//カメラの初期化
 	camera_.Initialize();
 	camera_.translate_.y = 1.0f;
 	camera_.translate_.z = -15.0f;
@@ -200,14 +201,12 @@ void GameScene::Initialize() {
 	theta_ = std::numbers::pi_v<float> / 2.0f;
 	
 	//ポストエフェクトの初期化
-	back_ = std::make_unique< BackText>();
+	back_ = std::make_unique<BackText>();
 	back_->Initialize();
 	//ビネット
 	vignette_ = std::make_unique<Vignette>();
 	vignette_->Initialize();
-	//const float vignetteScale = 17.0f;
 	vignettePow_ = 0.0f;
-	//vignette_->SetScale(vignetteScale);
 	vignette_->SetPow(vignettePow_);
 
 	//マテリアルの初期化
@@ -748,21 +747,15 @@ void GameScene::Update(GameManager* gameManager) {
 		//ライトはプレイヤーが持っているという包含の関係なのでPlayerに入れた方が良いかも。
 		//ここでやるべきではないと思う。
 		
-		//flashLight_->SetTheta(theta_);
-		//flashLight_->SetPhi(phi);
-
+		
 		player_->GetFlashLight()->SetTheta(theta_);
 		player_->GetFlashLight()->SetPhi(phi);
-		//flashLight_->SetPlayerPosition(playerPosition_);
-		//flashLight_->Update();
-
 		
 
 
 		//エネミーをコリジョンマネージャーに追加
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
-			//collisionManager_->RegisterList(enemy);
 			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 
 			//攻撃用の判定が出ていたら登録
