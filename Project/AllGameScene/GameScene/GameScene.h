@@ -76,8 +76,14 @@ public:
 	/// </summary>
 	void DrawObject3D()override;
 
-
+	/// <summary>
+	/// ポストエフェクト描画前
+	/// </summary>
 	void PreDrawPostEffectFirst()override;
+
+	/// <summary>
+	/// ポストエフェクトの描画
+	/// </summary>
 	void DrawPostEffect()override;
 
 

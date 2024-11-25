@@ -765,9 +765,10 @@ void GameScene::Update(GameManager* gameManager) {
 			}
 			
 		}
+		//通常の敵
 		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
 
-
+		//懐中電灯
 		collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
 		//当たると一発アウトの敵をコリジョンマネージャーへ
@@ -943,8 +944,6 @@ void GameScene::DrawObject3D() {
 
 	//懐中電灯を取得
 	SpotLight spotLight = player_->GetFlashLight()->GetSpotLight();
-
-
 
 	//地面
 	ground_->Draw(camera_, spotLight);
