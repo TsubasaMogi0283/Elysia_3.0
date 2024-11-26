@@ -12,52 +12,95 @@
 //テクスチャに関するクラス
 class TextureManager {
 private:
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	TextureManager() = default;
 
-	//コンストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~TextureManager() = default;
 
 public:
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
 	static TextureManager* GetInstance();
 
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="textureManager"></param>
 	TextureManager(const TextureManager& textureManager) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="textureManager"></param>
+	/// <returns></returns>
 	TextureManager& operator=(const TextureManager& textureManager) = delete;
 
 
 public:
 
 	//統合させた関数
-	//インデックスを返すからマイナスはありえない。
-	//uintにしたほうが良いよね
+	
+	/// <summary>
+	/// テクスチャの読み込み
+	/// </summary>
+	/// <param name="filePath"></param>
+	/// <returns></returns>
 	static uint32_t LoadTexture(const std::string& filePath);
 
+	/// <summary>
+	/// コマンドを送る
+	/// </summary>
+	/// <param name="rootParameter"></param>
+	/// <param name="texHandle"></param>
 	static void GraphicsCommand(uint32_t rootParameter, uint32_t texHandle);
 
 
 
-	/// テクスチャの情報を取得
+	/// <summary>
+	/// DESCの取得
+	/// </summary>
+	/// <param name="textureHandle"></param>
+	/// <returns></returns>
 	const D3D12_RESOURCE_DESC GetResourceDesc(uint32_t textureHandle);
 
 private:
 
-
-
-
 #pragma region テクスチャの読み込み
-	//Textureデータを読む
+	
 	//1.TextureデータそのものをCPUで読み込む
+	//2.DirectX12のTextureResourceを作る
+	//3.TextureResourceに1で読んだデータを転送する
+
+	/// <summary>
+	/// Textureデータの読み込み
+	/// </summary>
+	/// <param name="filePath"></param>
+	/// <returns></returns>
 	static DirectX::ScratchImage LoadTextureData(const std::string& filePath);
 
-	//2.DirectX12のTextureResourceを作る
+	
+
+	/// <summary>
+	/// リソースを作る
+	/// </summary>
+	/// <param name="metadata"></param>
+	/// <returns></returns>
 	static ComPtr<ID3D12Resource> CreateTextureResource(const DirectX::TexMetadata& metadata);
 
-	//3.TextureResourceに1で読んだデータを転送する
-	//void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages,ID3D12Device* device,ID3D12GraphicsCommandList* commandList);
-	static ComPtr<ID3D12Resource> UploadTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
+	/// <summary>
+	/// データの転送
+	/// </summary>
+	/// <param name="texture"></param>
+	/// <param name="mipImages"></param>
+	/// <returns></returns>
+	static ComPtr<ID3D12Resource> TransferTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
 
 
 #pragma endregion
@@ -65,7 +108,9 @@ private:
 
 public:
 
-
+	/// <summary>
+	/// テクスチャ情報
+	/// </summary>
 	struct TextureInformation {
 
 		//リソース
@@ -93,11 +138,12 @@ public:
 	}
 
 private:
-
+	//インデックス
 	static uint32_t index_;
 
-
+	//テクスチャ情報
 	std::map<std::string, TextureInformation> textureInformation_{};
+	
 	// handleからfilePathへのマッピングを保持する
 	std::map<uint32_t, std::string> handleToFilePathMap_{};
 
