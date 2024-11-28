@@ -656,9 +656,6 @@ void EnemyManager::Update(){
 #pragma endregion
 
 	}
-
-
-
 }
 
 void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){

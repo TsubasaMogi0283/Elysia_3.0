@@ -10,7 +10,7 @@
 #include "EnemyCondition.h"
 #include "EnemyFlashLightCollision.h"
 #include "Particle3D.h"
-
+#include "DirectionalLight.h"
 
 struct Camera;
 struct SpotLight;
@@ -247,6 +247,8 @@ private:
 
 	//消えるときのパーティクル
 	std::unique_ptr<Particle3D>particle_ = nullptr;
+	DirectionalLight directionalLight_ = {};
+	Material particleMaterial_ = {};
 
 	//追跡
 	bool isTracking_ = false;

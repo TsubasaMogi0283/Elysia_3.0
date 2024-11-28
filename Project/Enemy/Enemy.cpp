@@ -28,6 +28,11 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
 
+
+	directionalLight_.Initialize();
+	particleMaterial_.Initialize();
+	particleMaterial_.lightingKinds_ = Directional;
+
 	//生存か死亡
 	isAlive_ = true;
 	deleteTime_ = 180;
@@ -219,7 +224,7 @@ void Enemy::Update(){
 	//更新
 	worldTransform_.Update();
 	material_.Update();
-
+	directionalLight_.Update();
 	//AABBの計算
 	aabb_.max = VectorCalculation::Add(GetWorldPosition(), RADIUS_INTERVAL_);
 	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), RADIUS_INTERVAL_);
@@ -294,7 +299,7 @@ void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 
 	//絶命したらパーティクルの表示
 	if (isAlive_ == false) {
-		particle_->Draw(camera, material_, spotLight);
+		particle_->Draw(camera, particleMaterial_, directionalLight_);
 	}
 }
 

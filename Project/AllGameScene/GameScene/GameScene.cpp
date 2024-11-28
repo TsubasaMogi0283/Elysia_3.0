@@ -753,20 +753,20 @@ void GameScene::Update(GameManager* gameManager) {
 		//エネミーをコリジョンマネージャーに追加
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
-			//collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 
 			//攻撃用の判定が出ていたら登録
 			if (enemy->GetIsAttack() == true) {
-				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
+				//collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 				
 			}
 			
 			
 		}
 		//通常の敵
-		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
+		//collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
 		//懐中電灯
-		//collisionManager_->RegisterList(player_->GetFlashLightCollision());
+		collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		//1体しか出さないのにリストにする必要はあったのでしょうか・・

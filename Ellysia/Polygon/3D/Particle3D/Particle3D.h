@@ -88,10 +88,19 @@ private:
 
 #pragma region パーティクルの設定で使う関数
 
-	//パーティクルの初期化をする関数
-	Particle MakeNewParticle(const std::mt19937& randomEngine);
+	/// <summary>
+	/// 新しいパーティクルの生成
+	/// </summary>
+	/// <param name="randomEngine"></param>
+	/// <returns></returns>
+	Particle MakeNewParticle(std::mt19937& randomEngine);
 
-	//Emitterで発生させる
+	/// <summary>
+	/// Emitterで発生させる
+	/// </summary>
+	/// <param name="emmitter"></param>
+	/// <param name="randomEngine"></param>
+	/// <returns></returns>
 	std::list<Particle> Emission(const Emitter& emmitter, std::mt19937& randomEngine);
 
 

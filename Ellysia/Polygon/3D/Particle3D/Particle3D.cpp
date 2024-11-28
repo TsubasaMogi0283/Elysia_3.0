@@ -154,7 +154,7 @@ Particle3D* Particle3D::Create(const uint32_t& modelHandle,const uint32_t& moveT
 
 
 //生成関数
-Particle Particle3D::MakeNewParticle(const std::mt19937& randomEngine) {
+Particle Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
 
 	//ランダムの値で位置を決める
 	//SRは固定
@@ -186,7 +186,7 @@ Particle Particle3D::MakeNewParticle(const std::mt19937& randomEngine) {
 
 	//見えるかどうか
 	//color.wが0になったらtrue
-	particle.isInvisible = false;
+	//particle.isInvisible = false;
 
 	return particle;
 
@@ -237,6 +237,8 @@ void Particle3D::Update(const Camera& camera) {
 		Matrix4x4 translateMatrix = {};
 		Matrix4x4 billBoardMatrix = {};
 		Matrix4x4 backToFrontMatrix = {};
+		//加速
+		float accel = -0.001f;
 		particleIterator->currentTime += DELTA_TIME;
 
 		switch (moveType_) {
@@ -296,8 +298,7 @@ void Particle3D::Update(const Camera& camera) {
 			#pragma region 鉛直投げ上げ
 			//強制的にビルボードにするよ
 
-			//加速
-			float accel = -0.001f;
+			
 			velocityY_ += accel;
 
 			//加速を踏まえた位置計算
@@ -357,7 +358,6 @@ void Particle3D::Update(const Camera& camera) {
 			particleIterator->transform.translate.x += particleIterator->velocity.x / 3.0f;
 			particleIterator->transform.translate.y += 0.1f;
 			particleIterator->transform.translate.z += particleIterator->velocity.z / 3.0f;
-
 			//Y軸でπ/2回転
 			//これからはM_PIじゃなくてstd::numbers::pi_vを使おうね
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
@@ -406,9 +406,9 @@ void Particle3D::Update(const Camera& camera) {
 		}
 
 		//見えなくなった
-		if (particleIterator->color.w != 0.0f) {
-			particleIterator->isInvisible = true;
-		}
+		//if (particleIterator->color.w != 0.0f) {
+		//	particleIterator->isInvisible = true;
+		//}
 		
 	}
 

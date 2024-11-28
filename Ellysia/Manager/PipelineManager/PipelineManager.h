@@ -116,7 +116,7 @@ public:
 		return animationModelPSO_.graphicsPipelineState_;
 	}
 
-  //コマンドに積むためのGetter(Particle3D)
+	//コマンドに積むためのGetter(Particle3D)
 	ComPtr<ID3D12RootSignature> GetParticle3DRootSignature() {
 		return particle3DPSO_.rootSignature_;
 	}
@@ -273,62 +273,93 @@ public:
 	/// </summary>
 	void Initialize();
 
-
-	//ライン用
+	/// <summary>
+	/// ライン用のPSOを生成
+	/// </summary>
 	static void GenaratedLinePSO();
 
-	//スプライト用
+	/// <summary>
+	/// スプライト用のPSOを生成
+	/// </summary>
 	static void GenerateSpritePSO();
 
-	//モデル用
+	/// <summary>
+	/// モデル用のPSOを生成
+	/// </summary>
 	static void GenerateModelPSO();
 
-	//Skinning
+	/// <summary>
+	/// SkinningModel用のPSOを生成
+	/// </summary>
 	static void GenerateAnimationModelPSO();
 
-	//3Dパーティクル用
+	/// <summary>
+	/// 3Dパーティクル用のPSOを生成
+	/// </summary>
 	static void GenerateParticle3DPSO();
 
-	//CopyImage用
+	/// <summary>
+	/// CopyImage用のPSOを生成
+	/// </summary>
 	static void GenarateFullScreenPSO();
 
-	//GrayScale用
+	/// <summary>
+	/// GrayScale用のPSOを生成
+	/// </summary>
 	static void GenarateGrayScalePSO();
 
-	//SepiaScale用
+	/// <summary>
+	/// SepiaScale用のPSOを生成
+	/// </summary>
 	static void GenarateSepiaScalePSO();
 
-	//Vignette用
+	/// <summary>
+	/// Vignette用のPSOを生成
+	/// </summary>
 	static void GenarateVignettePSO();
 
-	//BoxFilter用
+	/// <summary>
+	/// BoxFilter用のPSOを生成
+	/// </summary>
 	static void GenarateBoxFilterPSO();
 
-	//GaussianFilter
+	/// <summary>
+	/// GaussianFilter用のPSOを生成
+	/// </summary>
 	static void GenarateGaussianFilterPSO();
 
-	//OutLine用
+	/// <summary>
+	/// OutLine用のPSOを生成
+	/// </summary>
 	static void GenarateLuminanceBasedOutlinePSO();
 
-	//DepthBasedOutline用
+	/// <summary>
+	/// DepthBasedOutline用
+	/// </summary>
 	static void GenarateDepthBasedOutlinePSO();
 
-	//RadialBlur用
+	/// <summary>
+	/// RadialBlur用のPSOを生成
+	/// </summary>
 	static void GenerateRadialBlurPSO();
 
-	//Dissolve用
+	/// <summary>
+	/// Dissolve用のPSOを生成
+	/// </summary>
 	static void GenarateDissolvePSO();
 
-	//RandomEffect用
+	/// <summary>
+	/// RandomEffect用のPSOを生成
+	/// </summary>
 	static void GenarateRandomEffectPSO();
 
 
-	//SkyBox
+	/// <summary>
+	/// SkyBoxのPSOの生成
+	/// </summary>
 	static void GenarateSkyBoxPSO();
 
 private:
-
-	
 
 	//ライン用
 	PSOInformation linePSO_ = {};

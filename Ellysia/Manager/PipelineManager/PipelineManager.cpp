@@ -60,14 +60,14 @@ void PipelineManager::GenaratePSO(PSOInformation& psoInformation, D3D12_INPUT_LA
 void PipelineManager::Initialize(){
 	
 	//モデル
-	PipelineManager::GetInstance()->SetModelBlendMode(1);
-	PipelineManager::GetInstance()->GenerateModelPSO();
+	SetModelBlendMode(1);
+	GenerateModelPSO();
 
-
-
-	//エフェクトごとにhlsl分けたい
-	//いずれやる
-	PipelineManager::GetInstance()->GenarateVignettePSO();
+	//パーティクル
+	GenerateParticle3DPSO();
+	
+	//ビネット
+	GenarateVignettePSO();
 
 }
 
