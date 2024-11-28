@@ -96,7 +96,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 void EnemyManager::DeleteEnemy(){
 	//敵が生存していなかったら消す
 	enemyes_.remove_if([](Enemy* enemy) {
-		if (enemy->GetIsAlive() == false) {
+		if (enemy->GetIsDeleted() == true) {
 			delete enemy;
 			return true;
 		}
@@ -676,9 +676,6 @@ void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 }
 
 EnemyManager::~EnemyManager(){
-
-
-	//audio_->Stop(audioHandle_);
 
 
 	//通常

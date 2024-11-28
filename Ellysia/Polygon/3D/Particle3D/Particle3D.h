@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+ * @file Particle3Dr.h
+ * @brief パーティクル(3D版)のクラス
+ * @author 茂木翼
+ */
+
 #include <d3dx12.h>
 #include <random>
 
@@ -63,17 +69,12 @@ public:
 	/// </summary>
 	Particle3D();
 
-
-
-
 	/// <summary>
 	/// 生成
 	/// </summary>
 	/// <param name="moveType"></param>
 	/// <returns></returns>
 	static Particle3D* Create(const uint32_t& moveType);
-
-
 
 	/// <summary>
 	/// 生成
@@ -92,6 +93,8 @@ private:
 
 	//Emitterで発生させる
 	std::list<Particle> Emission(const Emitter& emmitter, std::mt19937& randomEngine);
+
+
 
 #pragma endregion
 
@@ -137,6 +140,14 @@ public:
 
 
 public:
+	/// <summary>
+	///	一度だけ出すかどうか
+	/// </summary>
+	/// <param name="isReleaseOnce"></param>
+	inline void SetIsReleaseOnce(const bool &isReleaseOnce) {
+		this->isReleaseOnce_ = isReleaseOnce;
+	}
+
 
 	/// <summary>
 	/// 透明になっていくようにするかどうか
@@ -144,6 +155,14 @@ public:
 	/// <param name="isToTransparent"></param>
 	inline void SetIsToTransparent(const bool& isToTransparent) {
 		this->isToTransparent_ = isToTransparent;
+	}
+
+	/// <summary>
+	/// 全て透明になったかどうか
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsAllInvisible()const {
+		return isAllInvisible_;
 	}
 
 
@@ -200,8 +219,8 @@ private:
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+	//頂点データ
 	std::vector<VertexData> vertices_{};
-
 	//表示する数
 	int32_t instanceCount_ = 1;
 
@@ -216,8 +235,12 @@ private:
 	//インスタンスのインデックス
 	int instancingIndex_ = 0;
 
+	//一度だけ出すかどうか
+	bool isReleaseOnce_ = true;
+
 	//パーティクル
 	std::list<Particle>particles_;
+	//パーティクルデータ
 	ParticleForGPU* instancingData_ = nullptr;
 
 
@@ -228,7 +251,8 @@ private:
 
 	//透明になっていくか
 	bool isToTransparent_ = true;
-
+	//全て透明になったかどうか
+	bool isAllInvisible_ = false;
 
 	//エミッタの設定
 	Emitter emitter_ = {};

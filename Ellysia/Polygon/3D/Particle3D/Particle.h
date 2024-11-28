@@ -1,19 +1,24 @@
 #pragma once
-#include <Transform.h>
+#include "Transform.h"
 #include "Vector4.h"
-#include <Matrix4x4.h>
+#include "Matrix4x4.h"
 
-//CPU側
+/// <summary>
+/// パーティクルの情報
+/// </summary>
 struct Particle {
 	Transform transform;
 	Vector3  velocity;
 	Vector4 color;
 	float lifeTime;
 	float currentTime;
+	bool isInvisible;
 };
 
-//似てるけど全く別の物
+/// <summary>
+/// GPUに送る方のパーティクル
+/// </summary>
 struct ParticleForGPU {
-	Matrix4x4  World;
+	Matrix4x4  world;
 	Vector4 color;
 };

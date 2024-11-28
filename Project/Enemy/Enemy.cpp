@@ -238,6 +238,11 @@ void Enemy::Update(){
 	//座標の設定
 	particle_->SetTranslate(GetWorldPosition());
 
+	//パーティクルが全て消えたかどうか
+	isDeleted_ = particle_->GetIsAllInvisible();
+
+	//ダメージ演出
+	Damaged();
 
 #ifdef _DEBUG
 	float degreeRotateY = directionToRotateY * (180.0f / std::numbers::pi_v<float>);
@@ -265,8 +270,7 @@ void Enemy::Update(){
 	ImGui::End();
 #endif // _DEBUG
 
-	//ダメージ演出
-	Damaged();
+	
 }
 
 

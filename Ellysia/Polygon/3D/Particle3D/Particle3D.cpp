@@ -101,10 +101,10 @@ Particle3D* Particle3D::Create(const uint32_t& modelHandle,const uint32_t& moveT
 
 #pragma endregion
 
-	//テクスチャの読み込み
+	//モデルの読み込み
 	ModelData modelData = ModelManager::GetInstance()->GetModelData(modelHandle);
 
-
+	//テクスチャの読み込み
 	particle3D->textureHandle_ = TextureManager::GetInstance()->LoadTexture(modelData.textureFilePath);
 
 	//動きの種類
@@ -155,13 +155,16 @@ Particle3D* Particle3D::Create(const uint32_t& modelHandle,const uint32_t& moveT
 
 //生成関数
 Particle Particle3D::MakeNewParticle(const std::mt19937& randomEngine) {
+
+	//ランダムの値で位置を決める
+	//SRは固定
 	std::uniform_real_distribution<float> distribute(-2.0f, 2.0f);
 	Particle particle;
 	particle.transform.scale = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
 	particle.transform.rotate = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
-	//ランダムの値
 	Vector3 randomTranslate = {.x= distribute(randomEngine),.y= distribute(randomEngine),.z= distribute(randomEngine) };
 	particle.transform.translate = VectorCalculation::Add(emitter_.transform.translate, randomTranslate);
+	//投げ上げは少しだけ上にずらす
 	if (moveType_ == ThrowUp) {
 		Vector3 offset = { .x = randomTranslate.x,.y = 0.1f,.z = randomTranslate.z };
 		particle.transform.translate = VectorCalculation::Add(emitter_.transform.translate, offset);
@@ -172,7 +175,7 @@ Particle Particle3D::MakeNewParticle(const std::mt19937& randomEngine) {
 	std::uniform_real_distribution<float>distVelocity(-1.0f, 1.0f);
 	particle.velocity = {.x= distVelocity(randomEngine),.y= distVelocity(randomEngine),.z= distVelocity(randomEngine) };
 
-	//Color
+	//色
 	std::uniform_real_distribution<float> distColor(0.0f, 1.0f);
 	particle.color = {.x= distColor(randomEngine),.y= distColor(randomEngine),.z= distColor(randomEngine),.w= 1.0f};
 
@@ -180,6 +183,10 @@ Particle Particle3D::MakeNewParticle(const std::mt19937& randomEngine) {
 	std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
 	particle.lifeTime = distTime(randomEngine);
 	particle.currentTime = 0;
+
+	//見えるかどうか
+	//color.wが0になったらtrue
+	particle.isInvisible = false;
 
 	return particle;
 
@@ -206,14 +213,17 @@ void Particle3D::Update(const Camera& camera) {
 	std::mt19937 randomEngine(seedGenerator());
 
 	///時間経過
-	emitter_.frequencyTime += DELTA_TIME;
-	//頻度より大きいなら
-	if (emitter_.frequency <= emitter_.frequencyTime) {
-		//パーティクルを作る
-		particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
-		//余計に過ぎた時間も加味して頻度計算する
-		emitter_.frequencyTime -= emitter_.frequency;
+	if (isReleaseOnce_ == true) {
+		emitter_.frequencyTime += DELTA_TIME;
+		//頻度より大きいなら
+		if (emitter_.frequency <= emitter_.frequencyTime) {
+			//パーティクルを作る
+			particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
+			//余計に過ぎた時間も加味して頻度計算する
+			emitter_.frequencyTime -= emitter_.frequency;
+		}
 	}
+	
 
 
 	//座標の計算など
@@ -227,12 +237,11 @@ void Particle3D::Update(const Camera& camera) {
 		Matrix4x4 translateMatrix = {};
 		Matrix4x4 billBoardMatrix = {};
 		Matrix4x4 backToFrontMatrix = {};
-
-
+		particleIterator->currentTime += DELTA_TIME;
 
 		switch (moveType_) {
 		case NormalRelease:
-			#pragma region //通常の放出
+			#pragma region 通常の放出
 			if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
 			
 				continue;
@@ -264,7 +273,7 @@ void Particle3D::Update(const Camera& camera) {
 
 			//最大値を超えて描画しないようにする
 			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
-				instancingData_[numInstance_].World = worldMatrix;
+				instancingData_[numInstance_].world = worldMatrix;
 				instancingData_[numInstance_].color = particleIterator->color;
 
 				//透明になっていくようにするかどうか
@@ -282,7 +291,6 @@ void Particle3D::Update(const Camera& camera) {
 
 
 #pragma endregion
-
 
 		case ThrowUp:
 			#pragma region 鉛直投げ上げ
@@ -320,7 +328,7 @@ void Particle3D::Update(const Camera& camera) {
 
 			//最大値を超えて描画しないようにする
 			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
-				instancingData_[numInstance_].World = worldMatrix;
+				instancingData_[numInstance_].world = worldMatrix;
 				instancingData_[numInstance_].color = particleIterator->color;
 
 				//ワールド座標
@@ -344,7 +352,7 @@ void Particle3D::Update(const Camera& camera) {
 			#pragma endregion
 
 		case Rise:
-#pragma region 上昇
+			#pragma region 上昇
 			//強制的にビルボードにするよ
 			particleIterator->transform.translate.x += particleIterator->velocity.x / 3.0f;
 			particleIterator->transform.translate.y += 0.1f;
@@ -371,9 +379,9 @@ void Particle3D::Update(const Camera& camera) {
 			//その代わりにさっき作ったbillBoardMatrixを入れるよ
 			worldMatrix = Matrix4x4Calculation::Multiply(scaleMatrix, Matrix4x4Calculation::Multiply(billBoardMatrix, translateMatrix));
 
-			//最大値を超えて描画しないようにする
+			//最大値を超えないようにする
 			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
-				instancingData_[numInstance_].World = worldMatrix;
+				instancingData_[numInstance_].world = worldMatrix;
 				instancingData_[numInstance_].color = particleIterator->color;
 
 				//ワールド座標
@@ -387,15 +395,34 @@ void Particle3D::Update(const Camera& camera) {
 					//アルファはVector4でのwだね
 					float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
 					instancingData_[numInstance_].color.w = alpha;
-
 				}
 
 				++numInstance_;
 			}
 			break;
 
+			#pragma endregion
+
 		}
+
+		//見えなくなった
+		if (particleIterator->color.w != 0.0f) {
+			particleIterator->isInvisible = true;
+		}
+		
 	}
+
+
+	//1つでも見える場合ループを抜ける
+	//全て見えなくなったらisAllInvisible_がtrueになる
+	for (auto& particle : particles_) {
+		
+		if (particle.isInvisible == false) {
+			break;
+		}
+		isAllInvisible_ = true;
+	}
+
 }
 
 void Particle3D::Draw(const Camera& camera,const  Material& material,const DirectionalLight& directionalLight) {

@@ -173,6 +173,15 @@ public:
 		return isAttack_;
 	}
 
+
+	/// <summary>
+	/// 消すかどうか
+	/// </summary>
+	inline bool GetIsDeleted()const  {
+		return isDeleted_;
+	}
+
+
 	/// <summary>
 	/// 攻撃用の当たり判定を取得
 	/// </summary>
@@ -196,11 +205,6 @@ private:
 	/// 攻撃をライトで受ける
 	/// </summary>
 	void Damaged();
-
-	/// <summary>
-	/// 消えるときにパーティクルを表示する
-	/// </summary>
-	void DisplayParticle();
 
 
 

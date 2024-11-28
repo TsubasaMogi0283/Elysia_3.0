@@ -1,4 +1,11 @@
 #pragma once
+/**
+ * @file PipelineManager.h
+ * @brief PSO(パイプライン)の管理クラス
+ * @author 茂木翼
+ */
+
+
 #include <d3d12.h>
 #include <cassert>
 
