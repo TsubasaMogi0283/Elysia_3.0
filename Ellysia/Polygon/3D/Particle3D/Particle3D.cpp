@@ -213,7 +213,7 @@ void Particle3D::Update(const Camera& camera) {
 	std::mt19937 randomEngine(seedGenerator());
 
 	///時間経過
-	if (isReleaseOnce_ == true) {
+	//if (isReleaseOnce_ == true) {
 		emitter_.frequencyTime += DELTA_TIME;
 		//頻度より大きいなら
 		if (emitter_.frequency <= emitter_.frequencyTime) {
@@ -222,7 +222,7 @@ void Particle3D::Update(const Camera& camera) {
 			//余計に過ぎた時間も加味して頻度計算する
 			emitter_.frequencyTime -= emitter_.frequency;
 		}
-	}
+	//}
 	
 
 
@@ -249,9 +249,9 @@ void Particle3D::Update(const Camera& camera) {
 			//	continue;
 			//}
 			//強制的にビルボードにするよ
-			particleIterator->transform.translate.x += particleIterator->velocity.x * DELTA_TIME;
-			particleIterator->transform.translate.y += particleIterator->velocity.y * DELTA_TIME;
-			particleIterator->transform.translate.z += particleIterator->velocity.z * DELTA_TIME;
+			particleIterator->transform.translate.x += 0.001f;
+			particleIterator->transform.translate.y += 0.001f;
+			particleIterator->transform.translate.z += 0.001f;
 
 			//Y軸でπ/2回転
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
@@ -276,15 +276,15 @@ void Particle3D::Update(const Camera& camera) {
 			//最大値を超えて描画しないようにする
 			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
 				instancingData_[numInstance_].world = worldMatrix;
-				instancingData_[numInstance_].color = particleIterator->color;
+				instancingData_[numInstance_].color = {1.0f,1.0f,1.0f,1.0f};
 
 				//透明になっていくようにするかどうか
-				if (isToTransparent_ == true) {
-					//アルファはVector4でのwだね
-					float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
-					instancingData_[numInstance_].color.w = alpha;
-
-				}
+				//if (isToTransparent_ == true) {
+				//	//アルファはVector4でのwだね
+				//	float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
+				//	instancingData_[numInstance_].color.w = alpha;
+				//
+				//}
 
 				++numInstance_;
 			}
@@ -425,6 +425,65 @@ void Particle3D::Update(const Camera& camera) {
 
 }
 
+void Particle3D::Draw(const Camera& camera, const Material& material){
+	if (material.lightingKinds_ != Directional) {
+		assert(0);
+	}
+
+
+
+
+	//更新
+	Update(camera);
+
+	//PS用のカメラ
+	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
+	Vector3 cameraWorldPosition = {};
+	cameraWorldPosition.x = camera.worldMatrix_.m[3][0];
+	cameraWorldPosition.y = camera.worldMatrix_.m[3][1];
+	cameraWorldPosition.z = camera.worldMatrix_.m[3][2];
+
+	*cameraPositionData_ = cameraWorldPosition;
+	cameraResource_->Unmap(0, nullptr);
+
+
+	//コマンドを積む
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetParticle3DRootSignature().Get());
+	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetParticle3DGraphicsPipelineState().Get());
+
+
+
+	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
+	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
+	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+	//CBVを設定する
+	//マテリアル
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+
+	//インスタンシング
+	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(1, instancingIndex_);
+
+	//テクスチャ
+	if (textureHandle_ != 0) {
+		TextureManager::GraphicsCommand(2, textureHandle_);
+	}
+
+	//カメラ
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource_->GetGPUVirtualAddress());
+
+
+	//PS用のカメラ
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
+
+	//DrawCall
+	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0, 0);
+
+
+}
+
 void Particle3D::Draw(const Camera& camera,const  Material& material,const DirectionalLight& directionalLight) {
 
 	//Directionalではなかったらassert
@@ -485,7 +544,7 @@ void Particle3D::Draw(const Camera& camera,const  Material& material,const Direc
 }
 
 void Particle3D::Draw(const Camera& camera, const Material& material, const PointLight& pointLight){
-	//Directionalではなかったらassert
+	//Pointではなかったらassert
 	if (material.lightingKinds_ != Point) {
 		assert(0);
 	}
@@ -542,7 +601,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Poin
 }
 
 void Particle3D::Draw(const Camera& camera, const Material& material, const SpotLight& spotLight){
-	//Directionalではなかったらassert
+	//Spotではなかったらassert
 	if (material.lightingKinds_ != Spot) {
 		assert(0);
 	}

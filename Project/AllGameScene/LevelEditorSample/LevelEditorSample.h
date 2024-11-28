@@ -8,17 +8,21 @@
 #include "Model.h"
 #include "Camera.h"
 #include "Material.h"
-#include <BackText.h>
+#include "BackText.h"
 #include "LevelDataManager.h"
 #include "Collider/CollisionManager.h"
-#include <Vignette.h>
+#include "Vignette.h"
+#include "Particle3D.h"
 
 #include "Audio.h"
-#include <Player/AudioTestPlayer.h>
+#include "Player/AudioTestPlayer.h"
 
-//StatePatternを使う時は必ず前方宣言をするように
+
 class GameManager;
 
+/// <summary>
+/// レベルデータの動作確認クラス
+/// </summary>
 class LevelEditorSample : public IGameScene {
 public:
 
@@ -52,8 +56,14 @@ public:
 	/// </summary>
 	void DrawObject3D()override;
 
-
+	/// <summary>
+	/// ポストエフェクト描画前処理
+	/// </summary>
 	void PreDrawPostEffectFirst()override;
+	
+	/// <summary>
+	/// ポストエフェクトの描画
+	/// </summary>
 	void DrawPostEffect()override;
 
 
@@ -97,6 +107,9 @@ private:
 	//プレイヤー
 	std::unique_ptr<AudioTestPlayer>player_ = nullptr;
 	Vector3 playerDirection_ = {};
+
+	//パーティクル
+	std::unique_ptr<Particle3D>particle3D_ = nullptr;
 
 
 	//コリジョンマネージャー

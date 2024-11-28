@@ -116,7 +116,14 @@ public:
 	void Update(const Camera& camera);
 
 	/// <summary>
-	/// 平行光源
+	/// 通常描画
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	void Draw(const Camera& camera, const Material& material);
+
+	/// <summary>
+	/// 描画(平行光源)
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
@@ -124,7 +131,7 @@ public:
 	void Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight);
 
 	/// <summary>
-	/// 点光源
+	/// 描画(点光源)
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
@@ -132,7 +139,7 @@ public:
 	void Draw(const Camera& camera, const Material& material, const PointLight& pointLight);
 
 	/// <summary>
-	/// スポットライト
+	/// 描画(スポットライト)
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
@@ -245,7 +252,7 @@ private:
 	int instancingIndex_ = 0;
 
 	//一度だけ出すかどうか
-	bool isReleaseOnce_ = true;
+	bool isReleaseOnce_ = false;
 
 	//パーティクル
 	std::list<Particle>particles_;
@@ -256,7 +263,7 @@ private:
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
 	//動きの種類
-	uint32_t moveType_ = ThrowUp;
+	uint32_t moveType_ = NormalRelease;
 
 	//透明になっていくか
 	bool isToTransparent_ = true;

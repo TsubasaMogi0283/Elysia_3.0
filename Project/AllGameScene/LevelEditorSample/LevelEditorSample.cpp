@@ -48,7 +48,7 @@ void LevelEditorSample::Initialize(){
 	
 	//audio_->PlayMP3(audioHandleMP3_, true);
 
-
+	particle3D_.reset(Particle3D::Create(ParticleMoveType::ThrowUp));
 
 	collisionManager_ = std::make_unique<CollisionManager>();
 }
@@ -199,11 +199,13 @@ void LevelEditorSample::DrawSpriteBack(){
 
 void LevelEditorSample::DrawObject3D(){
 	//プレイヤー
-	player_->Draw(camera_, directionalLight_);
+	//player_->Draw(camera_, directionalLight_);
 
 	//レベルエディタ  
 	levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
 	
+	//パーティクル
+	particle3D_->Draw(camera_, material_);
 }
 
 void LevelEditorSample::PreDrawPostEffectFirst(){
