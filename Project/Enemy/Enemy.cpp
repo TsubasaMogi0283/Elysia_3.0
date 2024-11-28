@@ -58,7 +58,7 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 
 
 	//パーティクル
-	particle_.reset(Particle3D::Create(ParticleMoveType::Rise));
+	particle_.reset(Particle3D::Create(ParticleMoveType::NormalRelease));
 
 	//デバッグ用のモデル
 	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
@@ -244,7 +244,7 @@ void Enemy::Update(){
 	particle_->SetTranslate(GetWorldPosition());
 
 	//パーティクルが全て消えたかどうか
-	isDeleted_ = particle_->GetIsAllInvisible();
+	//isDeleted_ = particle_->GetIsAllInvisible();
 
 	//ダメージ演出
 	Damaged();

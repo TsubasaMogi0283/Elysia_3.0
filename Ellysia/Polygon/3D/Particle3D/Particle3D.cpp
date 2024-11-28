@@ -176,7 +176,7 @@ Particle Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
 	particle.velocity = {.x= distVelocity(randomEngine),.y= distVelocity(randomEngine),.z= distVelocity(randomEngine) };
 
 	//色
-	std::uniform_real_distribution<float> distColor(0.0f, 1.0f);
+	std::uniform_real_distribution<float> distColor(1.0f, 1.0f);
 	particle.color = {.x= distColor(randomEngine),.y= distColor(randomEngine),.z= distColor(randomEngine),.w= 1.0f};
 
 	//時間
@@ -244,10 +244,10 @@ void Particle3D::Update(const Camera& camera) {
 		switch (moveType_) {
 		case NormalRelease:
 			#pragma region 通常の放出
-			if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
-			
-				continue;
-			}
+			//if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+			//
+			//	continue;
+			//}
 			//強制的にビルボードにするよ
 			particleIterator->transform.translate.x += particleIterator->velocity.x * DELTA_TIME;
 			particleIterator->transform.translate.y += particleIterator->velocity.y * DELTA_TIME;
@@ -413,15 +413,15 @@ void Particle3D::Update(const Camera& camera) {
 	}
 
 
-	//1つでも見える場合ループを抜ける
-	//全て見えなくなったらisAllInvisible_がtrueになる
-	for (auto& particle : particles_) {
-		
-		if (particle.isInvisible == false) {
-			break;
-		}
-		isAllInvisible_ = true;
-	}
+	////1つでも見える場合ループを抜ける
+	////全て見えなくなったらisAllInvisible_がtrueになる
+	//for (auto& particle : particles_) {
+	//	
+	//	if (particle.isInvisible == false) {
+	//		break;
+	//	}
+	//	isAllInvisible_ = true;
+	//}
 
 }
 
