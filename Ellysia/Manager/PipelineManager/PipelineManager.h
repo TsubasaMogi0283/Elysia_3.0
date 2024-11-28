@@ -2,16 +2,15 @@
 #include <d3d12.h>
 #include <cassert>
 
-#include <CompileShaderManager.h>
+#include "CompileShaderManager.h"
 #include "ConvertLog.h"
-#include <DirectXSetup.h>
-
-//透明化を解決するためにPSOをクラス化しよう
-//後ブレンドの時大変だからswitch文で切り替えできるようにしたら楽かも
-//スプライトはスプライトで同じ情報だからインスタンス１つでいいよね
-//同様にモデルも
+#include "DirectXSetup.h"
 
 
+
+/// <summary>
+/// ブレンドモード
+/// </summary>
 enum BlemdMode {
 	//ブレンド無し
 	BlendModeNone,
@@ -40,23 +39,40 @@ enum BlemdMode {
 
 };
 
+/// <summary>
+/// パイプライン管理クラス
+/// </summary>
 class PipelineManager final {
 private:
 
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	PipelineManager()=default;
 
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~PipelineManager()=default;
 
 public:
-	//シングルインスタンス
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
 	static PipelineManager* GetInstance();
 
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="pipelineManager"></param>
 	PipelineManager(const PipelineManager& pipelineManager) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="pipelineManager"></param>
+	/// <returns></returns>
 	PipelineManager& operator=(const PipelineManager& pipelineManager) = delete;
 
 #pragma region アクセッサ
@@ -199,10 +215,17 @@ public:
 
 
 
-
+	/// <summary>
+	/// スプライトのブレンドモードの設定
+	/// </summary>
+	/// <param name="blendmode"></param>
 	void SetSpriteBlendMode(uint32_t blendmode) {
 		selectSpriteBlendMode_ = blendmode;
 	}
+	/// <summary>
+	/// モデルのブレンドモードの設定
+	/// </summary>
+	/// <param name="blendmode"></param>
 	void SetModelBlendMode(uint32_t blendmode) {
 		selectModelBlendMode_ = blendmode;
 	}
@@ -215,6 +238,9 @@ public:
 
 
 private:
+	/// <summary>
+	/// PSOの情報
+	/// </summary>
 	struct PSOInformation {
 		ComPtr<ID3DBlob> signatureBlob_ = nullptr;
 		ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
@@ -305,7 +331,6 @@ private:
 	PSOInformation modelPSO_ = {};
 	//モデル用の変数
 	PSOInformation particle3DPSO_ = {};
-
 	//CopyImage用
 	PSOInformation fullScreenPSO_ = {};
 	//GrayScale用

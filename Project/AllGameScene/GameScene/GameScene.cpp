@@ -71,7 +71,7 @@ void GameScene::Initialize() {
 	player_->Initialize();
 	player_->SetIsAbleToControll(false);
 
-	playerPosition_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+
 	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
 	isPlayerMoveKey_ = false;
 	bTriggerTime_ = 0;
@@ -315,7 +315,7 @@ void GameScene::ObjectCollision(){
 		AABB objectAABB = stageObject->GetAABB();
 
 		//オブジェクトとの差分ベクトル
-		Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(stageObject->GetWorldPosition(), playerPosition_);
+		Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(stageObject->GetWorldPosition(), player_->GetWorldPosition());
 		
 		//オブジェクトとプレイヤーの距離
 		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
@@ -348,7 +348,7 @@ void GameScene::ObjectCollision(){
 
 void GameScene::EscapeCondition(){
 	//ゲート
-	if (gate_->isCollision(playerPosition_)) {
+	if (gate_->isCollision(player_->GetWorldPosition())) {
 #ifdef _DEBUG
 		ImGui::Begin("InSpaceGate");
 		ImGui::End();
@@ -576,6 +576,8 @@ void GameScene::Update(GameManager* gameManager) {
 	//フェードの透明度の設定
 	fadeSprite_->SetTransparency(fadeTransparency_);
 
+	//プレイヤーの更新
+	player_->Update();
 
 	//StatePatternにしたい
 	//フェードイン
@@ -741,13 +743,7 @@ void GameScene::Update(GameManager* gameManager) {
 		//数学とプログラムで回る向きが違うことに煩わしさを感じます・・
 		float phi = -originPhi_;
 
-		//懐中電灯
-		playerPosition_ = player_->GetWorldPosition();
 
-		//ライトはプレイヤーが持っているという包含の関係なのでPlayerに入れた方が良いかも。
-		//ここでやるべきではないと思う。
-		
-		
 		player_->GetFlashLight()->SetTheta(theta_);
 		player_->GetFlashLight()->SetPhi(phi);
 		
@@ -756,27 +752,27 @@ void GameScene::Update(GameManager* gameManager) {
 		//エネミーをコリジョンマネージャーに追加
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
-			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+			//collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 
 			//攻撃用の判定が出ていたら登録
-			if (enemy->GetEnemyAttackCollision()->GetIsTouch() == true) {
+			if (enemy->GetIsAttack() == true) {
 				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 				
 			}
 			
+			
 		}
 		//通常の敵
 		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
-
 		//懐中電灯
-		collisionManager_->RegisterList(player_->GetFlashLightCollision());
+		//collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		//1体しか出さないのにリストにする必要はあったのでしょうか・・
 		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
 		for (StrongEnemy* strongEnemy : strongEnemyes) {
-			collisionManager_->RegisterList(strongEnemy);
+			//collisionManager_->RegisterList(strongEnemy);
 			bool isTouch = strongEnemy->GetIsTouchPlayer();
 
 			if (isTouch == true) {
@@ -784,13 +780,16 @@ void GameScene::Update(GameManager* gameManager) {
 			}
 		}
 
+		//当たり判定チェック
+		collisionManager_->CheckAllCollision();
+
 
 		//もとに戻す
 		camera_.rotate_.x = -phi;
 		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
 		camera_.rotate_.z = 0.0f;
 
-		camera_.translate_ = VectorCalculation::Add(playerPosition_, CAMERA_POSITION_OFFSET);
+		camera_.translate_ = VectorCalculation::Add(player_->GetWorldPosition(), CAMERA_POSITION_OFFSET);
 
 
 
@@ -824,6 +823,10 @@ void GameScene::Update(GameManager* gameManager) {
 		//または一発アウトの敵に接触した場合
 		//負け専用のクラスを作りたい
 		if (player_->GetHP() <= 0 || isTouchStrongEnemy_==true) {
+
+			//敵の動きが止まりブラックアウト
+			//プレイヤーことカメラが倒れる感じが良いかも
+
 			gameManager->ChangeScene(new LoseScene());
 			return;
 		}
@@ -836,14 +839,13 @@ void GameScene::Update(GameManager* gameManager) {
 		//更新
 		material_.Update();
 
-		//当たり判定チェック
-		collisionManager_->CheckAllCollision();
+		
 
 #ifdef _DEBUG
-		ImGui::Begin("Camera");
-		ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
-		ImGui::SliderFloat3("Traslate", &cameraTranslate.x, -100.0f, 100.0f);
-		ImGui::SliderFloat3("PosOffset", &CAMERA_POSITION_OFFSET.x, -30.0f, 30.0f);
+		ImGui::Begin("カメラ");
+		ImGui::SliderFloat3("回転", &camera_.rotate_.x, -3.0f, 3.0f);
+		ImGui::SliderFloat3("位置", &cameraTranslate.x, -100.0f, 100.0f);
+		ImGui::SliderFloat3("オフセット位置", &CAMERA_POSITION_OFFSET.x, -30.0f, 30.0f);
 		ImGui::InputFloat("Theta", &theta_);
 		ImGui::InputFloat("Phi", &phi);
 		ImGui::End();
@@ -885,16 +887,13 @@ void GameScene::Update(GameManager* gameManager) {
 	//天球
 	skydome_->Update();
 
-	//プレイヤーの更新
-	player_->Update();
-	playerPosition_ = player_->GetWorldPosition();
+	
 
-
+	
 #pragma region ポストエフェクト
 	//プレイヤーがダメージを受けた場合ビネット
 	if (player_->GetIsDamaged() == true) {
 		//時間の加算
-		const float DELTA_TIME = 1.0f / 60.0f;
 		vignetteChangeTime_ += DELTA_TIME;
 		
 		//線形補間で滑らかに変化
@@ -902,14 +901,11 @@ void GameScene::Update(GameManager* gameManager) {
 	}
 	//HPが1でピンチの場合
 	else if (player_->GetHP() == 1u) {
-		
-		const float DELTA_TIME = 1.0f / 60.0f;
 		warningTime_ += DELTA_TIME;
 		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
 		if (warningTime_ > 1.0f) {
 			warningTime_ = 0.0f;
 		}
-
 	}
 	//通常時の場合
 	else {
@@ -919,7 +915,7 @@ void GameScene::Update(GameManager* gameManager) {
 	vignette_->SetPow(vignettePow_);
 
 #ifdef _DEBUG
-	ImGui::Begin("VignetteCheck");
+	ImGui::Begin("ビネットの確認");
 	ImGui::InputFloat("POW", &vignettePow_);
 	ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
 	ImGui::End();
@@ -955,10 +951,8 @@ void GameScene::DrawObject3D() {
 	skydome_->Draw(camera_);
 	//プレイヤー
 	player_->Draw(camera_, spotLight);
-
 	//ステージオブジェクト
 	objectManager_->Draw(camera_, spotLight);
-
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
 

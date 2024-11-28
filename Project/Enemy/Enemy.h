@@ -9,11 +9,16 @@
 #include "AABB.h"
 #include "EnemyCondition.h"
 #include "EnemyFlashLightCollision.h"
+#include "Particle3D.h"
+
 
 struct Camera;
 struct SpotLight;
 class Player;
 
+/// <summary>
+/// 敵
+/// </summary>
 class Enemy{
 public:
 
@@ -99,7 +104,7 @@ public:
 	inline void SetPlayerPosition(const Vector3& position) {
 		this->playerPosition_ = position;
 	}
-
+	
 	/// <summary>
 	/// 前の状態の設定
 	/// </summary>
@@ -192,6 +197,12 @@ private:
 	/// </summary>
 	void Damaged();
 
+	/// <summary>
+	/// 消えるときにパーティクルを表示する
+	/// </summary>
+	void DisplayParticle();
+
+
 
 private:
 	//状態
@@ -229,6 +240,9 @@ private:
 	//時間とフラグ
 	int32_t deleteTime_ = 0;
 	bool isDeleted_ = false;
+
+	//消えるときのパーティクル
+	std::unique_ptr<Particle3D>particle_ = nullptr;
 
 	//追跡
 	bool isTracking_ = false;

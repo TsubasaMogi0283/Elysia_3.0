@@ -51,6 +51,10 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 	//攻撃
 	attackTime_ = 0;
 
+
+	//パーティクル
+	particle_.reset(Particle3D::Create(ParticleMoveType::Rise));
+
 	//デバッグ用のモデル
 	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
 
@@ -93,103 +97,105 @@ void Enemy::Update(){
 	
 	const float SPEED_AMOUNT = 0.05f;
 	//StatePatternにしたい！！
-	//状態
-	switch (condition_) {
-		//何もしない
-	case EnemyCondition::NoneMove:
-		#ifdef _DEBUG
-		ImGui::Begin("None");
-		ImGui::End();
-		#endif // DEBUG
-		
-		attackTime_ = 0;
-		preTrackingPlayerPosition_ = {};
-		preTrackingPosition_ = {};
-		speed_ = { 0.0f,0.0f,0.0f };
-		break;
-	
-		//通常の動き
-	case EnemyCondition::Move:
-		attackTime_ = 0;
+	 
+	if (isAlive_ == true) {
+		//状態遷移
+		switch (condition_) {
+			//何もしない
+		case EnemyCondition::NoneMove:
+#ifdef _DEBUG
+			ImGui::Begin("None");
+			ImGui::End();
+#endif // DEBUG
 
-		//通常の動き
-		preTrackingPlayerPosition_ = {};
-		preTrackingPosition_ = {};
-		if (speed_.x != 0.0f ||
-			speed_.y != 0.0f ||
-			speed_.z != 0.0f) {
-			direction_ = VectorCalculation::Normalize(speed_);
-		}
-		
-		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, speed_);
-	
-	
-		break;
-	
-	case EnemyCondition::PreTracking:
-	
-		attackTime_ = 0;
-		//取得したら追跡
-		preTrackingPlayerPosition_ = playerPosition_;
-		preTrackingPosition_ = GetWorldPosition();
-		
-		
+			attackTime_ = 0;
+			preTrackingPlayerPosition_ = {};
+			preTrackingPosition_ = {};
+			speed_ = { 0.0f,0.0f,0.0f };
+			break;
 
-		//強制的に追跡
-		preCondition_ = EnemyCondition::PreTracking;
-		condition_ = EnemyCondition::Tracking;
+			//通常の動き
+		case EnemyCondition::Move:
+			attackTime_ = 0;
 
-		break;
-	
-	case EnemyCondition::Tracking:
-		//追跡処理
+			//通常の動き
+			preTrackingPlayerPosition_ = {};
+			preTrackingPosition_ = {};
+			if (speed_.x != 0.0f ||
+				speed_.y != 0.0f ||
+				speed_.z != 0.0f) {
+				direction_ = VectorCalculation::Normalize(speed_);
+			}
+
+			worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, speed_);
+
+
+			break;
+
+		case EnemyCondition::PreTracking:
+
+			attackTime_ = 0;
+			//取得したら追跡
+			preTrackingPlayerPosition_ = playerPosition_;
+			preTrackingPosition_ = GetWorldPosition();
+
+
+
+			//強制的に追跡
+			preCondition_ = EnemyCondition::PreTracking;
+			condition_ = EnemyCondition::Tracking;
+
+			break;
+
+		case EnemyCondition::Tracking:
+			//追跡処理
 
 
 #ifdef _DEBUG
-		ImGui::Begin("Tracking");
-		ImGui::End();
+			ImGui::Begin("Tracking");
+			ImGui::End();
 #endif // DEBUG
 
 
 
-		//向きを求める
-		direction_ = VectorCalculation::Subtract(preTrackingPlayerPosition_, preTrackingPosition_);
-		direction_ = VectorCalculation::Normalize(direction_);
+			//向きを求める
+			direction_ = VectorCalculation::Subtract(playerPosition_, GetWorldPosition());
+			direction_ = VectorCalculation::Normalize(direction_);
 
-		//加算
-		Vector3 speedVelocity = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
-		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, speedVelocity);
+			//加算
+			Vector3 speedVelocity = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
+			worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, speedVelocity);
 
 
-		break;
-	
-		//攻撃
-	case EnemyCondition::Attack:
-		attackTime_ += 1;
-		
+			break;
 
-		//2秒の時に攻撃
-		if (attackTime_ == 121) {
-			//ここで攻撃
-			//コライダーが当たっている時だけ通す
-			if (attackCollision_->GetIsTouch() == true) {
+			//攻撃
+		case EnemyCondition::Attack:
+			attackTime_ += 1;
+
+
+			//2秒の時に攻撃
+			if (attackTime_ == 121) {
+				//ここで攻撃
+				//コライダーが当たっている時だけ通す
+
 				isAttack_ = true;
 			}
+			else {
+				isAttack_ = false;
+			}
+
+			//4秒経ったらまた0になる
+			if (attackTime_ > 240) {
+				attackTime_ = 0;
+
+			}
+
+			break;
 
 		}
-		else {
-			isAttack_ = false;
-		}
-
-		//4秒経ったらまた0になる
-		if (attackTime_ > 240) {
-			attackTime_ = 0;
-
-		}
-
-		break;
-
 	}
+	
 
 
 	
@@ -229,6 +235,9 @@ void Enemy::Update(){
 	attackCollision_->SetEnemyDirection(direction_);
 	attackCollision_->Update();
 
+	//座標の設定
+	particle_->SetTranslate(GetWorldPosition());
+
 
 #ifdef _DEBUG
 	float degreeRotateY = directionToRotateY * (180.0f / std::numbers::pi_v<float>);
@@ -237,6 +246,7 @@ void Enemy::Update(){
 	ImGui::InputFloat3("方向", &direction_.x);
 	ImGui::InputFloat("回転Y", &degreeRotateY);
 	ImGui::Checkbox("攻撃", &isAttack_);
+	ImGui::InputInt("攻撃時間", &attackTime_);
 	
 	if (ImGui::TreeNode("状態")) {
 		int newCondition = static_cast<int>(condition_);
@@ -277,5 +287,10 @@ void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 		model_->Draw(worldTransform_, camera,material_, spotLight);
 	}
 	
+
+	//絶命したらパーティクルの表示
+	if (isAlive_ == false) {
+		particle_->Draw(camera, material_, spotLight);
+	}
 }
 

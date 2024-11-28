@@ -54,7 +54,7 @@ private:
 	//StatePatternに必要な変数
 	IGameScene* currentGamaScene_ = nullptr;
 	//シーンの数
-	uint32_t SCENE_QUANTITY_ = 0;
+	uint32_t sceneQuantity_ = 0;
 
 
 	

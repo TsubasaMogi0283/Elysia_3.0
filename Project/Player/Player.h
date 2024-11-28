@@ -167,7 +167,6 @@ public:
 
 
 
-
 	/// <summary>
 	/// 通常の敵の当たり判定
 	/// </summary>

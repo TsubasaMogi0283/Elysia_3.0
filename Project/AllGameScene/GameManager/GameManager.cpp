@@ -18,7 +18,7 @@ void GameManager::Initialize() {
 	//初期化
 	currentGamaScene_->Initialize();
 
-	SCENE_QUANTITY_ = 0;
+	sceneQuantity_ = 0;
 
 }
 
@@ -40,12 +40,12 @@ void GameManager::Update() {
 	//シーンファクトリー組み合わせたらデバッグがやりやすそう
 	//選択するだけでシーン遷移出来るから
 	ImGui::Begin("Scene");
-	if (ImGui::BeginCombo("SceneSelect", sceneName[SCENE_QUANTITY_])) {
+	if (ImGui::BeginCombo("SceneSelect", sceneName[sceneQuantity_])) {
 		for (uint32_t i = 0; i < IM_ARRAYSIZE(sceneName); i++) {
-			bool isSelected = (SCENE_QUANTITY_ == i);
+			bool isSelected = (sceneQuantity_ == i);
 			if (ImGui::Selectable(sceneName[i], isSelected))
 			{
-				SCENE_QUANTITY_ = i; // 選択されたアイテムのインデックスを更新
+				sceneQuantity_ = i; // 選択されたアイテムのインデックスを更新
 			}
 
 			// 現在選択されているアイテムにフォーカスを設定

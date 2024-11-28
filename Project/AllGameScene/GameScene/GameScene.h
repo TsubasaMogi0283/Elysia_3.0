@@ -166,6 +166,8 @@ private:
 	bool isRotateYKey_ = false;
 	bool isRotateXKey_ = false;
 
+	//時間変化
+	const float DELTA_TIME = 1.0f / 60.0f;
 
 	//マテリアル
 	Material material_ = {};
@@ -182,8 +184,7 @@ private:
 
 	//プレイヤー
 	std::unique_ptr<Player> player_ = nullptr;
-	//座標
-	Vector3 playerPosition_ = {};
+
 	//向き
 	Vector3 playerMoveDirection_ = {};
 	//キーボードで動かしているかどうか
