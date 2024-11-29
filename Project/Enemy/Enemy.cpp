@@ -99,27 +99,30 @@ void Enemy::Damaged(){
 
 
 void Enemy::Update(){
-	
+	//スピードの量
 	const float SPEED_AMOUNT = 0.05f;
+	//攻撃開始時間
+	const uint32_t ATTACK_START_TIME = 60;
+	//攻撃終了時間
+	const uint32_t ATTCK_END_TIME = 120;
+
 	//StatePatternにしたい！！
 	 
 	if (isAlive_ == true) {
 		//状態遷移
 		switch (condition_) {
-			//何もしない
 		case EnemyCondition::NoneMove:
-#ifdef _DEBUG
-			ImGui::Begin("None");
-			ImGui::End();
-#endif // DEBUG
-
+			//何もしない
+			
+			//全ての値が0
 			attackTime_ = 0;
 			preTrackingPlayerPosition_ = {};
 			preTrackingPosition_ = {};
 			speed_ = { 0.0f,0.0f,0.0f };
+
 			break;
 
-			//通常の動き
+			
 		case EnemyCondition::Move:
 			attackTime_ = 0;
 
@@ -141,12 +144,13 @@ void Enemy::Update(){
 
 			attackTime_ = 0;
 			//取得したら追跡
+
 			preTrackingPlayerPosition_ = playerPosition_;
 			preTrackingPosition_ = GetWorldPosition();
 
 
 
-			//強制的に追跡
+			//強制的に追跡に移行
 			preCondition_ = EnemyCondition::PreTracking;
 			condition_ = EnemyCondition::Tracking;
 
@@ -154,13 +158,6 @@ void Enemy::Update(){
 
 		case EnemyCondition::Tracking:
 			//追跡処理
-
-
-#ifdef _DEBUG
-			ImGui::Begin("Tracking");
-			ImGui::End();
-#endif // DEBUG
-
 
 
 			//向きを求める
@@ -178,9 +175,9 @@ void Enemy::Update(){
 		case EnemyCondition::Attack:
 			attackTime_ += 1;
 
-
 			//2秒の時に攻撃
-			if (attackTime_ == 121) {
+			if (attackTime_ >= ATTACK_START_TIME&&
+				attackTime_ <= ATTCK_END_TIME) {
 				//ここで攻撃
 				//コライダーが当たっている時だけ通す
 
@@ -240,11 +237,7 @@ void Enemy::Update(){
 	attackCollision_->SetEnemyDirection(direction_);
 	attackCollision_->Update();
 
-	//座標の設定
-	particle_->SetTranslate(GetWorldPosition());
-
-	//パーティクルが全て消えたかどうか
-	//isDeleted_ = particle_->GetIsAllInvisible();
+	
 
 	//ダメージ演出
 	Damaged();
@@ -299,7 +292,7 @@ void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 
 	//絶命したらパーティクルの表示
 	if (isAlive_ == false) {
-		particle_->Draw(camera, particleMaterial_, directionalLight_);
+		//particle_->Draw(camera, particleMaterial_, directionalLight_);
 	}
 }
 

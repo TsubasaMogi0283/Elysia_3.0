@@ -4,7 +4,7 @@
 
 /**
  * @file GameManager.h
- * @brief ゲーム管理クラスのクラス
+ * @brief ゲーム管理クラス
  * @author 茂木翼
  */
 
@@ -64,9 +64,6 @@ public:
 	/// </summary>
 	void DrawPostEffect();
 	
-
-
-
 	/// <summary>
 	/// デストラクタ
 	/// </summary>

@@ -244,7 +244,7 @@ void GameScene::KeyCollision(){
 
 
 			//範囲内にいれば入力を受け付ける
-			if (colissionDistance <= player_->GetRadius() + key->GetRadius()) {
+			if (colissionDistance <= player_->GetSideSize() + key->GetRadius()) {
 
 				//取得可能
 				key->SetIsPrePickUp(true);
@@ -757,16 +757,16 @@ void GameScene::Update(GameManager* gameManager) {
 
 			//攻撃用の判定が出ていたら登録
 			if (enemy->GetIsAttack() == true) {
-				//collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
+				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 				
 			}
 			
 			
 		}
 		//通常の敵
-		//collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
+		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
 		//懐中電灯
-		collisionManager_->RegisterList(player_->GetFlashLightCollision());
+		//collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		//1体しか出さないのにリストにする必要はあったのでしょうか・・

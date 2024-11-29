@@ -1,4 +1,12 @@
 #pragma once
+
+/**
+ * @file GameManager.h
+ * @brief プレイヤーのクラス
+ * @author 茂木翼
+ */
+
+
 #include "WorldTransform.h"
 #include "Model.h"
 #include <memory>
@@ -9,6 +17,8 @@
 #include "Listener/ListenerForLevelEditor.h"
 #include "Light/FlashLight/FlashLight.h"
 #include "SpotLight.h"
+
+
 
 
 struct Camera;
@@ -63,8 +73,12 @@ public:
 
 public:
 
-	inline float GetRadius()const {
-		return radius_;
+	/// <summary>
+	/// 半径の取得
+	/// </summary>
+	/// <returns></returns>
+	inline float GetSideSize()const {
+		return SIDE_SIZE;
 	}
 
 	/// <summary>
@@ -91,6 +105,32 @@ public:
 		return aabb_;
 	}
 
+
+	/// <summary>
+	/// 体力を取得
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetHP()const {
+		return hp_;
+	}
+
+	/// <summary>
+	/// ダメージを受けたかどうかを取得
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsDamaged()const {
+		return isDameged_;
+	}
+
+
+
+	/// <summary>
+	/// 懐中電灯を取得
+	/// </summary>
+	/// <returns></returns>
+	inline FlashLight* GetFlashLight()const {
+		return flashLight_.get();
+	}
 
 public:
 
@@ -149,23 +189,8 @@ public:
 		this->isControll_ = isControll;
 	}
 
-	/// <summary>
-	/// 体力を取得
-	/// </summary>
-	/// <returns></returns>
-	uint32_t GetHP()const {
-		return hp_;
-	}
-
-	/// <summary>
-	/// ダメージを受けたかどうかを取得
-	/// </summary>
-	/// <returns></returns>
-	inline bool GetIsDamaged()const {
-		return isDameged_;
-	}
-
-
+	
+public:
 
 	/// <summary>
 	/// 通常の敵の当たり判定
@@ -191,13 +216,7 @@ public:
 		return flashLight_->GetFanCollision();
 	}
 
-	/// <summary>
-	/// 懐中電灯を取得
-	/// </summary>
-	/// <returns></returns>
-	inline FlashLight* GetFlashLight()const {
-		return flashLight_.get();
-	}
+	
 
 
 private:
@@ -211,7 +230,6 @@ private:
 	//ステージの四隅
 	StageRect stageRect_ = {};
 
-
 	//マテリアル
 	Material material_ = {};
 
@@ -224,18 +242,12 @@ private:
 	//動く方向
 	Vector3 moveDirection_ = {};
 
+	//幅のサイズ
 	const float SIDE_SIZE = 1.0f;
+	//AABB
 	AABB aabb_ = {};
 
 
-	//半径
-	float radius_ = 1.0f;
-
-	//AABBのmax部分に加算する縦横高さのサイズ
-	Vector3 upSideSize_ = { 1.0f,1.0f,1.0f };
-
-	//AABBのmin部分に加算する縦横高さのサイズ
-	Vector3 downSideSize_ = { 1.0f,1.0f,1.0f };
 
 
 	//体力
@@ -244,6 +256,7 @@ private:
 	int32_t downTime_ = 0;
 	//敵の攻撃に当たったかどうか
 	bool isDamage_ = false;
+	//攻撃を受け入れるかどうか
 	bool acceptDamage_ = false;
 
 	//操作可能かどうか
@@ -252,6 +265,7 @@ private:
 	uint32_t moveCondition_ = 0u;
 	//ダッシュ
 	bool isDash_ = false;
+
 
 
 
