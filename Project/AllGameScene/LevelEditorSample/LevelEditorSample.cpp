@@ -47,9 +47,12 @@ void LevelEditorSample::Initialize(){
 
 	
 	//audio_->PlayMP3(audioHandleMP3_, true);
+	//デバッグ用のモデル
+	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere","Sphere.obj");
 
-	particle3D_.reset(Particle3D::Create(ParticleMoveType::ThrowUp));
-
+	particle3D_.reset(Particle3D::Create(debugModelHandle,ParticleMoveType::NormalRelease));
+	particle3D_->SetScale({ 10.0f,10.0f,10.0f });
+	particle3D_->SetTranslate({ 0.0f,0.0f,0.0f });
 	collisionManager_ = std::make_unique<CollisionManager>();
 }
 
@@ -183,6 +186,7 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	//衝突判定の計算
 	collisionManager_->CheckAllCollision();
 
+	
 	//カメラの更新
 	//高さの補正も足す
 	const Vector3 OFFSET = { .x = 0.0f,.y = 5.0f,.z = -20.0f };
@@ -202,7 +206,7 @@ void LevelEditorSample::DrawObject3D(){
 	//player_->Draw(camera_, directionalLight_);
 
 	//レベルエディタ  
-	levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
+	//levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
 	
 	//パーティクル
 	particle3D_->Draw(camera_, material_);

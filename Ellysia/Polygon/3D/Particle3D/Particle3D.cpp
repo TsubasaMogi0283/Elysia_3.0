@@ -426,10 +426,6 @@ void Particle3D::Update(const Camera& camera) {
 }
 
 void Particle3D::Draw(const Camera& camera, const Material& material){
-	if (material.lightingKinds_ != Directional) {
-		assert(0);
-	}
-
 
 
 

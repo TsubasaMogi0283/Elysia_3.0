@@ -128,7 +128,6 @@ void DirectXSetup::GenerateDXGIFactory() {
 	//DXGIファクトリーの生成
 #ifdef _DEBUG
 	ComPtr<ID3D12Debug1> debugController;
-	//ID3D12Debug1* debugController = nullptr;
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
 		//デバッグレイヤーを有効化する
 		debugController->EnableDebugLayer();
@@ -136,7 +135,6 @@ void DirectXSetup::GenerateDXGIFactory() {
 		debugController->SetEnableGPUBasedValidation(TRUE);
 
 	}
-
 
 #endif 
 	

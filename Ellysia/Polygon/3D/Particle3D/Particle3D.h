@@ -238,7 +238,7 @@ private:
 	//頂点データ
 	std::vector<VertexData> vertices_{};
 	//表示する数
-	int32_t instanceCount_ = 1;
+	int32_t instanceCount_ = 20;
 
 
 	//インスタンス

@@ -70,7 +70,7 @@ private:
 
 public:
 	/// <summary>
-	/// インスタンス
+	/// インスタンスの取得
 	/// </summary>
 	/// <returns></returns>
 	static DirectXSetup* GetInstance();
