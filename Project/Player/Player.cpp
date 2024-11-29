@@ -60,13 +60,48 @@ void Player::Initialize(){
 	material_.lightingKinds_ = Spot;
 }
 
+
+
+void Player::Damaged() {
+	//通常の敵に当たった場合
+	if (colliderToNormalEnemy_->GetIsTouch() == true) {
+		//ダメージを受ける
+		if (!isDameged_) {
+			acceptDamage_ = true;
+			isDameged_ = true;
+		}
+
+	}
+	else {
+		acceptDamage_ = false;
+	}
+
+
+	//
+	if (acceptDamage_ == true) {
+
+
+		//体力を1減らす
+		if (isDameged_ == true) {
+			--hp_;
+			isDameged_ = false; // HPを減らした後、振動処理に移行
+		}
+
+		//線形補間で振動処理をする
+		vibeTime_ += DELTA_TIME;
+		vibeStrength_ = SingleCalculation::Lerp(1.0f, 0.0f, vibeTime_);
+		Input::GetInstance()->SetVibration(vibeStrength_, vibeStrength_);
+
+		//振動を止める
+		if (vibeStrength_ <= 0.0f) {
+			Input::GetInstance()->StopVibration();
+			vibeTime_ = 0.0f;
+			isDameged_ = false;
+		}
+	}
+}
 void Player::Update(){
-	//歩くスピード
-	const float NORMAL_MOVE_SPEED = 0.1f;
-	//走るスピード
-	const float DASH_MOVE_SPEED = 0.2f;
-	//時間変化
-	const float DELTA_TIME = 1.0f / 60.0f;
+	
 
 
 	//動けるときだけ加算
@@ -134,42 +169,9 @@ void Player::Update(){
 	//マテリアルの更新
 	material_.Update();
 
-
-	//通常の敵に当たった場合
-	if (colliderToNormalEnemy_->GetIsTouch() == true&& acceptDamage_ ==false) {
-		//ダメージを受ける
-		acceptDamage_ = true;
-
-		
+	//攻撃を受ける
+	Damaged();
 	
-		//ダメージを受ける
-		isDameged_ = true;
-	}
-
-
-	//ダメージを受けた場合
-	if (isDameged_ == true) {
-
-		if (acceptDamage_ == true) {
-			//体力を1減らす
-			--hp_;
-			acceptDamage_ = false;
-		}
-
-
-
-		//線形補間で振動処理をする
-		vibeTime_ += DELTA_TIME;
-		vibeStrength_ = SingleCalculation::Lerp(1.0f, 0.0f, vibeTime_);
-		Input::GetInstance()->SetVibration(vibeStrength_, vibeStrength_);
-
-		//振動を止める
-		if (vibeStrength_ < 0.0f) {
-			Input::GetInstance()->StopVibration();
-			vibeTime_ = 0.0f;
-			isDameged_ = false;
-		}
-	}
 
 	
 #ifdef _DEBUG
@@ -219,3 +221,5 @@ void Player::Draw(const Camera& camera, const SpotLight& spotLight){
 Player::~Player() {
 	Input::GetInstance()->StopVibration();
 }
+
+

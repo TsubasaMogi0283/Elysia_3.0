@@ -102,9 +102,9 @@ void Enemy::Update(){
 	//スピードの量
 	const float SPEED_AMOUNT = 0.05f;
 	//攻撃開始時間
-	const uint32_t ATTACK_START_TIME = 60;
+	//const uint32_t ATTACK_START_TIME = 60;
 	//攻撃終了時間
-	const uint32_t ATTCK_END_TIME = 120;
+	//const uint32_t ATTCK_END_TIME = 120;
 
 	//StatePatternにしたい！！
 	 
@@ -176,8 +176,7 @@ void Enemy::Update(){
 			attackTime_ += 1;
 
 			//2秒の時に攻撃
-			if (attackTime_ >= ATTACK_START_TIME&&
-				attackTime_ <= ATTCK_END_TIME) {
+			if (attackTime_ ==60) {
 				//ここで攻撃
 				//コライダーが当たっている時だけ通す
 

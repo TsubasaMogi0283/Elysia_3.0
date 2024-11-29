@@ -577,8 +577,7 @@ void GameScene::Update(GameManager* gameManager) {
 	//フェードの透明度の設定
 	fadeSprite_->SetTransparency(fadeTransparency_);
 
-	//プレイヤーの更新
-	player_->Update();
+	
 
 	//StatePatternにしたい
 	//フェードイン
@@ -754,17 +753,17 @@ void GameScene::Update(GameManager* gameManager) {
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
 			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
-
+			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 			//攻撃用の判定が出ていたら登録
 			if (enemy->GetIsAttack() == true) {
-				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 				
+				collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
 			}
 			
 			
 		}
 		//通常の敵
-		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
+		
 		//懐中電灯
 		//collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
@@ -877,7 +876,8 @@ void GameScene::Update(GameManager* gameManager) {
 
 	//オブジェクトマネージャーの更新
 	objectManager_->Update();
-
+	//プレイヤーの更新
+	player_->Update();
 	
 	//地面
 	ground_->Update();

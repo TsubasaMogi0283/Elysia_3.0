@@ -71,6 +71,12 @@ public:
 	/// </summary>
 	~Player();
 
+private:
+
+	void Damaged();
+
+
+
 public:
 
 	/// <summary>
@@ -275,6 +281,19 @@ private:
 	float vibeStrength_ = 0.0f;
 	//時間
 	float vibeTime_ = 0u;
+
+private:
+	//歩くスピード
+	const float NORMAL_MOVE_SPEED = 0.1f;
+	//走るスピード
+	const float DASH_MOVE_SPEED = 0.2f;
+	//時間変化
+	const float DELTA_TIME = 1.0f / 60.0f;
+
+
+
+private:
+
 
 	//当たり判定(通常の敵)
 	std::unique_ptr<PlayerCollisionToNormalEnemyAttack>colliderToNormalEnemy_ = nullptr;
