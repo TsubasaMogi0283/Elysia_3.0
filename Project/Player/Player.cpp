@@ -68,9 +68,10 @@ void Player::Damaged() {
 		//ダメージを受ける
 		if (isAcceptDamegeFromNoemalEnemy_ == true) {
 			++count;
+			--hp_;
 		}
 		else {
-			;
+			
 		}
 		/*if (isDameged_ == false) {
 			acceptDamage_ = true;
@@ -94,8 +95,7 @@ void Player::Damaged() {
 			++damagedTime_;
 
 			if (damagedTime_ == 1) {
-				//++count;
-				//--hp_;
+				
 			}
 			
 		}
@@ -210,6 +210,8 @@ void Player::Update(){
 
 		ImGui::TreePop();
 	}
+
+	ImGui::Checkbox("敵からの攻撃を受け入れるか", &isAcceptDamegeFromNoemalEnemy_);
 	ImGui::InputInt("downTime", &downTime_);
 	ImGui::InputFloat3("Transrate", &worldTransform_.translate.x);
 	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);

@@ -760,7 +760,7 @@ void GameScene::Update(GameManager* gameManager) {
 				player_->SetIsAcceptDamegeFromNoemalEnemy(true);
 			}
 			else {
-				player_->SetIsAcceptDamegeFromNoemalEnemy(true);
+				player_->SetIsAcceptDamegeFromNoemalEnemy(false);
 			}
 			
 			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());

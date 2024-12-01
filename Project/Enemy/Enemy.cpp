@@ -187,11 +187,11 @@ void Enemy::Update(){
 				isAttack_ = false;
 			}
 
-			////4秒経ったらまた0になる
-			//if (attackTime_ > 240) {
-			//	attackTime_ = 0;
+			//4秒経ったらまた0になる
+			if (attackTime_ > 240) {
+				attackTime_ = 0;
 
-			//}
+			}
 
 			break;
 
