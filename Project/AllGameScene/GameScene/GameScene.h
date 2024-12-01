@@ -215,7 +215,7 @@ private:
 
 #pragma endregion
 	
-
+	int count = 0;
 
 
 

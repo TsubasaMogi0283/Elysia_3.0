@@ -195,6 +195,14 @@ public:
 		this->isControll_ = isControll;
 	}
 
+	/// <summary>
+	/// 通常の敵からの攻撃を受け入れるかどうか
+	/// </summary>
+	/// <param name="isAccept"></param>
+	inline void SetIsAcceptDamegeFromNoemalEnemy(const bool& isAccept) {
+		this->isAcceptDamegeFromNoemalEnemy_ = isAccept;
+	}
+
 	
 public:
 
@@ -277,6 +285,8 @@ private:
 
 	//攻撃されたか
 	bool isDameged_ = false;
+	int32_t damagedTime_ = 0;
+	bool isAcceptDamegeFromNoemalEnemy_ = false;
 	//強さ
 	float vibeStrength_ = 0.0f;
 	//時間
@@ -291,6 +301,8 @@ private:
 	const float DELTA_TIME = 1.0f / 60.0f;
 
 
+
+	int count = 0;
 
 private:
 

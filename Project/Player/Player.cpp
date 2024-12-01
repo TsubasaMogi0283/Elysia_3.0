@@ -66,25 +66,38 @@ void Player::Damaged() {
 	//通常の敵に当たった場合
 	if (colliderToNormalEnemy_->GetIsTouch() == true) {
 		//ダメージを受ける
-		if (!isDameged_) {
+		if (isAcceptDamegeFromNoemalEnemy_ == true) {
+			++count;
+		}
+		else {
+			;
+		}
+		/*if (isDameged_ == false) {
 			acceptDamage_ = true;
 			isDameged_ = true;
-		}
-
+		}*/
+		
 	}
 	else {
 		acceptDamage_ = false;
+		isDameged_ = false;
+		
 	}
 
 
-	//
+	//ダメージを受け入れる
 	if (acceptDamage_ == true) {
-
+		
 
 		//体力を1減らす
 		if (isDameged_ == true) {
-			--hp_;
-			isDameged_ = false; // HPを減らした後、振動処理に移行
+			++damagedTime_;
+
+			if (damagedTime_ == 1) {
+				//++count;
+				//--hp_;
+			}
+			
 		}
 
 		//線形補間で振動処理をする
@@ -97,8 +110,12 @@ void Player::Damaged() {
 			Input::GetInstance()->StopVibration();
 			vibeTime_ = 0.0f;
 			isDameged_ = false;
+			acceptDamage_ = false;
+			//damagedTime_ = 0;
 		}
 	}
+
+
 }
 void Player::Update(){
 	
@@ -183,7 +200,10 @@ void Player::Update(){
 	ImGui::Begin("プレイヤー");
 	if (ImGui::TreeNode("状態")) {
 		ImGui::InputInt("鍵の数", &keyQuantity);
+		ImGui::InputInt("カウント", &count);
 		ImGui::InputInt("体力", &hp_);
+		ImGui::InputInt("ダメージ時間", &damagedTime_);
+
 		ImGui::Checkbox("acceptDamage_", &acceptDamage_);
 		ImGui::Checkbox("isDamage_", &isDamage_);
 		ImGui::Checkbox("振動", &isDameged_);

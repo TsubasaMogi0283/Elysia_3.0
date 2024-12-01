@@ -262,6 +262,7 @@ private:
 	//攻撃
 	int32_t attackTime_ = 0;
 	bool isAttack_ = false;
+	int32_t attackCount_ = 0;
 
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};

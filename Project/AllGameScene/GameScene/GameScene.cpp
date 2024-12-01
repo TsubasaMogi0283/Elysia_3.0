@@ -753,17 +753,23 @@ void GameScene::Update(GameManager* gameManager) {
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
 			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
-			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
-			//攻撃用の判定が出ていたら登録
+			
+			//攻撃
 			if (enemy->GetIsAttack() == true) {
-				
-				collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
+				++count;
+				player_->SetIsAcceptDamegeFromNoemalEnemy(true);
+			}
+			else {
+				player_->SetIsAcceptDamegeFromNoemalEnemy(true);
 			}
 			
+			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 			
 		}
 		//通常の敵
-		
+		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
+
+
 		//懐中電灯
 		//collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
@@ -836,9 +842,7 @@ void GameScene::Update(GameManager* gameManager) {
 		//現在のプレイヤーの体力を取得
 		currentDisplayHP_ = player_->GetHP();
 		
-		//更新
-		material_.Update();
-
+		
 		
 
 #ifdef _DEBUG
@@ -873,6 +877,10 @@ void GameScene::Update(GameManager* gameManager) {
 	
 	//カメラの更新
 	camera_.Update();
+
+	//更新
+	material_.Update();
+
 
 	//オブジェクトマネージャーの更新
 	objectManager_->Update();
@@ -916,6 +924,11 @@ void GameScene::Update(GameManager* gameManager) {
 	vignette_->SetPow(vignettePow_);
 
 #ifdef _DEBUG
+	ImGui::Begin("AAAA");
+	ImGui::InputInt("Count", &count);
+	ImGui::End();
+
+
 	ImGui::Begin("ビネットの確認");
 	ImGui::InputFloat("POW", &vignettePow_);
 	ImGui::InputFloat("変化の時間", &vignetteChangeTime_);

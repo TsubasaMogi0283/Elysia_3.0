@@ -179,18 +179,19 @@ void Enemy::Update(){
 			if (attackTime_ ==60) {
 				//ここで攻撃
 				//コライダーが当たっている時だけ通す
-
 				isAttack_ = true;
+				++attackCount_;
+				
 			}
 			else {
 				isAttack_ = false;
 			}
 
-			//4秒経ったらまた0になる
-			if (attackTime_ > 240) {
-				attackTime_ = 0;
+			////4秒経ったらまた0になる
+			//if (attackTime_ > 240) {
+			//	attackTime_ = 0;
 
-			}
+			//}
 
 			break;
 
@@ -248,6 +249,7 @@ void Enemy::Update(){
 	ImGui::InputFloat3("方向", &direction_.x);
 	ImGui::InputFloat("回転Y", &degreeRotateY);
 	ImGui::Checkbox("攻撃", &isAttack_);
+	ImGui::InputInt("attackCount_", &attackCount_);
 	ImGui::InputInt("攻撃時間", &attackTime_);
 	
 	if (ImGui::TreeNode("状態")) {
@@ -279,7 +281,10 @@ void Enemy::Update(){
 void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 #ifdef _DEBUG
 	//攻撃
-	attackCollision_->Draw(camera, spotLight);
+	if (isAttack_ == true) {
+		attackCollision_->Draw(camera, spotLight);
+	}
+	
 #endif // _DEBUG
 
 
