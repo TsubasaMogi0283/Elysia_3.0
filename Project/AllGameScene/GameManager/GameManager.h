@@ -40,11 +40,6 @@ public:
 	void Update();
 
 	/// <summary>
-	/// 描画(スプライト)
-	/// </summary>
-	void DrawSpriteBack();
-
-	/// <summary>
 	/// 描画(3Dオブジェクト)
 	/// </summary>
 	void DrawObject3D();

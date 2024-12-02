@@ -21,10 +21,6 @@ public:
 	/// <param name="gamaManager"></param>
 	virtual void Update(GameManager* gamaManager)=0;
 	
-	/// <summary>
-	/// 背景スプライト
-	/// </summary>
-	virtual void DrawSpriteBack() = 0;
 
 	/// <summary>
 	/// Object3Dの描画
@@ -38,6 +34,8 @@ public:
 
 
 #pragma region PostEffect
+
+
 	virtual void PreDrawPostEffectFirst()=0;
 	virtual void DrawPostEffect() = 0;
 

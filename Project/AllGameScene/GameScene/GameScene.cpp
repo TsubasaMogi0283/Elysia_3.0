@@ -946,9 +946,6 @@ void GameScene::Update(GameManager* gameManager) {
 
 }
 
-void GameScene::DrawSpriteBack(){
-
-}
 
 void GameScene::PreDrawPostEffectFirst(){
 	vignette_->PreDraw();

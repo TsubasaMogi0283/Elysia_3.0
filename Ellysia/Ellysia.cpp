@@ -111,10 +111,7 @@ void Ellysia::Draw(){
 	
 	//PostEffectの描画前処理
 	gameManager_->PreDrawPostEffectFirst();
-	//ポストエフェクト付きのスプライト
-	gameManager_->DrawSpriteBack();
 
-	
 	
 
 #pragma endregion

@@ -115,10 +115,6 @@ void TitleScene::Update(GameManager* gameManager){
 	}
 }
 
-void TitleScene::DrawSpriteBack()
-{
-}
-
 void TitleScene::DrawObject3D()
 {
 }

@@ -1,7 +1,14 @@
 #pragma once
-#include "IGameScene.h"
+/**
+ * @file GameManager.h
+ * @brief レベルエディタ確認用のクラス
+ * @author 茂木翼
+ */
+
 
 #include <memory>
+
+#include "IGameScene.h"
 
 #include "Sprite.h"
 #include "Input.h"
@@ -11,7 +18,6 @@
 #include "BackText.h"
 #include "LevelDataManager.h"
 #include "Collider/CollisionManager.h"
-#include "Vignette.h"
 #include "Particle3D.h"
 
 #include "Audio.h"
@@ -44,12 +50,6 @@ public:
 	void Update(GameManager* gameManager)override;
 
 #pragma region 描画
-
-	/// <summary>
-	/// ポストエフェクト掛ける前のスプライト
-	/// </summary>
-	void DrawSpriteBack()override;
-
 
 	/// <summary>
 	/// 3Dオブジェクト

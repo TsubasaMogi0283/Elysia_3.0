@@ -57,7 +57,7 @@ void LevelEditorSample::Initialize(){
 }
 
 void LevelEditorSample::Update(GameManager* gameManager){
-
+	//リストのクリア
 	collisionManager_->ClearList();
 
 #ifdef _DEBUG
@@ -70,6 +70,8 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	ImGui::Text("Rキーで指定した再読み込みするよ");
 	ImGui::End();
 
+
+	//Gキーで再読み込み
 	if (Input::GetInstance()->IsTriggerKey(DIK_R) == true) {
 		levelEditor_->Reload(levelHandle_);
 
@@ -85,6 +87,7 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 
 	//移動
+	//なにも
 	playerDirection_ = {};
 	//右
 	if (input_->IsPushKey(DIK_D) == true) {
@@ -171,7 +174,6 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 			//当たったらループを抜ける
 			break;
-
 		}
 		else{
 			//当たっていない
@@ -197,9 +199,6 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 }
 
-void LevelEditorSample::DrawSpriteBack(){
-
-}
 
 void LevelEditorSample::DrawObject3D(){
 	//プレイヤー

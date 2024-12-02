@@ -71,11 +71,6 @@ public:
 
 #pragma region 描画
 
-	/// <summary>
-	/// ポストエフェクト掛ける前のスプライト
-	/// </summary>
-	void DrawSpriteBack()override;
-
 
 	/// <summary>
 	/// 3Dオブジェクト
