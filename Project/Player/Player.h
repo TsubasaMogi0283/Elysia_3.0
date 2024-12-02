@@ -1,4 +1,12 @@
 #pragma once
+
+/**
+ * @file GameManager.h
+ * @brief プレイヤーのクラス
+ * @author 茂木翼
+ */
+
+
 #include "WorldTransform.h"
 #include "Model.h"
 #include <memory>
@@ -9,6 +17,8 @@
 #include "Listener/ListenerForLevelEditor.h"
 #include "Light/FlashLight/FlashLight.h"
 #include "SpotLight.h"
+
+
 
 
 struct Camera;
@@ -61,10 +71,20 @@ public:
 	/// </summary>
 	~Player();
 
+private:
+
+	void Damaged();
+
+
+
 public:
 
-	inline float GetRadius()const {
-		return radius_;
+	/// <summary>
+	/// 半径の取得
+	/// </summary>
+	/// <returns></returns>
+	inline float GetSideSize()const {
+		return SIDE_SIZE;
 	}
 
 	/// <summary>
@@ -91,6 +111,32 @@ public:
 		return aabb_;
 	}
 
+
+	/// <summary>
+	/// 体力を取得
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetHP()const {
+		return hp_;
+	}
+
+	/// <summary>
+	/// ダメージを受けたかどうかを取得
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsDamaged()const {
+		return isDameged_;
+	}
+
+
+
+	/// <summary>
+	/// 懐中電灯を取得
+	/// </summary>
+	/// <returns></returns>
+	inline FlashLight* GetFlashLight()const {
+		return flashLight_.get();
+	}
 
 public:
 
@@ -150,23 +196,15 @@ public:
 	}
 
 	/// <summary>
-	/// 体力を取得
+	/// 通常の敵からの攻撃を受け入れるかどうか
 	/// </summary>
-	/// <returns></returns>
-	uint32_t GetHP()const {
-		return hp_;
+	/// <param name="isAccept"></param>
+	inline void SetIsAcceptDamegeFromNoemalEnemy(const bool& isAccept) {
+		this->isAcceptDamegeFromNoemalEnemy_ = isAccept;
 	}
 
-	/// <summary>
-	/// ダメージを受けたかどうかを取得
-	/// </summary>
-	/// <returns></returns>
-	inline bool GetIsDamaged()const {
-		return isDameged_;
-	}
-
-
-
+	
+public:
 
 	/// <summary>
 	/// 通常の敵の当たり判定
@@ -192,29 +230,22 @@ public:
 		return flashLight_->GetFanCollision();
 	}
 
-	/// <summary>
-	/// 懐中電灯を取得
-	/// </summary>
-	/// <returns></returns>
-	inline FlashLight* GetFlashLight()const {
-		return flashLight_.get();
-	}
+	
 
 
 private:
 
 	//モデル
 	std::unique_ptr<Model> model_ = nullptr;
-
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_={};
+	//マテリアル
+	Material material_ = {};
+
+
 
 	//ステージの四隅
 	StageRect stageRect_ = {};
-
-
-	//マテリアル
-	Material material_ = {};
 
 
 
@@ -225,18 +256,12 @@ private:
 	//動く方向
 	Vector3 moveDirection_ = {};
 
+	//幅のサイズ
 	const float SIDE_SIZE = 1.0f;
+	//AABB
 	AABB aabb_ = {};
 
 
-	//半径
-	float radius_ = 1.0f;
-
-	//AABBのmax部分に加算する縦横高さのサイズ
-	Vector3 upSideSize_ = { 1.0f,1.0f,1.0f };
-
-	//AABBのmin部分に加算する縦横高さのサイズ
-	Vector3 downSideSize_ = { 1.0f,1.0f,1.0f };
 
 
 	//体力
@@ -245,6 +270,7 @@ private:
 	int32_t downTime_ = 0;
 	//敵の攻撃に当たったかどうか
 	bool isDamage_ = false;
+	//攻撃を受け入れるかどうか
 	bool acceptDamage_ = false;
 
 	//操作可能かどうか
@@ -256,12 +282,30 @@ private:
 
 
 
+
 	//攻撃されたか
 	bool isDameged_ = false;
-	//強さ
+	int32_t damagedTime_ = 0;
+	bool isAcceptDamegeFromNoemalEnemy_ = false;
+
+
+	//振動の強さ
 	float vibeStrength_ = 0.0f;
 	//時間
 	float vibeTime_ = 0u;
+
+private:
+	//歩くスピード
+	const float NORMAL_MOVE_SPEED = 0.1f;
+	//走るスピード
+	const float DASH_MOVE_SPEED = 0.2f;
+	//時間変化
+	const float DELTA_TIME = 1.0f / 60.0f;
+
+
+
+private:
+
 
 	//当たり判定(通常の敵)
 	std::unique_ptr<PlayerCollisionToNormalEnemyAttack>colliderToNormalEnemy_ = nullptr;

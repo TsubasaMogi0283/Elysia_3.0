@@ -1,17 +1,23 @@
 #pragma once
+/**
+ * @file PipelineManager.h
+ * @brief PSO(パイプライン)の管理クラス
+ * @author 茂木翼
+ */
+
+
 #include <d3d12.h>
 #include <cassert>
 
-#include <CompileShaderManager.h>
+#include "CompileShaderManager.h"
 #include "ConvertLog.h"
-#include <DirectXSetup.h>
-
-//透明化を解決するためにPSOをクラス化しよう
-//後ブレンドの時大変だからswitch文で切り替えできるようにしたら楽かも
-//スプライトはスプライトで同じ情報だからインスタンス１つでいいよね
-//同様にモデルも
+#include "DirectXSetup.h"
 
 
+
+/// <summary>
+/// ブレンドモード
+/// </summary>
 enum BlemdMode {
 	//ブレンド無し
 	BlendModeNone,
@@ -40,23 +46,40 @@ enum BlemdMode {
 
 };
 
+/// <summary>
+/// パイプライン管理クラス
+/// </summary>
 class PipelineManager final {
 private:
 
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	PipelineManager()=default;
 
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~PipelineManager()=default;
 
 public:
-	//シングルインスタンス
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
 	static PipelineManager* GetInstance();
 
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="pipelineManager"></param>
 	PipelineManager(const PipelineManager& pipelineManager) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="pipelineManager"></param>
+	/// <returns></returns>
 	PipelineManager& operator=(const PipelineManager& pipelineManager) = delete;
 
 #pragma region アクセッサ
@@ -93,7 +116,7 @@ public:
 		return animationModelPSO_.graphicsPipelineState_;
 	}
 
-  //コマンドに積むためのGetter(Particle3D)
+	//コマンドに積むためのGetter(Particle3D)
 	ComPtr<ID3D12RootSignature> GetParticle3DRootSignature() {
 		return particle3DPSO_.rootSignature_;
 	}
@@ -199,10 +222,17 @@ public:
 
 
 
-
+	/// <summary>
+	/// スプライトのブレンドモードの設定
+	/// </summary>
+	/// <param name="blendmode"></param>
 	void SetSpriteBlendMode(uint32_t blendmode) {
 		selectSpriteBlendMode_ = blendmode;
 	}
+	/// <summary>
+	/// モデルのブレンドモードの設定
+	/// </summary>
+	/// <param name="blendmode"></param>
 	void SetModelBlendMode(uint32_t blendmode) {
 		selectModelBlendMode_ = blendmode;
 	}
@@ -215,6 +245,9 @@ public:
 
 
 private:
+	/// <summary>
+	/// PSOの情報
+	/// </summary>
 	struct PSOInformation {
 		ComPtr<ID3DBlob> signatureBlob_ = nullptr;
 		ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
@@ -240,62 +273,93 @@ public:
 	/// </summary>
 	void Initialize();
 
-
-	//ライン用
+	/// <summary>
+	/// ライン用のPSOを生成
+	/// </summary>
 	static void GenaratedLinePSO();
 
-	//スプライト用
+	/// <summary>
+	/// スプライト用のPSOを生成
+	/// </summary>
 	static void GenerateSpritePSO();
 
-	//モデル用
+	/// <summary>
+	/// モデル用のPSOを生成
+	/// </summary>
 	static void GenerateModelPSO();
 
-	//Skinning
+	/// <summary>
+	/// SkinningModel用のPSOを生成
+	/// </summary>
 	static void GenerateAnimationModelPSO();
 
-	//3Dパーティクル用
+	/// <summary>
+	/// 3Dパーティクル用のPSOを生成
+	/// </summary>
 	static void GenerateParticle3DPSO();
 
-	//CopyImage用
+	/// <summary>
+	/// CopyImage用のPSOを生成
+	/// </summary>
 	static void GenarateFullScreenPSO();
 
-	//GrayScale用
+	/// <summary>
+	/// GrayScale用のPSOを生成
+	/// </summary>
 	static void GenarateGrayScalePSO();
 
-	//SepiaScale用
+	/// <summary>
+	/// SepiaScale用のPSOを生成
+	/// </summary>
 	static void GenarateSepiaScalePSO();
 
-	//Vignette用
+	/// <summary>
+	/// Vignette用のPSOを生成
+	/// </summary>
 	static void GenarateVignettePSO();
 
-	//BoxFilter用
+	/// <summary>
+	/// BoxFilter用のPSOを生成
+	/// </summary>
 	static void GenarateBoxFilterPSO();
 
-	//GaussianFilter
+	/// <summary>
+	/// GaussianFilter用のPSOを生成
+	/// </summary>
 	static void GenarateGaussianFilterPSO();
 
-	//OutLine用
+	/// <summary>
+	/// OutLine用のPSOを生成
+	/// </summary>
 	static void GenarateLuminanceBasedOutlinePSO();
 
-	//DepthBasedOutline用
+	/// <summary>
+	/// DepthBasedOutline用
+	/// </summary>
 	static void GenarateDepthBasedOutlinePSO();
 
-	//RadialBlur用
+	/// <summary>
+	/// RadialBlur用のPSOを生成
+	/// </summary>
 	static void GenerateRadialBlurPSO();
 
-	//Dissolve用
+	/// <summary>
+	/// Dissolve用のPSOを生成
+	/// </summary>
 	static void GenarateDissolvePSO();
 
-	//RandomEffect用
+	/// <summary>
+	/// RandomEffect用のPSOを生成
+	/// </summary>
 	static void GenarateRandomEffectPSO();
 
 
-	//SkyBox
+	/// <summary>
+	/// SkyBoxのPSOの生成
+	/// </summary>
 	static void GenarateSkyBoxPSO();
 
 private:
-
-	
 
 	//ライン用
 	PSOInformation linePSO_ = {};
@@ -305,7 +369,6 @@ private:
 	PSOInformation modelPSO_ = {};
 	//モデル用の変数
 	PSOInformation particle3DPSO_ = {};
-
 	//CopyImage用
 	PSOInformation fullScreenPSO_ = {};
 	//GrayScale用

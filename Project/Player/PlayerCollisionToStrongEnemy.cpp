@@ -4,24 +4,25 @@
 
 void PlayerCollisionToStrongEnemy::Initialize(){
 
+	//モデルの生成
 	uint32_t modelHandle= ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
 	model_.reset(Model::Create(modelHandle));
 
 
 	//初期化
 	worldTransform_.Initialize();
-	playerWorldPosition_ = {};
 
 
 #pragma region 当たり判定
+
+	//球じゃなくてAABBの方が良いかもね
+	//計算の量が減るからね
 
 	//種類
 	collisionType_ = ColliderType::SphereType;
 
 	//半径
 	radius_ = 1.0f;
-
-	
 
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_PLAYER2);
@@ -34,7 +35,7 @@ void PlayerCollisionToStrongEnemy::Initialize(){
 void PlayerCollisionToStrongEnemy::Update(){
 	//プレイヤーの座標を持ってくる
 	worldTransform_.translate = playerWorldPosition_;
-
+	//更新
 	worldTransform_.Update();
 
 
@@ -48,13 +49,9 @@ void PlayerCollisionToStrongEnemy::Draw(const Camera& camera,const Material& mat
 
 }
 
-Vector3 PlayerCollisionToStrongEnemy::GetWorldPosition(){
-	Vector3 position = worldTransform_.GetWorldPosition();
-	return position;
-}
 
 void PlayerCollisionToStrongEnemy::OnCollision(){
-
+	
 }
 
 void PlayerCollisionToStrongEnemy::OffCollision()

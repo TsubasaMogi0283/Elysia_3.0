@@ -240,7 +240,7 @@ void Particle3DManager::Update(Camera& camera) {
 
 				//最大値を超えて描画しないようにする
 				if (particleGroup.instanceNumber < MAX_INSTANCE_NUMBER_) {
-					particleGroup.instancingData[particleGroup.instanceNumber].World = worldMatrix;
+					particleGroup.instancingData[particleGroup.instanceNumber].world = worldMatrix;
 					particleGroup.instancingData[particleGroup.instanceNumber].color = (*particleIterator).color;
 
 					//アルファはVector4でいうwだね
@@ -262,7 +262,7 @@ void Particle3DManager::Update(Camera& camera) {
 
 				//最大値を超えて描画しないようにする
 				if (particleGroup.instanceNumber < MAX_INSTANCE_NUMBER_) {
-					particleGroup.instancingData[particleGroup.instanceNumber].World = worldMatrix;
+					particleGroup.instancingData[particleGroup.instanceNumber].world = worldMatrix;
 					particleGroup.instancingData[particleGroup.instanceNumber].color = (*particleIterator).color;
 
 					//アルファはVector4でいうwだね

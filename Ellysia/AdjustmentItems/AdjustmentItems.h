@@ -127,11 +127,30 @@ public:
 
 
 #pragma region 値の取得
-	int32_t GetIntValue(const std::string groupName, const std::string& key);
 
-	float GetFloatValue(const std::string groupName, const std::string& key);
+	/// <summary>
+	/// int32の値を取得
+	/// </summary>
+	/// <param name="groupName"></param>
+	/// <param name="key"></param>
+	/// <returns></returns>
+	int32_t GetIntValue(const std::string& groupName, const std::string& key);
 
-	Vector3 GetVector3Value(const std::string groupName, const std::string& key);
+	/// <summary>
+	/// floatのあたいヲ取得
+	/// </summary>
+	/// <param name="groupName"></param>
+	/// <param name="key"></param>
+	/// <returns></returns>
+	float GetFloatValue(const std::string& groupName, const std::string& key);
+
+	/// <summary>
+	/// Vector3の値を取得
+	/// </summary>
+	/// <param name="groupName"></param>
+	/// <param name="key"></param>
+	/// <returns></returns>
+	Vector3 GetVector3Value(const std::string& groupName, const std::string& key);
 
 #pragma endregion
 

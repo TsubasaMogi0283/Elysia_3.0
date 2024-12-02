@@ -1,4 +1,10 @@
 #pragma once
+/**
+ * @file GameManager.h
+ * @brief 敵の攻撃用のコライダークラス
+ * @author 茂木翼
+ */
+
 #include <memory>
 
 #include "Model.h"
@@ -9,7 +15,9 @@
 struct Camera;
 struct SpotLight;
 
-//敵の攻撃用の当たり判定
+/// <summary>
+/// 敵の攻撃用の当たり判定
+/// </summary>
 class EnemyAttackCollision :public Collider {
 public:
 
@@ -22,7 +30,7 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="modelHandle"></param>
-	void Initialize(uint32_t modelHandle);
+	void Initialize(const uint32_t& modelHandle);
 
 	/// <summary>
 	/// 更新
@@ -34,7 +42,7 @@ public:
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="spotLight"></param>
-	void Draw(const Camera&camera,const SpotLight& spotLight);
+	void Draw(const Camera& camera,const SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ
@@ -47,7 +55,7 @@ public:
 	/// 敵のワールド座標の設定
 	/// </summary>
 	/// <param name="position"></param>
-	inline void SetEnemyPosition(Vector3& position) {
+	inline void SetEnemyPosition(const Vector3& position) {
 		this->enemyWorldPosition_ = position;
 	}
 
@@ -55,17 +63,8 @@ public:
 	/// 敵の方向を設定
 	/// </summary>
 	/// <param name="direction"></param>
-	inline void SetEnemyDirection(Vector3& direction) {
+	inline void SetEnemyDirection(const Vector3& direction) {
 		this->enemyDirection_ = direction;
-	}
-
-
-	/// <summary>
-	/// 衝突の設定
-	/// </summary>
-	/// <param name="isTouch"></param>
-	inline void SetIsTouch(const bool& isTouch) {
-		this->isTouch_ = isTouch;
 	}
 
 	/// <summary>
@@ -93,14 +92,18 @@ public:
 	void OffCollision()override;
 
 private:
+	//モデル
 	std::unique_ptr<Model> model_ = nullptr;
+	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
+	//マテリアル
 	Material material_ = {};
 
+	//敵の座標と向き
 	Vector3 enemyWorldPosition_ = {};
 	Vector3 enemyDirection_ = {};
 
-
+	//衝突しているかどうか
 	bool isTouch_ = false;
 };
 

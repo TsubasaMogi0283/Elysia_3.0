@@ -64,17 +64,23 @@ public:
 	/// ワールド座標の取得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition()override;
+	inline Vector3 GetWorldPosition()override {
+		return worldTransform_.GetWorldPosition();
+	};
 
 	/// <summary>
 	/// 接触
 	/// </summary>
-	void OnCollision()override;
+	inline void OnCollision()override {
+		isTouch_ = true;
+	};
 
 	/// <summary>
 	/// 非接触
 	/// </summary>
-	void OffCollision()override;
+	inline void OffCollision()override {
+		isTouch_ = false;
+	};
 
 
 private:

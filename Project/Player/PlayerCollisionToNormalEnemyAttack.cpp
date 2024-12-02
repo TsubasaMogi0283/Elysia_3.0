@@ -20,7 +20,7 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 	collisionType_ = ColliderType::SphereType;
 
 	//半径
-	radius_ = 1.0f;
+	radius_ = 5.0f;
 
 
 	//自分
@@ -60,25 +60,4 @@ void PlayerCollisionToNormalEnemyAttack::Draw(const Camera& camera,const Materia
 
 }
 
-Vector3 PlayerCollisionToNormalEnemyAttack::GetWorldPosition(){
-	Vector3 position = worldTransform_.GetWorldPosition();
-	return position;
 
-}
-
-void PlayerCollisionToNormalEnemyAttack::OnCollision(){
-#ifdef _DEBUG
-	ImGui::Begin("敵攻撃");
-	ImGui::End();
-#endif // DEBUG
-
-	
-
-}
-
-void PlayerCollisionToNormalEnemyAttack::OffCollision(){
-#ifdef _DEBUG
-	ImGui::Begin("敵攻撃しない");
-	ImGui::End();
-#endif // DEBUG
-}

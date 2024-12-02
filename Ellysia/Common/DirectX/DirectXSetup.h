@@ -21,15 +21,22 @@ using Microsoft::WRL::ComPtr;
 
 #include <chrono>
 
+/// <summary>
+/// スワップチェインで使う変数をまとめた
+/// </summary>
 struct SwapChain {
 	ComPtr<IDXGISwapChain4> m_pSwapChain;
 	ComPtr<ID3D12Resource> m_pResource[2];
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 };
 
-////ReportLiveObjects
-	//DirectX12より低レベルのDXGIに問い合わせをする
-	//リソースリークチェック
+
+
+/// <summary>
+/// リソースリークチェック
+/// ReportLiveObjects
+/// DirectX12より低レベルのDXGIに問い合わせをする
+/// </summary>
 struct D3DResourceLeakChecker {
 	~D3DResourceLeakChecker() {
 		ComPtr<IDXGIDebug1>debug;
@@ -40,39 +47,55 @@ struct D3DResourceLeakChecker {
 			debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
 
 		}
-
-
-
 	}
 };
 
 
-//メンバ変数関数いつか整理したい・・・
-//ごちゃごちゃしてる
+/// <summary>
+/// DirectXの機能をまとめたクラス
+/// フレームワークなど
+/// </summary>
 class DirectXSetup final {
 private:
 
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	DirectXSetup() = default;
 
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~DirectXSetup() = default;
 
 public:
-	//インスタンス
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
 	static DirectXSetup* GetInstance();
 
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="directXSetup"></param>
 	DirectXSetup(const DirectXSetup& directXSetup) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="directXSetup"></param>
+	/// <returns></returns>
 	DirectXSetup& operator=(const DirectXSetup& directXSetup) = delete;
 
-	//まとめたのが下の「Initialize」
-	//他の所では使わないからprivateにしても良さそう
-	//アロー演算子を使ったとき邪魔になるから
-
-	//DescriptorHeapの作成関数
+	
+	/// <summary>
+	/// DescriptorHeapの作成関数
+	/// </summary>
+	/// <param name="heapType"></param>
+	/// <param name="numDescriptors"></param>
+	/// <param name="shaderVisible"></param>
+	/// <returns></returns>
 	static ComPtr<ID3D12DescriptorHeap> GenarateDescriptorHeap(
 		D3D12_DESCRIPTOR_HEAP_TYPE heapType,
 		UINT numDescriptors, bool shaderVisible);
@@ -82,11 +105,22 @@ public:
 private:
 	//DepthStencilTexture...奥行の根幹をなすものであり、非常に大量の読み書きを高速に行う必要がある
 	//						Textureの中でも特に例外的な扱いが必要となっている
-	static ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(const int32_t width, const int32_t height);
+
+	/// <summary>
+	/// DepthのResourceを生成する
+	/// </summary>
+	/// <param name="width"></param>
+	/// <param name="height"></param>
+	/// <returns></returns>
+	static ComPtr<ID3D12Resource> GenerateDepthStencilTextureResource(const uint32_t& width, const uint32_t& height);
+
+
+	//まとめたのが下の「Initialize」
+	//他の所では使わないからprivateにしても良さそう
+	//アロー演算子を使ったとき邪魔になるから
 
 
 #pragma region 初期化について
-	//初期化へ
 
 	/// <summary>
 	/// DXGIFactoryの生成
@@ -129,12 +163,9 @@ private:
 	static void PullResourcesFromSwapChain();
 
 
-
-
-
-
-
-
+	/// <summary>
+	/// フェンスの生成
+	/// </summary>
 	static void GenarateFence();
 
 
@@ -155,26 +186,45 @@ public:
 	static void GenarateScissor(uint32_t right, uint32_t bottom);
 
 
-
+	/// <summary>
+	/// リソースバリアの設定
+	/// </summary>
+	/// <param name="resource"></param>
+	/// <param name="beforeState"></param>
+	/// <param name="afterState"></param>
 	static void SetResourceBarrier(ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
+	
+	/// <summary>
+	/// リソースバリアの設定(スワップチェイン用)
+	/// </summary>
+	/// <param name="beforeState"></param>
+	/// <param name="afterState"></param>
 	static void SetResourceBarrierForSwapChain(D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
 
 
 #pragma endregion
 
 private:
-	//FPS固定初期化
+	/// <summary>
+	/// FPS固定初期化
+	/// </summary>
 	static void InitializeFPS();
 
-	//FPS固定更新
+	/// <summary>
+	/// FPS固定更新
+	/// </summary>
 	static void UpdateFPS();
 
 
-
 public:
-
+	/// <summary>
+	/// 第一初期化
+	/// </summary>
 	static void FirstInitialize();
 
+	/// <summary>
+	/// 第二初期化
+	/// </summary>
 	static void SecondInitialize();
 
 	/// <summary>
@@ -184,16 +234,24 @@ public:
 	/// <returns></returns>
 	ComPtr<ID3D12Resource> CreateBufferResource(size_t sizeInBytes);
 
+	/// <summary>
+	/// Depthリソースの取得
+	/// </summary>
+	/// <returns></returns>
 	ComPtr<ID3D12Resource> GerDepthStencilResource() {
 		return m_depthStencilResource_;
 	}
 
 	
 #pragma region whileの中身
-	
+	/// <summary>
+	/// 描画開始
+	/// </summary>
 	void StartDraw();
 
-
+	/// <summary>
+	/// 描画衆力
+	/// </summary>
 	void EndDraw();
 
 #pragma endregion
@@ -207,9 +265,6 @@ public:
 
 public:
 
-
-
-#pragma region 他のクラスでも使いたいのでGetter
 
 	/// <summary>
 	/// デバイスの取得
@@ -244,8 +299,6 @@ public:
 		return DirectXSetup::GetInstance()->swapChain;
 	}
 
-
-
 	/// <summary>
 	/// DSVハンドルの取得
 	/// </summary>
@@ -253,11 +306,6 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE& GetDsvHandle() {
 		return dsvHandle_;
 	}
-
-
-#pragma endregion
-
-
 
 private:
 
@@ -276,7 +324,7 @@ private:
 	ComPtr<ID3D12Resource> m_depthStencilResource_ = nullptr;
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_ = {};
 
-	//SwapChain
+	//スワップチェイン
 	SwapChain swapChain = {};
 	UINT backBufferIndex_ = {};
 	D3D12_RESOURCE_BARRIER barrier_{};
@@ -292,7 +340,7 @@ private:
 	uint64_t fenceValue_ = 0;
 	HANDLE fenceEvent_ = nullptr;
 
-
+	//デバッグコントローラー
 	ComPtr<ID3D12Debug1> debugController_ = nullptr;
 
 
@@ -301,8 +349,5 @@ private:
 	//FPS
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point frameEndTime_;
-
-
-
 
 };

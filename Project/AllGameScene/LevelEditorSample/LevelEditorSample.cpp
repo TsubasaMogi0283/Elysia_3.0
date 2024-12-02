@@ -47,14 +47,17 @@ void LevelEditorSample::Initialize(){
 
 	
 	//audio_->PlayMP3(audioHandleMP3_, true);
+	//デバッグ用のモデル
+	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere","Sphere.obj");
 
-
-
+	particle3D_.reset(Particle3D::Create(debugModelHandle,ParticleMoveType::NormalRelease));
+	particle3D_->SetScale({ 10.0f,10.0f,10.0f });
+	particle3D_->SetTranslate({ 0.0f,0.0f,0.0f });
 	collisionManager_ = std::make_unique<CollisionManager>();
 }
 
 void LevelEditorSample::Update(GameManager* gameManager){
-
+	//リストのクリア
 	collisionManager_->ClearList();
 
 #ifdef _DEBUG
@@ -67,6 +70,8 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	ImGui::Text("Rキーで指定した再読み込みするよ");
 	ImGui::End();
 
+
+	//Gキーで再読み込み
 	if (Input::GetInstance()->IsTriggerKey(DIK_R) == true) {
 		levelEditor_->Reload(levelHandle_);
 
@@ -82,6 +87,7 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 
 	//移動
+	//なにも
 	playerDirection_ = {};
 	//右
 	if (input_->IsPushKey(DIK_D) == true) {
@@ -168,7 +174,6 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 			//当たったらループを抜ける
 			break;
-
 		}
 		else{
 			//当たっていない
@@ -183,6 +188,7 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	//衝突判定の計算
 	collisionManager_->CheckAllCollision();
 
+	
 	//カメラの更新
 	//高さの補正も足す
 	const Vector3 OFFSET = { .x = 0.0f,.y = 5.0f,.z = -20.0f };
@@ -193,17 +199,16 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 }
 
-void LevelEditorSample::DrawSpriteBack(){
-
-}
 
 void LevelEditorSample::DrawObject3D(){
 	//プレイヤー
-	player_->Draw(camera_, directionalLight_);
+	//player_->Draw(camera_, directionalLight_);
 
 	//レベルエディタ  
-	levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
+	//levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
 	
+	//パーティクル
+	particle3D_->Draw(camera_, material_);
 }
 
 void LevelEditorSample::PreDrawPostEffectFirst(){

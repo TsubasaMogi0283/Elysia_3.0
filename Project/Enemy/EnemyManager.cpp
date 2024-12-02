@@ -33,7 +33,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	//CSVでやった方が良いかも
 	Enemy* enemy1 = new Enemy();
 	Vector3 position1 = { 0.0f,0.0f,11.0f };
-	enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,0.01f });
+	enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,-0.01f });
 	enemyes_.push_back(enemy1);
 	
 		
@@ -56,31 +56,26 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 
 #endif // _DEBUG
 
-	//StrongEnemy* enemy = new StrongEnemy();
-	//std::random_device seedGenerator;
-	//std::mt19937 randomEngine(seedGenerator());
-	//
-	////位置を決める
-	//std::uniform_real_distribution<float> positionDistribute(stageRect_.leftBack.x, stageRect_.rightBack.x);
-	//Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
-	//
-	//
-	////位置を決める
-	//std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
-	//Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
-	//
-	//position = { -4.0f,0.0f,5.0f };
-	//speed = { 0.01f,0.0f,-0.03f };
-	//
-	////強い敵の初期化
-	//enemy->Initialize(strongEnemyModelHandle_, position, speed);
-	//enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
-	//strongEnemyes_.push_back(enemy);
-
-	//マテリアルのの初期化
-	material_.Initialize();
-	material_.lightingKinds_ = Spot;
-
+	StrongEnemy* enemy = new StrongEnemy();
+	std::random_device seedGenerator;
+	std::mt19937 randomEngine(seedGenerator());
+	
+	//位置を決める
+	std::uniform_real_distribution<float> positionDistribute(stageRect_.leftBack.x, stageRect_.rightBack.x);
+	Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
+	
+	
+	//位置を決める
+	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
+	Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
+	
+	position = { -4.0f,0.0f,5.0f };
+	speed = { 0.01f,0.0f,-0.03f };
+	
+	//強い敵の初期化
+	enemy->Initialize(strongEnemyModelHandle_, position, speed);
+	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
+	strongEnemyes_.push_back(enemy);
 
 
 
@@ -96,7 +91,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 void EnemyManager::DeleteEnemy(){
 	//敵が生存していなかったら消す
 	enemyes_.remove_if([](Enemy* enemy) {
-		if (enemy->GetIsAlive() == false) {
+		if (enemy->GetIsDeleted() == true) {
 			delete enemy;
 			return true;
 		}
@@ -105,18 +100,24 @@ void EnemyManager::DeleteEnemy(){
 }
 
 void EnemyManager::GenarateEnemy() {
+	//通常の敵の生成
 	Enemy* enemy = new Enemy();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 	std::uniform_real_distribution<float> distribute(-30.0f, 30.0f);
+
+	//位置決め
 	Vector3 position1 = { distribute(randomEngine),0.0f,distribute(randomEngine) };
-	enemy->Initialize(normalEnemyModelHandle_, position1, { 0.0f,0.0f,0.0f });
+	Vector3 speed = { 0.0f,0.0f,0.0f };
+
+	//初期化
+	enemy->Initialize(normalEnemyModelHandle_, position1,speed );
 	enemyes_.push_back(enemy);
 }
 
 
 void EnemyManager::GenarateStrongEnemy(){
-	//生成
+	//強敵の生成
 	StrongEnemy* enemy = new StrongEnemy();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
@@ -137,7 +138,7 @@ void EnemyManager::GenarateStrongEnemy(){
 #endif // _DEBUG
 
 
-
+	//初期化
 	enemy->Initialize(strongEnemyModelHandle_, position, speed);
 	strongEnemyes_.push_back(enemy);
 }
@@ -610,8 +611,8 @@ void EnemyManager::Update(){
 		//方向からPanを振る
 		//基本左右だけなのでX軸成分だけとる
 		float pan = 1.0f- directionToPlayer.x;
-
-		audio_->SetPan(audioHandle_, pan);
+		pan;
+		//audio_->SetPan(audioHandle_, pan);
 
 #ifdef _DEBUG
 		ImGui::Begin("強敵");
@@ -656,9 +657,6 @@ void EnemyManager::Update(){
 #pragma endregion
 
 	}
-
-
-
 }
 
 void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
@@ -668,7 +666,7 @@ void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 		enemy->Draw(camera,spotLight);
 	}
 
-	//一発アウト
+	//強敵
 	for (StrongEnemy* strongEnemy : strongEnemyes_) {
 		strongEnemy->Draw(camera, spotLight);
 	}
@@ -676,20 +674,19 @@ void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 }
 
 EnemyManager::~EnemyManager(){
-
-
 	//audio_->Stop(audioHandle_);
-
 
 	//通常
 	for (Enemy* enemy : enemyes_) {
 		delete enemy;
 	}
 
-	//一発アウト
+	//強敵
 	for (StrongEnemy* strongEnemy : strongEnemyes_) {
 		delete strongEnemy;
 	}
+
+	
 }
 
 

@@ -1,36 +1,52 @@
 #pragma once
-#include <string>
-#include <cassert>
-#include <fstream>
-#include <sstream>
-#include <array>
-#include <memory>
-#include <list>
-#include <random>
 
-#include <DirectXTeX.h>
-#include "Matrix4x4.h"
-#include <Material.h>
-#include <TransformationMatrix.h>
-#include <DirectionalLight.h>
-#include "ModelData.h"
+/**
+ * @file Particle3Dr.h
+ * @brief パーティクル(3D版)のクラス
+ * @author 茂木翼
+ */
 
-
-#include "Vector4.h"
-#include "Matrix4x4Calculation.h"
-#include <VertexData.h>
-
-#include <VectorCalculation.h>
 #include <d3dx12.h>
-
+#include <random>
 
 
 #include "Camera.h"
 #include "Transform.h"
 #include "Particle.h"
-#include <AccelerationField.h>
+#include "AccelerationField.h"
 #include "ModelManager.h"
+#include "TransformationMatrix.h"
+#include "Matrix4x4Calculation.h"
+#include "VertexData.h"
 
+
+
+/// <summary>
+/// 動き方の設定
+/// </summary>
+enum ParticleMoveType {
+
+	//通常の放出
+	NormalRelease,
+	//鉛直投げ上げ
+	ThrowUp,
+	//自由落下
+	FreeFall,
+	//上昇
+	Rise,
+
+};
+
+
+struct Material;
+struct DirectionalLight;
+struct PointLight;
+struct SpotLight;
+
+
+/// <summary>
+/// エミッタ
+/// </summary>
 struct Emitter {
 	//エミッタのTransform;
 	Transform transform;
@@ -42,188 +58,233 @@ struct Emitter {
 	float frequencyTime;
 };
 
+/// <summary>
+/// パーティクル(3D)
+/// </summary>
 class Particle3D {
 public:
 
-	//コンストラクタ
-	Particle3D()=default;
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	Particle3D();
 
-	//初期化
-	static Particle3D* Create(uint32_t modelHandle);
+	/// <summary>
+	/// 生成
+	/// </summary>
+	/// <param name="moveType"></param>
+	/// <returns></returns>
+	static Particle3D* Create(const uint32_t& moveType);
+
+	/// <summary>
+	/// 生成
+	/// </summary>
+	/// <param name="moveType"></param>
+	/// <returns></returns>
+	static Particle3D* Create(const uint32_t& modelHandle,const uint32_t& moveType);
 
 
 private:
 
 #pragma region パーティクルの設定で使う関数
 
-	//パーティクルの初期化をする関数
+	/// <summary>
+	/// 新しいパーティクルの生成
+	/// </summary>
+	/// <param name="randomEngine"></param>
+	/// <returns></returns>
 	Particle MakeNewParticle(std::mt19937& randomEngine);
 
-	//Emitterで発生させる
+	/// <summary>
+	/// Emitterで発生させる
+	/// </summary>
+	/// <param name="emmitter"></param>
+	/// <param name="randomEngine"></param>
+	/// <returns></returns>
 	std::list<Particle> Emission(const Emitter& emmitter, std::mt19937& randomEngine);
+
+
 
 #pragma endregion
 
 public:
 
-	void Update(Camera& camera);
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="camera"></param>
+	void Update(const Camera& camera);
 
-	//通常の描画
-	//void Draw();
+	/// <summary>
+	/// 通常描画
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	void Draw(const Camera& camera, const Material& material);
 
-	//テクスチャを上書きをする描画
-	void Draw(uint32_t textureHandle,Camera& camera);
+	/// <summary>
+	/// 描画(平行光源)
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="directionalLight"></param>
+	void Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight);
+
+	/// <summary>
+	/// 描画(点光源)
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="pointLight"></param>
+	void Draw(const Camera& camera, const Material& material, const PointLight& pointLight);
+
+	/// <summary>
+	/// 描画(スポットライト)
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="spotLight"></param>
+	void Draw(const Camera& camera, const Material& material, const SpotLight& spotLight);
 
 
-	//デストラクタ
-	~Particle3D()=default;
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Particle3D() = default;
 
 
 
 
 public:
-	//アクセッサのまとめ
-
-	//透明度の変更
-	void SetColor(Vector4 color) {
-		this->materialColor_ = color;
+	/// <summary>
+	///	一度だけ出すかどうか
+	/// </summary>
+	/// <param name="isReleaseOnce"></param>
+	inline void SetIsReleaseOnce(const bool &isReleaseOnce) {
+		this->isReleaseOnce_ = isReleaseOnce;
 	}
 
-	void SetTransparency(float transparency) {
-		this->materialColor_.w = transparency;
+
+	/// <summary>
+	/// 透明になっていくようにするかどうか
+	/// </summary>
+	/// <param name="isToTransparent"></param>
+	inline void SetIsToTransparent(const bool& isToTransparent) {
+		this->isToTransparent_ = isToTransparent;
 	}
-	
-	//ビルボードにするかどうか
-	//デフォルトではするようにしている
-	bool IsBillBordMode(bool isBillBordMode) {
-		this->isBillBordMode_ = isBillBordMode;
+
+	/// <summary>
+	/// 全て透明になったかどうか
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsAllInvisible()const {
+		return isAllInvisible_;
 	}
+
 
 
 #pragma region エミッタの中の設定
-	
 
-	#pragma region SRT
+
+#pragma region SRT
 	//Scale
-	void SetScale(Vector3 scale) {
+	inline void SetScale(const Vector3& scale) {
 		this->emitter_.transform.scale = scale;
 	}
-	
+
 	//Rotate
-	void SetRotate(Vector3 rotate) {
+	inline void SetRotate(const Vector3 &rotate) {
 		this->emitter_.transform.rotate = rotate;
 	}
-	Vector3 GetRotate() {
+	inline Vector3 GetRotate() const {
 		return emitter_.transform.rotate;
 	}
 
 	//Translate
-	void SetTranslate(Vector3 translate) {
+	inline void SetTranslate(const Vector3& translate) {
 		this->emitter_.transform.translate = translate;
 	}
-	Vector3 GetTranslate() {
+	inline Vector3 GetTranslate() const{
 		return emitter_.transform.translate;
 	}
 
-	#pragma endregion
+#pragma endregion
 
 	//発生数
-	void SetCount(uint32_t count) {
+	inline void SetCount(const uint32_t& count) {
 		this->emitter_.count = count;
 	}
 	//発生頻度
-	void SetFrequency(float frequency){
+	inline void SetFrequency(const float& frequency) {
 		this->emitter_.frequency = frequency;
 	}
 	//発生頻度を設定
-	void SetFrequencyTime(float frequencyTime){
+	inline void SetFrequencyTime(const float& frequencyTime) {
 		this->emitter_.frequencyTime = frequencyTime;
 	}
 
 
-	//以下の2つはセットで使ってね
-	void SetField(bool isSetField) {
-		this->isSetField_ = isSetField;
-	}
-	void SetAccelerationField(AccelerationField accelerationField) {
-		this->accelerationField_ = accelerationField;
-	}
-
 #pragma endregion
 
-#pragma region Lightingの設定
-	void SetLighting(bool enableLighting) {
-		this->isEnableLighting_ = enableLighting;
-	}
-	//方向
-	void SetDirection(Vector3 direction) {
-		this->lightingDirection_ = direction;
-	}
-
-#pragma endregion
 
 private:
-	//TextureManagerを参考にする
-	std::list<ModelData> modelInformationList_;
+	//モデルマネージャー
+	ModelManager* modelManager_ = nullptr;
 
 	//頂点リソースを作る
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+	//頂点データ
 	std::vector<VertexData> vertices_{};
-
 	//表示する数
-	int32_t instanceCount_ = 1;
+	int32_t instanceCount_ = 20;
 
 
-	//マテリアル用のリソースを作る
-	ComPtr<ID3D12Resource> materialResource_ = nullptr;
-	//色関係のメンバ変数
-	Vector4 materialColor_ = { 1.0f,1.0f,1.0f,1.0f };
-
-
-	//Lighting用
-	ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
-	DirectionalLightData* directionalLightData_ = nullptr;
-	//色
-	Vector4 directionalLightColor_ = { 1.0f,1.0f,1.0f,1.0f };
-	float directionalLightIntensity_ = 3.0f;
-
-	//基本はtrueで
-	bool isEnableLighting_ = 1;
-	//方向
-	Vector3 lightingDirection_ = {0.0f,-1.0f,0.0f};
-
-
-	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_ = {};
-	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_ = {};
-
+	//インスタンス
 	ComPtr<ID3D12Resource>instancingResource_ = nullptr;
 
-
-	static const int32_t MAX_INSTANCE_NUMBER_ = 100;
+	//最大数
+	static const int32_t MAX_INSTANCE_NUMBER_ = 20;
 	//描画すべきインスタンス数
 	uint32_t numInstance_ = 0;
+	//インスタンスのインデックス
+	int instancingIndex_ = 0;
 
-	int InstancingIndex_=0;
+	//一度だけ出すかどうか
+	bool isReleaseOnce_ = false;
 
 	//パーティクル
 	std::list<Particle>particles_;
+	//パーティクルデータ
 	ParticleForGPU* instancingData_ = nullptr;
 
-	//ビルボード
-	bool isBillBordMode_ = true;
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
+	//動きの種類
+	uint32_t moveType_ = NormalRelease;
 
+	//透明になっていくか
+	bool isToTransparent_ = true;
+	//全て透明になったかどうか
+	bool isAllInvisible_ = false;
 
 	//エミッタの設定
 	Emitter emitter_ = {};
 	const float DELTA_TIME = 1.0f / 60.0f;
 
-	//フィールド
-	bool isSetField_ = false;
-	AccelerationField accelerationField_ = {};
 
+	//鉛直投げ上げ
+	float velocityY_ = 1.2f;
+
+
+
+	//カメラ
+	//リソース
+	ComPtr<ID3D12Resource>cameraResource_ = nullptr;
+	//カメラデータ
+	Vector3* cameraPositionData_ = {};
+	//座標
+	Vector3 cameraPosition_ = {};
 };

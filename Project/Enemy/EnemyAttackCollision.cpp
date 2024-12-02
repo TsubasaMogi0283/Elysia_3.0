@@ -3,28 +3,27 @@
 #include <VectorCalculation.h>
 
 
-void EnemyAttackCollision::Initialize(uint32_t modelHandle){
+void EnemyAttackCollision::Initialize(const uint32_t& modelHandle){
+	//モデルの生成
 	model_.reset(Model::Create(modelHandle));
 
 
-	//初期化
+	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	material_.Initialize();
 	material_.lightingKinds_ = Spot;
 	material_.color_ = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
 
-	enemyWorldPosition_ = {};
 
 
 	#pragma region 当たり判定
-
+	//球じゃなくてAABBの方が良いかもね
+	//計算の量が減るからね
 	//種類
 	collisionType_ = ColliderType::SphereType;
 
 	//半径
-	radius_ = 1.0f;
-
-
+	radius_ = 2.0f;
 
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY_ATTACK);
@@ -50,9 +49,8 @@ void EnemyAttackCollision::Update(){
 void EnemyAttackCollision::Draw(const Camera& camera,const SpotLight& spotLight){
 
 #ifdef _DEBUG
-	if (isTouch_ == true) {
-		model_->Draw(worldTransform_, camera, material_, spotLight);
-	}
+	model_->Draw(worldTransform_, camera, material_, spotLight);
+	
 #endif // _DEBUG
 
 
@@ -62,19 +60,14 @@ void EnemyAttackCollision::Draw(const Camera& camera,const SpotLight& spotLight)
 
 
 Vector3 EnemyAttackCollision::GetWorldPosition(){
-	Vector3 worldPosition = {
-		.x = worldTransform_.worldMatrix.m[3][0],
-		.y = worldTransform_.worldMatrix.m[3][1],
-		.z = worldTransform_.worldMatrix.m[3][2],
-	};
-	return worldPosition;
+	return worldTransform_.GetWorldPosition();
 }
 
 void EnemyAttackCollision::OnCollision(){
-
+	isTouch_ = true;
 }
 
-void EnemyAttackCollision::OffCollision()
-{
+void EnemyAttackCollision::OffCollision(){
+	isTouch_ = false;
 }
 

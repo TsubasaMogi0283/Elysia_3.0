@@ -1,12 +1,5 @@
 #include "Camera.h"
-#include <Matrix4x4Calculation.h>
-#include "WindowsSetup.h"
-
-
-
-
-#include "Camera.h"
-#include <Matrix4x4Calculation.h>
+#include "Matrix4x4Calculation.h"
 #include "WindowsSetup.h"
 
 
@@ -23,25 +16,27 @@ void Camera::Initialize() {
 	rotate_ = { 0.0f, 0.0f, 0.0f };
 	translate_ = { 0.0f, 0.0f, -9.8f };
 
-	//メインはUpdateの方
+
 	//アフィン行列を計算
 	worldMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
-	//カメラと言えば逆行列
+	//逆行列を計算
 	viewMatrix_ = Matrix4x4Calculation::Inverse(worldMatrix_);
 	//射影を計算
 	projectionMatrix_ = Matrix4x4Calculation::MakePerspectiveFovMatrix(fov_, aspectRatio_, nearClip_, farClip_);
 	//正射影行列(正規化)を計算
 	orthographicMatrix_ = Matrix4x4Calculation::MakeOrthographicMatrix(0, 0, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 
+	//転送
+	Transfer();
 }
 
-//行列を計算・転送する
+
 void Camera::Update() {
 
 	//アフィン行列を計算
 	worldMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
 
-	//カメラと言えば逆行列
+	//逆行列を計算
 	viewMatrix_ = Matrix4x4Calculation::Inverse(worldMatrix_);
 	//射影を計算
 	projectionMatrix_ = Matrix4x4Calculation::MakePerspectiveFovMatrix(fov_, aspectRatio_, nearClip_, farClip_);

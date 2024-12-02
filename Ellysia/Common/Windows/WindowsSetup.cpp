@@ -89,8 +89,8 @@ void WindowsSetup::DisplayWindow() {
 
 #pragma endregion
 
-//初期化
 void WindowsSetup::Initialize(const wchar_t* title, int32_t clientWidth,int32_t clientHeight) {
+	//値を入れる
 	this->title_ = title;
 	this->clientWidth_ = clientWidth;
 	this->clientHeight_ = clientHeight;

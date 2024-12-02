@@ -6,6 +6,9 @@
 
 struct Camera;
 
+/// <summary>
+/// 鍵
+/// </summary>
 class Key{
 public:
 	/// <summary>

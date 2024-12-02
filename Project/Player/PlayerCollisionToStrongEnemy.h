@@ -4,12 +4,14 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
-#include "../Collider/Collider.h"
+#include "Collider/Collider.h"
 
 struct Camera;
 struct SpotLight;
 
-
+/// <summary>
+/// 強敵に対してのコライダー
+/// </summary>
 class PlayerCollisionToStrongEnemy :public Collider {
 public:
 
@@ -58,7 +60,9 @@ public:
 	/// ワールド座標の取得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition()override;
+	inline Vector3 GetWorldPosition()override {
+		return worldTransform_.GetWorldPosition();
+	};
 
 	/// <summary>
 	/// 接触

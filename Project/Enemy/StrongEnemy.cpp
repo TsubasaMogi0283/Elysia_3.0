@@ -66,7 +66,7 @@ void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position
 void StrongEnemy::Update(){
 
 
-	const float SPEED_AMOUNT = 0.05f;
+	const float SPEED_AMOUNT = 0.02f;
 	//状態
 	//こっちもStatePatternにしたい！！
 	switch (condition_) {

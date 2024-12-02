@@ -1,4 +1,10 @@
 #pragma once
+
+/**
+ * @file GameManager.h
+ * @brief ゲームシーンのクラス
+ * @author 茂木翼
+ */
 #include "IGameScene.h"
 
 #include "Sprite.h"
@@ -38,9 +44,13 @@
 #include "Vignette.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
-class Gamemanager;
+//ゲームマネージャー
+class GameManager;
 
 
+/// <summary>
+/// ゲームシーン
+/// </summary>
 class GameScene : public IGameScene {
 public:
 
@@ -61,19 +71,20 @@ public:
 
 #pragma region 描画
 
-	/// <summary>
-	/// ポストエフェクト掛ける前のスプライト
-	/// </summary>
-	void DrawSpriteBack()override;
-
 
 	/// <summary>
 	/// 3Dオブジェクト
 	/// </summary>
 	void DrawObject3D()override;
 
-
+	/// <summary>
+	/// ポストエフェクト描画前
+	/// </summary>
 	void PreDrawPostEffectFirst()override;
+
+	/// <summary>
+	/// ポストエフェクトの描画
+	/// </summary>
 	void DrawPostEffect()override;
 
 
@@ -110,9 +121,15 @@ private:
 	/// </summary>
 	void PlayerMove();
 
+	/// <summary>
+	/// 逃げ状態
+	/// </summary>
 	void EscapeCondition();
 
 private:
+	/// <summary>
+	/// ゲームシーンの場面
+	/// </summary>
 	enum GameCondition {
 		GameFadeIn,
 		Explanation,
@@ -120,11 +137,12 @@ private:
 		GameFadeOut,
 	};
 
+	//初期はフェードイン
 	GameCondition gameCondition_ = GameCondition::GameFadeIn;
 
 
 private:
-
+	//インプット
 	Input* input_=nullptr;
 
 
@@ -145,15 +163,20 @@ private:
 	Vector3 cameraThirdPersonViewOfPointPosition_ = {};
 	Vector3 thirdPersonViewOfPointRotate_ = {};
 
+	//回転キーXY
 	bool isRotateYKey_ = false;
 	bool isRotateXKey_ = false;
 
+	//時間変化
+	const float DELTA_TIME = 1.0f / 60.0f;
 
 	//マテリアル
 	Material material_ = {};
 
 	//ポストエフェクト
+	//基本
 	std::unique_ptr<BackText> back_ = nullptr;
+	//ビネット
 	std::unique_ptr<Vignette> vignette_ = nullptr;
 	const float MAX_VIGNETTE_POW_ = 1.6f;
 	float vignettePow_ = 17.0f;
@@ -162,8 +185,7 @@ private:
 
 	//プレイヤー
 	std::unique_ptr<Player> player_ = nullptr;
-	//座標
-	Vector3 playerPosition_ = {};
+
 	//向き
 	Vector3 playerMoveDirection_ = {};
 	//キーボードで動かしているかどうか
@@ -185,27 +207,25 @@ private:
 
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;
-
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
 	bool isEscape_ = false;
-
-	
 
 	//天球
 	std::unique_ptr<Skydome> skydome_ = nullptr;
 
 #pragma endregion
 	
-	//敵
+	//敵管理
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
+	//敵のモデルハンドル
 	uint32_t enemyModelHandle_ = 0u;
 
-	uint32_t viewOfPoint_ = 0u;
-
+	//角度
 	float theta_ = 0.0f;
 	float originPhi_ = 0.0f;
 
+	//コリジョン管理
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 
 	//強い敵と接触したかどうか
@@ -237,30 +257,37 @@ private:
 	//鍵
 	std::unique_ptr<KeyManager> keyManager_ = {};
 	uint32_t keyQuantity_ = 0u;
+	//鍵を取得できるかどうか
 	bool isAbleToPickUpKey_ = false;
 
-	std::unique_ptr<Sprite>lackOfKeyesNumberSprite_[3] = { nullptr };
-	uint32_t lackOfKeyesNumber_ = 0u;
 
-
-
+	//脱出
 	std::unique_ptr<Sprite> toEscape_ = nullptr;
 
 #pragma endregion
 
 #pragma region フェード
-
-	std::unique_ptr<Sprite> fadeSprite_ = nullptr;
+	//白フェード
+	std::unique_ptr<Sprite> whiteFade_ = nullptr;
 	//透明度
-	float fadeTransparency_ = 1.0f;
+	float whiteFadeTransparency_ = 1.0f;
+	
+	//黒フェード
+	std::unique_ptr<Sprite> blackFade_ = nullptr;
+	//透明度
+	float blackFade_Transparency_ = 1.0f;
 
-	bool isFadeIn = true;
-	bool isFadeOut_ = false;
+	//イン
+	bool isWhiteFadeIn = true;
+	//アウト
+	bool isWhiteFadeOut_ = false;
 
 #pragma endregion
 
-
+	//場面
+	//説明
 	bool isExplain_ = false;
+	//ゲーム
 	bool isGamePlay_ = false;
 
 
@@ -278,15 +305,13 @@ private:
 
 
 #pragma region デバッグ用のオブジェクト
+	//カメラの位置
 	Vector3 cameraTranslate = {};
 
-	std::unique_ptr<Model> debugTower_ = nullptr;
-	WorldTransform debugTowerWorldTransform_ = {};
-
-	std::unique_ptr<Model> debugFanCollisionSphereModel_ = nullptr;
-	WorldTransform debugFanCollisionSphereWorldTransform_ = {};
-	Material debugFanCollisionSphereMaterial_ = {};
-
+	
 #pragma endregion
 
+private:
+	//フェードアウトの具合
+	const float FADE_OUT_INTERVAL = 0.01f;
 };

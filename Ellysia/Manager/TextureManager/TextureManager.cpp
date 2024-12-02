@@ -69,7 +69,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 	const DirectX::TexMetadata& metadata = textureInfo.mipImages_.GetMetadata();
 
 	textureInfo.resource_ = CreateTextureResource(metadata);
-	textureInfo.internegiateResource_ = UploadTextureData(
+	textureInfo.internegiateResource_ = TransferTextureData(
 		textureInfo.resource_.Get(), textureInfo.mipImages_).Get();
 
 
@@ -209,7 +209,7 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 //3.TextureResourceに1で読んだデータを転送する
 //書き換え
 [[nodiscard]]
-ComPtr<ID3D12Resource> TextureManager::UploadTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages) {
+ComPtr<ID3D12Resource> TextureManager::TransferTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages) {
 
 	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
 	DirectX::PrepareUpload(DirectXSetup::GetInstance()->GetDevice().Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);

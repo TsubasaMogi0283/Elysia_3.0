@@ -59,22 +59,29 @@ void PipelineManager::GenaratePSO(PSOInformation& psoInformation, D3D12_INPUT_LA
 
 void PipelineManager::Initialize(){
 	
+	//ブレンドモード
+	const uint32_t BLEND_MODE = BlemdMode::BlendModeNormal;
+
 	//モデル
-	PipelineManager::GetInstance()->SetModelBlendMode(1);
-	PipelineManager::GetInstance()->GenerateModelPSO();
+	SetModelBlendMode(BLEND_MODE);
+	GenerateModelPSO();
+
+	//スプライト
+	SetSpriteBlendMode(BLEND_MODE);
+	GenerateSpritePSO();
 
 
-
-	//エフェクトごとにhlsl分けたい
-	//いずれやる
-	PipelineManager::GetInstance()->GenarateVignettePSO();
+	//パーティクル
+	GenerateParticle3DPSO();
+	
+	//ビネット
+	GenarateVignettePSO();
 
 }
 
 //線
 void PipelineManager::GenaratedLinePSO() {
-	//PSO
-	////RootSignatureを作成
+	//RootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように間レンズけるかを示したオブジェクトである
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature_{};
 	descriptionRootSignature_.Flags =
@@ -1047,10 +1054,6 @@ void PipelineManager::GenerateAnimationModelPSO() {
 
 
 
-
-
-
-
 	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
 	//バイリニアフィルタ
 	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
@@ -1087,14 +1090,7 @@ void PipelineManager::GenerateAnimationModelPSO() {
 		PipelineManager::GetInstance()->animationModelPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->animationModelPSO_.rootSignature_));
 	assert(SUCCEEDED(hr));
 
-
-
-
-
-
-
-
-	////InputLayout
+	//InputLayout
 	//InputLayout・・VertexShaderへ渡す頂点データがどのようなものかを指定するオブジェクト
 
 
@@ -1234,7 +1230,7 @@ void PipelineManager::GenerateAnimationModelPSO() {
 
 
 
-	////RasterizerState
+	//RasterizerState
 	//RasterizerState・・・Rasterizerに対する設定
 	//					  三角形の内部をピクセルに分解して、
 	//					  PixelShaderを起動することでこの処理への設定を行う
@@ -1301,13 +1297,6 @@ void PipelineManager::GenerateAnimationModelPSO() {
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->animationModelPSO_.graphicsPipelineState_));
 	assert(SUCCEEDED(hr));
 
-
-
-
-
-
-
-
 }
 
 
@@ -1326,7 +1315,7 @@ void PipelineManager::GenerateParticle3DPSO() {
 	//今回は結果一つだけなので長さ１の配列
 
 	//VSでもCBufferを利用することになったので設定を追加
-	D3D12_ROOT_PARAMETER rootParameters[5] = {};
+	D3D12_ROOT_PARAMETER rootParameters[8] = {};
 	//CBVを使う
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	////PixelShaderで使う
@@ -1347,7 +1336,6 @@ void PipelineManager::GenerateParticle3DPSO() {
 
 
 	//今回はDescriptorTableを使う
-	//Instancing
 	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	//VertwxShaderで使う
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
@@ -1381,7 +1369,7 @@ void PipelineManager::GenerateParticle3DPSO() {
 
 
 	//DescriptorTableを使う
-	//Texture
+	//Texture用
 	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	//PixelShaderを使う
 	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -1390,22 +1378,43 @@ void PipelineManager::GenerateParticle3DPSO() {
 	//Tableで利用する数
 	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 
-	//CBVを使う
-	//DirectionalLight
+
+	//カメラ
 	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	//PixelShaderで使う
-	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	//レジスタ番号1を使う
-	rootParameters[3].Descriptor.ShaderRegister = 1;
+	rootParameters[3].Descriptor.ShaderRegister = 0;
 
 
-	//CBVを使う
-	//カメラ
+	//DirectionalLight
 	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	//VertwxShaderで使う
-	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	//register...Shader上のResource配置情報
+	//PixelShaderで使う
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//レジスタ番号1を使う
 	rootParameters[4].Descriptor.ShaderRegister = 1;
+
+	//PS用のカメラ
+	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//PixelShaderで使う
+	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//レジスタ番号1を使う
+	rootParameters[5].Descriptor.ShaderRegister = 2;
+
+	//PointLight
+	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//PixelShaderで使う
+	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//レジスタ番号2を使う
+	rootParameters[6].Descriptor.ShaderRegister = 3;
+
+
+	//SpotLight
+	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//PixelShaderで使う
+	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//レジスタ番号2を使う
+	rootParameters[7].Descriptor.ShaderRegister = 4;
 
 
 
@@ -1430,18 +1439,17 @@ void PipelineManager::GenerateParticle3DPSO() {
 
 	//シリアライズしてバイナリにする
 	ComPtr<ID3DBlob> errorBlob = nullptr;
-	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
+	HRESULT hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->particle3DPSO_.signatureBlob_, &errorBlob);
-	if (FAILED(hResult)) {
+	if (FAILED(hr)) {
 		ConvertString::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
 	//バイナリを元に生成
-	//ID3D12RootSignature* rootSignature_ = nullptr;
-	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->particle3DPSO_.signatureBlob_->GetBufferPointer(),
+	hr = DirectXSetup::GetInstance()->GetDevice()->CreateRootSignature(0, PipelineManager::GetInstance()->particle3DPSO_.signatureBlob_->GetBufferPointer(),
 		PipelineManager::GetInstance()->particle3DPSO_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&PipelineManager::GetInstance()->particle3DPSO_.rootSignature_));
-	assert(SUCCEEDED(hResult));
+	assert(SUCCEEDED(hr));
 
 
 
@@ -1454,16 +1462,19 @@ void PipelineManager::GenerateParticle3DPSO() {
 	//InputLayout・・VertexShaderへ渡す頂点データがどのようなものかを指定するオブジェクト
 	//InputLayout
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
+	//float4
 	inputElementDescs[0].SemanticName = "POSITION";
 	inputElementDescs[0].SemanticIndex = 0;
 	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
+	//float2
 	inputElementDescs[1].SemanticName = "TEXCOORD";
 	inputElementDescs[1].SemanticIndex = 0;
 	inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
+	//float3
 	inputElementDescs[2].SemanticName = "NORMAL";
 	inputElementDescs[2].SemanticIndex = 0;
 	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -1479,8 +1490,6 @@ void PipelineManager::GenerateParticle3DPSO() {
 
 
 
-
-	////BlendStateの設定を行う
 	//BlendStateの設定
 	D3D12_BLEND_DESC blendDesc{};
 	//全ての色要素を書き込む
@@ -1496,15 +1505,7 @@ void PipelineManager::GenerateParticle3DPSO() {
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 
 
-
-
-
-
-
-
-
-
-	////RasterizerState
+	//RasterizerState
 	//RasterizerState・・・Rasterizerに対する設定
 	//					  三角形の内部をピクセルに分解して、
 	//					  PixelShaderを起動することでこの処理への設定を行う
@@ -1512,7 +1513,7 @@ void PipelineManager::GenerateParticle3DPSO() {
 	//RasterizerStateの設定
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 	//今回はカリングをオフにする
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
 	//三角形の中を塗りつぶす
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
@@ -1531,7 +1532,7 @@ void PipelineManager::GenerateParticle3DPSO() {
 
 
 
-	////PSO生成
+	//PSO生成
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->particle3DPSO_.rootSignature_.Get();
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
@@ -1567,21 +1568,16 @@ void PipelineManager::GenerateParticle3DPSO() {
 	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	//実際に生成
-	hResult = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hr = DirectXSetup::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&PipelineManager::GetInstance()->particle3DPSO_.graphicsPipelineState_));
-	assert(SUCCEEDED(hResult));
-
-
+	assert(SUCCEEDED(hr));
 
 
 }
 
 void PipelineManager::GenarateFullScreenPSO() {
 
-	//////////PSO
-	// 
-	// 
-	////RootSignatureを作成
+	//RootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature_{};
 	descriptionRootSignature_.Flags =

@@ -9,8 +9,8 @@
 #include <imgui_impl_dx12.h>
 #include <imgui_impl_win32.h>
 
-//外部のつまり自分が作ったものではないファイルなどは
-//<>でインクルードさせた方が良いよ
+//外部の,、つまり自分が作ったものではないファイルなどは
+//<>でインクルードさせた方が良い
 
 //その他自分で作ったものは""でインクルードさせてね
 
@@ -48,16 +48,25 @@ public:
 
 	#pragma region 禁止事項
 
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="winApp"></param>
 	WindowsSetup(const WindowsSetup& winApp) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="winApp"></param>
+	/// <returns></returns>
 	WindowsSetup& operator=(const WindowsSetup& winApp) = delete;
 
 	#pragma endregion
 
-	//インスタンスにアクセス可能な関数を追加
-	//静的メンバ関数にする。クラス名を指定すればアクセスできる
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
 	static WindowsSetup* GetInstance();
 
 
