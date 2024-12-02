@@ -776,7 +776,7 @@ void GameScene::Update(GameManager* gameManager) {
 
 
 		//懐中電灯
-		//collisionManager_->RegisterList(player_->GetFlashLightCollision());
+		collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());

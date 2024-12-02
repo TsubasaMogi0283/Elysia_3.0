@@ -42,11 +42,6 @@ void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position
 	//半径
 	radius_ = 2.0f;
 
-	//AABBのmax部分に加算する縦横高さのサイズ
-	//upSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
-
-	//AABBのmin部分に加算する縦横高さのサイズ
-	//downSideSize_ = { .x = radius_ ,.y = radius_ ,.z = radius_ };
 
 	//判定
 	//自分

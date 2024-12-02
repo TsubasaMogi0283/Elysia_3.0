@@ -10,9 +10,12 @@
 #include <BackText.h>
 #include "DirectionalLight.h"
 
-//StatePatternを使う時は必ず前方宣言をするように
+
 class GameManager;
 
+/// <summary>
+/// タイトルシーン
+/// </summary>
 class TitleScene : public IGameScene {
 public:
 

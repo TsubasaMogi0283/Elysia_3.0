@@ -1,18 +1,28 @@
 #pragma once
-#include "IGameScene.h"
+/**
+ * @file GameManager.h
+ * @brief 負けシーンのクラス
+ * @author 茂木翼
+ */
+
+
+
 
 #include <memory>
 
 #include "Sprite.h"
 
+#include "IGameScene.h"
 #include "Model.h"
 #include "Camera.h"
-#include <BackText.h>
+#include "BackText.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class GameManager;
 
-
+/// <summary>
+/// 負けシーン
+/// </summary>
 class LoseScene : public IGameScene {
 public:
 
