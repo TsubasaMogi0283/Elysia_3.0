@@ -17,7 +17,7 @@ void TitleScene::Initialize(){
 	uint32_t titleTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Title/Title.png");
 
 	//初期化
-	const Vector3 INITIAL_POSITION = {.x=0.0f,.y=0.0f,.z=0.0f};
+	const Vector2 INITIAL_POSITION = {.x=0.0f,.y=0.0f};
 	text_.reset(Sprite::Create(logoTextureHandle, INITIAL_POSITION));
 	title_.reset(Sprite::Create(titleTextureHandle, INITIAL_POSITION));
 

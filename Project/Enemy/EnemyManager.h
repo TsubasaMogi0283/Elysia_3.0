@@ -136,8 +136,7 @@ private:
 	//ステージの四隅
 	StageRect stageRect_ = {};
 
-	//モデル
-	Material material_ = {};
+
 
 	
 	//接近BGM用

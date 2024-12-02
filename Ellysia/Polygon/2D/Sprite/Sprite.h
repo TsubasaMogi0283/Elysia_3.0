@@ -1,21 +1,22 @@
 #pragma once
-#include "DirectXSetup.h"
-#include "ConvertLog.h"
-#include <DirectXTex.h>
-#include "PipelineManager.h"
-
-#include "Vector4.h"
-#include "Vector2.h"
-#include "Matrix4x4.h"
-#include "Matrix4x4Calculation.h"
-#include "Transform.h"
-#include <VertexData.h>
-#include <Material.h>
+/**
+ * @file GameManager.h
+ * @brief スプライトのクラス
+ * @author 茂木翼
+ */
 
 #include <string>
 #include <format>
-#include <DirectionalLight.h>
-#include <TransformationMatrix.h>
+
+
+#include "DirectXSetup.h"
+#include "Vector4.h"
+#include "Vector2.h"
+#include "Transform.h"
+#include "VertexData.h"
+#include "Material.h"
+#include "TransformationMatrix.h"
+
 
 /// <summary>
 /// スプライト
@@ -51,108 +52,125 @@ public:
 
 	
 public:
-#pragma region アクセッサ
-	
-	//色
-	void SetTransparency(float transparency) {
+	/// <summary>
+	/// 透明度の設定
+	/// </summary>
+	/// <param name="transparency"></param>
+	inline void SetTransparency(const float& transparency) {
 		this->color_.w = transparency;
 	}
-	void SetColor(Vector4 color) {
+
+	/// <summary>
+	/// 色の設定
+	/// </summary>
+	/// <param name="color"></param>
+	inline void SetColor(const Vector4& color) {
 		this->color_ = color;
 	}
 
 
 
-	//拡縮
-	void SetScale(Vector2 scale) {
+	/// <summary>
+	/// スケールの設定
+	/// </summary>
+	/// <param name="scale"></param>
+	void SetScale(const Vector2& scale) {
 		this->scale_ = scale;
 	}
-	const Vector2 GetScale() {
-		return scale_;
-	}
 
 
 
-	//回転
-	void SetRotate(float rotate) {
+
+	/// <summary>
+	/// 回転の設定
+	/// </summary>
+	/// <param name="rotate"></param>
+	void SetRotate(const float& rotate) {
 		this->rotate_ = rotate;
 	}
-	const float GetRotate() {
-		return rotate_;
-	}
 
 
 
-	//位置
-	void SetPosition(Vector2 position) {
+	/// <summary>
+	/// 位置の設定
+	/// </summary>
+	/// <param name="position"></param>
+	void SetPosition(const Vector2& position) {
 		this->position_ = position;
 	}
-	const Vector2 GetPosition() {
-		return position_;
-	}
 
 
 
-	//アンカーポイント
+	/// <summary>
+	/// アンカーポイントの設定
+	/// </summary>
+	/// <param name="point"></param>
 	void SetAnchorPoint(Vector2 point) {
 		this->anchorPoint_ = point;
-	}
-	const Vector2 GetAnchorPoint() {
-		return anchorPoint_;
 	}
 	
 
 
-	//フリップ
-	void SetFlipX(bool isFlipX){
+	/// <summary>
+	/// X軸フリップ
+	/// </summary>
+	/// <param name="isFlipX"></param>
+	void SetFlipX(const bool& isFlipX){
 		this->isFlipX_=isFlipX;
 	}
-	const bool GetFlipX(){
-		return isFlipX_;
-	}
 
-	void SetFlipY(bool isFlipY){
+	/// <summary>
+	/// Y軸フリップ
+	/// </summary>
+	/// <param name="isFlipY"></param>
+	void SetFlipY(const bool& isFlipY){
 		this->isFlipY_=isFlipY;
 	}
-	const bool GetFlipY(){
-		return isFlipY_;
-	}
 
 
-
-	void SetInvisible(bool isInvisible) {
+	/// <summary>
+	/// 見えなくするかどうか
+	/// </summary>
+	/// <param name="isInvisible"></param>
+	void SetInvisible(const bool& isInvisible) {
 		this->isInvisible_ = isInvisible;
 	}
-	const bool GetInvisible() {
-		return isInvisible_;
+
+
+	/// <summary>
+	/// 後ろにするかどうか
+	/// </summary>
+	/// <param name="isBack"></param>
+	void SetIsBack(const bool& isBack) {
+		this->isBack_ = isBack;
 	}
 
 
-	//UV
-	void SetTextureLeftTop(Vector2 textureLeftTop) {
+	/// <summary>
+	/// UV座標系左上の設定
+	/// </summary>
+	/// <param name="textureLeftTop"></param>
+	void SetTextureLeftTop(const Vector2& textureLeftTop) {
 		this->textureLeftTop_ = textureLeftTop;
 	}
-	const Vector2 GetTextureLeftTop() {
-		return textureLeftTop_;
-	}
 
-	void SetTextureSize(Vector2 textureSize) {
+	/// <summary>
+	/// テクスチャのサイズの設定
+	/// </summary>
+	/// <param name="textureSize"></param>
+	void SetTextureSize(const Vector2& textureSize) {
 		this->textureSize_ = textureSize;
 	}
-	const Vector2 GetTextureSize() {
-		return textureSize_;
-	}
 
-	void SetUVMode(bool isUVMode) {
+	/// <summary>
+	/// UV編集モードにするかどうか
+	/// </summary>
+	/// <param name="isUVMode"></param>
+	void SetUVMode(const bool& isUVMode) {
 		this->isUVSetting_ = isUVMode;
 	}
-	const bool GetUVMode() {
-		return isUVSetting_;
-	}
 
 
-
-#pragma endregion
 
 
 
@@ -164,55 +182,42 @@ private:
 	/// <param name="position"></param>
 	void Initialize(const uint32_t& textureHandle,const Vector2& position);
 	
-	//Vertex
-	void CreateVertexBufferView();
-	//Index
-	void CreateIndexBufferView();
-
-
 
 private:
 
 
-#pragma region リソース
-
-	
-
-	//Sprite用
-	//三角形2枚
+	//頂点リソース
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
+	//頂点データ
+	VertexData* vertexData_ = nullptr;
+	//バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
 
-	//マテリアル用のリソースを作る
+
+	//マテリアル
 	ComPtr<ID3D12Resource> materialResource_ = nullptr;
 	MaterialData* materialData_ = nullptr;
 	
 
 
-	//Sprite用のTransformationMatrix用のリソースを作る。
-	//Matrix4x4 1つ分サイズを用意する
+	//TransformationMatrix用リソース
 	ComPtr<ID3D12Resource> transformationMatrixResource_ = nullptr;
 	TransformationMatrix* transformationMatrixData_ = nullptr;
-
-
-	//頂点データ
-	VertexData* vertexData_ = nullptr;
-
-
-	//頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
-
 	
-
-
-	//index用
+	
+	//Index用
 	ComPtr<ID3D12Resource> indexResource_ = nullptr;
-	//IndexBufferViewを作成
+	//バッファビュー
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 	//インデックスデータ
 	uint32_t* indexData_ = nullptr;
 
 
-#pragma endregion
+	//テクスチャの情報
+	D3D12_RESOURCE_DESC resourceDesc_{};
+
+
+private:
 
 	/// <summary>
 	/// 頂点の位置
@@ -222,24 +227,22 @@ private:
 		LeftBottom,
 	
 		//左上
-		LEFT_TOP,
+		LeftTop,
 	
 		//右下
-		RIGHT_BOTTOM,
+		RightBottom,
 	
 		//右上
-		RIGHT_TOP,
+		RightTop,
 
 	};
 
 	//UVトランスフォーム
-	Transform uvTransformSprite_ = {};
+	Transform uvTransform_ = {};
 
 
 	
-	//テクスチャの情報
-	D3D12_RESOURCE_DESC resourceDesc_{};
-
+	
 	//サイズ
 	Vector2 size_ = {};
 
@@ -248,7 +251,6 @@ private:
 	//R
 	float rotate_ = 0.0f;
 	//T
-	Vector2 originPosition_ = {};
 	Vector2 position_ = {};
 
 	//アンカーポイント
@@ -265,6 +267,10 @@ private:
 	//非表示
 	bool isInvisible_ = false;
 
+
+	//手前にするか後ろにするか
+	//基本手前にする
+	bool isBack_ = false;
 
 	//テクスチャ範囲設定
 	Vector2 textureLeftTop_ = { 0.0f,0.0f };

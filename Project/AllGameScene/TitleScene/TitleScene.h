@@ -8,6 +8,7 @@
 #include "Model.h"
 #include "Camera.h"
 #include <BackText.h>
+#include "DirectionalLight.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class GameManager;

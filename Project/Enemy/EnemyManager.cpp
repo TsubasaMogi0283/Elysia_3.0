@@ -77,11 +77,6 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
 	strongEnemyes_.push_back(enemy);
 
-	//マテリアルのの初期化
-	material_.Initialize();
-	material_.lightingKinds_ = Spot;
-
-
 
 
 	//接近BGMの設定
@@ -616,8 +611,8 @@ void EnemyManager::Update(){
 		//方向からPanを振る
 		//基本左右だけなのでX軸成分だけとる
 		float pan = 1.0f- directionToPlayer.x;
-
-		audio_->SetPan(audioHandle_, pan);
+		pan;
+		//audio_->SetPan(audioHandle_, pan);
 
 #ifdef _DEBUG
 		ImGui::Begin("強敵");
@@ -671,7 +666,7 @@ void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 		enemy->Draw(camera,spotLight);
 	}
 
-	//一発アウト
+	//強敵
 	for (StrongEnemy* strongEnemy : strongEnemyes_) {
 		strongEnemy->Draw(camera, spotLight);
 	}
@@ -686,7 +681,7 @@ EnemyManager::~EnemyManager(){
 		delete enemy;
 	}
 
-	//一発アウト
+	//強敵
 	for (StrongEnemy* strongEnemy : strongEnemyes_) {
 		delete strongEnemy;
 	}

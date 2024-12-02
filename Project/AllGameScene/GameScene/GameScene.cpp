@@ -22,8 +22,8 @@ void GameScene::Initialize() {
 
 #pragma region フェード
 	uint32_t fadeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/White.png");
-	const Vector2 INITIAL_POSITION = { .x = 0.0f,.y = 0.0f };
-	whiteFade_.reset(Sprite::Create(fadeTextureHandle, INITIAL_POSITION));
+	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
+	whiteFade_.reset(Sprite::Create(fadeTextureHandle, INITIAL_FADE_POSITION));
 	
 	//フェードインから始まる
 	isWhiteFadeIn = true;
@@ -31,7 +31,7 @@ void GameScene::Initialize() {
 
 
 	//黒フェード
-	 blackFade_.reset(Sprite::Create(fadeTextureHandle, INITIAL_POSITION));
+	 blackFade_.reset(Sprite::Create(fadeTextureHandle, INITIAL_FADE_POSITION));
 	
 
 #ifdef _DEBUG

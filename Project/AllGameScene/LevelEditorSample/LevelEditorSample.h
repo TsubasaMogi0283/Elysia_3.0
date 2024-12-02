@@ -16,7 +16,7 @@
 
 #include "Audio.h"
 #include "Player/AudioTestPlayer.h"
-
+#include "DirectionalLight.h"
 
 class GameManager;
 
