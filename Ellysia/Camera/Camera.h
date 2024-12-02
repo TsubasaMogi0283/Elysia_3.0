@@ -5,10 +5,10 @@
 #include "Vector3.h"
 #include "DirectXSetup.h"
 
+/// <summary>
+/// GPUに送る行列データ
+/// </summary>
 struct CameraMatrixData {
-	//アフィン行列はいらないかも
-
-	//必要なのはこの3つ
 	//ビュー行列
 	Matrix4x4 viewMatrix_;
 	//射影行列
@@ -17,22 +17,32 @@ struct CameraMatrixData {
 	Matrix4x4 orthographicMatrix_;
 };
 
-
+/// <summary>
+/// GPUに送る座標データ
+/// </summary>
 struct CameraForGPU {
 	Vector3 worldPosition;
 };
 
-
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera {
 public:
-	//初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
-	//行列を計算
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
 
-	//転送する
+	/// <summary>
+	/// 転送
+	/// </summary>
 	void Transfer();
 
 public:
@@ -40,7 +50,8 @@ public:
 	ComPtr<ID3D12Resource> bufferResource_;
 
 
-	//詳しくはMT3で
+
+
 	//角度
 	float fov_ = 0.45f;
 	//アスペクト比
@@ -49,7 +60,6 @@ public:
 	//奥行の変数
 	float nearClip_ = 0.1f;
 	float farClip_ = 1000.0f;
-
 
 
 	//回転
@@ -67,12 +77,12 @@ public:
 	Matrix4x4 projectionMatrix_ = {};
 	//正射影行列
 	Matrix4x4 orthographicMatrix_{};
-
+	//転送用のデータ
 	CameraMatrixData* cameraMatrixData_ = nullptr;
 
 private:
-	//スケールはっきり言って意味ない
-	//だけどMakeAffineにするときこれの方が楽だから入れてる
+	//スケール。
+	//本当はいらないけどアフィン行列を作るときに一緒に入れて見やすくしている。
 	Vector3 scale_ = { 1.0f,1.0f,1.0f };
 
 };

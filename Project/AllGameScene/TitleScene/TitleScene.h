@@ -8,6 +8,7 @@
 #include "Model.h"
 #include "Camera.h"
 #include <BackText.h>
+#include "DirectionalLight.h"
 
 //StatePatternを使う時は必ず前方宣言をするように
 class GameManager;
@@ -26,11 +27,6 @@ public:
 	void Update(GameManager* gameManager)override;
 
 #pragma region 描画
-
-	/// <summary>
-	/// ポストエフェクト掛ける前のスプライト
-	/// </summary>
-	void DrawSpriteBack()override;
 
 
 	/// <summary>

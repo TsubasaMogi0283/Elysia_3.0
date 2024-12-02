@@ -1,9 +1,20 @@
 #pragma once
 
+
+
+/**
+ * @file GameManager.h
+ * @brief ゲーム管理クラス
+ * @author 茂木翼
+ */
+
+
 #include "IGameScene.h"
 #include <cstdint>
 
-//main.cppにあるものを全部こっちに引っ越しする
+/// <summary>
+/// ゲーム管理クラス
+/// </summary>
 class GameManager {
 public:
 	
@@ -29,21 +40,25 @@ public:
 	void Update();
 
 	/// <summary>
-	/// 描画
+	/// 描画(3Dオブジェクト)
 	/// </summary>
-	void DrawSpriteBack();
 	void DrawObject3D();
+
+	/// <summary>
+	/// 描画(スプライト)
+	/// </summary>
 	void DrawSprite();
 
 	/// <summary>
-	/// ポストエフェクト
+	/// ポストエフェクト描画前処理
 	/// </summary>
 	void PreDrawPostEffectFirst();
+
+	/// <summary>
+	/// 描画(ポストエフェクト)
+	/// </summary>
 	void DrawPostEffect();
 	
-
-
-
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -54,7 +69,7 @@ private:
 	//StatePatternに必要な変数
 	IGameScene* currentGamaScene_ = nullptr;
 	//シーンの数
-	uint32_t SCENE_QUANTITY_ = 0;
+	uint32_t sceneQuantity_ = 0;
 
 
 	

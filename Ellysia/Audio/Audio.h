@@ -1,6 +1,10 @@
 #pragma once
 
-
+/**
+ * @file GameManager.h
+ * @brief オーディオクラス
+ * @author 茂木翼
+ */
 #define XAUDIO2_HELPER_FUNCTIONS
 #include <xaudio2.h>
 #include "xaudio2fx.h"
@@ -10,6 +14,8 @@
 #include <cassert>
 #include <array>
 #include <map>
+#include <complex>
+#include <vector>
 #include <XAPOFX.h>
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib,"xaudio2.lib")
@@ -27,19 +33,24 @@
 using Microsoft::WRL::ComPtr;
 
 
-#include <complex>
-#include <vector>
+
 
 
 #include "AudioStruct.h"
 
-//LoadAudioの時に使う
+
+
+/// <summary>
+/// エフェクトのタイプ。LoadAudioの時に使う
+/// </summary>
 enum EffectType {
 	Filter,
 	Reverb,
 };
 
-
+/// <summary>
+/// オーディオ
+/// </summary>
 class Audio final {
 private:
 	/// <summary>
@@ -378,7 +389,9 @@ private:
 
 	//3Dオーディオ
 	X3DAUDIO_HANDLE x3DInstance_ = {};
+	//リスナー
 	X3DAUDIO_LISTENER listener_ = {};
+	//エミッタ
 	X3DAUDIO_EMITTER emitter_ = {};
 
 

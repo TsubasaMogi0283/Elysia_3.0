@@ -10,6 +10,7 @@
 #include <numbers>
 #include <TextureManager.h>
 #include <SingleCalculation.h>
+#include <VectorCalculation.h>
 
 
 
@@ -21,15 +22,21 @@ void GameScene::Initialize() {
 
 #pragma region フェード
 	uint32_t fadeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/White.png");
-	fadeSprite_.reset(Sprite::Create(fadeTextureHandle, { .x = 0.0f,.y = 0.0f }));
-	fadeTransparency_ = 1.0f;
+	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
+	whiteFade_.reset(Sprite::Create(fadeTextureHandle, INITIAL_FADE_POSITION));
+	
+	//フェードインから始まる
+	isWhiteFadeIn = true;
+	isWhiteFadeOut_ = false;
 
-	isFadeIn = true;
-	isFadeOut_ = false;
+
+	//黒フェード
+	 blackFade_.reset(Sprite::Create(fadeTextureHandle, INITIAL_FADE_POSITION));
+	
 
 #ifdef _DEBUG
-	isFadeIn = false;
-	isFadeOut_ = false;
+	isWhiteFadeIn = false;
+	isWhiteFadeOut_ = false;
 
 #endif // _DEBUG
 
@@ -71,7 +78,7 @@ void GameScene::Initialize() {
 	player_->Initialize();
 	player_->SetIsAbleToControll(false);
 
-	playerPosition_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+
 	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
 	isPlayerMoveKey_ = false;
 	bTriggerTime_ = 0;
@@ -106,7 +113,7 @@ void GameScene::Initialize() {
 	enemyModelHandle_ = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube", "Cube.obj");
 #endif // _DEBUG
 
-	
+	//敵管理システム
 	enemyManager_ = std::make_unique<EnemyManager>();
 	enemyManager_->SetPlayer(player_.get());
 	enemyManager_->SetObjectManager(objectManager_);
@@ -115,19 +122,11 @@ void GameScene::Initialize() {
 	#pragma endregion
 
 	
-
-	#pragma region ライト確認用のタワー
-	uint32_t debugTowerModelhandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Tower", "Tower.obj");
-	debugTower_.reset(Model::Create(debugTowerModelhandle));
-	debugTowerWorldTransform_.Initialize();
-	debugTowerWorldTransform_.translate = { .x = 1.0f,.y = 0.0f,.z = 2.0f };
-	#pragma endregion
-	
-	
 	
 	
 	#pragma region カメラ
-	//カメラ
+
+	//カメラの初期化
 	camera_.Initialize();
 	camera_.translate_.y = 1.0f;
 	camera_.translate_.z = -15.0f;
@@ -143,21 +142,7 @@ void GameScene::Initialize() {
 	#pragma endregion
 	
 	
-	//プレイヤーのライト
-	uint32_t weaponLightModel = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
 	
-	
-	#pragma region 扇の当たり判定用の球
-	debugFanCollisionSphereModel_.reset(Model::Create(weaponLightModel));
-	debugFanCollisionSphereWorldTransform_.Initialize();
-	debugFanCollisionSphereWorldTransform_.translate = { .x = 0.0f,.y = 0.0f,.z = 7.0f };
-	debugFanCollisionSphereMaterial_.Initialize();
-	debugFanCollisionSphereMaterial_.lightingKinds_ = Spot;
-	debugFanCollisionSphereMaterial_.color_ = { .x = 0.0f,.y = 1.0f,.z = 0.0f,.w = 1.0f };
-	
-	
-	
-	#pragma endregion
 	
 
 
@@ -223,14 +208,12 @@ void GameScene::Initialize() {
 	theta_ = std::numbers::pi_v<float> / 2.0f;
 	
 	//ポストエフェクトの初期化
-	back_ = std::make_unique< BackText>();
+	back_ = std::make_unique<BackText>();
 	back_->Initialize();
 	//ビネット
 	vignette_ = std::make_unique<Vignette>();
 	vignette_->Initialize();
-	//const float vignetteScale = 17.0f;
 	vignettePow_ = 0.0f;
-	//vignette_->SetScale(vignetteScale);
 	vignette_->SetPow(vignettePow_);
 
 	//マテリアルの初期化
@@ -240,7 +223,7 @@ void GameScene::Initialize() {
 
 
 #ifdef _DEBUG
-	isFadeIn = false;
+	isWhiteFadeIn = false;
 	isGamePlay_ = true;
 #endif // _DEBUG
 
@@ -267,7 +250,7 @@ void GameScene::KeyCollision(){
 
 
 			//範囲内にいれば入力を受け付ける
-			if (colissionDistance <= player_->GetRadius() + key->GetRadius()) {
+			if (colissionDistance <= player_->GetSideSize() + key->GetRadius()) {
 
 				//取得可能
 				key->SetIsPrePickUp(true);
@@ -339,7 +322,7 @@ void GameScene::ObjectCollision(){
 		AABB objectAABB = stageObject->GetAABB();
 
 		//オブジェクトとの差分ベクトル
-		Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(stageObject->GetWorldPosition(), playerPosition_);
+		Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(stageObject->GetWorldPosition(), player_->GetWorldPosition());
 		
 		//オブジェクトとプレイヤーの距離
 		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
@@ -372,7 +355,7 @@ void GameScene::ObjectCollision(){
 
 void GameScene::EscapeCondition(){
 	//ゲート
-	if (gate_->isCollision(playerPosition_)) {
+	if (gate_->isCollision(player_->GetWorldPosition())) {
 #ifdef _DEBUG
 		ImGui::Begin("InSpaceGate");
 		ImGui::End();
@@ -419,7 +402,7 @@ void GameScene::EscapeCondition(){
 
 	//脱出
 	if (isEscape_ == true) {
-		isFadeOut_ = true;
+		isWhiteFadeOut_ = true;
 	}
 
 }
@@ -598,19 +581,20 @@ void GameScene::Update(GameManager* gameManager) {
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
 	//フェードの透明度の設定
-	fadeSprite_->SetTransparency(fadeTransparency_);
+	whiteFade_->SetTransparency(whiteFadeTransparency_);
 
+	
 
 	//StatePatternにしたい
 	//フェードイン
-	if (isFadeIn==true) {
+	if (isWhiteFadeIn==true) {
 		const float FADE_IN_INTERVAL = 0.01f;
-		fadeTransparency_ -= FADE_IN_INTERVAL;
+		whiteFadeTransparency_ -= FADE_IN_INTERVAL;
 		
 		//完全に透明になったらゲームが始まる
-		if (fadeTransparency_ < 0.0f) {
-			fadeTransparency_ = 0.0f;
-			isFadeIn = false;
+		if (whiteFadeTransparency_ < 0.0f) {
+			whiteFadeTransparency_ = 0.0f;
+			isWhiteFadeIn = false;
 			isExplain_ = true;
 			howToPlayTextureNumber_ = 1;
 		}
@@ -618,8 +602,8 @@ void GameScene::Update(GameManager* gameManager) {
 
 	//ゲーム
 	//StatePatternにしたい
-	if (isFadeIn == false && isFadeOut_ == false) {
-		fadeTransparency_ = 0.0f;
+	if (isWhiteFadeIn == false && isWhiteFadeOut_ == false) {
+		whiteFadeTransparency_ = 0.0f;
 		
 		if (isExplain_ == true) {
 			if (input_->IsTriggerKey(DIK_SPACE) == true) {
@@ -765,47 +749,39 @@ void GameScene::Update(GameManager* gameManager) {
 		//数学とプログラムで回る向きが違うことに煩わしさを感じます・・
 		float phi = -originPhi_;
 
-		//懐中電灯
-		playerPosition_ = player_->GetWorldPosition();
-
-		//ライトはプレイヤーが持っているという包含の関係なのでPlayerに入れた方が良いかも。
-		//ここでやるべきではないと思う。
-		
-		//flashLight_->SetTheta(theta_);
-		//flashLight_->SetPhi(phi);
 
 		player_->GetFlashLight()->SetTheta(theta_);
 		player_->GetFlashLight()->SetPhi(phi);
-		//flashLight_->SetPlayerPosition(playerPosition_);
-		//flashLight_->Update();
-
 		
 
 
 		//エネミーをコリジョンマネージャーに追加
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
-			//collisionManager_->RegisterList(enemy);
 			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
-
-			//攻撃用の判定が出ていたら登録
-			if (enemy->GetEnemyAttackCollision()->GetIsTouch() == true) {
-				collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
-				
+			
+			//攻撃
+			if (enemy->GetIsAttack() == true) {
+				player_->SetIsAcceptDamegeFromNoemalEnemy(true);
+			}
+			else {
+				player_->SetIsAcceptDamegeFromNoemalEnemy(false);
 			}
 			
+			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
+			
 		}
+		//通常の敵
 		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
 
 
-		collisionManager_->RegisterList(player_->GetFlashLightCollision());
+		//懐中電灯
+		//collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
 		//当たると一発アウトの敵をコリジョンマネージャーへ
-		//1体しか出さないのにリストにする必要はあったのでしょうか・・
 		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
 		for (StrongEnemy* strongEnemy : strongEnemyes) {
-			collisionManager_->RegisterList(strongEnemy);
 			bool isTouch = strongEnemy->GetIsTouchPlayer();
 
 			if (isTouch == true) {
@@ -813,13 +789,16 @@ void GameScene::Update(GameManager* gameManager) {
 			}
 		}
 
+		//当たり判定チェック
+		collisionManager_->CheckAllCollision();
+
 
 		//もとに戻す
 		camera_.rotate_.x = -phi;
 		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
 		camera_.rotate_.z = 0.0f;
 
-		camera_.translate_ = VectorCalculation::Add(playerPosition_, CAMERA_POSITION_OFFSET);
+		camera_.translate_ = VectorCalculation::Add(player_->GetWorldPosition(), CAMERA_POSITION_OFFSET);
 
 
 
@@ -853,6 +832,18 @@ void GameScene::Update(GameManager* gameManager) {
 		//または一発アウトの敵に接触した場合
 		//負け専用のクラスを作りたい
 		if (player_->GetHP() <= 0 || isTouchStrongEnemy_==true) {
+
+			//敵の動きが止まりブラックアウト
+			//プレイヤーことカメラが倒れる感じが良いかも
+
+			whiteFadeTransparency_ += FADE_OUT_INTERVAL;
+			whiteFade_->SetTransparency(whiteFadeTransparency_);
+
+			if (whiteFadeTransparency_ > 1.0f) {
+				gameManager->ChangeScene(new LoseScene());
+				return;
+			}
+
 			gameManager->ChangeScene(new LoseScene());
 			return;
 		}
@@ -862,17 +853,14 @@ void GameScene::Update(GameManager* gameManager) {
 		//現在のプレイヤーの体力を取得
 		currentDisplayHP_ = player_->GetHP();
 		
-		//更新
-		material_.Update();
-
-		//当たり判定チェック
-		collisionManager_->CheckAllCollision();
+		
+		
 
 #ifdef _DEBUG
-		ImGui::Begin("Camera");
-		ImGui::SliderFloat3("Rotate", &camera_.rotate_.x, -3.0f, 3.0f);
-		ImGui::SliderFloat3("Traslate", &cameraTranslate.x, -100.0f, 100.0f);
-		ImGui::SliderFloat3("PosOffset", &CAMERA_POSITION_OFFSET.x, -30.0f, 30.0f);
+		ImGui::Begin("カメラ");
+		ImGui::SliderFloat3("回転", &camera_.rotate_.x, -3.0f, 3.0f);
+		ImGui::SliderFloat3("位置", &cameraTranslate.x, -100.0f, 100.0f);
+		ImGui::SliderFloat3("オフセット位置", &CAMERA_POSITION_OFFSET.x, -30.0f, 30.0f);
 		ImGui::InputFloat("Theta", &theta_);
 		ImGui::InputFloat("Phi", &phi);
 		ImGui::End();
@@ -882,15 +870,15 @@ void GameScene::Update(GameManager* gameManager) {
 	
 	//ホワイトアウト
 	//StatePatternにしたい
-	if (isFadeOut_ == true) {
+	if (isWhiteFadeOut_ == true) {
 		escapeText_->SetInvisible(true);
 
 		player_->SetIsAbleToControll(false);
-		const float FADE_OUT_INTERVAL = 0.01f;
-		fadeTransparency_ += FADE_OUT_INTERVAL;
-		fadeSprite_->SetTransparency(fadeTransparency_);
+		
+		whiteFadeTransparency_ += FADE_OUT_INTERVAL;
+		whiteFade_->SetTransparency(whiteFadeTransparency_);
 
-		if (fadeTransparency_ > 1.0f) {
+		if (whiteFadeTransparency_ > 1.0f) {
 			gameManager->ChangeScene(new LoseScene());
 			return;
 		}
@@ -901,9 +889,14 @@ void GameScene::Update(GameManager* gameManager) {
 	//カメラの更新
 	camera_.Update();
 
+	//更新
+	material_.Update();
+
+
 	//オブジェクトマネージャーの更新
 	objectManager_->Update();
-
+	//プレイヤーの更新
+	player_->Update();
 	
 	//地面
 	ground_->Update();
@@ -914,16 +907,13 @@ void GameScene::Update(GameManager* gameManager) {
 	//天球
 	skydome_->Update();
 
-	//プレイヤーの更新
-	player_->Update();
-	playerPosition_ = player_->GetWorldPosition();
+	
 
-
+	
 #pragma region ポストエフェクト
 	//プレイヤーがダメージを受けた場合ビネット
 	if (player_->GetIsDamaged() == true) {
 		//時間の加算
-		const float DELTA_TIME = 1.0f / 60.0f;
 		vignetteChangeTime_ += DELTA_TIME;
 		
 		//線形補間で滑らかに変化
@@ -931,14 +921,11 @@ void GameScene::Update(GameManager* gameManager) {
 	}
 	//HPが1でピンチの場合
 	else if (player_->GetHP() == 1u) {
-		
-		const float DELTA_TIME = 1.0f / 60.0f;
 		warningTime_ += DELTA_TIME;
 		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
 		if (warningTime_ > 1.0f) {
 			warningTime_ = 0.0f;
 		}
-
 	}
 	//通常時の場合
 	else {
@@ -948,7 +935,7 @@ void GameScene::Update(GameManager* gameManager) {
 	vignette_->SetPow(vignettePow_);
 
 #ifdef _DEBUG
-	ImGui::Begin("VignetteCheck");
+	ImGui::Begin("ビネットの確認");
 	ImGui::InputFloat("POW", &vignettePow_);
 	ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
 	ImGui::End();
@@ -957,17 +944,8 @@ void GameScene::Update(GameManager* gameManager) {
 
 #pragma endregion
 
-	//ライト確認用のタワー
-	debugTowerWorldTransform_.Update();
-
-	debugFanCollisionSphereWorldTransform_.Update();
-	debugFanCollisionSphereMaterial_.Update();
-
 }
 
-void GameScene::DrawSpriteBack(){
-
-}
 
 void GameScene::PreDrawPostEffectFirst(){
 	vignette_->PreDraw();
@@ -980,8 +958,6 @@ void GameScene::DrawObject3D() {
 	//懐中電灯を取得
 	SpotLight spotLight = player_->GetFlashLight()->GetSpotLight();
 
-
-
 	//地面
 	ground_->Draw(camera_, spotLight);
 	//ゲート
@@ -992,10 +968,8 @@ void GameScene::DrawObject3D() {
 	skydome_->Draw(camera_);
 	//プレイヤー
 	player_->Draw(camera_, spotLight);
-
 	//ステージオブジェクト
 	objectManager_->Draw(camera_, spotLight);
-
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
 
@@ -1052,8 +1026,8 @@ void GameScene::DrawSprite(){
 	}
 
 	//フェード
-	if (isFadeIn == true || isFadeOut_ == true) {
-		fadeSprite_->Draw();
+	if (isWhiteFadeIn == true || isWhiteFadeOut_ == true) {
+		whiteFade_->Draw();
 	}
 
 

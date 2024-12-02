@@ -1,40 +1,17 @@
 #include "Sprite.h"
-
-#include "TextureManager.h"
-#include <Camera.h>
-
-//動的配列
 #include <vector>
 
-
-
-//Vertex
-void Sprite::CreateVertexBufferView() {
-	//リソースの先頭のアドレスから使う
-	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-	//使用するリソースのサイズは頂点３つ分のサイズ
-	vertexBufferView_.SizeInBytes = sizeof(VertexData) * 4;
-	//１頂点あたりのサイズ
-	vertexBufferView_.StrideInBytes = sizeof(VertexData);
-}
-
-//Index
-void Sprite::CreateIndexBufferView() {
-	
-	//リsp－スの先頭のアドレスから使う
-	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
-	//使用するリソースのサイズはインデックス6つ分のサイズ
-	indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6;
-	//インデックスはuint32_tとする
-	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
-
-}
-
+#include "TextureManager.h"
+#include "Camera.h"
+#include "ConvertLog.h"
+#include "PipelineManager.h"
+#include "Matrix4x4.h"
+#include "Matrix4x4Calculation.h"
 
 
 
 //初期化
-void Sprite::Initialize(uint32_t textureHandle,Vector3 position) {
+void Sprite::Initialize(const uint32_t& textureHandle, const Vector2& position) {
 	this->textureHandle_ = textureHandle;
 	this->position_ = position;
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
@@ -45,27 +22,40 @@ void Sprite::Initialize(uint32_t textureHandle,Vector3 position) {
 
 
 	
-	//ここでBufferResourceを作る
-	//Sprite用の頂点リソースを作る
-	//以前三角形二枚にしてたけど結合して四角一枚で良くなったので4で良いよね
+
+	//頂点リソースを作る
 	vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * 6).Get();
 	//index用のリソースを作る
 	indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * 6).Get();
-	////マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	materialResource_=DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
-	//Sprite用のTransformationMatrix用のリソースを作る。
-	//Matrix4x4 1つ分サイズを用意する
-	transformationMatrixResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(TransformationMatrix)).Get();
 	
 
 	//頂点バッファビューを作成する
-	CreateVertexBufferView();
+	//リソースの先頭のアドレスから使う
+	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+	//使用するリソースのサイズは頂点３つ分のサイズ
+	vertexBufferView_.SizeInBytes = sizeof(VertexData) * 4;
+	//１頂点あたりのサイズ
+	vertexBufferView_.StrideInBytes = sizeof(VertexData);
+
 
 	//Indexを利用
-	CreateIndexBufferView();
+	//リsp－スの先頭のアドレスから使う
+	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
+	//使用するリソースのサイズはインデックス6つ分のサイズ
+	indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6;
+	//インデックスはuint32_tとする
+	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
 
-	uvTransformSprite_ = {
+
+	//マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
+	materialResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
+	//TransformationMatrix用のリソースを作る。
+	transformationMatrixResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(TransformationMatrix)).Get();
+
+
+	//UVトランスフォームの初期化
+	uvTransform_ = {
 		{1.0f,1.0f,1.0f},
 		{0.0f,0.0f,0.0f},
 		{0.0f,0.0f,0.0f} 
@@ -75,13 +65,13 @@ void Sprite::Initialize(uint32_t textureHandle,Vector3 position) {
 	
 }
 
-Sprite* Sprite::Create(uint32_t textureHandle,Vector3 position) {
+Sprite* Sprite::Create(const uint32_t& textureHandle, const Vector2& position) {
+	//生成
 	Sprite* sprite = new Sprite();
 	
-	//初期化の所でやってね、Update,Drawでやるのが好ましいけど凄く重くなった。
-	//ブレンドモードの設定
-	PipelineManager::GetInstance()->SetSpriteBlendMode(sprite->blendModeNumber_);
-	PipelineManager::GetInstance()->GenerateSpritePSO();
+
+
+	//初期化
 	sprite->Initialize(textureHandle,position);
 
 	return sprite;
@@ -89,6 +79,8 @@ Sprite* Sprite::Create(uint32_t textureHandle,Vector3 position) {
 }
 //描画
 void Sprite::Draw() {
+
+
 	//非表示にするかどうか
 	if (isInvisible_ == true) {
 		return;
@@ -116,8 +108,6 @@ void Sprite::Draw() {
 
 
 
-	//「結合した」のでvertexDataに書き込むものが減るよ。やったね
-	//4つだけだよ
 
 	//書き込むためのアドレスを取得
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
@@ -133,7 +123,7 @@ void Sprite::Draw() {
 	float texTop= 0.0f;
 	float texBottom= 1.0f;
 
-	//UVをいじりたいときにオンにして設定するもの
+	//UVをいじりたいとき設定するもの
 	if (isUVSetting_ == true) {
 		//uv
 		texLeft = textureLeftTop_.x / resourceDesc_.Width;
@@ -159,21 +149,21 @@ void Sprite::Draw() {
 
 	//1枚目の三角形
 	//左下
-	vertexData_[LEFT_BOTTOM].position = {left,bottom,0.0f,1.0f};
-	vertexData_[LEFT_BOTTOM].texCoord = { texLeft,texBottom };
+	vertexData_[LeftBottom].position = {left,bottom,0.0f,1.0f};
+	vertexData_[LeftBottom].texCoord = { texLeft,texBottom };
 
 	//左上
-	vertexData_[LEFT_TOP].position = {left,top,0.0f,1.0f};
-	vertexData_[LEFT_TOP].texCoord = { texLeft,texTop };
+	vertexData_[LeftTop].position = {left,top,0.0f,1.0f};
+	vertexData_[LeftTop].texCoord = { texLeft,texTop };
 	
 	//右下
-	vertexData_[RIGHT_BOTTOM].position = {right,bottom,0.0f,1.0f} ;
-	vertexData_[RIGHT_BOTTOM].texCoord = { texRight,texBottom };
+	vertexData_[RightBottom].position = {right,bottom,0.0f,1.0f} ;
+	vertexData_[RightBottom].texCoord = { texRight,texBottom };
 
 
 	//右上
-	vertexData_[RIGHT_TOP].position = { right,top,0.0f,1.0f };
-	vertexData_[RIGHT_TOP].texCoord = { texRight,texTop };
+	vertexData_[RightTop].position = { right,top,0.0f,1.0f };
+	vertexData_[RightTop].texCoord = { texRight,texTop };
 
 
 	//IndexResourceにデータを書き込む
@@ -188,22 +178,28 @@ void Sprite::Draw() {
 
 
 
-	//サイズに注意を払ってね！！！！！
-	//どれだけのサイズが必要なのか考えよう
-
+	//トランスフォームデータに書き込み
 	transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
 	
+	//座標の再設定
+	Vector3 newPosition = {};
+	if (isBack_ == true) {
+		newPosition = { .x = position_.x,.y = position_.y,.z = 1.0f };
+	}
+	else {
+		newPosition = { .x = position_.x,.y = position_.y,.z = 0.0f };
+	}
 
-	//新しく引数作った方が良いかも
-	//3x3x3
-	Matrix4x4 worldMatrix = Matrix4x4Calculation::MakeAffineMatrix({ scale_.x,scale_.y,1.0f }, { 0.0f,0.0f,rotate_ }, position_);
-	//遠視投影行列
+
+	//アフィン行列を計算
+	Matrix4x4 affineMatrix = Matrix4x4Calculation::MakeAffineMatrix({ scale_.x,scale_.y,1.0f }, { 0.0f,0.0f,rotate_ }, newPosition);
+	//遠視投影行列を計算
 	Matrix4x4 viewMatrix = Matrix4x4Calculation::MakeIdentity4x4();
-	
+	//プロジェクション行列を計算
 	Matrix4x4 projectionMatrix = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 	
 	//WVP行列を作成
-	Matrix4x4 worldViewProjectionMatrixSprite = Matrix4x4Calculation::Multiply(worldMatrix, Matrix4x4Calculation::Multiply(viewMatrix, projectionMatrix));
+	Matrix4x4 worldViewProjectionMatrixSprite = Matrix4x4Calculation::Multiply(affineMatrix, Matrix4x4Calculation::Multiply(viewMatrix, projectionMatrix));
 
 	transformationMatrixData_->WVP = worldViewProjectionMatrixSprite;
 	transformationMatrixData_->World = Matrix4x4Calculation::MakeIdentity4x4();
@@ -220,9 +216,9 @@ void Sprite::Draw() {
 	materialData_->lightingKinds = 0;
 	materialData_->shininess = 0.0f;
 
-	Matrix4x4 uvTransformMatrix = Matrix4x4Calculation::MakeScaleMatrix(uvTransformSprite_.scale);
-	uvTransformMatrix = Matrix4x4Calculation::Multiply(uvTransformMatrix, Matrix4x4Calculation::MakeRotateZMatrix(uvTransformSprite_.rotate.z));
-	uvTransformMatrix = Matrix4x4Calculation::Multiply(uvTransformMatrix, Matrix4x4Calculation::MakeTranslateMatrix(uvTransformSprite_.translate));
+	Matrix4x4 uvTransformMatrix = Matrix4x4Calculation::MakeScaleMatrix(uvTransform_.scale);
+	uvTransformMatrix = Matrix4x4Calculation::Multiply(uvTransformMatrix, Matrix4x4Calculation::MakeRotateZMatrix(uvTransform_.rotate.z));
+	uvTransformMatrix = Matrix4x4Calculation::Multiply(uvTransformMatrix, Matrix4x4Calculation::MakeTranslateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix;
 
 

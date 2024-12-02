@@ -1,4 +1,10 @@
 #pragma once
+/**
+ * @file GameManager.h
+ * @brief 敵管理クラス
+ * @author 茂木翼
+ */
+
 #include "Enemy.h"
 #include <memory>
 #include <list>
@@ -16,8 +22,9 @@ class ObjectManager;
 
 
 
-//シングルトンパターンにしよう
-
+/// <summary>
+/// 敵管理クラス
+/// </summary>
 class EnemyManager{
 public:
 	/// <summary>
@@ -56,7 +63,10 @@ public:
 		return enemyes_;
 	}
 	
-
+	/// <summary>
+	/// 強敵の取得
+	/// </summary>
+	/// <returns></returns>
 	inline std::list<StrongEnemy*>GetStrongEnemyes()const {
 		return strongEnemyes_;
 	}
@@ -106,7 +116,9 @@ public:
 	
 
 private:
+	//プレイヤー
 	Player* player_ = nullptr;
+	//オブジェクト管理クラス
 	ObjectManager* objectManager_ = nullptr;
 
 	//エネミーのリスト
@@ -121,10 +133,10 @@ private:
 	uint32_t normalEnemyModelHandle_ = 0u;
 	uint32_t strongEnemyModelHandle_ = 0u;
 
+	//ステージの四隅
 	StageRect stageRect_ = {};
 
-	//モデル
-	Material material_ = {};
+
 
 	
 	//接近BGM用

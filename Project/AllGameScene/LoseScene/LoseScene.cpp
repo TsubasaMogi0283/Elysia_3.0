@@ -117,9 +117,6 @@ void LoseScene::Update(GameManager* gameManager){
 
 }
 
-void LoseScene::DrawSpriteBack()
-{
-}
 
 void LoseScene::DrawObject3D()
 {

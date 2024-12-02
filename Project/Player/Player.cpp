@@ -28,7 +28,6 @@ void Player::Initialize(){
 	hp_ = 3u;
 
 	//ダメージについて
-	acceptDamage_ = true;
 	isDamage_ = false;
 
 	//ワールドトランスフォームの初期化
@@ -36,14 +35,6 @@ void Player::Initialize(){
 	const Vector3 INITIAL_POSITION = { .x=0.0f,.y=0.0f,.z=-15.0f };
 	worldTransform_.translate = INITIAL_POSITION;
 
-	//半径
-	radius_ = 1.0f;
-
-	//AABBのmax部分に加算する縦横高さのサイズ
-	upSideSize_ = {1.0f,1.0f,1.0f};
-
-	//AABBのmin部分に加算する縦横高さのサイズ
-	downSideSize_ = {1.0f,1.0f,1.0f};
 
 
 	//通常
@@ -69,10 +60,56 @@ void Player::Initialize(){
 	material_.lightingKinds_ = Spot;
 }
 
-void Player::Update(){
 
-	const float NORMAL_MOVE_SPEED = 0.1f;
-	const float DASH_MOVE_SPEED = 0.2f;
+
+void Player::Damaged() {
+	//通常の敵に当たった場合
+	if (colliderToNormalEnemy_->GetIsTouch() == true) {
+		//ダメージを受ける
+		if (isAcceptDamegeFromNoemalEnemy_ == true) {
+			--hp_;
+		}
+		
+	}
+	else {
+		acceptDamage_ = false;
+		isDameged_ = false;
+		
+	}
+
+
+	//ダメージを受け入れる
+	if (acceptDamage_ == true) {
+		
+
+		//体力を1減らす
+		if (isDameged_ == true) {
+			++damagedTime_;
+
+			if (damagedTime_ == 1) {
+				
+			}
+			
+		}
+
+		//線形補間で振動処理をする
+		vibeTime_ += DELTA_TIME;
+		vibeStrength_ = SingleCalculation::Lerp(1.0f, 0.0f, vibeTime_);
+		Input::GetInstance()->SetVibration(vibeStrength_, vibeStrength_);
+
+		//振動を止める
+		if (vibeStrength_ <= 0.0f) {
+			Input::GetInstance()->StopVibration();
+			vibeTime_ = 0.0f;
+			isDameged_ = false;
+			acceptDamage_ = false;
+		}
+	}
+
+
+}
+void Player::Update(){
+	
 
 
 	//動けるときだけ加算
@@ -96,96 +133,75 @@ void Player::Update(){
 
 	//ステージの外には行けないようにする
 	//左
-	if (worldTransform_.translate.x < stageRect_.leftBack.x + radius_) {
-		worldTransform_.translate.x = stageRect_.leftBack.x + radius_;
+	if (worldTransform_.translate.x < stageRect_.leftBack.x + SIDE_SIZE) {
+		worldTransform_.translate.x = stageRect_.leftBack.x + SIDE_SIZE;
 	}
 	//右
-	if (worldTransform_.translate.x > stageRect_.rightBack.x - radius_) {
-		worldTransform_.translate.x = stageRect_.rightBack.x - radius_;
+	if (worldTransform_.translate.x > stageRect_.rightBack.x - SIDE_SIZE) {
+		worldTransform_.translate.x = stageRect_.rightBack.x - SIDE_SIZE;
 	}
 	//奥
-	if (worldTransform_.translate.z > stageRect_.leftBack.z - radius_) {
-		worldTransform_.translate.z = stageRect_.leftBack.z - radius_;
+	if (worldTransform_.translate.z > stageRect_.leftBack.z - SIDE_SIZE) {
+		worldTransform_.translate.z = stageRect_.leftBack.z - SIDE_SIZE;
 	}
 	//手前
-	if (worldTransform_.translate.z < stageRect_.leftFront.z + radius_) {
-		worldTransform_.translate.z = stageRect_.leftFront.z + radius_;
+	if (worldTransform_.translate.z < stageRect_.leftFront.z + SIDE_SIZE) {
+		worldTransform_.translate.z = stageRect_.leftFront.z + SIDE_SIZE;
 	}
 
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
-	Vector3 worldPosition = worldTransform_.GetWorldPosition();
+	//AABBの計算
+	aabb_.min.x = worldTransform_.GetWorldPosition().x - SIDE_SIZE;
+	aabb_.min.y = worldTransform_.GetWorldPosition().y - SIDE_SIZE;
+	aabb_.min.z = worldTransform_.GetWorldPosition().z - SIDE_SIZE;
 
-
-	aabb_.min.x = worldPosition.x - downSideSize_.x;
-	aabb_.min.y = worldPosition.y - downSideSize_.y;
-	aabb_.min.z = worldPosition.z - downSideSize_.z;
-
-	aabb_.max.x = worldPosition.x + downSideSize_.x;
-	aabb_.max.y = worldPosition.y + downSideSize_.y;
-	aabb_.max.z = worldPosition.z + downSideSize_.z;
+	aabb_.max.x = worldTransform_.GetWorldPosition().x + SIDE_SIZE;
+	aabb_.max.y = worldTransform_.GetWorldPosition().y + SIDE_SIZE;
+	aabb_.max.z = worldTransform_.GetWorldPosition().z + SIDE_SIZE;
 
 	//通常の敵用の当たり判定の更新
-	colliderToNormalEnemy_->SetPlayerPosition(worldPosition);
+	colliderToNormalEnemy_->SetPlayerPosition(worldTransform_.GetWorldPosition());
 	colliderToNormalEnemy_->Update();
 
 	//一発アウト用の当たり判定
-	collisionToStrongEnemy_->SetPlayerPosition(worldPosition);
+	collisionToStrongEnemy_->SetPlayerPosition(worldTransform_.GetWorldPosition());
 	collisionToStrongEnemy_->Update();
 
 	//懐中電灯の更新
 	//角度はゲームシーンで取得する
-	flashLight_->SetPlayerPosition(worldPosition);
+	flashLight_->SetPlayerPosition(worldTransform_.GetWorldPosition());
 	flashLight_->Update();
 
 
 	//マテリアルの更新
 	material_.Update();
 
-
-	//通常の敵に当たった場合
-	if (colliderToNormalEnemy_->GetIsTouch() == true) {
-		//体力を1減らす
-		--hp_;
+	//攻撃を受ける
+	Damaged();
 	
-		//振動させる
-		isDameged_ = true;
-	}
-
-
-	//攻撃された場合
-	if (isDameged_ == true) {
-		//線形補間で振動処理をする
-		const float DELTA_TIME = 1.0f/60.0f;
-		vibeTime_ += DELTA_TIME;
-		vibeStrength_ = SingleCalculation::Lerp(1.0f, 0.0f, vibeTime_);
-		Input::GetInstance()->SetVibration(vibeStrength_, vibeStrength_);
-
-		//振動を止める
-		if (vibeStrength_ < 0.0f) {
-			Input::GetInstance()->StopVibration();
-			vibeTime_ = 0.0f;
-			isDameged_ = false;
-		}
-	}
 
 	
 #ifdef _DEBUG
 	//ImGuiにInputUintが無いの不便・・
-	int keyQuantity = haveKeyQuantity_;
-	int condition = moveCondition_;
+	int32_t keyQuantity = static_cast<int32_t>(haveKeyQuantity_);
+	int32_t condition = static_cast<int32_t>(moveCondition_);
 
 
 	ImGui::Begin("プレイヤー");
 	if (ImGui::TreeNode("状態")) {
 		ImGui::InputInt("鍵の数", &keyQuantity);
 		ImGui::InputInt("体力", &hp_);
+		ImGui::InputInt("ダメージ時間", &damagedTime_);
+
 		ImGui::Checkbox("acceptDamage_", &acceptDamage_);
 		ImGui::Checkbox("isDamage_", &isDamage_);
 		ImGui::Checkbox("振動", &isDameged_);
 
 		ImGui::TreePop();
 	}
+
+	ImGui::Checkbox("敵からの攻撃を受け入れるか", &isAcceptDamegeFromNoemalEnemy_);
 	ImGui::InputInt("downTime", &downTime_);
 	ImGui::InputFloat3("Transrate", &worldTransform_.translate.x);
 	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
@@ -217,3 +233,5 @@ void Player::Draw(const Camera& camera, const SpotLight& spotLight){
 Player::~Player() {
 	Input::GetInstance()->StopVibration();
 }
+
+

@@ -111,51 +111,39 @@ public:
 		return collisionAttribute_;
 	}
 	//衝突属性(自分)を設定
-	void SetCollisionAttribute(uint32_t collisionAttribute) {
+	void SetCollisionAttribute(const uint32_t& collisionAttribute) {
 		this->collisionAttribute_ = collisionAttribute;
 	}
 
 	//衝突マスク(相手)を取得
-	uint32_t GetCollisionMask() {
+	uint32_t GetCollisionMask() const {
 		return collisionMask_;
 	}
 	//衝突マスク(相手)を設定
-	void SetCollisionMask(uint32_t collisionMask) {
+	void SetCollisionMask(const uint32_t& collisionMask) {
 		this->collisionMask_ = collisionMask;
 	}
 
 protected:
 
 	//当たり判定の種類
+	//デフォルトで球にしておく
 	uint32_t collisionType_ = ColliderType::SphereType;
-
-#pragma region 球
 
 	//衝突半径
 	float radius_ = 1.0f;
 
-#pragma endregion
-
-#pragma region AABB
-
 	//AABB
 	AABB aabb_ = {};
 
-#pragma endregion
-
-#pragma region 扇
 	//3D
 	Fan3D fan3D_ = {};
 
 	//2D
 	Fan2D fan2D_ = {};
 
-
-#pragma endregion
-
-#pragma region 平面
+	//平面
 	Plane plane_ = {};
-#pragma endregion
 
 private:
 	

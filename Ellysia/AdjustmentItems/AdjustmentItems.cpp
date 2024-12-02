@@ -126,7 +126,7 @@ void AdjustmentItems::AddItem(const std::string& groupName, const std::string& k
     }
 }
 
-int32_t AdjustmentItems::GetIntValue(const std::string groupName, const std::string& key) {
+int32_t AdjustmentItems::GetIntValue(const std::string& groupName, const std::string& key) {
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
@@ -147,18 +147,15 @@ int32_t AdjustmentItems::GetIntValue(const std::string groupName, const std::str
 
 }
 
-float AdjustmentItems::GetFloatValue(const std::string groupName, const std::string& key) {
+float AdjustmentItems::GetFloatValue(const std::string& groupName, const std::string& key) {
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
-
     assert(itGroup != datas_.end());
-
     Group& group = datas_.at(groupName);
 
 
     //キーを検索
     std::map<std::string, Item>::const_iterator itKey = group.items.find(key);
-
     assert(itKey != group.items.end());
 
     //SaveFileより
@@ -166,22 +163,18 @@ float AdjustmentItems::GetFloatValue(const std::string groupName, const std::str
 
 }
 
-Vector3 AdjustmentItems::GetVector3Value(const std::string groupName, const std::string& key) {
+Vector3 AdjustmentItems::GetVector3Value(const std::string& groupName, const std::string& key) {
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
-
     assert(itGroup != datas_.end());
-
     Group& group = datas_.at(groupName);
 
 
     //キーを検索
     std::map<std::string, Item>::const_iterator itKey = group.items.find(key);
-
     assert(itKey != group.items.end());
 
     //SaveFileより
-    //普通にVector3で大丈夫だった
     return std::get<Vector3>(itKey->second.value);
 
 
@@ -264,7 +257,6 @@ void AdjustmentItems::SaveFile(const std::string& groupName){
     //書き込み用に開いたファイルを閉じる。
     ofs.close();
 
-    //これで終了！
 
 }
 
