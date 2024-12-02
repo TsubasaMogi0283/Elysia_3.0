@@ -237,15 +237,15 @@ private:
 
 	//モデル
 	std::unique_ptr<Model> model_ = nullptr;
-
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_={};
+	//マテリアル
+	Material material_ = {};
+
+
 
 	//ステージの四隅
 	StageRect stageRect_ = {};
-
-	//マテリアル
-	Material material_ = {};
 
 
 
@@ -287,7 +287,9 @@ private:
 	bool isDameged_ = false;
 	int32_t damagedTime_ = 0;
 	bool isAcceptDamegeFromNoemalEnemy_ = false;
-	//強さ
+
+
+	//振動の強さ
 	float vibeStrength_ = 0.0f;
 	//時間
 	float vibeTime_ = 0u;
@@ -301,8 +303,6 @@ private:
 	const float DELTA_TIME = 1.0f / 60.0f;
 
 
-
-	int count = 0;
 
 private:
 

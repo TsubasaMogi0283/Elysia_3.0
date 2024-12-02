@@ -17,6 +17,9 @@
 #include <DirectionalLight.h>
 #include <TransformationMatrix.h>
 
+/// <summary>
+/// スプライト
+/// </summary>
 class Sprite {
 public:
 
@@ -31,7 +34,7 @@ public:
 	/// <param name="textureHandle"></param>
 	/// <param name="position"></param>
 	/// <returns></returns>
-	static Sprite* Create(uint32_t textureHandle,Vector3 position);
+	static Sprite* Create(const uint32_t& textureHandle,const Vector2& position);
 
 
 	/// <summary>
@@ -81,10 +84,10 @@ public:
 
 
 	//位置
-	void SetPosition(Vector3 position) {
+	void SetPosition(Vector2 position) {
 		this->position_ = position;
 	}
-	const Vector3 GetPosition() {
+	const Vector2 GetPosition() {
 		return position_;
 	}
 
@@ -154,8 +157,12 @@ public:
 
 
 private:
-	//初期化
-	void Initialize(uint32_t textureHandle,Vector3 position);
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="textureHandle"></param>
+	/// <param name="position"></param>
+	void Initialize(const uint32_t& textureHandle,const Vector2& position);
 	
 	//Vertex
 	void CreateVertexBufferView();
@@ -187,7 +194,7 @@ private:
 	TransformationMatrix* transformationMatrixData_ = nullptr;
 
 
-	//描画
+	//頂点データ
 	VertexData* vertexData_ = nullptr;
 
 
@@ -204,22 +211,15 @@ private:
 	//インデックスデータ
 	uint32_t* indexData_ = nullptr;
 
-	static const int MAX_TEXTURE_ = 20;
-
-
-	//画像読み込み
-	ComPtr<ID3D12Resource> textureResource_ = nullptr;
-	ComPtr<ID3D12Resource> resource_ = nullptr;
-
-	
-
 
 #pragma endregion
 
-
+	/// <summary>
+	/// 頂点の位置
+	/// </summary>
 	enum VERTEX_POSITION {
 		//左下
-		LEFT_BOTTOM,
+		LeftBottom,
 	
 		//左上
 		LEFT_TOP,
@@ -232,10 +232,10 @@ private:
 
 	};
 
-
+	//UVトランスフォーム
 	Transform uvTransformSprite_ = {};
 
-	int textureIndex_ = 0;
+
 	
 	//テクスチャの情報
 	D3D12_RESOURCE_DESC resourceDesc_{};
@@ -248,11 +248,11 @@ private:
 	//R
 	float rotate_ = 0.0f;
 	//T
-	Vector2 originPosition_ = { 0.0f,0.0f };
-	Vector3 position_ = { 0.0f,0.0f,0.0f };
+	Vector2 originPosition_ = {};
+	Vector2 position_ = {};
 
 	//アンカーポイント
-	Vector2 anchorPoint_ = { 0.0f,0.0f };
+	Vector2 anchorPoint_ = {};
 	//色
 	Vector4 color_ = {};
 
@@ -271,11 +271,10 @@ private:
 	//テクスチャ切り出しサイズ
 	Vector2 textureSize_ = { 100.0f,100.0f };
 
+	//UVの設定をするかどうか
 	bool isUVSetting_ = false;
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
-	//ブレンドモード
-	uint32_t blendModeNumber_ = 1;
 };

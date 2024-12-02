@@ -22,15 +22,21 @@ void GameScene::Initialize() {
 
 #pragma region フェード
 	uint32_t fadeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/White.png");
-	fadeSprite_.reset(Sprite::Create(fadeTextureHandle, { .x = 0.0f,.y = 0.0f }));
-	fadeTransparency_ = 1.0f;
+	const Vector2 INITIAL_POSITION = { .x = 0.0f,.y = 0.0f };
+	whiteFade_.reset(Sprite::Create(fadeTextureHandle, INITIAL_POSITION));
+	
+	//フェードインから始まる
+	isWhiteFadeIn = true;
+	isWhiteFadeOut_ = false;
 
-	isFadeIn = true;
-	isFadeOut_ = false;
+
+	//黒フェード
+	 blackFade_.reset(Sprite::Create(fadeTextureHandle, INITIAL_POSITION));
+	
 
 #ifdef _DEBUG
-	isFadeIn = false;
-	isFadeOut_ = false;
+	isWhiteFadeIn = false;
+	isWhiteFadeOut_ = false;
 
 #endif // _DEBUG
 
@@ -217,7 +223,7 @@ void GameScene::Initialize() {
 
 
 #ifdef _DEBUG
-	isFadeIn = false;
+	isWhiteFadeIn = false;
 	isGamePlay_ = true;
 #endif // _DEBUG
 
@@ -396,7 +402,7 @@ void GameScene::EscapeCondition(){
 
 	//脱出
 	if (isEscape_ == true) {
-		isFadeOut_ = true;
+		isWhiteFadeOut_ = true;
 	}
 
 }
@@ -575,20 +581,20 @@ void GameScene::Update(GameManager* gameManager) {
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
 	//フェードの透明度の設定
-	fadeSprite_->SetTransparency(fadeTransparency_);
+	whiteFade_->SetTransparency(whiteFadeTransparency_);
 
 	
 
 	//StatePatternにしたい
 	//フェードイン
-	if (isFadeIn==true) {
+	if (isWhiteFadeIn==true) {
 		const float FADE_IN_INTERVAL = 0.01f;
-		fadeTransparency_ -= FADE_IN_INTERVAL;
+		whiteFadeTransparency_ -= FADE_IN_INTERVAL;
 		
 		//完全に透明になったらゲームが始まる
-		if (fadeTransparency_ < 0.0f) {
-			fadeTransparency_ = 0.0f;
-			isFadeIn = false;
+		if (whiteFadeTransparency_ < 0.0f) {
+			whiteFadeTransparency_ = 0.0f;
+			isWhiteFadeIn = false;
 			isExplain_ = true;
 			howToPlayTextureNumber_ = 1;
 		}
@@ -596,8 +602,8 @@ void GameScene::Update(GameManager* gameManager) {
 
 	//ゲーム
 	//StatePatternにしたい
-	if (isFadeIn == false && isFadeOut_ == false) {
-		fadeTransparency_ = 0.0f;
+	if (isWhiteFadeIn == false && isWhiteFadeOut_ == false) {
+		whiteFadeTransparency_ = 0.0f;
 		
 		if (isExplain_ == true) {
 			if (input_->IsTriggerKey(DIK_SPACE) == true) {
@@ -756,7 +762,6 @@ void GameScene::Update(GameManager* gameManager) {
 			
 			//攻撃
 			if (enemy->GetIsAttack() == true) {
-				++count;
 				player_->SetIsAcceptDamegeFromNoemalEnemy(true);
 			}
 			else {
@@ -774,11 +779,9 @@ void GameScene::Update(GameManager* gameManager) {
 		//collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
 		//当たると一発アウトの敵をコリジョンマネージャーへ
-		//1体しか出さないのにリストにする必要はあったのでしょうか・・
 		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
 		for (StrongEnemy* strongEnemy : strongEnemyes) {
-			//collisionManager_->RegisterList(strongEnemy);
 			bool isTouch = strongEnemy->GetIsTouchPlayer();
 
 			if (isTouch == true) {
@@ -833,6 +836,14 @@ void GameScene::Update(GameManager* gameManager) {
 			//敵の動きが止まりブラックアウト
 			//プレイヤーことカメラが倒れる感じが良いかも
 
+			whiteFadeTransparency_ += FADE_OUT_INTERVAL;
+			whiteFade_->SetTransparency(whiteFadeTransparency_);
+
+			if (whiteFadeTransparency_ > 1.0f) {
+				gameManager->ChangeScene(new LoseScene());
+				return;
+			}
+
 			gameManager->ChangeScene(new LoseScene());
 			return;
 		}
@@ -859,15 +870,15 @@ void GameScene::Update(GameManager* gameManager) {
 	
 	//ホワイトアウト
 	//StatePatternにしたい
-	if (isFadeOut_ == true) {
+	if (isWhiteFadeOut_ == true) {
 		escapeText_->SetInvisible(true);
 
 		player_->SetIsAbleToControll(false);
-		const float FADE_OUT_INTERVAL = 0.01f;
-		fadeTransparency_ += FADE_OUT_INTERVAL;
-		fadeSprite_->SetTransparency(fadeTransparency_);
+		
+		whiteFadeTransparency_ += FADE_OUT_INTERVAL;
+		whiteFade_->SetTransparency(whiteFadeTransparency_);
 
-		if (fadeTransparency_ > 1.0f) {
+		if (whiteFadeTransparency_ > 1.0f) {
 			gameManager->ChangeScene(new LoseScene());
 			return;
 		}
@@ -924,11 +935,6 @@ void GameScene::Update(GameManager* gameManager) {
 	vignette_->SetPow(vignettePow_);
 
 #ifdef _DEBUG
-	ImGui::Begin("AAAA");
-	ImGui::InputInt("Count", &count);
-	ImGui::End();
-
-
 	ImGui::Begin("ビネットの確認");
 	ImGui::InputFloat("POW", &vignettePow_);
 	ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
@@ -1023,8 +1029,8 @@ void GameScene::DrawSprite(){
 	}
 
 	//フェード
-	if (isFadeIn == true || isFadeOut_ == true) {
-		fadeSprite_->Draw();
+	if (isWhiteFadeIn == true || isWhiteFadeOut_ == true) {
+		whiteFade_->Draw();
 	}
 
 

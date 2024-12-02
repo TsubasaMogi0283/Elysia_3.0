@@ -34,7 +34,7 @@ void Sprite::CreateIndexBufferView() {
 
 
 //初期化
-void Sprite::Initialize(uint32_t textureHandle,Vector3 position) {
+void Sprite::Initialize(const uint32_t& textureHandle, const Vector2& position) {
 	this->textureHandle_ = textureHandle;
 	this->position_ = position;
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
@@ -75,13 +75,13 @@ void Sprite::Initialize(uint32_t textureHandle,Vector3 position) {
 	
 }
 
-Sprite* Sprite::Create(uint32_t textureHandle,Vector3 position) {
+Sprite* Sprite::Create(const uint32_t& textureHandle, const Vector2& position) {
+	//生成
 	Sprite* sprite = new Sprite();
 	
-	//初期化の所でやってね、Update,Drawでやるのが好ましいけど凄く重くなった。
-	//ブレンドモードの設定
-	PipelineManager::GetInstance()->SetSpriteBlendMode(sprite->blendModeNumber_);
-	PipelineManager::GetInstance()->GenerateSpritePSO();
+
+
+	//初期化
 	sprite->Initialize(textureHandle,position);
 
 	return sprite;
@@ -159,8 +159,8 @@ void Sprite::Draw() {
 
 	//1枚目の三角形
 	//左下
-	vertexData_[LEFT_BOTTOM].position = {left,bottom,0.0f,1.0f};
-	vertexData_[LEFT_BOTTOM].texCoord = { texLeft,texBottom };
+	vertexData_[LeftBottom].position = {left,bottom,0.0f,1.0f};
+	vertexData_[LeftBottom].texCoord = { texLeft,texBottom };
 
 	//左上
 	vertexData_[LEFT_TOP].position = {left,top,0.0f,1.0f};

@@ -1,4 +1,10 @@
 #pragma once
+/**
+ * @file GameManager.h
+ * @brief 敵のクラス
+ * @author 茂木翼
+ */
+
 #include "Vector3.h"
 #include "WorldTransform.h"
 #include "Model.h"

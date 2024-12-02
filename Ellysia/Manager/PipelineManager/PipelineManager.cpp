@@ -59,9 +59,17 @@ void PipelineManager::GenaratePSO(PSOInformation& psoInformation, D3D12_INPUT_LA
 
 void PipelineManager::Initialize(){
 	
+	//ブレンドモード
+	const uint32_t BLEND_MODE = BlemdMode::BlendModeNormal;
+
 	//モデル
-	SetModelBlendMode(1);
+	SetModelBlendMode(BLEND_MODE);
 	GenerateModelPSO();
+
+	//スプライト
+	SetSpriteBlendMode(BLEND_MODE);
+	GenerateSpritePSO();
+
 
 	//パーティクル
 	GenerateParticle3DPSO();
@@ -73,8 +81,7 @@ void PipelineManager::Initialize(){
 
 //線
 void PipelineManager::GenaratedLinePSO() {
-	//PSO
-	////RootSignatureを作成
+	//RootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように間レンズけるかを示したオブジェクトである
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature_{};
 	descriptionRootSignature_.Flags =

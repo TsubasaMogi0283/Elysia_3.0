@@ -67,16 +67,8 @@ void Player::Damaged() {
 	if (colliderToNormalEnemy_->GetIsTouch() == true) {
 		//ダメージを受ける
 		if (isAcceptDamegeFromNoemalEnemy_ == true) {
-			++count;
 			--hp_;
 		}
-		else {
-			
-		}
-		/*if (isDameged_ == false) {
-			acceptDamage_ = true;
-			isDameged_ = true;
-		}*/
 		
 	}
 	else {
@@ -111,7 +103,6 @@ void Player::Damaged() {
 			vibeTime_ = 0.0f;
 			isDameged_ = false;
 			acceptDamage_ = false;
-			//damagedTime_ = 0;
 		}
 	}
 
@@ -200,7 +191,6 @@ void Player::Update(){
 	ImGui::Begin("プレイヤー");
 	if (ImGui::TreeNode("状態")) {
 		ImGui::InputInt("鍵の数", &keyQuantity);
-		ImGui::InputInt("カウント", &count);
 		ImGui::InputInt("体力", &hp_);
 		ImGui::InputInt("ダメージ時間", &damagedTime_);
 

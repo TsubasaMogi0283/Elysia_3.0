@@ -1,6 +1,10 @@
 #pragma once
 
-
+/**
+ * @file GameManager.h
+ * @brief オーディオクラス
+ * @author 茂木翼
+ */
 #define XAUDIO2_HELPER_FUNCTIONS
 #include <xaudio2.h>
 #include "xaudio2fx.h"

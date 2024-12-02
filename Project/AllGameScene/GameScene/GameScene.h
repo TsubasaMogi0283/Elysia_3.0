@@ -1,4 +1,10 @@
 #pragma once
+
+/**
+ * @file GameManager.h
+ * @brief ゲームシーンのクラス
+ * @author 茂木翼
+ */
 #include "IGameScene.h"
 
 #include "Sprite.h"
@@ -215,18 +221,16 @@ private:
 
 #pragma endregion
 	
-	int count = 0;
-
-
-
-	//敵
+	//敵管理
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
+	//敵のモデルハンドル
 	uint32_t enemyModelHandle_ = 0u;
 
 	//角度
 	float theta_ = 0.0f;
 	float originPhi_ = 0.0f;
 
+	//コリジョン管理
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 
 	//強い敵と接触したかどうか
@@ -258,6 +262,7 @@ private:
 	//鍵
 	std::unique_ptr<KeyManager> keyManager_ = {};
 	uint32_t keyQuantity_ = 0u;
+	//鍵を取得できるかどうか
 	bool isAbleToPickUpKey_ = false;
 
 
@@ -267,14 +272,20 @@ private:
 #pragma endregion
 
 #pragma region フェード
-
-	std::unique_ptr<Sprite> fadeSprite_ = nullptr;
+	//白フェード
+	std::unique_ptr<Sprite> whiteFade_ = nullptr;
 	//透明度
-	float fadeTransparency_ = 1.0f;
+	float whiteFadeTransparency_ = 1.0f;
+	
+	//黒フェード
+	std::unique_ptr<Sprite> blackFade_ = nullptr;
+	//透明度
+	float blackFade_Transparency_ = 1.0f;
+
 	//イン
-	bool isFadeIn = true;
+	bool isWhiteFadeIn = true;
 	//アウト
-	bool isFadeOut_ = false;
+	bool isWhiteFadeOut_ = false;
 
 #pragma endregion
 
@@ -305,4 +316,7 @@ private:
 	
 #pragma endregion
 
+private:
+	//フェードアウトの具合
+	const float FADE_OUT_INTERVAL = 0.01f;
 };

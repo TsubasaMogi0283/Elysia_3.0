@@ -1,4 +1,10 @@
 #pragma once
+/**
+ * @file GameManager.h
+ * @brief 敵の攻撃用のコライダークラス
+ * @author 茂木翼
+ */
+
 #include <memory>
 
 #include "Model.h"
@@ -9,7 +15,9 @@
 struct Camera;
 struct SpotLight;
 
-//敵の攻撃用の当たり判定
+/// <summary>
+/// 敵の攻撃用の当たり判定
+/// </summary>
 class EnemyAttackCollision :public Collider {
 public:
 
