@@ -836,13 +836,13 @@ void GameScene::Update(GameManager* gameManager) {
 			//敵の動きが止まりブラックアウト
 			//プレイヤーことカメラが倒れる感じが良いかも
 
-			whiteFadeTransparency_ += FADE_OUT_INTERVAL;
-			whiteFade_->SetTransparency(whiteFadeTransparency_);
-
-			if (whiteFadeTransparency_ > 1.0f) {
-				gameManager->ChangeScene(new LoseScene());
-				return;
-			}
+			//whiteFadeTransparency_ += FADE_OUT_INTERVAL;
+			//whiteFade_->SetTransparency(whiteFadeTransparency_);
+			//
+			//if (whiteFadeTransparency_ > 1.0f) {
+			//	gameManager->ChangeScene(new LoseScene());
+			//	return;
+			//}
 
 			gameManager->ChangeScene(new LoseScene());
 			return;
