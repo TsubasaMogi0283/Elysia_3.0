@@ -66,8 +66,21 @@ void Player::Damaged() {
 	//通常の敵に当たった場合
 	if (colliderToNormalEnemy_->GetIsTouch() == true) {
 		//ダメージを受ける
-		if (isAcceptDamegeFromNoemalEnemy_ == true) {
+		if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_==false) {
+			isDameged_ = true;
 			--hp_;
+			//線形補間で振動処理をする
+			vibeTime_ += DELTA_TIME;
+			vibeStrength_ = SingleCalculation::Lerp(1.0f, 0.0f, vibeTime_);
+			Input::GetInstance()->SetVibration(vibeStrength_, vibeStrength_);
+
+			//振動を止める
+			if (vibeStrength_ <= 0.0f) {
+				Input::GetInstance()->StopVibration();
+				vibeTime_ = 0.0f;
+				isDameged_ = false;
+				acceptDamage_ = false;
+			}
 		}
 		
 	}
@@ -78,33 +91,7 @@ void Player::Damaged() {
 	}
 
 
-	//ダメージを受け入れる
-	if (acceptDamage_ == true) {
-		
 
-		//体力を1減らす
-		if (isDameged_ == true) {
-			++damagedTime_;
-
-			if (damagedTime_ == 1) {
-				
-			}
-			
-		}
-
-		//線形補間で振動処理をする
-		vibeTime_ += DELTA_TIME;
-		vibeStrength_ = SingleCalculation::Lerp(1.0f, 0.0f, vibeTime_);
-		Input::GetInstance()->SetVibration(vibeStrength_, vibeStrength_);
-
-		//振動を止める
-		if (vibeStrength_ <= 0.0f) {
-			Input::GetInstance()->StopVibration();
-			vibeTime_ = 0.0f;
-			isDameged_ = false;
-			acceptDamage_ = false;
-		}
-	}
 
 
 }
