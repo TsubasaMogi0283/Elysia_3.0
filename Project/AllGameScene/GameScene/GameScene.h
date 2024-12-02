@@ -97,7 +97,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~GameScene();
+	~GameScene()=default;
 
 
 
@@ -200,7 +200,7 @@ private:
 	bool isBTrigger_ = false;
 
 	//オブジェクトマネージャー
-	ObjectManager* objectManager_ = nullptr;
+	std::unique_ptr<ObjectManager> objectManager_ = nullptr;
 
 
 #pragma region レベルエディタに引っ越します
@@ -271,17 +271,26 @@ private:
 	std::unique_ptr<Sprite> whiteFade_ = nullptr;
 	//透明度
 	float whiteFadeTransparency_ = 1.0f;
-	
-	//黒フェード
-	std::unique_ptr<Sprite> blackFade_ = nullptr;
-	//透明度
-	float blackFade_Transparency_ = 1.0f;
-
 	//イン
 	bool isWhiteFadeIn = true;
 	//アウト
 	bool isWhiteFadeOut_ = false;
 
+
+
+	//黒フェード
+	std::unique_ptr<Sprite> blackFade_ = nullptr;
+	//透明度
+	float blackFadeTransparency_ = 0.0f;
+	//イン
+	bool isBlackFadeIn = false;
+	//アウト
+	bool isBlackFadeOut_ = false;
+
+	//負けシーンに遷移するときの値
+	const float CHANGE_TO_LOSE_SCENE_VALUE_ = 2.0f;
+
+	
 #pragma endregion
 
 	//場面

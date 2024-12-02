@@ -21,9 +21,9 @@ GameScene::GameScene(){
 void GameScene::Initialize() {
 
 #pragma region フェード
-	uint32_t fadeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/White.png");
+	uint32_t whiteTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/White.png");
 	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
-	whiteFade_.reset(Sprite::Create(fadeTextureHandle, INITIAL_FADE_POSITION));
+	whiteFade_.reset(Sprite::Create(whiteTextureHandle, INITIAL_FADE_POSITION));
 	
 	//フェードインから始まる
 	isWhiteFadeIn = true;
@@ -31,8 +31,17 @@ void GameScene::Initialize() {
 
 
 	//黒フェード
-	 blackFade_.reset(Sprite::Create(fadeTextureHandle, INITIAL_FADE_POSITION));
+	uint32_t blackTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/Black.png");
+	blackFade_.reset(Sprite::Create(blackTextureHandle, INITIAL_FADE_POSITION));
 	
+	//透明度
+	blackFadeTransparency_ = 0.0f;
+	//イン
+	isBlackFadeIn = false;
+	//アウト
+	isBlackFadeOut_ = false;
+
+
 
 #ifdef _DEBUG
 	isWhiteFadeIn = false;
@@ -45,7 +54,7 @@ void GameScene::Initialize() {
 
 	
 #pragma region オブジェクト
-	objectManager_ = new ObjectManager();
+	objectManager_ = std::make_unique<ObjectManager>();
 	objectManager_->Initialize();
 
 	#pragma region 地面
@@ -62,7 +71,7 @@ void GameScene::Initialize() {
 	gate_->Initialize(gateModelhandle);
 
 
-
+	//脱出せよ
 	uint32_t escapeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/EscapeText.png");
 	escapeText_.reset(Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	//最初は非表示にする
@@ -99,6 +108,7 @@ void GameScene::Initialize() {
 	
 #pragma endregion
 	
+	//天球
 	uint32_t skydomeModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Game/Skydome","Skydome.obj");
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(skydomeModelHandle);
@@ -116,7 +126,7 @@ void GameScene::Initialize() {
 	//敵管理システム
 	enemyManager_ = std::make_unique<EnemyManager>();
 	enemyManager_->SetPlayer(player_.get());
-	enemyManager_->SetObjectManager(objectManager_);
+	enemyManager_->SetObjectManager(objectManager_.get());
 	enemyManager_->SetStageRectangle(stageRect);
 	enemyManager_->Initialize(enemyModelHandle_, strongEnemyModelHandle);
 	#pragma endregion
@@ -141,12 +151,8 @@ void GameScene::Initialize() {
 	
 	#pragma endregion
 	
-	
-	
-	
 
-
-#pragma region 説明
+	#pragma region 説明
 	uint32_t explanationTextureHandle[EXPLANATION_QUANTITY_] = {};
 	explanationTextureHandle[0] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/Explanation1.png");
 	explanationTextureHandle[1] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/Explanation2.png");
@@ -178,23 +184,23 @@ void GameScene::Initialize() {
 	
 #pragma endregion
 
-#pragma region UI
-	uint32_t playerHPTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Player/PlayerHP.png");
-	uint32_t playerHPBackFrameTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Player/PlayerHPBack.png");
-	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
-	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
-		playerHP_[i].reset(Sprite::Create(playerHPTextureHandle, {.x=static_cast<float>(i)*64+ INITIAL_POSITION.x,.y= INITIAL_POSITION .y}));
-	}
+	#pragma region UI
+		uint32_t playerHPTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Player/PlayerHP.png");
+		uint32_t playerHPBackFrameTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Player/PlayerHPBack.png");
+		const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
+		for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
+			playerHP_[i].reset(Sprite::Create(playerHPTextureHandle, {.x=static_cast<float>(i)*64+ INITIAL_POSITION.x,.y= INITIAL_POSITION .y}));
+		}
 	
-	playerHPBackFrame_.reset(Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
-	currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
+		playerHPBackFrame_.reset(Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
+		currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
 
 
-	//ゴールに向かえのテキスト
-	uint32_t toEscapeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/ToGoal.png");
-	toEscape_.reset(Sprite::Create(toEscapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
+		//ゴールに向かえのテキスト
+		uint32_t toEscapeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/ToGoal.png");
+		toEscape_.reset(Sprite::Create(toEscapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 
-#pragma endregion
+	#pragma endregion
 
 
 
@@ -835,17 +841,18 @@ void GameScene::Update(GameManager* gameManager) {
 
 			//敵の動きが止まりブラックアウト
 			//プレイヤーことカメラが倒れる感じが良いかも
+			isBlackFadeOut_ = true;
 
-			//whiteFadeTransparency_ += FADE_OUT_INTERVAL;
-			//whiteFade_->SetTransparency(whiteFadeTransparency_);
-			//
-			//if (whiteFadeTransparency_ > 1.0f) {
-			//	gameManager->ChangeScene(new LoseScene());
-			//	return;
-			//}
+			blackFadeTransparency_ += FADE_OUT_INTERVAL;
+			blackFade_->SetTransparency(blackFadeTransparency_);
 
-			gameManager->ChangeScene(new LoseScene());
-			return;
+
+			//負けシーンへ
+			if (blackFadeTransparency_ > CHANGE_TO_LOSE_SCENE_VALUE_) {
+				gameManager->ChangeScene(new LoseScene());
+				return;
+			}
+			
 		}
 
 
@@ -939,7 +946,17 @@ void GameScene::Update(GameManager* gameManager) {
 	ImGui::InputFloat("POW", &vignettePow_);
 	ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
 	ImGui::End();
+
+	ImGui::Begin("フェード");
+	ImGui::InputFloat("白", &whiteFadeTransparency_);
+	ImGui::InputFloat("黒", &blackFadeTransparency_);
+
+	ImGui::End();
+
+
 #endif // _DEBUG
+
+
 
 
 #pragma endregion
@@ -1029,14 +1046,12 @@ void GameScene::DrawSprite(){
 	if (isWhiteFadeIn == true || isWhiteFadeOut_ == true) {
 		whiteFade_->Draw();
 	}
+	//黒フェード
+	if (isBlackFadeIn==true|| isBlackFadeOut_==true) {
+		blackFade_->Draw();
+	}
 
 
-}
-
-
-
-GameScene::~GameScene() {
-	delete objectManager_;
 }
 
 
