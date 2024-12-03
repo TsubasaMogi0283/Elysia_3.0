@@ -89,11 +89,6 @@ void Player::Damaged() {
 		isDameged_ = false;
 		
 	}
-
-
-
-
-
 }
 void Player::Update(){
 	
@@ -170,7 +165,7 @@ void Player::Update(){
 
 	
 #ifdef _DEBUG
-	//ImGuiにInputUintが無いの不便・・
+
 	int32_t keyQuantity = static_cast<int32_t>(haveKeyQuantity_);
 	int32_t condition = static_cast<int32_t>(moveCondition_);
 

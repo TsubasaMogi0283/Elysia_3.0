@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file GameManager.h
+ * @file LevelEditorSample.h
  * @brief レベルエディタ確認用のクラス
  * @author 茂木翼
  */

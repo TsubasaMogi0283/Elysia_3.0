@@ -18,17 +18,17 @@ Ellysia* Ellysia::GetInstance() {
 
 void Ellysia::Initialize(){
 	//ここでタイトルバーの名前を決めてね
-	const wchar_t* titleBarName = L"静寂の霊園";
+	const wchar_t* TITLE_BAR_NAME = L"静寂の霊園";
 	//ウィンドウのサイズを決める
-	const int WINDOW_SIZE_WIDTH_ = 1280;
-	const int WINDOW_SIZE_HEIGHT_ = 720;
+	const int WINDOW_SIZE_WIDTH = 1280;
+	const int WINDOW_SIZE_HEIGHT = 720;
 
 	//ひなに聞いたけどわざわざ一個ずつGetInstanceするの止めた方が良いとのこと
 	//取得に時間がかかる
 
 	//初期化
 	//ウィンドウ
-	WindowsSetup::GetInstance()->Initialize(titleBarName,WINDOW_SIZE_WIDTH_,WINDOW_SIZE_HEIGHT_);
+	WindowsSetup::GetInstance()->Initialize(TITLE_BAR_NAME,WINDOW_SIZE_WIDTH,WINDOW_SIZE_HEIGHT);
 	
 	//COMの初期化
 	//COM...ComponentObjectModel、Microsoftの提唱する設計技術の１つ
@@ -119,6 +119,7 @@ void Ellysia::Draw(){
 	//3Dオブジェクトの描画
 	gameManager_->DrawObject3D();
 	
+	//描画始め(スワップチェイン)
 	DirectXSetup::GetInstance()->StartDraw();
 
 	//PostEffectの描画

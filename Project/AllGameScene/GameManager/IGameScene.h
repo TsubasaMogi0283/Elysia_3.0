@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file GameManager.h
+ * @file IGameScene.h
  * @brief ゲームシーンのインターフェイス
  * @author 茂木翼
  */

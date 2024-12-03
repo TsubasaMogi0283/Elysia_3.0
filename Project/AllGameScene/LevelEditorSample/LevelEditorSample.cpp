@@ -37,7 +37,7 @@ void LevelEditorSample::Initialize(){
 	back_ = std::make_unique<BackText>();
 	back_->Initialize();
 
-
+	//オーディオ確認用のプレイヤー
 	player_ = std::make_unique<AudioTestPlayer>();
 	player_->Initialize();
 

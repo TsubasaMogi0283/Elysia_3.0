@@ -105,8 +105,8 @@ void StrongEnemy::Update(){
 		direction_ = VectorCalculation::Normalize(direction_);
 
 		//加算
-		Vector3 newSpeed = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
-		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, newSpeed);
+		direction_ = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
+		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, direction_);
 
 
 

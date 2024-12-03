@@ -19,9 +19,10 @@ void LoseScene::Initialize(){
 	uint32_t textHandle = TextureManager::GetInstance()->LoadTexture("Resources/Result/Lose/LoseText.png");
 	text_.reset(Sprite::Create(textHandle, { .x = 0.0f,.y = 0.0f }));
 
-
-	uint32_t blackTexturehandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/Black.png");
-	black_.reset(Sprite::Create(blackTexturehandle, { .x = 0.0f,.y = 0.0f }));
+	//黒背景
+	uint32_t blackTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/Black.png");
+	black_.reset(Sprite::Create(blackTextureHandle, { .x = 0.0f,.y = 0.0f }));
+	//透明度の設定
 	transparency_ = 0.0f;
 	black_->SetTransparency(transparency_);
 	blackOutTime_ = 0;
@@ -96,8 +97,7 @@ void LoseScene::Update(GameManager* gameManager){
 			black_->SetTransparency(transparency_);
 
 			//暗くなったらシーンチェンジ
-			const float TRANSPARENCY_INTERVAL = 0.01f;
-			transparency_ += TRANSPARENCY_INTERVAL;
+			transparency_ += TRANSPARENCY_INTERVAL_;
 		}
 
 

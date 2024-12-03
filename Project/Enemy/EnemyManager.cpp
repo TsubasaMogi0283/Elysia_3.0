@@ -1,12 +1,12 @@
 #include "EnemyManager.h"
-#include <Input.h>
+#include <random>
 #include <cassert>
 
 #include "Player/Player.h"
 #include "Stage/ObjectManager/ObjectManager.h"
-#include <VectorCalculation.h>
-#include <SingleCalculation.h>
-#include <random>
+#include "VectorCalculation.h"
+#include "SingleCalculation.h"
+#include "Input.h"
 
 void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& strongEnemyModel){
 	
