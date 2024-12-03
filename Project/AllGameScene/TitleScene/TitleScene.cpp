@@ -81,6 +81,7 @@ void TitleScene::Update(GameManager* gameManager){
 	}
 
 
+
 	//高速点滅
 	if (isFastFlash_ == true) {
 		fastFlashTime_ += 1;
