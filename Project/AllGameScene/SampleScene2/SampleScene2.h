@@ -1,32 +1,44 @@
 #pragma once
 /**
- * @file SampleScene2.h
- * @brief サンプルクラス2
+ * @file WinScene.h
+ * @brief 勝利シーン
  * @author 茂木翼
  */
+#include <memory>
 
 #include "IGameScene.h"
-
 #include "Sprite.h"
 #include "Transform.h"
-
 #include "Particle3D.h"
 #include "Audio.h"
-#include <memory>
-#include <Model.h>
+#include "Model.h"
+#include "Input.h"
 
-//StatePatternを使う時は必ず前方宣言をするように
-class Gamemanager;
+
+#pragma region 前方宣言
 
 /// <summary>
-/// サンプルクラス2
+/// ゲーム管理クラス
 /// </summary>
-class SampleScene2 : public IGameScene {
+class GameManager;
+
+/// <summary>
+/// 入力
+/// </summary>
+class Input;
+
+
+#pragma endregion
+
+/// <summary>
+/// 勝利シーン
+/// </summary>
+class WinScene : public IGameScene {
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	SampleScene2()=default;
+	WinScene();
 
 	/// <summary>
 	/// 初期化
@@ -62,17 +74,20 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~SampleScene2();
-
+	~WinScene();
 
 
 private:
-	//勝ち
-	std::unique_ptr<Sprite> winTexture_ = nullptr;
-	//テキスト
-	std::unique_ptr<Sprite> text_ = nullptr;
+	//入力
+	Input* input_ = nullptr;
 
-	//背景
+
+private:
+	//脱出成功のスプライト
+	std::unique_ptr<Sprite> succeeded_ = nullptr;
+	//のスプライト
+	std::unique_ptr<Sprite> text_ = nullptr;
+	//背景のスプライト
 	std::unique_ptr<Sprite> black_ = nullptr;
 	//透明度
 	float transparency_ = 0.0f;
@@ -83,6 +98,8 @@ private:
 	//Bトリガー
 	uint32_t bTriggerTime_ = 0u;
 	bool isBTrigger_ = false;
+
+	//再開
 	bool restart_ = false;
 
 
@@ -90,13 +107,19 @@ private:
 
 	//点滅
 	bool isFlash_ = false;
+	//時間
 	uint32_t flashTime_ = 0u;
 	const uint32_t FLASH_TIME_LIMIT_ = 30u;
+	
+	
 	//高速点滅
 	bool isFastFlash_ = false;
 	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60u;
+	//間隔
 	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
+	//見せるカウント
 	uint32_t textDisplayCount_ = 0u;
+	//時間
 	uint32_t fastFlashTime_ = 0u;
 
 };

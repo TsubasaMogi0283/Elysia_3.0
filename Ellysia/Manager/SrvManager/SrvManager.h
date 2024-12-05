@@ -1,7 +1,17 @@
 #pragma once
+
+/**
+ * @file SrvManager.h
+ * @brief SRV管理クラス
+ * @author 茂木翼
+ */
+
 #include "DirectXSetup.h"
 
 
+/// <summary>
+/// SRV管理クラス
+/// </summary>
 class SrvManager final{
 private:
 	/// <summary>
@@ -34,10 +44,6 @@ public:
 	/// <returns></returns>
 	SrvManager& operator=(const SrvManager& rvHeapManager) = delete;
 
-	
-
-
-
 public:
 	/// <summary>
 	/// 初期化
@@ -63,7 +69,7 @@ public:
 	/// <param name="format"></param>
 	/// <param name="mipLevels"></param>
 	/// <param name="isCubeMap"></param>
-	void CreateSRVForTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, DXGI_FORMAT format, UINT mipLevels,bool isCubeMap);
+	void CreateSRVForTexture2D(const uint32_t& srvIndex, ID3D12Resource* pResource,const  DXGI_FORMAT& format,const UINT& mipLevels,const bool& isCubeMap);
 	
 	/// <summary>
 	/// StructureBuffer用のSRVを作成
@@ -72,20 +78,20 @@ public:
 	/// <param name="pResource"></param>
 	/// <param name="numElements"></param>
 	/// <param name="structureByteStride"></param>
-	void CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride);
+	void CreateSRVForStructuredBuffer(const uint32_t& srvIndex, ID3D12Resource* pResource,const UINT& numElements,const UINT& structureByteStride);
 	
 	/// <summary>
 	/// RenderTexture用のSRVを作成
 	/// </summary>
 	/// <param name="pResource"></param>
 	/// <param name="handle"></param>
-	void CreateSRVForRenderTexture(ID3D12Resource* pResource,uint32_t handle);
+	void CreateSRVForRenderTexture(ID3D12Resource* pResource,const uint32_t& handle);
 
 	/// <summary>
 	/// DepthTexture用のSRVを作成
 	/// </summary>
 	/// <param name="handle"></param>
-	void CreateSRVForDepthTexture(uint32_t handle);
+	void CreateSRVForDepthTexture(const uint32_t& handle);
 
 
 
@@ -94,7 +100,7 @@ public:
 	/// </summary>
 	/// <param name="rootParameterIndex"></param>
 	/// <param name="srvIndex"></param>
-	void SetGraphicsRootDescriptorTable(UINT rootParameterIndex, uint32_t srvIndex);
+	void SetGraphicsRootDescriptorTable(const UINT& rootParameterIndex,const uint32_t& srvIndex);
 	
 
 public:
@@ -103,7 +109,7 @@ public:
 	/// </summary>
 	/// <param name="index"></param>
 	/// <returns></returns>
-	inline D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t index) {
+	inline D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const uint32_t& index) {
 		D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 		handleCPU.ptr += (descriptorSize_ * index);
 		return handleCPU;
@@ -114,7 +120,7 @@ public:
 	/// </summary>
 	/// <param name="index"></param>
 	/// <returns></returns>
-	inline D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(uint32_t index) {
+	inline D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const uint32_t& index) {
 		D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap_->GetGPUDescriptorHandleForHeapStart();
 		handleGPU.ptr += (descriptorSize_ * index);
 		return handleGPU;

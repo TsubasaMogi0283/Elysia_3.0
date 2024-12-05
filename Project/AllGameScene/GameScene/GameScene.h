@@ -1,25 +1,20 @@
 #pragma once
 
 /**
- * @file GameManager.h
+ * @file GameScene.h
  * @brief ゲームシーンのクラス
  * @author 茂木翼
  */
-#include "IGameScene.h"
 
-#include "Sprite.h"
-#include "GameManager.h"
-#include "Model.h"
-#include "AnimationModel.h"
-#include "TextureManager.h"
-#include "Camera.h"
-#include "Audio.h"
 
 #include <memory>
-#include <Audio.h>
-#include "BackText.h"
 
-
+#include "IGameScene.h"
+#include "Sprite.h"
+#include "Model.h"
+#include "AnimationModel.h"
+#include "Camera.h"
+#include "Audio.h"
 #include "SkinCluster.h"
 #include "Material.h"
 #include "SpotLight.h"
@@ -42,10 +37,28 @@
 #include "Input.h"
 #include "Stage/ObjectManager/ObjectManager.h"
 #include "Vignette.h"
+#include "BackText.h"
 
-//StatePatternを使う時は必ず前方宣言をするように
-//ゲームマネージャー
+
+#pragma region 前方宣言
+
+/// <summary>
+/// ゲーム管理クラス
+/// </summary>
 class GameManager;
+
+/// <summary>
+/// テクスチャ管理クラス
+/// </summary>
+class TextureManager;
+
+/// <summary>
+/// 入力クラス
+/// </summary>
+class Input;
+
+
+#pragma endregion
 
 
 /// <summary>
@@ -54,10 +67,11 @@ class GameManager;
 class GameScene : public IGameScene {
 public:
 
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	GameScene();
 
-	
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -68,9 +82,6 @@ public:
 	/// </summary>
 	/// <param name="gameManager"></param>
 	void Update(GameManager* gameManager)override;
-
-#pragma region 描画
-
 
 	/// <summary>
 	/// 3Dオブジェクト
@@ -87,13 +98,11 @@ public:
 	/// </summary>
 	void DrawPostEffect()override;
 
-
 	/// <summary>
 	/// スプライト
 	/// </summary>
 	void DrawSprite()override;
 
-#pragma endregion
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -102,8 +111,6 @@ public:
 
 
 private:
-
-
 
 	/// <summary>
 	/// 鍵の取得の処理
@@ -131,9 +138,16 @@ private:
 	/// ゲームシーンの場面
 	/// </summary>
 	enum GameCondition {
+		//フェードイン
 		GameFadeIn,
+		
+		//説明
 		Explanation,
+		
+		//ゲームプレイ
 		GamePlay,
+
+		//フェードアウト
 		GameFadeOut,
 	};
 
@@ -144,8 +158,8 @@ private:
 private:
 	//インプット
 	Input* input_=nullptr;
-
-
+	//テクスチャ管理クラス
+	TextureManager* texturemanager_ = nullptr;
 
 
 private:
@@ -239,35 +253,39 @@ private:
 	//UIを表示するかどうか
 	bool isDisplayUI_ = false;
 
-	//脱出テキスト
+	//脱出テキストのスプライト
 	std::unique_ptr<Sprite> escapeText_ = nullptr;
 
-	//操作
+	//操作のスプライト
 	std::unique_ptr<Sprite> operation_ = nullptr;
 
-	//鍵取得
+	//鍵取得のスプライト
 	std::unique_ptr<Sprite> pickUpKey_ = nullptr;
 
 	//プレイヤーの体力
 	static const uint32_t PLAYER_HP_MAX_QUANTITY_ = 3u;
+	//現在のHP
 	uint32_t currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
+	//プレイヤーHPのスプライト
 	std::unique_ptr<Sprite> playerHP_[PLAYER_HP_MAX_QUANTITY_] = { nullptr };
+	//背景フレーム
 	std::unique_ptr<Sprite> playerHPBackFrame_ = nullptr;
 
-	//鍵
+	//鍵管理クラス
 	std::unique_ptr<KeyManager> keyManager_ = {};
+	//鍵の数
 	uint32_t keyQuantity_ = 0u;
 	//鍵を取得できるかどうか
 	bool isAbleToPickUpKey_ = false;
 
 
-	//脱出
+	//脱出のスプライト
 	std::unique_ptr<Sprite> toEscape_ = nullptr;
 
 #pragma endregion
 
 #pragma region フェード
-	//白フェード
+	//白フェードのスプライト
 	std::unique_ptr<Sprite> whiteFade_ = nullptr;
 	//透明度
 	float whiteFadeTransparency_ = 1.0f;
@@ -278,7 +296,7 @@ private:
 
 
 
-	//黒フェード
+	//黒フェードのスプライト
 	std::unique_ptr<Sprite> blackFade_ = nullptr;
 	//透明度
 	float blackFadeTransparency_ = 0.0f;
@@ -301,13 +319,18 @@ private:
 
 
 #pragma region 説明
+	//説明の数
 	static const uint32_t EXPLANATION_QUANTITY_ = 2u;
+	//説明スプライト
 	std::unique_ptr<Sprite> explanation_[EXPLANATION_QUANTITY_] = { nullptr };
 
 	//Spaceで次に進むテキスト
+	//数
 	static const uint32_t SPACE_TO_NEXT_QUANTITY_ = 2u;
+	//次へのスプライト
 	std::unique_ptr<Sprite> spaceToNext_[SPACE_TO_NEXT_QUANTITY_] = { nullptr };
 
+	//
 	uint32_t howToPlayTextureNumber_ = 0u;
 
 #pragma endregion

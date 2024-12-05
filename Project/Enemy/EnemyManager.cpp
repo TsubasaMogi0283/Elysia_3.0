@@ -596,9 +596,11 @@ void EnemyManager::Update(){
 			audio_->Stop(audioHandle_);
 		}
 		else {
+			//再生
 			audio_->Play(audioHandle_, true);
 		}
 
+		//音量変化
 		audio_->ChangeVolume(audioHandle_, volume);
 
 
@@ -626,13 +628,11 @@ void EnemyManager::Update(){
 
 		//設定した距離より小さくなると追跡
 		if (playerStrongEnemyDistance <= STRONG_ENEMY_TRACKING_START_DISTANCE_) {
-			
 			//追跡に移行
 			uint32_t newCondition = EnemyCondition::Tracking;
 			strongEnemy->SetCondition(newCondition);
 		}
 		else {
-
 			//通常の動きに移行
 			uint32_t newCondition = EnemyCondition::Move;
 			strongEnemy->SetCondition(newCondition);

@@ -1,10 +1,25 @@
 #pragma once
+/**
+ * @file Key.h
+ * @brief 鍵のクラス
+ * @author 茂木翼
+ */
+
 #include <memory>
+
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
 
+#pragma region 前方宣言
+
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+#pragma endregion
+
 
 /// <summary>
 /// 鍵
@@ -21,7 +36,7 @@ public:
 	/// </summary>
 	/// <param name="modelhandle"></param>
 	/// <param name="position"></param>
-	void Initialize(uint32_t& modelhandle,Vector3& position);
+	void Initialize(const uint32_t& modelhandle,const Vector3& position);
 
 	/// <summary>
 	/// 更新
@@ -33,7 +48,7 @@ public:
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="spotLight"></param>
-	void Draw(Camera& camera,SpotLight& spotLight);
+	void Draw(const Camera& camera,const SpotLight& spotLight);
 
 
 	/// <summary>
@@ -53,7 +68,9 @@ public:
 	/// ワールド座標を取得する
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition()const;
+	Vector3 GetWorldPosition()const {
+		return worldTransform_.GetWorldPosition();
+	}
 
 	/// <summary>
 	/// 半径の取得
@@ -78,6 +95,11 @@ public:
 	inline void SetIsPrePickUp(bool isPrePickUp) {
 		this->isPrePickUp_ = isPrePickUp;
 	}
+
+	/// <summary>
+	/// 取得可能かどうか
+	/// </summary>
+	/// <returns></returns>
 	inline bool GetIsPrePickUp()const {
 		return isPrePickUp_;
 	}
@@ -91,11 +113,11 @@ private:
 	//マテリアル
 	Material material_ = {};
 	
+
 	//取得する前
 	bool isPrePickUp_ = false;
 	//取得されたか
 	bool isPickUp_ = false;
-
 	//半径
 	float radius_ = 0.0f;
 

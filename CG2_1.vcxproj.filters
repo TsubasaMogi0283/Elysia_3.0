@@ -615,6 +615,9 @@
     <ClCompile Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
+    <ClCompile Include="Project\AllGameScene\SampleScene2\SampleScene2.cpp">
+      <Filter>Project\GameScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -1083,6 +1086,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.h">
       <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\SampleScene2\SampleScene2.h">
+      <Filter>Project\GameScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

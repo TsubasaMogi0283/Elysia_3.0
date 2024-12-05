@@ -1,16 +1,43 @@
 #pragma once
+/**
+ * @file KeyManager.h
+ * @brief 鍵のクラス
+ * @author 茂木翼
+ */
+
 #include <memory>
 #include <list>
 
 #include "Key.h"
-#include <TextureManager.h>
-#include <Sprite.h>
+#include "TextureManager.h"
+#include "Sprite.h"
 
+
+#pragma region 前方宣言
+
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight;
 
+
+
+/// <summary>
+/// プレイヤー
+/// </summary>
 class Player;
 
+#pragma endregion
+
+
+/// <summary>
+/// 鍵管理クラス
+/// </summary>
 class KeyManager{
 public:
 	/// <summary>
@@ -22,7 +49,7 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="modelHandle"></param>
-	void Initialize(uint32_t modelHandle);
+	void Initialize(const uint32_t& modelHandle);
 
 	/// <summary>
 	/// 更新
@@ -73,16 +100,19 @@ private:
 	//鍵
 	std::list<Key*>keyes_ = {};
 
+	//最大数
 	const uint32_t MAX_KEY_QUANTITY_ = 3;
 
 	//UI
 	std::unique_ptr<Sprite> keySprite_ = nullptr;
+	//数
 	static const uint32_t NUMBER_QUANTITY_ = 10;
+	//スプライト
 	std::unique_ptr<Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
 
 
 
-	//鍵取得
+	//鍵取得するかどうか
 	std::unique_ptr<Sprite> pickUpKey_ = nullptr;
 
 

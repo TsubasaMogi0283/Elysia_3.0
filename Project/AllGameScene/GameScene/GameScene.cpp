@@ -1,27 +1,36 @@
 #include "GameScene.h"
 #include <imgui.h>
-#include <Input.h>
-#include <AdjustmentItems.h>
+#include <numbers>
+
+#include "Input.h"
+#include "AdjustmentItems.h"
 #include "SampleScene2/SampleScene2.h"
 #include "LoseScene/LoseScene.h"
 
-#include "ModelManager.h"
-#include "AnimationManager.h"
-#include <numbers>
-#include <TextureManager.h>
-#include <SingleCalculation.h>
-#include <VectorCalculation.h>
+#include "SingleCalculation.h"
+#include "VectorCalculation.h"
 
+
+#include "AnimationManager.h"
+#include "TextureManager.h"
+#include "GameManager.h"
+#include "ModelManager.h"
 
 
 GameScene::GameScene(){
+
+	//入力
 	input_ = Input::GetInstance();
+
+	//テクスチャ管理クラス
+	texturemanager_ = TextureManager::GetInstance();
+
 }
 
 void GameScene::Initialize() {
 
 #pragma region フェード
-	uint32_t whiteTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/White.png");
+	uint32_t whiteTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Back/White.png");
 	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
 	whiteFade_.reset(Sprite::Create(whiteTextureHandle, INITIAL_FADE_POSITION));
 	
@@ -31,7 +40,7 @@ void GameScene::Initialize() {
 
 
 	//黒フェード
-	uint32_t blackTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/Black.png");
+	uint32_t blackTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Back/Black.png");
 	blackFade_.reset(Sprite::Create(blackTextureHandle, INITIAL_FADE_POSITION));
 	
 	//透明度
@@ -72,7 +81,7 @@ void GameScene::Initialize() {
 
 
 	//脱出せよ
-	uint32_t escapeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/EscapeText.png");
+	uint32_t escapeTextureHandle = texturemanager_->LoadTexture("Resources/Game/Escape/EscapeText.png");
 	escapeText_.reset(Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	//最初は非表示にする
 	escapeText_->SetInvisible(true);
@@ -98,7 +107,6 @@ void GameScene::Initialize() {
 
 
 #pragma endregion
-
 
 #pragma region 鍵
 	uint32_t keyModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/key","Key.obj");
@@ -131,9 +139,6 @@ void GameScene::Initialize() {
 	enemyManager_->Initialize(enemyModelHandle_, strongEnemyModelHandle);
 	#pragma endregion
 
-	
-	
-	
 	#pragma region カメラ
 
 	//カメラの初期化
@@ -151,11 +156,10 @@ void GameScene::Initialize() {
 	
 	#pragma endregion
 	
-
 	#pragma region 説明
 	uint32_t explanationTextureHandle[EXPLANATION_QUANTITY_] = {};
-	explanationTextureHandle[0] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/Explanation1.png");
-	explanationTextureHandle[1] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/Explanation2.png");
+	explanationTextureHandle[0] = texturemanager_->LoadTexture("Resources/Game/Explanation/Explanation1.png");
+	explanationTextureHandle[1] = texturemanager_->LoadTexture("Resources/Game/Explanation/Explanation2.png");
 
 	for (uint32_t i = 0u; i < EXPLANATION_QUANTITY_; ++i) {
 		explanation_[i].reset(Sprite::Create(explanationTextureHandle[i], {.x=0.0f,.y=0.0f}));
@@ -163,8 +167,8 @@ void GameScene::Initialize() {
 	
 
 	uint32_t spaceToNextTextureHandle[SPACE_TO_NEXT_QUANTITY_] = {};
-	spaceToNextTextureHandle[0] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/ExplanationNext1.png");
-	spaceToNextTextureHandle[1] = TextureManager::GetInstance()->LoadTexture("Resources/Game/Explanation/ExplanationNext2.png");
+	spaceToNextTextureHandle[0] = texturemanager_->LoadTexture("Resources/Game/Explanation/ExplanationNext1.png");
+	spaceToNextTextureHandle[1] = texturemanager_->LoadTexture("Resources/Game/Explanation/ExplanationNext2.png");
 
 	for (uint32_t i = 0; i < SPACE_TO_NEXT_QUANTITY_; ++i) {
 		spaceToNext_[i].reset(Sprite::Create(spaceToNextTextureHandle[i], { .x=0.0f,.y = 0.0f }));
@@ -175,18 +179,18 @@ void GameScene::Initialize() {
 
 	//常時表示
 	//操作
-	uint32_t operationTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Operation/Operation.png");
+	uint32_t operationTextureHandle = texturemanager_->LoadTexture("Resources/Game/Operation/Operation.png");
 	operation_.reset(Sprite::Create(operationTextureHandle, {.x=20.0f,.y=0.0f}));
 	isGamePlay_ = false;
 
-	uint32_t pickUpTextureManager = TextureManager::GetInstance()->LoadTexture("Resources/Game/Key/PickUpKey.png");
+	uint32_t pickUpTextureManager = texturemanager_->LoadTexture("Resources/Game/Key/PickUpKey.png");
 	pickUpKey_.reset(Sprite::Create(pickUpTextureManager, { .x = 0.0f,.y = 0.0f }));
 	
 #pragma endregion
 
 	#pragma region UI
-		uint32_t playerHPTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Player/PlayerHP.png");
-		uint32_t playerHPBackFrameTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Player/PlayerHPBack.png");
+		uint32_t playerHPTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHP.png");
+		uint32_t playerHPBackFrameTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHPBack.png");
 		const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
 		for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
 			playerHP_[i].reset(Sprite::Create(playerHPTextureHandle, {.x=static_cast<float>(i)*64+ INITIAL_POSITION.x,.y= INITIAL_POSITION .y}));
@@ -197,7 +201,7 @@ void GameScene::Initialize() {
 
 
 		//ゴールに向かえのテキスト
-		uint32_t toEscapeTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Game/Escape/ToGoal.png");
+		uint32_t toEscapeTextureHandle = texturemanager_->LoadTexture("Resources/Game/Escape/ToGoal.png");
 		toEscape_.reset(Sprite::Create(toEscapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 
 	#pragma endregion
@@ -247,10 +251,13 @@ void GameScene::KeyCollision(){
 		//勿論取得されていない時だけ受け付ける
 		if (key->GetIsPickUp() == false) {
 			//判定は円で良いかも
-			Vector3 distance = {};
-			distance.x = std::powf((player_->GetWorldPosition().x - key->GetWorldPosition().x), 2.0f);
-			distance.z = std::powf((player_->GetWorldPosition().z - key->GetWorldPosition().z), 2.0f);
+			Vector3 distance = {
+				.x = std::powf((player_->GetWorldPosition().x - key->GetWorldPosition().x), 2.0f),
+				.y = 0.0f,
+				.z = std::powf((player_->GetWorldPosition().z - key->GetWorldPosition().z), 2.0f),
+			};
 
+			//距離
 			float colissionDistance = sqrtf(distance.x + distance.y + distance.z);
 			
 
@@ -415,11 +422,11 @@ void GameScene::EscapeCondition(){
 
 void GameScene::PlayerMove(){
 
-	//何も押していないの時つまり動いていないので
-	//通常はfalseにしておく
+	//何も押していない時つまり動いていないので
+	//通常はfalseと0にしておく
 	isPlayerMoveKey_ = false;
 	isPlayerMove_ = false;
-	playerMoveDirection_ = { 0.0f,0.0f,0.0f };
+	playerMoveDirection_ = {.x= 0.0f,.y=0.0f,.z=0.0f };
 
 
 	#pragma region キーボード
@@ -474,20 +481,23 @@ void GameScene::PlayerMove(){
 
 			//コントローラーの入力
 			bool isInput = false;
+			//左スティック
 			Vector3 leftStickInput = {
 				.x = (static_cast<float>(input_->GetState().Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
 				.z = (static_cast<float>(input_->GetState().Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
 			};
 
 
-			//デッドゾーン
+			//デッドゾーンの設定
 			const float DEAD_ZONE = 0.1f;
+			//X軸
 			if (std::abs(leftStickInput.x) < DEAD_ZONE) {
 				leftStickInput.x = 0.0f;
 			}
 			else {
 				isInput = true;
 			}
+			//Z軸
 			if (std::abs(leftStickInput.z) < DEAD_ZONE) {
 				leftStickInput.z = 0.0f;
 			}
@@ -578,9 +588,7 @@ void GameScene::PlayerMove(){
 
 }
 
-/// <summary>
-/// 更新
-/// </summary>
+
 void GameScene::Update(GameManager* gameManager) {
 
 	//フレーム初めに
@@ -752,18 +760,21 @@ void GameScene::Update(GameManager* gameManager) {
 
 
 
-		//数学とプログラムで回る向きが違うことに煩わしさを感じます・・
+		//数学とプログラムで回る向きが違うことに煩わしさを感じるので
+		//無理矢理直す
 		float phi = -originPhi_;
 
-
+		//プレイヤーにそれぞれの角度を設定する
 		player_->GetFlashLight()->SetTheta(theta_);
 		player_->GetFlashLight()->SetPhi(phi);
 		
 
 
 		//エネミーをコリジョンマネージャーに追加
+		//通常の敵のリストの取得
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
+			//懐中電灯に対して
 			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 			
 			//攻撃
@@ -774,12 +785,12 @@ void GameScene::Update(GameManager* gameManager) {
 				player_->SetIsAcceptDamegeFromNoemalEnemy(false);
 			}
 			
+			//敵の攻撃
 			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 			
 		}
 		//通常の敵
 		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
-
 
 		//懐中電灯
 		collisionManager_->RegisterList(player_->GetFlashLightCollision());
@@ -790,6 +801,7 @@ void GameScene::Update(GameManager* gameManager) {
 		for (StrongEnemy* strongEnemy : strongEnemyes) {
 			bool isTouch = strongEnemy->GetIsTouchPlayer();
 
+			//接触
 			if (isTouch == true) {
 				isTouchStrongEnemy_ = true;
 			}
@@ -800,10 +812,12 @@ void GameScene::Update(GameManager* gameManager) {
 
 
 		//もとに戻す
+		//カメラの回転の計算
 		camera_.rotate_.x = -phi;
 		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
 		camera_.rotate_.z = 0.0f;
 
+		//位置の計算
 		camera_.translate_ = VectorCalculation::Add(player_->GetWorldPosition(), CAMERA_POSITION_OFFSET);
 
 
@@ -885,8 +899,8 @@ void GameScene::Update(GameManager* gameManager) {
 		whiteFadeTransparency_ += FADE_OUT_INTERVAL;
 		whiteFade_->SetTransparency(whiteFadeTransparency_);
 
-		if (whiteFadeTransparency_ > 1.0f) {
-			gameManager->ChangeScene(new LoseScene());
+		if (whiteFadeTransparency_ > 2.0f) {
+			gameManager->ChangeScene(new WinScene());
 			return;
 		}
 		
@@ -950,7 +964,6 @@ void GameScene::Update(GameManager* gameManager) {
 	ImGui::Begin("フェード");
 	ImGui::InputFloat("白", &whiteFadeTransparency_);
 	ImGui::InputFloat("黒", &blackFadeTransparency_);
-
 	ImGui::End();
 
 
@@ -965,13 +978,13 @@ void GameScene::Update(GameManager* gameManager) {
 
 
 void GameScene::PreDrawPostEffectFirst(){
+	//ビネット描画処理前
 	vignette_->PreDraw();
 }
 
 
 void GameScene::DrawObject3D() {
 	
-
 	//懐中電灯を取得
 	SpotLight spotLight = player_->GetFlashLight()->GetSpotLight();
 
@@ -995,6 +1008,7 @@ void GameScene::DrawObject3D() {
 
 
 void GameScene::DrawPostEffect(){
+	//ビネット描画
 	vignette_->Draw();
 }
 

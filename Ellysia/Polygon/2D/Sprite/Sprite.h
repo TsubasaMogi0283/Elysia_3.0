@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file GameManager.h
+ * @file Sprite.h
  * @brief スプライトのクラス
  * @author 茂木翼
  */
@@ -196,12 +196,14 @@ private:
 
 	//マテリアル
 	ComPtr<ID3D12Resource> materialResource_ = nullptr;
+	//データ
 	MaterialData* materialData_ = nullptr;
 	
 
 
 	//TransformationMatrix用リソース
 	ComPtr<ID3D12Resource> transformationMatrixResource_ = nullptr;
+	//データ
 	TransformationMatrix* transformationMatrixData_ = nullptr;
 	
 	
