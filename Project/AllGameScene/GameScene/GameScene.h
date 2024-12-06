@@ -176,7 +176,7 @@ private:
 
 	//カメラ
 	Camera camera_ = {};
-
+	//座標のオフセット
 	Vector3 cameraPositionOffset = { 0.0f,1.0f,0.0f };
 
 

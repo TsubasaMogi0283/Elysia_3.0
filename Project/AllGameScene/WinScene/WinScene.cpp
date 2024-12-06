@@ -1,4 +1,4 @@
-#include "SampleScene2.h"
+#include "WinScene.h"
 #include <TextureManager.h>
 
 #include "TitleScene/TitleScene.h"
@@ -33,7 +33,7 @@ void WinScene::Initialize() {
 	transparency_ = 0.0f;
 	black_->SetTransparency(transparency_);
 	
-	
+	//ブラックアウトの時間を初期化
 	blackOutTime_ = 0;
 
 
@@ -48,23 +48,25 @@ void WinScene::Initialize() {
 
 void WinScene::Update(GameManager* gameManager){
 
-
 	//通常の点滅
 	flashTime_ += 1;
+	//表示
 	if (flashTime_ > FLASH_TIME_LIMIT_ * 0 &&
 		flashTime_ <= FLASH_TIME_LIMIT_) {
 		text_->SetInvisible(false);
 	}
+	//非表示
 	if (flashTime_ > FLASH_TIME_LIMIT_ &&
 		flashTime_ <= FLASH_TIME_LIMIT_ * 2) {
 		text_->SetInvisible(true);
 
 	}
+	//循環
 	if (flashTime_ > FLASH_TIME_LIMIT_ * 2) {
 		flashTime_ = 0;
 	}
 
-
+	//コントローラーを繋いでいる時
 	if (input_->IsConnetGamePad() == true) {
 
 		//Bボタンを押したとき
@@ -72,12 +74,13 @@ void WinScene::Update(GameManager* gameManager){
 			bTriggerTime_ += 1;
 
 		}
+		//押していない時
 		if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
 			bTriggerTime_ = 0;
 		}
 
+		//トリガー
 		if (bTriggerTime_ == 1) {
-			
 			restart_ = true;
 		}
 	}
@@ -86,9 +89,10 @@ void WinScene::Update(GameManager* gameManager){
 		restart_ = true;
 	}
 
-
+	//再スタート
 	if (restart_ == true) {
 
+		//時間を足していく
 		fastFlashTime_ += 1;
 		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == 0) {
 			++textDisplayCount_;
@@ -97,6 +101,7 @@ void WinScene::Update(GameManager* gameManager){
 		if (textDisplayCount_ % 2 == 0) {
 			text_->SetInvisible(true);
 		}
+		//非表示
 		else {
 			text_->SetInvisible(false);
 		}
@@ -109,19 +114,19 @@ void WinScene::Update(GameManager* gameManager){
 			black_->SetTransparency(transparency_);
 
 			//暗くなったらシーンチェンジ
-			const float TRANSPARENCY_INTERVAL = 0.01f;
 			transparency_ += TRANSPARENCY_INTERVAL;
 		}
 
-
-		if (transparency_ > 1.0f) {
+		//指定した時間まで時間が足される
+		if (transparency_ > COMPLETELY_NO_TRANSPARENT_) {
 			blackOutTime_ += 1;
 		}
 
 		
 	}
 
-	if (blackOutTime_ > 60*2) {
+	//タイトルシーンへ
+	if (blackOutTime_ > CHANGE_TO_TITLE_TIME_) {
 		gameManager->ChangeScene(new TitleScene());
 		return;
 	}

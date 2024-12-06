@@ -4,7 +4,7 @@
 
 #include "Input.h"
 #include "AdjustmentItems.h"
-#include "SampleScene2/SampleScene2.h"
+#include "WinScene/WinScene.h"
 #include "LoseScene/LoseScene.h"
 
 #include "SingleCalculation.h"

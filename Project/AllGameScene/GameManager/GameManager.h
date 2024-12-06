@@ -1,16 +1,13 @@
 #pragma once
-
-
-
 /**
  * @file GameManager.h
  * @brief ゲーム管理クラス
  * @author 茂木翼
  */
 
-
-#include "IGameScene.h"
 #include <cstdint>
+#include "IGameScene.h"
+
 
 /// <summary>
 /// ゲーム管理クラス

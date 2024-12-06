@@ -89,38 +89,57 @@ private:
 	std::unique_ptr<Sprite> text_ = nullptr;
 	//背景のスプライト
 	std::unique_ptr<Sprite> black_ = nullptr;
+	//見せるカウント
+	uint32_t textDisplayCount_ = 0u;
+
 	//透明度
 	float transparency_ = 0.0f;
 	
+
 	//暗転している時間
 	uint32_t blackOutTime_ = 0u;
 
 	//Bトリガー
+	//時間
 	uint32_t bTriggerTime_ = 0u;
+	//フラグ
 	bool isBTrigger_ = false;
 
 	//再開
 	bool restart_ = false;
 
-
-
+	
 
 	//点滅
 	bool isFlash_ = false;
 	//時間
 	uint32_t flashTime_ = 0u;
-	const uint32_t FLASH_TIME_LIMIT_ = 30u;
 	
-	
+
 	//高速点滅
 	bool isFastFlash_ = false;
-	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60u;
-	//間隔
-	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
-	//見せるカウント
-	uint32_t textDisplayCount_ = 0u;
 	//時間
 	uint32_t fastFlashTime_ = 0u;
 
+
+	
+	
+
+
+private:
+	//透明変化の間隔
+	const float TRANSPARENCY_INTERVAL = 0.01f;
+	//完全に「不透明」になる値
+	const float COMPLETELY_NO_TRANSPARENT_ = 1.0f;
+	//タイトルシーンに変わる時間
+	const uint32_t CHANGE_TO_TITLE_TIME_ = 60 * 2;
+
+	//この時間になるまで点滅
+	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60u;
+	//高速点滅の間隔
+	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
+	//この時間になるまで高速点滅
+	const uint32_t FLASH_TIME_LIMIT_ = 30u;
+	
 };
 

@@ -5,8 +5,11 @@
  * @author 茂木翼
  */
 
+//前方宣言
 
-
+/// <summary>
+/// ゲーム管理クラス
+/// </summary>
 class GameManager;
 
 /// <summary>

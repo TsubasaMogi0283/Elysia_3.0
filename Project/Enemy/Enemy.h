@@ -18,9 +18,25 @@
 #include "Particle3D.h"
 #include "DirectionalLight.h"
 
+#pragma region 前方宣言
+
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight;
+
+/// <summary>
+/// プレイヤー
+/// </summary>
 class Player;
+
+
+#pragma endregion
 
 /// <summary>
 /// 敵
@@ -226,6 +242,9 @@ private:
 	WorldTransform worldTransform_ = {};
 	//スケールサイズ
 	const float SCALE_SIZE = 10.0f;
+
+	//スピードの量
+	const float SPEED_AMOUNT_ = 0.05f;
 	//移動速度
 	Vector3 preSpeed_ = {};
 	Vector3 speed_ = {};
@@ -268,7 +287,9 @@ private:
 	//攻撃
 	int32_t attackTime_ = 0;
 	bool isAttack_ = false;
-	int32_t attackCount_ = 0;
+
+	//0に戻る時間
+	const int32_t RETURN_ATTCK_TIME_ = 240u;
 
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
