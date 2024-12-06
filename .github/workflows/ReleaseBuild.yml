@@ -15,7 +15,7 @@ env:
   # リポジトリのルートディレクトリを基点としたソリューションファイルパス
   SOLUTION_FILE_PATH: CG2_1.sln
   # Visual Studio の構成(Debug /Release)
-  CONFIGURATION: ReleaseBuild
+  CONFIGURATION: Release
 
 # job...ワークフローの本体
 jobs:
