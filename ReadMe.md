@@ -1,5 +1,7 @@
 [![DebugBuild](https://github.com/TsubasaMogi0283/Ellysia_3.0/actions/workflows/DebugBuild.yml/badge.svg?branch=master)](https://github.com/TsubasaMogi0283/Ellysia_3.0/actions/workflows/DebugBuild.yml)
 
+[![ReleaseBuild](https://github.com/TsubasaMogi0283/Ellysia_3.0/actions/workflows/ReleaseBuild.yml/badge.svg?branch=master)](https://github.com/TsubasaMogi0283/Ellysia_3.0/actions/workflows/ReleaseBuild.yml)
+
 # 作品
 
 タイトル: 静寂の霊園  
