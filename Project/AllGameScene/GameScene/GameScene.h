@@ -53,6 +53,11 @@ class GameManager;
 class TextureManager;
 
 /// <summary>
+/// モデル管理クラス
+/// </summary>
+class ModelManager;
+
+/// <summary>
 /// 入力クラス
 /// </summary>
 class Input;
@@ -160,7 +165,8 @@ private:
 	Input* input_=nullptr;
 	//テクスチャ管理クラス
 	TextureManager* texturemanager_ = nullptr;
-
+	//モデル管理クラス
+	ModelManager* modelManager_ = nullptr;
 
 private:
 
@@ -170,12 +176,10 @@ private:
 
 	//カメラ
 	Camera camera_ = {};
-	Vector3 cameraPosition_ = {};
-	Vector3 CAMERA_POSITION_OFFSET = { 0.0f,1.0f,0.0f };
 
-	//3人称視点
-	Vector3 cameraThirdPersonViewOfPointPosition_ = {};
-	Vector3 thirdPersonViewOfPointRotate_ = {};
+	Vector3 cameraPositionOffset = { 0.0f,1.0f,0.0f };
+
+
 
 	//回転キーXY
 	bool isRotateYKey_ = false;
@@ -232,8 +236,7 @@ private:
 	
 	//敵管理
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
-	//敵のモデルハンドル
-	uint32_t enemyModelHandle_ = 0u;
+	
 
 	//角度
 	float theta_ = 0.0f;
