@@ -110,7 +110,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 //DSSについて
 //DSS...DirectDrawSurface
 //png,jpegだとCubemapを使えないがDSSだと出来る!!
-
+//GPUに圧縮したまま送ることが出来るので処理速度が速い
 
 
 
@@ -118,6 +118,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 #pragma region 上のLoadTextureにまとめた
 //Textureを読み込むためのLoad関数
 //1.TextureデータそのものをCPUで読み込む
+
 DirectX::ScratchImage TextureManager::LoadTextureData(const std::string& filePath) {
 
 	HRESULT hResult = {};
@@ -157,6 +158,7 @@ DirectX::ScratchImage TextureManager::LoadTextureData(const std::string& filePat
 }
 
 //2.DirectX12のTextureResourceを作る
+
 ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexMetadata& metadata) {
 	ComPtr<ID3D12Resource> resource = nullptr;
 
@@ -208,6 +210,7 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 
 //3.TextureResourceに1で読んだデータを転送する
 //書き換え
+
 [[nodiscard]]
 ComPtr<ID3D12Resource> TextureManager::TransferTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages) {
 
@@ -241,7 +244,7 @@ ComPtr<ID3D12Resource> TextureManager::TransferTextureData(ComPtr<ID3D12Resource
 #pragma endregion
 
 
-void TextureManager::GraphicsCommand(uint32_t rootParameter, uint32_t texHandle) {
-	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(rootParameter, texHandle);
+void TextureManager::GraphicsCommand(const uint32_t& rootParameter, const uint32_t& textureHandle) {
+	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(rootParameter, textureHandle);
 }
 

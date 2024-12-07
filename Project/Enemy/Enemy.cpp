@@ -99,13 +99,7 @@ void Enemy::Damaged(){
 
 
 void Enemy::Update(){
-	//スピードの量
-	const float SPEED_AMOUNT = 0.05f;
-	//攻撃開始時間
-	//const uint32_t ATTACK_START_TIME = 60;
-	//攻撃終了時間
-	//const uint32_t ATTCK_END_TIME = 120;
-
+	
 	//StatePatternにしたい！！
 	 
 	if (isAlive_ == true) {
@@ -118,7 +112,7 @@ void Enemy::Update(){
 			attackTime_ = 0;
 			preTrackingPlayerPosition_ = {};
 			preTrackingPosition_ = {};
-			speed_ = { 0.0f,0.0f,0.0f };
+			speed_ = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
 
 			break;
 
@@ -165,7 +159,7 @@ void Enemy::Update(){
 			direction_ = VectorCalculation::Normalize(direction_);
 
 			//加算
-			Vector3 speedVelocity = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
+			Vector3 speedVelocity = VectorCalculation::Multiply(direction_, SPEED_AMOUNT_);
 			worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, speedVelocity);
 
 
@@ -180,7 +174,6 @@ void Enemy::Update(){
 				//ここで攻撃
 				//コライダーが当たっている時だけ通す
 				isAttack_ = true;
-				++attackCount_;
 				
 			}
 			else {
@@ -188,7 +181,7 @@ void Enemy::Update(){
 			}
 
 			//4秒経ったらまた0になる
-			if (attackTime_ > 240) {
+			if (attackTime_ > RETURN_ATTCK_TIME_) {
 				attackTime_ = 0;
 
 			}
@@ -198,13 +191,10 @@ void Enemy::Update(){
 		}
 	}
 	
-
-
-	
-
 	//向きを計算しモデルを回転させる
 	float directionToRotateY = std::atan2f(-direction_.z,direction_.x);
-
+	//回転のオフセット
+	//元々のモデルの回転が変だったのでこれを足している
 	const float ROTATE_OFFSET = -std::numbers::pi_v<float>/2.0f;
 	worldTransform_.rotate.y = directionToRotateY + ROTATE_OFFSET;
 
@@ -213,15 +203,16 @@ void Enemy::Update(){
 	worldTransform_.rotate.y = directionToRotateY + DEBUG_MODEL_ROTATE_OFFSET;
 #endif // _DEBUG
 
-
-	
-
-	
-
-	//更新
+	//ワールドトランスフォームの更新
 	worldTransform_.Update();
+	//マテリアルの更新
 	material_.Update();
+	//平行光源の更新
 	directionalLight_.Update();
+
+
+
+
 	//AABBの計算
 	aabb_.max = VectorCalculation::Add(GetWorldPosition(), RADIUS_INTERVAL_);
 	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), RADIUS_INTERVAL_);
@@ -243,13 +234,10 @@ void Enemy::Update(){
 	Damaged();
 
 #ifdef _DEBUG
-	float degreeRotateY = directionToRotateY * (180.0f / std::numbers::pi_v<float>);
 
 	ImGui::Begin("敵");
 	ImGui::InputFloat3("方向", &direction_.x);
-	ImGui::InputFloat("回転Y", &degreeRotateY);
 	ImGui::Checkbox("攻撃", &isAttack_);
-	ImGui::InputInt("attackCount_", &attackCount_);
 	ImGui::InputInt("攻撃時間", &attackTime_);
 	
 	if (ImGui::TreeNode("状態")) {
@@ -288,7 +276,7 @@ void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 #endif // _DEBUG
 
 
-	//描画
+	//本体
 	if (isAlive_ == true) {
 		model_->Draw(worldTransform_, camera,material_, spotLight);
 	}

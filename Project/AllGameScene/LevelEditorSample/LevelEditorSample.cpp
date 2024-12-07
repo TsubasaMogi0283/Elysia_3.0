@@ -14,9 +14,9 @@
 
 
 LevelEditorSample::LevelEditorSample(){
-	//レベルエディタのインスタンスを取得
+	//レベルエディタ
 	levelEditor_ = LevelDataManager::GetInstance();
-	//インプットのインスタンスを取得
+	//インプット
 	input_ = Input::GetInstance();
 }
 
@@ -35,10 +35,12 @@ void LevelEditorSample::Initialize(){
 
 	//ポストエフェクト
 	back_ = std::make_unique<BackText>();
+	//初期化
 	back_->Initialize();
 
-
+	//オーディオ確認用のプレイヤー
 	player_ = std::make_unique<AudioTestPlayer>();
+	//初期化
 	player_->Initialize();
 
 
@@ -50,6 +52,7 @@ void LevelEditorSample::Initialize(){
 	//デバッグ用のモデル
 	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere","Sphere.obj");
 
+	//パーティクルの設定
 	particle3D_.reset(Particle3D::Create(debugModelHandle,ParticleMoveType::NormalRelease));
 	particle3D_->SetScale({ 10.0f,10.0f,10.0f });
 	particle3D_->SetTranslate({ 0.0f,0.0f,0.0f });
@@ -202,10 +205,10 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 void LevelEditorSample::DrawObject3D(){
 	//プレイヤー
-	//player_->Draw(camera_, directionalLight_);
+	player_->Draw(camera_, directionalLight_);
 
 	//レベルエディタ  
-	//levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
+	levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
 	
 	//パーティクル
 	particle3D_->Draw(camera_, material_);

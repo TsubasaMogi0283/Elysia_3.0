@@ -19,7 +19,7 @@ void TitleScene::Initialize(){
 	//初期化
 	const Vector2 INITIAL_POSITION = {.x=0.0f,.y=0.0f};
 	text_.reset(Sprite::Create(logoTextureHandle, INITIAL_POSITION));
-	title_.reset(Sprite::Create(titleTextureHandle, INITIAL_POSITION));
+	backGround_.reset(Sprite::Create(titleTextureHandle, INITIAL_POSITION));
 
 	isStart_ = false;
 	isFlash_ = true;
@@ -81,6 +81,7 @@ void TitleScene::Update(GameManager* gameManager){
 	}
 
 
+
 	//高速点滅
 	if (isFastFlash_ == true) {
 		fastFlashTime_ += 1;
@@ -128,15 +129,12 @@ void TitleScene::DrawPostEffect()
 }
 
 void TitleScene::DrawSprite(){
-	title_->Draw();
+	//背景
+	backGround_->Draw();
 
-	
+	//テキスト
 	text_->Draw();
 	
 
 
-}
-
-TitleScene::~TitleScene()
-{
 }

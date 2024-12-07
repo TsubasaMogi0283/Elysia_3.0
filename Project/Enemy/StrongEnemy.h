@@ -1,5 +1,12 @@
 #pragma once
 
+/**
+ * @file GameManager.h
+ * @brief 強敵のクラス
+ * @author 茂木翼
+ */
+
+
 #include <memory>
 
 #include "Model.h"
@@ -13,7 +20,9 @@
 struct Camera;
 struct SpotLight;
 
-
+/// <summary>
+/// 強敵
+/// </summary>
 class StrongEnemy :public Collider {
 public:
 	/// <summary>

@@ -1,4 +1,11 @@
 #pragma once
+
+/**
+ * @file Ellysia.h
+ * @brief 敵のクラス
+ * @author 茂木翼
+ */
+
 #include "GameManager.h"
 #include "WindowsSetup.h"
 #include "DirectXSetup.h"
@@ -9,6 +16,7 @@
 //「Ellysia Engine」というように、後ろにEngine加えても自然だと思う
 
 //崩〇3〇dじゃないよ
+//Elysiaでもないよ。誤字ではないよ。
 
 /// <summary>
 /// エンジン
@@ -34,10 +42,17 @@ public:
 	/// <returns></returns>
 	static Ellysia* GetInstance();
 
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="ellysia"></param>
 	Ellysia(const Ellysia& ellysia) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="ellysia"></param>
+	/// <returns></returns>
 	Ellysia& operator=(const Ellysia& ellysia) = delete;
 
 

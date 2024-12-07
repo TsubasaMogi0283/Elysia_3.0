@@ -1,4 +1,11 @@
 #pragma once
+
+/**
+ * @file TextureManager.h
+ * @brief テクスチャ管理クラスのクラス
+ * @author 茂木翼
+ */
+
 #include <d3d12.h>
 #include <string>
 #include <array>
@@ -9,8 +16,10 @@
 #include "DirectXSetup.h"
 #include "ConvertLog.h"
 
-//テクスチャに関するクラス
-class TextureManager {
+/// <summary>
+/// テクスチャ管理クラス
+/// </summary>
+class TextureManager final{
 private:
 	/// <summary>
 	/// コンストラクタ
@@ -58,8 +67,8 @@ public:
 	/// コマンドを送る
 	/// </summary>
 	/// <param name="rootParameter"></param>
-	/// <param name="texHandle"></param>
-	static void GraphicsCommand(uint32_t rootParameter, uint32_t texHandle);
+	/// <param name="textureHandle"></param>
+	static void GraphicsCommand(const uint32_t& rootParameter,const uint32_t& textureHandle);
 
 
 

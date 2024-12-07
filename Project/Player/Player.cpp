@@ -66,8 +66,21 @@ void Player::Damaged() {
 	//通常の敵に当たった場合
 	if (colliderToNormalEnemy_->GetIsTouch() == true) {
 		//ダメージを受ける
-		if (isAcceptDamegeFromNoemalEnemy_ == true) {
+		if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_==false) {
+			isDameged_ = true;
 			--hp_;
+			//線形補間で振動処理をする
+			vibeTime_ += DELTA_TIME;
+			vibeStrength_ = SingleCalculation::Lerp(1.0f, 0.0f, vibeTime_);
+			Input::GetInstance()->SetVibration(vibeStrength_, vibeStrength_);
+
+			//振動を止める
+			if (vibeStrength_ <= 0.0f) {
+				Input::GetInstance()->StopVibration();
+				vibeTime_ = 0.0f;
+				isDameged_ = false;
+				acceptDamage_ = false;
+			}
 		}
 		
 	}
@@ -76,37 +89,6 @@ void Player::Damaged() {
 		isDameged_ = false;
 		
 	}
-
-
-	//ダメージを受け入れる
-	if (acceptDamage_ == true) {
-		
-
-		//体力を1減らす
-		if (isDameged_ == true) {
-			++damagedTime_;
-
-			if (damagedTime_ == 1) {
-				
-			}
-			
-		}
-
-		//線形補間で振動処理をする
-		vibeTime_ += DELTA_TIME;
-		vibeStrength_ = SingleCalculation::Lerp(1.0f, 0.0f, vibeTime_);
-		Input::GetInstance()->SetVibration(vibeStrength_, vibeStrength_);
-
-		//振動を止める
-		if (vibeStrength_ <= 0.0f) {
-			Input::GetInstance()->StopVibration();
-			vibeTime_ = 0.0f;
-			isDameged_ = false;
-			acceptDamage_ = false;
-		}
-	}
-
-
 }
 void Player::Update(){
 	
@@ -151,6 +133,7 @@ void Player::Update(){
 
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
+
 	//AABBの計算
 	aabb_.min.x = worldTransform_.GetWorldPosition().x - SIDE_SIZE;
 	aabb_.min.y = worldTransform_.GetWorldPosition().y - SIDE_SIZE;
@@ -183,7 +166,7 @@ void Player::Update(){
 
 	
 #ifdef _DEBUG
-	//ImGuiにInputUintが無いの不便・・
+
 	int32_t keyQuantity = static_cast<int32_t>(haveKeyQuantity_);
 	int32_t condition = static_cast<int32_t>(moveCondition_);
 
