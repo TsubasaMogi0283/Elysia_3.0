@@ -1,8 +1,20 @@
 #pragma once
+/**
+ * @file IGameScene.h
+ * @brief ゲームシーンのインターフェイス
+ * @author 茂木翼
+ */
 
 //前方宣言
+
+/// <summary>
+/// ゲーム管理クラス
+/// </summary>
 class GameManager;
 
+/// <summary>
+/// ゲームシーンのインターフェイス
+/// </summary>
 class IGameScene {
 public:
 	/// <summary>
@@ -32,15 +44,15 @@ public:
 	/// </summary>
 	virtual void DrawSprite() = 0;
 
-
-#pragma region PostEffect
-
-
+	/// <summary>
+	/// ポストエフェクト描画処理前
+	/// </summary>
 	virtual void PreDrawPostEffectFirst()=0;
+
+	/// <summary>
+	/// ポストエフェクト描画
+	/// </summary>
 	virtual void DrawPostEffect() = 0;
-
-
-#pragma endregion
 
 
 };

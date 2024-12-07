@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file GameManager.h
+ * @file EnemyManager.h
  * @brief 敵管理クラス
  * @author 茂木翼
  */

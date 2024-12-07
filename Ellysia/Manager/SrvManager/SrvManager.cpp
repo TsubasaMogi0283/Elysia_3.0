@@ -39,7 +39,7 @@ uint32_t SrvManager::Allocate(){
 
 
 
-void SrvManager::CreateSRVForTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, DXGI_FORMAT format, UINT mipLevels, bool isCubeMap) {
+void SrvManager::CreateSRVForTexture2D(const uint32_t& srvIndex, ID3D12Resource* pResource, const  DXGI_FORMAT& format, const UINT& mipLevels, const bool& isCubeMap) {
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -63,7 +63,7 @@ void SrvManager::CreateSRVForTexture2D(uint32_t srvIndex, ID3D12Resource* pResou
 	
 }
 
-void SrvManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride){
+void SrvManager::CreateSRVForStructuredBuffer(const uint32_t& srvIndex, ID3D12Resource* pResource, const UINT& numElements, const UINT& structureByteStride){
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc={};
 	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -78,7 +78,7 @@ void SrvManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource*
 
 }
 
-void SrvManager::CreateSRVForRenderTexture(ID3D12Resource* pResource, uint32_t handle){
+void SrvManager::CreateSRVForRenderTexture(ID3D12Resource* pResource,const uint32_t& handle){
 	//SRVの設定
 	//FormatはResourceと同じにしておく
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -95,7 +95,7 @@ void SrvManager::CreateSRVForRenderTexture(ID3D12Resource* pResource, uint32_t h
 
 }
 
-void SrvManager::CreateSRVForDepthTexture(uint32_t handle){
+void SrvManager::CreateSRVForDepthTexture(const uint32_t& handle){
 	D3D12_SHADER_RESOURCE_VIEW_DESC depthTextureSrvDesc{};
 	//DXGI_FORMAT_D24_UNIFORM_S8_UNITのDepthを読むときはDXGI_FORMAT_R24_UNIFORM_X8_TYPELESS
 	depthTextureSrvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
@@ -117,7 +117,7 @@ void SrvManager::PreDraw() {
 
 
 
-void SrvManager::SetGraphicsRootDescriptorTable(UINT rootParameterIndex, uint32_t srvIndex){
+void SrvManager::SetGraphicsRootDescriptorTable(const UINT& rootParameterIndex,const uint32_t& srvIndex){
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(
 		rootParameterIndex,
 		GetGPUDescriptorHandle(srvIndex));

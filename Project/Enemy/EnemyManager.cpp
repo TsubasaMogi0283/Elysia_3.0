@@ -1,12 +1,12 @@
 #include "EnemyManager.h"
-#include <Input.h>
+#include <random>
 #include <cassert>
 
 #include "Player/Player.h"
 #include "Stage/ObjectManager/ObjectManager.h"
-#include <VectorCalculation.h>
-#include <SingleCalculation.h>
-#include <random>
+#include "VectorCalculation.h"
+#include "SingleCalculation.h"
+#include "Input.h"
 
 void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& strongEnemyModel){
 	
@@ -37,20 +37,17 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	enemyes_.push_back(enemy1);
 	
 		
-	//Enemy* enemy2 = new Enemy();
-	//Vector3 position2 = { -5.0f,0.0f,15.0f };
-	//enemy2->Initialize(normalEnemyModelHandle_, position2, { 0.01f,0.0f,0.0f });
-	//enemyes_.push_back(enemy2);
+	Enemy* enemy2 = new Enemy();
+	Vector3 position2 = { -5.0f,0.0f,15.0f };
+	enemy2->Initialize(normalEnemyModelHandle_, position2, { 0.01f,0.0f,0.0f });
+	enemyes_.push_back(enemy2);
 	
-	//Enemy* enemy3 = new Enemy();
-	//Vector3 position3 = { -10.0f,0.0f,4.0f };
-	//enemy3->Initialize(normalEnemyModelHandle_, position3, { 0.01f,0.0f,0.01f });
-	//uint32_t condition = EnemyCondition::Move;
-	//enemy3->SetCondition(condition);
-	//enemy3->SetRadius_(player_->GetRadius());
-	//enemyes_.push_back(enemy3);
-	////"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\TD2_Enemy\TD2_Enemy.obj"
-	//
+	Enemy* enemy3 = new Enemy();
+	Vector3 position3 = { -10.0f,0.0f,4.0f };
+	enemy3->Initialize(normalEnemyModelHandle_, position3, { 0.01f,0.0f,0.01f });
+	enemyes_.push_back(enemy3);
+	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\TD2_Enemy\TD2_Enemy.obj"
+	
 	//生成
 #ifdef _DEBUG
 
@@ -69,7 +66,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
 	Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
 	
-	position = { -4.0f,0.0f,5.0f };
+	position = { -20.0f,0.0f,10.0f };
 	speed = { 0.01f,0.0f,-0.03f };
 	
 	//強い敵の初期化
@@ -599,9 +596,11 @@ void EnemyManager::Update(){
 			audio_->Stop(audioHandle_);
 		}
 		else {
-			audio_->Play(audioHandle_, true);
+			//再生
+			//audio_->Play(audioHandle_, true);
 		}
 
+		//音量変化
 		audio_->ChangeVolume(audioHandle_, volume);
 
 
@@ -629,13 +628,11 @@ void EnemyManager::Update(){
 
 		//設定した距離より小さくなると追跡
 		if (playerStrongEnemyDistance <= STRONG_ENEMY_TRACKING_START_DISTANCE_) {
-			
 			//追跡に移行
 			uint32_t newCondition = EnemyCondition::Tracking;
 			strongEnemy->SetCondition(newCondition);
 		}
 		else {
-
 			//通常の動きに移行
 			uint32_t newCondition = EnemyCondition::Move;
 			strongEnemy->SetCondition(newCondition);

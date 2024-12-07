@@ -1,6 +1,6 @@
 #include "GameManager.h"
 #include "GameScene/GameScene.h"
-#include "SampleScene2/SampleScene2.h"
+#include "WinScene/WinScene.h"
 #include "TitleScene/TitleScene.h"
 #include "LevelEditorSample/LevelEditorSample.h"
 
