@@ -61,13 +61,13 @@ public:
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="spotLight"></param>
-	void DrawObject3D(Camera& camera,SpotLight& spotLight);
+	void DrawObject3D(const Camera& camera,const SpotLight& spotLight);
 	
 	/// <summary>
 	/// スプライトの描画
 	/// </summary>
 	/// <param name="playeresKey"></param>
-	void DrawSprite(uint32_t playeresKey);
+	void DrawSprite(const uint32_t& playeresKey);
 
 	/// <summary>
 	/// デストラクタ
@@ -87,8 +87,8 @@ public:
 	/// 今ステージ上にある鍵の数を取得
 	/// </summary>
 	/// <returns></returns>
-	inline uint32_t GetKeyQuantity() {
-		return uint32_t(keyes_.size());
+	inline uint32_t GetKeyQuantity() const {
+		return static_cast<uint32_t>(keyes_.size());
 	}
 
 	inline uint32_t GetMaxKeyQuantity()const {

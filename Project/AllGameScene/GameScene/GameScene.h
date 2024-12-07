@@ -168,6 +168,19 @@ private:
 	//モデル管理クラス
 	ModelManager* modelManager_ = nullptr;
 
+
+
+private:
+	//時間変化
+	const float DELTA_TIME_ = 1.0f / 60.0f;
+
+
+	//フェードアウトの具合
+	const float FADE_OUT_INTERVAL_ = 0.01f;
+
+	//回転の大きさ
+	const float ROTATE_INTERVAL = 0.025f;
+
 private:
 
 
@@ -177,7 +190,7 @@ private:
 	//カメラ
 	Camera camera_ = {};
 	//座標のオフセット
-	Vector3 cameraPositionOffset = { 0.0f,1.0f,0.0f };
+	Vector3 cameraPositionOffset_ = {};
 
 
 
@@ -185,9 +198,7 @@ private:
 	bool isRotateYKey_ = false;
 	bool isRotateXKey_ = false;
 
-	//時間変化
-	const float DELTA_TIME = 1.0f / 60.0f;
-
+	
 	//マテリアル
 	Material material_ = {};
 
@@ -346,7 +357,5 @@ private:
 	
 #pragma endregion
 
-private:
-	//フェードアウトの具合
-	const float FADE_OUT_INTERVAL = 0.01f;
+
 };

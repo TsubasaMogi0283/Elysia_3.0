@@ -133,6 +133,7 @@ void Player::Update(){
 
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
+
 	//AABBの計算
 	aabb_.min.x = worldTransform_.GetWorldPosition().x - SIDE_SIZE;
 	aabb_.min.y = worldTransform_.GetWorldPosition().y - SIDE_SIZE;

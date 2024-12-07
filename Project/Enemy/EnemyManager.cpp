@@ -597,7 +597,7 @@ void EnemyManager::Update(){
 		}
 		else {
 			//再生
-			audio_->Play(audioHandle_, true);
+			//audio_->Play(audioHandle_, true);
 		}
 
 		//音量変化

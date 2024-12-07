@@ -105,6 +105,15 @@ public:
 	}
 
 
+
+private:
+	//回転の大きさ
+	const float ROTATE_AMOUNT_ = 0.1f;
+	//上下移動の大きさ
+	const float MOVE_AMOUNT_ = 0.1f;
+
+
+
 private:
 	//モデル
 	std::unique_ptr<Model> model_ = nullptr;
@@ -121,5 +130,10 @@ private:
 	//半径
 	float radius_ = 0.0f;
 
+	//元の座標
+	float originalPositionY_ = 0.001f;
+
+	//sinの動きにしたいのでthetaを作る
+	float theta_ = 0.0f;
 };
 

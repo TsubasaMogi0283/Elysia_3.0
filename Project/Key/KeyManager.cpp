@@ -10,7 +10,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 	//1個目生成
 	Key* key1 = new Key();
 	//座標
-	Vector3 keyPosition = { -10.0f,0.5f,1.0f };
+	Vector3 keyPosition = { .x = -10.0f,.y = 0.5f,.z = 1.0f };
 	//初期化
 	key1->Initialize(modelHandle, keyPosition);
 	//リストに入れる
@@ -19,14 +19,14 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 	//2個目生成
 	//以下同様
 	Key* key2 = new Key();
-	Vector3 keyPosition2 = { 5.0f,0.5f,10.0f };
+	Vector3 keyPosition2 = { .x = 5.0f,.y = 0.5f,.z = 10.0f };
 	key2->Initialize(modelHandle, keyPosition2);
 	keyes_.push_back(key2);
 
 	//3個目生成
 	//以下同様
 	Key* key3 = new Key();
-	Vector3 keyPosition3 = { 8.0f,0.5f,-10.0f };
+	Vector3 keyPosition3 = { .x = 8.0f,.y = 0.5f,.z = -10.0f };
 	key3->Initialize(modelHandle, keyPosition3);
 	keyes_.push_back(key3);
 
@@ -62,8 +62,6 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 
 void KeyManager::Update(){
 
-
-
 	//鍵
 	for (Key* key : keyes_) {
 		key->Update();
@@ -81,14 +79,14 @@ void KeyManager::Update(){
 	});
 }
 
-void KeyManager::DrawObject3D(Camera& camera, SpotLight& spotLight){
-	//鍵
+void KeyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight){
+	//描画
 	for (Key* key : keyes_) {
 		key->Draw(camera, spotLight);
 	}
 }
 
-void KeyManager::DrawSprite(uint32_t playeresKey){
+void KeyManager::DrawSprite(const uint32_t& playeresKey){
 	keySprite_->Draw();
 	keyNumber[playeresKey]->Draw();
 

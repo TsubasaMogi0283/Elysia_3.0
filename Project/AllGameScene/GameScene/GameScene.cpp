@@ -195,7 +195,7 @@ void GameScene::Initialize() {
 	
 
 	//カメラ座標のオフセットの初期化
-	cameraPositionOffset = { .x = 0.0f,.y = 2.0f,.z = 0.0f };
+	cameraPositionOffset_ = { .x = 0.0f,.y = 2.0f,.z = 0.0f };
 	
 	#pragma endregion
 	
@@ -237,20 +237,20 @@ void GameScene::Initialize() {
 #pragma endregion
 
 	#pragma region UI
-		uint32_t playerHPTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHP.png");
-		uint32_t playerHPBackFrameTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHPBack.png");
-		const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
-		for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
-			playerHP_[i].reset(Sprite::Create(playerHPTextureHandle, {.x=static_cast<float>(i)*64+ INITIAL_POSITION.x,.y= INITIAL_POSITION .y}));
-		}
+	uint32_t playerHPTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHP.png");
+	uint32_t playerHPBackFrameTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHPBack.png");
+	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
+	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
+		playerHP_[i].reset(Sprite::Create(playerHPTextureHandle, {.x=static_cast<float>(i)*64+ INITIAL_POSITION.x,.y= INITIAL_POSITION .y}));
+	}
 	
-		playerHPBackFrame_.reset(Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
-		currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
+	playerHPBackFrame_.reset(Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
+	currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
 
 
-		//ゴールに向かえのテキスト
-		uint32_t toEscapeTextureHandle = texturemanager_->LoadTexture("Resources/Game/Escape/ToGoal.png");
-		toEscape_.reset(Sprite::Create(toEscapeTextureHandle, INITIAL_FADE_POSITION));
+	//ゴールに向かえのテキスト
+	uint32_t toEscapeTextureHandle = texturemanager_->LoadTexture("Resources/Game/Escape/ToGoal.png");
+	toEscape_.reset(Sprite::Create(toEscapeTextureHandle, INITIAL_FADE_POSITION));
 
 	#pragma endregion
 
@@ -691,6 +691,7 @@ void GameScene::Update(GameManager* gameManager) {
 			whiteFadeTransparency_ = 0.0f;
 			isWhiteFadeIn = false;
 			isExplain_ = true;
+			//1枚目
 			howToPlayTextureNumber_ = 1;
 		}
 	}
@@ -700,16 +701,20 @@ void GameScene::Update(GameManager* gameManager) {
 	if (isWhiteFadeIn == false && isWhiteFadeOut_ == false) {
 		whiteFadeTransparency_ = 0.0f;
 		
+		//説明
 		if (isExplain_ == true) {
 			if (input_->IsTriggerKey(DIK_SPACE) == true) {
 				++howToPlayTextureNumber_;
 			}
-			//Bボタンを押したとき
+			
+			//コントローラー接続時
 			if (input_->IsConnetGamePad() == true) {
+				//Bボタンを押したとき
 				if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 					bTriggerTime_ += 1;
 
 				}
+				//押していない時
 				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
 					bTriggerTime_ = 0;
 				}
@@ -719,12 +724,14 @@ void GameScene::Update(GameManager* gameManager) {
 				}
 			}
 
+			//読み終わったらゲームプレイへ
 			if (howToPlayTextureNumber_ > 2) {
 				isExplain_ = false;
 				isGamePlay_ = true;
 			}
 		}
 		if (isGamePlay_ == true) {
+			//コントロール可能にする
 			player_->SetIsAbleToControll(true);
 
 			//操作説明を追加
@@ -744,15 +751,15 @@ void GameScene::Update(GameManager* gameManager) {
 		#pragma region Y軸に旋回
 
 		//+が左回り
-		const float ROTATE_OFFSET = 0.025f;
+		
 		//左を向く
 		if (input_->IsPushKey(DIK_LEFT) == true) {
-			theta_ += ROTATE_OFFSET;
+			theta_ += ROTATE_INTERVAL;
 			isRotateYKey_ = true;
 		}
 		//右を向く
 		if (input_->IsPushKey(DIK_RIGHT) == true) {
-			theta_ -= ROTATE_OFFSET;
+			theta_ -= ROTATE_INTERVAL;
 			isRotateYKey_ = true;
 		}
 
@@ -774,12 +781,12 @@ void GameScene::Update(GameManager* gameManager) {
 		
 		//上を向く
 		if (input_->IsPushKey(DIK_UP) == true) {
-			originPhi_ -= ROTATE_OFFSET;
+			originPhi_ -= ROTATE_INTERVAL;
 			isRotateXKey_ = true;
 		}
 		//下を向く
 		if (input_->IsPushKey(DIK_DOWN) == true) {
-			originPhi_ += ROTATE_OFFSET;
+			originPhi_ += ROTATE_INTERVAL;
 			isRotateXKey_ = true;
 		}
 
@@ -810,8 +817,8 @@ void GameScene::Update(GameManager* gameManager) {
 			if (isRotateYKey_ == false && isRotateXKey_ == false) {
 
 				//入力
-				float rotateMoveX = (float)input_->GetState().Gamepad.sThumbRY / SHRT_MAX * ROTATE_OFFSET;
-				float rotateMoveY = (float)input_->GetState().Gamepad.sThumbRX / SHRT_MAX * ROTATE_OFFSET;
+				float rotateMoveX = (float)input_->GetState().Gamepad.sThumbRY / SHRT_MAX * ROTATE_INTERVAL;
+				float rotateMoveY = (float)input_->GetState().Gamepad.sThumbRX / SHRT_MAX * ROTATE_INTERVAL;
 				
 				//勝手に動くので制限を掛ける
 				if (rotateMoveY < MOVE_LIMITATION && rotateMoveY > -MOVE_LIMITATION) {
@@ -899,7 +906,7 @@ void GameScene::Update(GameManager* gameManager) {
 		camera_.rotate_.z = 0.0f;
 
 		//位置の計算
-		camera_.translate_ = VectorCalculation::Add(player_->GetWorldPosition(), cameraPositionOffset);
+		camera_.translate_ = VectorCalculation::Add(player_->GetWorldPosition(), cameraPositionOffset_);
 
 
 
@@ -938,7 +945,7 @@ void GameScene::Update(GameManager* gameManager) {
 			//プレイヤーことカメラが倒れる感じが良いかも
 			isBlackFadeOut_ = true;
 
-			blackFadeTransparency_ += FADE_OUT_INTERVAL;
+			blackFadeTransparency_ += FADE_OUT_INTERVAL_;
 			blackFade_->SetTransparency(blackFadeTransparency_);
 
 
@@ -962,7 +969,7 @@ void GameScene::Update(GameManager* gameManager) {
 		ImGui::Begin("カメラ");
 		ImGui::SliderFloat3("回転", &camera_.rotate_.x, -3.0f, 3.0f);
 		ImGui::SliderFloat3("位置", &cameraTranslate.x, -100.0f, 100.0f);
-		ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset.x, -30.0f, 30.0f);
+		ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
 		ImGui::InputFloat("Theta", &theta_);
 		ImGui::InputFloat("Phi", &phi);
 		ImGui::End();
@@ -977,7 +984,7 @@ void GameScene::Update(GameManager* gameManager) {
 
 		player_->SetIsAbleToControll(false);
 		
-		whiteFadeTransparency_ += FADE_OUT_INTERVAL;
+		whiteFadeTransparency_ += FADE_OUT_INTERVAL_;
 		whiteFade_->SetTransparency(whiteFadeTransparency_);
 
 		if (whiteFadeTransparency_ > 2.0f) {
@@ -1016,14 +1023,14 @@ void GameScene::Update(GameManager* gameManager) {
 	//プレイヤーがダメージを受けた場合ビネット
 	if (player_->GetIsDamaged() == true) {
 		//時間の加算
-		vignetteChangeTime_ += DELTA_TIME;
+		vignetteChangeTime_ += DELTA_TIME_;
 		
 		//線形補間で滑らかに変化
 		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
 	}
 	//HPが1でピンチの場合
 	else if (player_->GetHP() == 1u) {
-		warningTime_ += DELTA_TIME;
+		warningTime_ += DELTA_TIME_;
 		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
 		if (warningTime_ > 1.0f) {
 			warningTime_ = 0.0f;
