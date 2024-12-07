@@ -889,8 +889,10 @@ void GameScene::Update(GameManager* gameManager) {
 		for (StrongEnemy* strongEnemy : strongEnemyes) {
 			bool isTouch = strongEnemy->GetIsTouchPlayer();
 
+			collisionManager_->RegisterList(strongEnemy);
 			//接触
 			if (isTouch == true) {
+
 				isTouchStrongEnemy_ = true;
 			}
 		}

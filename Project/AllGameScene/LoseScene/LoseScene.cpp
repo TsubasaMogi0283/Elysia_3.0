@@ -9,19 +9,21 @@
 
 void LoseScene::Initialize(){
 
+	//スプライトの初期座標
+	const Vector2 INITIAL_SPRITE_POSITION_ = { .x = 0.0f,.y = 0.0f };
+
 	//メイン
-	uint32_t failedTextureHandle = TextureManager::LoadTexture("Resources/Result/Lose/EscapeFailed.png");
-	failedTexture_.reset(Sprite::Create(failedTextureHandle, { .x = 0.0f,.y = 0.0f }));
-	failedTexture_->SetScale({ .x = 1.0f,.y = 1.0f });
+	uint32_t failedTextureHandle = TextureManager::LoadTexture("Resources/Sprite/Result/Lose/EscapeFailed.png");
+	failedTexture_.reset(Sprite::Create(failedTextureHandle, INITIAL_SPRITE_POSITION_));
 
 
 	//Text
-	uint32_t textHandle = TextureManager::GetInstance()->LoadTexture("Resources/Result/Lose/LoseText.png");
-	text_.reset(Sprite::Create(textHandle, { .x = 0.0f,.y = 0.0f }));
+	uint32_t textHandle = TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Result/Lose/LoseText.png");
+	text_.reset(Sprite::Create(textHandle, INITIAL_SPRITE_POSITION_));
 
 	//黒背景
-	uint32_t blackTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Back/Black.png");
-	black_.reset(Sprite::Create(blackTextureHandle, { .x = 0.0f,.y = 0.0f }));
+	uint32_t blackTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Back/Black.png");
+	black_.reset(Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION_));
 	//透明度の設定
 	transparency_ = 0.0f;
 	black_->SetTransparency(transparency_);
@@ -53,6 +55,7 @@ void LoseScene::Update(GameManager* gameManager){
 		flashTime_ = 0;
 	}
 
+	//コントローラー接続時
 	if (Input::GetInstance()->IsConnetGamePad() == true) {
 
 		//Bボタンを押したとき
@@ -75,6 +78,7 @@ void LoseScene::Update(GameManager* gameManager){
 	}
 
 
+	//タイトルへ戻る
 	if (isReturnTitle == true) {
 
 		fastFlashTime_ += 1;
@@ -108,7 +112,8 @@ void LoseScene::Update(GameManager* gameManager){
 
 	}
 
-	if (blackOutTime_ > 60 * 2) {
+	//タイトルへ
+	if (blackOutTime_ > CHANGE_TO_TITLE_TIME_) {
 		gameManager->ChangeScene(new TitleScene());
 		return;
 	}

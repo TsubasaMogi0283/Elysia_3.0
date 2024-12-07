@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "GameScene/GameScene.h"
 #include "WinScene/WinScene.h"
+#include "LoseScene/LoseScene.h"
 #include "TitleScene/TitleScene.h"
 #include "LevelEditorSample/LevelEditorSample.h"
 
@@ -12,7 +13,7 @@ void GameManager::Initialize() {
 	
 #ifdef _DEBUG
 	//currentGamaScene_ = new LevelEditorSample();
-	currentGamaScene_ = new GameScene();
+	currentGamaScene_ = new LoseScene();
 #endif // _DEBUG
 
 	//初期化
