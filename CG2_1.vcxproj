@@ -127,7 +127,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Ellysia\AdjustmentItems\AdjustmentItems.cpp" />
+    <ClCompile Include="Ellysia\AdjustmentItems\GlobalVariables.cpp" />
     <ClCompile Include="Ellysia\Audio\Audio.cpp" />
     <ClCompile Include="Ellysia\Camera\Camera.cpp" />
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp" />
@@ -389,7 +389,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ellysia\AdjustmentItems\AdjustmentItems.h" />
+    <ClInclude Include="Ellysia\AdjustmentItems\GlobalVariables.h" />
     <ClInclude Include="Ellysia\Audio\Audio.h" />
     <ClInclude Include="Ellysia\Audio\AudioStruct.h" />
     <ClInclude Include="Ellysia\Camera\Camera.h" />

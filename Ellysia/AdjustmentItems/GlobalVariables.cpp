@@ -1,21 +1,22 @@
-#include "AdjustmentItems.h"
-#include <ImGuiManager.h>
+#include "GlobalVariables.h"
+
 #include <imgui.h>
 
+#include "ImGuiManager.h"
 #include "WindowsSetup.h"
 
 
-AdjustmentItems* AdjustmentItems::GetInstance(){
-    static AdjustmentItems instance;
+GlobalVariables* GlobalVariables::GetInstance(){
+    static GlobalVariables instance;
     return &instance;
 }
 
-void AdjustmentItems::CreateGroup(const std::string& groupName){
+void GlobalVariables::CreateGroup(const std::string& groupName){
     //指定名のオブジェクトが無ければ追加
     datas_[groupName];
 }
 
-void AdjustmentItems::SetValue(const std::string& groupName, const std::string& key, int32_t value){
+void GlobalVariables::SetValue(const std::string& groupName, const std::string& key,const int32_t& value){
     //グループの参照
     Group& group = datas_[groupName];
     
@@ -28,7 +29,7 @@ void AdjustmentItems::SetValue(const std::string& groupName, const std::string& 
 
 }
 
-void AdjustmentItems::SetValue(const std::string& groupName, const std::string& key, float value){
+void GlobalVariables::SetValue(const std::string& groupName, const std::string& key,const float& value){
     //グループの参照
     Group& group = datas_[groupName];
 
@@ -41,7 +42,7 @@ void AdjustmentItems::SetValue(const std::string& groupName, const std::string& 
 
 }
 
-void AdjustmentItems::SetValue(const std::string& groupName, const std::string& key, const Vector3 value){
+void GlobalVariables::SetValue(const std::string& groupName, const std::string& key, const Vector3& value){
     //グループの参照
     Group& group = datas_[groupName];
 
@@ -54,7 +55,7 @@ void AdjustmentItems::SetValue(const std::string& groupName, const std::string& 
 
 }
 
-void AdjustmentItems::AddItem(const std::string& groupName, const std::string& key, int32_t value){
+void GlobalVariables::AddItem(const std::string& groupName, const std::string& key,const int32_t& value){
     
 
     //グループを検索
@@ -80,7 +81,7 @@ void AdjustmentItems::AddItem(const std::string& groupName, const std::string& k
     
 }
 
-void AdjustmentItems::AddItem(const std::string& groupName, const std::string& key, float value){
+void GlobalVariables::AddItem(const std::string& groupName, const std::string& key,const float& value){
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
@@ -103,7 +104,7 @@ void AdjustmentItems::AddItem(const std::string& groupName, const std::string& k
     }
 }
 
-void AdjustmentItems::AddItem(const std::string& groupName, const std::string& key, const Vector3 value){
+void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, const Vector3& value){
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
@@ -126,7 +127,7 @@ void AdjustmentItems::AddItem(const std::string& groupName, const std::string& k
     }
 }
 
-int32_t AdjustmentItems::GetIntValue(const std::string& groupName, const std::string& key) {
+int32_t GlobalVariables::GetIntValue(const std::string& groupName, const std::string& key) {
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
@@ -147,7 +148,7 @@ int32_t AdjustmentItems::GetIntValue(const std::string& groupName, const std::st
 
 }
 
-float AdjustmentItems::GetFloatValue(const std::string& groupName, const std::string& key) {
+float GlobalVariables::GetFloatValue(const std::string& groupName, const std::string& key) {
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
     assert(itGroup != datas_.end());
@@ -163,7 +164,7 @@ float AdjustmentItems::GetFloatValue(const std::string& groupName, const std::st
 
 }
 
-Vector3 AdjustmentItems::GetVector3Value(const std::string& groupName, const std::string& key) {
+Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std::string& key) {
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
     assert(itGroup != datas_.end());
@@ -180,19 +181,19 @@ Vector3 AdjustmentItems::GetVector3Value(const std::string& groupName, const std
 
 }
 
-void AdjustmentItems::SaveFile(const std::string& groupName){
+void GlobalVariables::SaveFile(const std::string& groupName){
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
     //無かったら止める
     assert(itGroup!=datas_.end());
 
-    json root;
+    nlohmann::json root;
     //json::objectはstd::mapみたいなもの
-    root = json::object();
+    root = nlohmann::json::object();
 
     //jsonオブジェクト登録
-    root[groupName] = json::object();
+    root[groupName] = nlohmann::json::object();
 
     //各項目について
     for (std::map<std::string, Item>::iterator itItem = itGroup->second.items.begin();
@@ -219,7 +220,7 @@ void AdjustmentItems::SaveFile(const std::string& groupName){
         else if (std::holds_alternative<Vector3>(item.value)) {
             //float型のjson配列登録
             Vector3 value = std::get<Vector3>(item.value);
-            root[groupName][itemName] = json::array({value.x, value.y, value.z});
+            root[groupName][itemName] = nlohmann::json::array({value.x, value.y, value.z});
         }
 
     }
@@ -260,7 +261,7 @@ void AdjustmentItems::SaveFile(const std::string& groupName){
 
 }
 
-void AdjustmentItems::LoadFile(){
+void GlobalVariables::LoadFile(){
     //保存先ディレクトリのパスをローカル変数で宣言する
     std::filesystem::path dir(DIRECTORY_PATH_);
 
@@ -300,7 +301,7 @@ void AdjustmentItems::LoadFile(){
 
 }
 
-void AdjustmentItems::LoadFile(const std::string& groupName){
+void GlobalVariables::LoadFile(const std::string& groupName){
     //読み込むJSONファイルのフルパスを合成する
     std::string filePath = DIRECTORY_PATH_ + groupName + ".json";
     //読み込み用のファイルストリーム
@@ -322,7 +323,7 @@ void AdjustmentItems::LoadFile(const std::string& groupName){
         return;
     }
 
-    json root;
+    nlohmann::json root = {};
 
     //json文字列からjsonのデータ構造に展開
     ifs >> root;
@@ -332,14 +333,14 @@ void AdjustmentItems::LoadFile(const std::string& groupName){
 
     //グループ登録確認
     //グループを検索
-    json::iterator itGroup = root.find(groupName);
+    nlohmann::json::iterator itGroup = root.find(groupName);
 
     //未登録チェック
     assert(itGroup != root.end());
 
 
     //確認アイテムについて
-    for (json::iterator itItem = itGroup->begin(); itItem != itGroup->end(); ++itItem) {
+    for (nlohmann::json::iterator itItem = itGroup->begin(); itItem != itGroup->end(); ++itItem) {
         //アイテム名(キー)を取得
         const std::string& itemName = itItem.key();
     
@@ -366,7 +367,7 @@ void AdjustmentItems::LoadFile(const std::string& groupName){
 
 }
 
-void AdjustmentItems::Update(){
+void GlobalVariables::Update(){
 #ifdef _DEBUG
 
     //メニューバーを使用可能なフラグを付けてウィンドウを開く

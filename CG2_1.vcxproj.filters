@@ -124,9 +124,6 @@
     <Filter Include="Ellysia\Source File\Polygone\3D\Particle3DManager">
       <UniqueIdentifier>{3ec739a0-2572-47d0-a8e3-2884e559d8fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Header File\AdjustmentItems">
-      <UniqueIdentifier>{790ca7fe-3aed-4cdc-bdf7-edc3fdacdae6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Text">
       <UniqueIdentifier>{86ea6656-3c90-41a3-872c-722ea8f63729}</UniqueIdentifier>
     </Filter>
@@ -198,9 +195,6 @@
     </Filter>
     <Filter Include="Ellysia\Source File\Manager\Animation">
       <UniqueIdentifier>{854ee5dc-7df8-4ce1-a244-9ca2a7c26822}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ellysia\Source File\AdjustmentItems">
-      <UniqueIdentifier>{12e16608-40ac-4915-8d0c-9b46fdd3dd26}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ellysia\Source File\Lighting">
       <UniqueIdentifier>{18d4b0dd-38f4-4c8c-b471-c9aa09e3199c}</UniqueIdentifier>
@@ -355,6 +349,12 @@
     <Filter Include="Project\GameScene\WinScene">
       <UniqueIdentifier>{c06d8e17-a723-4892-983a-90de5852100f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\GlobalVariables">
+      <UniqueIdentifier>{790ca7fe-3aed-4cdc-bdf7-edc3fdacdae6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\GlobalVariables">
+      <UniqueIdentifier>{12e16608-40ac-4915-8d0c-9b46fdd3dd26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -474,8 +474,8 @@
     <ClCompile Include="Ellysia\Manager\ImGuiManager\ImGuiManager.cpp">
       <Filter>Ellysia\Source File\Manager\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\AdjustmentItems\AdjustmentItems.cpp">
-      <Filter>Ellysia\Source File\AdjustmentItems</Filter>
+    <ClCompile Include="Ellysia\AdjustmentItems\GlobalVariables.cpp">
+      <Filter>Ellysia\Source File\GlobalVariables</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Lighting\DirectionalLight.cpp">
       <Filter>Ellysia\Source File\Lighting</Filter>
@@ -841,8 +841,8 @@
     <ClInclude Include="Ellysia\Math\Shape\SphereShape.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\AdjustmentItems\AdjustmentItems.h">
-      <Filter>Ellysia\Header File\AdjustmentItems</Filter>
+    <ClInclude Include="Ellysia\AdjustmentItems\GlobalVariables.h">
+      <Filter>Ellysia\Header File\GlobalVariables</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Transform\EulerTransform.h">
       <Filter>Ellysia\Header File\Math</Filter>
