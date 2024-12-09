@@ -53,16 +53,15 @@ void TitleScene::Update(GameManager* gameManager){
 	}
 	
 
-	XINPUT_STATE joyState{};
 	//コントローラーのBを押すと高速点滅
 	if (Input::GetInstance()->IsConnetGamePad() == true) {
 
 		//Bボタンを押したとき
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+		if (Input::GetInstance()->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 			bTriggerTime_ += 1;
 
 		}
-		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+		if ((Input::GetInstance()->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
 			bTriggerTime_ = 0;
 		}
 

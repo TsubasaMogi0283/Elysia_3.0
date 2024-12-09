@@ -41,7 +41,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 #pragma endregion
 
 	//読み込み
-	uint32_t keySpriteHandle = TextureManager::GetInstance()->LoadTexture("Resources/Item/KeyList.png");
+	uint32_t keySpriteHandle = textureManager_->LoadTexture("Resources/Item/KeyList.png");
 	//座標
 	const Vector2 INITIAL_POSITION = {.x= 20.0f,.y=10.0f };
 	//鍵の画像の位置
@@ -58,7 +58,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 		//変換した番号を組み込む
 		const std::string filePath = "Resources/Sprite/Number/" + number + ".png";
 		//テクスチャの読み込み
-		keyNumberQuantity[i] = TextureManager::GetInstance()->LoadTexture(filePath);
+		keyNumberQuantity[i] = textureManager_->LoadTexture(filePath);
 		//座標を決める
 		const Vector2 numberPosition = { 64.0f * 2.0f+ INITIAL_POSITION.x,INITIAL_POSITION.y};
 		//生成
@@ -69,8 +69,8 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 	uint32_t notificationSEHandle = audio_->Load("Resources/External/Audio/Key/Shake.mp3");
 	//拾う音の読み込み
 	uint32_t pickUpSEHandle = audio_->Load("Resources/External/Audio/Key/PickUp.mp3");
-
-
+	notificationSEHandle;
+	pickUpSEHandle;
 }
 
 void KeyManager::Update(){

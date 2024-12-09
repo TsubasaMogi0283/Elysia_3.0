@@ -34,6 +34,11 @@ class Player;
 /// </summary>
 class Audio;
 
+/// <summary>
+/// テクスチャ管理クラス
+/// </summary>
+class TextureManager;
+
 #pragma endregion
 
 
