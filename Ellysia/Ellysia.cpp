@@ -7,9 +7,8 @@
 #include "SrvManager.h"
 #include "RtvManager.h"
 #include <Audio.h>
-#include <AdjustmentItems.h>
 #include <LevelDataManager.h>
-
+#include "GlobalVariables/GlobalVariables.h"
 
 Ellysia* Ellysia::GetInstance() {
 	static Ellysia instance;
@@ -23,8 +22,7 @@ void Ellysia::Initialize(){
 	const int WINDOW_SIZE_WIDTH = 1280;
 	const int WINDOW_SIZE_HEIGHT = 720;
 
-	//ひなに聞いたけどわざわざ一個ずつGetInstanceするの止めた方が良いとのこと
-	//取得に時間がかかる
+
 
 	//初期化
 	//ウィンドウ

@@ -1,10 +1,18 @@
 #include "KeyManager.h"
 
+#include "Audio.h"
+#include "TextureManager.h"
+
+
+KeyManager::KeyManager(){
+	//オーディオの取得
+	audio_ = Audio::GetInstance();
+	//テクスチャ管理クラスの取得
+	textureManager_ = TextureManager::GetInstance();
+}
 
 void KeyManager::Initialize(const uint32_t& modelHandle){
 
-
-	
 #pragma region 鍵の生成
 	//CSVにしたい
 	//1個目生成
@@ -57,6 +65,11 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 		keyNumber[i].reset(Sprite::Create(keyNumberQuantity[i], numberPosition));
 	}
 
+	//知らせる音の読み込み
+	uint32_t notificationSEHandle = audio_->Load("Resources/External/Audio/Key/Shake.mp3");
+	//拾う音の読み込み
+	uint32_t pickUpSEHandle = audio_->Load("Resources/External/Audio/Key/PickUp.mp3");
+
 
 }
 
@@ -64,13 +77,15 @@ void KeyManager::Update(){
 
 	//鍵
 	for (Key* key : keyes_) {
+		//更新
 		key->Update();
 	}
 
 
-	//当たり判定自体はゲームシーンでやりたい
-	//鍵が取得されたら消す
+
+
 	keyes_.remove_if([](Key* key) {
+		//拾われたら消す
 		if (key->GetIsPickUp() == true) {
 			delete key;
 			return true;
@@ -80,20 +95,23 @@ void KeyManager::Update(){
 }
 
 void KeyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight){
-	//描画
+	//鍵モデルの描画
 	for (Key* key : keyes_) {
 		key->Draw(camera, spotLight);
 	}
 }
 
 void KeyManager::DrawSprite(const uint32_t& playeresKey){
+	//鍵の画像の描画
 	keySprite_->Draw();
+	//数の描画
 	keyNumber[playeresKey]->Draw();
 
 
 }
 
 KeyManager::~KeyManager(){
+	//消す
 	for (Key* key : keyes_) {
 		delete  key;
 	}

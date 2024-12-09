@@ -127,7 +127,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Ellysia\AdjustmentItems\GlobalVariables.cpp" />
     <ClCompile Include="Ellysia\Audio\Audio.cpp" />
     <ClCompile Include="Ellysia\Camera\Camera.cpp" />
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp" />
@@ -136,6 +135,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\ConvertFunction\ConvertColor\ConvertColor.cpp" />
     <ClCompile Include="Ellysia\ConvertFunction\ConvertLog\ConvertLog.cpp" />
     <ClCompile Include="Ellysia\Ellysia.cpp" />
+    <ClCompile Include="Ellysia\GlobalVariables\GlobalVariables.cpp" />
     <ClCompile Include="Ellysia\Input\Input.cpp" />
     <ClCompile Include="Ellysia\Lighting\DirectionalLight.cpp" />
     <ClCompile Include="Ellysia\Lighting\PointLight.cpp" />
@@ -389,7 +389,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ellysia\AdjustmentItems\GlobalVariables.h" />
     <ClInclude Include="Ellysia\Audio\Audio.h" />
     <ClInclude Include="Ellysia\Audio\AudioStruct.h" />
     <ClInclude Include="Ellysia\Camera\Camera.h" />
@@ -399,6 +398,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\ConvertFunction\ConvertColor\ConvertColor.h" />
     <ClInclude Include="Ellysia\ConvertFunction\ConvertLog\ConvertLog.h" />
     <ClInclude Include="Ellysia\Ellysia.h" />
+    <ClInclude Include="Ellysia\GlobalVariables\GlobalVariables.h" />
     <ClInclude Include="Ellysia\Input\Input.h" />
     <ClInclude Include="Ellysia\Lighting\DirectionalLight.h" />
     <ClInclude Include="Ellysia\Lighting\LightingType.h" />

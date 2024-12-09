@@ -1,7 +1,6 @@
 #include "TitleScene.h"
 #include <imgui.h>
 #include <Input.h>
-#include <AdjustmentItems.h>
 #include "GameScene/GameScene.h"
 
 #include "GameManager.h"
