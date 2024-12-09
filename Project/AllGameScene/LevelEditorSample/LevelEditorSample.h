@@ -72,8 +72,12 @@ private:
 
 	LevelDataManager* levelEditor_ = nullptr;
 
-
+	//jpg
 	std::unique_ptr<Sprite>ellysia_ = nullptr;
+
+	//png
+	std::unique_ptr<Sprite>ellysiaPng_ = nullptr;
+
 
 };
 

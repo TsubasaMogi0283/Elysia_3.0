@@ -34,9 +34,17 @@ void LevelEditorSample::Initialize(){
 
 
 	//TL2
-	uint32_t ellysiaTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Sample/TL2/Ellysia.dds");
+	//JPG
+	uint32_t ellysiaTextureFromJpgHandle = TextureManager::GetInstance()->LoadTexture("Resources/Sample/TL2/Ellysia.dds");
 	Vector3 position = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
-	ellysia_.reset(Sprite::Create(ellysiaTextureHandle, position));
+	ellysia_.reset(Sprite::Create(ellysiaTextureFromJpgHandle, position));
+
+	//PNG
+	uint32_t ellysiaTextureFromPngHandle = TextureManager::GetInstance()->LoadTexture("Resources/Sample/TL2/EllysiaP.dds");
+	Vector3 position2 = { .x = 400.0f,.y = 0.0f,.z = 0.0f };
+	ellysiaPng_.reset(Sprite::Create(ellysiaTextureFromPngHandle, position2));
+
+
 
 }
 
@@ -79,7 +87,7 @@ void LevelEditorSample::DrawPostEffect(){
 
 void LevelEditorSample::DrawSprite(){
 	ellysia_->Draw();
-
+	ellysiaPng_->Draw();
 }
 
 LevelEditorSample::~LevelEditorSample(){
