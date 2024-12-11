@@ -98,9 +98,26 @@ public:
 		return static_cast<uint32_t>(keyes_.size());
 	}
 
+	/// <summary>
+	/// 最大で取得できる数数
+	/// </summary>
+	/// <returns></returns>
 	inline uint32_t GetMaxKeyQuantity()const {
 		return MAX_KEY_QUANTITY_;
 	}
+
+
+public:
+	/// <summary>
+	/// プレイヤー
+	/// </summary>
+	/// <param name="player"></param>
+	/// <returns></returns>
+	inline Player* SetPlayer(Player* player) { 
+		this->player_ = player;
+	};
+
+
 
 private:
 	//オーディオ
@@ -109,6 +126,8 @@ private:
 	//テクスチャ管理クラス
 	TextureManager* textureManager_ = nullptr;
 
+	//プレイヤー
+	Player* player_ = nullptr;
 
 
 private:
@@ -130,7 +149,8 @@ private:
 	//鍵取得するかどうか
 	std::unique_ptr<Sprite> pickUpKey_ = nullptr;
 
-
+	//プレイヤーと全ての鍵の距離
+	std::list<float>keyAndPlayerDistances_ = {};
 	
 };
 

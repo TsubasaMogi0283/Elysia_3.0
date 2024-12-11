@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file GameManager.h
+ * @file Enemy.h
  * @brief 敵のクラス
  * @author 茂木翼
  */
@@ -236,15 +236,26 @@ private:
 	uint32_t condition_ = EnemyCondition::Move;
 
 
-
 private:
-	//ワールドトランスフォーム
-	WorldTransform worldTransform_ = {};
 	//スケールサイズ
 	const float SCALE_SIZE = 10.0f;
 
 	//スピードの量
 	const float SPEED_AMOUNT_ = 0.05f;
+
+	//幅
+	const float RADIUS_ = 1.0f;
+	//幅(Vector3)
+	const Vector3 RADIUS_INTERVAL_ = { .x = RADIUS_,.y = RADIUS_,.z = RADIUS_ };
+
+	//0に戻る時間
+	const int32_t RETURN_ATTCK_TIME_ = 240u;
+
+
+private:
+	//ワールドトランスフォーム
+	WorldTransform worldTransform_ = {};
+	
 	//移動速度
 	Vector3 preSpeed_ = {};
 	Vector3 speed_ = {};
@@ -260,11 +271,7 @@ private:
 
 	//AABB
 	AABB aabb_ = {};
-	//幅
-	const float RADIUS_ = 1.0f;
-	//幅(Vector3)
-	const Vector3 RADIUS_INTERVAL_ = { .x = RADIUS_,.y = RADIUS_,.z = RADIUS_ };
-
+	
 	//消滅
 	//時間とフラグ
 	int32_t deleteTime_ = 0;
@@ -288,9 +295,7 @@ private:
 	int32_t attackTime_ = 0;
 	bool isAttack_ = false;
 
-	//0に戻る時間
-	const int32_t RETURN_ATTCK_TIME_ = 240u;
-
+	
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
 

@@ -760,12 +760,6 @@
     <ClInclude Include="Ellysia\Math\Vector\Vector2.h">
       <Filter>Ellysia\Header File\Math\Vector</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\Vector\VertexData.h">
-      <Filter>Ellysia\Header File\Math\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Math\Vector\Material.h">
-      <Filter>Ellysia\Header File\Math\Vector</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Common\DirectX\DirectXSetup.h">
       <Filter>Ellysia\Header File\Common</Filter>
     </ClInclude>
@@ -1107,6 +1101,12 @@
     </ClInclude>
     <ClInclude Include="Project\Player\AudioTestPlayer.h">
       <Filter>Project\Player\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Vector\Material.h">
+      <Filter>Ellysia\Header File\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Vector\VertexData.h">
+      <Filter>Ellysia\Header File\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

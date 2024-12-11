@@ -2,7 +2,9 @@
 
 #include "Audio.h"
 #include "TextureManager.h"
-
+#include "VectorCalculation.h"
+#include "Player/Player.h"
+#include "SingleCalculation.h"
 
 KeyManager::KeyManager(){
 	//オーディオの取得
@@ -12,6 +14,8 @@ KeyManager::KeyManager(){
 }
 
 void KeyManager::Initialize(const uint32_t& modelHandle){
+
+	assert(player_ == nullptr);
 
 #pragma region 鍵の生成
 	//CSVにしたい
@@ -75,12 +79,33 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 
 void KeyManager::Update(){
 
+	//全ての要素を消す
+	keyAndPlayerDistances_.clear();
+
 	//鍵
 	for (Key* key : keyes_) {
 		//更新
 		key->Update();
+
+		//プレイヤーと鍵の差分
+		Vector3 playerAndKeydifference = VectorCalculation::Subtract(player_->GetWorldPosition(), key->GetWorldPosition());
+		//距離
+		float distance = SingleCalculation::Length(playerAndKeydifference);
+		//挿入
+		keyAndPlayerDistances_.push_back(distance);
 	}
 
+	//全ての要素から一番小さい値を調べる
+	auto minIt = std::min_element(keyAndPlayerDistances_.begin(), keyAndPlayerDistances_.end());
+
+	//最短距離を求める
+	float closestDistance = 0.0f;
+	if (minIt != keyAndPlayerDistances_.end()) {
+		closestDistance = (*minIt);
+	}
+
+
+	//求めた値から音量設定をする
 
 
 
