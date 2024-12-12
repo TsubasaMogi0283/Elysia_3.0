@@ -256,15 +256,18 @@ private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 	
+	//モデル
+	std::unique_ptr<Model> model_ = nullptr;
+
+	//マテリアル
+	Material material_ = {};
+
 	//移動速度
 	Vector3 preSpeed_ = {};
 	Vector3 speed_ = {};
 
-	//モデル
-	std::unique_ptr<Model> model_ = nullptr;
-	
-	//マテリアル
-	Material material_ = {};
+	//向き
+	Vector3 direction_ = {};
 	
 	//生存
 	bool isAlive_ = true;
@@ -277,10 +280,6 @@ private:
 	int32_t deleteTime_ = 0;
 	bool isDeleted_ = false;
 
-	//消えるときのパーティクル
-	std::unique_ptr<Particle3D>particle_ = nullptr;
-	DirectionalLight directionalLight_ = {};
-	Material particleMaterial_ = {};
 
 	//追跡
 	bool isTracking_ = false;
@@ -288,17 +287,16 @@ private:
 	Vector3 preTrackingPosition_ = {};
 	Vector3 preTrackingPlayerPosition_ = {};
 
-	//向き
-	Vector3 direction_ = {};
+	//プレイヤーの座標
+	Vector3 playerPosition_ = {};
+
 
 	//攻撃
 	int32_t attackTime_ = 0;
 	bool isAttack_ = false;
 
-	
-	//プレイヤーの座標
-	Vector3 playerPosition_ = {};
 
+private:
 
 	//攻撃用の当たり判定
 	std::unique_ptr<EnemyAttackCollision> attackCollision_ = nullptr;
