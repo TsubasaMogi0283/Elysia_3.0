@@ -8,6 +8,13 @@
 #include "SingleCalculation.h"
 #include "Input.h"
 
+
+//Enemyのこれからやること
+//1.追跡システムを単純化する
+//2.ポリモーフィズムを上手く使おう
+//3.オブジェクトマネージャーからレベルエディタに変えていく
+
+
 void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& strongEnemyModel){
 	
 	//空だったら引っかかるようにしている
@@ -27,32 +34,36 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 
 
 	//モデルを代入
+	//通常
 	normalEnemyModelHandle_ = normalEnemyModel;
+	//強敵
 	strongEnemyModelHandle_ = strongEnemyModel;
 
 	//CSVでやった方が良いかも
+	//JSONでも良いよね
+
+	//1体目
 	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = { 0.0f,0.0f,11.0f };
-	enemy1->Initialize(normalEnemyModelHandle_, position1, { -0.0f,0.0f,-0.01f });
+	Vector3 position1 = {.x= 0.0f,.y= 0.0f,.z= 11.0f };
+	enemy1->Initialize(normalEnemyModelHandle_, position1, {.x = -0.0f,.y= 0.0f,.z = -0.01f });
 	enemyes_.push_back(enemy1);
 	
-		
+	//2体目
 	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = { -5.0f,0.0f,15.0f };
-	enemy2->Initialize(normalEnemyModelHandle_, position2, { 0.01f,0.0f,0.0f });
+	Vector3 position2 = {.x= -5.0f,.y= 0.0f,.z= 15.0f };
+	enemy2->Initialize(normalEnemyModelHandle_, position2, {.x= 0.01f,.y= 0.0f,.z= 0.0f });
 	enemyes_.push_back(enemy2);
 	
+	//3体目
 	Enemy* enemy3 = new Enemy();
-	Vector3 position3 = { -10.0f,0.0f,4.0f };
-	enemy3->Initialize(normalEnemyModelHandle_, position3, { 0.01f,0.0f,0.01f });
+	Vector3 position3 = {.x= -10.0f,.y= 0.0f,.z= 4.0f };
+	enemy3->Initialize(normalEnemyModelHandle_, position3, {.x= 0.01f,.y= 0.0f,.z= 0.01f });
 	enemyes_.push_back(enemy3);
-	//"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\TD2_Enemy\TD2_Enemy.obj"
 	
-	//生成
-#ifdef _DEBUG
+	
 
-#endif // _DEBUG
 
+	//強敵生成
 	StrongEnemy* enemy = new StrongEnemy();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
@@ -62,16 +73,21 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
 	
 	
-	//位置を決める
+	//スピードを決める
 	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
 	Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
+#ifdef _DEBUG
+	position = {.x= -20.0f,.y= 0.0f,.z= 10.0f };
+	speed = {.x= 0.01f,.y= 0.0f,.z= -0.03f };
+#endif // _DEBUG
+
 	
-	position = { -20.0f,0.0f,10.0f };
-	speed = { 0.01f,0.0f,-0.03f };
 	
-	//強い敵の初期化
+	//強敵の初期化
 	enemy->Initialize(strongEnemyModelHandle_, position, speed);
+	//追跡開始距離の設定
 	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
+	//挿入
 	strongEnemyes_.push_back(enemy);
 
 
@@ -104,8 +120,9 @@ void EnemyManager::GenarateEnemy() {
 	std::uniform_real_distribution<float> distribute(-30.0f, 30.0f);
 
 	//位置決め
-	Vector3 position1 = { distribute(randomEngine),0.0f,distribute(randomEngine) };
-	Vector3 speed = { 0.0f,0.0f,0.0f };
+	Vector3 position1 = {.x= distribute(randomEngine),.y= 0.0f,.z= distribute(randomEngine) };
+	//スピード決め
+	Vector3 speed = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
 
 	//初期化
 	enemy->Initialize(normalEnemyModelHandle_, position1,speed );
@@ -121,22 +138,23 @@ void EnemyManager::GenarateStrongEnemy(){
 
 	//位置を決める
 	std::uniform_real_distribution<float> positionDistribute(stageRect_.leftBack.x, stageRect_.rightBack.x);
-	Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
+	Vector3 position = {.x= positionDistribute(randomEngine),.y= 0.0f,.z= positionDistribute(randomEngine) };
 	
 
 	//位置を決める
 	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
-	Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
+	Vector3 speed = {.x= speedDistribute(randomEngine),.y= 0.0f,.z= speedDistribute(randomEngine) };
 
 
 #ifdef _DEBUG
-	position = { -4.0f,0.0f,5.0f };
-	speed = { -0.01f,0.0f,0.03f };
+	position = {.x= -4.0f,.y= 0.0f,.z= 5.0f };
+	speed = {.x= -0.01f,.y= 0.0f,.z= 0.03f };
 #endif // _DEBUG
 
 
 	//初期化
 	enemy->Initialize(strongEnemyModelHandle_, position, speed);
+	//挿入
 	strongEnemyes_.push_back(enemy);
 }
 
@@ -156,14 +174,14 @@ void EnemyManager::Update(){
 
 	//プレイヤーの座標
 	Vector3 playerPosition = player_->GetWorldPosition();
-	const float ATTACK_DISTANCE_OFFSET = 0.0f;
-	float MINIMUM_DISTANCE = 1.0f+1.0f + ATTACK_DISTANCE_OFFSET;
+	//最小の距離
+	const float MINIMUM_DISTANCE = 2.0f;
 	
-	
-	//敵はポリモーフィズムでやった方がよさそう
-	//通常の敵と強敵
 
-	//全ての敵
+
+	//ポリモーフィズムでまとめたい
+	//↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+	//通常の敵
 	for (Enemy* enemy : enemyes_) {
 		//プレイヤーの位置を設定
 		//使っているのはPreTrackingしかないので
@@ -181,16 +199,14 @@ void EnemyManager::Update(){
 		//移動中の時
 		if (enemy->GetCondition() == EnemyCondition::Move) {
 
-			#pragma region ステージの端に行ったら反転
-			//X
+			//X軸反転
 			if ((enemyAABB.min.x < stageRect_.leftBack.x) || (enemyAABB.max.x > stageRect_.rightBack.x)) {
 				enemy->InvertSpeedX();
 			}
-			//Z
+			//Z軸反転
 			if ((enemyAABB.min.z < stageRect_.leftFront.z) || (enemyAABB.max.z > stageRect_.leftBack.z)) {
 				enemy->InvertSpeedZ();
 			}
-			#pragma endregion
 
 			#pragma region ステージオブジェクト
 
@@ -200,30 +216,27 @@ void EnemyManager::Update(){
 
 				//AABBを取得
 				AABB objectAABB = stageObject->GetAABB();
-
 				//位置を取得
 				Vector3 objectPosition = stageObject->GetWorldPosition();
 
-				
 				
 				//お互いのAABBが接触している場合
 				if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
 					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
 					//オブジェクトとの差分ベクトル
 					Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
+					//正規化
 					Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
 
 
 					//敵の向いている方向
 					Vector3 enemyDirection = enemy->GetDirection();
 
-
-
 					//前にある場合だけ計算
 					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
 
 					//進行方向上にあるときだけ計算する
-					if (dot > 0.0f) {
+					if (dot > FRONT_DOT) {
 
 						//差分ベクトルのXとZの大きさを比べ
 						//値が大きい方で反転させる
@@ -231,9 +244,11 @@ void EnemyManager::Update(){
 						float defferenceValueZ = std::abs(defference.z);
 
 
+						//X軸反転
 						if (defferenceValueX >= defferenceValueZ) {
 							enemy->InvertSpeedX();
 						}
+						//Z軸反転
 						else {
 							enemy->InvertSpeedZ();
 						}
@@ -289,7 +304,7 @@ void EnemyManager::Update(){
 					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
 
 					//進行方向上にあるときだけ計算する
-					if (dot > 0.0f) {
+					if (dot > FRONT_DOT) {
 
 						//差分ベクトルのXとZの大きさを比べ
 						//値が大きい方で反転させる
@@ -330,9 +345,15 @@ void EnemyManager::Update(){
 	uint32_t enemyAmount = static_cast<uint32_t>(enemyes_.size());
 
 	//1体だけの時
+	const uint32_t ONLY_ONE = 1u;
+
+
+	
+	
 	//衝突判定をやる必要が無いからね
-	if (enemyAmount == 1u) {
+	if (enemyAmount == ONLY_ONE) {
 		for (Enemy* enemy : enemyes_) {
+			//状態
 			uint32_t condition = enemy->GetCondition();
 
 
@@ -340,7 +361,9 @@ void EnemyManager::Update(){
 			Vector3 enemyDirection = enemy->GetDirection();
 
 			//それぞれのAABB
+			//プレイヤー
 			AABB playerAABB = player_->GetAABB();
+			//敵
 			AABB enemyAABB = enemy->GetAABB();
 
 
@@ -349,20 +372,20 @@ void EnemyManager::Update(){
 			Vector3 defference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
 			//距離
 			float defferenceDistance = SingleCalculation::Length(defference);
-
-
 			//正射影ベクトル
 			Vector3 projectDifference = VectorCalculation::Project(defference, enemyDirection);
-
-			
-
-
+			//差分の正規化
 			Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
+			//内積の計算
 			float dot = SingleCalculation::Dot(normalizedDefference, enemyDirection);
 
 			
+			
 
-			if (dot > 0.8f) {
+			//後頭部に目がついているわけではないからね
+			if (dot > FRONT_DOT) {
+
+				//追跡開始距離以内になったら追跡準備に移行
 				if ((defferenceDistance < TRACKING_START_DISTANCE_ && defferenceDistance>ATTACK_START_DISTANCE_)
 					&& condition == EnemyCondition::Move) {
 
@@ -376,6 +399,7 @@ void EnemyManager::Update(){
 				}
 
 				//追跡している時
+				//追跡開始距離より短い時
 				if (defferenceDistance <= ATTACK_START_DISTANCE_ && condition == EnemyCondition::Tracking) {
 					//前の状態を保存
 					enemy->SetPreCondition(condition);
@@ -409,16 +433,26 @@ void EnemyManager::Update(){
 	}
 
 	//1体より多い時
-	if (enemyAmount > 1u) {
+	if (enemyAmount > ONLY_ONE) {
 		for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
 
+			//比較する数
+			const uint32_t COMPARE_NUMBER = 2u;
+
+			//元となる敵
+			const uint32_t BASE_ENEMY = 0u;
+
+			//比較する敵
+			const uint32_t COMPARE_ENEMY = 1u;
+
 			//AABB
-			AABB aabb[2] = {};
-			Vector3 enemyPosition[2] = {};
-			aabb[0] = (*it1)->GetAABB();
+			AABB aabb[COMPARE_NUMBER] = {};
+			//座標
+			Vector3 enemyPosition[COMPARE_NUMBER] = {};
 			
-			enemyPosition[0] = (*it1)->GetWorldPosition();
-			//向き
+			//元となる敵のAABBと座標、向きを取得
+			aabb[BASE_ENEMY] = (*it1)->GetAABB();
+			enemyPosition[BASE_ENEMY] = (*it1)->GetWorldPosition();
 			Vector3 direction = (*it1)->GetDirection();
 
 			//敵同士の内積
@@ -432,25 +466,25 @@ void EnemyManager::Update(){
 				}
 
 				//2体目のAABBを取得
-				aabb[1] = (*it2)->GetAABB();
+				aabb[COMPARE_ENEMY] = (*it2)->GetAABB();
 
 				//接触している場合
-				if ((aabb[0].min.x < aabb[1].max.x && aabb[0].max.x > aabb[1].min.x) &&
-					(aabb[0].min.y < aabb[1].max.y && aabb[0].max.y > aabb[1].min.y) &&
-					(aabb[0].min.z < aabb[1].max.z && aabb[0].max.z > aabb[1].min.z)) {
+				if ((aabb[BASE_ENEMY].min.x < aabb[COMPARE_ENEMY].max.x && aabb[BASE_ENEMY].max.x > aabb[COMPARE_ENEMY].min.x) &&
+					(aabb[BASE_ENEMY].min.y < aabb[COMPARE_ENEMY].max.y && aabb[BASE_ENEMY].max.y > aabb[COMPARE_ENEMY].min.y) &&
+					(aabb[BASE_ENEMY].min.z < aabb[COMPARE_ENEMY].max.z && aabb[BASE_ENEMY].max.z > aabb[COMPARE_ENEMY].min.z)) {
 					//ワールド座標
-					enemyPosition[1] = (*it2)->GetWorldPosition();
+					enemyPosition[COMPARE_ENEMY] = (*it2)->GetWorldPosition();
 
 
 					//敵同士の差分ベクトル
-					Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemyPosition[1], enemyPosition[0]);
+					Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemyPosition[COMPARE_ENEMY], enemyPosition[BASE_ENEMY]);
 
-					//内積
-					//進行方向の前にいると+
+					//正規化
 					Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
+					//内積
 					enemyAndEnemyDot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
 
-
+					//次のループで上書きされないようにbreakさせるよ！
 					break;
 				}
 
@@ -461,8 +495,9 @@ void EnemyManager::Update(){
 			//現在の状態
 			uint32_t condition = (*it1)->GetCondition();
 
-			//プレイヤーとの距離
+			//プレイヤーとの差分
 			Vector3 playerEnemyDifference = VectorCalculation::Subtract(playerPosition, (*it1)->GetWorldPosition());
+			//プレイヤーとの距離 
 			float playerEnemyDistance = SingleCalculation::Length(playerEnemyDifference);
 
 			
@@ -470,7 +505,7 @@ void EnemyManager::Update(){
 
 
 			//前方にいた場合
-			if (enemyAndEnemyDot >= 0.8f && condition == EnemyCondition::Move) {
+			if (enemyAndEnemyDot >= FRONT_DOT && condition == EnemyCondition::Move) {
 				//接触した場合止まる
 				if ((aabb[0].min.x < aabb[1].max.x && aabb[0].max.x > aabb[1].min.x) &&
 					(aabb[0].min.y < aabb[1].max.y && aabb[0].max.y > aabb[1].min.y) &&
@@ -520,8 +555,7 @@ void EnemyManager::Update(){
 
 					//前の状態を保存
 					(*it1)->SetPreCondition(condition);
-					//スピードの保存
-					//(*it1)->SaveSpeed();
+
 					//状態の変更
 					(*it1)->SetCondition(newCondition);
 				}
@@ -571,6 +605,7 @@ void EnemyManager::Update(){
 		}
 	}
 
+	//強敵の更新
 	for (StrongEnemy* strongEnemy : strongEnemyes_) {
 		//一発アウトの敵の更新
 		strongEnemy->Update();
@@ -583,16 +618,23 @@ void EnemyManager::Update(){
 
 		
 
-		//距離を求める
+		//差分を求める
 		Vector3 playerStrongEnemyDifference = VectorCalculation::Subtract(playerPosition, strongEnemy->GetWorldPosition());
+		//距離を求める
 		float playerStrongEnemyDistance = SingleCalculation::Length(playerStrongEnemyDifference);
+		//正規化
 		Vector3 directionToPlayer = VectorCalculation::Normalize(playerStrongEnemyDifference);
 
 
 		//大きさの処理
-		float volume = 1.0f - (playerStrongEnemyDistance / STRONG_ENEMY_TRACKING_START_DISTANCE_);
+		//追跡開始する距離と強敵とプレイヤーの距離の割合で音量を決める
+		const float MAX_VOLUME = 1.0f;
+		float volume = MAX_VOLUME - (playerStrongEnemyDistance / STRONG_ENEMY_TRACKING_START_DISTANCE_);
+
+
 		//0だったら鳴らす意味はないので止めておく
-		if (volume < 0.0f) {
+		const float MIN_VOLUME = 0.0f;
+		if (volume < MIN_VOLUME) {
 			audio_->Stop(audioHandle_);
 		}
 		else {
@@ -609,7 +651,8 @@ void EnemyManager::Update(){
 		//Panの処理
 		//方向からPanを振る
 		//基本左右だけなのでX軸成分だけとる
-		float pan = 1.0f- directionToPlayer.x;
+		//まだ不具合があるので後ほど修正
+		float pan = directionToPlayer.x;
 		pan;
 		//audio_->SetPan(audioHandle_, pan);
 
@@ -641,12 +684,12 @@ void EnemyManager::Update(){
 
 
 #pragma region ステージの端に行ったら反転
-		//X
+		//X軸反転
 		if ((strongEnemyAABB.min.x < stageRect_.leftBack.x) || 
 			(strongEnemyAABB.max.x > stageRect_.rightBack.x)) {
 			strongEnemy->InvertSpeedX();
 		}
-		//Z
+		//Z軸反転
 		if ((strongEnemyAABB.min.z < stageRect_.leftFront.z) || 
 			(strongEnemyAABB.max.z > stageRect_.leftBack.z)) {
 			strongEnemy->InvertSpeedZ();
@@ -658,12 +701,12 @@ void EnemyManager::Update(){
 
 void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 
-	//通常
+	//描画(通常)
 	for (Enemy* enemy : enemyes_) {
 		enemy->Draw(camera,spotLight);
 	}
 
-	//強敵
+	//描画(強敵)
 	for (StrongEnemy* strongEnemy : strongEnemyes_) {
 		strongEnemy->Draw(camera, spotLight);
 	}
@@ -673,12 +716,12 @@ void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 EnemyManager::~EnemyManager(){
 	//audio_->Stop(audioHandle_);
 
-	//通常
+	//消す(通常)
 	for (Enemy* enemy : enemyes_) {
 		delete enemy;
 	}
 
-	//強敵
+	//消す(強敵)
 	for (StrongEnemy* strongEnemy : strongEnemyes_) {
 		delete strongEnemy;
 	}

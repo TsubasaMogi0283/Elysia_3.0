@@ -94,13 +94,6 @@ public:
 		return aabb_;
 	}
 
-	/// <summary>
-	/// Z座標の設定
-	/// </summary>
-	/// <param name="posX"></param>
-	inline void SetPositionZ(const float& posZ) {
-		this->worldTransform_.translate.z = posZ;
-	}
 
 
 	/// <summary>

@@ -10,7 +10,7 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 
 	//初期化
 	worldTransform_.Initialize();
-	worldTransform_.scale = { 5.0f,5.0f,5.0f };
+	worldTransform_.scale = {.x= 5.0f,.y= 5.0f,.z= 5.0f };
 	playerWorldPosition_ = {};
 
 

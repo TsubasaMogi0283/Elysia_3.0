@@ -1,8 +1,17 @@
 #pragma once
+/**
+ * @file EnemyFlashLightCollision.h
+ * @brief 扇との当たり判定クラス
+ * @author 茂木翼
+ */
+
+
 #include "Collider/Collider.h"
 #include "Vector3.h"
 
-//扇との当たり判定
+/// <summary>
+/// 扇との当たり判定
+/// </summary>
 class EnemyFlashLightCollision : public Collider {
 public:
 	/// <summary>

@@ -40,8 +40,19 @@ void LoseScene::Initialize(){
 
 void LoseScene::Update(GameManager* gameManager){
 
+	//増える時間の値
+	const uint32_t INCREASE_VALUE = 1u;
+	//Bトリガーの反応する時間
+	const uint32_t REACT_TIME = 1u;
+	//Bトリガーの反応しない時間
+	const uint32_t NO_REACT_TIME = 0u;
+
+	//再スタート時間
+	const uint32_t RESTART_TIME = 0u;
+
+
 	//通常の点滅
-	flashTime_ += 1;
+	flashTime_ += INCREASE_VALUE;
 	if (flashTime_ > FLASH_TIME_LIMIT_ * 0 &&
 		flashTime_ <= FLASH_TIME_LIMIT_) {
 		text_->SetInvisible(false);
@@ -52,7 +63,7 @@ void LoseScene::Update(GameManager* gameManager){
 
 	}
 	if (flashTime_ > FLASH_TIME_LIMIT_ * 2) {
-		flashTime_ = 0;
+		flashTime_ = RESTART_TIME;
 	}
 
 	//コントローラー接続時
@@ -60,14 +71,14 @@ void LoseScene::Update(GameManager* gameManager){
 
 		//Bボタンを押したとき
 		if (Input::GetInstance()->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-			bTriggerTime_ += 1;
+			bTriggerTime_ += INCREASE_VALUE;
 
 		}
 		if ((Input::GetInstance()->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-			bTriggerTime_ = 0;
+			bTriggerTime_ = RESTART_TIME;
 		}
 
-		if (bTriggerTime_ == 1) {
+		if (bTriggerTime_ == REACT_TIME) {
 
 			isReturnTitle = true;
 		}
@@ -78,15 +89,22 @@ void LoseScene::Update(GameManager* gameManager){
 	}
 
 
+	//カウントが増える時間
+	const uint32_t INCREASE_COUNT_TIME = 0u;
+	//点滅の間隔
+	const uint32_t FLASH_INTERVAL = 2u;
+	//表示
+	const uint32_t DISPLAY = 0u;
+
 	//タイトルへ戻る
 	if (isReturnTitle == true) {
 
-		fastFlashTime_ += 1;
-		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == 0) {
+		fastFlashTime_ += INCREASE_VALUE;
+		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
 			++textDisplayCount_;
 		}
 		//表示
-		if (textDisplayCount_ % 2 == 0) {
+		if (textDisplayCount_ % 2 == DISPLAY) {
 			text_->SetInvisible(true);
 		}
 		else {
@@ -104,9 +122,9 @@ void LoseScene::Update(GameManager* gameManager){
 			transparency_ += TRANSPARENCY_INTERVAL_;
 		}
 
-
-		if (transparency_ > 1.0f) {
-			blackOutTime_ += 1;
+		const float MAX_TRANSPARENCY = 1.0f;
+		if (transparency_ > MAX_TRANSPARENCY) {
+			blackOutTime_ += INCREASE_VALUE;
 		}
 
 

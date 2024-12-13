@@ -7,7 +7,7 @@ void EnemyFlashLightCollision::Initialize(){
 #pragma region 当たり判定
 
 	//種類
-	//点。AABBとか球にしたら計算量多くなるので止めた
+	//点。AABBとか球にしたら計算量が多くなるので止めた
 	collisionType_ = ColliderType::PointType;
 
 
@@ -36,15 +36,17 @@ void EnemyFlashLightCollision::Update(){
 }
 
 Vector3 EnemyFlashLightCollision::GetWorldPosition(){
+	//敵の座標そのまま入れる
 	return enemyPosition_;
 }
 
 void EnemyFlashLightCollision::OnCollision(){
+	//当たっている
 	isTouch_ = true;
 
 }
 
 void EnemyFlashLightCollision::OffCollision(){
-	//通常時
+	//通常時は当たっていない
 	isTouch_ = false;
 }

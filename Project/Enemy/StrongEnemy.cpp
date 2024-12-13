@@ -25,6 +25,7 @@ void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position
 
 	//マテリアル
 	material_.Initialize();
+	//ライティングの種類
 	material_.lightingKinds_ = Spot;
 
 	//プレイヤーに当たったかどうか
@@ -67,19 +68,14 @@ void StrongEnemy::Update(){
 	switch (condition_) {
 	case EnemyCondition::NoneMove:
 		//何もしない
-#ifdef _DEBUG
-		ImGui::Begin("None");
-		ImGui::End();
-#endif // DEBUG
-
 
 		speed_ = { 0.0f,0.0f,0.0f };
 		break;
 
-		//通常の動き
+		
 	case EnemyCondition::Move:
 
-
+		//通常の動き
 		//スピードの正規化
 		if (speed_.x != 0.0f ||
 			speed_.y != 0.0f ||
@@ -87,8 +83,9 @@ void StrongEnemy::Update(){
 			direction_ = VectorCalculation::Normalize(speed_);
 		}
 
-		//加算
+		//スピードの計算
 		Vector3 moveSpeedVelocity = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
+		//加算
 		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, moveSpeedVelocity);
 
 
@@ -102,10 +99,12 @@ void StrongEnemy::Update(){
 
 		//向きを求める
 		direction_ = VectorCalculation::Subtract(playerPosition_, GetWorldPosition());
+		//正規化
 		direction_ = VectorCalculation::Normalize(direction_);
 
-		//加算
+		//
 		direction_ = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
+		//加算
 		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, direction_);
 
 
@@ -131,7 +130,9 @@ void StrongEnemy::Update(){
 
 	//向きを計算しモデルを回転させる
 	float directionToRotateY = std::atan2f(-direction_.z, direction_.x);
+	//修正
 	const float ROTATE_OFFSET = -std::numbers::pi_v<float> / 2.0f;
+	//加算
 	worldTransform_.rotate.y = directionToRotateY + ROTATE_OFFSET;
 
 	
@@ -151,6 +152,7 @@ void StrongEnemy::Update(){
 }
 
 void StrongEnemy::Draw(const Camera& camera,const SpotLight& spotLight){
+	//描画
 	model_->Draw(worldTransform_, camera, material_, spotLight);
 }
 

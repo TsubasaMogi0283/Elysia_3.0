@@ -1,24 +1,24 @@
 #include "Player.h"
-#include <Input.h>
-#include <VectorCalculation.h>
-
-#include "Material.h"
-#include "SpotLight.h"
 #include <numbers>
 
+
+#include "Input.h"
+#include "VectorCalculation.h"
+#include "Material.h"
+#include "SpotLight.h"
 #include "Stage/ObjectManager/ObjectManager.h"
 #include "GameScene/GameScene.h"
-#include <SingleCalculation.h>
-#include <Collider/CollisionConfig.h>
-#include <ModelManager.h>
+#include "SingleCalculation.h"
+#include "Collider/CollisionConfig.h"
+#include "ModelManager.h"
 
 void Player::Initialize(){
 
-
-	//モデルの生成 //"C:\Lesson\CG\CGGrade3\Ellysia_3.0\Resources\Sample\Cube\cube.obj"
+	//モデルの生成 
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Cube","cube.obj");
 	model_.reset(Model::Create(modelHandle));
 
+	//初期はコントロールできない
 	isControll_ = false;
 
 	//持っている鍵の数
@@ -46,7 +46,7 @@ void Player::Initialize(){
 	collisionToStrongEnemy_ = std::make_unique<PlayerCollisionToStrongEnemy>();
 	collisionToStrongEnemy_->Initialize();
 
-
+	//懐中電灯
 	flashLight_ = std::make_unique<FlashLight>();
 	flashLight_->Initialize();
 
@@ -65,27 +65,38 @@ void Player::Initialize(){
 void Player::Damaged() {
 	//通常の敵に当たった場合
 	if (colliderToNormalEnemy_->GetIsTouch() == true) {
+
 		//ダメージを受ける
 		if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_==false) {
+			//ダメージを受ける
 			isDameged_ = true;
+			//体力を減らす
 			--hp_;
 			//線形補間で振動処理をする
 			vibeTime_ += DELTA_TIME;
-			vibeStrength_ = SingleCalculation::Lerp(1.0f, 0.0f, vibeTime_);
+
+			//線形補間を使い振動を減衰させる
+			vibeStrength_ = SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
 			Input::GetInstance()->SetVibration(vibeStrength_, vibeStrength_);
 
 			//振動を止める
-			if (vibeStrength_ <= 0.0f) {
+			if (vibeStrength_ <= MIN_VIBE_) {
+				//振動が止まる
 				Input::GetInstance()->StopVibration();
-				vibeTime_ = 0.0f;
+				
+				//戻る時間
+				const float RESTART_TIME = 0.0f;
+				//時間を戻す
+				vibeTime_ = RESTART_TIME;
+				//ダメージを受けていないようにする
 				isDameged_ = false;
-				acceptDamage_ = false;
 			}
 		}
 		
 	}
 	else {
-		acceptDamage_ = false;
+		//ダメージを受けない
+		//当たっていないので
 		isDameged_ = false;
 		
 	}
@@ -166,7 +177,7 @@ void Player::Update(){
 
 	
 #ifdef _DEBUG
-
+	//それぞれintに変換
 	int32_t keyQuantity = static_cast<int32_t>(haveKeyQuantity_);
 	int32_t condition = static_cast<int32_t>(moveCondition_);
 
@@ -177,7 +188,6 @@ void Player::Update(){
 		ImGui::InputInt("体力", &hp_);
 		ImGui::InputInt("ダメージ時間", &damagedTime_);
 
-		ImGui::Checkbox("acceptDamage_", &acceptDamage_);
 		ImGui::Checkbox("isDamage_", &isDamage_);
 		ImGui::Checkbox("振動", &isDameged_);
 
@@ -214,6 +224,7 @@ void Player::Draw(const Camera& camera, const SpotLight& spotLight){
 
 
 Player::~Player() {
+	//振動を止める
 	Input::GetInstance()->StopVibration();
 }
 

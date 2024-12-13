@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file GameManager.h
+ * @file Player.h
  * @brief プレイヤーのクラス
  * @author 茂木翼
  */
@@ -18,14 +18,30 @@
 #include "Light/FlashLight/FlashLight.h"
 #include "SpotLight.h"
 
+#pragma region 前方宣言
 
-
-
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+/// <summary>
+/// マテリアル
+/// </summary>
 struct Material;
+
+/// <summary>
+/// ゲームシーン
+/// </summary>
 class GameScene;
+
+/// <summary>
+/// オブジェクト管理クラス
+/// </summary>
 class ObjectManager;
 
+
+#pragma endregion
 
 /// <summary>
 /// プレイヤーの移動状態
@@ -72,7 +88,9 @@ public:
 	~Player();
 
 private:
-
+	/// <summary>
+	/// ダメージ
+	/// </summary>
 	void Damaged();
 
 
@@ -100,14 +118,14 @@ public:
 	/// 方向
 	/// </summary>
 	/// <returns></returns>
-	inline Vector3 GetDirection() {
+	inline Vector3 GetDirection() const{
 		return moveDirection_;
 	}
 
 	/// <summary>
 	/// AABBの取得
 	/// </summary>
-	inline AABB GetAABB() {
+	inline AABB GetAABB() const{
 		return aabb_;
 	}
 
@@ -270,8 +288,6 @@ private:
 	int32_t downTime_ = 0;
 	//敵の攻撃に当たったかどうか
 	bool isDamage_ = false;
-	//攻撃を受け入れるかどうか
-	bool acceptDamage_ = false;
 
 	//操作可能かどうか
 	bool isControll_ = false;
@@ -302,6 +318,10 @@ private:
 	//時間変化
 	const float DELTA_TIME = 1.0f / 60.0f;
 
+	//最大の振動の強さ
+	const float MAX_VIBE_ = 1.0f;
+	//最小の振動の強さ
+	const float MIN_VIBE_ = 0.0f;
 
 
 private:
