@@ -48,8 +48,20 @@ void WinScene::Initialize() {
 
 void WinScene::Update(GameManager* gameManager){
 
+	//増える時間の値
+	const uint32_t INCREASE_VALUE = 1u;
+	//Bトリガーの反応する時間
+	const uint32_t REACT_TIME = 1u;
+	//Bトリガーの反応しない時間
+	const uint32_t NO_REACT_TIME = 0u;
+
+	//再スタート時間
+	const uint32_t RESTART_TIME = 0u;
+
+
+
 	//通常の点滅
-	flashTime_ += 1;
+	flashTime_ += INCREASE_VALUE;
 	//表示
 	if (flashTime_ > FLASH_TIME_LIMIT_ * 0 &&
 		flashTime_ <= FLASH_TIME_LIMIT_) {
@@ -63,24 +75,34 @@ void WinScene::Update(GameManager* gameManager){
 	}
 	//循環
 	if (flashTime_ > FLASH_TIME_LIMIT_ * 2) {
-		flashTime_ = 0;
+		flashTime_ = RESTART_TIME;
 	}
+
+
+
+	//カウントが増える時間
+	const uint32_t INCREASE_COUNT_TIME = 0u;
+	//点滅の間隔
+	const uint32_t FLASH_INTERVAL = 2u;
+	//表示
+	const uint32_t DISPLAY = 0u;
+
 
 	//コントローラーを繋いでいる時
 	if (input_->IsConnetGamePad() == true) {
 
 		//Bボタンを押したとき
 		if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-			bTriggerTime_ += 1;
+			bTriggerTime_ += INCREASE_VALUE;
 
 		}
 		//押していない時
 		if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-			bTriggerTime_ = 0;
+			bTriggerTime_ = NO_REACT_TIME;
 		}
 
 		//トリガー
-		if (bTriggerTime_ == 1) {
+		if (bTriggerTime_ == REACT_TIME) {
 			restart_ = true;
 		}
 	}
@@ -93,12 +115,12 @@ void WinScene::Update(GameManager* gameManager){
 	if (restart_ == true) {
 
 		//時間を足していく
-		fastFlashTime_ += 1;
-		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == 0) {
+		fastFlashTime_ += INCREASE_VALUE;
+		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
 			++textDisplayCount_;
 		}
 		//表示
-		if (textDisplayCount_ % 2 == 0) {
+		if (textDisplayCount_ % FLASH_INTERVAL == DISPLAY) {
 			text_->SetInvisible(true);
 		}
 		//非表示
@@ -119,10 +141,8 @@ void WinScene::Update(GameManager* gameManager){
 
 		//指定した時間まで時間が足される
 		if (transparency_ > COMPLETELY_NO_TRANSPARENT_) {
-			blackOutTime_ += 1;
+			blackOutTime_ += INCREASE_VALUE;
 		}
-
-		
 	}
 
 	//タイトルシーンへ
