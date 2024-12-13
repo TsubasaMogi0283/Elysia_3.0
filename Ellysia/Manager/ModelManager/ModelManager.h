@@ -1,4 +1,10 @@
 #pragma once
+/**
+ * @file ModelManager.h
+ * @brief モデル管理クラスクラス
+ * @author 茂木翼
+ */
+
 #include <string>
 #include <array>
 #include <fstream>
@@ -9,6 +15,9 @@
 #include <ModelData.h>
 #include "Animation.h"
 
+/// <summary>
+/// モデル管理クラス
+/// </summary>
 class ModelManager final{
 private:
 	/// <summary>

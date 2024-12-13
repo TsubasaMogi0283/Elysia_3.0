@@ -4,13 +4,12 @@
 
 #include "Input.h"
 #include "GameScene/GameScene.h"
-#include "AdjustmentItems.h"
 #include "GameManager.h"
 #include "ModelManager.h"
 #include "AnimationManager.h"
 #include "TextureManager.h"
-#include <VectorCalculation.h>
-#include <SingleCalculation.h>
+#include "VectorCalculation.h"
+#include "SingleCalculation.h"
 
 
 LevelEditorSample::LevelEditorSample(){

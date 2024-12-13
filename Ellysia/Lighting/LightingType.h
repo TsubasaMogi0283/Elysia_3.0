@@ -1,5 +1,14 @@
 #pragma once
 
+/**
+ * @file LightingType.h
+ * @brief ライティングの種類の列挙型
+ * @author 茂木翼
+ */
+
+/// <summary>
+/// ライティングの種類
+/// </summary>
 enum LightingType {
 	//無し
 	None,

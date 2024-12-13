@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file GameManager.h
+ * @file Audio.h
  * @brief オーディオクラス
  * @author 茂木翼
  */

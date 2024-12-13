@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+ * @file IObjectForLevelEditor.h
+ * @brief レベルエディタ用のモデル(基底クラス)
+ * @author 茂木翼
+ */
+
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Vector3.h"

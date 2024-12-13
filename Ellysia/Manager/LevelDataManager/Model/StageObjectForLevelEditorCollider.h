@@ -1,6 +1,15 @@
 #pragma once
+/**
+ * @file StageObjectForLevelEditorCollider.h
+ * @brief ステージオブジェクト用のクラス
+ * @author 茂木翼
+ */
+
 #include "IObjectForLevelEditorCollider.h"
 
+/// <summary>
+/// ステージオブジェクト用のクラス
+/// </summary>
 class StageObjectForLevelEditorCollider :public IObjectForLevelEditorCollider {
 public:
 

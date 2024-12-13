@@ -29,9 +29,6 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 	material_.lightingKinds_ = Spot;
 
 
-	directionalLight_.Initialize();
-	particleMaterial_.Initialize();
-	particleMaterial_.lightingKinds_ = Directional;
 
 	//生存か死亡
 	isAlive_ = true;
@@ -57,8 +54,6 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 	attackTime_ = 0;
 
 
-	//パーティクル
-	particle_.reset(Particle3D::Create(ParticleMoveType::NormalRelease));
 
 	//デバッグ用のモデル
 	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
@@ -207,8 +202,7 @@ void Enemy::Update(){
 	worldTransform_.Update();
 	//マテリアルの更新
 	material_.Update();
-	//平行光源の更新
-	directionalLight_.Update();
+
 
 
 

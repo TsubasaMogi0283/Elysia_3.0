@@ -1,4 +1,10 @@
 #pragma once
+/**
+ * @file Plane.h
+ * @brief 平面の構造体
+ * @author 茂木翼
+ */
+
 #include "Vector3.h"
 
 /// <summary>

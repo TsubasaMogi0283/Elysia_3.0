@@ -1,6 +1,15 @@
 #pragma once
+/**
+ * @file SepiaScale.h
+ * @brief セピアのクラス
+ * @author 茂木翼
+ */
+
 #include "DirectXSetup.h"
 
+/// <summary>
+/// セピア
+/// </summary>
 class SepiaScale{
 public:
 	/// <summary>
@@ -31,13 +40,13 @@ public:
 
 
 private:
-
+	//RTVハンドル
 	uint32_t rtvHandle_ = 0;
 	//RTV
 	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
-
+	//SRVハンドル
 	uint32_t srvHandle_ = 0;
-
+	//バリア
 	D3D12_RESOURCE_BARRIER barrier = {};
 
 

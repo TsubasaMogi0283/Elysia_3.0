@@ -1,17 +1,27 @@
 #pragma once
+
+/**
+ * @file Particle3DManager.h
+ * @brief パーティクル(3D)管理クラス
+ * @author 茂木翼
+ */
+
 #include <unordered_map>
 #include <string>
 #include <list>
 #include <random>
 
 #include "DirectXSetup.h"
-#include <Particle.h>
+#include "Particle.h"
 #include "VertexData.h"
-#include <Camera.h>
-#include <AccelerationField.h>
-#include <DirectionalLight.h>
+#include "Camera.h"
+#include "AccelerationField.h"
+#include "DirectionalLight.h"
 #include "Transform.h"
 
+/// <summary>
+/// パーティクルエミッター
+/// </summary>
 struct ParticleEmitterStruct {
 	//エミッタのTransform;
 	Transform transform;
@@ -23,6 +33,9 @@ struct ParticleEmitterStruct {
 	float frequencyTime;
 };
 
+/// <summary>
+/// パーティクルグループ
+/// </summary>
 struct ParticleGrounp {
 	//マテリアルデータ
 	std::string textureFilePath;
@@ -44,23 +57,39 @@ struct ParticleGrounp {
 	ParticleEmitterStruct emitter_ = {};
 };
 
-
+/// <summary>
+/// パーティクル(3D)管理クラス
+/// </summary>
 class Particle3DManager final {
 private:
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Particle3DManager() = default;
 
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Particle3DManager() = default;
 
 public:
-	//インスタンス
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
 	static Particle3DManager* GetInstance();
 
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="particle3DManager"></param>
 	Particle3DManager(const Particle3DManager& particle3DManager) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="particle3DManager"></param>
+	/// <returns></returns>
 	Particle3DManager& operator=(const Particle3DManager& particle3DManager) = delete;
 
 

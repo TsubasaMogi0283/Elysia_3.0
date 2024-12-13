@@ -3,7 +3,6 @@
 #include <numbers>
 
 #include "Input.h"
-#include "AdjustmentItems.h"
 #include "WinScene/WinScene.h"
 #include "LoseScene/LoseScene.h"
 
@@ -103,7 +102,7 @@ void GameScene::Initialize() {
 	gate_->Initialize(gateModelhandle);
 
 
-	//脱出せよ
+
 	//「脱出せよ」の画像読み込み
 	uint32_t escapeTextureHandle = texturemanager_->LoadTexture("Resources/Game/Escape/EscapeText.png");
 	//生成
@@ -144,6 +143,8 @@ void GameScene::Initialize() {
 	uint32_t keyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/key","Key.obj");
 	//生成
 	keyManager_ = std::make_unique<KeyManager>();
+	//プレイヤーの設定
+	keyManager_->SetPlayer(player_.get());
 	//初期化
 	keyManager_->Initialize(keyModelHandle);
 	
@@ -320,12 +321,12 @@ void GameScene::KeyCollision(){
 			};
 
 			//距離
-			float colissionDistance = sqrtf(distance.x + distance.y + distance.z);
+			float collisionDistance = sqrtf(distance.x + distance.y + distance.z);
 			
 
 
 			//範囲内にいれば入力を受け付ける
-			if (colissionDistance <= player_->GetSideSize() + key->GetRadius()) {
+			if (collisionDistance <= player_->GetSideSize() + key->GetRadius()) {
 
 				//取得可能
 				key->SetIsPrePickUp(true);
@@ -383,6 +384,10 @@ void GameScene::KeyCollision(){
 
 void GameScene::ObjectCollision(){
 	
+	//ただ衝突判定を設定するだけだと出来なかったので
+	//内積の計算も入れて可能にする
+
+
 	//プレイヤーの移動方向
 	Vector3 direction = playerMoveDirection_;
 	//プレイヤーの当たり判定AABB
@@ -889,8 +894,10 @@ void GameScene::Update(GameManager* gameManager) {
 		for (StrongEnemy* strongEnemy : strongEnemyes) {
 			bool isTouch = strongEnemy->GetIsTouchPlayer();
 
+			collisionManager_->RegisterList(strongEnemy);
 			//接触
 			if (isTouch == true) {
+
 				isTouchStrongEnemy_ = true;
 			}
 		}

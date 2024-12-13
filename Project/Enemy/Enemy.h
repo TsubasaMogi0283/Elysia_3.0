@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file GameManager.h
+ * @file Enemy.h
  * @brief 敵のクラス
  * @author 茂木翼
  */
@@ -236,44 +236,50 @@ private:
 	uint32_t condition_ = EnemyCondition::Move;
 
 
-
 private:
-	//ワールドトランスフォーム
-	WorldTransform worldTransform_ = {};
 	//スケールサイズ
 	const float SCALE_SIZE = 10.0f;
 
 	//スピードの量
 	const float SPEED_AMOUNT_ = 0.05f;
+
+	//幅
+	const float RADIUS_ = 1.0f;
+	//幅(Vector3)
+	const Vector3 RADIUS_INTERVAL_ = { .x = RADIUS_,.y = RADIUS_,.z = RADIUS_ };
+
+	//0に戻る時間
+	const int32_t RETURN_ATTCK_TIME_ = 240u;
+
+
+private:
+	//ワールドトランスフォーム
+	WorldTransform worldTransform_ = {};
+	
+	//モデル
+	std::unique_ptr<Model> model_ = nullptr;
+
+	//マテリアル
+	Material material_ = {};
+
 	//移動速度
 	Vector3 preSpeed_ = {};
 	Vector3 speed_ = {};
 
-	//モデル
-	std::unique_ptr<Model> model_ = nullptr;
-	
-	//マテリアル
-	Material material_ = {};
+	//向き
+	Vector3 direction_ = {};
 	
 	//生存
 	bool isAlive_ = true;
 
 	//AABB
 	AABB aabb_ = {};
-	//幅
-	const float RADIUS_ = 1.0f;
-	//幅(Vector3)
-	const Vector3 RADIUS_INTERVAL_ = { .x = RADIUS_,.y = RADIUS_,.z = RADIUS_ };
-
+	
 	//消滅
 	//時間とフラグ
 	int32_t deleteTime_ = 0;
 	bool isDeleted_ = false;
 
-	//消えるときのパーティクル
-	std::unique_ptr<Particle3D>particle_ = nullptr;
-	DirectionalLight directionalLight_ = {};
-	Material particleMaterial_ = {};
 
 	//追跡
 	bool isTracking_ = false;
@@ -281,19 +287,16 @@ private:
 	Vector3 preTrackingPosition_ = {};
 	Vector3 preTrackingPlayerPosition_ = {};
 
-	//向き
-	Vector3 direction_ = {};
+	//プレイヤーの座標
+	Vector3 playerPosition_ = {};
+
 
 	//攻撃
 	int32_t attackTime_ = 0;
 	bool isAttack_ = false;
 
-	//0に戻る時間
-	const int32_t RETURN_ATTCK_TIME_ = 240u;
 
-	//プレイヤーの座標
-	Vector3 playerPosition_ = {};
-
+private:
 
 	//攻撃用の当たり判定
 	std::unique_ptr<EnemyAttackCollision> attackCollision_ = nullptr;

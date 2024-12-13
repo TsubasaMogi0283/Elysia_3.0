@@ -69,11 +69,19 @@ void PipelineManager::Initialize(){
 	//スプライト
 	SetSpriteBlendMode(BLEND_MODE);
 	GenerateSpritePSO();
-
+	
+	//スカイボックス
+	GenarateSkyBoxPSO();
 
 	//パーティクル
 	GenerateParticle3DPSO();
 	
+	//ポストエフェクト(基本機能)
+	GenarateFullScreenPSO();
+
+	//ディゾルブ
+	GenarateDissolvePSO();
+
 	//ビネット
 	GenarateVignettePSO();
 

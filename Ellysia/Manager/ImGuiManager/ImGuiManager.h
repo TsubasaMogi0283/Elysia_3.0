@@ -1,24 +1,48 @@
 #pragma once
 
+/**
+ * @file ImGuiManager.h
+ * @brief ImGui管理クラス
+ * @author 茂木翼
+ */
 
+/// <summary>
+/// ImGui管理クラス
+/// </summary>
 class ImGuiManager final{
 private:
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	ImGuiManager()=default;
 
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~ImGuiManager()=default;
 
 public:
 	
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// インスタンスを取得
+	/// </summary>
+	/// <returns></returns>
+	static ImGuiManager* GetInstance();
+
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="imGui"></param>
 	ImGuiManager(const ImGuiManager& imGui) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="imGui"></param>
+	/// <returns></returns>
 	ImGuiManager& operator=(const ImGuiManager& imGui) = delete;
 
-	//インスタンスを取得
-	static ImGuiManager* GetInstance();
+	
 
 public:
 

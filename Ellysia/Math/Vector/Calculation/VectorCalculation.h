@@ -1,8 +1,18 @@
 #pragma once
-#include <Vector3.h>
-#include "Matrix4x4.h"
-#include <Vector2.h>
+/**
+ * @file VectorCalculation.h
+ * @brief ベクトルの計算
+ * @author 茂木翼
+ */
 
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Matrix4x4.h"
+
+
+/// <summary>
+/// ベクトルの計算
+/// </summary>
 namespace VectorCalculation {
 
 	/// <summary>

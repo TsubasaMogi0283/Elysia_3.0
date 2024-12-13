@@ -1,10 +1,20 @@
 #pragma once
+
+/**
+ * @file LuminanceBasedOutline.h
+ * @brief アウトライン(輝度)の管理クラス
+ * @author 茂木翼
+ */
+
+
 #include "DirectXSetup.h"
 #include "Vector4.h"
 #include "Vector3.h"
 #include "VertexData.h"
 
-
+/// <summary>
+/// アウトライン(輝度)
+/// </summary>
 class LuminanceBasedOutline{
 public:
 	/// <summary>

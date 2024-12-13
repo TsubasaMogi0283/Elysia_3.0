@@ -1,13 +1,13 @@
 #include "Dissolve.h"
+#include "imgui.h"
+
 #include <PipelineManager.h>
 #include "TextureManager.h"
-#include <SrvManager.h>
-#include "imgui.h"
+#include "SrvManager.h"
 #include "RtvManager.h"
 
-void Dissolve::Initialize(uint32_t maskTexture){
-	//パイプライン
-	PipelineManager::GetInstance()->GenarateDissolvePSO();
+void Dissolve::Initialize(const uint32_t& maskTexture){
+	
 
 
 	

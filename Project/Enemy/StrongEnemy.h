@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file GameManager.h
+ * @file StrongEnemy.h
  * @brief 強敵のクラス
  * @author 茂木翼
  */

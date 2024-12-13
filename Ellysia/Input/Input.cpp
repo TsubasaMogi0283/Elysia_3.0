@@ -83,7 +83,7 @@ void Input::Initialize() {
 #pragma region キーボード
 
 //Push状態
-bool Input::IsPushKey(uint8_t keyNumber) {
+bool Input::IsPushKey(const uint8_t& keyNumber) const{
 	//指定されていたキーを押していればtrueを返す
 	if (currentKey_[keyNumber]!=0) {
 		return true;
@@ -94,7 +94,7 @@ bool Input::IsPushKey(uint8_t keyNumber) {
 }
 
 //トリガー
-bool Input::IsTriggerKey(uint8_t keyNumber) {
+bool Input::IsTriggerKey(const uint8_t& keyNumber) const{
 	if (currentKey_[keyNumber]!=0 && preKey_[keyNumber]==0) {
 		return true;
 	}
@@ -105,7 +105,7 @@ bool Input::IsTriggerKey(uint8_t keyNumber) {
 
 #pragma region マウス
 //Push状態
-bool Input::IsPushMouse(int32_t mouseNumber) {
+bool Input::IsPushMouse(const int32_t& mouseNumber)const {
 	if (currentMouse_.rgbButtons[mouseNumber] != 0) {
 		return true;
 	}
@@ -113,7 +113,7 @@ bool Input::IsPushMouse(int32_t mouseNumber) {
 }
 
 //Trigger状態
-bool Input::IsTriggerMouse(int32_t mouseNumber) {
+bool Input::IsTriggerMouse(const int32_t& mouseNumber)const {
 	if (currentMouse_.rgbButtons[mouseNumber] != 0 && preMouse_.rgbButtons[mouseNumber] == 0) {
 		return true;
 	}
@@ -133,7 +133,7 @@ bool Input::IsConnetGamePad(){
 	return false;
 }
 
-bool Input::IsPushButton(int32_t button) {
+bool Input::IsPushButton(const int32_t& button)const {
 	if (state_.Gamepad.wButtons & button) {
 		return true;
 	}
@@ -141,25 +141,30 @@ bool Input::IsPushButton(int32_t button) {
 }
 
 
-void Input::SetVibration(float leftMotor, float rightMotor){
+void Input::SetVibration(const float& leftMotor, const float& rightMotor){
 	XINPUT_VIBRATION vibration;
 	ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 	//0から65535まで
 	const float MAX_SIZE = 65535.0f;
-	vibration.wLeftMotorSpeed = WORD(leftMotor* MAX_SIZE);
-	vibration.wRightMotorSpeed = WORD(rightMotor* MAX_SIZE);
+	vibration = {
+		.wLeftMotorSpeed = WORD(leftMotor * MAX_SIZE),
+		.wRightMotorSpeed = WORD(rightMotor * MAX_SIZE) }
+	;
 	XInputSetState(0, &vibration);
 }
 
 void Input::StopVibration(){
 	XINPUT_VIBRATION vibration;
 	ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
-	vibration.wLeftMotorSpeed = WORD(0.0f);
-	vibration.wRightMotorSpeed = WORD(0.0f);
+	vibration = {
+		.wLeftMotorSpeed= WORD(0.0f),
+		.wRightMotorSpeed= WORD(0.0f) }
+	;
 	XInputSetState(0, &vibration);
 }
 
-void Input::SetIsDisplayCursor(bool isDisplay){
+void Input::SetIsDisplayCursor(const bool& isDisplay){
+	//カーソルの表示をするかどうか
 	ShowCursor(isDisplay);
 }
 

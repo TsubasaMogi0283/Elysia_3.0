@@ -1,18 +1,25 @@
 #pragma once
+/**
+ * @file Line.h
+ * @brief 線のクラス
+ * @author 茂木翼
+ */
+
+#include <string>
+
 #include "DirectXSetup.h"
 #include "ConvertLog.h"
-
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "Matrix4x4Calculation.h"
-
-#include <string>
 #include "Material.h"
 #include "TransformationMatrix.h"
-#include <Camera.h>
+#include "Camera.h"
 
 
-
+/// <summary>
+/// 線
+/// </summary>
 class Line {
 public:
 	

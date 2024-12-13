@@ -124,9 +124,6 @@
     <Filter Include="Ellysia\Source File\Polygone\3D\Particle3DManager">
       <UniqueIdentifier>{3ec739a0-2572-47d0-a8e3-2884e559d8fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Header File\AdjustmentItems">
-      <UniqueIdentifier>{790ca7fe-3aed-4cdc-bdf7-edc3fdacdae6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Text">
       <UniqueIdentifier>{86ea6656-3c90-41a3-872c-722ea8f63729}</UniqueIdentifier>
     </Filter>
@@ -198,9 +195,6 @@
     </Filter>
     <Filter Include="Ellysia\Source File\Manager\Animation">
       <UniqueIdentifier>{854ee5dc-7df8-4ce1-a244-9ca2a7c26822}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ellysia\Source File\AdjustmentItems">
-      <UniqueIdentifier>{12e16608-40ac-4915-8d0c-9b46fdd3dd26}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ellysia\Source File\Lighting">
       <UniqueIdentifier>{18d4b0dd-38f4-4c8c-b471-c9aa09e3199c}</UniqueIdentifier>
@@ -355,6 +349,27 @@
     <Filter Include="Project\GameScene\WinScene">
       <UniqueIdentifier>{c06d8e17-a723-4892-983a-90de5852100f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\GlobalVariables">
+      <UniqueIdentifier>{790ca7fe-3aed-4cdc-bdf7-edc3fdacdae6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\GlobalVariables">
+      <UniqueIdentifier>{12e16608-40ac-4915-8d0c-9b46fdd3dd26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Math\Quaternion">
+      <UniqueIdentifier>{2cae3cb5-511e-4439-a451-3396d7bef972}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager\LevelData">
+      <UniqueIdentifier>{a9f4badc-0a2a-44b9-aaae-ab36f9e8bc53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager\LevelData\Object">
+      <UniqueIdentifier>{35c7088b-304e-4eca-8be4-219967eab75c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager\LevelData\Object\Collider">
+      <UniqueIdentifier>{0c773198-32c9-4ff1-9dcb-2282ab84779d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Player\Test">
+      <UniqueIdentifier>{83fcd2cc-6d97-4ff6-9a5c-737b5fbaaaf3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -432,9 +447,6 @@
     <ClCompile Include="Ellysia\Manager\RtvManager\RtvManager.cpp">
       <Filter>Ellysia\Source File\Manager\RTV</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\PostEffect\DepthBasedOutline\DepthBasedOutline.cpp">
-      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Polygon\PostEffect\BackTest\BackText.cpp">
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
@@ -473,9 +485,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\ImGuiManager\ImGuiManager.cpp">
       <Filter>Ellysia\Source File\Manager\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\AdjustmentItems\AdjustmentItems.cpp">
-      <Filter>Ellysia\Source File\AdjustmentItems</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Lighting\DirectionalLight.cpp">
       <Filter>Ellysia\Source File\Lighting</Filter>
@@ -552,9 +561,6 @@
     <ClCompile Include="Project\AllGameScene\LevelEditorSample\LevelEditorSample.cpp">
       <Filter>Project\GameScene\LevelEditorSample</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\LevelDataManager.cpp">
-      <Filter>Ellysia\Source File\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp">
       <Filter>Project\Enemy\EnemyAttackCollision</Filter>
     </ClCompile>
@@ -582,35 +588,11 @@
     <ClCompile Include="Project\AllGameScene\GameScene\GameScene.cpp">
       <Filter>Project\GameScene\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditor.cpp">
-      <Filter>Ellysia\Source File\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.cpp">
-      <Filter>Ellysia\Source File\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Player\PlayerCollisionToNormalEnemyAttack.cpp">
       <Filter>Project\Player\PlayerCollisionToNormalEnemyAttack</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Player\AudioTestPlayer.cpp">
-      <Filter>Project\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.cpp">
-      <Filter>Ellysia\Source File\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditorCollider.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Player\PlayerCollisionToAudioObject.cpp">
       <Filter>Project\Player\PlayerCollisionToAudioObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Player\PlayerCollisionToStageObject.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.cpp">
-      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\WinScene\WinScene.cpp">
       <Filter>Project\GameScene\WinScene</Filter>
@@ -620,6 +602,36 @@
     </ClCompile>
     <ClCompile Include="Project\Light\FlashLight\FlashLightCollision.cpp">
       <Filter>Project\Light\FlashLight</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\GlobalVariables\GlobalVariables.cpp">
+      <Filter>Ellysia\Source File\GlobalVariables</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.cpp">
+      <Filter>Ellysia\Source File\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\LevelDataManager.cpp">
+      <Filter>Ellysia\Source File\Manager\LevelData</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.cpp">
+      <Filter>Ellysia\Source File\Manager\LevelData</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.cpp">
+      <Filter>Ellysia\Source File\Manager\LevelData\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditor.cpp">
+      <Filter>Ellysia\Source File\Manager\LevelData\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditorCollider.cpp">
+      <Filter>Ellysia\Source File\Manager\LevelData\Object\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.cpp">
+      <Filter>Ellysia\Source File\Manager\LevelData\Object\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\PlayerCollisionToStageObject.cpp">
+      <Filter>Project\Player\PlayerCollisionToStageObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\AudioTestPlayer.cpp">
+      <Filter>Project\Player\Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -745,12 +757,6 @@
     <ClInclude Include="Ellysia\Math\Vector\Vector2.h">
       <Filter>Ellysia\Header File\Math\Vector</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\Vector\VertexData.h">
-      <Filter>Ellysia\Header File\Math\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Math\Vector\Material.h">
-      <Filter>Ellysia\Header File\Math\Vector</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Common\DirectX\DirectXSetup.h">
       <Filter>Ellysia\Header File\Common</Filter>
     </ClInclude>
@@ -832,22 +838,13 @@
     <ClInclude Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.h">
       <Filter>Ellysia\Header File\Polygone\3D\Particle3DManager</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\Quaternion\Quaternion.h">
-      <Filter>Ellysia\Header File\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Audio\AudioStruct.h">
       <Filter>Ellysia\Header File\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Shape\SphereShape.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\AdjustmentItems\AdjustmentItems.h">
-      <Filter>Ellysia\Header File\AdjustmentItems</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Math\Transform\EulerTransform.h">
-      <Filter>Ellysia\Header File\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Math\Transform\QuaternionTransform.h">
       <Filter>Ellysia\Header File\Math</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Lighting\LightingType.h">
@@ -870,9 +867,6 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\RtvManager\RtvManager.h">
       <Filter>Ellysia\Header File\Manager\RTV</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\PostEffect\DepthBasedOutline\DepthBasedOutline.h">
-      <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\PostEffect\BackTest\BackText.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
@@ -1051,17 +1045,11 @@
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.h">
       <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Player\AudioTestPlayer.h">
-      <Filter>Project\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Player\PlayerCollisionToAudioObject.h">
       <Filter>Project\Player\PlayerCollisionToAudioObject</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Shape\Plane.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Player\PlayerCollisionToStageObject.h">
-      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.h">
       <Filter>Ellysia\Header File\Manager\LevelEditor\Object</Filter>
@@ -1081,9 +1069,6 @@
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditorCollider.h">
       <Filter>Ellysia\Header File\Manager\LevelEditor\Object\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Project\AllGameScene\WinScene\WinScene.h">
       <Filter>Project\GameScene\WinScene</Filter>
     </ClInclude>
@@ -1092,6 +1077,30 @@
     </ClInclude>
     <ClInclude Include="Project\Light\FlashLight\FlashLightCollision.h">
       <Filter>Project\Light\FlashLight</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\GlobalVariables\GlobalVariables.h">
+      <Filter>Ellysia\Header File\GlobalVariables</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Quaternion\Quaternion.h">
+      <Filter>Ellysia\Header File\Math\Quaternion</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.h">
+      <Filter>Ellysia\Header File\Math\Quaternion</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Transform\QuaternionTransform.h">
+      <Filter>Ellysia\Header File\Math\Quaternion</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\AudioTestPlayer.h">
+      <Filter>Project\Player\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Vector\Material.h">
+      <Filter>Ellysia\Header File\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Vector\VertexData.h">
+      <Filter>Ellysia\Header File\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\PlayerCollisionToStageObject.h">
+      <Filter>Project\Player\PlayerCollisionToStageObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

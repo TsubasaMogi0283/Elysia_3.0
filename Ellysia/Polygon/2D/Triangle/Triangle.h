@@ -1,7 +1,14 @@
 #pragma once
+
+/**
+ * @file Triangle.h
+ * @brief 三角形
+ * @author 茂木翼
+ */
+
+#include <string>
+
 #include "DirectXSetup.h"
-#include "ConvertLog.h"
-#include <DirectXTex.h>
 
 #include "Vector4.h"
 #include "Matrix4x4.h"
@@ -9,29 +16,42 @@
 #include "Transform.h"
 #include "VertexData.h"
 
-#include <string>
+
 #include "Material.h"
 #include "TransformationMatrix.h"
 
+/// <summary>
+/// 三角形
+/// </summary>
 class Triangle {
 public:
-	//コンストラクタ
-	Triangle();
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	Triangle()=default;
 
-	//初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
-	//描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="transform"></param>
+	/// <param name="color"></param>
 	void Draw(Transform transform,Vector4 color);
 
 
-
-	~Triangle();
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Triangle()=default;
 
 
 
 private:
-
+	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
 
 	//Resource

@@ -1,4 +1,13 @@
 #pragma once
+
+/**
+ * @file AudioObjectForLevelEditor.h
+ * @brief オーディオ用のオブジェクトクラス
+ * @author 茂木翼
+ */
+
+
+
 #include <memory>
 #include <cstdint>
 
@@ -6,11 +15,34 @@
 #include "AudioObjectForLevelEditorCollider.h"
 #include "Audio.h"
 
+#pragma region 前方宣言
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+/// <summary>
+/// マテリアル
+/// </summary>
 struct Material;
+
+/// <summary>
+/// 平行光源
+/// </summary>
 struct DirectionalLight;
+
+/// <summary>
+/// 点光源
+/// </summary>
 struct PointLight;
+
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight;
+
+#pragma endregion
+
 
 /// <summary>
 /// オーディオオブジェクトのタイプ

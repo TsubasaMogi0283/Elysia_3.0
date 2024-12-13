@@ -1,10 +1,23 @@
 #pragma once
-#include "Animation.h"
+/**
+ * @file AnimationManager.h
+ * @brief  アニメーション管理のクラス
+ * @author 茂木翼
+ */
+
 #include <array>
+#include "Animation.h"
+
+
+/// <summary>
+/// スケルトン
+/// </summary>
 struct Skeleton;
 
 
-
+/// <summary>
+/// アニメーション管理クラス
+/// </summary>
 class AnimationManager{
 private:
 	/// <summary>
@@ -26,10 +39,17 @@ public:
 	/// <returns></returns>
 	static AnimationManager* GetInstance();
 
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="modelManager"></param>
 	AnimationManager(const AnimationManager& modelManager) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="modelManager"></param>
+	/// <returns></returns>
 	AnimationManager& operator=(const AnimationManager& modelManager) = delete;
 
 
@@ -80,6 +100,9 @@ public:
 
 
 private:
+	/// <summary>
+	/// アニメーションに関する情報
+	/// </summary>
 	struct AnimationInformation {
 		//モデルデータ
 		Animation animationData;

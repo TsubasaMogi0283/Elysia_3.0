@@ -1,21 +1,40 @@
 #pragma once
-#include "Vector4.h"
+
+/**
+ * @file Material.h
+ * @brief マテリアル
+ * @author 茂木翼
+ */
+
+
+
 #include <cstdint>
+
+#include "Vector4.h"
 #include "Matrix4x4.h"
 #include "DirectXSetup.h"
 #include "LightingType.h"
 
-
+/// <summary>
+/// データ
+/// </summary>
 struct MaterialData {
+	//色
 	Vector4 color;
+	//ライティングの種類
 	int32_t lightingKinds;
 	float padding[3];
+	//UVトランスフォーム
 	Matrix4x4 uvTransform;
+	//輝度
 	float shininess;
+	//環境マッピングするかどうか
 	bool isEnviromentMap;
 };
 
-//モデル用のマテリアルの設定
+/// <summary>
+/// マテリアル
+/// </summary>
 struct Material {
 public:
 	/// <summary>

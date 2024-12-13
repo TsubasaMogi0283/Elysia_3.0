@@ -1,8 +1,17 @@
 #pragma once
+/**
+ * @file PointLight.h
+ * @brief 点光源の構造体
+ * @author 茂木翼
+ */
+
 #include <Vector4.h>
 #include <Vector3.h>
 #include "DirectXSetup.h"
 
+/// <summary>
+/// 点光源のデータ
+/// </summary>
 struct PointLightData {
 	//ライトの色
 	Vector4 color;
@@ -20,7 +29,9 @@ struct PointLightData {
 };
 
 
-//点光源
+/// <summary>
+/// 点光源
+/// </summary>
 struct PointLight {
 public:
 	/// <summary>

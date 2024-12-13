@@ -1,8 +1,9 @@
 #include "BackText.h"
-#include <PipelineManager.h>
-#include "TextureManager.h"
-#include <SrvManager.h>
 #include "imgui.h"
+
+#include "PipelineManager.h"
+#include "TextureManager.h"
+#include "SrvManager.h"
 #include "RtvManager.h"
 
 
@@ -12,9 +13,7 @@ void BackText::Initialize(){
 	//エフェクトの種類を設定
 	effectType_ = NoneEffect;
 
-	//エフェクトごとにhlsl分けたい
-	//いずれやる
-	PipelineManager::GetInstance()->GenarateFullScreenPSO();
+	
 	
 	//Effect
 	effectResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(int32_t));

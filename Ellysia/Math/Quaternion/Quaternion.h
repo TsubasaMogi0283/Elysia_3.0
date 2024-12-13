@@ -1,7 +1,14 @@
 #pragma once
 
-//四元数
-//回転する為だけにに使われる
+/**
+ * @file Quaternion.h
+ * @brief クォータニオン
+ * @author 茂木翼
+ */
+
+/// <summary>
+/// クォータニオン
+/// </summary>
 struct Quaternion {
 	float x;
 	float y;

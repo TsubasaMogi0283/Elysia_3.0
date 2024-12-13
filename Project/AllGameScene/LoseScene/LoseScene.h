@@ -12,7 +12,11 @@
 #include "Camera.h"
 #include "BackText.h"
 
-//StatePatternを使う時は必ず前方宣言をするように
+//前方宣言
+
+/// <summary>
+/// ゲーム管理クラス
+/// </summary>
 class GameManager;
 
 /// <summary>
@@ -66,6 +70,21 @@ public:
 	~LoseScene();
 
 private:
+	//間隔
+	const float TRANSPARENCY_INTERVAL_ = 0.01f;
+
+	//点滅どのくらい
+	const uint32_t FLASH_TIME_LIMIT_ = 30u;
+
+
+	//高速点滅どのくらい
+	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60u;
+	//高速点滅間隔
+	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
+	//タイトルに変わる時間
+	const uint32_t CHANGE_TO_TITLE_TIME_ = 60 * 2;
+
+private:
 	//失敗
 	std::unique_ptr<Sprite> failedTexture_ = nullptr;
 	//テキスト
@@ -74,8 +93,7 @@ private:
 	std::unique_ptr<Sprite> black_ = nullptr;
 	//透明度
 	float transparency_ = 0.0f;
-	//間隔
-	const float TRANSPARENCY_INTERVAL_ = 0.01f;
+	
 	//見せる番号
 	uint32_t textDisplayCount_ = 0u;
 
@@ -96,16 +114,11 @@ private:
 	bool isFlash_ = false;
 	//時間
 	uint32_t flashTime_ = 0u;
-	//どのくらい
-	const uint32_t FLASH_TIME_LIMIT_ = 30u;
-
+	
 
 	//高速点滅
 	bool isFastFlash_ = false;
-	//どのくらい
-	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60u;
-	//間隔
-	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
+	
 	//時間
 	uint32_t fastFlashTime_ = 0u;
 

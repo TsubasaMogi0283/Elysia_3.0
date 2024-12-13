@@ -1,25 +1,54 @@
 #pragma once
+
+/**
+ * @file LevelDataManager.h
+ * @brief レベルデータ管理クラス
+ * @author 茂木翼
+ */
+
 #include <string>
 #include <list>
 #include <map>
 #include <memory>
 #include <fstream>
-
-#include <Vector3.h>
 #include <json.hpp>
-#include <Model.h>
+
+#include "Vector3.h"
+#include "Model.h"
 #include "WorldTransform.h"
 #include "Collider/Collider.h"
-#include <Transform.h>
-#include <Model/IObjectForLevelEditor.h>
-#include <Model/AudioObjectForLevelEditor.h>
+#include "Transform.h"
+#include "Model/IObjectForLevelEditor.h"
+#include "Model/AudioObjectForLevelEditor.h"
 
+#pragma region 前方宣言
 
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+/// <summary>
+/// マテリアル
+/// </summary>
 struct Material;
+
+/// <summary>
+/// 平行光源
+/// </summary>
 struct DirectionalLight;
+
+/// <summary>
+/// 点光源
+/// </summary>
 struct PointLight;
+
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight;
+
+#pragma endregion
 
 /// <summary>
 /// リスナー
