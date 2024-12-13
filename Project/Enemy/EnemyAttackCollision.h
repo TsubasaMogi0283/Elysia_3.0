@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file GameManager.h
+ * @file EnemyAttackCollision.h
  * @brief 敵の攻撃用のコライダークラス
  * @author 茂木翼
  */
@@ -10,10 +10,22 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
-#include "../Collider/Collider.h"
+#include "Collider/Collider.h"
 
+#pragma region 前方宣言
+
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight;
+
+#pragma endregion
+
 
 /// <summary>
 /// 敵の攻撃用の当たり判定

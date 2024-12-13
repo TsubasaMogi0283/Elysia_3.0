@@ -16,9 +16,10 @@ void AudioTestPlayer::Initialize(){
 	material_.lightingKinds_ = LightingType::Directional;
 
 	//コリジョンの初期化
+	//オーディオ
 	collosionToAudioObject_ = std::make_unique<PlayerCollisionToAudioObject>();
 	collosionToAudioObject_->Initialize();
-
+	//ステージ
 	collosionToStageObject_ = std::make_unique<PlayerCollisionToStageObject>();
 	collosionToStageObject_->Initialize();
 
@@ -35,6 +36,7 @@ void AudioTestPlayer::Update(){
 
 #endif // _DEBUG
 
+	//動いている時
 	if (moveCondition_ == TestPlayerMoveCondition::OnTestPlayerMove) {
 		//方向とスピードを計算
 		const float SPEED = 0.1f;
@@ -45,20 +47,23 @@ void AudioTestPlayer::Update(){
 		worldTransform_.Update();
 	}
 	
+	//マテリアルの更新
 	material_.Update();
 
 
 
 	//コリジョンの更新
+	//オーディオ
 	collosionToAudioObject_->SetPlayerGetWorldPosition(worldTransform_.GetWorldPosition());
 	collosionToAudioObject_->Update();
-
+	//ステージ
 	collosionToStageObject_->SetPlayerGetWorldPosition(worldTransform_.GetWorldPosition());
 	collosionToStageObject_->Update();
 
 }
 
 void AudioTestPlayer::Draw(const Camera& camera, const DirectionalLight& directionalLight){
+	//描画
 	model_->Draw(worldTransform_, camera, material_, directionalLight);
 
 }

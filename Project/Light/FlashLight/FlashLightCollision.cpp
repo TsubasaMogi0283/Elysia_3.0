@@ -6,30 +6,24 @@
 
 void FlashLightCollision::Initialize(){
 
-
-#pragma region 当たり判定
-
 	//種類
 	collisionType_ = ColliderType::FanType;
-
-
 
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_FLASH_LIGHT);
 	//相手
 	SetCollisionMask(COLLISION_ATTRIBUTE_ENEMY2);
 
-#pragma endregion
-
 
 }
 
 void FlashLightCollision::Update(){
 
+
 }
 
 Vector3 FlashLightCollision::GetWorldPosition(){
-
+	//プレイヤーの座標を返す
 	return playerWorldPosition_;
 }
 

@@ -1,4 +1,11 @@
 #pragma once
+
+/**
+ * @file ObjectManager.h
+ * @brief オブジェクト管理クラス
+ * @author 茂木翼
+ */
+
 #include <list>
 #include <memory>
 
@@ -10,9 +17,19 @@
 
 //LevelEditorでステージを作るつもり
 
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight;
 
+/// <summary>
+/// オブジェクト管理クラス
+/// </summary>
 class ObjectManager{
 public:
 

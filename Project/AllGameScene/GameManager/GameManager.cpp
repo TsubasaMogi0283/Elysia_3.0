@@ -5,7 +5,7 @@
 #include "TitleScene/TitleScene.h"
 #include "LevelEditorSample/LevelEditorSample.h"
 
-//シーンファクトリー作った方がよさそう
+
 
 void GameManager::Initialize() {
 	//シーンごとに動作確認したいときはここを変えてね
@@ -19,7 +19,6 @@ void GameManager::Initialize() {
 	//初期化
 	currentGamaScene_->Initialize();
 
-	sceneQuantity_ = 0;
 
 }
 
@@ -34,56 +33,34 @@ void GameManager::ChangeScene(IGameScene* newGameScene) {
 
 
 void GameManager::Update() {
-
-#ifdef _DEBUG
-	
-	const char* sceneName[] = { "Title", "Game", "Win" };
-	//シーンファクトリー組み合わせたらデバッグがやりやすそう
-	//選択するだけでシーン遷移出来るから
-	ImGui::Begin("Scene");
-	if (ImGui::BeginCombo("SceneSelect", sceneName[sceneQuantity_])) {
-		for (uint32_t i = 0; i < IM_ARRAYSIZE(sceneName); i++) {
-			bool isSelected = (sceneQuantity_ == i);
-			if (ImGui::Selectable(sceneName[i], isSelected))
-			{
-				sceneQuantity_ = i; // 選択されたアイテムのインデックスを更新
-			}
-
-			// 現在選択されているアイテムにフォーカスを設定
-			if (isSelected==true) {
-				ImGui::SetItemDefaultFocus();
-			}
-			
-		}
-
-		ImGui::EndCombo();
-	}
-	ImGui::End();
-#endif // _DEBUG
-
-
+	//更新
 	currentGamaScene_->Update(this);
 }
 
 void GameManager::DrawObject3D() {
+	//3Dオブジェクトの描画
 	currentGamaScene_->DrawObject3D();
 }
 
 void GameManager::DrawSprite(){
+	//スプライトの描画
 	currentGamaScene_->DrawSprite();
 }
 
 void GameManager::PreDrawPostEffectFirst(){
+	//ポストエフェクト描画処理前
 	currentGamaScene_->PreDrawPostEffectFirst();
 }
 
 
 void GameManager::DrawPostEffect(){
+	//ポストエフェクト描画前
 	currentGamaScene_->DrawPostEffect();
 }
 
 
 
 GameManager::~GameManager() {
+	//消去
 	delete currentGamaScene_;
 }
