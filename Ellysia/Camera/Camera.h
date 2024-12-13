@@ -1,6 +1,10 @@
 #pragma once
 
-
+/**
+ * @file Camera.h
+ * @brief カメラクラス
+ * @author 茂木翼
+ */
 #include "Matrix4x4.h"
 #include "Vector3.h"
 #include "DirectXSetup.h"

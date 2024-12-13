@@ -14,8 +14,8 @@ KeyManager::KeyManager(){
 }
 
 void KeyManager::Initialize(const uint32_t& modelHandle){
-
-	assert(player_ == nullptr);
+	//プレイヤーが入っているかどうか
+	assert(player_ != nullptr);
 
 #pragma region 鍵の生成
 	//CSVにしたい

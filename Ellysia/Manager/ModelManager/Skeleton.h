@@ -1,11 +1,22 @@
 #pragma once
+#pragma once
+/**
+ * @file Skeleton.h
+ * @brief スケルトンの構造体
+ * @author 茂木翼
+ */
+
 #include <cstdint>
 #include <map>
 #include <string>
 #include <vector>
+
 #include <Joint.h>
 #include <Node.h>
 
+/// <summary>
+/// スケルトン
+/// </summary>
 struct Skeleton {
 #pragma region メンバ関数
 

@@ -1,4 +1,11 @@
 #pragma once
+
+/**
+ * @file LevelDataManager.h
+ * @brief レベルデータ管理クラス
+ * @author 茂木翼
+ */
+
 #include <string>
 #include <list>
 #include <map>

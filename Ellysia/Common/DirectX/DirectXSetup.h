@@ -1,5 +1,9 @@
 #pragma once
-
+/**
+ * @file DirectXSetup.h
+ * @brief DirectXの設定クラス
+ * @author 茂木翼
+ */
 #include "ConvertLog.h"
 #include "WindowsSetup.h"
 #include "Vector4.h"

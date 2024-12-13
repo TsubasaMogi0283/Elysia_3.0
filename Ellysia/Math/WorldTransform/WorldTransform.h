@@ -1,4 +1,9 @@
 #pragma once
+/**
+ * @file WorldTransform.h
+ * @brief ワールドトランスフォーム
+ * @author 茂木翼
+ */
 
 #include "Matrix4x4.h"
 #include "Vector3.h"

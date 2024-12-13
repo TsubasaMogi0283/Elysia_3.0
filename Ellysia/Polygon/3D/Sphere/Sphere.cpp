@@ -11,57 +11,6 @@
 
 
 
-//Resource作成の関数化
-ID3D12Resource* Sphere::CreateBufferResource(size_t sizeInBytes) {
-	//void返り値も忘れずに
-	ID3D12Resource* resource = nullptr;
-	
-	////VertexResourceを生成
-	//頂点リソース用のヒープを設定
-	
-	uploadHeapProperties_.Type = D3D12_HEAP_TYPE_UPLOAD;
-
-	//頂点リソースの設定
-	
-	//バッファリソース。テクスチャの場合はまた別の設定をする
-	vertexResourceDesc_.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	vertexResourceDesc_.Width = sizeInBytes;
-	//バッファの場合はこれらは1にする決まり
-	vertexResourceDesc_.Height = 1;
-	vertexResourceDesc_.DepthOrArraySize = 1;
-	vertexResourceDesc_.MipLevels = 1;
-	vertexResourceDesc_.SampleDesc.Count = 1;
-
-	//バッファの場合はこれにする決まり
-	vertexResourceDesc_.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-	//実際に頂点リソースを作る
-	//ID3D12Resource* vertexResource_ = nullptr;
-	//hrは調査用
-	HRESULT hr;
-	hr = directXSetup_->GetDevice()->CreateCommittedResource(
-		&uploadHeapProperties_,
-		D3D12_HEAP_FLAG_NONE,
-		&vertexResourceDesc_,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr, IID_PPV_ARGS(&resource));
-	assert(SUCCEEDED(hr));
-
-	return resource;
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE Sphere::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	handleCPU.ptr += (descriptorSize * index);
-	return handleCPU;
-}
-
-D3D12_GPU_DESCRIPTOR_HANDLE Sphere::GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-	handleGPU.ptr += (descriptorSize * index);
-	return handleGPU;
-}
-
 
 
 //頂点バッファビューを作成する
@@ -86,12 +35,12 @@ void Sphere::Initialize() {
 
 	//ここでBufferResourceを作る
 	//頂点を6に増やす
-	vertexResourceSphere_ = CreateBufferResource(sizeof(VertexData) * SUBDIVISION_ *SUBDIVISION_ * 6);
+	vertexResourceSphere_ = directXSetup_->CreateBufferResource(sizeof(VertexData) * SUBDIVISION_ *SUBDIVISION_ * 6);
 	////マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	materialResourceSphere_=CreateBufferResource(sizeof(MaterialData));
+	materialResourceSphere_= directXSetup_->CreateBufferResource(sizeof(MaterialData));
 
 	//Lighting
-	directionalLightResource_ = CreateBufferResource(sizeof(DirectionalLightData));
+	directionalLightResource_ = directXSetup_->CreateBufferResource(sizeof(DirectionalLightData));
 	directionalLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
 	directionalLightData_->color={ 1.0f,1.0f,1.0f,1.0f };
 	directionalLightData_->direction = { 0.0f,-1.0f,0.0f };
@@ -99,12 +48,8 @@ void Sphere::Initialize() {
 
 	//Sphere用のTransformationMatrix用のリソースを作る。
 	//Matrix4x4 1つ分サイズを用意する
-	transformationMatrixResourceSphere_ = CreateBufferResource(sizeof(TransformationMatrix));
+	transformationMatrixResourceSphere_ = directXSetup_->CreateBufferResource(sizeof(TransformationMatrix));
 
-	//DescriptorSize
-	descriptorSizeSRV_=directXSetup_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	descriptorSizeRTV_=directXSetup_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	descriptorSizeDSV_=directXSetup_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 
 	//頂点バッファビューを作成する

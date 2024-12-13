@@ -1,4 +1,12 @@
 #pragma once
+
+/**
+ * @file Particle.h
+ * @brief パーティクル
+ * @author 茂木翼
+ */
+
+
 #include "Transform.h"
 #include "Vector4.h"
 #include "Matrix4x4.h"

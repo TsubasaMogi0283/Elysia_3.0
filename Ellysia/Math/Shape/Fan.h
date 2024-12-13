@@ -1,10 +1,19 @@
 #pragma once
-#include <Vector3.h>
+
+/**
+ * @file Fan.h
+ * @brief 扇の構造体
+ * @author 茂木翼
+ */
+
 #include "Vector2.h"
+#include "Vector3.h"
 
 
 
-//扇型
+/// <summary>
+/// 扇型(2D)
+/// </summary>
 struct Fan2D {
 	//中心座標
 	Vector2 position;
@@ -30,7 +39,9 @@ struct Fan2D {
 
 };
 
-//ほぼほぼ円錐かも
+/// <summary>
+/// 扇形(3D)
+/// </summary>
 struct Fan3D {
 	//中心座標
 	Vector3 position;

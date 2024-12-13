@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+ * @file WindowsSetup.h
+ * @brief Windowsクラス
+ * @author 茂木翼
+ */
+
 #include <Windows.h>
 #include <WinUser.h>
 #include <cstdint>

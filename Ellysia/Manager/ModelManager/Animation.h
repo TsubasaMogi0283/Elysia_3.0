@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+ * @file Animation.h
+ * @brief アニメーションの関するクラス
+ * @author 茂木翼
+ */
+
 #include <map>
 #include <string>
 
@@ -7,6 +13,9 @@
 #include "Joint.h"
 #include "Skeleton.h"
 
+/// <summary>
+/// アニメーション
+/// </summary>
 struct Animation {
 	//アニメーション全体の尺
 	float duration;

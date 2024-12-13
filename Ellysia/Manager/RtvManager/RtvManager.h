@@ -1,24 +1,49 @@
 #pragma once
-#include "DirectXSetup.h"
+/**
+ * @file RtvManager.h
+ * @brief RTV管理クラス
+ * @author 茂木翼
+ */
+
+
 #include <array>
 #include <string>
 
-class RtvManager{
+#include "DirectXSetup.h"
+
+/// <summary>
+/// RTV管理クラス
+/// </summary>
+class RtvManager final{
 private:
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	RtvManager() = default;
 
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~RtvManager() = default;
 
 public:
-	//インスタンス
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
 	static RtvManager* GetInstance();
 
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="rtvHeapManager"></param>
 	RtvManager(const RtvManager& rtvHeapManager) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="rtvHeapManager"></param>
+	/// <returns></returns>
 	RtvManager& operator=(const RtvManager& rtvHeapManager) = delete;
 
 public:
@@ -44,7 +69,7 @@ public:
 	/// ディスクリプタヒープの取得
 	/// </summary>
 	/// <returns></returns>
-	ComPtr<ID3D12DescriptorHeap> GetRtvDescriptorHeap() {
+	inline ComPtr<ID3D12DescriptorHeap> GetRtvDescriptorHeap() const{
 		return  m_rtvDescriptorHeap_;
 	}
 
@@ -54,7 +79,7 @@ public:
 	// </summary>
 	// <param name="number"></param>
 	// <returns></returns>
-	D3D12_CPU_DESCRIPTOR_HANDLE& GetRtvHandle(uint32_t number) {
+	inline D3D12_CPU_DESCRIPTOR_HANDLE& GetRtvHandle(uint32_t number) const{
 		return rtvHandles_[number];
 	}
 
@@ -72,13 +97,13 @@ public:
 	/// </summary>
 	/// <param name="name"></param>
 	/// <returns></returns>
-	uint32_t Allocate(std::string name);
+	uint32_t Allocate(const std::string& name);
 
 	/// <summary>
 	/// RTV作成
 	/// </summary>
 	/// <param name="resource"></param>
-	void GenarateRenderTargetView(ComPtr<ID3D12Resource> resource,uint32_t handle);
+	void GenarateRenderTargetView(const ComPtr<ID3D12Resource>& resource,const uint32_t& handle);
 
 
 
@@ -91,7 +116,9 @@ private:
 	ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap_ = nullptr;
 	static D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[RTV_DESCRIPTOR_SIZE_];
 
-
+	/// <summary>
+	/// RTVの情報
+	/// </summary>
 	struct RTVInformation {
 		//PostEffect名
 		std::string name_;

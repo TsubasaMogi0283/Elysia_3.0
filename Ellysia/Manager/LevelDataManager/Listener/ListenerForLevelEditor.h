@@ -1,4 +1,10 @@
 #pragma once
+/**
+ * @file ListenerForLevelEditor.h
+ * @brief レベルエディタ用のリスナー
+ * @author 茂木翼
+ */
+
 #include <Vector3.h>
 
 /// <summary>

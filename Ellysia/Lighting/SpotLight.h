@@ -1,8 +1,17 @@
 #pragma once
+/**
+ * @file SpotLight.h
+ * @brief スポットライトのクラス
+ * @author 茂木翼
+ */
+
 #include <Vector4.h>
 #include <Vector3.h>
 #include "DirectXSetup.h"
 
+/// <summary>
+/// スポットライトのデータ
+/// </summary>
 struct SpotLightData {
 	//ライトの色
 	Vector4 color;
@@ -31,7 +40,9 @@ struct SpotLightData {
 
 };
 
-
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight {
 public:
 	/// <summary>

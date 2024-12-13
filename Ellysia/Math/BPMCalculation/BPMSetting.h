@@ -1,4 +1,10 @@
 #pragma once
+/**
+ * @file BPMSetting.h
+ * @brief BPMとフレームの設定
+ * @author 茂木翼
+ */
+
 
 const float BPM = 150.0f;
 

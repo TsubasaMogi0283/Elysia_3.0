@@ -447,9 +447,6 @@
     <ClCompile Include="Ellysia\Manager\RtvManager\RtvManager.cpp">
       <Filter>Ellysia\Source File\Manager\RTV</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\PostEffect\DepthBasedOutline\DepthBasedOutline.cpp">
-      <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Polygon\PostEffect\BackTest\BackText.cpp">
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
@@ -871,9 +868,6 @@
     <ClInclude Include="Ellysia\Manager\RtvManager\RtvManager.h">
       <Filter>Ellysia\Header File\Manager\RTV</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\PostEffect\DepthBasedOutline\DepthBasedOutline.h">
-      <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Polygon\PostEffect\BackTest\BackText.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
@@ -1096,9 +1090,6 @@
     <ClInclude Include="Ellysia\Math\Transform\QuaternionTransform.h">
       <Filter>Ellysia\Header File\Math\Quaternion</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Player\PlayerCollisionToStageObject.h">
-      <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Player\AudioTestPlayer.h">
       <Filter>Project\Player\Test</Filter>
     </ClInclude>
@@ -1107,6 +1098,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Vector\VertexData.h">
       <Filter>Ellysia\Header File\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\PlayerCollisionToStageObject.h">
+      <Filter>Project\Player\PlayerCollisionToStageObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

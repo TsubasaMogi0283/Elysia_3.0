@@ -113,7 +113,7 @@ public:
 	/// </summary>
 	/// <param name="player"></param>
 	/// <returns></returns>
-	inline Player* SetPlayer(Player* player) { 
+	inline void SetPlayer(Player* player) { 
 		this->player_ = player;
 	};
 

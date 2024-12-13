@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+ * @file IObjectForLevelEditorCollider.h
+ * @brief レベルエディタ用のオブジェクトの当たり判定クラス
+ * @author 茂木翼
+ */
+
 #include "Collider/Collider.h"
 
 

@@ -1,14 +1,22 @@
 #pragma once
-#include "Matrix4x4.h"
-#include "Vector3.h"
 
+/**
+ * @file Matrix4x4Calculation.h
+ * @brief 4x4行列の計算
+ * @author 茂木翼
+ */
 
 #include <cassert>
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <math.h>
 
+#include "Matrix4x4.h"
+#include "Vector3.h"
 
+/// <summary>
+/// 4x4行列の計算
+/// </summary>
 namespace Matrix4x4Calculation {
 	
 	/// <summary>

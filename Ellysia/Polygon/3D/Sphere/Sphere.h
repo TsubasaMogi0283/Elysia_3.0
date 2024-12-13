@@ -1,8 +1,12 @@
 #pragma once
 
+/**
+ * @file Sphere.h
+ * @brief 球
+ * @author 茂木翼
+ */
+
 #include "DirectXSetup.h"
-#include "ConvertLog.h"
-#include <DirectXTex.h>
 
 #include "Vector4.h"
 #include "Matrix4x4.h"
@@ -12,44 +16,57 @@
 #include "Material.h"
 #include "TransformationMatrix.h"
 #include "DirectionalLight.h"
-#include <SphereShape.h>
+#include "SphereShape.h"
 
+/// <summary>
+/// 球
+/// </summary>
 class Sphere {
 public:
 	
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Sphere()=default;
 
-	//初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
 
-	
 
-	//描画
 	//左上、右上、左下、右下
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="sphereCondtion"></param>
+	/// <param name="transform"></param>
+	/// <param name="viewMatrix"></param>
+	/// <param name="projectionMatrix"></param>
+	/// <param name="color"></param>
 	void Draw(SphereShape sphereCondtion, Transform transform,Matrix4x4 viewMatrix,Matrix4x4 projectionMatrix, Vector4 color);
 
 
-	//解放
+	/// <summary>
+	/// 解放
+	/// </summary>
 	void Release();
 
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Sphere()=default;
 
 
 private:
 
 	
-	//Resource作成の関数化
-	ID3D12Resource* CreateBufferResource(size_t sizeInBytes);
 
-	//頂点バッファビューを作成する
+	/// <summary>
+	/// 頂点バッファビューを作成する
+	/// </summary>
 	void GenerateVertexBufferView();
-
-	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-	
 
 
 
@@ -74,10 +91,6 @@ private:
 	VertexData* vertexDataSphere_ = nullptr;
 
 
-	//constにする意味はあったのだろうか
-	uint32_t descriptorSizeSRV_=0u;
-	uint32_t descriptorSizeRTV_=0u;
-	uint32_t descriptorSizeDSV_=0u;
 
 
 	//マテリアル用のリソースを作る

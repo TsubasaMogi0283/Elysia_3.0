@@ -1,9 +1,20 @@
 #pragma once
+/**
+ * @file BackText.h
+ * @brief ポストエフェクトのクラス
+ * @author 茂木翼
+ */
+
+
 #include "DirectXSetup.h"
 #include "Vector4.h"
 #include "Vector3.h"
 #include "VertexData.h"
 
+
+/// <summary>
+/// タイプ
+/// </summary>
 enum TextureEffectType {
 	NoneEffect,	//エフェクトなし
 	Monochrome,	//白黒(グレースケール)
@@ -24,28 +35,10 @@ enum TextureEffectType {
 
 };
 
-struct TextureEffectSelection {
-	//白黒(グレースケール)
-	bool isMonochrome;
-	//セピア
-	bool isSepia;
-	//端が暗くなる
-	bool isVegnette;
-		
 
-	//Smoothing(平滑化)
-	//輪郭などのくっきりしたところをぼかして滑らかな雰囲気を出すよ
-	bool isBoxFilter3x3;
-	bool isBoxFilter5x5;
-
-	//GaussianFilter
-	//BoxFilterよりこっちの方良い感じらしい
-	bool isGaussianFilter3x3;
-	bool isGaussianFilter5x5;
-
-};
-
-
+/// <summary>
+/// ビネットに関する情報
+/// </summary>
 struct VignetteInformation {
 	//倍
 	float scale;
@@ -54,6 +47,9 @@ struct VignetteInformation {
 	
 };
 
+/// <summary>
+/// ガウシアンフィルタに関する情報
+/// </summary>
 struct GaussianFilterInformation {
 	//標準偏差
 	//StandardDivision。一般的にσ(シグマ)が使われる
@@ -61,7 +57,9 @@ struct GaussianFilterInformation {
 
 };
 
-
+/// <summary>
+/// ポストエフェクト(通常から他のものまで)
+/// </summary>
 class BackText{
 public:
 	/// <summary>
@@ -114,5 +112,6 @@ private:
 	Vector4 renderTargetClearValue_ = {};
 	uint32_t srvHandle_ = 0;
 
+	//バリア
 	D3D12_RESOURCE_BARRIER barrier = {};
 };

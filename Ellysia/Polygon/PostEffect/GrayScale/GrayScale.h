@@ -1,6 +1,16 @@
 #pragma once
+/**
+ * @file GrayScale.h
+ * @brief グレースケール
+ * @author 茂木翼
+ */
+
+
 #include "DirectXSetup.h"
 
+/// <summary>
+/// グレースケール
+/// </summary>
 class GrayScale{
 public:
 	/// <summary>

@@ -127,7 +127,7 @@ ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResourceForDepth(DXGI_FORM
 }
 
 
-uint32_t RtvManager::Allocate(std::string name){
+uint32_t RtvManager::Allocate(const std::string& name){
 	//上限だったらasset
 	assert(index_ < RTV_DESCRIPTOR_SIZE_);
 
@@ -159,7 +159,7 @@ uint32_t RtvManager::Allocate(std::string name){
 
 }
 
-void RtvManager::GenarateRenderTargetView(ComPtr<ID3D12Resource> resource,uint32_t handle){
+void RtvManager::GenarateRenderTargetView(const ComPtr<ID3D12Resource>& resource,const uint32_t& handle){
 	//RTVの設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;				//出力結果をSRGBに変換して書き込む

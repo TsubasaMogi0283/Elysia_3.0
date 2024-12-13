@@ -7,9 +7,6 @@
 #include <vector>
 #include <TextureManager.h>
 
-Triangle::Triangle() {
-	
-}
 
 
 
@@ -77,6 +74,7 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 	vertexData_[5].position = {0.5f,-0.5f,-0.5f,1.0f} ;
 	vertexData_[5].texCoord = { 1.0f,1.0f };
 
+	vertexResouce_->Unmap(0, nullptr);
 
 	//マテリアルにデータを書き込む
 	
@@ -89,17 +87,13 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 	materialData_->lightingKinds = 0;
 	materialData_->uvTransform = Matrix4x4Calculation::MakeIdentity4x4();
 	
-	//materialResource_ = CreateBufferResource(directXSetup_->GetDevice(), sizeof(Vector4));
-	
+	materialResource_->Unmap(0, nullptr);
 	
 	//サイズに注意を払ってね！！！！！
 	//どれだけのサイズが必要なのか考えよう
 
 	//新しく引数作った方が良いかも
 	Matrix4x4 worldMatrix = Matrix4x4Calculation::MakeAffineMatrix(transform.scale,transform.rotate,transform.translate);
-	//遠視投影行列
-	//Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.5f, float() / float(WINDOW_SIZE_HEIGHT), 0.1f, 100.0f);
-	//Matrix4x4 worldMatrix = MakeAffineMatrix();
 	//遠視投影行列
 	Matrix4x4 viewMatrixSprite = Matrix4x4Calculation::MakeIdentity4x4();
 	
@@ -119,7 +113,7 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 	wvpData_->World = Matrix4x4Calculation::MakeIdentity4x4();
 	
 
-
+	wvpResource_->Unmap(0, nullptr);
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
@@ -146,10 +140,6 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 
 	//描画(DrawCall)３頂点で１つのインスタンス。
 	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(6, 1, 0, 0);
-
-}
-
-Triangle::~Triangle() {
 
 }
 

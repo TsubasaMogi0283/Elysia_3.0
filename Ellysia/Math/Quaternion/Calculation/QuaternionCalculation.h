@@ -1,19 +1,31 @@
 #pragma once
+/**
+ * @file QuaternionCalculation.h
+ * @brief クォータニオンの計算
+ * @author 茂木翼
+ */
+
 #include "Quaternion.h"
 #include "Matrix4x4.h"
 #include "Vector3.h"
 
-
+/// <summary>
+/// クォータニオンの計算
+/// </summary>
 namespace QuaternionCalculation{
+	//計算とそれぞれの要素について
+	// 
 	//q=w+xi+yj+zk
 	//i^2=j^2=k^2=ijk=-1
 	//ij=k,jk=i,ki=j,
 	//ji=-k,kj=-i,ik=-j
 
-
 	//q=(qw,qv)
 	//qw=w
 	//qv=(x,y,z)
+
+
+
 
 	/// <summary>
 	/// Quaternionの積

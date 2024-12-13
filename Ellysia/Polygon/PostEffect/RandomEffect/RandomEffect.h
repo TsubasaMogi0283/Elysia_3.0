@@ -1,11 +1,23 @@
 #pragma once
+
+/**
+ * @file RandomEffect.h
+ * @brief ランダムエフェクトのクラス
+ * @author 茂木翼
+ */
+
+#include <time.h>
+#include <random>
+
 #include "DirectXSetup.h"
 #include "Vector4.h"
 #include "Vector3.h"
 #include "VertexData.h"
-#include <time.h>
-#include <random>
 
+
+/// <summary>
+/// ランダムエフェクト
+/// </summary>
 class RandomEffect{
 public:
 	/// <summary>
