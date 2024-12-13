@@ -6,6 +6,7 @@
  */
 
 #include <cstdint>
+
 #include "IGameScene.h"
 
 
@@ -14,11 +15,11 @@
 /// </summary>
 class GameManager {
 public:
-	
+
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	GameManager()=default;
+	GameManager() = default;
 
 	/// <summary>
 	/// 初期化
@@ -55,7 +56,7 @@ public:
 	/// 描画(ポストエフェクト)
 	/// </summary>
 	void DrawPostEffect();
-	
+
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -65,9 +66,5 @@ private:
 
 	//StatePatternに必要な変数
 	IGameScene* currentGamaScene_ = nullptr;
-	//シーンの数
-	uint32_t sceneQuantity_ = 0;
 
-
-	
 };

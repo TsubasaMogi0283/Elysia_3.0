@@ -1,6 +1,17 @@
 #pragma once
 
+/**
+ * @file EnemyCondition.h
+ * @brief 敵の状態の列挙型
+ * @author 茂木翼
+ */
+
+
 //後々StatePatternで分けるつもり
+
+/// <summary>
+/// 敵の状態
+/// </summary>
 enum EnemyCondition {
 	//何もしない
 	NoneMove,

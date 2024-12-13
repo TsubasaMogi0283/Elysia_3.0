@@ -6,7 +6,7 @@
 
 void FlashLight::Initialize(){
 
-	//初期化
+	//スポットライトの初期化
 	spotLight_.Initialize();
 	spotLight_.position_ = lightPosition;
 	spotLight_.distance_ = LIGHT_DISTANCE;
@@ -33,8 +33,10 @@ void FlashLight::Initialize(){
 
 	//マテリアルの初期化
 	material_.Initialize();
+	//ライティングの設定
 	material_.lightingKinds_ = None;
-	material_.color_ = { 0.5f,1.0f,0.5f,1.0f };
+	//色
+	material_.color_ = { .x = 0.5f,.y = 1.0f,.z = 0.5f,.w = 1.0f };
 
 
 	//デバッグ用のモデルを生成する
@@ -101,12 +103,13 @@ void FlashLight::Update() {
 	fan3D_.position = lightPosition;
 
 	//高さは同じ
+	//左
 	fan3D_.leftVector = { 
 		.x = std::cosf(theta_ + lightSideTheta),
 		.y = std::sinf(phi_), 
 		.z = std::sinf(theta_ + lightSideTheta) 
 	};
-
+	//右
 	fan3D_.rightVector = { 
 		.x = std::cosf(theta_ - lightSideTheta),
 		.y = std::sinf(phi_), 

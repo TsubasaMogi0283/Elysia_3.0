@@ -1,7 +1,17 @@
 #pragma once
+/**
+ * @file FlashLightCollision.h
+ * @brief 懐中電灯の当たり判定クラス
+ * @author 茂木翼
+ */
+
 #include "Collider/Collider.h"
 
-class FlashLightCollision: public Collider{
+
+/// <summary>
+/// 懐中電灯の当たり判定
+/// </summary>
+class FlashLightCollision : public Collider{
 public:
 	/// <summary>
 	/// コンストラクタ

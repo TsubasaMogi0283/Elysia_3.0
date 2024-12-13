@@ -5,22 +5,38 @@
  * @author 茂木翼
  */
 
-#include "Enemy.h"
 #include <memory>
 #include <list>
 
 #include "Stage/Ground/StageRect.h"
+#include "Enemy.h"
 #include "StrongEnemy.h"
-#include <Audio.h>
+#include "Audio.h"
 
 
+#pragma region 前方宣言
 
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight;
+
+/// <summary>
+/// プレイヤー
+/// </summary>
 class Player;
+
+/// <summary>
+/// オブジェクト管理クラス
+/// </summary>
 class ObjectManager;
 
-
+#pragma endregion
 
 /// <summary>
 /// 敵管理クラス
@@ -115,6 +131,15 @@ public:
 
 	
 
+
+
+private:
+	//前方にいるかどうかの内積
+	const float FRONT_DOT = 0.7f;
+
+	//追跡開始の距離
+	const float STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
+
 private:
 	//プレイヤー
 	Player* player_ = nullptr;
@@ -122,15 +147,17 @@ private:
 	ObjectManager* objectManager_ = nullptr;
 
 	//エネミーのリスト
+	//通常
 	std::list<Enemy*>enemyes_ = {};
+	//強敵
 	std::list<StrongEnemy*>strongEnemyes_ = {};
 
-	//追跡開始の距離
-	const float STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
 	
 
 	//モデルハンドル
+	//通常
 	uint32_t normalEnemyModelHandle_ = 0u;
+	//強敵
 	uint32_t strongEnemyModelHandle_ = 0u;
 
 	//ステージの四隅
@@ -141,6 +168,7 @@ private:
 	
 	//接近BGM用
 	Audio* audio_ = nullptr;
+	//ハンドル
 	uint32_t audioHandle_ = 0u;
 
 };

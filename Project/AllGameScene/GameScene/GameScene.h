@@ -171,15 +171,33 @@ private:
 
 
 private:
+
+
+	//説明テクスチャの最大数
+	const uint32_t MAX_EXPLANATION_NUMBER_ = 2;
+
 	//時間変化
 	const float DELTA_TIME_ = 1.0f / 60.0f;
 
+	//トリガーの増える値
+	const uint32_t INCREASE_VALUE = 1u;
 
 	//フェードアウトの具合
 	const float FADE_OUT_INTERVAL_ = 0.01f;
 
 	//回転の大きさ
 	const float ROTATE_INTERVAL = 0.025f;
+
+	//反応する
+	const uint32_t B_REACT_TIME_ = 1u;
+	//反応しない
+	const uint32_t B_NO_REACT_TIME_ = 0u;
+
+	//コントローラーの押していない時の値
+	const uint32_t NO_PUSH_VALUE_ = 0u;
+
+	//完全に透明に鳴る値
+	const uint32_t PERFECT_TRANSPARENT_ = 0.0f;
 
 private:
 
@@ -223,6 +241,8 @@ private:
 	bool isPlayerMove_ = false;
 	//ダッシュしているかどうか
 	bool isPlayerDash_ = false;
+
+	
 
 	//Bボタンのトリガー
 	uint32_t bTriggerTime_ = 0u;

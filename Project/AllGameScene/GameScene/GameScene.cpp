@@ -341,15 +341,17 @@ void GameScene::KeyCollision(){
 
 				//Bボタンを押したとき
 				if (input_->IsConnetGamePad() == true){
+
 					if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-						bTriggerTime_ += 1;
+						
+						bTriggerTime_ += INCREASE_VALUE;
 
 					}
-					if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-						bTriggerTime_ = 0;
+					if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
+						bTriggerTime_ = B_NO_REACT_TIME_;
 					}
 
-					if (bTriggerTime_ == 1) {
+					if (bTriggerTime_ == B_REACT_TIME_) {
 						//プレイヤーの持っているか鍵の数が増える
 						player_->AddHaveKeyQuantity();
 						//鍵が取得される
@@ -409,13 +411,18 @@ void GameScene::ObjectCollision(){
 		//内積
 		float dot  = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
 
-		//衝突判定
+		//前方にいる時の値
 		//だいたい内積は0.7くらいが良さそう
+		const float FRONT_DOT = 0.7f;
+
+		//衝突判定
 		if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
 			(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z)&&
-			(dot > 0.7f)) {
+			(dot > FRONT_DOT)) {
+			//動かないようにする
 			uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
 			player_->SetPlayerMoveCondition(newCondition);
+
 			//当たったらループを抜ける
 			break;
 
@@ -455,14 +462,14 @@ void GameScene::EscapeCondition(){
 
 				//Bボタンを押したとき
 				if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-					bTriggerTime_ += 1;
+					bTriggerTime_ += INCREASE_VALUE;
 
 				}
-				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-					bTriggerTime_ = 0;
+				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
+					bTriggerTime_ = B_NO_REACT_TIME_;
 				}
 
-				if (bTriggerTime_ == 1) {
+				if (bTriggerTime_ == B_REACT_TIME_) {
 					//脱出
 					isEscape_ = true;
 				}
@@ -692,8 +699,8 @@ void GameScene::Update(GameManager* gameManager) {
 		whiteFadeTransparency_ -= FADE_IN_INTERVAL;
 		
 		//完全に透明になったらゲームが始まる
-		if (whiteFadeTransparency_ < 0.0f) {
-			whiteFadeTransparency_ = 0.0f;
+		if (whiteFadeTransparency_ < PERFECT_TRANSPARENT_) {
+			whiteFadeTransparency_ = PERFECT_TRANSPARENT_;
 			isWhiteFadeIn = false;
 			isExplain_ = true;
 			//1枚目
@@ -704,7 +711,7 @@ void GameScene::Update(GameManager* gameManager) {
 	//ゲーム
 	//StatePatternにしたい
 	if (isWhiteFadeIn == false && isWhiteFadeOut_ == false) {
-		whiteFadeTransparency_ = 0.0f;
+		whiteFadeTransparency_ = PERFECT_TRANSPARENT_;
 		
 		//説明
 		if (isExplain_ == true) {
@@ -716,21 +723,22 @@ void GameScene::Update(GameManager* gameManager) {
 			if (input_->IsConnetGamePad() == true) {
 				//Bボタンを押したとき
 				if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-					bTriggerTime_ += 1;
+					bTriggerTime_ += INCREASE_VALUE;
 
 				}
 				//押していない時
-				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-					bTriggerTime_ = 0;
+				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
+					bTriggerTime_ = B_NO_REACT_TIME_;
 				}
 
-				if (bTriggerTime_ == 1) {
+				//1の時テクスチャの数字が増える
+				if (bTriggerTime_ == B_REACT_TIME_) {
 					++howToPlayTextureNumber_;
 				}
 			}
 
 			//読み終わったらゲームプレイへ
-			if (howToPlayTextureNumber_ > 2) {
+			if (howToPlayTextureNumber_ > MAX_EXPLANATION_NUMBER_) {
 				isExplain_ = false;
 				isGamePlay_ = true;
 			}
@@ -946,7 +954,8 @@ void GameScene::Update(GameManager* gameManager) {
 		//体力が0になったら負け
 		//または一発アウトの敵に接触した場合
 		//負け専用のクラスを作りたい
-		if (player_->GetHP() <= 0 || isTouchStrongEnemy_==true) {
+		const uint32_t MIN_HP = 0u;
+		if (player_->GetHP() <= MIN_HP || isTouchStrongEnemy_==true) {
 
 			//敵の動きが止まりブラックアウト
 			//プレイヤーことカメラが倒れる感じが良いかも
@@ -988,13 +997,18 @@ void GameScene::Update(GameManager* gameManager) {
 	//StatePatternにしたい
 	if (isWhiteFadeOut_ == true) {
 		escapeText_->SetInvisible(true);
-
+		//振動しないようにする
 		player_->SetIsAbleToControll(false);
 		
+		//加算
 		whiteFadeTransparency_ += FADE_OUT_INTERVAL_;
+		//透明度の設定
 		whiteFade_->SetTransparency(whiteFadeTransparency_);
 
-		if (whiteFadeTransparency_ > 2.0f) {
+		//最大の透明度
+		//本当は1.0fだけど新しく変数を作るとネストが増えるので一緒にやることにした。
+		const float MAX_TRANSPARENCY = 2.0f;
+		if (whiteFadeTransparency_ > MAX_TRANSPARENCY) {
 			gameManager->ChangeScene(new WinScene());
 			return;
 		}
@@ -1027,6 +1041,8 @@ void GameScene::Update(GameManager* gameManager) {
 
 	
 #pragma region ポストエフェクト
+	//HPが1でピンチの場合
+	const uint32_t DANGEROUS_HP = 1u;
 	//プレイヤーがダメージを受けた場合ビネット
 	if (player_->GetIsDamaged() == true) {
 		//時間の加算
@@ -1035,12 +1051,18 @@ void GameScene::Update(GameManager* gameManager) {
 		//線形補間で滑らかに変化
 		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
 	}
-	//HPが1でピンチの場合
-	else if (player_->GetHP() == 1u) {
+	
+	else if (player_->GetHP() == DANGEROUS_HP) {
 		warningTime_ += DELTA_TIME_;
 		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
-		if (warningTime_ > 1.0f) {
-			warningTime_ = 0.0f;
+
+		//最大時間
+		const float MAX_WARNING_TIME = 1.0f;
+		//最小時間
+		const float MIN_WARNING_TIME = 1.0f;
+
+		if (warningTime_ > MAX_WARNING_TIME) {
+			warningTime_ = MIN_WARNING_TIME;
 		}
 	}
 	//通常時の場合
@@ -1109,15 +1131,18 @@ void GameScene::DrawPostEffect(){
 
 void GameScene::DrawSprite(){
 	
+	
+	//最大数
+	const uint32_t MAX_TEXTURE_QUANTITY = 2;
 	//説明
-	if (howToPlayTextureNumber_ == 1u) {
-		explanation_[0]->Draw();
-		spaceToNext_[0]->Draw();
+	for (uint32_t i = 0; i < MAX_TEXTURE_QUANTITY; ++i) {
+		if (howToPlayTextureNumber_ == i+1) {
+			explanation_[i]->Draw();
+			spaceToNext_[i]->Draw();
+		}
 	}
-	if (howToPlayTextureNumber_ == 2u) {
-		explanation_[1]->Draw();
-		spaceToNext_[1]->Draw();
-	}
+
+
 	
 	//UIを表示するかどうか
 	if (isDisplayUI_ == true) {

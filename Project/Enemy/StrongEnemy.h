@@ -12,13 +12,27 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
-
 #include "Enemy/EnemyCondition.h"
 #include "Collider/Collider.h"
 
 
+#pragma region 前方宣言
+
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight;
+
+#pragma endregion
+
+
+
+//はやくColliderを継承させるのやめなさい！！！
 
 /// <summary>
 /// 強敵
@@ -86,6 +100,10 @@ public:
 		this->playerPosition_ = position;
 	}
 
+	/// <summary>
+	/// プレイヤーと当たったかどうか
+	/// </summary>
+	/// <returns></returns>
 	inline bool GetIsTouchPlayer()const {
 		return isTouchPlayer_;
 	}
@@ -102,26 +120,40 @@ public:
 		this->condition_ = condition;
 	}
 
+	/// <summary>
+	/// 状態の取得
+	/// </summary>
+	/// <returns></returns>
 	inline uint32_t GetCondition() const {
 		return condition_;
 	}
 
 
-
+	/// <summary>
+	/// X軸反転
+	/// </summary>
 	inline void InvertSpeedX() {
 		speed_.x *= -1.0f;
 	}
+	/// <summary>
+	/// Z軸反転
+	/// </summary>
 	inline void InvertSpeedZ() {
 		speed_.z *= -1.0f;
 	}
 
-
+	/// <summary>
+	/// スピードの保存
+	/// </summary>
 	inline void SaveSpeed() {
 		preSpeed_ = speed_;
 	}
 
 
-
+	/// <summary>
+	/// AABBの取得
+	/// </summary>
+	/// <returns></returns>
 	inline AABB GetAABB() {
 		return aabb_;
 	}
@@ -155,11 +187,13 @@ private:
 	Vector3 direction_ = {};
 
 	//移動速度
+	//変更前
 	Vector3 preSpeed_ = {};
+	//通常
 	Vector3 speed_ = {};
 
 
-
+	//AABB
 	AABB aabb_ = {};
 
 

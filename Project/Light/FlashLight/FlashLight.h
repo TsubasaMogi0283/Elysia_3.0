@@ -1,16 +1,27 @@
 #pragma once
+/**
+ * @file FlashLight.h
+ * @brief 懐中電灯クラス
+ * @author 茂木翼
+ */
+
 #include <memory>
 
 #include "SpotLight.h"
-#include <Fan.h>
-#include <WorldTransform.h>
-#include <Model.h>
+#include "Fan.h"
+#include "WorldTransform.h"
+#include "Model.h"
 #include "Material.h"
 #include "FlashLightCollision.h"
 
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
 
-
+/// <summary>
+/// 懐中電灯
+/// </summary>
 class FlashLight {
 public:
 	/// <summary>

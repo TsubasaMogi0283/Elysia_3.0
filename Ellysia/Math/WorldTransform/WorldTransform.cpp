@@ -2,15 +2,18 @@
 #include "Matrix4x4Calculation.h"
 
 #include "DirectXSetup.h"
-#include <Camera.h>
+#include "Camera.h"
 
 void WorldTransform::Initialize() {
 	//Resource作成
 	bufferResource = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(WorldTransformData)).Get();
 
 	//初期値
+	//スケール
 	scale = { .x = 1.0f,.y = 1.0f,.z = 1.0f };
+	//回転
 	rotate = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+	//座標
 	translate = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
 }
 

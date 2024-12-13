@@ -7,14 +7,15 @@ void ObjectManager::Initialize(){
 	//uint32_t treeModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/tree_3D","tree1.fbx");
 	uint32_t trunkModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/tree_3D/Tree1", "Trunk1.obj");
 
-	
+	//木1
 	StageObjectPre* tree1 = new Tree();
-	Vector3 treePosition = { 4.0,0.0f,5.0f };
+	Vector3 treePosition = {.x= 4.0,.y= 0.0f,.z= 5.0f };
 	tree1->Initialize(trunkModelHandle, treePosition);
 	stageObjects_.push_back(tree1);
 	
+	//木2
 	StageObjectPre* tree2 = new Tree();
-	Vector3 treePosition2 = { -4.0,0.0f,-8.0f };
+	Vector3 treePosition2 = {.x= -4.0,.y= 0.0f,.z =-8.0f };
 	tree2->Initialize(trunkModelHandle, treePosition2);
 	stageObjects_.push_back(tree2);
 
@@ -22,6 +23,7 @@ void ObjectManager::Initialize(){
 
 	//マテリアルの初期化
 	material_.Initialize();
+	//ライティングの設定
 	material_.lightingKinds_ = Spot;
 }
 
@@ -46,7 +48,7 @@ void ObjectManager::Draw(Camera& camera, SpotLight& spotLight){
 
 ObjectManager::~ObjectManager(){
 
-
+	//全て消去
 	for (StageObjectPre* stageObject : stageObjects_) {
 		delete stageObject;
 	}

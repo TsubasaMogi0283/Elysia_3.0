@@ -10,10 +10,13 @@ void EnemyAttackCollision::Initialize(const uint32_t& modelHandle){
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
-	material_.Initialize();
-	material_.lightingKinds_ = Spot;
-	material_.color_ = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
 
+	//マテリアルの初期化
+	material_.Initialize();
+	//ライティング
+	material_.lightingKinds_ = Spot;
+	
+	
 
 
 	#pragma region 当たり判定
@@ -39,16 +42,22 @@ void EnemyAttackCollision::Update(){
 	
 	//間隔
 	const float INTERVAL = 5.0f;
+	//新しく方向を計算する
 	Vector3 newDirection = VectorCalculation::Multiply(enemyDirection_, INTERVAL);
-	//更新
+	
+	//座標の計算
 	worldTransform_.translate = VectorCalculation::Add(enemyWorldPosition_, newDirection);
+	
+	//ワールドトランスフォームの更新
 	worldTransform_.Update();
+	//マテリアルの更新
 	material_.Update();
 }
 
 void EnemyAttackCollision::Draw(const Camera& camera,const SpotLight& spotLight){
 
 #ifdef _DEBUG
+	//描画
 	model_->Draw(worldTransform_, camera, material_, spotLight);
 	
 #endif // _DEBUG

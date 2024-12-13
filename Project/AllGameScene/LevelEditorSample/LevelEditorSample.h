@@ -24,6 +24,11 @@
 #include "Player/AudioTestPlayer.h"
 #include "DirectionalLight.h"
 
+ //前方宣言
+
+/// <summary>
+/// ゲーム管理クラス
+/// </summary>
 class GameManager;
 
 /// <summary>
