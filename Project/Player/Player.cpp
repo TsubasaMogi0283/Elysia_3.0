@@ -81,9 +81,13 @@ void Player::Damaged() {
 
 			//振動を止める
 			if (vibeStrength_ <= MIN_VIBE_) {
+				//振動が止まる
 				Input::GetInstance()->StopVibration();
+				
+				//戻る時間
+				const float RESTART_TIME = 0.0f;
 				//時間を戻す
-				vibeTime_ = 0.0f;
+				vibeTime_ = RESTART_TIME;
 				//ダメージを受けていないようにする
 				isDameged_ = false;
 			}

@@ -27,17 +27,19 @@ void BackText::Initialize(){
 	gaussianFilterResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(GaussianFilterInformation));
 	gaussianFilterInformation_.sigma = 2.0f;
 
-
+	//色
 	renderTargetClearValue_ = { 0.0f,0.5f,0.5f,1.0f };
+	//リソース作成
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, renderTargetClearValue_);
 	
-	const std::string postEffectName = "BackText";
-	rtvHandle_= RtvManager::GetInstance()->Allocate(postEffectName);
+	//ハンドルの取得
+	rtvHandle_= RtvManager::GetInstance()->Allocate("BackText");
 
+	//RTV作成
 	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);
 
 
-	//Texture
+	//SRV
 	srvHandle_ = SrvManager::GetInstance()->Allocate();
 	SrvManager::GetInstance()->CreateSRVForRenderTexture(rtvResource_.Get(), srvHandle_);
 
@@ -48,17 +50,20 @@ void BackText::Initialize(){
 
 void BackText::PreDraw(){
 	
+	//RTの設定
 	const float RENDER_TARGET_CLEAR_VALUE[] = { renderTargetClearValue_.x,renderTargetClearValue_.y,renderTargetClearValue_.z,renderTargetClearValue_.w };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
 		1, &RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 
+	//RTVのクリア
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
 		RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
 
-
+	//Depthのクリア
 	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(
 		DirectXSetup::GetInstance()->GetDsvHandle(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
+	//クライアントサイズの取得
 	uint32_t width = WindowsSetup::GetInstance()->GetClientWidth();
 	uint32_t height = WindowsSetup::GetInstance()->GetClientHeight();
 

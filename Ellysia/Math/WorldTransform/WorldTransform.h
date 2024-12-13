@@ -14,8 +14,11 @@
 /// シェーダーに送るデータ
 /// </summary>
 struct WorldTransformData {
+	//ワールド
 	Matrix4x4 world;
+	//ノーマル
 	Matrix4x4 normal;
+	//逆転置
 	Matrix4x4 worldInverseTranspose;
 };
 
