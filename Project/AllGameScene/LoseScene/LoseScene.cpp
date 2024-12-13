@@ -75,7 +75,7 @@ void LoseScene::Update(GameManager* gameManager){
 
 		}
 		if ((Input::GetInstance()->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-			bTriggerTime_ = RESTART_TIME;
+			bTriggerTime_ = NO_REACT_TIME;
 		}
 
 		if (bTriggerTime_ == REACT_TIME) {
@@ -104,7 +104,7 @@ void LoseScene::Update(GameManager* gameManager){
 			++textDisplayCount_;
 		}
 		//表示
-		if (textDisplayCount_ % 2 == DISPLAY) {
+		if (textDisplayCount_ % FLASH_INTERVAL == DISPLAY) {
 			text_->SetInvisible(true);
 		}
 		else {

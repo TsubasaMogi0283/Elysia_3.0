@@ -194,10 +194,10 @@ private:
 	const uint32_t B_NO_REACT_TIME_ = 0u;
 
 	//コントローラーの押していない時の値
-	const uint32_t NO_PUSH_VALUE_ = 0u;
+	const int32_t NO_PUSH_VALUE_ = 0u;
 
-	//完全に透明に鳴る値
-	const uint32_t PERFECT_TRANSPARENT_ = 0.0f;
+	//完全に透明になる値
+	const float PERFECT_TRANSPARENT_ = 0.0f;
 
 private:
 
