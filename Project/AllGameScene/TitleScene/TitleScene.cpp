@@ -33,7 +33,7 @@ void TitleScene::Update(GameManager* gameManager){
 	//増える時間の値
 	const uint32_t INCREASE_VALUE = 1u;
 	//Bトリガーの反応する時間
-	const uint32_t REACT_TIME = 0u;
+	const uint32_t REACT_TIME = 1u;
 	//Bトリガーの反応しない時間
 	const uint32_t NO_REACT_TIME = 0u;
 
