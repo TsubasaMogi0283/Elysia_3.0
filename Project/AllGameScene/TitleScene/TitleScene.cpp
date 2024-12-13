@@ -75,7 +75,7 @@ void TitleScene::Update(GameManager* gameManager){
 
 		}
 		if ((Input::GetInstance()->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-			bTriggerTime_ = RESTART_TIME;
+			bTriggerTime_ = NO_REACT_TIME;
 		}
 
 		if (bTriggerTime_ == REACT_TIME) {
