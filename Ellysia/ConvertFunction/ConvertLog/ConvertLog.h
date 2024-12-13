@@ -1,4 +1,11 @@
 #pragma once
+
+/**
+ * @file ConvertLog.h
+ * @brief Logに関係する関数
+ * @author 茂木翼
+ */
+
 #include <cstdint>
 #include <string>
 #include <format>
@@ -8,6 +15,9 @@
 #include <dxgidebug.h>
 #include <dxcapi.h>
 
+/// <summary>
+/// Logに関係する関数
+/// </summary>
 namespace ConvertString {
 	/// <summary>
 	///	ログの出力

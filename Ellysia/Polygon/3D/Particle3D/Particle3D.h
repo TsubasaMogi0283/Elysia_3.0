@@ -9,7 +9,6 @@
 #include <d3dx12.h>
 #include <random>
 
-
 #include "Camera.h"
 #include "Transform.h"
 #include "Particle.h"
@@ -37,10 +36,24 @@ enum ParticleMoveType {
 
 };
 
-
+/// <summary>
+/// マテリアル
+/// </summary>
 struct Material;
+
+/// <summary>
+/// 平行光源
+/// </summary>
 struct DirectionalLight;
+
+/// <summary>
+/// 点光源
+/// </summary>
 struct PointLight;
+
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight;
 
 

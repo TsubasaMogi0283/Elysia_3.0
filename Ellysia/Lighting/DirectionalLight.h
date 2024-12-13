@@ -1,8 +1,17 @@
 #pragma once
+/**
+ * @file DirectionalLight.h
+ * @brief 平行光源の構造体
+ * @author 茂木翼
+ */
+
 #include "Vector4.h" 
 #include "Vector3.h"
 #include "DirectXSetup.h"
 
+/// <summary>
+/// 平行光源データ
+/// </summary>
 struct DirectionalLightData {
 	//ライトの色
 	Vector4 color;
@@ -13,7 +22,9 @@ struct DirectionalLightData {
 };
 
 
-
+/// <summary>
+/// 平行光源
+/// </summary>
 struct DirectionalLight {
 public:
 	/// <summary>

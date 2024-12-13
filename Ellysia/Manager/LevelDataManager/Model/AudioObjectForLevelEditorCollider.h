@@ -1,5 +1,12 @@
 #pragma once
 
+/**
+ * @file AudioObjectForLevelEditorCollider.h
+ * @brief オーディオオブジェクト用の当たり判定クラス
+ * @author 茂木翼
+ */
+
+
 #include "IObjectForLevelEditorCollider.h"
 
 /// <summary>

@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+ * @file Input.h
+ * @brief 入力クラス
+ * @author 茂木翼
+ */
+
 //ここでDirectXInputのバージョン設定をする
 #define DIRECTINPUT_VERSION	0x0800
 
@@ -16,31 +22,50 @@ using namespace Microsoft::WRL;
 #pragma comment(lib,"xinput.lib")
 
 
-//0,1,2,3とか分かりにくいのでenumで分かりやすくしたい
+/// <summary>
+/// マウスの情報
+/// </summary>
 enum MouseInformation{
 	LeftButton,
 	RightButton,
 	MouseWheel,
 };
 
-class Input {
+/// <summary>
+/// 入力
+/// </summary>
+class Input final {
 private:
 
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Input()=default;
 	
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Input()=default;
 
 public:
 	
-	//コピーコンストラクタ禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="input"></param>
 	Input(const Input& input) = delete;
 
-	//代入演算子を無効にする
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="input"></param>
+	/// <returns></returns>
 	Input& operator=(const Input& input) = delete;
 
-	//シングルインスタンス
+	/// <summary>
+	/// シングルインスタンス
+	/// </summary>
+	/// <returns></returns>
 	static Input* GetInstance();
 
 
@@ -56,7 +81,10 @@ public:
 	/// </summary>
 	void Update();
 
-
+	/// <summary>
+	/// Stateの取得
+	/// </summary>
+	/// <returns></returns>
 	inline XINPUT_STATE GetState()const {
 		return state_;
 	}
@@ -64,14 +92,20 @@ public:
 
 
 #pragma region キーボード
-	//Push状態
-	bool IsPushKey(uint8_t keyNumber);
+	/// <summary>
+	/// Push状態
+	/// </summary>
+	/// <param name="keyNumber"></param>
+	/// <returns></returns>
+	bool IsPushKey(const uint8_t& keyNumber)const;
 
-	//Trigger状態
-	bool IsTriggerKey(uint8_t keyNumber);
+	/// <summary>
+	/// Trigger状態
+	/// </summary>
+	/// <param name="keyNumber"></param>
+	/// <returns></returns>
+	bool IsTriggerKey(const uint8_t& keyNumber)const;
 
-	//Releaseいるかな・・・
-	//必要になったら追加する
 
 #pragma endregion
 
@@ -79,10 +113,10 @@ public:
 
 
 	//Push状態
-	bool IsPushMouse(int32_t keyNumber);
+	bool IsPushMouse(const int32_t& keyNumber)const;
 
 	//Trigger状態
-	bool IsTriggerMouse(int32_t keyNumber);
+	bool IsTriggerMouse(const int32_t& keyNumber)const;
 
 #pragma endregion
 
@@ -98,9 +132,18 @@ public:
 	/// </summary>
 	/// <param name="button"></param>
 	/// <returns></returns>
-	bool IsPushButton(int32_t button);
+	bool IsPushButton(const int32_t& button)const;
 
-	void SetVibration(float leftMotor,float rightMotor);
+	/// <summary>
+	/// 振動の設定
+	/// </summary>
+	/// <param name="leftMotor"></param>
+	/// <param name="rightMotor"></param>
+	void SetVibration(const float& leftMotor,const float& rightMotor);
+	
+	/// <summary>
+	/// 振動を止める
+	/// </summary>
 	void StopVibration();
 
 #pragma endregion
@@ -109,7 +152,7 @@ public:
 	/// カーソルの表示・非表示
 	/// </summary>
 	/// <param name="isDisplay"></param>
-	void SetIsDisplayCursor(bool isDisplay);
+	void SetIsDisplayCursor(const bool& isDisplay);
 
 	
 
@@ -136,6 +179,8 @@ private:
 	BYTE preControllerButtons_[XUSER_MAX_COUNT][XINPUT_GAMEPAD_TRIGGER_THRESHOLD] = {};
 	BYTE currentControllerButtons_[XUSER_MAX_COUNT][XINPUT_GAMEPAD_TRIGGER_THRESHOLD] = {};
 
+	//コントローラー
+	XINPUT_STATE state_ = {};
 
 
 	//マウスの入力状態を取得
@@ -143,9 +188,7 @@ private:
 	DIMOUSESTATE preMouse_ = {};
 
 
-	//コントローラー
-	XINPUT_STATE state_{};
-
+	
 
 
 

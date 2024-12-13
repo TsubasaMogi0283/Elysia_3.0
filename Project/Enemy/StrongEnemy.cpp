@@ -144,9 +144,8 @@ void StrongEnemy::Update(){
 
 
 	//AABBの計算
-	//aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), downSideSize_);
-	//aabb_.max = VectorCalculation::Add(GetWorldPosition(), upSideSize_);
-
+	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), { radius_ ,radius_ ,radius_ });
+	aabb_.max = VectorCalculation::Add(GetWorldPosition(), { radius_ ,radius_ ,radius_ });
 
 
 }

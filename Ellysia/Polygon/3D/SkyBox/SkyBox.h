@@ -1,7 +1,13 @@
 #pragma once
 
+/**
+ * @file SkyBox.h
+ * @brief スカイボックス
+ * @author 茂木翼
+ */
+
 #include "DirectXSetup.h"
-#include "ConvertLog.h"
+
 
 #include "Vector4.h"
 #include "Matrix4x4.h"
@@ -11,54 +17,77 @@
 #include "TransformationMatrix.h"
 #include "DirectionalLight.h"
 
+#pragma region 前方宣言
+
+/// <summary>
+/// ワールドトランスフォーム
+/// </summary>
 struct WorldTransform;
+
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
 
+#pragma endregion
 
+
+/// <summary>
+/// スカイボックス
+/// </summary>
 class SkyBox {
 public:
 	
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	SkyBox()=default;
 
-	//初期化
-	void Create(uint32_t textureHandle);
+	/// <summary>
+	/// 生成
+	/// </summary>
+	void Create();
 
 	
-	//描画
-	//左上、右上、左下、右下
-	void Draw(WorldTransform & worldTransform,Camera & camera);
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="texturehandle"></param>
+	/// <param name="worldTransform"></param>
+	/// <param name="camera"></param>
+	void Draw(const uint32_t& texturehandle,const WorldTransform & worldTransform,const Camera & camera);
 
 
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~SkyBox()=default;
 
 
 private:
 
-
+	/// <summary>
+	/// マテリアル
+	/// </summary>
 	struct SkyBoxMaterial {
 		Vector4 color;
 		Matrix4x4 uvTransform;
 	};
 
-	enum VERTEX_POSITION {
+	/// <summary>
+	/// 頂点の位置
+	/// </summary>
+	enum SkyBoxVertexPosition {
 		
 		//右
 		//右上奥
-		TOP_RIGHT_BACK,
+		TopRightBack,
 		//右上前
-		TOP_RIGHT_FRONT,
+		TopRightFront,
 		//右下奥
-		BOTTOM_RIGHT_BACK,
+		BottomRightBack,
 		//右下前
-		BOTTOM_RIGHT_FRONT,
-
-
-
-
-
-
+		BottomRightFront,
 
 	};
 
@@ -91,6 +120,5 @@ private:
 	SkyBoxMaterial* materialData_ = nullptr;
 
 
-	uint32_t textureHandle_ = 0;
 
 };

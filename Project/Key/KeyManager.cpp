@@ -1,10 +1,22 @@
 #include "KeyManager.h"
 
+#include "Audio.h"
+#include "TextureManager.h"
+#include "VectorCalculation.h"
+#include "Player/Player.h"
+#include "SingleCalculation.h"
+
+KeyManager::KeyManager(){
+	//オーディオの取得
+	audio_ = Audio::GetInstance();
+	//テクスチャ管理クラスの取得
+	textureManager_ = TextureManager::GetInstance();
+}
 
 void KeyManager::Initialize(const uint32_t& modelHandle){
+	//プレイヤーが入っているかどうか
+	assert(player_ != nullptr);
 
-
-	
 #pragma region 鍵の生成
 	//CSVにしたい
 	//1個目生成
@@ -33,7 +45,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 #pragma endregion
 
 	//読み込み
-	uint32_t keySpriteHandle = TextureManager::GetInstance()->LoadTexture("Resources/Item/KeyList.png");
+	uint32_t keySpriteHandle = textureManager_->LoadTexture("Resources/Item/KeyList.png");
 	//座標
 	const Vector2 INITIAL_POSITION = {.x= 20.0f,.y=10.0f };
 	//鍵の画像の位置
@@ -50,27 +62,55 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 		//変換した番号を組み込む
 		const std::string filePath = "Resources/Sprite/Number/" + number + ".png";
 		//テクスチャの読み込み
-		keyNumberQuantity[i] = TextureManager::GetInstance()->LoadTexture(filePath);
+		keyNumberQuantity[i] = textureManager_->LoadTexture(filePath);
 		//座標を決める
 		const Vector2 numberPosition = { 64.0f * 2.0f+ INITIAL_POSITION.x,INITIAL_POSITION.y};
 		//生成
 		keyNumber[i].reset(Sprite::Create(keyNumberQuantity[i], numberPosition));
 	}
 
-
+	//知らせる音の読み込み
+	uint32_t notificationSEHandle = audio_->Load("Resources/External/Audio/Key/Shake.mp3");
+	//拾う音の読み込み
+	uint32_t pickUpSEHandle = audio_->Load("Resources/External/Audio/Key/PickUp.mp3");
+	notificationSEHandle;
+	pickUpSEHandle;
 }
 
 void KeyManager::Update(){
 
+	//全ての要素を消す
+	keyAndPlayerDistances_.clear();
+
 	//鍵
 	for (Key* key : keyes_) {
+		//更新
 		key->Update();
+
+		//プレイヤーと鍵の差分
+		Vector3 playerAndKeydifference = VectorCalculation::Subtract(player_->GetWorldPosition(), key->GetWorldPosition());
+		//距離
+		float distance = SingleCalculation::Length(playerAndKeydifference);
+		//挿入
+		keyAndPlayerDistances_.push_back(distance);
+	}
+
+	//全ての要素から一番小さい値を調べる
+	auto minIt = std::min_element(keyAndPlayerDistances_.begin(), keyAndPlayerDistances_.end());
+
+	//最短距離を求める
+	float closestDistance = 0.0f;
+	if (minIt != keyAndPlayerDistances_.end()) {
+		closestDistance = (*minIt);
 	}
 
 
-	//当たり判定自体はゲームシーンでやりたい
-	//鍵が取得されたら消す
+	//求めた値から音量設定をする
+
+
+
 	keyes_.remove_if([](Key* key) {
+		//拾われたら消す
 		if (key->GetIsPickUp() == true) {
 			delete key;
 			return true;
@@ -80,20 +120,23 @@ void KeyManager::Update(){
 }
 
 void KeyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight){
-	//描画
+	//鍵モデルの描画
 	for (Key* key : keyes_) {
 		key->Draw(camera, spotLight);
 	}
 }
 
 void KeyManager::DrawSprite(const uint32_t& playeresKey){
+	//鍵の画像の描画
 	keySprite_->Draw();
+	//数の描画
 	keyNumber[playeresKey]->Draw();
 
 
 }
 
 KeyManager::~KeyManager(){
+	//消す
 	for (Key* key : keyes_) {
 		delete  key;
 	}

@@ -1,4 +1,9 @@
 #pragma once
+/**
+ * @file Model.h
+ * @brief モデル
+ * @author 茂木翼
+ */
 
 #include "DirectXSetup.h"
 
@@ -10,14 +15,48 @@
 #include "LightingType.h"
 #include "ModelData.h"
 
+#pragma region 前方宣言
+
+/// <summary>
+/// ワールドトランスフォーム
+/// </summary>
 struct WorldTransform;
+
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+/// <summary>
+/// GPUに送るためのカメラ
+/// </summary>
 struct CameraForGPU;
+
+/// <summary>
+/// マテリアル
+/// </summary>
 struct Material;
+
+/// <summary>
+/// 点光源
+/// </summary>
 struct DirectionalLight;
+
+/// <summary>
+/// 点光源
+/// </summary>
 struct PointLight;
+
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight;
 
+#pragma endregion
+
+/// <summary>
+/// モデル
+/// </summary>
 class Model {
 public:
 

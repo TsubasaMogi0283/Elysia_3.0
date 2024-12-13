@@ -1,7 +1,16 @@
 #pragma once
-#include "DirectXSetup.h"
-#include <Vector3.h>
+/**
+ * @file Vignette.h
+ * @brief ビネットのクラス
+ * @author 茂木翼
+ */
 
+#include "DirectXSetup.h"
+#include "Vector3.h"
+
+/// <summary>
+/// ビネット
+/// </summary>
 class Vignette {
 public:
 	/// <summary>

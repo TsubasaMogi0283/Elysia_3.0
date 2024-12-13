@@ -1,17 +1,18 @@
 #include "ImGuiManager.h"
+
+#include <imgui_impl_dx12.cpp>
+
 #include "WindowsSetup.h"
 #include "DirectXSetup.h"
 #include "SrvManager.h"
 #include "RtvManager.h"
-#include <imgui_impl_dx12.cpp>
+
 
 
 
 
 ImGuiManager* ImGuiManager::GetInstance() {
-	//関数内static変数として宣言する
 	static ImGuiManager instance;
-
 	return &instance;
 }
 
@@ -25,7 +26,7 @@ void ImGuiManager::Initialize() {
 	ImGui::StyleColorsDark();
 	ImGuiIO& io = ImGui::GetIO();
 
-
+	//フォントの設定
 	std::string fontPath = "C:/Lesson/CG/CGGrade3/Ellysia_3.0/Resources/External/Font/GenShinGothic-P-Medium.ttf";
 	ImFont* font = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
 	if (font == NULL) {
@@ -50,6 +51,7 @@ void ImGuiManager::Initialize() {
 }
 
 void ImGuiManager::BeginFrame() {
+	//フレーム始まり
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -60,6 +62,7 @@ void ImGuiManager::BeginFrame() {
 
 
 void ImGuiManager::Draw() {
+	//描画
 	ImGui::Render();
 
 	//描画用のDescriptorの設定
@@ -77,6 +80,7 @@ void ImGuiManager::EndDraw() {
 
 
 void ImGuiManager::Release() {
+	//解放
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

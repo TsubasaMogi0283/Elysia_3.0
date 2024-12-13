@@ -18,8 +18,8 @@ void RadialBlur::Initialize(){
 
 
 	//Texture
-	textureHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(rtvResource_.Get(), textureHandle_);
+	srvHandle_ = SrvManager::GetInstance()->Allocate();
+	SrvManager::GetInstance()->CreateSRVForRenderTexture(rtvResource_.Get(), srvHandle_);
 
 	
 
@@ -69,7 +69,7 @@ void RadialBlur::Draw(){
 	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//Texture
-	TextureManager::GraphicsCommand(0,textureHandle_);
+	TextureManager::GraphicsCommand(0,srvHandle_);
 
 
 

@@ -7,9 +7,8 @@
 #include "SrvManager.h"
 #include "RtvManager.h"
 #include <Audio.h>
-#include <AdjustmentItems.h>
 #include <LevelDataManager.h>
-
+#include "GlobalVariables/GlobalVariables.h"
 
 Ellysia* Ellysia::GetInstance() {
 	static Ellysia instance;
@@ -23,8 +22,7 @@ void Ellysia::Initialize(){
 	const int WINDOW_SIZE_WIDTH = 1280;
 	const int WINDOW_SIZE_HEIGHT = 720;
 
-	//ひなに聞いたけどわざわざ一個ずつGetInstanceするの止めた方が良いとのこと
-	//取得に時間がかかる
+
 
 	//初期化
 	//ウィンドウ
@@ -68,7 +66,7 @@ void Ellysia::Initialize(){
 	Audio::GetInstance()->Initialize();
 
 	//JSON読み込みの初期化
-	AdjustmentItems::GetInstance()->LoadFile();
+	GlobalVariables::GetInstance()->LoadFile();
 
 	//GameManagerの初期化
 	gameManager_ = std::make_unique<GameManager>();
@@ -94,7 +92,7 @@ void Ellysia::BeginFrame(){
 void Ellysia::Update(){
 	//JSON用
 	//グローバル変数の更新
-	AdjustmentItems::GetInstance()->GetInstance()->Update();
+	GlobalVariables::GetInstance()->GetInstance()->Update();
 
 
 	//入力の更新

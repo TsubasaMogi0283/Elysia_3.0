@@ -1,7 +1,15 @@
 #pragma once
+/**
+ * @file PlayerCollisionToStageObject.h
+ * @brief ステージオブジェクトに対するCollisionクラス
+ * @author 茂木翼
+ */
+
 #include "Collider/Collider.h"
 
-
+/// <summary>
+/// ステージオブジェクトに対するCollision
+/// </summary>
 class PlayerCollisionToStageObject :public Collider {
 public:
 

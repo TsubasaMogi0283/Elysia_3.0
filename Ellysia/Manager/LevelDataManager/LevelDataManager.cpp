@@ -11,10 +11,10 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
-#include <Audio.h>
+#include "Audio.h"
 
 #include "Model/AudioObjectForLevelEditor.h"
-#include <Model/StageObjectForLevelEditor.h>
+#include "Model/StageObjectForLevelEditor.h"
 
 
 LevelDataManager* LevelDataManager::GetInstance(){

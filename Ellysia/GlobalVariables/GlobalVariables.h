@@ -1,14 +1,24 @@
 #pragma once
+
+/**
+ * @file GlobalVariables.h
+ * @brief 調整項目クラス
+ * @author 茂木翼
+ */
+
 #include <iostream>
 #include <variant>
 #include <string>
-#include <Vector3.h>
 #include <map>
 #include <fstream>
-
 #include <json.hpp>
 
-//項目
+
+#include "Vector3.h"
+
+/// <summary>
+/// 項目
+/// </summary>
 struct Item {
 	//項目の値
 	//variantは複数種類の型のデータを入れることが出来る万能なもの
@@ -16,36 +26,51 @@ struct Item {
 	std::variant<int32_t,float, Vector3 >value;
 };
 
-//グループ
+/// <summary>
+/// グループ
+/// </summary>
 struct Group {
 	//<キー,値>
 	std::map<std::string, Item>items;
 };
 
-//調整項目クラス
-//JSONを使うよ
-class AdjustmentItems{
+
+/// <summary>
+/// 調整項目クラス
+/// </summary>
+class GlobalVariables{
 private:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	AdjustmentItems() = default;
+	GlobalVariables() = default;
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~AdjustmentItems() = default;
+	~GlobalVariables() = default;
 
 
 
 public:
-	static AdjustmentItems* GetInstance();
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
+	static GlobalVariables* GetInstance();
 
-	//コピーコンストラクタ禁止
-	AdjustmentItems(const AdjustmentItems& obj) = delete;
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="obj"></param>
+	GlobalVariables(const GlobalVariables& obj) = delete;
 
-	//代入演算子を無効にする
-	AdjustmentItems& operator=(const AdjustmentItems& obj) = delete;
+	/// <summary>
+	/// 代入演算子を無効にする
+	/// </summary>
+	/// <param name="obj"></param>
+	/// <returns></returns>
+	GlobalVariables& operator=(const GlobalVariables& obj) = delete;
 
 
 
@@ -58,32 +83,30 @@ public:
 	void CreateGroup(const std::string& groupName);
 
 #pragma region 値のセット
-	//関数テンプレートでまとめても◎
-
 
 	/// <summary>
 	/// 値のセット(int)
 	/// </summary>
 	/// <param name="groupName">グループ名</param>
-	/// <param name="key"></param>
+	/// <param name="key">キー</param>
 	/// <param name="value">値</param>
-	void SetValue(const std::string& groupName, const std::string& key, int32_t value);
+	void SetValue(const std::string& groupName, const std::string& key,const int32_t& value);
 
 	/// <summary>
 	/// 値のセット(float)
 	/// </summary>
 	/// <param name="groupName">グループ名</param>
-	/// <param name="key"></param>
+	/// <param name="key">キー</param>
 	/// <param name="value">値</param>
-	void SetValue(const std::string& groupName, const std::string& key, float value);
+	void SetValue(const std::string& groupName, const std::string& key,const float& value);
 
 	/// <summary>
 	/// 値のセット(Vector3)
 	/// </summary>
 	/// <param name="groupName">グループ名</param>
-	/// <param name="key"></param>
+	/// <param name="key">キー</param>
 	/// <param name="value">値</param>
-	void SetValue(const std::string& groupName, const std::string& key, const Vector3 value);
+	void SetValue(const std::string& groupName, const std::string& key, const Vector3& value);
 
 
 #pragma endregion
@@ -101,7 +124,7 @@ public:
 	/// <param name="groupName">グループ名</param>
 	/// <param name="key"></param>
 	/// <param name="value">値</param>
-	void AddItem(const std::string& groupName, const std::string& key, int32_t value);
+	void AddItem(const std::string& groupName, const std::string& key,const int32_t& value);
 
 	/// <summary>
 	/// 項目の追加(float)
@@ -109,7 +132,7 @@ public:
 	/// <param name="groupName">グループ名</param>
 	/// <param name="key"></param>
 	/// <param name="value">値</param>
-	void AddItem(const std::string& groupName, const std::string& key, float value);
+	void AddItem(const std::string& groupName, const std::string& key,const float& value);
 
 
 	/// <summary>
@@ -118,7 +141,7 @@ public:
 	/// <param name="groupName">グループ名</param>
 	/// <param name="key"></param>
 	/// <param name="value">値</param>
-	void AddItem(const std::string& groupName, const std::string& key, const Vector3 value);
+	void AddItem(const std::string& groupName, const std::string& key, const Vector3& value);
 
 
 
@@ -180,16 +203,16 @@ public:
 	void Update();
 
 
+
+private:
+	//グローバル変数の保存先ファイルパス
+	const std::string DIRECTORY_PATH_ = "Resources/JsonFile/";
+
 private:
 	//全データ
 	std::map<std::string, Group>datas_;
 
-	//新しい名前=元の名前
-	//冗長だと感じたらusingで短く！
-	using json = nlohmann::json;
-
-	//グローバル変数の保存先ファイルパス
-	const std::string DIRECTORY_PATH_ = "Resources/JsonFile/";
+	
 
 };
 

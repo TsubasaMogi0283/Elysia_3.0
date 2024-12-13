@@ -1,13 +1,21 @@
 #pragma once
-#include <QuaternionTransform.h>
-#include "Matrix4x4.h"
-#include "Node.h"
+/**
+ * @file Joint.h
+ * @brief ジョイントの構造体
+ * @author 茂木翼
+ */
 
 #include <string>
 #include <vector>
 #include <optional>
 
+#include <QuaternionTransform.h>
+#include "Matrix4x4.h"
+#include "Node.h"
 
+/// <summary>
+/// ジョイント
+/// </summary>
 struct Joint {
 	//Transform情報
 	QuaternionTransform transform;

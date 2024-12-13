@@ -1,9 +1,18 @@
 #pragma once
+/**
+ * @file KeyFrame.h
+ * @brief キーフレームの構造体
+ * @author 茂木翼
+ */
+
 #include <Vector3.h>
 #include <Quaternion.h>
 
 template <typename tValue>
 
+/// <summary>
+/// キーフレーム
+/// </summary>
 struct KeyFrame {
 	//キーフレームの値
 	tValue value;

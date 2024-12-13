@@ -1,9 +1,19 @@
 #pragma once
+/**
+ * @file GaussianFilter.h
+ * @brief ガウシアンフィルタのクラス
+ * @author 茂木翼
+ */
+
+
 #include "DirectXSetup.h"
 #include "Vector4.h"
 #include "Vector3.h"
 #include "VertexData.h"
 
+/// <summary>
+/// 種類
+/// </summary>
 enum GaussianFilterSelection {
 	//GaussianFilter
 	//BoxFilterよりこっちの方良い感じらしい
@@ -14,7 +24,9 @@ enum GaussianFilterSelection {
 
 };
 
-
+/// <summary>
+/// データ
+/// </summary>
 struct GaussianFilterData {
 	//種類
 	int32_t type;
@@ -25,7 +37,9 @@ struct GaussianFilterData {
 
 };
 
-
+/// <summary>
+/// ガウシアンフィルタ
+/// </summary>
 class GaussianFilter {
 public:
 	/// <summary>

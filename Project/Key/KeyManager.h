@@ -9,7 +9,6 @@
 #include <list>
 
 #include "Key.h"
-#include "TextureManager.h"
 #include "Sprite.h"
 
 
@@ -25,12 +24,20 @@ struct Camera;
 /// </summary>
 struct SpotLight;
 
-
-
 /// <summary>
 /// プレイヤー
 /// </summary>
 class Player;
+
+/// <summary>
+/// オーディオ
+/// </summary>
+class Audio;
+
+/// <summary>
+/// テクスチャ管理クラス
+/// </summary>
+class TextureManager;
 
 #pragma endregion
 
@@ -43,7 +50,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	KeyManager() = default;
+	KeyManager();
 
 	/// <summary>
 	/// 初期化
@@ -91,30 +98,59 @@ public:
 		return static_cast<uint32_t>(keyes_.size());
 	}
 
+	/// <summary>
+	/// 最大で取得できる数数
+	/// </summary>
+	/// <returns></returns>
 	inline uint32_t GetMaxKeyQuantity()const {
 		return MAX_KEY_QUANTITY_;
 	}
 
 
-private:
-	//鍵
-	std::list<Key*>keyes_ = {};
+public:
+	/// <summary>
+	/// プレイヤー
+	/// </summary>
+	/// <param name="player"></param>
+	/// <returns></returns>
+	inline void SetPlayer(Player* player) { 
+		this->player_ = player;
+	};
 
+
+
+private:
+	//オーディオ
+	Audio* audio_ = nullptr;
+
+	//テクスチャ管理クラス
+	TextureManager* textureManager_ = nullptr;
+
+	//プレイヤー
+	Player* player_ = nullptr;
+
+
+private:
 	//最大数
 	const uint32_t MAX_KEY_QUANTITY_ = 3;
 
-	//UI
-	std::unique_ptr<Sprite> keySprite_ = nullptr;
 	//数
 	static const uint32_t NUMBER_QUANTITY_ = 10;
+
+
+private:
+	//鍵のリスト
+	std::list<Key*>keyes_ = {};
+
+	//UI
+	std::unique_ptr<Sprite> keySprite_ = nullptr;
 	//スプライト
 	std::unique_ptr<Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
-
-
-
 	//鍵取得するかどうか
 	std::unique_ptr<Sprite> pickUpKey_ = nullptr;
 
-
+	//プレイヤーと全ての鍵の距離
+	std::list<float>keyAndPlayerDistances_ = {};
+	
 };
 

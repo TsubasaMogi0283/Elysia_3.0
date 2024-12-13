@@ -1,15 +1,28 @@
 #pragma once
+/**
+ * @file BoxFilter.h
+ * @brief ボックスフィルタのクラス
+ * @author 茂木翼
+ */
+
+
 #include "DirectXSetup.h"
 #include "Vector4.h"
 #include "Vector3.h"
 #include "VertexData.h"
 
+/// <summary>
+/// ボックスフィルタの種類
+/// </summary>
 enum BoxFilterSelection {
 	BoxFilter3x3,
 	BoxFilter5x5,
 
 }; 
 
+/// <summary>
+/// 平滑化に関するデータ
+/// </summary>
 struct BoxFilterType {
 
 	//Smoothing(平滑化)
@@ -20,7 +33,9 @@ struct BoxFilterType {
 
 
 
-
+/// <summary>
+/// ボックスフィルタ
+/// </summary>
 class BoxFilter {
 public:
 	/// <summary>

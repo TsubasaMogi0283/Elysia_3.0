@@ -1,21 +1,65 @@
 #pragma once
+
+/**
+ * @file AnimationModel.h
+ * @brief アニメーションモデル
+ * @author 茂木翼
+ */
+
 #include <cstdint>
-#include <ModelData.h>
 
+#include "ModelData.h"
+#include "LightingType.h"
+#include "Material.h"
 
-#include  "LightingType.h"
-#include <Material.h>
+#pragma region 前方宣言
+
+/// <summary>
+/// ワールドトランスフォーム
+/// </summary>
 struct WorldTransform;
+
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+/// <summary>
+/// GPUに送るカメラ
+/// </summary>
 struct CameraForGPU;
+
+/// <summary>
+/// スキンクラスター
+/// </summary>
 struct SkinCluster;
 
+/// <summary>
+/// 平行光源
+/// </summary>
 struct DirectionalLight;
+
+/// <summary>
+/// 点光源
+/// </summary>
 struct PointLight;
+
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight;
+
+/// <summary>
+/// マテリアル
+/// </summary>
 struct Material;
 
+#pragma endregion
 
+
+/// <summary>
+/// アニメーションモデル
+/// </summary>
 class AnimationModel{
 public:
 	/// <summary>

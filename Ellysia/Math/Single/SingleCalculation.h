@@ -1,9 +1,30 @@
 #pragma once
 
+/**
+ * @file SingleCalculation.h
+ * @brief 単体の計算
+ * @author 茂木翼
+ */
+
+#pragma region 前方宣言
+
+/// <summary>
+/// ベクトル(2D)
+/// </summary>
 struct Vector2;
+
+/// <summary>
+/// ベクトル(3D)
+/// </summary>
 struct Vector3;
 
+#pragma endregion
+
 //単体、例えばint,floatなどの値を返す計算する
+
+/// <summary>
+/// 単体の計算
+/// </summary>
 namespace SingleCalculation{
 
 	/// <summary>
