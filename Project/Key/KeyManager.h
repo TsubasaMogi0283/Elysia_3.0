@@ -81,6 +81,14 @@ public:
 	/// </summary>
 	~KeyManager();
 
+
+private:
+	/// <summary>
+	/// 消去
+	/// </summary>
+	void Delete();
+
+
 public:
 	/// <summary>
 	/// 鍵のリストを取得
@@ -137,6 +145,8 @@ private:
 	//数
 	static const uint32_t NUMBER_QUANTITY_ = 10;
 
+	//鍵の音が聞こえる最大距離
+	const float MAX_DISTANCE_ = 10.0f;
 
 private:
 	//鍵のリスト
@@ -152,5 +162,11 @@ private:
 	//プレイヤーと全ての鍵の距離
 	std::list<float>keyAndPlayerDistances_ = {};
 	
+
+	//拾う音
+	uint32_t pickUpSEHandle = 0u;
+	//鍵の場所を知らせる音
+	uint32_t notificationSEHandle_ = 0u;
+
 };
 
