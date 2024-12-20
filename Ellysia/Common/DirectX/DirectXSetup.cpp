@@ -14,9 +14,7 @@ DirectXSetup* DirectXSetup::GetInstance() {
 }
 
 
-ComPtr<ID3D12DescriptorHeap> DirectXSetup::GenarateDescriptorHeap(
-		D3D12_DESCRIPTOR_HEAP_TYPE heapType,
-		UINT numDescriptors, bool shaderVisible) {
+ComPtr<ID3D12DescriptorHeap> DirectXSetup::GenarateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType,UINT numDescriptors, bool shaderVisible) {
 
 	ComPtr<ID3D12DescriptorHeap> descriptorHeap= nullptr;
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
@@ -31,20 +29,16 @@ ComPtr<ID3D12DescriptorHeap> DirectXSetup::GenarateDescriptorHeap(
 
 
 ComPtr<ID3D12Resource> DirectXSetup::CreateBufferResource(const size_t& sizeInBytes) {
-	//void返り値も忘れずに
+
 	ComPtr<ID3D12Resource> resource = nullptr;
 	
-	////VertexResourceを生成
-	//頂点リソース用のヒープを設定
+	//HeapPropertiesの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties_ = {
 		.Type= D3D12_HEAP_TYPE_UPLOAD,
 	};
 	
-	
-
-	
-	//頂点リソースの設定
-	D3D12_RESOURCE_DESC vertexResourceDesc_ = {
+	//ResourceDescの設定
+	D3D12_RESOURCE_DESC resourceDesc_ = {
 		//バッファリソース。テクスチャの場合はまた別の設定をする
 		.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER,
 		.Width = sizeInBytes,
@@ -53,13 +47,13 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateBufferResource(const size_t& sizeInBy
 		.MipLevels = 1,
 		.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
 	};
-	vertexResourceDesc_.SampleDesc.Count = 1;
+	resourceDesc_.SampleDesc.Count = 1;
 
 	//作成
 	HRESULT hr = DirectXSetup::GetInstance()->GetDevice()->CreateCommittedResource(
 		&uploadHeapProperties_,
 		D3D12_HEAP_FLAG_NONE,
-		&vertexResourceDesc_,
+		&resourceDesc_,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr, IID_PPV_ARGS(&resource));
 	assert(SUCCEEDED(hr));
