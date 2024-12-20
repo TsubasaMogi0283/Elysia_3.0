@@ -84,6 +84,7 @@ public:
 
 #pragma region アクセッサ
 
+	//コマンドに積むためのGetter(Line)
 	ComPtr<ID3D12RootSignature> GetLineRootSignature() {
 		return linePSO_.rootSignature_;
 	}

@@ -49,12 +49,14 @@ void LevelEditorSample::Initialize(){
 	
 	//audio_->PlayMP3(audioHandleMP3_, true);
 	//デバッグ用のモデル
-	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere","Sphere.obj");
+	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere","Sphere.obj");
 
 	//パーティクルの設定
 	particle3D_.reset(Particle3D::Create(debugModelHandle,ParticleMoveType::NormalRelease));
 	particle3D_->SetScale({ 10.0f,10.0f,10.0f });
 	particle3D_->SetTranslate({ 0.0f,0.0f,0.0f });
+
+	//コリジョン管理クラス
 	collisionManager_ = std::make_unique<CollisionManager>();
 }
 
@@ -210,7 +212,7 @@ void LevelEditorSample::DrawObject3D(){
 	levelEditor_->Draw(levelHandle_,camera_, material_, directionalLight_);
 	
 	//パーティクル
-	particle3D_->Draw(camera_, material_);
+	particle3D_->Draw(camera_, material_, directionalLight_);
 }
 
 void LevelEditorSample::PreDrawPostEffectFirst(){
