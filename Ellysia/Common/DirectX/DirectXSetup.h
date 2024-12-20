@@ -4,15 +4,14 @@
  * @brief DirectXの設定クラス
  * @author 茂木翼
  */
-#include "ConvertLog.h"
-#include "WindowsSetup.h"
-#include "Vector4.h"
 
 
 #include <cassert>
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <dxgidebug.h>
+#include <chrono>
+
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
@@ -23,7 +22,13 @@
 using Microsoft::WRL::ComPtr;
 
 
-#include <chrono>
+
+
+
+#include "ConvertLog.h"
+#include "WindowsSetup.h"
+#include "Vector4.h"
+
 
 /// <summary>
 /// スワップチェインで使う変数をまとめた
@@ -109,6 +114,7 @@ public:
 private:
 	//DepthStencilTexture...奥行の根幹をなすものであり、非常に大量の読み書きを高速に行う必要がある
 	//						Textureの中でも特に例外的な扱いが必要となっている
+	//						とのこと。Depthと名前の通り奥行きの情報を持っているものだね
 
 	/// <summary>
 	/// DepthのResourceを生成する
@@ -179,7 +185,7 @@ public:
 	/// </summary>
 	/// <param name="width">横幅</param>
 	/// <param name="height">縦幅</param>
-	static void GenarateViewport(uint32_t width, uint32_t height);
+	static void GenarateViewport(const uint32_t& width, const uint32_t& height);
 
 	
 	/// <summary>
@@ -187,7 +193,7 @@ public:
 	/// </summary>
 	/// <param name="right">横幅</param>
 	/// <param name="bottom">立幅</param>
-	static void GenarateScissor(uint32_t right, uint32_t bottom);
+	static void GenarateScissor(const uint32_t& right, const uint32_t& bottom);
 
 
 	/// <summary>
@@ -196,14 +202,14 @@ public:
 	/// <param name="resource"></param>
 	/// <param name="beforeState"></param>
 	/// <param name="afterState"></param>
-	static void SetResourceBarrier(ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
+	static void SetResourceBarrier(const ComPtr<ID3D12Resource>& resource, const D3D12_RESOURCE_STATES& beforeState, const D3D12_RESOURCE_STATES& afterState);
 	
 	/// <summary>
 	/// リソースバリアの設定(スワップチェイン用)
 	/// </summary>
 	/// <param name="beforeState"></param>
 	/// <param name="afterState"></param>
-	static void SetResourceBarrierForSwapChain(D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
+	static void SetResourceBarrierForSwapChain(const D3D12_RESOURCE_STATES& beforeState, const D3D12_RESOURCE_STATES& afterState);
 
 
 #pragma endregion
@@ -236,14 +242,14 @@ public:
 	/// </summary>
 	/// <param name="sizeInBytes"></param>
 	/// <returns></returns>
-	ComPtr<ID3D12Resource> CreateBufferResource(size_t sizeInBytes);
+	ComPtr<ID3D12Resource> CreateBufferResource(const size_t& sizeInBytes);
 
 	/// <summary>
 	/// Depthリソースの取得
 	/// </summary>
 	/// <returns></returns>
-	ComPtr<ID3D12Resource> GerDepthStencilResource() {
-		return m_depthStencilResource_;
+	inline ComPtr<ID3D12Resource> GerDepthStencilResource() const{
+		return depthStencilResource_;
 	}
 
 	
@@ -274,24 +280,24 @@ public:
 	/// デバイスの取得
 	/// </summary>
 	/// <returns></returns>
-	ComPtr<ID3D12Device> GetDevice() {
-		return m_device_;
+	inline ComPtr<ID3D12Device> GetDevice() const{
+		return device_;
 	}
 
 	/// <summary>
 	/// コマンドリストの取得
 	/// </summary>
 	/// <returns></returns>
-	ComPtr<ID3D12GraphicsCommandList> GetCommandList() {
-		return DirectXSetup::GetInstance()->m_commandList_;
+	inline ComPtr<ID3D12GraphicsCommandList> GetCommandList() const{
+		return DirectXSetup::GetInstance()->commandList_;
 	}
 
 	/// <summary>
 	/// DSVディスクリプタヒープの取得
 	/// </summary>
 	/// <returns></returns>
-	ComPtr<ID3D12DescriptorHeap> GetDsvDescriptorHeap() {
-		return  m_dsvDescriptorHeap_;
+	inline ComPtr<ID3D12DescriptorHeap> GetDsvDescriptorHeap() const{
+		return  dsvDescriptorHeap_;
 	}
 
 
@@ -299,7 +305,7 @@ public:
 	/// スワップチェーンの取得
 	/// </summary>
 	/// <returns></returns>
-	SwapChain GetSwapChain() {
+	inline SwapChain GetSwapChain() const{
 		return DirectXSetup::GetInstance()->swapChain;
 	}
 
@@ -307,41 +313,51 @@ public:
 	/// DSVハンドルの取得
 	/// </summary>
 	/// <returns></returns>
-	D3D12_CPU_DESCRIPTOR_HANDLE& GetDsvHandle() {
+	inline D3D12_CPU_DESCRIPTOR_HANDLE& GetDsvHandle(){
 		return dsvHandle_;
 	}
 
 private:
 
+	//ファクトリー
+	ComPtr<IDXGIFactory7> dxgiFactory_ = nullptr;
+	//アダプター
+	ComPtr<IDXGIAdapter4> useAdapter_ = nullptr;
 	//デバイス
-	ComPtr<IDXGIFactory7> m_dxgiFactory_ = nullptr;
-	ComPtr<IDXGIAdapter4> m_useAdapter_ = nullptr;
-	ComPtr<ID3D12Device> m_device_ = nullptr;
+	ComPtr<ID3D12Device> device_ = nullptr;
 
-	//コマンド
-	ComPtr<ID3D12GraphicsCommandList> m_commandList_ = nullptr;
+	//コマンドリスト
+	ComPtr<ID3D12GraphicsCommandList> commandList_ = nullptr;
+	//コマンドキュー
 	ComPtr<ID3D12CommandQueue> m_commandQueue_ = nullptr;
+	//コマンドアロケータ
 	ComPtr<ID3D12CommandAllocator> m_commandAllocator_ = nullptr;
 
 	//DSV
-	ComPtr<ID3D12DescriptorHeap> m_dsvDescriptorHeap_ = nullptr;
-	ComPtr<ID3D12Resource> m_depthStencilResource_ = nullptr;
+	ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap_ = nullptr;
+	//リソース
+	ComPtr<ID3D12Resource> depthStencilResource_ = nullptr;
+	//ハンドル
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_ = {};
 
 	//スワップチェイン
 	SwapChain swapChain = {};
 	UINT backBufferIndex_ = {};
+	//バリア
 	D3D12_RESOURCE_BARRIER barrier_{};
 
 
-	//スワップチェーン1枚目
-	uint32_t rtvHandle[2] = {};
-	std::string swapChainName[2] = {};
+	//スワップチェーン
+	//RTVハンドル
+	uint32_t rtvHandle_[2] = {};
+	std::string swapChainName_[2] = {};
 
 	
 	//Fence
-	ComPtr<ID3D12Fence> m_fence_ = nullptr;
+	ComPtr<ID3D12Fence> fence_ = nullptr;
+	//バリュー
 	uint64_t fenceValue_ = 0;
+	//イベント
 	HANDLE fenceEvent_ = nullptr;
 
 	//デバッグコントローラー

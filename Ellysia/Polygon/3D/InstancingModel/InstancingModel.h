@@ -1,7 +1,7 @@
 #pragma once
 /**
- * @file Model.h
- * @brief モデル
+ * @file InstancingModel.h
+ * @brief インスタンシングモデル
  * @author 茂木翼
  */
 
@@ -16,9 +16,9 @@
 #include "ModelData.h"
 
 #pragma region 前方宣言
-/// <summary>
-/// テクスチャ管理クラス
-/// </summary>
+ /// <summary>
+ /// テクスチャ管理クラス
+ /// </summary>
 class TextureManager;
 
 /// <summary>
@@ -73,25 +73,26 @@ struct SpotLight;
 
 #pragma endregion
 
+
 /// <summary>
-/// モデル
+/// インスタンシング描画
 /// </summary>
-class Model {
+class InstancingModel{
 public:
 
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Model();
+	InstancingModel();
 
 	/// <summary>
 	/// 生成
 	/// </summary>
 	/// <param name="modelHandle">モデルハンドル</param>
 	/// <returns></returns>
-	static Model* Create(const uint32_t& modelHandle);
+	static InstancingModel* Create(const uint32_t& modelHandle);
 
-	#pragma region 描画
+#pragma region 描画
 
 	/// <summary>
 	/// 描画
@@ -99,7 +100,7 @@ public:
 	/// <param name="worldTransform">ワールドトランスフォーム</param>
 	/// <param name="camera">カメラ</param>
 	/// <param name="directionalLight">平行光源</param>
-	void Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const DirectionalLight& directionalLight);
+	void Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const DirectionalLight& directionalLight);
 
 	/// <summary>
 	/// 描画
@@ -107,7 +108,7 @@ public:
 	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="pointLight"></param>
-	void Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const PointLight& pointLight);
+	void Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const PointLight& pointLight);
 
 	/// <summary>
 	/// 描画
@@ -115,14 +116,14 @@ public:
 	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="spotLight"></param>
-	void Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const SpotLight& spotLight);
+	void Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const SpotLight& spotLight);
 
 #pragma endregion
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Model() = default;
+	~InstancingModel() = default;
 
 
 public:
@@ -147,7 +148,7 @@ private:
 
 	//モデル管理クラス
 	ModelManager* modelmanager_ = nullptr;
-	
+
 	//パイプライン管理クラス
 	PipelineManager* pipelineManager_ = nullptr;
 
@@ -185,3 +186,4 @@ private:
 
 
 };
+

@@ -1,4 +1,4 @@
-#include "Model.h"
+#include "InstancingModel.h"
 
 #include <numbers>
 #include <cassert>
@@ -16,7 +16,7 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 
-Model::Model(){
+InstancingModel::InstancingModel() {
 	//テクスチャ管理クラスの取得
 	textureManager_ = TextureManager::GetInstance();
 
@@ -34,10 +34,10 @@ Model::Model(){
 
 }
 
-Model* Model::Create(const uint32_t& modelHandle) {
-	
+InstancingModel* InstancingModel::Create(const uint32_t& modelHandle) {
+
 	//新たなModel型のインスタンスのメモリを確保
-	Model* model = new Model();
+	InstancingModel* model = new InstancingModel();
 
 	//テクスチャの読み込み
 	model->textureHandle_ = model->textureManager_->LoadTexture(model->modelmanager_->GetModelData(modelHandle).textureFilePath);
@@ -75,7 +75,7 @@ Model* Model::Create(const uint32_t& modelHandle) {
 }
 
 //描画
-void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const DirectionalLight& directionalLight) {
+void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const DirectionalLight& directionalLight) {
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
@@ -136,7 +136,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
 	if (textureHandle_ != 0) {
-		textureManager_->GraphicsCommand(2,textureHandle_);
+		textureManager_->GraphicsCommand(2, textureHandle_);
 	}
 
 	//DirectionalLight
@@ -158,7 +158,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 }
 
-void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const PointLight& pointLight){
+void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const PointLight& pointLight) {
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
@@ -230,8 +230,8 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
 	//PointLight
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6, pointLight.bufferResource_->GetGPUVirtualAddress());
-	
-	if (material.isEnviromentMap_ == true&&eviromentTextureHandle_ != 0) {
+
+	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0) {
 		srvManager_->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
 	}
 
@@ -240,7 +240,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 }
 
-void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const SpotLight& spotLight){
+void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const SpotLight& spotLight) {
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するらしいとのこと
@@ -315,7 +315,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLight.bufferResource_->GetGPUVirtualAddress());
 
 	//環境マッピングの設定
-	if (material.isEnviromentMap_ ==true&&eviromentTextureHandle_ != 0) {
+	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0) {
 		srvManager_->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
 	}
 

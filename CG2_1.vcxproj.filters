@@ -370,6 +370,9 @@
     <Filter Include="Project\Player\Test">
       <UniqueIdentifier>{83fcd2cc-6d97-4ff6-9a5c-737b5fbaaaf3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\Polygone\3D\InstancingModel">
+      <UniqueIdentifier>{30e383de-74ed-4107-a05e-3a65171fd88c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -632,6 +635,9 @@
     </ClCompile>
     <ClCompile Include="Project\Player\AudioTestPlayer.cpp">
       <Filter>Project\Player\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1101,6 +1107,9 @@
     </ClInclude>
     <ClInclude Include="Project\Player\PlayerCollisionToStageObject.h">
       <Filter>Project\Player\PlayerCollisionToStageObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

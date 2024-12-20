@@ -171,6 +171,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Polygon\2D\Sprite\Sprite.cpp" />
     <ClCompile Include="Ellysia\Polygon\2D\Triangle\Triangle.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.cpp" />
+    <ClCompile Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Model\Model.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Particle3D\Particle3D.cpp" />
@@ -458,6 +459,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\2D\Sprite\Sprite.h" />
     <ClInclude Include="Ellysia\Polygon\2D\Triangle\Triangle.h" />
     <ClInclude Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.h" />
+    <ClInclude Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Model\Model.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\AccelerationField.h" />
