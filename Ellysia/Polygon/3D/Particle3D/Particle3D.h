@@ -239,10 +239,16 @@ public:
 
 #pragma endregion
 
-
 private:
+
 	//モデルマネージャー
 	ModelManager* modelManager_ = nullptr;
+
+	//テクスチャ管理クラスの取得
+	TextureManager* textureManager_ = nullptr;
+
+private:
+	
 
 	//頂点リソースを作る
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;

@@ -12,15 +12,15 @@ void Camera::Initialize() {
 	aspectRatio_ = float(WindowsSetup::GetInstance()->GetClientWidth()) / float(WindowsSetup::GetInstance()->GetClientHeight());
 
 	//初期
-	scale_ = { 1.0f, 1.0f,1.0f };
-	rotate_ = { 0.0f, 0.0f, 0.0f };
-	translate_ = { 0.0f, 0.0f, -9.8f };
+	scale_ = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
+	rotate_ = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
+	translate_ = {.x= 0.0f,.y= 0.0f,.z= -9.8f };
 
 
 	//アフィン行列を計算
-	worldMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
+	affineMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
 	//逆行列を計算
-	viewMatrix_ = Matrix4x4Calculation::Inverse(worldMatrix_);
+	viewMatrix_ = Matrix4x4Calculation::Inverse(affineMatrix_);
 	//射影を計算
 	projectionMatrix_ = Matrix4x4Calculation::MakePerspectiveFovMatrix(fov_, aspectRatio_, nearClip_, farClip_);
 	//正射影行列(正規化)を計算
@@ -34,10 +34,10 @@ void Camera::Initialize() {
 void Camera::Update() {
 
 	//アフィン行列を計算
-	worldMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
+	affineMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
 
 	//逆行列を計算
-	viewMatrix_ = Matrix4x4Calculation::Inverse(worldMatrix_);
+	viewMatrix_ = Matrix4x4Calculation::Inverse(affineMatrix_);
 	//射影を計算
 	projectionMatrix_ = Matrix4x4Calculation::MakePerspectiveFovMatrix(fov_, aspectRatio_, nearClip_, farClip_);
 	//正射影行列(正規化)を計算
@@ -48,6 +48,7 @@ void Camera::Update() {
 }
 
 void Camera::Transfer() {
+	//それぞれにデータの書き込み
 	bufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraMatrixData_));
 	cameraMatrixData_->viewMatrix_ = viewMatrix_;
 	cameraMatrixData_->projectionMatrix_ = projectionMatrix_;

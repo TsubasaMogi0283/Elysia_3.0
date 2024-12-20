@@ -16,10 +16,16 @@
 
 
 Particle3D::Particle3D() {
+	//モデル管理クラスの取得
 	modelManager_ = ModelManager::GetInstance();
+
+	//テクスチャ管理クラスの取得
+	textureManager_ = TextureManager::GetInstance();
+
 }
 
 Particle3D* Particle3D::Create(const uint32_t& moveType){
+	//生成
 	Particle3D* particle3D = new Particle3D();
 
 #pragma region デフォルトの設定 
@@ -36,8 +42,7 @@ Particle3D* Particle3D::Create(const uint32_t& moveType){
 #pragma endregion
 
 	//モデルの読み込み
-	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/External/Model/Plane", "plane.obj");
-	ModelData modelData = ModelManager::GetInstance()->GetModelData(modelHandle);
+	uint32_t modelHandle = particle3D->modelManager_->LoadModelFile("Resources/External/Model/Plane", "plane.obj");
 
 	//テクスチャの読み込み
 	particle3D->textureHandle_ = TextureManager::GetInstance()->LoadTexture("Resources/External/Texture/Circle/circle.png");
@@ -46,10 +51,11 @@ Particle3D* Particle3D::Create(const uint32_t& moveType){
 	particle3D->moveType_ = moveType;
 
 	//頂点リソースを作る
-	particle3D->vertices_ = ModelManager::GetInstance()->GetModelData(modelHandle).vertices;
+	particle3D->vertices_ = particle3D->modelManager_->GetModelData(modelHandle).vertices;
 	particle3D->vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * particle3D->vertices_.size());
 
 
+	//VBVとか関数でまとめたい
 
 	//リソースの先頭のアドレスから使う
 	particle3D->vertexBufferView_.BufferLocation = particle3D->vertexResource_->GetGPUVirtualAddress();
@@ -95,23 +101,23 @@ Particle3D* Particle3D::Create(const uint32_t& modelHandle,const uint32_t& moveT
 	//発生頻度用の時刻。0.0で初期化
 	particle3D->emitter_.frequencyTime = 0.0f;
 	//SRT
-	particle3D->emitter_.transform.scale = { 10.0f,10.0f,10.0f };
-	particle3D->emitter_.transform.rotate = { 0.0f,0.0f,0.0f };
-	particle3D->emitter_.transform.translate = { 0.0f,0.0f,4.0f };
+	particle3D->emitter_.transform.scale = {.x= 10.0f,.y= 10.0f,.z= 10.0f };
+	particle3D->emitter_.transform.rotate = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
+	particle3D->emitter_.transform.translate = {.x= 0.0f,.y= 0.0f,.z= 4.0f };
 
 #pragma endregion
 
 	//モデルの読み込み
-	ModelData modelData = ModelManager::GetInstance()->GetModelData(modelHandle);
+	ModelData modelData = particle3D->modelManager_->GetModelData(modelHandle);
 
 	//テクスチャの読み込み
-	particle3D->textureHandle_ = TextureManager::GetInstance()->LoadTexture(modelData.textureFilePath);
+	particle3D->textureHandle_ = particle3D->textureManager_->LoadTexture(modelData.textureFilePath);
 
 	//動きの種類
 	particle3D->moveType_ = moveType;
 
 	//頂点リソースを作る
-	particle3D->vertices_ = ModelManager::GetInstance()->GetModelData(modelHandle).vertices;
+	particle3D->vertices_ = particle3D->modelManager_->GetModelData(modelHandle).vertices;
 	particle3D->vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * particle3D->vertices_.size());
 
 
@@ -212,17 +218,15 @@ void Particle3D::Update(const Camera& camera) {
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 
-	///時間経過
-	//if (isReleaseOnce_ == true) {
-		emitter_.frequencyTime += DELTA_TIME;
-		//頻度より大きいなら
-		if (emitter_.frequency <= emitter_.frequencyTime) {
-			//パーティクルを作る
-			particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
-			//余計に過ぎた時間も加味して頻度計算する
-			emitter_.frequencyTime -= emitter_.frequency;
-		}
-	//}
+	//時間経過
+	emitter_.frequencyTime += DELTA_TIME;
+	//頻度より大きいなら
+	if (emitter_.frequency <= emitter_.frequencyTime) {
+		//パーティクルを作る
+		particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
+		//余計に過ぎた時間も加味して頻度計算する
+		emitter_.frequencyTime -= emitter_.frequency;
+	}
 	
 
 
@@ -257,7 +261,7 @@ void Particle3D::Update(const Camera& camera) {
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
-			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix_);
+			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.affineMatrix_);
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
@@ -311,7 +315,7 @@ void Particle3D::Update(const Camera& camera) {
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
-			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix_);
+			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.affineMatrix_);
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
@@ -363,7 +367,7 @@ void Particle3D::Update(const Camera& camera) {
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
-			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix_);
+			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.affineMatrix_);
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
@@ -434,10 +438,14 @@ void Particle3D::Draw(const Camera& camera, const Material& material){
 
 	//PS用のカメラ
 	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
-	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.worldMatrix_.m[3][0];
-	cameraWorldPosition.y = camera.worldMatrix_.m[3][1];
-	cameraWorldPosition.z = camera.worldMatrix_.m[3][2];
+	//カメラの座標を取得
+	Vector3 cameraWorldPosition = {
+		.x = camera.affineMatrix_.m[3][0],
+		.y = camera.affineMatrix_.m[3][1],
+		.z = camera.affineMatrix_.m[3][2],
+	};
+
+	
 
 	*cameraPositionData_ = cameraWorldPosition;
 	cameraResource_->Unmap(0, nullptr);
@@ -493,9 +501,9 @@ void Particle3D::Draw(const Camera& camera,const  Material& material,const Direc
 	//PS用のカメラ
 	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
 	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.worldMatrix_.m[3][0];
-	cameraWorldPosition.y = camera.worldMatrix_.m[3][1];
-	cameraWorldPosition.z = camera.worldMatrix_.m[3][2];
+	cameraWorldPosition.x = camera.affineMatrix_.m[3][0];
+	cameraWorldPosition.y = camera.affineMatrix_.m[3][1];
+	cameraWorldPosition.z = camera.affineMatrix_.m[3][2];
 
 	*cameraPositionData_ = cameraWorldPosition;
 	cameraResource_->Unmap(0, nullptr);
@@ -551,9 +559,9 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Poin
 	//PS用のカメラ
 	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
 	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.worldMatrix_.m[3][0];
-	cameraWorldPosition.y = camera.worldMatrix_.m[3][1];
-	cameraWorldPosition.z = camera.worldMatrix_.m[3][2];
+	cameraWorldPosition.x = camera.affineMatrix_.m[3][0];
+	cameraWorldPosition.y = camera.affineMatrix_.m[3][1];
+	cameraWorldPosition.z = camera.affineMatrix_.m[3][2];
 
 	*cameraPositionData_ = cameraWorldPosition;
 	cameraResource_->Unmap(0, nullptr);
@@ -608,9 +616,9 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Spot
 	//PS用のカメラ
 	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
 	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.worldMatrix_.m[3][0];
-	cameraWorldPosition.y = camera.worldMatrix_.m[3][1];
-	cameraWorldPosition.z = camera.worldMatrix_.m[3][2];
+	cameraWorldPosition.x = camera.affineMatrix_.m[3][0];
+	cameraWorldPosition.y = camera.affineMatrix_.m[3][1];
+	cameraWorldPosition.z = camera.affineMatrix_.m[3][2];
 
 	*cameraPositionData_ = cameraWorldPosition;
 	cameraResource_->Unmap(0, nullptr);
