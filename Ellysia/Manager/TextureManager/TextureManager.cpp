@@ -16,7 +16,7 @@ TextureManager* TextureManager::GetInstance() {
 
 
 
-const D3D12_RESOURCE_DESC TextureManager::GetResourceDesc(uint32_t textureHandle) {
+const D3D12_RESOURCE_DESC TextureManager::GetResourceDesc(const uint32_t& textureHandle) {
 	//テクスチャの情報を取得
 	// handleからfilePathを取得
 	auto it = handleToFilePathMap_.find(textureHandle);
