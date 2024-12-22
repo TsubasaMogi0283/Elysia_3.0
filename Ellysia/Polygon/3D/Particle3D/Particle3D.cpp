@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <numbers>
+#include <algorithm>
 
 #include "Camera.h"
 #include "TextureManager.h"
@@ -264,10 +265,15 @@ void Particle3D::Update(const Camera& camera) {
 		switch (moveType_) {
 		case NormalRelease:
 			#pragma region 通常の放出
-			if (particleIterator->lifeTime <= particleIterator->currentTime) {
-			
-				continue;
+
+			if (isReleaseOnceMode_ == false) {
+				if (particleIterator->lifeTime <= particleIterator->currentTime) {
+
+					continue;
+				}
 			}
+
+			
 			particleIterator->transform.translate.y += 0.001f;
 			
 			//Y軸でπ/2回転
@@ -282,7 +288,9 @@ void Particle3D::Update(const Camera& camera) {
 			billBoardMatrix.m[3][2] = 0.0f;
 
 			//行列を作っていくよ
+			//Scale
 			scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(particleIterator->transform.scale);
+			//座標
 			translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(particleIterator->transform.translate);
 
 
@@ -292,23 +300,18 @@ void Particle3D::Update(const Camera& camera) {
 
 			//最大値を超えて描画しないようにする
 			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
+				//ワールド行列と色のデータを設定
 				instancingData_[numInstance_].world = worldMatrix;
-				//instancingData_[numInstance_].color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
+				const Vector4 COLOR = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
+				instancingData_[numInstance_].color = COLOR;
+				particleIterator->color = COLOR;
 
 				//透明になっていくようにするかどうか
 				if (isToTransparent_ == true) {
 					//アルファはVector4でのwだね
 					float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
-					instancingData_[numInstance_].color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = alpha };
-				
-
-#ifdef _DEBUG
-					ImGui::Begin("パーティクルの透明度"); 
-					ImGui::InputFloat("Alpha", &alpha);
-					ImGui::End();
-#endif // _DEBUG
-
-
+					instancingData_[numInstance_].color.w = alpha ;
+					particleIterator->color.w = alpha;
 				}
 
 				++numInstance_;
@@ -430,33 +433,34 @@ void Particle3D::Update(const Camera& camera) {
 
 		}
 
-		////見えなくなった
-		//if (particleIterator->color.w != 0.0f) {
-		//	particleIterator->isInvisible = true;
-		//}
+		//見えなくなった
+		if (particleIterator->color.w <= 0.0f) {
+			particleIterator->isInvisible = true;
+		}
 		
 	}
 
-	//一度だけ出す場合の処理
-	//1つでも見える場合ループを抜ける
+
 	//全て見えなくなったらisAllInvisible_がtrueになる
 	if (isReleaseOnceMode_ == true) {
-		for (auto& particle : particles_) {
+		
+		//all_ofは中にある全ての要素が満たす時にtrueを返す
+		//今回の場合はparticles_にあるisInvisibleが全てtrueに鳴ったらtrueを返すという仕組みになっている
+		isAllInvisible_ = std::all_of(particles_.begin(), particles_.end(), [](const Particle& particle) {
+			return particle.isInvisible == true;
+		});
 
-			//まだ見えている
-			if (particle.isInvisible == false) {
-				break;
-			}
-			//isAllInvisible_ = true;
-		}
 
-	}
+
 
 #ifdef _DEBUG
-	ImGui::Begin("パーティクル"); 
-	ImGui::Checkbox("全て消えたか", &isAllInvisible_);
-	ImGui::End();
+		ImGui::Begin("パーティクル");
+		ImGui::Checkbox("全て消えたか", &isAllInvisible_);
+		ImGui::End();
 #endif // _DEBUG
+	}
+
+
 
 
 	
