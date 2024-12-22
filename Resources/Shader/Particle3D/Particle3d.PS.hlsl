@@ -157,14 +157,14 @@ PixelShaderOutput main(VertexShaderOutput input)
         float specularPow = pow(saturate(NDotH), gMaterial.shininess);
 		
 		//拡散反射
-        float3 diffuse = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
+        float3 diffuse = input.color.rgb* textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
 		//鏡面反射
 		//1.0f,1.0f,1.0fの所は反射色。
         float3 specular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
 		
         //色を計算
         output.color.rgb = diffuse + specular;
-        output.color.a = gMaterial.color.a * textureColor.a;
+        output.color.a = input.color.a * textureColor.a;
         
 		
     }

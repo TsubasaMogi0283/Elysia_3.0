@@ -39,7 +39,7 @@ Particle3D* Particle3D::Create(const uint32_t& moveType){
 	Particle3D* particle3D = new Particle3D();
 
 #pragma region デフォルトの設定 
-	particle3D->emitter_.count = 100;
+	particle3D->emitter_.count = 3;
 	//0.5秒ごとに発生
 	particle3D->emitter_.frequency = 0.0f;
 	//発生頻度用の時刻。0.0で初期化
@@ -92,7 +92,6 @@ Particle3D* Particle3D::Create(const uint32_t& moveType){
 	particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
 	//書き込み
 	particle3D->instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
-
 
 	//カメラ
 	particle3D->cameraResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(Vector3));
@@ -167,10 +166,6 @@ Particle3D* Particle3D::Create(const uint32_t& modelHandle,const uint32_t& moveT
 
 }
 
-
-
-
-//生成関数
 Particle Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
 
 	//ランダムの値で位置を決める
@@ -209,7 +204,6 @@ Particle Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
 
 }
 
-
 std::list<Particle> Particle3D::Emission(const Emitter& emmitter, std::mt19937& randomEngine) {
 	std::list<Particle> particles;
 
@@ -221,7 +215,6 @@ std::list<Particle> Particle3D::Emission(const Emitter& emmitter, std::mt19937& 
 	return particles;
 }
 
-
 void Particle3D::Update(const Camera& camera) {
 
 
@@ -229,15 +222,27 @@ void Particle3D::Update(const Camera& camera) {
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 
-	//時間経過
-	emitter_.frequencyTime += DELTA_TIME;
-	//頻度より大きいなら
-	if (emitter_.frequency <= emitter_.frequencyTime) {
+
+	//一度だけ出すモード
+	if (isReleaseOnceMode_ == true && isReeasedOnce_ == false) {
 		//パーティクルを作る
 		particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
-		//余計に過ぎた時間も加味して頻度計算する
-		emitter_.frequencyTime -= emitter_.frequency;
+		isReeasedOnce_ = true;
 	}
+
+
+	if (isReleaseOnceMode_ == false) {
+		//時間経過
+		emitter_.frequencyTime += DELTA_TIME;
+		//頻度より大きいなら
+		if (emitter_.frequency <= emitter_.frequencyTime) {
+			//パーティクルを作る
+			particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
+			//余計に過ぎた時間も加味して頻度計算する
+			emitter_.frequencyTime -= emitter_.frequency;
+		}
+	}
+	
 	
 
 
@@ -259,7 +264,7 @@ void Particle3D::Update(const Camera& camera) {
 		switch (moveType_) {
 		case NormalRelease:
 			#pragma region 通常の放出
-			if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+			if (particleIterator->lifeTime <= particleIterator->currentTime) {
 			
 				continue;
 			}
@@ -288,15 +293,23 @@ void Particle3D::Update(const Camera& camera) {
 			//最大値を超えて描画しないようにする
 			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
 				instancingData_[numInstance_].world = worldMatrix;
-				instancingData_[numInstance_].color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
+				//instancingData_[numInstance_].color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
 
 				//透明になっていくようにするかどうか
-				//if (isToTransparent_ == true) {
-				//	//アルファはVector4でのwだね
-				//	float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
-				//	instancingData_[numInstance_].color.w = alpha;
-				//
-				//}
+				if (isToTransparent_ == true) {
+					//アルファはVector4でのwだね
+					float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
+					instancingData_[numInstance_].color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = alpha };
+				
+
+#ifdef _DEBUG
+					ImGui::Begin("パーティクルの透明度"); 
+					ImGui::InputFloat("Alpha", &alpha);
+					ImGui::End();
+#endif // _DEBUG
+
+
+				}
 
 				++numInstance_;
 			}
@@ -417,24 +430,36 @@ void Particle3D::Update(const Camera& camera) {
 
 		}
 
-		//見えなくなった
+		////見えなくなった
 		//if (particleIterator->color.w != 0.0f) {
 		//	particleIterator->isInvisible = true;
 		//}
 		
 	}
 
+	//一度だけ出す場合の処理
+	//1つでも見える場合ループを抜ける
+	//全て見えなくなったらisAllInvisible_がtrueになる
+	if (isReleaseOnceMode_ == true) {
+		for (auto& particle : particles_) {
 
-	////1つでも見える場合ループを抜ける
-	////全て見えなくなったらisAllInvisible_がtrueになる
-	//for (auto& particle : particles_) {
-	//	
-	//	if (particle.isInvisible == false) {
-	//		break;
-	//	}
-	//	isAllInvisible_ = true;
-	//}
+			//まだ見えている
+			if (particle.isInvisible == false) {
+				break;
+			}
+			//isAllInvisible_ = true;
+		}
 
+	}
+
+#ifdef _DEBUG
+	ImGui::Begin("パーティクル"); 
+	ImGui::Checkbox("全て消えたか", &isAllInvisible_);
+	ImGui::End();
+#endif // _DEBUG
+
+
+	
 }
 
 void Particle3D::Draw(const Camera& camera, const Material& material){

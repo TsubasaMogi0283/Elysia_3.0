@@ -53,8 +53,10 @@ void LevelEditorSample::Initialize(){
 
 	//パーティクルの設定
 	particle3D_.reset(Particle3D::Create(debugModelHandle,ParticleMoveType::NormalRelease));
-	particle3D_->SetScale({ 10.0f,10.0f,10.0f });
-	particle3D_->SetTranslate({ 0.0f,0.0f,0.0f });
+	particle3D_->SetScale({.x= 10.0f,.y= 10.0f,.z= 10.0f });
+	particle3D_->SetTranslate({.x= 0.0f,.y= 0.0f,.z= 0.0f });
+	particle3D_->SetIsReleaseOnceMode(true);
+	particle3D_->SetIsToTransparent(true);
 
 	//コリジョン管理クラス
 	collisionManager_ = std::make_unique<CollisionManager>();

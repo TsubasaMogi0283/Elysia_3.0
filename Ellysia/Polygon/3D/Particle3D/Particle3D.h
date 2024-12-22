@@ -198,7 +198,7 @@ public:
 	///	一度だけ出すかどうか
 	/// </summary>
 	/// <param name="isReleaseOnce"></param>
-	inline void SetIsReleaseOnce(const bool &isReleaseOnce) {
+	inline void SetIsReleaseOnceMode(const bool &isReleaseOnce) {
 		this->isReleaseOnceMode_ = isReleaseOnce;
 	}
 
