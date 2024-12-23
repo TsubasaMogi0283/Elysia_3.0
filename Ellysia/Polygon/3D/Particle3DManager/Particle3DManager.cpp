@@ -27,10 +27,6 @@ void Particle3DManager::Initialize(){
 
 	std::mt19937 randomEngine(seedGenerator());
 	rand_ = randomEngine;
-    //パイプラインの生成
-    PipelineManager::GetInstance()->GenerateParticle3DPSO();
-     
-
 
     
     //頂点データの初期化

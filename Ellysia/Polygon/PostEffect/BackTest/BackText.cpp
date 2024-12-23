@@ -14,7 +14,6 @@ void BackText::Initialize(){
 	effectType_ = NoneEffect;
 
 	
-	
 	//Effect
 	effectResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(int32_t));
 	

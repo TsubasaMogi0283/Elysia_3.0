@@ -1,5 +1,5 @@
 #include "Material.h"
-#include <Matrix4x4Calculation.h>
+#include "Matrix4x4Calculation.h"
 
 void Material::Initialize(){
 	//色
@@ -13,15 +13,18 @@ void Material::Initialize(){
 	shininess_=1000.0f;
 	//環境マップ
 	isEnviromentMap_ = false;
+	//ディゾルブ
+	isDissolve_ = false;
+
 	//リソースを生成
-	bufferResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
+	resource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
 
 }
 
 void Material::Update(){
 
 	//書き込み
-	bufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	resource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	//色
 	materialData_->color = color_;
 	//ライティングの種類
@@ -32,6 +35,9 @@ void Material::Update(){
 	materialData_->shininess = shininess_;
 	//環境マップ
 	materialData_->isEnviromentMap = isEnviromentMap_;
+	//ディゾルブ
+	materialData_->isDissolve = isDissolve_;
+
 	//書き込み終了
-	bufferResource_->Unmap(0, nullptr);
+	resource_->Unmap(0, nullptr);
 }

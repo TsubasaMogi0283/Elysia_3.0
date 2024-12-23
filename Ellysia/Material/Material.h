@@ -23,13 +23,16 @@ struct MaterialData {
 	Vector4 color;
 	//ライティングの種類
 	int32_t lightingKinds;
-	float padding[3];
+	float padding[6];
 	//UVトランスフォーム
 	Matrix4x4 uvTransform;
 	//輝度
 	float shininess;
 	//環境マッピングするかどうか
 	bool isEnviromentMap;
+	//ディゾルブするかどうか
+	bool isDissolve;
+
 };
 
 /// <summary>
@@ -59,9 +62,11 @@ public:
 	float shininess_=100.0f;
 	//環境マップ
 	bool isEnviromentMap_ = false;
+	//ディゾルブ
+	bool isDissolve_ = false;
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> bufferResource_ = nullptr;
+	ComPtr<ID3D12Resource> resource_ = nullptr;
 	//書き込みのデータ
 	MaterialData* materialData_ = nullptr;
 

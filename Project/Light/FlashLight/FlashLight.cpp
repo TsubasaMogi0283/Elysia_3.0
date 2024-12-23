@@ -40,7 +40,7 @@ void FlashLight::Initialize(){
 
 
 	//デバッグ用のモデルを生成する
-	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
+	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
 
 
 	const float SCALE = 0.4f;

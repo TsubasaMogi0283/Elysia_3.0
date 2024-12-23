@@ -81,7 +81,7 @@ void GameScene::Initialize() {
 	#pragma region 地面
 
 	//地面モデルの読み込み
-	uint32_t groundModelHandle = modelManager_->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
+	uint32_t groundModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Ground", "Ground.obj");
 	//生成
 	ground_ = std::make_unique<Ground>();
 	//初期化
@@ -95,7 +95,7 @@ void GameScene::Initialize() {
 	#pragma region ゲート
 
 	//ゲートのモデルの読み込み
-	uint32_t gateModelhandle = modelManager_->LoadModelFile("Resources/Sample/Gate","Gate.obj");
+	uint32_t gateModelhandle = modelManager_->LoadModelFile("Resources/Model/Sample/Gate","Gate.obj");
 	//生成
 	gate_ = std::make_unique<Gate>();
 	//初期化
@@ -168,7 +168,7 @@ void GameScene::Initialize() {
 	uint32_t strongEnemyModelHandle= modelManager_->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
 
 #ifdef _DEBUG
-	enemyModelHandle = modelManager_->LoadModelFile("Resources/Sample/Cube", "Cube.obj");
+	enemyModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube", "Cube.obj");
 #endif // _DEBUG
 
 	//敵管理システム

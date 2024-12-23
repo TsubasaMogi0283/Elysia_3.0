@@ -126,7 +126,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 
 
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.resource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
@@ -210,7 +210,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 
 
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.resource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
@@ -292,7 +292,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 
 
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.resource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった

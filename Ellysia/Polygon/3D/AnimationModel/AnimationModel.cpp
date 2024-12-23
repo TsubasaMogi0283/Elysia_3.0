@@ -20,9 +20,6 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 	//新たなModel型のインスタンスのメモリを確保
 	AnimationModel* model = new AnimationModel();
 
-	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
-	PipelineManager::GetInstance()->SetModelBlendMode(1);
-	PipelineManager::GetInstance()->GenerateAnimationModelPSO();
 
 	//テクスチャの読み込み
 	model->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
@@ -124,7 +121,7 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 
 
 	//Material
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.resource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
@@ -220,7 +217,7 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 
 
 	//Material
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.resource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
@@ -324,7 +321,7 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 
 
 	//Material
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.resource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった

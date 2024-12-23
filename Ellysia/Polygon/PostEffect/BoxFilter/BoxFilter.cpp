@@ -9,9 +9,7 @@
 
 void BoxFilter::Initialize(){
 
-	//エフェクトごとにhlsl分けたい
-	//いずれやる
-	PipelineManager::GetInstance()->GenarateBoxFilterPSO();
+	
 	
 	//Effect
 	boxFilterTypeResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(BoxFilterType));

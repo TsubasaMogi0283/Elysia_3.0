@@ -13,9 +13,9 @@
 
 
 LevelEditorSample::LevelEditorSample(){
-	//レベルエディタ
+	//レベルエディタクラスの取得
 	levelEditor_ = LevelDataManager::GetInstance();
-	//インプット
+	//入力っクラスの取得
 	input_ = Input::GetInstance();
 }
 

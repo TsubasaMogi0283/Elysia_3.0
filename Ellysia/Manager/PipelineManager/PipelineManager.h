@@ -82,6 +82,15 @@ public:
 	/// <returns></returns>
 	PipelineManager& operator=(const PipelineManager& pipelineManager) = delete;
 
+
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize();
+
+
+
 #pragma region アクセッサ
 
 	//コマンドに積むためのGetter(Line)
@@ -250,10 +259,15 @@ private:
 	/// PSOの情報
 	/// </summary>
 	struct PSOInformation {
+		//シグネチャーブロブ
 		ComPtr<ID3DBlob> signatureBlob_ = nullptr;
+		//ルートシグネチャー
 		ComPtr<ID3D12RootSignature> rootSignature_ = nullptr;
+		//ピクセル
 		ComPtr<IDxcBlob> pixelShaderBlob_ = nullptr;
+		//頂点
 		ComPtr<IDxcBlob> vertexShaderBlob_ = nullptr;
+		//パイプラインステイト
 		ComPtr<ID3D12PipelineState> graphicsPipelineState_ = nullptr;
 
 	};
@@ -268,11 +282,9 @@ private:
 	/// <param name="rasterizerDesc"></param>
 	static void GenaratePSO(PSOInformation& psoInformation, D3D12_INPUT_LAYOUT_DESC& inputLayoutDesc, D3D12_BLEND_DESC& blendDesc, D3D12_RASTERIZER_DESC& rasterizerDesc);
 
+
+
 public:
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize();
 
 	/// <summary>
 	/// ライン用のPSOを生成

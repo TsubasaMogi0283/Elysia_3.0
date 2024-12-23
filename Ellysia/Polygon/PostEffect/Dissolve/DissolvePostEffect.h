@@ -1,8 +1,8 @@
 #pragma once
 
 /**
- * @file Dissolve.h
- * @brief ディゾルブのクラス
+ * @file DissolvePostEffect.h
+ * @brief ディゾルブ(ポストエフェクト)のクラス
  * @author 茂木翼
  */
 
@@ -11,17 +11,17 @@
 #include "Vector4.h"
 #include "Vector3.h"
 #include "VertexData.h"
-
+#include "Dissolve.h"
 
 /// <summary>
 /// ディゾルブ
 /// </summary>
-class Dissolve {
+class DissolvePostEffect {
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Dissolve()=default;
+	DissolvePostEffect()=default;
 
 	/// <summary>
 	/// 初期化
@@ -42,7 +42,7 @@ public:
 	/// <summary>
 	/// デストラク
 	/// </summary>
-	~Dissolve()=default;
+	~DissolvePostEffect()=default;
 
 public:
 	/// <summary>
@@ -80,20 +80,7 @@ public:
 
 private:
 
-	/// <summary>
-	/// データ
-	/// </summary>
-	struct DissolveData {
-		//Edgeを使うかどうか
-		bool isUseEdge;
-		//Edgeの色
-		Vector3 edgeColor;
-		//Edgeの厚さ
-		float edgeThinkness;
-		//閾値
-		float threshold;
-
-	};
+	
 	//リソース
 	ComPtr<ID3D12Resource> dissolveResource_ = nullptr;
 	//値

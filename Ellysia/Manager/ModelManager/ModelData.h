@@ -6,9 +6,10 @@
  */
 
 #include <vector>
-#include <VertexData.h>
-#include <Node.h>
 #include <map>
+
+#include "VertexData.h"
+#include "Node.h"
 #include "JoinWeightData.h"
 
 /// <summary>

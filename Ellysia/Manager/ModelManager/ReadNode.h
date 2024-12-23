@@ -1,6 +1,5 @@
 #pragma once
 
-#pragma once
 /**
  * @file ReadNode.h
  * @brief ノードの読み込みクラス
@@ -11,8 +10,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <Node.h>
-
+#include "Node.h"
 
 /// <summary>
 /// ノードの読み込み

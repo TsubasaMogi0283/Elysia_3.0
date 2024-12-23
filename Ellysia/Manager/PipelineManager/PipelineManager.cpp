@@ -1,6 +1,6 @@
 #include "PipelineManager.h"
 
-
+#include <array>
 #include <vector>
 
 PipelineManager* PipelineManager::GetInstance() {
@@ -62,28 +62,64 @@ void PipelineManager::Initialize(){
 	//ブレンドモード
 	const uint32_t BLEND_MODE = BlemdMode::BlendModeNormal;
 
-	//モデル
-	SetModelBlendMode(BLEND_MODE);
-	GenerateModelPSO();
+	//ライン
+	//GenaratedLinePSO();
 
+	
 	//スプライト
 	SetSpriteBlendMode(BLEND_MODE);
 	GenerateSpritePSO();
 	
+	//モデル
+	SetModelBlendMode(BLEND_MODE);
+	GenerateModelPSO();
+
+
 	//スカイボックス
 	GenarateSkyBoxPSO();
+
+	//アニメーションモデル
+	GenerateAnimationModelPSO();
 
 	//パーティクル
 	GenerateParticle3DPSO();
 	
+
 	//ポストエフェクト(基本機能)
-	GenarateFullScreenPSO();
+	PipelineManager::GenarateFullScreenPSO();
+
+	//グレースケール
+	GenarateGrayScalePSO();
+
+	//セピア
+	GenarateSepiaScalePSO();
+
+
+	//ボックスフィルター
+	GenarateBoxFilterPSO();
+
+	//ガウシアンフィルター
+	GenarateGaussianFilterPSO();
+
+	//輝度のアウトライン
+	GenarateLuminanceBasedOutlinePSO();
+
+	//デプスを使ったアウトライン
+	GenarateDepthBasedOutlinePSO();
+
+	//ラジアルブラー
+	GenerateRadialBlurPSO();
 
 	//ディゾルブ
 	GenarateDissolvePSO();
 
 	//ビネット
 	GenarateVignettePSO();
+
+	//ランダム
+	GenarateRandomEffectPSO();
+
+
 
 }
 
@@ -709,7 +745,7 @@ void PipelineManager::GenerateModelPSO() {
 	//Offsetを自動計算
 	enviromentDescriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-
+	//環境マッピング
 	//DescriptorTableを使う
 	rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	//PixelShaderを使う
@@ -720,6 +756,28 @@ void PipelineManager::GenerateModelPSO() {
 	rootParameters[8].DescriptorTable.NumDescriptorRanges = _countof(enviromentDescriptorRange);
 
 
+
+
+	////MaskTexture
+	//D3D12_DESCRIPTOR_RANGE maskTextureDescriptorRange[1] = {};
+	//maskTextureDescriptorRange[0].BaseShaderRegister = 2;
+	//maskTextureDescriptorRange[0].NumDescriptors = 1;
+	//maskTextureDescriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	//maskTextureDescriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	//rootParameters[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	//rootParameters[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//rootParameters[9].DescriptorTable.pDescriptorRanges = maskTextureDescriptorRange;
+	//rootParameters[9].DescriptorTable.NumDescriptorRanges = _countof(maskTextureDescriptorRange);
+
+
+	////ディゾルブ
+	//// CBVを使う
+	//rootParameters[10].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	////PixelShaderで使う
+	//rootParameters[10].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	////レジスタ番号1を使う
+	//rootParameters[10].Descriptor.ShaderRegister = 5;
 
 	//ルートパラメータ配列へのポイント
 	descriptionRootSignature_.pParameters = rootParameters;
@@ -1307,8 +1365,6 @@ void PipelineManager::GenerateAnimationModelPSO() {
 
 }
 
-
-//3Dパーティクル用
 void PipelineManager::GenerateParticle3DPSO() {
 
 	//PSO
@@ -3162,10 +3218,6 @@ void PipelineManager::GenarateDissolvePSO() {
 	D3D12_ROOT_PARAMETER rootParameters[3] = {};
 
 
-
-	//応急処置でTextureを無理矢理2番目になるようにする
-	//そろわなくなってしまう
-	//いつか直す
 
 	//Texture
 	D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};

@@ -71,7 +71,13 @@ struct PointLight;
 /// </summary>
 struct SpotLight;
 
+/// <summary>
+/// ディゾルブ
+/// </summary>
+struct Dissolve;
+
 #pragma endregion
+
 
 /// <summary>
 /// モデル
@@ -94,7 +100,7 @@ public:
 	#pragma region 描画
 
 	/// <summary>
-	/// 描画
+	/// 描画(平行光源)
 	/// </summary>
 	/// <param name="worldTransform">ワールドトランスフォーム</param>
 	/// <param name="camera">カメラ</param>
@@ -102,7 +108,7 @@ public:
 	void Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const DirectionalLight& directionalLight);
 
 	/// <summary>
-	/// 描画
+	/// 描画(点光源)
 	/// </summary>
 	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
@@ -110,12 +116,24 @@ public:
 	void Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const PointLight& pointLight);
 
 	/// <summary>
-	/// 描画
+	/// 描画(スポットライト)
 	/// </summary>
 	/// <param name="worldTransform"></param>
 	/// <param name="camera"></param>
 	/// <param name="spotLight"></param>
 	void Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const SpotLight& spotLight);
+
+
+
+	/// <summary>
+	/// 描画(平行光源&ディゾルブ)
+	/// </summary>
+	/// <param name="worldTransform"></param>
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="directionalLight"></param>
+	void Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const DirectionalLight& directionalLight,const Dissolve& dissolve);
+
 
 #pragma endregion
 
@@ -178,6 +196,7 @@ private:
 	//環境マップ
 	uint32_t eviromentTextureHandle_ = 0;
 
+	
 	//モデルハンドル
 	ModelData modelData_ = {};
 

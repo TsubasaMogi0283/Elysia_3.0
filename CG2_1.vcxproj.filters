@@ -373,6 +373,15 @@
     <Filter Include="Ellysia\Header File\Polygone\3D\InstancingModel">
       <UniqueIdentifier>{30e383de-74ed-4107-a05e-3a65171fd88c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\Material">
+      <UniqueIdentifier>{4731fa12-43c5-4ec0-a3d8-4ede8dc0cedd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Material">
+      <UniqueIdentifier>{efc8e2b6-6939-408f-b96b-45dd4d8fa7df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Polygone\3D\InstancingModel">
+      <UniqueIdentifier>{ccfbd469-66e7-47eb-850a-4b9699c22c13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -453,7 +462,7 @@
     <ClCompile Include="Ellysia\Polygon\PostEffect\BackTest\BackText.cpp">
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\PostEffect\Dissolve\Dissolve.cpp">
+    <ClCompile Include="Ellysia\Polygon\PostEffect\Dissolve\DissolvePostEffect.cpp">
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\PostEffect\LuminanceBasedOutline\LuminanceBasedOutline.cpp">
@@ -549,9 +558,6 @@
     <ClCompile Include="Project\AllGameScene\TitleScene\TitleScene.cpp">
       <Filter>Project\GameScene\Title</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Math\Vector\Material.cpp">
-      <Filter>Ellysia\Source File\Polygone\3D</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Stage\DemoObject\DemoObject.cpp">
       <Filter>Project\ObjectManager\StageObject\DemoObject</Filter>
     </ClCompile>
@@ -636,7 +642,13 @@
     <ClCompile Include="Project\Player\AudioTestPlayer.cpp">
       <Filter>Project\Player\Test</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\Material\Material.cpp">
+      <Filter>Ellysia\Source File\Material</Filter>
+    </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.cpp">
+      <Filter>Ellysia\Source File\Polygone\3D\InstancingModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Material\Dissolve\Dissolve.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -880,7 +892,7 @@
     <ClInclude Include="Ellysia\Polygon\PostEffect\RandomEffect\RandomEffect.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\PostEffect\Dissolve\Dissolve.h">
+    <ClInclude Include="Ellysia\Polygon\PostEffect\Dissolve\DissolvePostEffect.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\PostEffect\LuminanceBasedOutline\LuminanceBasedOutline.h">
@@ -1099,9 +1111,6 @@
     <ClInclude Include="Project\Player\AudioTestPlayer.h">
       <Filter>Project\Player\Test</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\Vector\Material.h">
-      <Filter>Ellysia\Header File\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Math\Vector\VertexData.h">
       <Filter>Ellysia\Header File\Math</Filter>
     </ClInclude>
@@ -1110,6 +1119,12 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.h">
       <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Material\Material.h">
+      <Filter>Ellysia\Header File\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Material\Dissolve\Dissolve.h">
+      <Filter>Ellysia\Header File\Material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

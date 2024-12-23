@@ -8,8 +8,6 @@
 
 void RandomEffect::Initialize() {
 
-	PipelineManager::GetInstance()->GenarateRandomEffectPSO();
-
 
 
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };

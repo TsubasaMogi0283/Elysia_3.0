@@ -1,12 +1,12 @@
-#include "Dissolve.h"
+#include "DissolvePostEffect.h"
 #include "imgui.h"
 
-#include <PipelineManager.h>
+#include "PipelineManager.h"
 #include "TextureManager.h"
 #include "SrvManager.h"
 #include "RtvManager.h"
 
-void Dissolve::Initialize(const uint32_t& maskTexture){
+void DissolvePostEffect::Initialize(const uint32_t& maskTexture){
 	
 
 
@@ -38,7 +38,7 @@ void Dissolve::Initialize(const uint32_t& maskTexture){
 
 }
 
-void Dissolve::PreDraw(){
+void DissolvePostEffect::PreDraw(){
 	
 	const float CLEAR_COLOR[] = { renderTargetClearColor.x,renderTargetClearColor.y,renderTargetClearColor.z,renderTargetClearColor.w };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
@@ -64,7 +64,7 @@ void Dissolve::PreDraw(){
 
 }
 
-void Dissolve::Draw(){
+void DissolvePostEffect::Draw(){
 
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(

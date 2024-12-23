@@ -491,7 +491,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material){
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.resource_->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1, instancingIndex_);
@@ -544,7 +544,7 @@ void Particle3D::Draw(const Camera& camera,const  Material& material,const Direc
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.resource_->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1, instancingIndex_);
@@ -596,7 +596,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Poin
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.resource_->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1, instancingIndex_);
@@ -649,7 +649,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Spot
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.resource_->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1, instancingIndex_);
