@@ -20,10 +20,6 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 	//新たなModel型のインスタンスのメモリを確保
 	AnimationModel* model = new AnimationModel();
 
-	//いずれSetModeBlendをなくしてGenerateModelPSOの所で指定できるようにしたい
-	PipelineManager::GetInstance()->SetModelBlendMode(1);
-	PipelineManager::GetInstance()->GenerateAnimationModelPSO();
-
 	//テクスチャの読み込み
 	model->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
 	//Drawでも使いたいので取り入れる

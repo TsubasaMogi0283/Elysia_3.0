@@ -274,6 +274,10 @@ public:
 	/// </summary>
 	void Initialize();
 
+
+
+private:
+
 	/// <summary>
 	/// ライン用のPSOを生成
 	/// </summary>
