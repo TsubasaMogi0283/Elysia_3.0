@@ -17,10 +17,10 @@ void Camera::Initialize() {
 	translate_ = {.x= 0.0f,.y= 0.0f,.z= -9.8f };
 
 
-	//アフィン行列を計算
-	affineMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
+	//ワールド行列を計算
+	worldMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
 	//逆行列を計算
-	viewMatrix_ = Matrix4x4Calculation::Inverse(affineMatrix_);
+	viewMatrix_ = Matrix4x4Calculation::Inverse(worldMatrix_);
 	//射影を計算
 	projectionMatrix_ = Matrix4x4Calculation::MakePerspectiveFovMatrix(fov_, aspectRatio_, nearClip_, farClip_);
 	//正射影行列(正規化)を計算
@@ -33,11 +33,11 @@ void Camera::Initialize() {
 
 void Camera::Update() {
 
-	//アフィン行列を計算
-	affineMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
+	//ワールド行列を計算
+	worldMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
 
 	//逆行列を計算
-	viewMatrix_ = Matrix4x4Calculation::Inverse(affineMatrix_);
+	viewMatrix_ = Matrix4x4Calculation::Inverse(worldMatrix_);
 	//射影を計算
 	projectionMatrix_ = Matrix4x4Calculation::MakePerspectiveFovMatrix(fov_, aspectRatio_, nearClip_, farClip_);
 	//正射影行列(正規化)を計算

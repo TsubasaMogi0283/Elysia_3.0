@@ -636,7 +636,7 @@
     <ClCompile Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Math\Vector\Material.cpp">
+    <ClCompile Include="Ellysia\Material\Material.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1109,7 +1109,7 @@
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Material\Material.h">
-      <Filter>Ellysia</Filter>
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -222,7 +222,7 @@ void Particle3DManager::Update(Camera& camera) {
 				Matrix4x4 backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 				//カメラの回転を適用する
-				Matrix4x4 billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.affineMatrix_);
+				Matrix4x4 billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix_);
 				//平行成分はいらないよ
 				billBoardMatrix.m[3][0] = 0.0f;
 				billBoardMatrix.m[3][1] = 0.0f;

@@ -98,9 +98,9 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 #pragma region PixelShaderに送る方のカメラ
 	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
 	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.affineMatrix_.m[3][0];
-	cameraWorldPosition.y = camera.affineMatrix_.m[3][1];
-	cameraWorldPosition.z = camera.affineMatrix_.m[3][2];
+	cameraWorldPosition.x = camera.worldMatrix_.m[3][0];
+	cameraWorldPosition.y = camera.worldMatrix_.m[3][1];
+	cameraWorldPosition.z = camera.worldMatrix_.m[3][2];
 
 	cameraForGPU_->worldPosition = cameraWorldPosition;
 	cameraResource_->Unmap(0, nullptr);
@@ -181,12 +181,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 
 #pragma region PixelShaderに送る方のカメラ
 	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
-	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.affineMatrix_.m[3][0];
-	cameraWorldPosition.y = camera.affineMatrix_.m[3][1];
-	cameraWorldPosition.z = camera.affineMatrix_.m[3][2];
-
-	cameraForGPU_->worldPosition = cameraWorldPosition;
+	cameraForGPU_->worldPosition = camera.GetWorldPosition();
 	cameraResource_->Unmap(0, nullptr);
 #pragma endregion
 
@@ -263,12 +258,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 
 #pragma region PixelShaderに送る方のカメラ
 	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
-	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.affineMatrix_.m[3][0];
-	cameraWorldPosition.y = camera.affineMatrix_.m[3][1];
-	cameraWorldPosition.z = camera.affineMatrix_.m[3][2];
-
-	cameraForGPU_->worldPosition = cameraWorldPosition;
+	cameraForGPU_->worldPosition = camera.GetWorldPosition();
 	cameraResource_->Unmap(0, nullptr);
 #pragma endregion
 

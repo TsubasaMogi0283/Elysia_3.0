@@ -84,26 +84,21 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
+	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
 	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-	vertexResource_->Unmap(0, nullptr);
+	vertexResource_->Unmap(0u, nullptr);
 
 #pragma endregion
 
-	uint32_t* mappedIndex = nullptr;
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
-	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-	indexResource_->Unmap(0, nullptr);
+	uint32_t* index = nullptr;
+	indexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&index));
+	std::memcpy(index, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+	indexResource_->Unmap(0u, nullptr);
 
 #pragma region PixelShaderに送る方のカメラ
-	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
-	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.affineMatrix_.m[3][0];
-	cameraWorldPosition.y = camera.affineMatrix_.m[3][1];
-	cameraWorldPosition.z = camera.affineMatrix_.m[3][2];
-
-	cameraForGPU_->worldPosition = cameraWorldPosition;
-	cameraResource_->Unmap(0, nullptr);
+	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+	cameraForGPU_->worldPosition = camera.GetWorldPosition();
+	cameraResource_->Unmap(0u, nullptr);
 #pragma endregion
 
 
@@ -116,7 +111,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 	directXSetup_->GetCommandList()->SetPipelineState(pipelineManager_->GetModelGraphicsPipelineState().Get());
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
 	//IBVを設定
 	directXSetup_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 
@@ -126,35 +121,35 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.bufferResource->GetGPUVirtualAddress());
 
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
-	if (textureHandle_ != 0) {
-		textureManager_->GraphicsCommand(2,textureHandle_);
+	if (textureHandle_ != 0u) {
+		textureManager_->GraphicsCommand(2u,textureHandle_);
 	}
 
 	//DirectionalLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLight.bufferResource_->GetGPUVirtualAddress());
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource_->GetGPUVirtualAddress());
 
 	//PixelShaderに送る方のカメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 
-	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0) {
-		srvManager_->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
+	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
+		srvManager_->SetGraphicsRootDescriptorTable(8u, eviromentTextureHandle_);
 	}
 
 
 	//DrawCall
-	directXSetup_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+	directXSetup_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1u, 0u, 0u, 0u);
 
 }
 
@@ -167,27 +162,22 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
+	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
 	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-	vertexResource_->Unmap(0, nullptr);
+	vertexResource_->Unmap(0u, nullptr);
 
 #pragma endregion
 
-	uint32_t* mappedIndex = nullptr;
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
-	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-	indexResource_->Unmap(0, nullptr);
+	uint32_t* index = nullptr;
+	indexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&index));
+	std::memcpy(index, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+	indexResource_->Unmap(0u, nullptr);
 
 
 #pragma region PixelShaderに送る方のカメラ
-	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
-	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.affineMatrix_.m[3][0];
-	cameraWorldPosition.y = camera.affineMatrix_.m[3][1];
-	cameraWorldPosition.z = camera.affineMatrix_.m[3][2];
-
-	cameraForGPU_->worldPosition = cameraWorldPosition;
-	cameraResource_->Unmap(0, nullptr);
+	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+	cameraForGPU_->worldPosition = camera.GetWorldPosition();
+	cameraResource_->Unmap(0u, nullptr);
 #pragma endregion
 
 
@@ -210,33 +200,33 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.bufferResource->GetGPUVirtualAddress());
 
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
-	if (textureHandle_ != 0) {
-		textureManager_->GraphicsCommand(2, textureHandle_);
+	if (textureHandle_ != 0u) {
+		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource_->GetGPUVirtualAddress());
 
 	//PixelShaderに送る方のカメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//PointLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6, pointLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6u, pointLight.bufferResource_->GetGPUVirtualAddress());
 	
-	if (material.isEnviromentMap_ == true&&eviromentTextureHandle_ != 0) {
-		srvManager_->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
+	if (material.isEnviromentMap_ == true&&eviromentTextureHandle_ != 0u) {
+		srvManager_->SetGraphicsRootDescriptorTable(8u, eviromentTextureHandle_);
 	}
 
 	//DrawCall
-	directXSetup_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+	directXSetup_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1u, 0u, 0u, 0u);
 
 }
 
@@ -249,27 +239,22 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
+	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
 	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-	vertexResource_->Unmap(0, nullptr);
+	vertexResource_->Unmap(0u, nullptr);
 
 #pragma endregion
 
-	uint32_t* mappedIndex = nullptr;
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
-	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-	indexResource_->Unmap(0, nullptr);
+	uint32_t* index = nullptr;
+	indexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&index));
+	std::memcpy(index, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+	indexResource_->Unmap(0u, nullptr);
 
 
 #pragma region PixelShaderに送る方のカメラ
-	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
-	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.affineMatrix_.m[3][0];
-	cameraWorldPosition.y = camera.affineMatrix_.m[3][1];
-	cameraWorldPosition.z = camera.affineMatrix_.m[3][2];
-
-	cameraForGPU_->worldPosition = cameraWorldPosition;
-	cameraResource_->Unmap(0, nullptr);
+	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+	cameraForGPU_->worldPosition = camera.GetWorldPosition();
+	cameraResource_->Unmap(0u, nullptr);
 #pragma endregion
 
 
@@ -282,7 +267,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 	directXSetup_->GetCommandList()->SetPipelineState(pipelineManager_->GetModelGraphicsPipelineState().Get());
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
 	//IBVを設定
 	directXSetup_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 
@@ -292,35 +277,35 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.bufferResource->GetGPUVirtualAddress());
 
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
-	if (textureHandle_ != 0) {
-		textureManager_->GraphicsCommand(2, textureHandle_);
+	if (textureHandle_ != 0u) {
+		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource_->GetGPUVirtualAddress());
 
 	//PixelShaderに送る方のカメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 
 	//SpotLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.bufferResource_->GetGPUVirtualAddress());
 
 	//環境マッピングの設定
-	if (material.isEnviromentMap_ ==true&&eviromentTextureHandle_ != 0) {
-		srvManager_->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
+	if (material.isEnviromentMap_ ==true&&eviromentTextureHandle_ != 0u) {
+		srvManager_->SetGraphicsRootDescriptorTable(8u, eviromentTextureHandle_);
 	}
 
 
 	//DrawCall
-	directXSetup_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+	directXSetup_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1u, 0u, 0u, 0u);
 
 }

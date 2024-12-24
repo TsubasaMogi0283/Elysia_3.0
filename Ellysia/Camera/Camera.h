@@ -50,9 +50,9 @@ public:
 	/// <returns></returns>
 	Vector3 GetWorldPosition() const{
 		Vector3 worldPosition = {
-			.x = affineMatrix_.m[3][0],
-			.y = affineMatrix_.m[3][1],
-			.z = affineMatrix_.m[3][2],
+			.x = worldMatrix_.m[3][0],
+			.y = worldMatrix_.m[3][1],
+			.z = worldMatrix_.m[3][2],
 		};
 		return worldPosition;
 	}
@@ -86,8 +86,8 @@ public:
 	Vector3 translate_ = {};
 
 
-	//アフィン行列
-	Matrix4x4 affineMatrix_ = {};
+	//ワールド列
+	Matrix4x4 worldMatrix_ = {};
 	//ビュー行列
 	Matrix4x4 viewMatrix_ = {};
 	//射影行列

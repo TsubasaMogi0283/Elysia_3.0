@@ -280,7 +280,7 @@ void Particle3D::Update(const Camera& camera) {
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
-			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.affineMatrix_);
+			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix_);
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
@@ -339,7 +339,7 @@ void Particle3D::Update(const Camera& camera) {
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
-			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.affineMatrix_);
+			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix_);
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
@@ -391,7 +391,7 @@ void Particle3D::Update(const Camera& camera) {
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
-			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.affineMatrix_);
+			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix_);
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;

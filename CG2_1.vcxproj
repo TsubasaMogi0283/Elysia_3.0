@@ -160,13 +160,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Manager\RtvManager\RtvManager.cpp" />
     <ClCompile Include="Ellysia\Manager\SrvManager\SrvManager.cpp" />
     <ClCompile Include="Ellysia\Manager\TextureManager\TextureManager.cpp" />
+    <ClCompile Include="Ellysia\Material\Material.cpp" />
     <ClCompile Include="Ellysia\Math\BPMCalculation\BPMSetting.cpp" />
     <ClCompile Include="Ellysia\Math\Collision\CollisionCalculation.cpp" />
     <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp" />
     <ClCompile Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.cpp" />
     <ClCompile Include="Ellysia\Math\Single\SingleCalculation.cpp" />
     <ClCompile Include="Ellysia\Math\Vector\Calculation\VectorCalculation.cpp" />
-    <ClCompile Include="Ellysia\Math\Vector\Material.cpp" />
     <ClCompile Include="Ellysia\Math\WorldTransform\WorldTransform.cpp" />
     <ClCompile Include="Ellysia\Polygon\2D\Sprite\Sprite.cpp" />
     <ClCompile Include="Ellysia\Polygon\2D\Triangle\Triangle.cpp" />
