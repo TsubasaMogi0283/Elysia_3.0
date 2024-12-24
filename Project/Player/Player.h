@@ -185,7 +185,7 @@ public:
 	/// 動きの状態を設定
 	/// </summary>
 	/// <param name="condition"></param>
-	inline void SetPlayerMoveCondition(const uint32_t& condition) {
+	inline void SetMoveCondition(const uint32_t& condition) {
 		this->moveCondition_ = condition;
 	}
 

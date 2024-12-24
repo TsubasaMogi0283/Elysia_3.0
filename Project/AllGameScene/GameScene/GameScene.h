@@ -38,6 +38,7 @@
 #include "Stage/ObjectManager/ObjectManager.h"
 #include "Vignette.h"
 #include "BackText.h"
+#include "LevelDataManager.h"
 
 
 #pragma region 前方宣言
@@ -167,7 +168,9 @@ private:
 	TextureManager* texturemanager_ = nullptr;
 	//モデル管理クラス
 	ModelManager* modelManager_ = nullptr;
-
+	//レベルエディタ
+	LevelDataManager* levelDataManager_ = nullptr;
+	uint32_t levelHandle_ = 0u;
 
 
 private:

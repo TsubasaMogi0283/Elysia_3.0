@@ -4,7 +4,7 @@
 
 void PlayerCollisionToNormalEnemyAttack::Initialize(){
 
-	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere","Sphere.obj");
+	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere","Sphere.obj");
 	model_.reset(Model::Create(modelHandle));
 
 
