@@ -974,6 +974,14 @@ void GameScene::Update(GameManager* gameManager) {
 		//レベルエディタの更新
 		levelDataManager_->Update(levelHandle_);
 
+#ifdef _DEBUG
+		if (input_->IsTriggerKey(DIK_R) == true) {
+			levelDataManager_->Reload(levelHandle_);
+		}
+#endif // _DEBUG
+
+
+
 		//当たり判定チェック
 		collisionManager_->CheckAllCollision();
 
@@ -1180,7 +1188,7 @@ void GameScene::DrawObject3D() {
 	//プレイヤー
 	player_->Draw(camera_, spotLight);
 	//ステージオブジェクト
-	objectManager_->Draw(camera_, spotLight);
+	//objectManager_->Draw(camera_, spotLight);
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
 
