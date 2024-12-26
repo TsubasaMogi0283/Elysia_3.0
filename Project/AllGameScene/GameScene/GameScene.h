@@ -257,8 +257,7 @@ private:
 
 #pragma region レベルエディタに引っ越します
 
-	//地面
-	std::unique_ptr<Ground> ground_ = nullptr;
+
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
 	bool isEscape_ = false;

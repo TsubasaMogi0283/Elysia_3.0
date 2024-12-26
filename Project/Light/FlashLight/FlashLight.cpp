@@ -40,20 +40,20 @@ void FlashLight::Initialize(){
 
 
 	//デバッグ用のモデルを生成する
-	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
 
 
 	const float SCALE = 0.4f;
 	//左右
 	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
-		model_[i].reset(Model::Create(modelHandle));
+		model_[i].reset(Model::Create(debugModelHandle));
 		worldTransform_[i].Initialize();
 		worldTransform_[i].scale = { .x = SCALE,.y = SCALE ,.z = SCALE };
 
 	}
 
 	//中心
-	lightCenterModel_.reset(Model::Create(modelHandle));
+	lightCenterModel_.reset(Model::Create(debugModelHandle));
 	lightCenterWorldTransform_.Initialize();
 	lightCenterWorldTransform_.scale = { .x = SCALE,.y = SCALE ,.z = SCALE };
 	lightCenterMaterial_.Initialize();
@@ -143,8 +143,6 @@ void FlashLight::Update() {
 	flashLightCollision_->SetFan3D(fan3D_);
 
 #ifdef _DEBUG
-
-
 	ImGui::Begin("Light");
 	ImGui::SliderFloat("Degree", &lightSideTheta,0.0f,90.0f);
 	ImGui::InputFloat3("Position", &spotLight_.position_.x);

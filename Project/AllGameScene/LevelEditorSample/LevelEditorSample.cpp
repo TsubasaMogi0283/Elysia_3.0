@@ -153,8 +153,8 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	//座標が取れなかったのでこっちでやる
 	//ObjectManagerでやっていたものをこっちに引っ越す
 	//上手くいったらGameSceneで実装する
-	std::vector<Vector3> positions = levelEditor_->GetStageObjectPosition(levelHandle_);
-	std::vector<AABB> aabbs = levelEditor_->GetStageObjectAABB(levelHandle_);
+	std::vector<Vector3> positions = levelEditor_->GetStageObjectPositions(levelHandle_);
+	std::vector<AABB> aabbs = levelEditor_->GetStageObjectAABBs(levelHandle_);
 	for (size_t i = 0; i < positions.size() && i < aabbs.size(); ++i) {
 
 
