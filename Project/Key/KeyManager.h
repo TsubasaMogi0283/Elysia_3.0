@@ -146,7 +146,7 @@ private:
 	static const uint32_t NUMBER_QUANTITY_ = 10;
 
 	//鍵の音が聞こえる最大距離
-	const float MAX_DISTANCE_ = 10.0f;
+	const float MAX_DISTANCE_ = 30.0f;
 
 private:
 	//鍵のリスト
