@@ -141,6 +141,7 @@ void TitleScene::Update(GameManager* gameManager){
 	//脱出
 	if (isStart_ == true) {
 		gameManager->ChangeScene(new GameScene());
+		return;
 	}
 
 	//カメラの更新
