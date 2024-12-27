@@ -84,6 +84,7 @@ public:
 
 #pragma region アクセッサ
 
+	//コマンドに積むためのGetter(Line)
 	ComPtr<ID3D12RootSignature> GetLineRootSignature() {
 		return linePSO_.rootSignature_;
 	}
@@ -272,6 +273,10 @@ public:
 	/// 初期化
 	/// </summary>
 	void Initialize();
+
+
+
+private:
 
 	/// <summary>
 	/// ライン用のPSOを生成

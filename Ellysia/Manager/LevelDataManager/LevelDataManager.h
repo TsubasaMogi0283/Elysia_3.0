@@ -160,7 +160,7 @@ public:
 	void Release();
 
 
-
+public:
 
 	/// <summary>
 	/// データにある分だけColliderを取得する
@@ -195,7 +195,7 @@ public:
 	/// </summary>
 	/// <param name="handle"></param>
 	/// <returns></returns>
-	inline std::vector<Vector3> GetStageObjectPosition(const uint32_t& handle) {
+	inline std::vector<Vector3> GetStageObjectPositions(const uint32_t& handle) {
 		std::vector<Vector3> positions = {};
 
 		for (const auto& [key, levelData] : levelDatas_) {
@@ -226,7 +226,7 @@ public:
 	/// </summary>
 	/// <param name="handle"></param>
 	/// <returns></returns>
-	inline std::vector<AABB> GetStageObjectAABB(const uint32_t& handle) {
+	inline std::vector<AABB> GetStageObjectAABBs(const uint32_t& handle) {
 		std::vector<AABB> aabbs = {};
 
 		for (const auto& [key, levelData] : levelDatas_) {
@@ -250,6 +250,34 @@ public:
 		}
 
 		return aabbs;
+	}
+
+	/// <summary>
+	/// コライダーを持っているかどうかの取得
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
+	inline std::vector<bool> GetIsHavingColliders(const uint32_t& handle) {
+		std::vector<bool> colliders = {};
+
+		for (const auto& [key, levelData] : levelDatas_) {
+			if (levelData->handle == handle) {
+
+
+				//該当するLevelDataのobjectDatasを検索
+				for (auto& objectData : levelData->objectDatas) {
+
+					//コライダーを持っているかどうかのフラグを挿入
+					colliders.push_back(objectData.isHavingCollider);
+
+				}
+
+				//無駄なループを防ぐ
+				break;
+			}
+		}
+
+		return colliders;
 	}
 
 private:

@@ -16,6 +16,25 @@
 #include "ModelData.h"
 
 #pragma region 前方宣言
+/// <summary>
+/// テクスチャ管理クラス
+/// </summary>
+class TextureManager;
+
+/// <summary>
+/// モデル管理クラス
+/// </summary>
+class ModelManager;
+
+/// <summary>
+/// パイプライン管理クラス
+/// </summary>
+class PipelineManager;
+
+/// <summary>
+/// SRV管理クラス
+/// </summary>
+class SrvManager;
 
 /// <summary>
 /// ワールドトランスフォーム
@@ -60,15 +79,17 @@ struct SpotLight;
 class Model {
 public:
 
-	//コンストラクタ
-	Model() = default;
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	Model();
 
 	/// <summary>
 	/// 生成
 	/// </summary>
 	/// <param name="modelHandle">モデルハンドル</param>
 	/// <returns></returns>
-	static Model* Create(uint32_t modelHandle);
+	static Model* Create(const uint32_t& modelHandle);
 
 	#pragma region 描画
 
@@ -104,48 +125,52 @@ public:
 	~Model() = default;
 
 
-
-
 public:
-
-
-	//アクセッサのまとめ
-	void SetBlendMode(int32_t blendmode) {
-		blendModeNumber_ = blendmode;
-	}
-
 
 
 	/// <summary>
 	/// 環境マップテクスチャの設定
 	/// </summary>
 	/// <param name="textureHandle"></param>
-	void SetEviromentTexture(uint32_t textureHandle) {
+	void SetEviromentTexture(const uint32_t& textureHandle) {
 		this->eviromentTextureHandle_ = textureHandle;
 	}
 
 
 
+private:
+	//DirectXクラス
+	DirectXSetup* directXSetup_ = nullptr;
+
+	//テクスチャ管理クラス
+	TextureManager* textureManager_ = nullptr;
+
+	//モデル管理クラス
+	ModelManager* modelmanager_ = nullptr;
+	
+	//パイプライン管理クラス
+	PipelineManager* pipelineManager_ = nullptr;
+
+	//SRV管理クラス
+	SrvManager* srvManager_ = nullptr;
 
 private:
-	//頂点リソースを作る
-	//頂点バッファビューを作成する
+	//頂点リソース
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
-	//頂点バッファビューを作成する
+	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 
-	//インデックス
+	//インデックスリソース
 	ComPtr<ID3D12Resource> indexResource_ = nullptr;
+	//インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
 
-	//PixelShaderにカメラの座標を送る為の変数
+	//カメラリソース
 	ComPtr<ID3D12Resource> cameraResource_ = nullptr;
+	//PixelShaderにカメラの座標を送る為の変数
 	CameraForGPU* cameraForGPU_ = {};
 
-
-	//アニメーションを再生するときに使う時間
-	float animationTime_ = 0.0f;
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
@@ -155,12 +180,6 @@ private:
 
 	//モデルハンドル
 	ModelData modelData_ = {};
-
-	//デフォルトはα加算
-	int32_t blendModeNumber_ = 1;
-
-
-	bool isAnimation_ = false;
 
 
 

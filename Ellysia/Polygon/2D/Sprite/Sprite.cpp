@@ -2,8 +2,6 @@
 #include <vector>
 
 #include "TextureManager.h"
-#include "Camera.h"
-#include "ConvertLog.h"
 #include "PipelineManager.h"
 #include "Matrix4x4.h"
 #include "Matrix4x4Calculation.h"

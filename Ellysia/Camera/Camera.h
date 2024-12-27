@@ -42,7 +42,23 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+public:
 
+	/// <summary>
+	/// ワールド座標の取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetWorldPosition() const{
+		Vector3 worldPosition = {
+			.x = worldMatrix_.m[3][0],
+			.y = worldMatrix_.m[3][1],
+			.z = worldMatrix_.m[3][2],
+		};
+		return worldPosition;
+	}
+
+
+private:
 
 	/// <summary>
 	/// 転送
@@ -52,8 +68,6 @@ public:
 public:
 	//リソース
 	ComPtr<ID3D12Resource> bufferResource_;
-
-
 
 
 	//角度
@@ -67,13 +81,12 @@ public:
 
 
 	//回転
-	Vector3 rotate_ = { 0.0f,0.0f,0.0f };
+	Vector3 rotate_ = {};
 	//移動
-	Vector3 translate_ = { 0.0f,0.0f,0.0f };
+	Vector3 translate_ = {};
 
 
-
-	//アフィン行列
+	//ワールド列
 	Matrix4x4 worldMatrix_ = {};
 	//ビュー行列
 	Matrix4x4 viewMatrix_ = {};
@@ -87,6 +100,6 @@ public:
 private:
 	//スケール。
 	//本当はいらないけどアフィン行列を作るときに一緒に入れて見やすくしている。
-	Vector3 scale_ = { 1.0f,1.0f,1.0f };
+	Vector3 scale_ = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
 
 };

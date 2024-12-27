@@ -11,17 +11,30 @@
 #include "Vector4.h"
 #include "Vector3.h"
 #include "VertexData.h"
+ /// <summary>
+	 /// データ
+	 /// </summary>
+struct DissolveData {
+	//Edgeを使うかどうか
+	bool isUseEdge;
+	//Edgeの色
+	Vector3 edgeColor;
+	//Edgeの厚さ
+	float edgeThinkness;
+	//閾値
+	float threshold;
 
+};
 
 /// <summary>
 /// ディゾルブ
 /// </summary>
-class Dissolve {
+class DissolveEffect {
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Dissolve()=default;
+	DissolveEffect()=default;
 
 	/// <summary>
 	/// 初期化
@@ -42,7 +55,7 @@ public:
 	/// <summary>
 	/// デストラク
 	/// </summary>
-	~Dissolve()=default;
+	~DissolveEffect()=default;
 
 public:
 	/// <summary>
@@ -80,20 +93,7 @@ public:
 
 private:
 
-	/// <summary>
-	/// データ
-	/// </summary>
-	struct DissolveData {
-		//Edgeを使うかどうか
-		bool isUseEdge;
-		//Edgeの色
-		Vector3 edgeColor;
-		//Edgeの厚さ
-		float edgeThinkness;
-		//閾値
-		float threshold;
-
-	};
+	
 	//リソース
 	ComPtr<ID3D12Resource> dissolveResource_ = nullptr;
 	//値

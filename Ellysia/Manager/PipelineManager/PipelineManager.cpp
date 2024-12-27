@@ -70,21 +70,54 @@ void PipelineManager::Initialize(){
 	SetSpriteBlendMode(BLEND_MODE);
 	GenerateSpritePSO();
 	
-	//スカイボックス
-	GenarateSkyBoxPSO();
+	// スプライト用のPSOを生成
+	GenerateSpritePSO();
 
-	//パーティクル
+	// モデル用のPSOを生成
+	GenerateModelPSO();
+
+	// SkinningModel用のPSOを生成
+	GenerateAnimationModelPSO();
+
+	// 3Dパーティクル用のPSOを生成
 	GenerateParticle3DPSO();
-	
-	//ポストエフェクト(基本機能)
+
+	// CopyImage用のPSOを生成
 	GenarateFullScreenPSO();
 
-	//ディゾルブ
-	GenarateDissolvePSO();
+	// GrayScale用のPSOを生成
+	GenarateGrayScalePSO();
 
-	//ビネット
+	// SepiaScale用のPSOを生成
+	GenarateSepiaScalePSO();
+
+	// Vignette用のPSOを生成
 	GenarateVignettePSO();
 
+	// BoxFilter用のPSOを生成
+	GenarateBoxFilterPSO();
+
+	// GaussianFilter用のPSOを生成
+	GenarateGaussianFilterPSO();
+
+	//OutLine用のPSOを生成
+	GenarateLuminanceBasedOutlinePSO();
+
+	//DepthBasedOutline用
+	GenarateDepthBasedOutlinePSO();
+
+	//RadialBlur用のPSOを生成
+	GenerateRadialBlurPSO();
+
+	//Dissolve用のPSOを生成
+	GenarateDissolvePSO();
+
+	//RandomEffect用のPSOを生成
+	GenarateRandomEffectPSO();
+
+
+	//SkyBoxのPSOの生成
+	GenarateSkyBoxPSO();
 }
 
 //線
@@ -794,6 +827,7 @@ void PipelineManager::GenerateModelPSO() {
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
 	inputLayoutDesc.pInputElementDescs = inputElementDescs.data();
 	inputLayoutDesc.NumElements = static_cast<UINT>(inputElementDescs.size());
+
 
 
 

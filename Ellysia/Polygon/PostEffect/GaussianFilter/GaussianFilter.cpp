@@ -9,11 +9,6 @@
 
 void GaussianFilter::Initialize(){
 
-
-	//エフェクトごとにhlsl分けたい
-	//いずれやる
-	PipelineManager::GetInstance()->GenarateGaussianFilterPSO();
-	
 	//Effect
 	boxFilterTypeResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(GaussianFilterData));
 	sigma_ = 2.0f;

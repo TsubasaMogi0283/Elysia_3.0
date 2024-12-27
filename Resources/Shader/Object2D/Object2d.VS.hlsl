@@ -25,7 +25,6 @@ VertexShaderOutput main(VertexShaderInput input) {
 	//法線の変換にはWorldMatrixの平衡移動は不要。拡縮回転情報が必要
 	//左上3x3だけを取り出す
 	//法線と言えば正規化をなのでそれを忘れないようにする
-	//これを入れると何かだめになる
 	output.normal = normalize(mul(input.normal, (float3x3)gTransformationMatrix.World));
 	return output;
 }

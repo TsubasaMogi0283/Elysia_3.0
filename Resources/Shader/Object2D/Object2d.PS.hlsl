@@ -50,6 +50,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	PixelShaderOutput output;
 	
 	//Materialを拡張する
+    float4x4 test = gMaterial.uvTransform;
 	float4 transformedUV = mul(float32_t4(input.texcoord,0.0f, 1.0f), gMaterial.uvTransform);
 	float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
 	

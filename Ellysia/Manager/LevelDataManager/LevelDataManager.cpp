@@ -152,7 +152,9 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 
 			}
-
+			else {
+				objectData.isHavingCollider = false;
+			}
 
 
 			//オーディオの読み込み
@@ -360,7 +362,7 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 	//指定したファイルパスのレベルデータを持ってくる
 	LevelData& levelData = *levelDatas_[fullFilePath];
 
-	//読み込み
+	//配置
 	Place(deserialized["objects"], levelData);
 
 	//生成

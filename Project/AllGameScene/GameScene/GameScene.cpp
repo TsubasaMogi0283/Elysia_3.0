@@ -26,6 +26,9 @@ GameScene::GameScene(){
 
 	//モデル管理クラス
 	modelManager_ = ModelManager::GetInstance();
+
+	//レベルエディタ管理クラスの取得
+	levelDataManager_ = LevelDataManager::GetInstance();
 }
 
 void GameScene::Initialize() {
@@ -79,15 +82,15 @@ void GameScene::Initialize() {
 	objectManager_->Initialize();
 
 	#pragma region 地面
-
-	//地面モデルの読み込み
-	uint32_t groundModelHandle = modelManager_->LoadModelFile("Resources/Sample/Ground", "Ground.obj");
-	//生成
-	ground_ = std::make_unique<Ground>();
-	//初期化
-	ground_->Initialize(groundModelHandle);
 	//四隅の座標を取得
-	StageRect stageRect = ground_->GetStageRect();
+	StageRect stageRect = {};
+	//四隅
+	const float SCALE_SIZE_ = 40.0f;
+	stageRect.leftBack = { .x = -SCALE_SIZE_ ,.y = 0.0f ,.z = SCALE_SIZE_ };
+	stageRect.rightBack = { .x = SCALE_SIZE_ ,.y = 0.0f ,.z = SCALE_SIZE_ };
+	stageRect.leftFront = { .x = -SCALE_SIZE_ ,.y = 0.0f ,.z = -SCALE_SIZE_ };
+	stageRect.rightFront = { .x = SCALE_SIZE_ ,.y = 0.0f ,.z = -SCALE_SIZE_ };
+
 
 	#pragma endregion
 
@@ -95,7 +98,7 @@ void GameScene::Initialize() {
 	#pragma region ゲート
 
 	//ゲートのモデルの読み込み
-	uint32_t gateModelhandle = modelManager_->LoadModelFile("Resources/Sample/Gate","Gate.obj");
+	uint32_t gateModelhandle = modelManager_->LoadModelFile("Resources/Model/Sample/Gate","Gate.obj");
 	//生成
 	gate_ = std::make_unique<Gate>();
 	//初期化
@@ -159,8 +162,11 @@ void GameScene::Initialize() {
 	skydome_->Initialize(skydomeModelHandle);
 
 
+	levelHandle_=levelDataManager_->Load("GameStage/GameStage.json");
 
-	#pragma region 敵
+
+
+#pragma region 敵
 	//敵モデルの読み込み
 	//通常
 	uint32_t enemyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
@@ -168,7 +174,7 @@ void GameScene::Initialize() {
 	uint32_t strongEnemyModelHandle= modelManager_->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
 
 #ifdef _DEBUG
-	enemyModelHandle = modelManager_->LoadModelFile("Resources/Sample/Cube", "Cube.obj");
+	enemyModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube", "Cube.obj");
 #endif // _DEBUG
 
 	//敵管理システム
@@ -396,47 +402,93 @@ void GameScene::ObjectCollision(){
 	AABB playerAABB = player_->GetAABB();
 
 
-	//デモ用
-	std::list <StageObjectPre*> stageObjects = objectManager_->GetStageObjets();
-	for (StageObjectPre* stageObject : stageObjects) {
-		
-		//オブジェクトのAABB
-		AABB objectAABB = stageObject->GetAABB();
-
-		//オブジェクトとの差分ベクトル
-		Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(stageObject->GetWorldPosition(), player_->GetWorldPosition());
-		
-		//オブジェクトとプレイヤーの距離
-		Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
-		//内積
-		float dot  = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
-
-		//前方にいる時の値
-		//だいたい内積は0.7くらいが良さそう
-		const float FRONT_DOT = 0.7f;
-
-		//衝突判定
-		if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
-			(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z)&&
-			(dot > FRONT_DOT)) {
-			//動かないようにする
-			uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
-			player_->SetPlayerMoveCondition(newCondition);
-
-			//当たったらループを抜ける
-			break;
-
-		}
-		else {
-			//当たっていない
-			uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
-			player_->SetPlayerMoveCondition(newCondition);
-
-		}
-
-	}
+	////デモ用
+	//std::list <StageObjectPre*> stageObjects = objectManager_->GetStageObjets();
+	//for (StageObjectPre* stageObject : stageObjects) {
+	//	
+	//	//オブジェクトのAABB
+	//	AABB objectAABB = stageObject->GetAABB();
+	//
+	//	//オブジェクトとの差分ベクトル
+	//	Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(stageObject->GetWorldPosition(), player_->GetWorldPosition());
+	//	
+	//	//オブジェクトとプレイヤーの距離
+	//	Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
+	//	//内積
+	//	float dot  = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
+	//
+	//	//前方にいる時の値
+	//	//だいたい内積は0.7くらいが良さそう
+	//	const float FRONT_DOT = 0.7f;
+	//
+	//	//衝突判定
+	//	if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
+	//		(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z)&&
+	//		(dot > FRONT_DOT)) {
+	//		//動かないようにする
+	//		uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+	//		player_->SetPlayerMoveCondition(newCondition);
+	//
+	//		//当たったらループを抜ける
+	//		break;
+	//
+	//	}
+	//	else {
+	//		//当たっていない
+	//		uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+	//		player_->SetPlayerMoveCondition(newCondition);
+	//
+	//	}
+	//
+	//}
 	
 
+
+	//座標
+	std::vector<Vector3> positions = levelDataManager_->GetStageObjectPositions(levelHandle_);
+	//AABB
+	std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelHandle_);
+	//コライダーを持っているかどうか
+	std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelHandle_);
+	//衝突判定
+	for (size_t i = 0; i < positions.size() && i < aabbs.size()&&i<colliders.size(); ++i) {
+		
+		//コライダーを持っているときだけ
+		if (colliders[i] == true) {
+			//オブジェクトとの差分ベクトル
+			Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(positions[i], player_->GetWorldPosition());
+
+			//オブジェクトとプレイヤーの距離
+			Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
+
+			//内積
+			//これが無いと接触したまま動けなくなってしまうので入れる
+			float dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
+			const float DOT_OFFSET = 0.7f;
+
+
+			//衝突判定
+			//Y成分はいらない
+			if ((playerAABB.min.x <= aabbs[i].max.x && playerAABB.max.x >= aabbs[i].min.x) &&
+				(playerAABB.min.z <= aabbs[i].max.z && playerAABB.max.z >= aabbs[i].min.z) &&
+				(dot > DOT_OFFSET)) {
+				uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
+				player_->SetMoveCondition(newCondition);
+
+				//当たったらループを抜ける
+				break;
+			}
+			else {
+				//当たっていない
+				uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
+				player_->SetMoveCondition(newCondition);
+
+			}
+		}
+
+		
+
+	}
 	
 }
 
@@ -631,7 +683,7 @@ void GameScene::PlayerMove(){
 	if (isPlayerMove_ == true) {
 		//状態の設定
 		uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
-		player_->SetPlayerMoveCondition(newCondition);
+		player_->SetMoveCondition(newCondition);
 
 		//ダッシュ
 		if (isPlayerMoveKey_ == true) {
@@ -662,7 +714,7 @@ void GameScene::PlayerMove(){
 	//動いていない時
 	else {
 		uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
-		player_->SetPlayerMoveCondition(newCondition);
+		player_->SetMoveCondition(newCondition);
 	}
 
 #ifdef _DEBUG
@@ -910,6 +962,26 @@ void GameScene::Update(GameManager* gameManager) {
 			}
 		}
 
+
+
+		//レベルエディタで使うリスナーの設定
+		Listener listener = {
+			.position = player_->GetWorldPosition(),
+			.move = player_->GetDirection(),
+		};
+		levelDataManager_->SetListener(levelHandle_, listener);
+
+		//レベルエディタの更新
+		levelDataManager_->Update(levelHandle_);
+
+#ifdef _DEBUG
+		if (input_->IsTriggerKey(DIK_R) == true) {
+			levelDataManager_->Reload(levelHandle_);
+		}
+#endif // _DEBUG
+
+
+
 		//当たり判定チェック
 		collisionManager_->CheckAllCollision();
 
@@ -1028,8 +1100,6 @@ void GameScene::Update(GameManager* gameManager) {
 	//プレイヤーの更新
 	player_->Update();
 	
-	//地面
-	ground_->Update();
 
 	//門
 	gate_->Update();
@@ -1105,18 +1175,20 @@ void GameScene::DrawObject3D() {
 	//懐中電灯を取得
 	SpotLight spotLight = player_->GetFlashLight()->GetSpotLight();
 
-	//地面
-	ground_->Draw(camera_, spotLight);
 	//ゲート
 	gate_->Draw(camera_, spotLight);
 	//敵
 	enemyManager_->Draw(camera_, spotLight);
 	//天球
 	skydome_->Draw(camera_);
+
+	//レベルエディタ  
+	levelDataManager_->Draw(levelHandle_, camera_, material_, spotLight);
+
 	//プレイヤー
 	player_->Draw(camera_, spotLight);
 	//ステージオブジェクト
-	objectManager_->Draw(camera_, spotLight);
+	//objectManager_->Draw(camera_, spotLight);
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
 

@@ -10,23 +10,37 @@
 #include <TextureManager.h>
 
 
+TitleScene::TitleScene(){
+	//テクスチャ管理クラスの取得
+	textureManager_ = TextureManager::GetInstance();
+	//入力クラスの取得
+	input_ = Input::GetInstance();
+
+}
+
 void TitleScene::Initialize(){
 
-	uint32_t logoTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Title/StartText.png");
-	uint32_t titleTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Title/Title.png");
+	//ロゴ
+	uint32_t logoTextureHandle = textureManager_->LoadTexture("Resources/Title/StartText.png");
+	//タイトルテクスチャ
+	uint32_t titleTextureHandle = textureManager_->LoadTexture("Resources/Title/Title.png");
 
 	//初期化
 	const Vector2 INITIAL_POSITION = {.x=0.0f,.y=0.0f};
+	//生成
+	//テキスト
 	text_.reset(Sprite::Create(logoTextureHandle, INITIAL_POSITION));
+	//毎系
 	backGround_.reset(Sprite::Create(titleTextureHandle, INITIAL_POSITION));
 
 	isStart_ = false;
 	isFlash_ = true;
 	isFastFlash_ = false;
 
-	//カメラ
+	//カメラの初期化
 	camera_.Initialize();
-	camera_.translate_ = { 0.0f,0.0f,-9.8f };
+	//座標
+	camera_.translate_ = {.x = 0.0f,.y = 0.0f,.z = -9.8f };
 }
 
 void TitleScene::Update(GameManager* gameManager){
@@ -67,17 +81,19 @@ void TitleScene::Update(GameManager* gameManager){
 	
 
 	//コントローラーのBを押すと高速点滅
-	if (Input::GetInstance()->IsConnetGamePad() == true) {
+	if (input_->IsConnetGamePad() == true) {
 
 		//Bボタンを押したとき
-		if (Input::GetInstance()->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+		if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 			bTriggerTime_ += INCREASE_VALUE;
 
 		}
-		if ((Input::GetInstance()->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+		//押していない
+		if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
 			bTriggerTime_ = NO_REACT_TIME;
 		}
 
+		//反応
 		if (bTriggerTime_ == REACT_TIME) {
 
 			isFastFlash_ = true;
@@ -86,7 +102,7 @@ void TitleScene::Update(GameManager* gameManager){
 	}
 
 	//スペースを押したら高速点滅
-	if (Input::GetInstance()->IsPushKey(DIK_SPACE) == true) {
+	if (input_->IsPushKey(DIK_SPACE) == true) {
 		//高速点滅
 		isFastFlash_ = true;
 	}
@@ -152,6 +168,4 @@ void TitleScene::DrawSprite(){
 	//テキスト
 	text_->Draw();
 	
-
-
 }
