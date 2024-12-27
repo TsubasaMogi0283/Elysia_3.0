@@ -402,46 +402,6 @@ void GameScene::ObjectCollision(){
 	AABB playerAABB = player_->GetAABB();
 
 
-	////デモ用
-	//std::list <StageObjectPre*> stageObjects = objectManager_->GetStageObjets();
-	//for (StageObjectPre* stageObject : stageObjects) {
-	//	
-	//	//オブジェクトのAABB
-	//	AABB objectAABB = stageObject->GetAABB();
-	//
-	//	//オブジェクトとの差分ベクトル
-	//	Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(stageObject->GetWorldPosition(), player_->GetWorldPosition());
-	//	
-	//	//オブジェクトとプレイヤーの距離
-	//	Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
-	//	//内積
-	//	float dot  = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
-	//
-	//	//前方にいる時の値
-	//	//だいたい内積は0.7くらいが良さそう
-	//	const float FRONT_DOT = 0.7f;
-	//
-	//	//衝突判定
-	//	if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
-	//		(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z)&&
-	//		(dot > FRONT_DOT)) {
-	//		//動かないようにする
-	//		uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
-	//		player_->SetPlayerMoveCondition(newCondition);
-	//
-	//		//当たったらループを抜ける
-	//		break;
-	//
-	//	}
-	//	else {
-	//		//当たっていない
-	//		uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
-	//		player_->SetPlayerMoveCondition(newCondition);
-	//
-	//	}
-	//
-	//}
-	
 
 
 	//座標

@@ -41,10 +41,14 @@ void Player::Initialize(){
 	colliderToNormalEnemy_ = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
 	colliderToNormalEnemy_->Initialize();
 
-
 	//強敵
 	collisionToStrongEnemy_ = std::make_unique<PlayerCollisionToStrongEnemy>();
 	collisionToStrongEnemy_->Initialize();
+
+
+	collosionToAudioObject_ = std::make_unique<PlayerCollisionToAudioObject>();
+	collosionToAudioObject_->Initialize();
+
 
 	//懐中電灯
 	flashLight_ = std::make_unique<FlashLight>();
@@ -101,13 +105,10 @@ void Player::Damaged() {
 		
 	}
 }
-void Player::Update(){
-	
 
-
+void Player::Move(){
 	//動けるときだけ加算
-	if (isControll_ == true && moveCondition_==PlayerMoveCondition::OnPlayerMove) {
-	
+	if (isControll_ == true && moveCondition_ == PlayerMoveCondition::OnPlayerMove) {
 
 		float moveSpeed = 0.0f;
 		//走っている時
@@ -122,49 +123,45 @@ void Player::Update(){
 		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, VectorCalculation::Multiply(moveDirection_, moveSpeed));
 
 	}
+}
+
+
+void Player::Update(){
 	
-
-	//ステージの外には行けないようにする
-	//左
-	if (worldTransform_.translate.x < stageRect_.leftBack.x + SIDE_SIZE) {
-		worldTransform_.translate.x = stageRect_.leftBack.x + SIDE_SIZE;
-	}
-	//右
-	if (worldTransform_.translate.x > stageRect_.rightBack.x - SIDE_SIZE) {
-		worldTransform_.translate.x = stageRect_.rightBack.x - SIDE_SIZE;
-	}
-	//奥
-	if (worldTransform_.translate.z > stageRect_.leftBack.z - SIDE_SIZE) {
-		worldTransform_.translate.z = stageRect_.leftBack.z - SIDE_SIZE;
-	}
-	//手前
-	if (worldTransform_.translate.z < stageRect_.leftFront.z + SIDE_SIZE) {
-		worldTransform_.translate.z = stageRect_.leftFront.z + SIDE_SIZE;
-	}
-
+	//移動処理
+	Move();
+	
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
-	//AABBの計算
-	aabb_.min.x = worldTransform_.GetWorldPosition().x - SIDE_SIZE;
-	aabb_.min.y = worldTransform_.GetWorldPosition().y - SIDE_SIZE;
-	aabb_.min.z = worldTransform_.GetWorldPosition().z - SIDE_SIZE;
+	//ワールド座標
+	Vector3 worldPosition = worldTransform_.GetWorldPosition();
 
-	aabb_.max.x = worldTransform_.GetWorldPosition().x + SIDE_SIZE;
-	aabb_.max.y = worldTransform_.GetWorldPosition().y + SIDE_SIZE;
-	aabb_.max.z = worldTransform_.GetWorldPosition().z + SIDE_SIZE;
+	//AABBの計算
+	aabb_.min.x = worldPosition.x - SIDE_SIZE;
+	aabb_.min.y = worldPosition.y - SIDE_SIZE;
+	aabb_.min.z = worldPosition.z - SIDE_SIZE;
+
+	aabb_.max.x = worldPosition.x + SIDE_SIZE;
+	aabb_.max.y = worldPosition.y + SIDE_SIZE;
+	aabb_.max.z = worldPosition.z + SIDE_SIZE;
+
 
 	//通常の敵用の当たり判定の更新
-	colliderToNormalEnemy_->SetPlayerPosition(worldTransform_.GetWorldPosition());
+	colliderToNormalEnemy_->SetPlayerPosition(worldPosition);
 	colliderToNormalEnemy_->Update();
 
 	//一発アウト用の当たり判定
-	collisionToStrongEnemy_->SetPlayerPosition(worldTransform_.GetWorldPosition());
+	collisionToStrongEnemy_->SetPlayerPosition(worldPosition);
 	collisionToStrongEnemy_->Update();
+
+	//オーディオオブジェクトに対しての当たり判定
+	collosionToAudioObject_->SetPlayerPosition(worldPosition);
+	collosionToAudioObject_->Update();
 
 	//懐中電灯の更新
 	//角度はゲームシーンで取得する
-	flashLight_->SetPlayerPosition(worldTransform_.GetWorldPosition());
+	flashLight_->SetPlayerPosition(worldPosition);
 	flashLight_->Update();
 
 

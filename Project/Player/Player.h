@@ -17,6 +17,7 @@
 #include "Listener/ListenerForLevelEditor.h"
 #include "Light/FlashLight/FlashLight.h"
 #include "SpotLight.h"
+#include "PlayerCollisionToAudioObject.h"
 
 #pragma region 前方宣言
 
@@ -93,7 +94,10 @@ private:
 	/// </summary>
 	void Damaged();
 
-
+	/// <summary>
+	/// 移動処理
+	/// </summary>
+	void Move();
 
 public:
 
@@ -196,14 +200,6 @@ public:
 		this->isDash_ = isDash;
 	}
 
-	/// <summary>
-	/// 四隅の取得
-	/// </summary>
-	/// <param name="stageRect"></param>
-	/// <returns></returns>
-	inline void SetStageRect(const StageRect& stageRect) {
-		this->stageRect_ = stageRect;
-	}
 
 	/// <summary>
 	/// 操作を受け付けるか受け付けないかの設定
@@ -241,6 +237,14 @@ public:
 	}
 
 	/// <summary>
+	/// オーディオオブジェクトに対しての当たり判定
+	/// </summary>
+	/// <returns></returns>
+	inline PlayerCollisionToAudioObject* GetCollisionToAudioObject()const {
+		return collosionToAudioObject_.get();
+	}
+
+	/// <summary>
 	/// 懐中電灯の当たり判定
 	/// </summary>
 	/// <returns></returns>
@@ -262,11 +266,6 @@ private:
 
 
 
-	//ステージの四隅
-	StageRect stageRect_ = {};
-
-
-
 	//持っている鍵の数
 	//可算なのでQuantity
 	uint32_t haveKeyQuantity_ = 0u;
@@ -278,7 +277,6 @@ private:
 	const float SIDE_SIZE = 1.0f;
 	//AABB
 	AABB aabb_ = {};
-
 
 
 
@@ -329,10 +327,14 @@ private:
 
 	//当たり判定(通常の敵)
 	std::unique_ptr<PlayerCollisionToNormalEnemyAttack>colliderToNormalEnemy_ = nullptr;
-
-
 	//当たり判定(一発アウトの敵用)
 	std::unique_ptr<PlayerCollisionToStrongEnemy>collisionToStrongEnemy_ = nullptr;
+	//オーディオオブジェクト用
+	std::unique_ptr<PlayerCollisionToAudioObject>collosionToAudioObject_ = nullptr;
+
+
+
+private:
 
 
 	//懐中電灯
