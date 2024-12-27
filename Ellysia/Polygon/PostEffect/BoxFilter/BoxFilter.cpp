@@ -1,7 +1,7 @@
 #include "BoxFilter.h"
-#include <PipelineManager.h>
+#include "PipelineManager.h"
 #include "TextureManager.h"
-#include <SrvManager.h>
+#include "SrvManager.h"
 #include "imgui.h"
 #include "RtvManager.h"
 
@@ -9,10 +9,6 @@
 
 void BoxFilter::Initialize(){
 
-	//エフェクトごとにhlsl分けたい
-	//いずれやる
-	PipelineManager::GetInstance()->GenarateBoxFilterPSO();
-	
 	//Effect
 	boxFilterTypeResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(BoxFilterType));
 	boxFilterType_ = BoxFilter3x3;
@@ -94,10 +90,6 @@ void BoxFilter::Draw(){
 	//Type
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, boxFilterTypeResource_->GetGPUVirtualAddress());
 	
-	
-
-
-
 	//描画(DrawCall)３頂点で１つのインスタンス。
 	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 

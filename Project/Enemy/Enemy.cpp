@@ -56,7 +56,7 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 
 
 	//デバッグ用のモデル
-	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Sample/Sphere", "Sphere.obj");
+	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
 
 	//攻撃の当たり判定
 	attackCollision_ = std::make_unique<EnemyAttackCollision>();

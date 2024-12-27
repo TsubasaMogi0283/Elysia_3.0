@@ -77,7 +77,7 @@ public:
 	/// </summary>
 	/// <param name="textureHandle"></param>
 	/// <returns></returns>
-	const D3D12_RESOURCE_DESC GetResourceDesc(uint32_t textureHandle);
+	const D3D12_RESOURCE_DESC GetResourceDesc(const uint32_t& textureHandle);
 
 private:
 

@@ -1,5 +1,7 @@
 #include "KeyManager.h"
 
+#include <stdlib.h>
+
 #include "Audio.h"
 #include "TextureManager.h"
 #include "VectorCalculation.h"
@@ -7,8 +9,10 @@
 #include "SingleCalculation.h"
 
 KeyManager::KeyManager(){
+
 	//オーディオの取得
 	audio_ = Audio::GetInstance();
+	
 	//テクスチャ管理クラスの取得
 	textureManager_ = TextureManager::GetInstance();
 }
@@ -70,12 +74,34 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 	}
 
 	//知らせる音の読み込み
-	uint32_t notificationSEHandle = audio_->Load("Resources/External/Audio/Key/Shake.mp3");
+	notificationSEHandle_ = audio_->Load("Resources/External/Audio/Key/Shake.mp3");
 	//拾う音の読み込み
-	uint32_t pickUpSEHandle = audio_->Load("Resources/External/Audio/Key/PickUp.mp3");
-	notificationSEHandle;
-	pickUpSEHandle;
+	pickUpSEHandle = audio_->Load("Resources/External/Audio/Key/PickUp.mp3");
+	
+
+	//再生
+	audio_->Play(notificationSEHandle_, true);
+	//初期の音の設定
+	const float INITIAL_VOLUME = 0.0f;
+	audio_->ChangeVolume(notificationSEHandle_, INITIAL_VOLUME);
 }
+
+void KeyManager::Delete(){
+
+	//消去処理
+	//外部の変数を持ってきたいときは[]の中に=を入れよう！
+	keyes_.remove_if([=](Key* key) {
+		//拾われたら消す
+		if (key->GetIsPickUp() == true) {
+			audio_->Play(pickUpSEHandle, false);
+
+			delete key;
+			return true;
+		}
+		return false;
+	});
+}
+
 
 void KeyManager::Update(){
 
@@ -104,19 +130,38 @@ void KeyManager::Update(){
 		closestDistance = (*minIt);
 	}
 
+	if (closestDistance > MAX_DISTANCE_) {
+		closestDistance = MAX_DISTANCE_;
+	}
+	//最大の距離を超え内容にする
+	
+	
 
 	//求めた値から音量設定をする
+	float volume = 1.0f-(closestDistance / MAX_DISTANCE_);
+	audio_->ChangeVolume(notificationSEHandle_, volume);
+
+
+#ifdef _DEBUG
+	ImGui::Begin("鍵管理クラス"); 
+	ImGui::InputFloat("音量", &volume);
+	
+	ImGui::InputFloat("近い距離", &closestDistance);
+	ImGui::End();
+#endif // _DEBUG
 
 
 
-	keyes_.remove_if([](Key* key) {
-		//拾われたら消す
-		if (key->GetIsPickUp() == true) {
-			delete key;
-			return true;
-		}
-		return false;
-	});
+
+	//現在の鍵の数
+	size_t currentKeyQuantity = keyes_.size();
+	if (currentKeyQuantity == 0) {
+		audio_->Stop(notificationSEHandle_);
+	}
+
+
+	//消去処理
+	Delete();
 }
 
 void KeyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight){
@@ -142,3 +187,4 @@ KeyManager::~KeyManager(){
 	}
 
 }
+

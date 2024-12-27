@@ -6,35 +6,20 @@
  * @author 茂木翼
  */
 
-#include <d3dx12.h>
+
 #include <random>
+#include <list>
 
 #include "Camera.h"
 #include "Transform.h"
 #include "Particle.h"
 #include "AccelerationField.h"
-#include "ModelManager.h"
 #include "TransformationMatrix.h"
 #include "Matrix4x4Calculation.h"
 #include "VertexData.h"
+#include "DirectXSetup.h"
 
-
-
-/// <summary>
-/// 動き方の設定
-/// </summary>
-enum ParticleMoveType {
-
-	//通常の放出
-	NormalRelease,
-	//鉛直投げ上げ
-	ThrowUp,
-	//自由落下
-	FreeFall,
-	//上昇
-	Rise,
-
-};
+#pragma region 前方宣言
 
 /// <summary>
 /// マテリアル
@@ -55,6 +40,46 @@ struct PointLight;
 /// スポットライト
 /// </summary>
 struct SpotLight;
+
+/// <summary>
+/// モデル管理クラス
+/// </summary>
+class ModelManager;
+
+/// <summary>
+/// テクスチャ管理クラス
+/// </summary>
+class TextureManager;
+
+/// <summary>
+/// SRV管理クラス
+/// </summary>
+class SrvManager;
+
+/// <summary>
+/// パイプライン管理クラス
+/// </summary>
+class PipelineManager;
+
+
+#pragma endregion
+
+
+/// <summary>
+/// 動き方の設定
+/// </summary>
+enum ParticleMoveType {
+
+	//通常の放出
+	NormalRelease,
+	//鉛直投げ上げ
+	ThrowUp,
+	//自由落下
+	FreeFall,
+	//上昇
+	Rise,
+
+};
 
 
 /// <summary>
@@ -173,8 +198,8 @@ public:
 	///	一度だけ出すかどうか
 	/// </summary>
 	/// <param name="isReleaseOnce"></param>
-	inline void SetIsReleaseOnce(const bool &isReleaseOnce) {
-		this->isReleaseOnce_ = isReleaseOnce;
+	inline void SetIsReleaseOnceMode(const bool &isReleaseOnce) {
+		this->isReleaseOnceMode_ = isReleaseOnce;
 	}
 
 
@@ -239,10 +264,25 @@ public:
 
 #pragma endregion
 
+private:
+
+	//モデル管理クラス
+	ModelManager* modelManager_ = nullptr;
+
+	//テクスチャ管理クラス
+	TextureManager* textureManager_ = nullptr;
+
+	//DirectXクラス
+	DirectXSetup* directXSetup_ = nullptr;
+
+	//SRV管理クラス
+	SrvManager* srvManager_ = nullptr;
+
+	//パイプライン管理クラス
+	PipelineManager* pipelineManager_ = nullptr;
 
 private:
-	//モデルマネージャー
-	ModelManager* modelManager_ = nullptr;
+	
 
 	//頂点リソースを作る
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
@@ -250,22 +290,22 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 	//頂点データ
 	std::vector<VertexData> vertices_{};
-	//表示する数
-	int32_t instanceCount_ = 20;
 
 
 	//インスタンス
 	ComPtr<ID3D12Resource>instancingResource_ = nullptr;
 
 	//最大数
-	static const int32_t MAX_INSTANCE_NUMBER_ = 20;
+	const uint32_t MAX_INSTANCE_NUMBER_ = 100u;
 	//描画すべきインスタンス数
-	uint32_t numInstance_ = 0;
+	uint32_t numInstance_ = 0u;
 	//インスタンスのインデックス
 	int instancingIndex_ = 0;
 
 	//一度だけ出すかどうか
-	bool isReleaseOnce_ = false;
+	bool isReleaseOnceMode_ = false;
+	//出し終えたかどうか
+	bool isReeasedOnce_ = false;
 
 	//パーティクル
 	std::list<Particle>particles_;

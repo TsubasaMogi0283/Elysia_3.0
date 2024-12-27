@@ -14,37 +14,31 @@ DirectXSetup* DirectXSetup::GetInstance() {
 }
 
 
-ComPtr<ID3D12DescriptorHeap> DirectXSetup::GenarateDescriptorHeap(
-		D3D12_DESCRIPTOR_HEAP_TYPE heapType,
-		UINT numDescriptors, bool shaderVisible) {
+ComPtr<ID3D12DescriptorHeap> DirectXSetup::GenarateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType,UINT numDescriptors, bool shaderVisible) {
 
 	ComPtr<ID3D12DescriptorHeap> descriptorHeap= nullptr;
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
 	descriptorHeapDesc.Type = heapType;
 	descriptorHeapDesc.NumDescriptors = numDescriptors;
 	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	HRESULT hr = DirectXSetup::GetInstance()->m_device_->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+	HRESULT hr = DirectXSetup::GetInstance()->device_->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
 	assert(SUCCEEDED(hr));
 	return descriptorHeap;
 
 }
 
 
-ComPtr<ID3D12Resource> DirectXSetup::CreateBufferResource(size_t sizeInBytes) {
-	//void返り値も忘れずに
+ComPtr<ID3D12Resource> DirectXSetup::CreateBufferResource(const size_t& sizeInBytes) {
+
 	ComPtr<ID3D12Resource> resource = nullptr;
 	
-	////VertexResourceを生成
-	//頂点リソース用のヒープを設定
+	//HeapPropertiesの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties_ = {
 		.Type= D3D12_HEAP_TYPE_UPLOAD,
 	};
 	
-	
-
-	
-	//頂点リソースの設定
-	D3D12_RESOURCE_DESC vertexResourceDesc_ = {
+	//ResourceDescの設定
+	D3D12_RESOURCE_DESC resourceDesc_ = {
 		//バッファリソース。テクスチャの場合はまた別の設定をする
 		.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER,
 		.Width = sizeInBytes,
@@ -53,14 +47,13 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateBufferResource(size_t sizeInBytes) {
 		.MipLevels = 1,
 		.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR,
 	};
+	resourceDesc_.SampleDesc.Count = 1;
 
-	
-	vertexResourceDesc_.SampleDesc.Count = 1;
-
+	//作成
 	HRESULT hr = DirectXSetup::GetInstance()->GetDevice()->CreateCommittedResource(
 		&uploadHeapProperties_,
 		D3D12_HEAP_FLAG_NONE,
-		&vertexResourceDesc_,
+		&resourceDesc_,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr, IID_PPV_ARGS(&resource));
 	assert(SUCCEEDED(hr));
@@ -106,7 +99,7 @@ ComPtr<ID3D12Resource> DirectXSetup::GenerateDepthStencilTextureResource(const u
 
 	//Resourceの作成
 	ComPtr<ID3D12Resource> resource = nullptr;
-	HRESULT hr = DirectXSetup::GetInstance()->m_device_->CreateCommittedResource(
+	HRESULT hr = DirectXSetup::GetInstance()->device_->CreateCommittedResource(
 		&heapProperties,					//Heapの設定 
 		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定。特になし。
 		&resourceDesc,						//Resourceの設定
@@ -148,7 +141,7 @@ void DirectXSetup::SelectAdapter() {
 	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	//初期でエラーが発生した場合どうにもできないのでassert
 	assert(SUCCEEDED(hr));
-	DirectXSetup::GetInstance()->m_dxgiFactory_ = dxgiFactory;
+	DirectXSetup::GetInstance()->dxgiFactory_ = dxgiFactory;
 
 	ComPtr<IDXGIAdapter4> useAdapter = nullptr;
 
@@ -177,8 +170,8 @@ void DirectXSetup::SelectAdapter() {
 	assert(useAdapter != nullptr);
 	
 	//更新したデータをメンバ変数にまた保存
-	DirectXSetup::GetInstance()->m_dxgiFactory_ = dxgiFactory;
-	DirectXSetup::GetInstance()->m_useAdapter_ = useAdapter;
+	DirectXSetup::GetInstance()->dxgiFactory_ = dxgiFactory;
+	DirectXSetup::GetInstance()->useAdapter_ = useAdapter;
 
 
 
@@ -199,9 +192,9 @@ void DirectXSetup::GenerateD3D12Device() {
 		//採用したアダプターでデバイスが生成
 		HRESULT hr = {};
 		hr = D3D12CreateDevice(
-			DirectXSetup::GetInstance()->m_useAdapter_.Get(), 
+			DirectXSetup::GetInstance()->useAdapter_.Get(), 
 			featureLevels[i], 
-			IID_PPV_ARGS(&DirectXSetup::GetInstance()->m_device_));
+			IID_PPV_ARGS(&DirectXSetup::GetInstance()->device_));
 		//指定した機能レベルでデバイスが生成できたか確認
 		if (SUCCEEDED(hr)) {
 			//生成できたのでログ出力を行ってループを抜ける
@@ -211,7 +204,7 @@ void DirectXSetup::GenerateD3D12Device() {
 	}
 
 	//デバイスの生成が上手くいかなかったので起動できない
-	assert(DirectXSetup::GetInstance()->m_device_ != nullptr);
+	assert(DirectXSetup::GetInstance()->device_ != nullptr);
 	ConvertString::Log("Complete create D3D12Device!!!\n");
 
 }
@@ -223,7 +216,7 @@ void DirectXSetup::StopErrorWarning() {
 
 	//エラー・警告、即ち停止
 	ComPtr<ID3D12InfoQueue> infoQueue;
-	if (SUCCEEDED(DirectXSetup::GetInstance()->m_device_->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
+	if (SUCCEEDED(DirectXSetup::GetInstance()->device_->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
 		//エラー時に止まる
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
 		//エラー時に止まる
@@ -266,19 +259,19 @@ void DirectXSetup::GenerateCommand() {
 	HRESULT hr = {};
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc_{};
 	ComPtr<ID3D12CommandQueue> commandQueue = nullptr;
-	hr = DirectXSetup::GetInstance()->m_device_->CreateCommandQueue(&commandQueueDesc_, IID_PPV_ARGS(&commandQueue));
+	hr = DirectXSetup::GetInstance()->device_->CreateCommandQueue(&commandQueueDesc_, IID_PPV_ARGS(&commandQueue));
 	//コマンドキューの生成が上手くいかなかったので起動できない
 	assert(SUCCEEDED(hr));
 
 	//コマンドアロケータを生成する
 	ComPtr<ID3D12CommandAllocator> commandAllocator = nullptr;
-	hr = DirectXSetup::GetInstance()->m_device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
+	hr = DirectXSetup::GetInstance()->device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
 	//コマンドアロケータの生成が上手くいかなかったので起動できない
 	assert(SUCCEEDED(hr));
 
 	//コマンドリストを生成する
 	ComPtr<ID3D12GraphicsCommandList> commandList = nullptr;
-	hr = DirectXSetup::GetInstance()->m_device_->CreateCommandList(
+	hr = DirectXSetup::GetInstance()->device_->CreateCommandList(
 		0, 
 		D3D12_COMMAND_LIST_TYPE_DIRECT, 
 		commandAllocator.Get(),
@@ -291,7 +284,7 @@ void DirectXSetup::GenerateCommand() {
 	//ローカルに入れた値をメンバ変数に保存しよう
 	DirectXSetup::GetInstance()->m_commandQueue_ = commandQueue;
 	DirectXSetup::GetInstance()->m_commandAllocator_ = commandAllocator;
-	DirectXSetup::GetInstance()->m_commandList_ = commandList;
+	DirectXSetup::GetInstance()->commandList_ = commandList;
 }
 
 void DirectXSetup::GenerateSwapChain() {
@@ -311,7 +304,7 @@ void DirectXSetup::GenerateSwapChain() {
 
 
 	//コマンドキュー、ウィンドウハンドル、設定を渡して生成する
-	HRESULT hr = DirectXSetup::GetInstance()->m_dxgiFactory_->CreateSwapChainForHwnd(
+	HRESULT hr = DirectXSetup::GetInstance()->dxgiFactory_->CreateSwapChainForHwnd(
 		DirectXSetup::GetInstance()->m_commandQueue_.Get(),
 		hwnd, 
 		&swapChainDesc, 
@@ -341,13 +334,13 @@ void DirectXSetup::GenarateDescriptorHeap() {
 	//2DTexture
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	//DSVHeapの先頭にDSVを作る
-	DirectXSetup::GetInstance()->m_device_->CreateDepthStencilView(
+	DirectXSetup::GetInstance()->device_->CreateDepthStencilView(
 		depthStencilResource_.Get(), 
 		&dsvDesc, 
 		dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart());
 
-	DirectXSetup::GetInstance()->m_dsvDescriptorHeap_ = dsvDescriptorHeap_;
-	DirectXSetup::GetInstance()->m_depthStencilResource_ = depthStencilResource_;
+	DirectXSetup::GetInstance()->dsvDescriptorHeap_ = dsvDescriptorHeap_;
+	DirectXSetup::GetInstance()->depthStencilResource_ = depthStencilResource_;
 }
 
 void DirectXSetup::PullResourcesFromSwapChain() {
@@ -366,7 +359,7 @@ void DirectXSetup::GenarateFence() {
 
 	//上の2つはSwapChain用
 
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = DirectXSetup::GetInstance()->m_dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = DirectXSetup::GetInstance()->dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 	DirectXSetup::GetInstance()->dsvHandle_ = dsvHandle;
 
 
@@ -379,7 +372,7 @@ void DirectXSetup::GenarateFence() {
 	//EventはWindowsのものである
 	uint64_t fenceValue = 0;
 	ComPtr<ID3D12Fence> fence = nullptr;
-	HRESULT hr = DirectXSetup::GetInstance()->m_device_->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	HRESULT hr = DirectXSetup::GetInstance()->device_->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 	assert(SUCCEEDED(hr));
 
 	//FenceのSignalを待つためのイベントを作成する
@@ -389,14 +382,14 @@ void DirectXSetup::GenarateFence() {
 
 	DirectXSetup::GetInstance()->fenceValue_ = fenceValue;
 	DirectXSetup::GetInstance()->fenceEvent_ = fenceEvent;
-	DirectXSetup::GetInstance()->m_fence_ = fence;
+	DirectXSetup::GetInstance()->fence_ = fence;
 
 
 }
 
 
 
-void DirectXSetup::GenarateViewport(uint32_t width, uint32_t height) {
+void DirectXSetup::GenarateViewport(const uint32_t& width,const uint32_t& height) {
 	//クライアント領域のサイズと一緒にして画面全体に表示
 	D3D12_VIEWPORT viewport = {
 		.TopLeftX = 0.0f,
@@ -413,7 +406,7 @@ void DirectXSetup::GenarateViewport(uint32_t width, uint32_t height) {
 
 }
 
-void DirectXSetup::GenarateScissor(uint32_t right, uint32_t bottom) {
+void DirectXSetup::GenarateScissor(const uint32_t& right,const uint32_t& bottom) {
 	
 	//基本的にビューポートと同じ矩形が構成されるようにする
 
@@ -431,7 +424,7 @@ void DirectXSetup::GenarateScissor(uint32_t right, uint32_t bottom) {
 
 }
 
-void DirectXSetup::SetResourceBarrier(ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState){
+void DirectXSetup::SetResourceBarrier(const ComPtr<ID3D12Resource>& resource,const D3D12_RESOURCE_STATES& beforeState,const D3D12_RESOURCE_STATES& afterState){
 	
 
 	//TransitionBarrierを張るコード
@@ -456,7 +449,7 @@ void DirectXSetup::SetResourceBarrier(ComPtr<ID3D12Resource> resource, D3D12_RES
 
 }
 
-void DirectXSetup::SetResourceBarrierForSwapChain(D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState){
+void DirectXSetup::SetResourceBarrierForSwapChain(const D3D12_RESOURCE_STATES& beforeState,const D3D12_RESOURCE_STATES& afterState){
 
 	//TransitionBarrierを張るコード
 	//現在のResourceStateを設定する必要がある → ResorceがどんなStateなのかを追跡する必要がある
@@ -544,17 +537,17 @@ void DirectXSetup::FirstInitialize() {
 void DirectXSetup::SecondInitialize() {
 
 	//名前を設定
-	DirectXSetup::GetInstance()->swapChainName[0] = "SwapChainNumber1";
-	DirectXSetup::GetInstance()->swapChainName[1] = "SwapChainNumber2";
+	DirectXSetup::GetInstance()->swapChainName_[0] = "SwapChainNumber1";
+	DirectXSetup::GetInstance()->swapChainName_[1] = "SwapChainNumber2";
 
 	//ハンドルの計算
-	DirectXSetup::GetInstance()->rtvHandle[0] = RtvManager::GetInstance()->Allocate(DirectXSetup::GetInstance()->swapChainName[0]);
-	DirectXSetup::GetInstance()->rtvHandle[1] = RtvManager::GetInstance()->Allocate(DirectXSetup::GetInstance()->swapChainName[1]);
+	DirectXSetup::GetInstance()->rtvHandle_[0] = RtvManager::GetInstance()->Allocate(DirectXSetup::GetInstance()->swapChainName_[0]);
+	DirectXSetup::GetInstance()->rtvHandle_[1] = RtvManager::GetInstance()->Allocate(DirectXSetup::GetInstance()->swapChainName_[1]);
 	
 	//スワップチェーン1枚目
-	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[0].Get(), DirectXSetup::GetInstance()->rtvHandle[0]);
+	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[0].Get(), DirectXSetup::GetInstance()->rtvHandle_[0]);
 	//スワップチェーン2枚目
-	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[1].Get(), DirectXSetup::GetInstance()->rtvHandle[1]);
+	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[1].Get(), DirectXSetup::GetInstance()->rtvHandle_[1]);
 
 
 	//フェンスを生成
@@ -690,14 +683,14 @@ void DirectXSetup::EndDraw() {
 	//Fenceの値を更新
 	fenceValue_++;
 	//GPUがここまでたどりついた時に、Fenceの値を代入するようSignalを送る
-	DirectXSetup::GetInstance()->m_commandQueue_->Signal(DirectXSetup::GetInstance()->m_fence_.Get(), fenceValue_);
+	DirectXSetup::GetInstance()->m_commandQueue_->Signal(DirectXSetup::GetInstance()->fence_.Get(), fenceValue_);
 	
 
 	//Fenceの値が指定したSignal値にたどりついているか確認する
 	//GetCompletedValueの初期値はFence作成時に渡した初期値
-	if (DirectXSetup::GetInstance()->m_fence_->GetCompletedValue() < fenceValue_) {
+	if (DirectXSetup::GetInstance()->fence_->GetCompletedValue() < fenceValue_) {
 		//指定したSignalにたどりついていないので、たどり着くまで待つようにイベントを設定する
-		DirectXSetup::GetInstance()->m_fence_->SetEventOnCompletion(fenceValue_, fenceEvent_);
+		DirectXSetup::GetInstance()->fence_->SetEventOnCompletion(fenceValue_, fenceEvent_);
 		//イベントを待つ
 		WaitForSingleObject(fenceEvent_, INFINITE);
 	}
@@ -708,7 +701,7 @@ void DirectXSetup::EndDraw() {
 	//リセット
 	hr = DirectXSetup::GetInstance()->m_commandAllocator_->Reset();
 	assert(SUCCEEDED(hr));
-	hr = DirectXSetup::GetInstance()->m_commandList_->Reset(DirectXSetup::GetInstance()->m_commandAllocator_.Get(), nullptr);
+	hr = DirectXSetup::GetInstance()->commandList_->Reset(DirectXSetup::GetInstance()->m_commandAllocator_.Get(), nullptr);
 	assert(SUCCEEDED(hr));
 }
 

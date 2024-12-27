@@ -14,8 +14,26 @@
 #include "BackText.h"
 #include "DirectionalLight.h"
 
+#pragma region 前方宣言
 
+/// <summary>
+/// ゲーム管理クラス
+/// </summary>
 class GameManager;
+
+/// <summary>
+/// テクスチャ管理クラス
+/// </summary>
+class TextureManager;
+
+/// <summary>
+/// 入力
+/// </summary>
+class Input;
+
+
+#pragma endregion
+
 
 /// <summary>
 /// タイトルシーン
@@ -26,7 +44,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	TitleScene()=default;
+	TitleScene();
 
 
 	/// <summary>
@@ -69,6 +87,12 @@ public:
 	~TitleScene()=default;
 
 
+private:
+	//テクスチャ管理クラス
+	TextureManager* textureManager_ = nullptr;
+
+	//入力クラス
+	Input* input_ = nullptr;
 
 
 private:

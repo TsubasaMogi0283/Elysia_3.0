@@ -23,8 +23,6 @@ void Line::Initialize() {
 	vertexBufferView_.StrideInBytes = sizeof(LineVertexData);
 
 
-	//パイプライン
-	PipelineManager::GetInstance()->GenaratedLinePSO();
 }
 
 

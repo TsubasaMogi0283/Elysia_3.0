@@ -30,6 +30,7 @@ struct MaterialData {
 	float shininess;
 	//環境マッピングするかどうか
 	bool isEnviromentMap;
+
 };
 
 /// <summary>
