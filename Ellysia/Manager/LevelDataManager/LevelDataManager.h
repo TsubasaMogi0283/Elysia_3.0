@@ -190,7 +190,11 @@ public:
 		return colliders;
 	}
 
-
+	/// <summary>
+	/// オーディオの方のコライダーを取得
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
 	inline std::vector<IObjectForLevelEditorCollider*>GetAudioCollider(const uint32_t& handle) {
 		std::vector<IObjectForLevelEditorCollider*> colliders = {};
 

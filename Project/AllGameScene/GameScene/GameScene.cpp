@@ -119,8 +119,6 @@ void GameScene::Initialize() {
 #pragma region プレイヤー
 	//生成
 	player_ = std::make_unique<Player>();
-	//ステージの四隅の設定
-	player_->SetStageRect(stageRect);
 	//初期化
 	player_->Initialize();
 	//最初はコントロールは出来ない用にする
@@ -902,12 +900,12 @@ void GameScene::Update(GameManager* gameManager) {
 			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 			
 		}
-		//通常の敵
+		//通常の敵に対してのコライダーを登録
 		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
-
-		//懐中電灯
+		//オーディオオブジェクトに対してのコライダーを登録
+		collisionManager_->RegisterList(player_->GetCollisionToAudioObject());
+		//懐中電灯に対してのコライダーを登録
 		collisionManager_->RegisterList(player_->GetFlashLightCollision());
-
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
@@ -933,6 +931,15 @@ void GameScene::Update(GameManager* gameManager) {
 
 		//レベルエディタの更新
 		levelDataManager_->Update(levelHandle_);
+
+		std::vector<IObjectForLevelEditorCollider*> audioColliders =levelDataManager_->GetAudioCollider(levelHandle_);
+
+		for (std::vector<IObjectForLevelEditorCollider*>::iterator it = audioColliders.begin(); it != audioColliders.end(); ++it) {
+
+			collisionManager_->RegisterList(*it);
+
+		}
+
 
 #ifdef _DEBUG
 		if (input_->IsTriggerKey(DIK_R) == true) {
@@ -1055,8 +1062,7 @@ void GameScene::Update(GameManager* gameManager) {
 	material_.Update();
 
 
-	//オブジェクトマネージャーの更新
-	objectManager_->Update();
+
 	//プレイヤーの更新
 	player_->Update();
 	
@@ -1147,8 +1153,6 @@ void GameScene::DrawObject3D() {
 
 	//プレイヤー
 	player_->Draw(camera_, spotLight);
-	//ステージオブジェクト
-	//objectManager_->Draw(camera_, spotLight);
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
 
