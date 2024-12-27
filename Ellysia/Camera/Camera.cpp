@@ -26,8 +26,7 @@ void Camera::Initialize() {
 	//正射影行列(正規化)を計算
 	orthographicMatrix_ = Matrix4x4Calculation::MakeOrthographicMatrix(0, 0, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 
-	//転送
-	Transfer();
+
 }
 
 
