@@ -36,6 +36,11 @@ class Player;
 /// </summary>
 class ObjectManager;
 
+/// <summary>
+/// レベルデータ管理クラス
+/// </summary>
+class LevelDataManager;
+
 #pragma endregion
 
 /// <summary>
@@ -122,15 +127,37 @@ public:
 	}
 
 	/// <summary>
+	/// レベルデータ管理クラスとハンドルの設定
+	/// </summary>
+	/// <param name="levelDataManager"></param>
+	/// <param name="levelDataHandle"></param>
+	inline void SetLevelDataManager(LevelDataManager* levelDataManager, uint32_t levelDataHandle) {
+		this->levelDataManager_ = levelDataManager;
+		this->levelDataHandle_ = levelDataHandle;
+	}
+
+
+	/// <summary>
 	/// ステージの四隅を取得
 	/// </summary>
 	/// <param name="stageRect"></param>
-	inline void SetStageRectangle(StageRect& stageRect) {
+	inline void SetStageRectangle(const StageRect& stageRect) {
 		this->stageRect_ = stageRect;
 	}
 
 	
 
+
+private:
+
+	//プレイヤー
+	Player* player_ = nullptr;
+	//オブジェクト管理クラス
+	ObjectManager* objectManager_ = nullptr;
+	//レベルデータ管理クラス
+	LevelDataManager* levelDataManager_ = nullptr;
+	//レベルデータのハンドル
+	uint32_t levelDataHandle_ = 0u;
 
 
 private:
@@ -141,11 +168,7 @@ private:
 	const float STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
 
 private:
-	//プレイヤー
-	Player* player_ = nullptr;
-	//オブジェクト管理クラス
-	ObjectManager* objectManager_ = nullptr;
-
+	
 	//エネミーのリスト
 	//通常
 	std::list<Enemy*>enemyes_ = {};

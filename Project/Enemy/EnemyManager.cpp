@@ -7,7 +7,7 @@
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
 #include "Input.h"
-
+#include "LevelDataManager.h"
 
 //Enemyのこれからやること
 //1.追跡システムを単純化する
@@ -20,6 +20,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	//空だったら引っかかるようにしている
 	assert(player_!=nullptr);
 	assert(objectManager_ != nullptr);
+	assert(levelDataManager_ != nullptr);
 
 	//Stageの四隅が一つでも同じだったら引っかかるようにしている
 	//X軸
@@ -40,7 +41,6 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	strongEnemyModelHandle_ = strongEnemyModel;
 
 	//CSVでやった方が良いかも
-	//JSONでも良いよね
 
 	//1体目
 	Enemy* enemy1 = new Enemy();
@@ -210,6 +210,75 @@ void EnemyManager::Update(){
 
 			#pragma region ステージオブジェクト
 
+
+			//レベルエディタから持ってくる
+			//座標
+			std::vector<Vector3> positions = levelDataManager_->GetStageObjectPositions(levelDataHandle_);
+			//AABB
+			std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelDataHandle_);
+			//コライダーを持っているかどうか
+			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_);
+			//衝突判定
+			for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
+
+				
+					//AABBを取得
+					AABB objectAABB = aabbs[i];
+					//位置を取得
+					Vector3 objectPosition = positions[i];
+
+
+					//お互いのAABBが接触している場合
+					if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
+						((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
+						//オブジェクトとの差分ベクトル
+						Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
+						//正規化
+						Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
+
+
+						//敵の向いている方向
+						Vector3 enemyDirection = enemy->GetDirection();
+
+						//前にある場合だけ計算
+						float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
+
+						//進行方向上にあるときだけ計算する
+						if (dot > FRONT_DOT) {
+
+							//差分ベクトルのXとZの大きさを比べ
+							//値が大きい方で反転させる
+							float defferenceValueX = std::abs(defference.x);
+							float defferenceValueZ = std::abs(defference.z);
+
+
+							//X軸反転
+							if (defferenceValueX >= defferenceValueZ) {
+								enemy->InvertSpeedX();
+							}
+							//Z軸反転
+							else {
+								enemy->InvertSpeedZ();
+							}
+
+
+
+#ifdef _DEBUG
+							ImGui::Begin("DemoObjectEnemy");
+							ImGui::InputFloat("Dot", &dot);
+							ImGui::InputFloat3("defference", &defference.x);
+							ImGui::InputFloat("defferenceValueX", &defferenceValueX);
+							ImGui::InputFloat("defferenceValueZ", &defferenceValueZ);
+							ImGui::End();
+#endif // _DEBUG
+
+						}
+					}
+
+			}
+
+
+
 			//仮置きのステージオブジェクト
 			std::list<StageObjectPre*>stageObjects=objectManager_->GetStageObjets();
 			for (StageObjectPre* stageObject : stageObjects) {
@@ -263,9 +332,6 @@ void EnemyManager::Update(){
 						ImGui::InputFloat("defferenceValueZ", &defferenceValueZ);
 						ImGui::End();
 #endif // _DEBUG
-
-
-
 
 					}
 				}
@@ -347,9 +413,6 @@ void EnemyManager::Update(){
 	//1体だけの時
 	const uint32_t ONLY_ONE = 1u;
 
-
-	
-	
 	//衝突判定をやる必要が無いからね
 	if (enemyAmount == ONLY_ONE) {
 		for (Enemy* enemy : enemyes_) {
