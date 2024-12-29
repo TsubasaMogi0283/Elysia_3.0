@@ -159,7 +159,7 @@ void GameScene::Initialize() {
 	//初期化
 	skydome_->Initialize(skydomeModelHandle);
 
-
+	//ハンドルの取得
 	levelHandle_=levelDataManager_->Load("GameStage/GameStage.json");
 
 
@@ -181,6 +181,8 @@ void GameScene::Initialize() {
 	enemyManager_->SetPlayer(player_.get());
 	//オブジェクト管理クラスの設定
 	enemyManager_->SetObjectManager(objectManager_.get());
+	//レベルデータ管理クラスの設定
+	enemyManager_->SetLevelDataManager(levelDataManager_, levelHandle_);
 	//ステージの四隅の情報を設定
 	enemyManager_->SetStageRectangle(stageRect);
 	//初期化
@@ -905,7 +907,7 @@ void GameScene::Update(GameManager* gameManager) {
 		//オーディオオブジェクトに対してのコライダーを登録
 		collisionManager_->RegisterList(player_->GetCollisionToAudioObject());
 		//懐中電灯に対してのコライダーを登録
-		collisionManager_->RegisterList(player_->GetFlashLightCollision());
+		//collisionManager_->RegisterList(player_->GetFlashLightCollision());
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();

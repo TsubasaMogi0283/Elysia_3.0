@@ -44,10 +44,10 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 
 	//1体目
 	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = {.x= 0.0f,.y= 0.0f,.z= 11.0f };
-	enemy1->Initialize(normalEnemyModelHandle_, position1, {.x = -0.0f,.y= 0.0f,.z = -0.01f });
-	//enemyes_.push_back(enemy1);
-	delete enemy1;
+	Vector3 position1 = {.x= -0.0f,.y= 0.0f,.z= -30.0f };
+	enemy1->Initialize(normalEnemyModelHandle_, position1, {.x = -0.01f,.y= 0.0f,.z = 0.0f });
+	enemyes_.push_back(enemy1);
+	//delete enemy1;
 	//2体目
 	Enemy* enemy2 = new Enemy();
 	Vector3 position2 = {.x= -5.0f,.y= 0.0f,.z= 15.0f };
