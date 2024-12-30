@@ -373,6 +373,9 @@
     <Filter Include="Ellysia\Header File\Polygone\3D\InstancingModel">
       <UniqueIdentifier>{30e383de-74ed-4107-a05e-3a65171fd88c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy">
+      <UniqueIdentifier>{dfcbb99b-9978-43c1-a6cf-5a4c4e60f7f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -637,6 +640,9 @@
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Material\Material.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\NormalEnemy.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1109,6 +1115,9 @@
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Material\Material.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\NormalEnemy.h">
       <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>

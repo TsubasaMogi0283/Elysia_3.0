@@ -1,21 +1,23 @@
 #include "TitleScene.h"
 #include <imgui.h>
-#include <Input.h>
-#include "GameScene/GameScene.h"
+#include <numbers>
 
+#include "Input.h"
+#include "GameScene/GameScene.h"
 #include "GameManager.h"
 #include "ModelManager.h"
 #include "AnimationManager.h"
-#include <numbers>
-#include <TextureManager.h>
 
+#include "TextureManager.h"
+#include "LevelDataManager.h"
 
 TitleScene::TitleScene(){
 	//テクスチャ管理クラスの取得
 	textureManager_ = TextureManager::GetInstance();
 	//入力クラスの取得
 	input_ = Input::GetInstance();
-
+	//レベルエディタ管理クラスの取得
+	levelDataManager_ = LevelDataManager::GetInstance();
 }
 
 void TitleScene::Initialize(){
@@ -33,9 +35,19 @@ void TitleScene::Initialize(){
 	//毎系
 	backGround_.reset(Sprite::Create(titleTextureHandle, INITIAL_POSITION));
 
+
+	levelHandle_ = levelDataManager_->Load("TitleStage/TitleStage.json");
+
 	isStart_ = false;
 	isFlash_ = true;
 	isFastFlash_ = false;
+
+	//マテリアルの初期化
+	material_.Initialize();
+	material_.lightingKinds_ = Spot;
+
+	//スポットライトの初期化
+	spotLight.Initialize();
 
 	//カメラの初期化
 	camera_.Initialize();
@@ -144,14 +156,32 @@ void TitleScene::Update(GameManager* gameManager){
 		return;
 	}
 
+
+	//ステージデータの更新
+	Listener listener = {
+			.position = {},
+			.move = {},
+	};
+	levelDataManager_->SetListener(levelHandle_, listener);
+
+	levelDataManager_->Update(levelHandle_);
+
+	//マテリアルの更新
+	material_.Update();
+	//スポットライトの更新
+	spotLight.Update();
+
 	//カメラの更新
 	camera_.Update();
 
 	
 }
 
-void TitleScene::DrawObject3D()
-{
+void TitleScene::DrawObject3D(){
+
+	levelDataManager_->Draw(levelHandle_,camera_, material_, spotLight);
+
+
 }
 
 void TitleScene::PreDrawPostEffectFirst()

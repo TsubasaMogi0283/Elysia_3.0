@@ -175,7 +175,6 @@ private:
 
 private:
 
-
 	//説明テクスチャの最大数
 	const uint32_t MAX_EXPLANATION_NUMBER_ = 2;
 

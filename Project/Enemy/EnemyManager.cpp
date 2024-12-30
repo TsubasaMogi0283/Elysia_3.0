@@ -222,73 +222,12 @@ void EnemyManager::Update(){
 			for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
 
 				
-					//AABBを取得
-					AABB objectAABB = aabbs[i];
-					//位置を取得
-					Vector3 objectPosition = positions[i];
-
-
-					//お互いのAABBが接触している場合
-					if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
-						((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
-						//オブジェクトとの差分ベクトル
-						Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
-						//正規化
-						Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
-
-
-						//敵の向いている方向
-						Vector3 enemyDirection = enemy->GetDirection();
-
-						//前にある場合だけ計算
-						float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
-
-						//進行方向上にあるときだけ計算する
-						if (dot > FRONT_DOT) {
-
-							//差分ベクトルのXとZの大きさを比べ
-							//値が大きい方で反転させる
-							float defferenceValueX = std::abs(defference.x);
-							float defferenceValueZ = std::abs(defference.z);
-
-
-							//X軸反転
-							if (defferenceValueX >= defferenceValueZ) {
-								enemy->InvertSpeedX();
-							}
-							//Z軸反転
-							else {
-								enemy->InvertSpeedZ();
-							}
-
-
-
-#ifdef _DEBUG
-							ImGui::Begin("DemoObjectEnemy");
-							ImGui::InputFloat("Dot", &dot);
-							ImGui::InputFloat3("defference", &defference.x);
-							ImGui::InputFloat("defferenceValueX", &defferenceValueX);
-							ImGui::InputFloat("defferenceValueZ", &defferenceValueZ);
-							ImGui::End();
-#endif // _DEBUG
-
-						}
-					}
-
-			}
-
-
-
-			//仮置きのステージオブジェクト
-			std::list<StageObjectPre*>stageObjects=objectManager_->GetStageObjets();
-			for (StageObjectPre* stageObject : stageObjects) {
-
 				//AABBを取得
-				AABB objectAABB = stageObject->GetAABB();
+				AABB objectAABB = aabbs[i];
 				//位置を取得
-				Vector3 objectPosition = stageObject->GetWorldPosition();
+				Vector3 objectPosition = positions[i];
 
-				
+
 				//お互いのAABBが接触している場合
 				if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
 					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
@@ -338,70 +277,9 @@ void EnemyManager::Update(){
 
 			}
 
+
+
 			#pragma endregion
-		}
-
-
-		if (enemy->GetCondition() == EnemyCondition::Tracking) {
-		
-			//仮置きのステージオブジェクト
-			std::list<StageObjectPre*>stageObjects = objectManager_->GetStageObjets();
-			for (StageObjectPre* stageObject : stageObjects) {
-
-				//AABBを取得
-				AABB objectAABB = stageObject->GetAABB();
-
-				//位置を取得
-				Vector3 objectPosition = stageObject->GetWorldPosition();
-
-
-				//お互いのAABBが接触している場合
-				if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
-					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
-					//オブジェクトとの差分ベクトル
-					Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
-					Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
-
-
-					//敵の向いている方向
-					Vector3 enemyDirection = enemy->GetDirection();
-
-					//前にある場合だけ計算
-					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
-
-					//進行方向上にあるときだけ計算する
-					if (dot > FRONT_DOT) {
-
-						//差分ベクトルのXとZの大きさを比べ
-						//値が大きい方で反転させる
-						float defferenceValueX = std::abs(defference.x);
-						float defferenceValueZ = std::abs(defference.z);
-
-
-						if (defferenceValueX >= defferenceValueZ) {
-							enemy->InvertSpeedX();
-						}
-						else {
-							enemy->InvertSpeedZ();
-						}
-
-
-
-#ifdef _DEBUG
-						ImGui::Begin("DemoObjectEnemy");
-						ImGui::InputFloat("Dot", &dot);
-						ImGui::InputFloat3("defference", &defference.x);
-						ImGui::InputFloat("defferenceValueX", &defferenceValueX);
-						ImGui::InputFloat("defferenceValueZ", &defferenceValueZ);
-						ImGui::End();
-#endif // _DEBUG
-
-
-
-
-					}
-				}
-			}
 		}
 
 

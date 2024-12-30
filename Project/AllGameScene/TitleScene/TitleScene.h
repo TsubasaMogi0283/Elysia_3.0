@@ -13,6 +13,7 @@
 #include "Camera.h"
 #include "BackText.h"
 #include "DirectionalLight.h"
+#include "SpotLight.h"
 
 #pragma region 前方宣言
 
@@ -31,6 +32,10 @@ class TextureManager;
 /// </summary>
 class Input;
 
+/// <summary>
+/// レベル管理クラス
+/// </summary>
+class LevelDataManager;
 
 #pragma endregion
 
@@ -94,6 +99,9 @@ private:
 	//入力クラス
 	Input* input_ = nullptr;
 
+	//レベルエディタ
+	LevelDataManager* levelDataManager_ = nullptr;
+	uint32_t levelHandle_ = 0u;
 
 private:
 
@@ -104,6 +112,9 @@ private:
 
 	//平行光源
 	DirectionalLight directionalLight_ = {};
+
+	//スポットライト
+	SpotLight spotLight = {};
 	//マテリアル
 	Material material_ = {};
 
