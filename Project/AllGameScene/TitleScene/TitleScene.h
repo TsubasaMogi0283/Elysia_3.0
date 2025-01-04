@@ -112,11 +112,17 @@ private:
 
 	//平行光源
 	DirectionalLight directionalLight_ = {};
-
 	//スポットライト
 	SpotLight spotLight = {};
 	//マテリアル
 	Material material_ = {};
+
+
+
+	//ポストエフェクト
+	//基本
+	std::unique_ptr<BackText> back_ = nullptr;
+
 
 	//テキスト
 	std::unique_ptr<Sprite> text_ = nullptr;

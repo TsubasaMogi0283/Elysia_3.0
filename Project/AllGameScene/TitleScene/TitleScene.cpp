@@ -44,15 +44,22 @@ void TitleScene::Initialize(){
 
 	//マテリアルの初期化
 	material_.Initialize();
-	material_.lightingKinds_ = Spot;
+	material_.lightingKinds_ = Directional;
 
 	//スポットライトの初期化
 	spotLight.Initialize();
+
+	directionalLight_.Initialize();
 
 	//カメラの初期化
 	camera_.Initialize();
 	//座標
 	camera_.translate_ = {.x = 0.0f,.y = 0.0f,.z = -9.8f };
+
+
+	//ポストエフェクト
+	back_ = std::make_unique<BackText>();
+	back_->Initialize();
 }
 
 void TitleScene::Update(GameManager* gameManager){
@@ -170,7 +177,7 @@ void TitleScene::Update(GameManager* gameManager){
 	material_.Update();
 	//スポットライトの更新
 	spotLight.Update();
-
+	directionalLight_.Update();
 	//カメラの更新
 	camera_.Update();
 
@@ -179,22 +186,22 @@ void TitleScene::Update(GameManager* gameManager){
 
 void TitleScene::DrawObject3D(){
 
-	levelDataManager_->Draw(levelHandle_,camera_, material_, spotLight);
+	levelDataManager_->Draw(levelHandle_,camera_, material_, directionalLight_);
 
 
 }
 
-void TitleScene::PreDrawPostEffectFirst()
-{
+void TitleScene::PreDrawPostEffectFirst(){
+	back_->PreDraw();
 }
 
-void TitleScene::DrawPostEffect()
-{
+void TitleScene::DrawPostEffect(){
+	back_->Draw();
 }
 
 void TitleScene::DrawSprite(){
 	//背景
-	backGround_->Draw();
+	//backGround_->Draw();
 
 	//テキスト
 	text_->Draw();

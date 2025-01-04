@@ -103,7 +103,7 @@ public:
 	/// <param name="isMove"></param>
 	/// <returns></returns>
 	inline void SetIsListenerMove(const bool& isMove) {
-		this->isListenerMove_ = isMove;
+		isListenerMove_ = isMove;
 	}
 
 protected:

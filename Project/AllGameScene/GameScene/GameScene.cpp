@@ -1144,7 +1144,7 @@ void GameScene::DrawObject3D() {
 	SpotLight spotLight = player_->GetFlashLight()->GetSpotLight();
 
 	//ゲート
-	gate_->Draw(camera_, spotLight);
+	//gate_->Draw(camera_, spotLight);
 	//敵
 	enemyManager_->Draw(camera_, spotLight);
 	//天球
