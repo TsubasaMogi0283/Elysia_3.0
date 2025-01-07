@@ -106,6 +106,40 @@ public:
 		isListenerMove_ = isMove;
 	}
 
+
+#pragma region SRTの設定.ここで上書きできるよ
+
+
+	/// <summary>
+	/// 拡縮
+	/// </summary>
+	/// <param name="scale"></param>
+	inline void SetScale(const Vector3& scale) {
+		this->worldTransform_.scale = scale;
+	}
+
+
+	/// <summary>
+	/// 回転
+	/// </summary>
+	/// <param name="rotate"></param>
+	inline void SetRotate(const Vector3& rotate) {
+		this->worldTransform_.rotate = rotate;
+	}
+
+
+
+	/// <summary>
+	/// 座標の設定
+	/// </summary>
+	/// <param name="position"></param>
+	inline void SetPositione(const Vector3& position) {
+		this->worldTransform_.translate = position;
+	}
+
+
+#pragma endregion
+
 protected:
 	//モデル
 	std::unique_ptr<Model> model_ = nullptr;

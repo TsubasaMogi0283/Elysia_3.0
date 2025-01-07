@@ -147,18 +147,11 @@ void GameScene::Initialize() {
 	//プレイヤーの設定
 	keyManager_->SetPlayer(player_.get());
 	//初期化
-	keyManager_->Initialize(keyModelHandle);
+	const std::string keyPositionCSV = "Resources/CSV/KeyPosition.csv";
+	keyManager_->Initialize(keyModelHandle, keyPositionCSV);
 	
 #pragma endregion
 	
-	//天球
-	//モデル読み込み
-	uint32_t skydomeModelHandle = modelManager_->LoadModelFile("Resources/Game/Skydome","Skydome.obj");
-	//生成
-	skydome_ = std::make_unique<Skydome>();
-	//初期化
-	skydome_->Initialize(skydomeModelHandle);
-
 	//ハンドルの取得
 	levelHandle_=levelDataManager_->Load("GameStage/GameStage.json");
 
@@ -183,10 +176,9 @@ void GameScene::Initialize() {
 	enemyManager_->SetObjectManager(objectManager_.get());
 	//レベルデータ管理クラスの設定
 	enemyManager_->SetLevelDataManager(levelDataManager_, levelHandle_);
-	//ステージの四隅の情報を設定
-	enemyManager_->SetStageRectangle(stageRect);
 	//初期化
-	enemyManager_->Initialize(enemyModelHandle, strongEnemyModelHandle);
+	std::string initialPositionCSV = "Resources/CSV/EnemyInitialPosition.csv";
+	enemyManager_->Initialize(enemyModelHandle, strongEnemyModelHandle, initialPositionCSV);
 	#pragma endregion
 
 	#pragma region カメラ
@@ -450,6 +442,8 @@ void GameScene::ObjectCollision(){
 
 	}
 	
+
+
 }
 
 void GameScene::EscapeCondition(){
@@ -888,7 +882,7 @@ void GameScene::Update(GameManager* gameManager) {
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
 			//懐中電灯に対して
-			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+			//collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 			
 			//攻撃
 			if (enemy->GetIsAttack() == true) {
@@ -937,7 +931,6 @@ void GameScene::Update(GameManager* gameManager) {
 		std::vector<IObjectForLevelEditorCollider*> audioColliders =levelDataManager_->GetAudioCollider(levelHandle_);
 
 		for (std::vector<IObjectForLevelEditorCollider*>::iterator it = audioColliders.begin(); it != audioColliders.end(); ++it) {
-
 			collisionManager_->RegisterList(*it);
 
 		}
@@ -1072,10 +1065,6 @@ void GameScene::Update(GameManager* gameManager) {
 	//門
 	gate_->Update();
 
-	//天球
-	skydome_->Update();
-
-	
 
 	
 #pragma region ポストエフェクト
@@ -1147,8 +1136,6 @@ void GameScene::DrawObject3D() {
 	//gate_->Draw(camera_, spotLight);
 	//敵
 	enemyManager_->Draw(camera_, spotLight);
-	//天球
-	skydome_->Draw(camera_);
 
 	//レベルエディタ  
 	levelDataManager_->Draw(levelHandle_, camera_, material_, spotLight);

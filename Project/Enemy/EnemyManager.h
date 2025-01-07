@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <list>
+#include <sstream>
 
 #include "Stage/Ground/StageRect.h"
 #include "Enemy.h"
@@ -56,8 +57,10 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="normalEnemymodel"></param>
-	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel);
+	/// <param name="normalEnemyModel"></param>
+	/// <param name="strongEnemyModel"></param>
+	/// <param name="csvPath"></param>
+	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel, const std::string& csvPath);
 	
 	/// <summary>
 	/// 更新
@@ -93,17 +96,18 @@ public:
 	}
 
 
+	/// <summary>
+	/// 通常の敵の生成
+	/// </summary>
+	/// <param name="position"></param>
+	void GenarateNormalEnemy(const Vector3& position);
+
 
 	/// <summary>
-	/// エネミーの生成
+	/// 強敵を生成
 	/// </summary>
-	void GenarateEnemy();
-
-
-	/// <summary>
-	/// 強い敵を生成
-	/// </summary>
-	void GenarateStrongEnemy();
+	/// <param name="position"></param>
+	void GenarateStrongEnemy(const Vector3& position);
 
 	/// <summary>
 	/// エネミーを消す処理
@@ -137,15 +141,8 @@ public:
 	}
 
 
-	/// <summary>
-	/// ステージの四隅を取得
-	/// </summary>
-	/// <param name="stageRect"></param>
-	inline void SetStageRectangle(const StageRect& stageRect) {
-		this->stageRect_ = stageRect;
-	}
 
-	
+
 
 
 private:
@@ -183,12 +180,11 @@ private:
 	//強敵
 	uint32_t strongEnemyModelHandle_ = 0u;
 
-	//ステージの四隅
-	StageRect stageRect_ = {};
+
+	//生成の文字列を入れる
+	std::stringstream enemyPositionsFromCSV;
 
 
-
-	
 	//接近BGM用
 	Audio* audio_ = nullptr;
 	//ハンドル

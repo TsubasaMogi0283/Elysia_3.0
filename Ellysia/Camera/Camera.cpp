@@ -9,6 +9,7 @@ void Camera::Initialize() {
 	//Resource作成
 	bufferResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraMatrixData)).Get();
 
+	//アスペクト比
 	aspectRatio_ = float(WindowsSetup::GetInstance()->GetClientWidth()) / float(WindowsSetup::GetInstance()->GetClientHeight());
 
 	//初期

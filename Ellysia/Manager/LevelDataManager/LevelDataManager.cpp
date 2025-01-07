@@ -296,15 +296,13 @@ nlohmann::json LevelDataManager::Deserialize(const std::string& fullFilePath){
 	//ファイルを開ける
 	file.open(fullFilePath);
 
-	//ミスしたら止める
+	//読み込めないなら止める
 	if (file.fail()) {
 		assert(0);
 	}
 
 	//JSON文字列から解凍したデータ
 	nlohmann::json data;
-
-	//解凍
 	file >> data;
 
 	//正しいレベルデータファイルかチェック
