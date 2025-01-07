@@ -6,6 +6,7 @@
  */
 
 #include <memory>
+#include <vector>
 
 #include "IGameScene.h"
 #include "Sprite.h"
@@ -92,6 +93,10 @@ public:
 	~TitleScene()=default;
 
 
+
+private:
+	Vector3 CatmullRomPositionLoop(const std::vector<Vector3>& points, float& t);
+
 private:
 	//テクスチャ管理クラス
 	TextureManager* textureManager_ = nullptr;
@@ -107,6 +112,9 @@ private:
 
 	//カメラ
 	Camera camera_ = {};
+	//線形補間
+	float cameraT_ = 0.0f;
+
 	//座標
 	Vector3 cameraPosition_ = {};
 
@@ -158,5 +166,20 @@ private:
 	
 	//スタート
 	bool isStart_ = false;
+
+
+
+
+
+
+
+private:
+	Vector3 p0 = {};
+	Vector3 p1 = {};
+	Vector3 p2 = {};
+	Vector3 p3 = {};
+	std::vector<Vector3>points_;
+
+
 };
 

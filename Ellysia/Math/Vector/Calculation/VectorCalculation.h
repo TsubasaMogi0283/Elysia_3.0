@@ -148,22 +148,5 @@ namespace VectorCalculation {
 	Vector3 CatmullRom(const Vector3& p0,const Vector3& p1,const Vector3& p2,const Vector3& p3,const float& t);
 
 
-	/// <summary>
-	/// CatmullRomのスプライン曲線上の座標を得る
-	/// </summary>
-	/// <param name="points"></param>
-	/// <param name="t"></param>
-	/// <returns></returns>
-	Vector3 CatmullRomPosition(const std::vector<Vector3>& points, const float& t);
-
-
-	/// <summary>
-	/// CatmullRomのスプライン曲線上の座標を得る(ループ版)
-	/// </summary>
-	/// <param name="points"></param>
-	/// <param name="t"></param>
-	/// <returns></returns>
-	Vector3 CatmullRomPositionLoop(const std::vector<Vector3>& points, float& t);
-
 
 }
