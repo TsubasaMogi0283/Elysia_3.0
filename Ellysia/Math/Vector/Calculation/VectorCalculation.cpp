@@ -221,3 +221,135 @@ Vector3 VectorCalculation::TransformCalculation(const Vector3& v, const Matrix4x
 
 }
 
+Vector3 VectorCalculation::CatmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, const float& t){
+
+	//半分
+	const float half = 1.0f / 2.0f;
+
+	Vector3 result = {
+		.x= half * (
+		(-1.0f * p0.x + 3.0f * p1.x - 3.0f * p2.x + p3.x) * (t * t * t) +
+		(2.0f * p0.x - 5.0f * p1.x + 4.0f * p2.x - p3.x) * (t * t) +
+		(-1.0f * p0.x + p2.x) * t +
+		2.0f * p1.x),
+
+		.y	= half * (
+		(-1.0f * p0.y + 3.0f * p1.y - 3.0f * p2.y + p3.y) * (t * t * t) +
+		(2.0f * p0.y - 5.0f * p1.y + 4.0f * p2.y - p3.y) * (t * t) +
+		(-1.0f * p0.y + p2.y) * t +
+		2.0f * p1.y),
+
+		.z= half * (
+		(-1.0f * p0.z + 3.0f * p1.z - 3.0f * p2.z + p3.z) * (t * t * t) +
+		(2.0f * p0.z - 5.0f * p1.z + 4.0f * p2.z - p3.z) * (t * t) +
+		(-1.0f * p0.z + p2.z) * t +
+		2.0f * p1.z),
+	
+	};
+	
+
+	return result;
+
+
+}
+
+Vector3 VectorCalculation::CatmullRomPosition(const std::vector<Vector3>& points, const float& t){
+
+	assert(points.size() >= 4 && "制御点は4点以上必要です");
+
+	//区間数は制御点の数-1
+	//初期化処理の所のcontrolPointに入っている数を参照してあげる
+	size_t division = points.size() - 1;
+	//1区間の長さ(全体を1.0とした割合)
+	float areaWidth = 1.0f / division;
+
+	//区間内の始点を0.0f、終点を1.0としたときの現在位置
+	float t_2 = std::fmod(t, areaWidth) * division;
+	//下限(0.0f)と上限(1.0f)の範囲に収める
+	t_2 = SingleCalculation::Clamp(t_2, 0.0f, 1.0f);
+
+	int index = static_cast<int>(t / areaWidth);
+	//区間番号が上限を超えないための計算
+	//index = max(index, 4);
+
+
+	int index0 = index - 1;
+	int index1 = index;
+	int index2 = index + 1;
+	int index3 = index + 2;
+
+
+
+	//始点&終点だった場合制御点を設定し直すよ
+	//最初の区間のp0はp1を重複使用する
+	if (index == 0) {
+		index0 = index1;
+	}
+
+
+	//最後の区間のp3はp2を重複使用する
+	if (index3 >= points.size()) {
+		index3 = index2;
+
+
+	}
+
+	//結果
+	Vector3 result= CatmullRom(points[index0], points[index1], points[index2], points[index3], t_2);
+	return result;
+	
+}
+
+Vector3 VectorCalculation::CatmullRomPositionLoop(const std::vector<Vector3>& points, float& t){
+	assert(points.size() >= 4 && "制御点は4点以上必要です");
+
+	//区間数は制御点の数-1
+	//初期化処理の所のcontrolPointに入っている数を参照してあげる
+	size_t division = points.size() - 1;
+	//1区間の長さ(全体を1.0とした割合)
+	float areaWidth = 1.0f / division;
+
+	//区間内の始点を0.0f、終点を1.0としたときの現在位置
+	float t_2 = std::fmod(t, areaWidth) * division;
+	//下限(0.0f)と上限(1.0f)の範囲に収める
+	t_2 = SingleCalculation::Clamp(t_2, 0.0f, 1.0f);
+
+	int index = static_cast<int>(t / areaWidth);
+	//区間番号が上限を超えないための計算
+	//index = max(index, 4);
+
+
+	int index0 = index - 1;
+	int index1 = index;
+	int index2 = index + 1;
+	int index3 = index + 2;
+
+
+
+	//始点&終点だった場合制御点を設定し直すよ
+	//最初の区間のp0はp1を重複使用する
+	if (index == 0) {
+		index0 = index1;
+	}
+
+
+	//最後の区間のp3はp2を重複使用する
+	if (index3 >= points.size()) {
+		index3 = index2;
+
+		//また最初に戻る
+		if (t > 1.0f) {
+			t = 0.0f;
+			index = 0;
+			index0 = index;
+			index1 = index;
+			index2 = index + 1;
+			index3 = index + 2;
+		}
+	}
+
+	//結果
+	Vector3 result = CatmullRom(points[index0], points[index1], points[index2], points[index3], t_2);
+	return result;
+}
+

@@ -3,6 +3,48 @@
     "objects": [
         {
             "type": "MESH",
+            "name": "Ground",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    2.0,
+                    2.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    0.0,
+                    -0.20999999344348907,
+                    0.0
+                ]
+            },
+            "file_name": "Grass",
+            "object_type": "Audio",
+            "audio": {
+                "file_name": "RunOnGrass",
+                "type": "Action",
+                "on_area": true,
+                "loop": true
+            },
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    80.0,
+                    80.0,
+                    0.2199999988079071
+                ]
+            }
+        },
+        {
+            "type": "MESH",
             "name": "Fence1.001",
             "transform": {
                 "scaling": [
@@ -893,7 +935,45 @@
                     1.0,
                     1.0
                 ]
-            }
+            },
+            "children": [
+                {
+                    "type": "MESH",
+                    "name": "Fence1.036",
+                    "transform": {
+                        "scaling": [
+                            2.999976873397827,
+                            0.3333563208580017,
+                            1.0
+                        ],
+                        "rotation": [
+                            0.0,
+                            -0.0,
+                            89.60256958007812
+                        ],
+                        "translation": [
+                            0.9316377639770508,
+                            -50.42140579223633,
+                            0.0
+                        ]
+                    },
+                    "file_name": "Fence",
+                    "object_type": "Stage",
+                    "collider": {
+                        "type": "AABB",
+                        "center": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "size": [
+                            6.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                }
+            ]
         },
         {
             "type": "MESH",
@@ -1653,42 +1733,6 @@
         },
         {
             "type": "MESH",
-            "name": "Fence1.036",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    0.9999999403953552,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    -0.2379501312971115
-                ],
-                "translation": [
-                    -10.410764694213867,
-                    -39.79491424560547,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    6.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
             "name": "Fence1.037",
             "transform": {
                 "scaling": [
@@ -1864,48 +1908,6 @@
                     6.0,
                     1.0,
                     1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "平面.001",
-            "transform": {
-                "scaling": [
-                    2.0,
-                    2.0,
-                    2.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    0.0,
-                    -0.20999999344348907,
-                    0.0
-                ]
-            },
-            "file_name": "Grass",
-            "object_type": "Audio",
-            "audio": {
-                "file_name": "RunOnGrass",
-                "type": "Action",
-                "on_area": true,
-                "loop": true
-            },
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    80.0,
-                    80.0,
-                    0.2199999988079071
                 ]
             }
         },
@@ -2301,7 +2303,7 @@
                 "size": [
                     8.199999809265137,
                     1.0,
-                    1.0
+                    4.0
                 ]
             }
         },
@@ -2373,7 +2375,7 @@
                 "size": [
                     8.270000457763672,
                     1.0,
-                    1.0
+                    4.0
                 ]
             }
         },

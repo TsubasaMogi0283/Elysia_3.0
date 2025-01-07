@@ -85,10 +85,10 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 	//生成
 	keySprite_.reset(Sprite::Create(keySpriteHandle, keySpritePosition));
 
+	//数字
 	uint32_t keyNumberQuantity[NUMBER_QUANTITY_] = {};
 	for (uint32_t i = 0u; i < NUMBER_QUANTITY_; ++i) {
 		//数を文字列に変換した方が賢いよね！
-		
 		//数をstd::stringに変換
 		const std::string number = std::to_string(i);
 		//変換した番号を組み込む
@@ -179,7 +179,6 @@ void KeyManager::Update(){
 #ifdef _DEBUG
 	ImGui::Begin("鍵管理クラス"); 
 	ImGui::InputFloat("音量", &volume);
-	
 	ImGui::InputFloat("近い距離", &closestDistance);
 	ImGui::End();
 #endif // _DEBUG
