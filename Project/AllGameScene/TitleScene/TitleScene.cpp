@@ -57,99 +57,22 @@ void TitleScene::Initialize(){
 	//カメラの初期化
 	camera_.Initialize();
 	//座標
-	camera_.translate_ = {.x = 0.0f,.y = 0.0f,.z = -9.8f };
+	camera_.translate = {.x = 0.0f,.y = 0.0f,.z = -9.8f };
 
-
-	points_ = {
-		{0.0f,0.0f,0.0f},
-		{0.0f,2.0f,2.0f},
-		{0.0f,4.0f,4.0f},
-		{0.0f,2.0f,6.0f},
-		{0.0f,0.0f,8.0f},
-
-
-	};
+	//レールカメラ
+	titleRailCamera_ = std::make_unique<TitleRailCamera>();
+	//初期化
+	titleRailCamera_->Initialize();
+	
 
 	//ポストエフェクト
 	back_ = std::make_unique<BackText>();
+	//初期化
 	back_->Initialize();
 }
 
 
 
-Vector3 TitleScene::CatmullRomPositionLoop(const std::vector<Vector3>& points, float& t) {
-	assert(points.size() >= 4 && "制御点は4点以上必要です");
-
-	//区間数は制御点の数-1
-	//初期化処理の所のcontrolPointに入っている数を参照してあげる
-	size_t division = points.size() - 1;
-	//1区間の長さ(全体を1.0とした割合)
-	float areaWidth = 1.0f / division;
-
-	//区間内の始点を0.0f、終点を1.0としたときの現在位置
-	float t_2 = std::fmod(t, areaWidth) * division;
-	//下限(0.0f)と上限(1.0f)の範囲に収める
-	t_2 = SingleCalculation::Clamp(t_2, 0.0f, 1.0f);
-
-	int index = static_cast<int>(t / areaWidth);
-	//区間番号が上限を超えないための計算
-	//index = max(index, 4);
-
-
-	int index0 = index - 1;
-	int index1 = index;
-	int index2 = index + 1;
-	int index3 = index + 2;
-
-
-
-	//始点&終点だった場合制御点を設定し直すよ
-	//最初の区間のp0はp1を重複使用する
-	if (index == 0) {
-		index0 = index1;
-	}
-
-
-	//最後の区間のp3はp2を重複使用する
-	if (index3 >= points.size()) {
-		index3 = index2;
-
-		//また最初に戻る
-		if (t > 1.0f) {
-			t = 0.0f;
-			index = 0;
-			index0 = index;
-			index1 = index;
-			index2 = index + 1;
-			index3 = index + 2;
-		}
-	}
-
-
-
-	//4点の座標
-	p0 = points[index0];
-	p1 = points[index1];
-	p2 = points[index2];
-	p3 = points[index3];
-
-#ifdef _DEBUG
-	ImGui::Begin("Index");
-	ImGui::InputFloat("t2", &t_2);
-	ImGui::InputInt("Index", &index);
-	ImGui::InputInt("Index0", &index0);
-	ImGui::InputInt("Index1", &index1);
-	ImGui::InputInt("Index2", &index2);
-	ImGui::InputInt("Index3", &index3);
-	ImGui::End();
-#endif // _DEBUG
-
-	
-
-	//結果
-	Vector3 result = VectorCalculation::CatmullRom(points[index0], points[index1], points[index2], points[index3], t_2);
-	return result;
-}
 
 
 
@@ -267,50 +190,28 @@ void TitleScene::Update(GameManager* gameManager){
 
 
 
-	//回転角を求めてワールドトランスフォームの角度に入れる
-	cameraT_ += 0.001f;
-	//Vector3 tangent = VectorCalculation::CatmullRom(p0, p1, p2, p3, cameraT_);
-	//
-	////atan(高さ,底辺)
-	//camera_.rotate_.y = std::atan2(tangent.x, tangent.z);
-	////三角比
-	//float velocityXZ = sqrtf((tangent.x * tangent.x) + (tangent.z * tangent.z));
-	//camera_.rotate_.x = std::atan2(-tangent.y, velocityXZ);
 
 
 
 	
-	
-	camera_.translate_ = CatmullRomPositionLoop(points_, cameraT_);
-
 
 	//マテリアルの更新
 	material_.Update();
 	//スポットライトの更新
 	spotLight.Update();
 	directionalLight_.Update();
+
+	//レールカメラの更新
+	titleRailCamera_->Update();
+	camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
+	camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
+
 	//カメラの更新
-	camera_.Update();
-
-	
+	camera_.Transfer();
 
 
-#ifdef _DEBUG
-	ImGui::Begin("CameraInfo");
-	ImGui::InputFloat("T", &cameraT_);
-	ImGui::InputFloat3("Translate", &camera_.translate_.x);
-	ImGui::InputFloat3("Rotate", &camera_.rotate_.x);
-	ImGui::End();
 
 
-	ImGui::Begin("P");
-	
-	ImGui::InputFloat3("P0", &p0.x);
-	ImGui::InputFloat3("P1", &p1.x);
-	ImGui::InputFloat3("P2", &p2.x);
-	ImGui::InputFloat3("P3", &p3.x);
-	ImGui::End();
-#endif // _DEBUG
 }
 
 void TitleScene::DrawObject3D(){

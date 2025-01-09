@@ -280,7 +280,7 @@ void Particle3D::Update(const Camera& camera) {
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
-			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix_);
+			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix);
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
@@ -339,7 +339,7 @@ void Particle3D::Update(const Camera& camera) {
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
-			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix_);
+			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix);
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
@@ -391,7 +391,7 @@ void Particle3D::Update(const Camera& camera) {
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
-			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix_);
+			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix);
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
@@ -502,7 +502,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material){
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource->GetGPUVirtualAddress());
 
 
 	//PS用のカメラ
@@ -555,7 +555,7 @@ void Particle3D::Draw(const Camera& camera,const  Material& material,const Direc
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource->GetGPUVirtualAddress());
 
 	//平行光源
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, directionalLight.bufferResource_->GetGPUVirtualAddress());
@@ -607,7 +607,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Poin
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource->GetGPUVirtualAddress());
 
 	//PS用のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
@@ -660,7 +660,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Spot
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource->GetGPUVirtualAddress());
 
 	//PS用のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());

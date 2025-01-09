@@ -138,7 +138,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLight.bufferResource_->GetGPUVirtualAddress());
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
 
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
@@ -214,7 +214,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
 
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
@@ -291,7 +291,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
 
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());

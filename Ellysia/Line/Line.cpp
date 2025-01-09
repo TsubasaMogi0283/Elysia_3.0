@@ -77,7 +77,7 @@ void Line::Draw(Vector3 start, Vector3 end, Camera& camera) {
 	//今回はRootParameter[1]に対してCBVの設定を行っている
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, wvpResource_->GetGPUVirtualAddress());
 
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, camera.bufferResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, camera.bufferResource->GetGPUVirtualAddress());
 
 	//マテリアル
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(2, materialResource_->GetGPUVirtualAddress());

@@ -128,7 +128,7 @@ void SkyBox::Draw(const uint32_t& texturehandle, const WorldTransform& worldTran
 	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferViewSphere_);
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, worldTransform.bufferResource->GetGPUVirtualAddress());
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, camera.bufferResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, camera.bufferResource->GetGPUVirtualAddress());
 
 	if (texturehandle != 0) {
 		TextureManager::GetInstance()->GraphicsCommand(2, texturehandle);

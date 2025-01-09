@@ -7,25 +7,25 @@
 //初期化
 void Camera::Initialize() {
 	//Resource作成
-	bufferResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraMatrixData)).Get();
+	bufferResource = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraMatrixData)).Get();
 
 	//アスペクト比
-	aspectRatio_ = float(WindowsSetup::GetInstance()->GetClientWidth()) / float(WindowsSetup::GetInstance()->GetClientHeight());
+	aspectRatio = float(WindowsSetup::GetInstance()->GetClientWidth()) / float(WindowsSetup::GetInstance()->GetClientHeight());
 
 	//初期
-	scale_ = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
-	rotate_ = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
-	translate_ = {.x= 0.0f,.y= 0.0f,.z= -9.8f };
+	scale = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
+	rotate = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
+	translate = {.x= 0.0f,.y= 0.0f,.z= -9.8f };
 
 
 	//ワールド行列を計算
-	worldMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
+	worldMatrix = Matrix4x4Calculation::MakeAffineMatrix(scale, rotate, translate);
 	//逆行列を計算
-	viewMatrix_ = Matrix4x4Calculation::Inverse(worldMatrix_);
+	viewMatrix = Matrix4x4Calculation::Inverse(worldMatrix);
 	//射影を計算
-	projectionMatrix_ = Matrix4x4Calculation::MakePerspectiveFovMatrix(fov_, aspectRatio_, nearClip_, farClip_);
+	projectionMatrix = Matrix4x4Calculation::MakePerspectiveFovMatrix(fov_, aspectRatio, nearClip, farClip);
 	//正射影行列(正規化)を計算
-	orthographicMatrix_ = Matrix4x4Calculation::MakeOrthographicMatrix(0, 0, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	orthographicMatrix = Matrix4x4Calculation::MakeOrthographicMatrix(0, 0, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 
 
 }
@@ -34,14 +34,14 @@ void Camera::Initialize() {
 void Camera::Update() {
 
 	//ワールド行列を計算
-	worldMatrix_ = Matrix4x4Calculation::MakeAffineMatrix(scale_, rotate_, translate_);
+	worldMatrix = Matrix4x4Calculation::MakeAffineMatrix(scale, rotate, translate);
 
 	//逆行列を計算
-	viewMatrix_ = Matrix4x4Calculation::Inverse(worldMatrix_);
+	viewMatrix = Matrix4x4Calculation::Inverse(worldMatrix);
 	//射影を計算
-	projectionMatrix_ = Matrix4x4Calculation::MakePerspectiveFovMatrix(fov_, aspectRatio_, nearClip_, farClip_);
+	projectionMatrix = Matrix4x4Calculation::MakePerspectiveFovMatrix(fov_, aspectRatio, nearClip, farClip);
 	//正射影行列(正規化)を計算
-	orthographicMatrix_ = Matrix4x4Calculation::MakeOrthographicMatrix(0, 0, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	orthographicMatrix = Matrix4x4Calculation::MakeOrthographicMatrix(0, 0, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 
 	//転送
 	Transfer();
@@ -49,9 +49,9 @@ void Camera::Update() {
 
 void Camera::Transfer() {
 	//それぞれにデータの書き込み
-	bufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraMatrixData_));
-	cameraMatrixData_->viewMatrix_ = viewMatrix_;
-	cameraMatrixData_->projectionMatrix_ = projectionMatrix_;
-	cameraMatrixData_->orthographicMatrix_ = orthographicMatrix_;
-	bufferResource_->Unmap(0, nullptr);
+	bufferResource->Map(0, nullptr, reinterpret_cast<void**>(&cameraMatrixData));
+	cameraMatrixData->viewMatrix_ = viewMatrix;
+	cameraMatrixData->projectionMatrix_ = projectionMatrix;
+	cameraMatrixData->orthographicMatrix_ = orthographicMatrix;
+	bufferResource->Unmap(0, nullptr);
 }

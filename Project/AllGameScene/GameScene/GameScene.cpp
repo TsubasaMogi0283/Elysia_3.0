@@ -188,9 +188,9 @@ void GameScene::Initialize() {
 	//それぞれに値を入れていく
 	//回転
 	//+で左回り
-	camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
+	camera_.rotate.y = std::numbers::pi_v<float> / 2.0f;
 	//座標
-	camera_.translate_ = { .x = 0.0f,.y = 1.0f ,.z = -15.0f };
+	camera_.translate = { .x = 0.0f,.y = 1.0f ,.z = -15.0f };
 	
 
 	//カメラ座標のオフセットの初期化
@@ -950,12 +950,12 @@ void GameScene::Update(GameManager* gameManager) {
 
 		//もとに戻す
 		//カメラの回転の計算
-		camera_.rotate_.x = -phi;
-		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
-		camera_.rotate_.z = 0.0f;
+		camera_.rotate.x = -phi;
+		camera_.rotate.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
+		camera_.rotate.z = 0.0f;
 
 		//位置の計算
-		camera_.translate_ = VectorCalculation::Add(player_->GetWorldPosition(), cameraPositionOffset_);
+		camera_.translate = VectorCalculation::Add(player_->GetWorldPosition(), cameraPositionOffset_);
 
 
 
@@ -1017,7 +1017,7 @@ void GameScene::Update(GameManager* gameManager) {
 
 #ifdef _DEBUG
 		ImGui::Begin("カメラ");
-		ImGui::SliderFloat3("回転", &camera_.rotate_.x, -3.0f, 3.0f);
+		ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
 		ImGui::SliderFloat3("位置", &cameraTranslate.x, -100.0f, 100.0f);
 		ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
 		ImGui::InputFloat("Theta", &theta_);

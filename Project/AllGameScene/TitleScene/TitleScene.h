@@ -15,6 +15,8 @@
 #include "BackText.h"
 #include "DirectionalLight.h"
 #include "SpotLight.h"
+#include "RailCamera/TitleRailCamera.h"
+
 
 #pragma region 前方宣言
 
@@ -94,8 +96,6 @@ public:
 
 
 
-private:
-	Vector3 CatmullRomPositionLoop(const std::vector<Vector3>& points, float& t);
 
 private:
 	//テクスチャ管理クラス
@@ -112,8 +112,7 @@ private:
 
 	//カメラ
 	Camera camera_ = {};
-	//線形補間
-	float cameraT_ = 0.0f;
+	std::unique_ptr<TitleRailCamera> titleRailCamera_ = nullptr;
 
 	//座標
 	Vector3 cameraPosition_ = {};
@@ -168,18 +167,7 @@ private:
 	bool isStart_ = false;
 
 
-
-
-
-
-
-private:
-	Vector3 p0 = {};
-	Vector3 p1 = {};
-	Vector3 p2 = {};
-	Vector3 p3 = {};
-	std::vector<Vector3>points_;
-
+	
 
 };
 
