@@ -71,13 +71,8 @@ private:
 
 	//線形補間
 	float cameraT_ = 0.0f;
-	float t_2 = 0.0f;
 
-
-	Vector3 p0 = {};
-	Vector3 p1 = {};
-	Vector3 p2 = {};
-	Vector3 p3 = {};
+	
 	std::vector<Vector3>points_;
 
 
