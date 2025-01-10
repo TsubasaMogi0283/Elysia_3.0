@@ -37,7 +37,7 @@ Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& poin
 	float areaLength = 1.0f / division;
 
 	//区間内の始点を0.0f、終点を1.0としたときの現在位置
-	t_2 = std::fmod(t, areaLength) * division;
+	float t_2 = std::fmod(t, areaLength) * division;
 	//下限(0.0f)と上限(1.0f)の範囲に収める
 	t_2 = SingleCalculation::Clamp(0.0f, 1.0f, t_2);
 
@@ -78,26 +78,15 @@ Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& poin
 
 
 	//4点の座標
-	p0 = points[index0];
-	p1 = points[index1];
-	p2 = points[index2];
-	p3 = points[index3];
-
-#ifdef _DEBUG
-	ImGui::Begin("Index");
-	ImGui::InputFloat("t2", &t_2);
-	ImGui::InputInt("Index", &index);
-	ImGui::InputInt("Index0", &index0);
-	ImGui::InputInt("Index1", &index1);
-	ImGui::InputInt("Index2", &index2);
-	ImGui::InputInt("Index3", &index3);
-	ImGui::End();
-#endif // _DEBUG
-
+	const Vector3& p0 = points[index0];
+	const Vector3& p1 = points[index1];
+	const Vector3& p2 = points[index2];
+	const Vector3& p3 = points[index3];
 
 
 	//結果
-	return  VectorCalculation::CatmullRom(p0, p1, p2, p3, t_2);
+	Vector3 result = VectorCalculation::CatmullRom(p0, p1, p2, p3, t_2);
+	return  result;
 }
 
 
@@ -105,58 +94,41 @@ void TitleRailCamera::Update(){
 
 
 
-	//回転角を求めてワールドトランスフォームの角度に入れる
+	//線形補間
 	cameraT_ += 0.001f;
 	
-	//targetとeyeの差分ベクトル(forward)から02_09_ex1より
-	//回転角を求めてワールドトランスフォームの角度に入れる
-	Vector3 tangent = VectorCalculation::CatmullRom(p0, p1, p2, p3, t_2);
-
-
-
-	if (cameraT_ >= 0.5f) {
-		tangent;
-	}
-	//atan(高さ,底辺)
-	//ここは09aとだいたい同じ
-	worldTransform_.rotate.y = std::atan2(tangent.x, tangent.z);
-	//三角比
-	float velocityXZ = sqrtf((tangent.x * tangent.x) + (tangent.z * tangent.z));
-	worldTransform_.rotate.x = std::atan2(-tangent.y, velocityXZ);
 	
-
-
+	//座標
 	worldTransform_.translate = CatmullRomPositionLoop(points_, cameraT_);
 
+	//targetとeyeの差分ベクトル(forward)から02_09_ex1より
+	//回転角を求めてワールドトランスフォームの角度に入れる
+	Vector3 target = worldTransform_.translate;
+
+	//atan2(高さ,底辺)
+	//各角度を計算
+	worldTransform_.rotate.y = std::atan2(target.x, target.z);
+	//XZの長さ
+	float velocityXZ = sqrtf((target.x * target.x) + (target.z * target.z));
+	worldTransform_.rotate.x = std::atan2(-target.y, velocityXZ);
+
+
+	//ワールド行列を計算
 	worldTransform_.worldMatrix = Matrix4x4Calculation::MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	
 	//ビュー行列の計算
 	camera_.viewMatrix = Matrix4x4Calculation::Inverse(worldTransform_.worldMatrix);
 
 
-
-	
-
-
-
-
-
-
 #ifdef _DEBUG
 	ImGui::Begin("CameraInfo");
 	ImGui::DragFloat3("Position", &worldTransform_.translate.x);
 	ImGui::SliderFloat("T", &cameraT_,0.0f,1.0f);
+
 	ImGui::InputFloat3("Rotate", &worldTransform_.rotate.x);
 	ImGui::End();
 
 
-	ImGui::Begin("P");
-
-	ImGui::InputFloat3("P0", &p0.x);
-	ImGui::InputFloat3("P1", &p1.x);
-	ImGui::InputFloat3("P2", &p2.x);
-	ImGui::InputFloat3("P3", &p3.x);
-	ImGui::End();
 #endif // _DEBUG
 
 }
