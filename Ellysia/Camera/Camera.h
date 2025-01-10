@@ -42,6 +42,14 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+
+
+	/// <summary>
+	/// 転送
+	/// </summary>
+	void Transfer();
+
+
 public:
 
 	/// <summary>
@@ -50,56 +58,50 @@ public:
 	/// <returns></returns>
 	Vector3 GetWorldPosition() const{
 		Vector3 worldPosition = {
-			.x = worldMatrix_.m[3][0],
-			.y = worldMatrix_.m[3][1],
-			.z = worldMatrix_.m[3][2],
+			.x = worldMatrix.m[3][0],
+			.y = worldMatrix.m[3][1],
+			.z = worldMatrix.m[3][2],
 		};
 		return worldPosition;
 	}
 
 
-private:
-
-	/// <summary>
-	/// 転送
-	/// </summary>
-	void Transfer();
-
+	
 public:
 	//リソース
-	ComPtr<ID3D12Resource> bufferResource_;
+	ComPtr<ID3D12Resource> bufferResource;
 
 
 	//角度
 	float fov_ = 0.45f;
 	//アスペクト比
-	float aspectRatio_ = 0.0f;
+	float aspectRatio = 0.0f;
 
 	//奥行の変数
-	float nearClip_ = 0.1f;
-	float farClip_ = 1000.0f;
+	float nearClip = 0.1f;
+	float farClip = 1000.0f;
 
 
 	//回転
-	Vector3 rotate_ = {};
+	Vector3 rotate = {};
 	//移動
-	Vector3 translate_ = {};
+	Vector3 translate = {};
 
 
 	//ワールド列
-	Matrix4x4 worldMatrix_ = {};
+	Matrix4x4 worldMatrix = {};
 	//ビュー行列
-	Matrix4x4 viewMatrix_ = {};
+	Matrix4x4 viewMatrix = {};
 	//射影行列
-	Matrix4x4 projectionMatrix_ = {};
+	Matrix4x4 projectionMatrix = {};
 	//正射影行列
-	Matrix4x4 orthographicMatrix_{};
+	Matrix4x4 orthographicMatrix={};
 	//転送用のデータ
-	CameraMatrixData* cameraMatrixData_ = nullptr;
+	CameraMatrixData* cameraMatrixData = nullptr;
 
 private:
 	//スケール。
 	//本当はいらないけどアフィン行列を作るときに一緒に入れて見やすくしている。
-	Vector3 scale_ = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
+	Vector3 scale = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
 
 };

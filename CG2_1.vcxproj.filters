@@ -283,20 +283,8 @@
     <Filter Include="Project\ObjectManager\StageObject">
       <UniqueIdentifier>{3ee82dd3-28aa-419b-817b-b4293c945d9b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\ObjectManager\StageObject\Ground">
-      <UniqueIdentifier>{3c3cdb90-3b57-4d02-8386-26dafe74497f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\ObjectManager\StageObject\Gate">
       <UniqueIdentifier>{04fdbc6f-7a4a-4b0a-ad10-68fef5f36d90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\ObjectManager\StageObject\Skydome">
-      <UniqueIdentifier>{3ef8085f-eeb8-4a09-ae96-9db0b99c2fae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\ObjectManager\StageObject\DemoObject">
-      <UniqueIdentifier>{23eb0470-6142-403d-b697-8c87c43993b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\ObjectManager\StageObject\Tree">
-      <UniqueIdentifier>{5a44d3e4-b20b-4e25-b81a-9f359069b5ec}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\GameScene\LevelEditorSample">
       <UniqueIdentifier>{cb24ff76-ddbd-45d1-b26d-09fce883e618}</UniqueIdentifier>
@@ -373,6 +361,27 @@
     <Filter Include="Ellysia\Header File\Polygone\3D\InstancingModel">
       <UniqueIdentifier>{30e383de-74ed-4107-a05e-3a65171fd88c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy">
+      <UniqueIdentifier>{dfcbb99b-9978-43c1-a6cf-5a4c4e60f7f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Polygone\3D\SkyBox">
+      <UniqueIdentifier>{54532141-e906-455a-85b0-6a80eab57ef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Math\Quaternion">
+      <UniqueIdentifier>{4dfcbc6b-4417-49ec-93cb-13e97a3524aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Math\BPM">
+      <UniqueIdentifier>{c6fd8d56-189c-4bfc-9d75-c2f68718fbf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Polygone\3D\InstancingModel">
+      <UniqueIdentifier>{14ace3db-195d-4354-9565-509ea9b161f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Camera">
+      <UniqueIdentifier>{e783ebed-4b01-4c8e-84cd-f4deb18a6bc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Camera\TitleRailCamera">
+      <UniqueIdentifier>{d5dff015-e7ce-422c-8ab2-1a450b24d437}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -389,9 +398,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Audio\Audio.cpp">
       <Filter>Ellysia\Source File\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Math\BPMCalculation\BPMSetting.cpp">
-      <Filter>Ellysia\Source File\Math</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Common\Windows\WindowsSetup.cpp">
       <Filter>Ellysia\Source File\Common</Filter>
@@ -525,9 +531,6 @@
     <ClCompile Include="Project\Player\Player.cpp">
       <Filter>Project\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Stage\Ground\Ground.cpp">
-      <Filter>Project\ObjectManager\StageObject\Ground</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Key\Key.cpp">
       <Filter>Project\Item\Key</Filter>
     </ClCompile>
@@ -537,9 +540,6 @@
     <ClCompile Include="Project\Light\FlashLight\FlashLight.cpp">
       <Filter>Project\Light\FlashLight</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Stage\Skydome\Skydome.cpp">
-      <Filter>Project\ObjectManager\StageObject\Skydome</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Enemy\EnemyManager.cpp">
       <Filter>Project\Enemy\EnemyManager</Filter>
     </ClCompile>
@@ -548,9 +548,6 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\TitleScene\TitleScene.cpp">
       <Filter>Project\GameScene\Title</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Stage\DemoObject\DemoObject.cpp">
-      <Filter>Project\ObjectManager\StageObject\DemoObject</Filter>
     </ClCompile>
     <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp">
       <Filter>Project\ObjectManager</Filter>
@@ -563,9 +560,6 @@
     </ClCompile>
     <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp">
       <Filter>Project\Enemy\EnemyAttackCollision</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Stage\StageObject\Tree\Tree.cpp">
-      <Filter>Project\ObjectManager\StageObject\Tree</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\StrongEnemy.cpp">
       <Filter>Project\Enemy\StrongEnemy</Filter>
@@ -606,9 +600,6 @@
     <ClCompile Include="Ellysia\GlobalVariables\GlobalVariables.cpp">
       <Filter>Ellysia\Source File\GlobalVariables</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.cpp">
-      <Filter>Ellysia\Source File\Math</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Manager\LevelDataManager\LevelDataManager.cpp">
       <Filter>Ellysia\Source File\Manager\LevelData</Filter>
     </ClCompile>
@@ -633,11 +624,23 @@
     <ClCompile Include="Project\Player\AudioTestPlayer.cpp">
       <Filter>Project\Player\Test</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Material\Material.cpp">
       <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.cpp">
+      <Filter>Ellysia\Source File\Math\Quaternion</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Math\BPMCalculation\BPMSetting.cpp">
+      <Filter>Ellysia\Source File\Math\BPM</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.cpp">
+      <Filter>Ellysia\Source File\Polygone\3D\InstancingModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\NormalEnemy.cpp">
+      <Filter>Project\Enemy\NormalEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\RailCamera\TitleRailCamera.cpp">
+      <Filter>Project\Camera\TitleRailCamera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -856,9 +859,6 @@
     <ClInclude Include="Ellysia\Lighting\LightingType.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\SkyBox\SkyBox.h">
-      <Filter>Ellysia\Header File\Polygone\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.h">
       <Filter>Ellysia\Header File\Polygone\3D\AnimationModel</Filter>
     </ClInclude>
@@ -973,9 +973,6 @@
     <ClInclude Include="Project\Key\Key.h">
       <Filter>Project\Item\Key</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Stage\Ground\Ground.h">
-      <Filter>Project\ObjectManager\StageObject\Ground</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Key\KeyManager.h">
       <Filter>Project\Item\Key\KeyManager</Filter>
     </ClInclude>
@@ -985,14 +982,8 @@
     <ClInclude Include="Ellysia\Math\Shape\Fan.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Stage\Ground\StageRect.h">
-      <Filter>Project\ObjectManager\StageObject\Ground</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Manager\LevelDataManager\LevelDataManager.h">
       <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Stage\Skydome\Skydome.h">
-      <Filter>Project\ObjectManager\StageObject\Skydome</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\EnemyManager.h">
       <Filter>Project\Enemy\EnemyManager</Filter>
@@ -1009,9 +1000,6 @@
     <ClInclude Include="Project\Stage\ObjectManager\ObjectManager.h">
       <Filter>Project\ObjectManager</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Stage\DemoObject\DemoObject.h">
-      <Filter>Project\ObjectManager\StageObject\DemoObject</Filter>
-    </ClInclude>
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h">
       <Filter>Project\GameScene\Lose</Filter>
     </ClInclude>
@@ -1026,9 +1014,6 @@
     </ClInclude>
     <ClInclude Include="Project\Enemy\EnemyAttackCollision.h">
       <Filter>Project\Enemy\EnemyAttackCollision</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Stage\StageObject\Tree\Tree.h">
-      <Filter>Project\ObjectManager\StageObject\Tree</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\StrongEnemy.h">
       <Filter>Project\Enemy\StrongEnemy</Filter>
@@ -1105,11 +1090,20 @@
     <ClInclude Include="Project\Player\PlayerCollisionToStageObject.h">
       <Filter>Project\Player\PlayerCollisionToStageObject</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Material\Material.h">
       <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\SkyBox\SkyBox.h">
+      <Filter>Ellysia\Header File\Polygone\3D\SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.h">
+      <Filter>Ellysia\Header File\Polygone\3D\InstancingModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\NormalEnemy.h">
+      <Filter>Project\Enemy\NormalEnemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\RailCamera\TitleRailCamera.h">
+      <Filter>Project\Camera\TitleRailCamera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

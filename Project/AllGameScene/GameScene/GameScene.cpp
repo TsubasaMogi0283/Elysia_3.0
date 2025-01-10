@@ -119,8 +119,6 @@ void GameScene::Initialize() {
 #pragma region プレイヤー
 	//生成
 	player_ = std::make_unique<Player>();
-	//ステージの四隅の設定
-	player_->SetStageRect(stageRect);
 	//初期化
 	player_->Initialize();
 	//最初はコントロールは出来ない用にする
@@ -149,19 +147,12 @@ void GameScene::Initialize() {
 	//プレイヤーの設定
 	keyManager_->SetPlayer(player_.get());
 	//初期化
-	keyManager_->Initialize(keyModelHandle);
+	const std::string keyPositionCSV = "Resources/CSV/KeyPosition.csv";
+	keyManager_->Initialize(keyModelHandle, keyPositionCSV);
 	
 #pragma endregion
 	
-	//天球
-	//モデル読み込み
-	uint32_t skydomeModelHandle = modelManager_->LoadModelFile("Resources/Game/Skydome","Skydome.obj");
-	//生成
-	skydome_ = std::make_unique<Skydome>();
-	//初期化
-	skydome_->Initialize(skydomeModelHandle);
-
-
+	//ハンドルの取得
 	levelHandle_=levelDataManager_->Load("GameStage/GameStage.json");
 
 
@@ -183,10 +174,11 @@ void GameScene::Initialize() {
 	enemyManager_->SetPlayer(player_.get());
 	//オブジェクト管理クラスの設定
 	enemyManager_->SetObjectManager(objectManager_.get());
-	//ステージの四隅の情報を設定
-	enemyManager_->SetStageRectangle(stageRect);
+	//レベルデータ管理クラスの設定
+	enemyManager_->SetLevelDataManager(levelDataManager_, levelHandle_);
 	//初期化
-	enemyManager_->Initialize(enemyModelHandle, strongEnemyModelHandle);
+	std::string initialPositionCSV = "Resources/CSV/EnemyInitialPosition.csv";
+	enemyManager_->Initialize(enemyModelHandle, strongEnemyModelHandle, initialPositionCSV);
 	#pragma endregion
 
 	#pragma region カメラ
@@ -196,9 +188,9 @@ void GameScene::Initialize() {
 	//それぞれに値を入れていく
 	//回転
 	//+で左回り
-	camera_.rotate_.y = std::numbers::pi_v<float> / 2.0f;
+	camera_.rotate.y = std::numbers::pi_v<float> / 2.0f;
 	//座標
-	camera_.translate_ = { .x = 0.0f,.y = 1.0f ,.z = -15.0f };
+	camera_.translate = { .x = 0.0f,.y = 1.0f ,.z = -15.0f };
 	
 
 	//カメラ座標のオフセットの初期化
@@ -402,46 +394,6 @@ void GameScene::ObjectCollision(){
 	AABB playerAABB = player_->GetAABB();
 
 
-	////デモ用
-	//std::list <StageObjectPre*> stageObjects = objectManager_->GetStageObjets();
-	//for (StageObjectPre* stageObject : stageObjects) {
-	//	
-	//	//オブジェクトのAABB
-	//	AABB objectAABB = stageObject->GetAABB();
-	//
-	//	//オブジェクトとの差分ベクトル
-	//	Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(stageObject->GetWorldPosition(), player_->GetWorldPosition());
-	//	
-	//	//オブジェクトとプレイヤーの距離
-	//	Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
-	//	//内積
-	//	float dot  = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
-	//
-	//	//前方にいる時の値
-	//	//だいたい内積は0.7くらいが良さそう
-	//	const float FRONT_DOT = 0.7f;
-	//
-	//	//衝突判定
-	//	if ((playerAABB.min.x <= objectAABB.max.x && playerAABB.max.x >= objectAABB.min.x) &&
-	//		(playerAABB.min.z <= objectAABB.max.z && playerAABB.max.z >= objectAABB.min.z)&&
-	//		(dot > FRONT_DOT)) {
-	//		//動かないようにする
-	//		uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
-	//		player_->SetPlayerMoveCondition(newCondition);
-	//
-	//		//当たったらループを抜ける
-	//		break;
-	//
-	//	}
-	//	else {
-	//		//当たっていない
-	//		uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
-	//		player_->SetPlayerMoveCondition(newCondition);
-	//
-	//	}
-	//
-	//}
-	
 
 
 	//座標
@@ -490,6 +442,8 @@ void GameScene::ObjectCollision(){
 
 	}
 	
+
+
 }
 
 void GameScene::EscapeCondition(){
@@ -928,7 +882,7 @@ void GameScene::Update(GameManager* gameManager) {
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
 			//懐中電灯に対して
-			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+			//collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 			
 			//攻撃
 			if (enemy->GetIsAttack() == true) {
@@ -942,12 +896,12 @@ void GameScene::Update(GameManager* gameManager) {
 			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 			
 		}
-		//通常の敵
+		//通常の敵に対してのコライダーを登録
 		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
-
-		//懐中電灯
-		collisionManager_->RegisterList(player_->GetFlashLightCollision());
-
+		//オーディオオブジェクトに対してのコライダーを登録
+		collisionManager_->RegisterList(player_->GetCollisionToAudioObject());
+		//懐中電灯に対してのコライダーを登録
+		//collisionManager_->RegisterList(player_->GetFlashLightCollision());
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
@@ -974,6 +928,14 @@ void GameScene::Update(GameManager* gameManager) {
 		//レベルエディタの更新
 		levelDataManager_->Update(levelHandle_);
 
+		std::vector<IObjectForLevelEditorCollider*> audioColliders =levelDataManager_->GetAudioCollider(levelHandle_);
+
+		for (std::vector<IObjectForLevelEditorCollider*>::iterator it = audioColliders.begin(); it != audioColliders.end(); ++it) {
+			collisionManager_->RegisterList(*it);
+
+		}
+
+
 #ifdef _DEBUG
 		if (input_->IsTriggerKey(DIK_R) == true) {
 			levelDataManager_->Reload(levelHandle_);
@@ -988,12 +950,12 @@ void GameScene::Update(GameManager* gameManager) {
 
 		//もとに戻す
 		//カメラの回転の計算
-		camera_.rotate_.x = -phi;
-		camera_.rotate_.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
-		camera_.rotate_.z = 0.0f;
+		camera_.rotate.x = -phi;
+		camera_.rotate.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
+		camera_.rotate.z = 0.0f;
 
 		//位置の計算
-		camera_.translate_ = VectorCalculation::Add(player_->GetWorldPosition(), cameraPositionOffset_);
+		camera_.translate = VectorCalculation::Add(player_->GetWorldPosition(), cameraPositionOffset_);
 
 
 
@@ -1055,7 +1017,7 @@ void GameScene::Update(GameManager* gameManager) {
 
 #ifdef _DEBUG
 		ImGui::Begin("カメラ");
-		ImGui::SliderFloat3("回転", &camera_.rotate_.x, -3.0f, 3.0f);
+		ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
 		ImGui::SliderFloat3("位置", &cameraTranslate.x, -100.0f, 100.0f);
 		ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
 		ImGui::InputFloat("Theta", &theta_);
@@ -1095,8 +1057,7 @@ void GameScene::Update(GameManager* gameManager) {
 	material_.Update();
 
 
-	//オブジェクトマネージャーの更新
-	objectManager_->Update();
+
 	//プレイヤーの更新
 	player_->Update();
 	
@@ -1104,10 +1065,6 @@ void GameScene::Update(GameManager* gameManager) {
 	//門
 	gate_->Update();
 
-	//天球
-	skydome_->Update();
-
-	
 
 	
 #pragma region ポストエフェクト
@@ -1176,19 +1133,15 @@ void GameScene::DrawObject3D() {
 	SpotLight spotLight = player_->GetFlashLight()->GetSpotLight();
 
 	//ゲート
-	gate_->Draw(camera_, spotLight);
+	//gate_->Draw(camera_, spotLight);
 	//敵
 	enemyManager_->Draw(camera_, spotLight);
-	//天球
-	skydome_->Draw(camera_);
 
 	//レベルエディタ  
 	levelDataManager_->Draw(levelHandle_, camera_, material_, spotLight);
 
 	//プレイヤー
 	player_->Draw(camera_, spotLight);
-	//ステージオブジェクト
-	//objectManager_->Draw(camera_, spotLight);
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
 

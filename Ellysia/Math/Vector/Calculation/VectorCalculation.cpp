@@ -221,3 +221,33 @@ Vector3 VectorCalculation::TransformCalculation(const Vector3& v, const Matrix4x
 
 }
 
+Vector3 VectorCalculation::CatmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, const float& t){
+
+	Vector3 result = {};
+
+	const float half = 1.0f / 2.0f;
+
+	result.x = half * (
+		(-1.0f * p0.x + 3.0f * p1.x - 3.0f * p2.x + p3.x) * (t * t * t) +
+		(2.0f * p0.x - 5.0f * p1.x + 4.0f * p2.x - p3.x) * (t * t) +
+		(-1.0f * p0.x + p2.x) * t +
+		2.0f * p1.x);
+
+	result.y = half * (
+		(-1.0f * p0.y + 3.0f * p1.y - 3.0f * p2.y + p3.y) * (t * t * t) +
+		(2.0f * p0.y - 5.0f * p1.y + 4.0f * p2.y - p3.y) * (t * t) +
+		(-1.0f * p0.y + p2.y) * t +
+		2.0f * p1.y);
+
+	result.z = half * (
+		(-1.0f * p0.z + 3.0f * p1.z - 3.0f * p2.z + p3.z) * (t * t * t) +
+		(2.0f * p0.z - 5.0f * p1.z + 4.0f * p2.z - p3.z) * (t * t) +
+		(-1.0f * p0.z + p2.z) * t +
+		2.0f * p1.z);
+
+
+	return result;
+
+
+}
+

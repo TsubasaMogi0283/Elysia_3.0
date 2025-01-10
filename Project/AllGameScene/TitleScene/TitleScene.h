@@ -6,6 +6,7 @@
  */
 
 #include <memory>
+#include <vector>
 
 #include "IGameScene.h"
 #include "Sprite.h"
@@ -13,6 +14,9 @@
 #include "Camera.h"
 #include "BackText.h"
 #include "DirectionalLight.h"
+#include "SpotLight.h"
+#include "RailCamera/TitleRailCamera.h"
+
 
 #pragma region 前方宣言
 
@@ -31,6 +35,10 @@ class TextureManager;
 /// </summary>
 class Input;
 
+/// <summary>
+/// レベル管理クラス
+/// </summary>
+class LevelDataManager;
 
 #pragma endregion
 
@@ -87,6 +95,8 @@ public:
 	~TitleScene()=default;
 
 
+
+
 private:
 	//テクスチャ管理クラス
 	TextureManager* textureManager_ = nullptr;
@@ -94,18 +104,32 @@ private:
 	//入力クラス
 	Input* input_ = nullptr;
 
+	//レベルエディタ
+	LevelDataManager* levelDataManager_ = nullptr;
+	uint32_t levelHandle_ = 0u;
 
 private:
 
 	//カメラ
 	Camera camera_ = {};
+	std::unique_ptr<TitleRailCamera> titleRailCamera_ = nullptr;
+
 	//座標
 	Vector3 cameraPosition_ = {};
 
 	//平行光源
 	DirectionalLight directionalLight_ = {};
+	//スポットライト
+	SpotLight spotLight = {};
 	//マテリアル
 	Material material_ = {};
+
+
+
+	//ポストエフェクト
+	//基本
+	std::unique_ptr<BackText> back_ = nullptr;
+
 
 	//テキスト
 	std::unique_ptr<Sprite> text_ = nullptr;
@@ -141,5 +165,9 @@ private:
 	
 	//スタート
 	bool isStart_ = false;
+
+
+	
+
 };
 

@@ -7,7 +7,7 @@
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
 #include "Input.h"
-
+#include "LevelDataManager.h"
 
 //Enemyのこれからやること
 //1.追跡システムを単純化する
@@ -15,52 +15,99 @@
 //3.オブジェクトマネージャーからレベルエディタに変えていく
 
 
-void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& strongEnemyModel){
+//管理しにくいのでCSVにする
+
+void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& strongEnemyModel, const std::string& csvPath){
 	
 	//空だったら引っかかるようにしている
 	assert(player_!=nullptr);
 	assert(objectManager_ != nullptr);
-
-	//Stageの四隅が一つでも同じだったら引っかかるようにしている
-	//X軸
-	assert((stageRect_.leftBack.x != stageRect_.leftFront.x)||
-		(stageRect_.leftBack.x != stageRect_.rightBack.x)||
-		(stageRect_.leftBack.x != stageRect_.rightFront.x));
-
-	//Z軸
-	assert((stageRect_.leftBack.z != stageRect_.leftFront.z) ||
-		(stageRect_.leftBack.z != stageRect_.rightBack.z) ||
-		(stageRect_.leftBack.z != stageRect_.rightFront.z));
+	assert(levelDataManager_ != nullptr);
 
 
-	//モデルを代入
+	//モデルハンドルを代入
 	//通常
 	normalEnemyModelHandle_ = normalEnemyModel;
 	//強敵
 	strongEnemyModelHandle_ = strongEnemyModel;
 
-	//CSVでやった方が良いかも
-	//JSONでも良いよね
 
-	//1体目
-	Enemy* enemy1 = new Enemy();
-	Vector3 position1 = {.x= 0.0f,.y= 0.0f,.z= 11.0f };
-	enemy1->Initialize(normalEnemyModelHandle_, position1, {.x = -0.0f,.y= 0.0f,.z = -0.01f });
-	//enemyes_.push_back(enemy1);
-	delete enemy1;
-	//2体目
-	Enemy* enemy2 = new Enemy();
-	Vector3 position2 = {.x= -5.0f,.y= 0.0f,.z= 15.0f };
-	enemy2->Initialize(normalEnemyModelHandle_, position2, {.x= 0.01f,.y= 0.0f,.z= 0.0f });
-	//enemyes_.push_back(enemy2);
-	delete enemy2;
-	//3体目
-	Enemy* enemy3 = new Enemy();
-	Vector3 position3 = {.x= -10.0f,.y= 0.0f,.z= 4.0f };
-	enemy3->Initialize(normalEnemyModelHandle_, position3, {.x= 0.01f,.y= 0.0f,.z= 0.01f });
-	//enemyes_.push_back(enemy3);
-	delete enemy3;
-	
+
+	//CSVManagerクラスとか作ってまとめた方が賢いかも
+	//まとめたいね
+	std::ifstream file;
+	file.open(csvPath);
+	//開かなかったら止まる
+	assert(file.is_open());
+
+	//ファイルの内容を文字列ストリームにコピー
+	enemyPositionsFromCSV << file.rdbuf();
+	//ファイルを閉じる
+	file.close();
+
+	//1行分の文字列を入れる変数
+	std::string line;
+
+
+	//コマンド実行ループ
+	while (std::getline(enemyPositionsFromCSV, line)) {
+
+		//1行分の文字列をストリームに変換して解析しやすくする
+		std::istringstream lineStream(line);
+
+		std::string word;
+		//,区切りで行の先頭文字列を取得
+		std::getline(lineStream, word, ',');
+
+		//「//」があった行の場合コメントなので飛ばす
+		if (word.find("//") == 0) {
+			//コメントは飛ばす
+			continue;
+		}
+
+
+		//通常の敵の場合
+		if (word.find("NormalEnemy") == 0) {
+			Vector3 position = {};
+			//X座標
+			std::getline(lineStream, word, ',');
+			position.x = static_cast<float>(std::atof(word.c_str()));
+
+			//Y座標
+			std::getline(lineStream, word, ',');
+			position.y = static_cast<float>(std::atof(word.c_str()));
+
+			//Z座標
+			std::getline(lineStream, word, ',');
+			position.z = static_cast<float>(std::atof(word.c_str()));
+
+			//生成
+			GenarateNormalEnemy(position);
+
+		}
+		//強敵の場合
+		else if (word.find("StrongEnemy") == 0) {
+			Vector3 position = {};
+			//X座標
+			std::getline(lineStream, word, ',');
+			position.x = static_cast<float>(std::atof(word.c_str()));
+
+			//Y座標
+			std::getline(lineStream, word, ',');
+			position.y = static_cast<float>(std::atof(word.c_str()));
+
+			//Z座標
+			std::getline(lineStream, word, ',');
+			position.z = static_cast<float>(std::atof(word.c_str()));
+
+			//生成
+			GenarateStrongEnemy(position);
+
+		}
+
+
+	}
+
 
 
 	//強敵生成
@@ -69,7 +116,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	std::mt19937 randomEngine(seedGenerator());
 	
 	//位置を決める
-	std::uniform_real_distribution<float> positionDistribute(stageRect_.leftBack.x, stageRect_.rightBack.x);
+	std::uniform_real_distribution<float> positionDistribute(-30.0f, 30.0f);
 	Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
 	
 	
@@ -89,7 +136,6 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
 	//挿入
 	//strongEnemyes_.push_back(enemy);
-
 	delete enemy;
 
 	//接近BGMの設定
@@ -112,44 +158,36 @@ void EnemyManager::DeleteEnemy(){
 	});
 }
 
-void EnemyManager::GenarateEnemy() {
+
+void EnemyManager::GenarateNormalEnemy(const Vector3& position) {
 	//通常の敵の生成
 	Enemy* enemy = new Enemy();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
-	std::uniform_real_distribution<float> distribute(-30.0f, 30.0f);
+	std::uniform_real_distribution<float> speedDistribute(-0.1f, 0.1f);
 
-	//位置決め
-	Vector3 position1 = {.x= distribute(randomEngine),.y= 0.0f,.z= distribute(randomEngine) };
+	
 	//スピード決め
-	Vector3 speed = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
+	Vector3 speed = { .x = speedDistribute(randomEngine),.y = 0.0f,.z = speedDistribute(randomEngine) };
 
 	//初期化
-	enemy->Initialize(normalEnemyModelHandle_, position1,speed );
+	enemy->Initialize(normalEnemyModelHandle_, position,speed );
 	enemyes_.push_back(enemy);
 }
 
 
-void EnemyManager::GenarateStrongEnemy(){
+void EnemyManager::GenarateStrongEnemy(const Vector3& position){
 	//強敵の生成
 	StrongEnemy* enemy = new StrongEnemy();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 
-	//位置を決める
-	std::uniform_real_distribution<float> positionDistribute(stageRect_.leftBack.x, stageRect_.rightBack.x);
-	Vector3 position = {.x= positionDistribute(randomEngine),.y= 0.0f,.z= positionDistribute(randomEngine) };
-	
 
-	//位置を決める
+
+	//スピード(方向)を決める
 	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
 	Vector3 speed = {.x= speedDistribute(randomEngine),.y= 0.0f,.z= speedDistribute(randomEngine) };
 
-
-#ifdef _DEBUG
-	position = {.x= -4.0f,.y= 0.0f,.z= 5.0f };
-	speed = {.x= -0.01f,.y= 0.0f,.z= 0.03f };
-#endif // _DEBUG
 
 
 	//初期化
@@ -159,13 +197,7 @@ void EnemyManager::GenarateStrongEnemy(){
 }
 
 void EnemyManager::Update(){
-#ifdef _DEBUG
-	//Gキーで出す
-	if (Input::GetInstance()->IsTriggerKey(DIK_G) == true) {
-		GenarateStrongEnemy();
-	}
 
-#endif
 
 	//接近するときの距離
 	const float TRACKING_START_DISTANCE_ = 15.0f;
@@ -184,12 +216,9 @@ void EnemyManager::Update(){
 	//通常の敵
 	for (Enemy* enemy : enemyes_) {
 		//プレイヤーの位置を設定
-		//使っているのはPreTrackingしかないので
-		if (enemy->GetCondition() == EnemyCondition::PreTracking) {
-			enemy->SetPlayerPosition(playerPosition);
+		enemy->SetPlayerPosition(playerPosition);
 
-		}
-		
+
 		//更新
 		enemy->Update();
 
@@ -199,27 +228,26 @@ void EnemyManager::Update(){
 		//移動中の時
 		if (enemy->GetCondition() == EnemyCondition::Move) {
 
-			//X軸反転
-			if ((enemyAABB.min.x < stageRect_.leftBack.x) || (enemyAABB.max.x > stageRect_.rightBack.x)) {
-				enemy->InvertSpeedX();
-			}
-			//Z軸反転
-			if ((enemyAABB.min.z < stageRect_.leftFront.z) || (enemyAABB.max.z > stageRect_.leftBack.z)) {
-				enemy->InvertSpeedZ();
-			}
-
 			#pragma region ステージオブジェクト
 
-			//仮置きのステージオブジェクト
-			std::list<StageObjectPre*>stageObjects=objectManager_->GetStageObjets();
-			for (StageObjectPre* stageObject : stageObjects) {
 
-				//AABBを取得
-				AABB objectAABB = stageObject->GetAABB();
-				//位置を取得
-				Vector3 objectPosition = stageObject->GetWorldPosition();
+			//レベルエディタから持ってくる
+			//座標
+			std::vector<Vector3> positions = levelDataManager_->GetStageObjectPositions(levelDataHandle_);
+			//AABB
+			std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelDataHandle_);
+			//コライダーを持っているかどうか
+			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_);
+			//衝突判定
+			for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
 
 				
+				//AABBを取得
+				AABB objectAABB = aabbs[i];
+				//位置を取得
+				Vector3 objectPosition = positions[i];
+
+
 				//お互いのAABBが接触している場合
 				if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
 					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
@@ -264,78 +292,14 @@ void EnemyManager::Update(){
 						ImGui::End();
 #endif // _DEBUG
 
-
-
-
 					}
 				}
 
 			}
+
+
 
 			#pragma endregion
-		}
-
-
-		if (enemy->GetCondition() == EnemyCondition::Tracking) {
-		
-			//仮置きのステージオブジェクト
-			std::list<StageObjectPre*>stageObjects = objectManager_->GetStageObjets();
-			for (StageObjectPre* stageObject : stageObjects) {
-
-				//AABBを取得
-				AABB objectAABB = stageObject->GetAABB();
-
-				//位置を取得
-				Vector3 objectPosition = stageObject->GetWorldPosition();
-
-
-				//お互いのAABBが接触している場合
-				if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
-					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
-					//オブジェクトとの差分ベクトル
-					Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
-					Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
-
-
-					//敵の向いている方向
-					Vector3 enemyDirection = enemy->GetDirection();
-
-					//前にある場合だけ計算
-					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
-
-					//進行方向上にあるときだけ計算する
-					if (dot > FRONT_DOT) {
-
-						//差分ベクトルのXとZの大きさを比べ
-						//値が大きい方で反転させる
-						float defferenceValueX = std::abs(defference.x);
-						float defferenceValueZ = std::abs(defference.z);
-
-
-						if (defferenceValueX >= defferenceValueZ) {
-							enemy->InvertSpeedX();
-						}
-						else {
-							enemy->InvertSpeedZ();
-						}
-
-
-
-#ifdef _DEBUG
-						ImGui::Begin("DemoObjectEnemy");
-						ImGui::InputFloat("Dot", &dot);
-						ImGui::InputFloat3("defference", &defference.x);
-						ImGui::InputFloat("defferenceValueX", &defferenceValueX);
-						ImGui::InputFloat("defferenceValueZ", &defferenceValueZ);
-						ImGui::End();
-#endif // _DEBUG
-
-
-
-
-					}
-				}
-			}
 		}
 
 
@@ -347,10 +311,7 @@ void EnemyManager::Update(){
 	//1体だけの時
 	const uint32_t ONLY_ONE = 1u;
 
-
-	
-	
-	//衝突判定をやる必要が無いからね
+	//敵同士の衝突判定をやる必要が無いからね
 	if (enemyAmount == ONLY_ONE) {
 		for (Enemy* enemy : enemyes_) {
 			//状態
@@ -683,18 +644,6 @@ void EnemyManager::Update(){
 
 
 
-#pragma region ステージの端に行ったら反転
-		//X軸反転
-		if ((strongEnemyAABB.min.x < stageRect_.leftBack.x) || 
-			(strongEnemyAABB.max.x > stageRect_.rightBack.x)) {
-			strongEnemy->InvertSpeedX();
-		}
-		//Z軸反転
-		if ((strongEnemyAABB.min.z < stageRect_.leftFront.z) || 
-			(strongEnemyAABB.max.z > stageRect_.leftBack.z)) {
-			strongEnemy->InvertSpeedZ();
-		}
-#pragma endregion
 
 	}
 }

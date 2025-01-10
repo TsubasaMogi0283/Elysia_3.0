@@ -50,8 +50,6 @@ void Key::Update(){
 }
 
 void Key::Draw(const Camera& camera,const SpotLight& spotLight){
-	
-
 	//本体の描画
 	model_->Draw(worldTransform_, camera, material_, spotLight);
 }

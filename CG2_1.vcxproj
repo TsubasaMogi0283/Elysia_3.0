@@ -198,6 +198,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp" />
     <ClCompile Include="Project\Enemy\EnemyFlashLightCollision.cpp" />
     <ClCompile Include="Project\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy.cpp" />
     <ClCompile Include="Project\Enemy\StrongEnemy.cpp" />
     <ClCompile Include="Project\Key\Key.cpp" />
     <ClCompile Include="Project\Key\KeyManager.cpp" />
@@ -209,12 +210,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Player\PlayerCollisionToNormalEnemyAttack.cpp" />
     <ClCompile Include="Project\Player\PlayerCollisionToStageObject.cpp" />
     <ClCompile Include="Project\Player\PlayerCollisionToStrongEnemy.cpp" />
-    <ClCompile Include="Project\Stage\DemoObject\DemoObject.cpp" />
+    <ClCompile Include="Project\RailCamera\TitleRailCamera.cpp" />
     <ClCompile Include="Project\Stage\Gate\Gate.cpp" />
-    <ClCompile Include="Project\Stage\Ground\Ground.cpp" />
     <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp" />
-    <ClCompile Include="Project\Stage\Skydome\Skydome.cpp" />
-    <ClCompile Include="Project\Stage\StageObject\Tree\Tree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\AnimationObject3D\AnimationObject3D.PS.hlsl">
@@ -492,6 +490,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Enemy\EnemyCondition.h" />
     <ClInclude Include="Project\Enemy\EnemyFlashLightCollision.h" />
     <ClInclude Include="Project\Enemy\EnemyManager.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy.h" />
     <ClInclude Include="Project\Enemy\StrongEnemy.h" />
     <ClInclude Include="Project\Key\Key.h" />
     <ClInclude Include="Project\Key\KeyManager.h" />
@@ -503,14 +502,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Player\PlayerCollisionToNormalEnemyAttack.h" />
     <ClInclude Include="Project\Player\PlayerCollisionToStageObject.h" />
     <ClInclude Include="Project\Player\PlayerCollisionToStrongEnemy.h" />
-    <ClInclude Include="Project\Stage\DemoObject\DemoObject.h" />
+    <ClInclude Include="Project\RailCamera\TitleRailCamera.h" />
     <ClInclude Include="Project\Stage\Gate\Gate.h" />
-    <ClInclude Include="Project\Stage\Ground\Ground.h" />
-    <ClInclude Include="Project\Stage\Ground\StageRect.h" />
     <ClInclude Include="Project\Stage\ObjectManager\ObjectManager.h" />
-    <ClInclude Include="Project\Stage\Skydome\Skydome.h" />
     <ClInclude Include="Project\Stage\StageObject\StageObject.h" />
-    <ClInclude Include="Project\Stage\StageObject\Tree\Tree.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

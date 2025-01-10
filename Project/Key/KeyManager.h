@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <list>
+#include <sstream>
 
 #include "Key.h"
 #include "Sprite.h"
@@ -56,7 +57,8 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="modelHandle"></param>
-	void Initialize(const uint32_t& modelHandle);
+	/// <param name="csvPath"></param>
+	void Initialize(const uint32_t& modelHandle,const std::string& csvPath);
 
 	/// <summary>
 	/// 更新
@@ -83,6 +85,13 @@ public:
 
 
 private:
+
+	/// <summary>
+	/// 生成
+	/// </summary>
+	/// <param name="position"></param>
+	void Genarate(const Vector3& position);
+
 	/// <summary>
 	/// 消去
 	/// </summary>
@@ -162,6 +171,12 @@ private:
 	//プレイヤーと全ての鍵の距離
 	std::list<float>keyAndPlayerDistances_ = {};
 	
+	//モデルハンドル
+	uint32_t modelHandle_ = 0u;
+
+	//生成の文字列を入れる
+	std::stringstream enemyPositionsFromCSV;
+
 
 	//拾う音
 	uint32_t pickUpSEHandle = 0u;

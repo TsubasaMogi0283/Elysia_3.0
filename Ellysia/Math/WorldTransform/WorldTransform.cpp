@@ -44,7 +44,7 @@ void WorldTransform::Transfer() {
 	//Resourceに書き込む
 	bufferResource->Map(0, nullptr, reinterpret_cast<void**>(&tranceformationData));
 	tranceformationData->world = worldMatrix;
-	tranceformationData->normal = worldMatrix;
+	tranceformationData->normal = Matrix4x4Calculation::MakeIdentity4x4();
 	tranceformationData->worldInverseTranspose = worldInverseTransposeMatrix;
 	bufferResource->Unmap(0, nullptr);
 }

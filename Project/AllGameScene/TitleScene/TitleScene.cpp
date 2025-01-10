@@ -1,21 +1,26 @@
 #include "TitleScene.h"
 #include <imgui.h>
-#include <Input.h>
-#include "GameScene/GameScene.h"
+#include <numbers>
 
+
+#include "Input.h"
+#include "GameScene/GameScene.h"
 #include "GameManager.h"
 #include "ModelManager.h"
 #include "AnimationManager.h"
-#include <numbers>
-#include <TextureManager.h>
 
+#include "TextureManager.h"
+#include "LevelDataManager.h"
+#include <VectorCalculation.h>
+#include <SingleCalculation.h>
 
 TitleScene::TitleScene(){
 	//テクスチャ管理クラスの取得
 	textureManager_ = TextureManager::GetInstance();
 	//入力クラスの取得
 	input_ = Input::GetInstance();
-
+	//レベルエディタ管理クラスの取得
+	levelDataManager_ = LevelDataManager::GetInstance();
 }
 
 void TitleScene::Initialize(){
@@ -33,15 +38,43 @@ void TitleScene::Initialize(){
 	//毎系
 	backGround_.reset(Sprite::Create(titleTextureHandle, INITIAL_POSITION));
 
+
+	levelHandle_ = levelDataManager_->Load("TitleStage/TitleStage.json");
+
 	isStart_ = false;
 	isFlash_ = true;
 	isFastFlash_ = false;
 
+	//マテリアルの初期化
+	material_.Initialize();
+	material_.lightingKinds_ = Directional;
+
+	//スポットライトの初期化
+	spotLight.Initialize();
+
+	directionalLight_.Initialize();
+
 	//カメラの初期化
 	camera_.Initialize();
 	//座標
-	camera_.translate_ = {.x = 0.0f,.y = 0.0f,.z = -9.8f };
+	camera_.translate = {.x = 0.0f,.y = 0.0f,.z = -9.8f };
+
+	//レールカメラ
+	titleRailCamera_ = std::make_unique<TitleRailCamera>();
+	//初期化
+	titleRailCamera_->Initialize();
+	
+
+	//ポストエフェクト
+	back_ = std::make_unique<BackText>();
+	//初期化
+	back_->Initialize();
 }
+
+
+
+
+
 
 void TitleScene::Update(GameManager* gameManager){
 	//増える時間の値
@@ -144,27 +177,61 @@ void TitleScene::Update(GameManager* gameManager){
 		return;
 	}
 
-	//カメラの更新
-	camera_.Update();
+
+	//ステージデータの更新
+	Listener listener = {
+			.position = {},
+			.move = {},
+	};
+	levelDataManager_->SetListener(levelHandle_, listener);
+
+	levelDataManager_->Update(levelHandle_);
+
+
+
+
+
+
 
 	
+
+	//マテリアルの更新
+	material_.Update();
+	//スポットライトの更新
+	spotLight.Update();
+	directionalLight_.Update();
+
+	//レールカメラの更新
+	titleRailCamera_->Update();
+	camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
+	camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
+
+	//カメラの更新
+	camera_.Transfer();
+
+
+
+
 }
 
-void TitleScene::DrawObject3D()
-{
+void TitleScene::DrawObject3D(){
+
+	levelDataManager_->Draw(levelHandle_,camera_, material_, directionalLight_);
+
+
 }
 
-void TitleScene::PreDrawPostEffectFirst()
-{
+void TitleScene::PreDrawPostEffectFirst(){
+	back_->PreDraw();
 }
 
-void TitleScene::DrawPostEffect()
-{
+void TitleScene::DrawPostEffect(){
+	back_->Draw();
 }
 
 void TitleScene::DrawSprite(){
 	//背景
-	backGround_->Draw();
+	//backGround_->Draw();
 
 	//テキスト
 	text_->Draw();

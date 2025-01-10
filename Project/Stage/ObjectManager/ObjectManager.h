@@ -12,8 +12,6 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
-#include "Stage/DemoObject/DemoObject.h"
-#include "Stage/StageObject/Tree/Tree.h"
 
 //LevelEditorでステージを作るつもり
 
@@ -60,24 +58,11 @@ public:
 	/// </summary>
 	~ObjectManager();
 
-public:
-	/// <summary>
-	/// DemoObjectリストの取得
-	/// </summary>
-	/// <returns></returns>
-	inline std::list <StageObjectPre*> GetStageObjets()const {
-		return stageObjects_;
-	}
-
 
 private:
 	//各オブジェクトをリストにするかも
 	Material material_ = {};
 	
-	//ステージオブジェクト
-	std::list<StageObjectPre*> stageObjects_{};
-
-
 
 };
 

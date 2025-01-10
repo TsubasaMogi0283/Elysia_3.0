@@ -17,36 +17,64 @@ KeyManager::KeyManager(){
 	textureManager_ = TextureManager::GetInstance();
 }
 
-void KeyManager::Initialize(const uint32_t& modelHandle){
+void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvPath){
 	//プレイヤーが入っているかどうか
 	assert(player_ != nullptr);
 
-#pragma region 鍵の生成
-	//CSVにしたい
-	//1個目生成
-	Key* key1 = new Key();
-	//座標
-	Vector3 keyPosition = { .x = -10.0f,.y = 0.5f,.z = 1.0f };
-	//初期化
-	key1->Initialize(modelHandle, keyPosition);
-	//リストに入れる
-	keyes_.push_back(key1);
+	//モデルハンドルの代入
+	modelHandle_ = modelHandle;
 
-	//2個目生成
-	//以下同様
-	Key* key2 = new Key();
-	Vector3 keyPosition2 = { .x = 5.0f,.y = 0.5f,.z = 10.0f };
-	key2->Initialize(modelHandle, keyPosition2);
-	keyes_.push_back(key2);
 
-	//3個目生成
-	//以下同様
-	Key* key3 = new Key();
-	Vector3 keyPosition3 = { .x = 8.0f,.y = 0.5f,.z = -10.0f };
-	key3->Initialize(modelHandle, keyPosition3);
-	keyes_.push_back(key3);
+	//CSVManagerクラスとか作ってまとめた方が賢いかも
+	std::ifstream file;
+	file.open(csvPath);
+	//開かなかったら止まる
+	assert(file.is_open());
 
-#pragma endregion
+	//ファイルの内容を文字列ストリームにコピー
+	enemyPositionsFromCSV << file.rdbuf();
+	//ファイルを閉じる
+	file.close();
+
+	//1行分の文字列を入れる変数
+	std::string line;
+
+
+	//コマンド実行ループ
+	while (std::getline(enemyPositionsFromCSV, line)) {
+
+		//1行分の文字列をストリームに変換して解析しやすくする
+		std::istringstream lineStream(line);
+
+		std::string word;
+		//,区切りで行の先頭文字列を取得
+		std::getline(lineStream, word, ',');
+
+		//「//」があった行の場合コメントなので飛ばす
+		if (word.find("//") == 0) {
+			//コメントは飛ばす
+			continue;
+		}
+
+
+		Vector3 position = {};
+		//X座標
+		std::getline(lineStream, word, ',');
+		position.x = static_cast<float>(std::atof(word.c_str()));
+
+		//Y座標
+		std::getline(lineStream, word, ',');
+		position.y = static_cast<float>(std::atof(word.c_str()));
+
+		//Z座標
+		std::getline(lineStream, word, ',');
+		position.z = static_cast<float>(std::atof(word.c_str()));
+
+		//生成
+		Genarate(position);
+
+	}
+
 
 	//読み込み
 	uint32_t keySpriteHandle = textureManager_->LoadTexture("Resources/Item/KeyList.png");
@@ -57,10 +85,10 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 	//生成
 	keySprite_.reset(Sprite::Create(keySpriteHandle, keySpritePosition));
 
+	//数字
 	uint32_t keyNumberQuantity[NUMBER_QUANTITY_] = {};
 	for (uint32_t i = 0u; i < NUMBER_QUANTITY_; ++i) {
 		//数を文字列に変換した方が賢いよね！
-		
 		//数をstd::stringに変換
 		const std::string number = std::to_string(i);
 		//変換した番号を組み込む
@@ -86,6 +114,15 @@ void KeyManager::Initialize(const uint32_t& modelHandle){
 	audio_->ChangeVolume(notificationSEHandle_, INITIAL_VOLUME);
 }
 
+void KeyManager::Genarate(const Vector3& position){
+	//生成
+	Key* key = new Key();
+	//初期化
+	key->Initialize(modelHandle_, position);
+	//リストに入れる
+	keyes_.push_back(key);
+}
+
 void KeyManager::Delete(){
 
 	//消去処理
@@ -101,7 +138,6 @@ void KeyManager::Delete(){
 		return false;
 	});
 }
-
 
 void KeyManager::Update(){
 
@@ -130,13 +166,11 @@ void KeyManager::Update(){
 		closestDistance = (*minIt);
 	}
 
+	//最大の距離を超えないようにする
 	if (closestDistance > MAX_DISTANCE_) {
 		closestDistance = MAX_DISTANCE_;
 	}
-	//最大の距離を超え内容にする
 	
-	
-
 	//求めた値から音量設定をする
 	float volume = 1.0f-(closestDistance / MAX_DISTANCE_);
 	audio_->ChangeVolume(notificationSEHandle_, volume);
@@ -145,7 +179,6 @@ void KeyManager::Update(){
 #ifdef _DEBUG
 	ImGui::Begin("鍵管理クラス"); 
 	ImGui::InputFloat("音量", &volume);
-	
 	ImGui::InputFloat("近い距離", &closestDistance);
 	ImGui::End();
 #endif // _DEBUG
@@ -155,7 +188,7 @@ void KeyManager::Update(){
 
 	//現在の鍵の数
 	size_t currentKeyQuantity = keyes_.size();
-	if (currentKeyQuantity == 0) {
+	if (currentKeyQuantity == 0u) {
 		audio_->Stop(notificationSEHandle_);
 	}
 

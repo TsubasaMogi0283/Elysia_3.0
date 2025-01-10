@@ -25,14 +25,12 @@
 #include "Enemy/Enemy.h"
 #include "Collider/CollisionManager.h"
 #include "Key/Key.h"
-#include "Stage/Ground/Ground.h"
 #include "Key/KeyManager.h"
 #include "Light/FlashLight/FlashLight.h"
 #include "Enemy/EnemyManager.h"
 #include "Stage/Gate/Gate.h"
 #include "Fan.h"
 #include "CollisionCalculation.h"
-#include "Stage/Skydome/Skydome.h"
 
 #include "Input.h"
 #include "Stage/ObjectManager/ObjectManager.h"
@@ -175,7 +173,6 @@ private:
 
 private:
 
-
 	//説明テクスチャの最大数
 	const uint32_t MAX_EXPLANATION_NUMBER_ = 2;
 
@@ -262,8 +259,6 @@ private:
 	std::unique_ptr<Gate> gate_ = nullptr;
 	bool isEscape_ = false;
 
-	//天球
-	std::unique_ptr<Skydome> skydome_ = nullptr;
 
 #pragma endregion
 	

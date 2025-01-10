@@ -5,6 +5,8 @@
  * @author 茂木翼
  */
 
+#include <vector>
+
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Matrix4x4.h"
@@ -132,6 +134,19 @@ namespace VectorCalculation {
 	/// <param name="m">行列</param>
 	/// <returns></returns>
 	Vector3 TransformCalculation(const Vector3& v, const Matrix4x4& m);
+
+
+	/// <summary>
+	/// Catmull-romスプライン曲線(3D)
+	/// </summary>
+	/// <param name="p0"></param>
+	/// <param name="p1"></param>
+	/// <param name="p2"></param>
+	/// <param name="p3"></param>
+	/// <param name="t"></param>
+	/// <returns></returns>
+	Vector3 CatmullRom(const Vector3& p0,const Vector3& p1,const Vector3& p2,const Vector3& p3,const float& t);
+
 
 
 }

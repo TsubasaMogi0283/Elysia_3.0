@@ -191,6 +191,35 @@ public:
 	}
 
 	/// <summary>
+	/// オーディオの方のコライダーを取得
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
+	inline std::vector<IObjectForLevelEditorCollider*>GetAudioCollider(const uint32_t& handle) {
+		std::vector<IObjectForLevelEditorCollider*> colliders = {};
+
+		for (const auto& [key, levelData] : levelDatas_) {
+			if (levelData->handle == handle) {
+
+				//該当するLevelDataのobjectDatasを検索
+				for (auto& objectData : levelData->objectDatas) {
+
+					//コライダーを持っている場合、リストに追加
+					if (objectData.levelDataObjectCollider != nullptr && objectData.type == "Audio") {
+						colliders.push_back(objectData.levelDataObjectCollider);
+					}
+				}
+
+				//無駄なループを防ぐ
+				break;
+			}
+		}
+
+		return colliders;
+	}
+
+
+	/// <summary>
 	/// ステージオブジェクトの座標を取得
 	/// </summary>
 	/// <param name="handle"></param>
@@ -307,6 +336,8 @@ private:
 			std::string colliderType;
 
 			uint32_t colliderTypeNumber;
+
+
 			//Sphere,Box
 			Vector3 center;
 			Vector3 size;

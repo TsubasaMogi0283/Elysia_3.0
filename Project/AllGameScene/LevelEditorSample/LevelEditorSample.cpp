@@ -30,7 +30,7 @@ void LevelEditorSample::Initialize(){
 
 	//カメラ
 	camera_.Initialize();
-	camera_.translate_ = {.x = 0.0f,.y = 2.0f,.z = -30.0f };
+	camera_.translate = {.x = 0.0f,.y = 2.0f,.z = -30.0f };
 
 	//ポストエフェクト
 	back_ = std::make_unique<BackText>();
@@ -68,8 +68,8 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 #ifdef _DEBUG
 	ImGui::Begin("Camera"); 
-	ImGui::SliderFloat3("Position", &camera_.translate_.x, -50.0f, 50.0f);
-	ImGui::SliderFloat3("Rotate", &camera_.rotate_.x , -3.0f, 3.0f);
+	ImGui::SliderFloat3("Position", &camera_.translate.x, -50.0f, 50.0f);
+	ImGui::SliderFloat3("Rotate", &camera_.rotate.x , -3.0f, 3.0f);
 	ImGui::End();
 
 	ImGui::Begin("LevelEditor");
@@ -199,8 +199,8 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	//高さの補正も足す
 	const Vector3 OFFSET = { .x = 0.0f,.y = 5.0f,.z = -20.0f };
 	Vector3 playerViewPoint = VectorCalculation::Add(player_->GetWorldPosition(), OFFSET);
-	camera_.rotate_.x = 0.26f;
-	camera_.translate_ = playerViewPoint;
+	camera_.rotate.x = 0.26f;
+	camera_.translate = playerViewPoint;
 	camera_.Update();
 
 }

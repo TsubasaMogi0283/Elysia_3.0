@@ -98,9 +98,9 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 #pragma region PixelShaderに送る方のカメラ
 	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
 	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.worldMatrix_.m[3][0];
-	cameraWorldPosition.y = camera.worldMatrix_.m[3][1];
-	cameraWorldPosition.z = camera.worldMatrix_.m[3][2];
+	cameraWorldPosition.x = camera.worldMatrix.m[3][0];
+	cameraWorldPosition.y = camera.worldMatrix.m[3][1];
+	cameraWorldPosition.z = camera.worldMatrix.m[3][2];
 
 	cameraForGPU_->worldPosition = cameraWorldPosition;
 	cameraResource_->Unmap(0, nullptr);
@@ -143,7 +143,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLight.bufferResource_->GetGPUVirtualAddress());
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource->GetGPUVirtualAddress());
 
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
@@ -219,7 +219,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource->GetGPUVirtualAddress());
 
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
@@ -296,7 +296,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource->GetGPUVirtualAddress());
 
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());

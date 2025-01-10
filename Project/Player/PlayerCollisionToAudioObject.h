@@ -1,6 +1,16 @@
 #pragma once
+/**
+ * @file PlayerCollisionToAudioObject.h
+ * @brief オーディオオブジェクトに対してのコライダークラス
+ * @author 茂木翼
+ */
+
+
 #include "Collider/Collider.h"
 
+/// <summary>
+/// オーディオオブジェクトに対してのコライダー
+/// </summary>
 class PlayerCollisionToAudioObject:public Collider{
 public:
 
@@ -51,7 +61,7 @@ public:
 	/// ワールド座標を設定
 	/// </summary>
 	/// <param name="position"></param>
-	inline void SetPlayerGetWorldPosition(const Vector3& position) {
+	inline void SetPlayerPosition(const Vector3& position) {
 		this->position_ = position;
 	}
 

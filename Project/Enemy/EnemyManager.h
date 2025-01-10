@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <list>
+#include <sstream>
 
 #include "Stage/Ground/StageRect.h"
 #include "Enemy.h"
@@ -36,6 +37,11 @@ class Player;
 /// </summary>
 class ObjectManager;
 
+/// <summary>
+/// レベルデータ管理クラス
+/// </summary>
+class LevelDataManager;
+
 #pragma endregion
 
 /// <summary>
@@ -51,8 +57,10 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="normalEnemymodel"></param>
-	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel);
+	/// <param name="normalEnemyModel"></param>
+	/// <param name="strongEnemyModel"></param>
+	/// <param name="csvPath"></param>
+	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel, const std::string& csvPath);
 	
 	/// <summary>
 	/// 更新
@@ -88,17 +96,18 @@ public:
 	}
 
 
+	/// <summary>
+	/// 通常の敵の生成
+	/// </summary>
+	/// <param name="position"></param>
+	void GenarateNormalEnemy(const Vector3& position);
+
 
 	/// <summary>
-	/// エネミーの生成
+	/// 強敵を生成
 	/// </summary>
-	void GenarateEnemy();
-
-
-	/// <summary>
-	/// 強い敵を生成
-	/// </summary>
-	void GenarateStrongEnemy();
+	/// <param name="position"></param>
+	void GenarateStrongEnemy(const Vector3& position);
 
 	/// <summary>
 	/// エネミーを消す処理
@@ -122,15 +131,30 @@ public:
 	}
 
 	/// <summary>
-	/// ステージの四隅を取得
+	/// レベルデータ管理クラスとハンドルの設定
 	/// </summary>
-	/// <param name="stageRect"></param>
-	inline void SetStageRectangle(StageRect& stageRect) {
-		this->stageRect_ = stageRect;
+	/// <param name="levelDataManager"></param>
+	/// <param name="levelDataHandle"></param>
+	inline void SetLevelDataManager(LevelDataManager* levelDataManager, uint32_t levelDataHandle) {
+		this->levelDataManager_ = levelDataManager;
+		this->levelDataHandle_ = levelDataHandle;
 	}
 
-	
 
+
+
+
+
+private:
+
+	//プレイヤー
+	Player* player_ = nullptr;
+	//オブジェクト管理クラス
+	ObjectManager* objectManager_ = nullptr;
+	//レベルデータ管理クラス
+	LevelDataManager* levelDataManager_ = nullptr;
+	//レベルデータのハンドル
+	uint32_t levelDataHandle_ = 0u;
 
 
 private:
@@ -141,11 +165,7 @@ private:
 	const float STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
 
 private:
-	//プレイヤー
-	Player* player_ = nullptr;
-	//オブジェクト管理クラス
-	ObjectManager* objectManager_ = nullptr;
-
+	
 	//エネミーのリスト
 	//通常
 	std::list<Enemy*>enemyes_ = {};
@@ -160,12 +180,11 @@ private:
 	//強敵
 	uint32_t strongEnemyModelHandle_ = 0u;
 
-	//ステージの四隅
-	StageRect stageRect_ = {};
+
+	//生成の文字列を入れる
+	std::stringstream enemyPositionsFromCSV;
 
 
-
-	
 	//接近BGM用
 	Audio* audio_ = nullptr;
 	//ハンドル
