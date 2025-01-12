@@ -1,5 +1,5 @@
 #pragma once
-#include "Collider/Collider.h"
+#include "Collider.h"
 #include <WorldTransform.h>
 #include <memory>
 #include <Material.h>

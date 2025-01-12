@@ -16,7 +16,7 @@
 #include "Vector3.h"
 #include "Model.h"
 #include "WorldTransform.h"
-#include "Collider/Collider.h"
+#include "Collider.h"
 #include "Transform.h"
 #include "Model/IObjectForLevelEditor.h"
 #include "Model/AudioObjectForLevelEditor.h"

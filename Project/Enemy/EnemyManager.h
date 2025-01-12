@@ -33,11 +33,6 @@ struct SpotLight;
 class Player;
 
 /// <summary>
-/// オブジェクト管理クラス
-/// </summary>
-class ObjectManager;
-
-/// <summary>
 /// レベルデータ管理クラス
 /// </summary>
 class LevelDataManager;
@@ -123,14 +118,6 @@ public:
 	}
 	
 	/// <summary>
-	/// オブジェクト管理クラスの設定
-	/// </summary>
-	/// <param name="objectManager"></param>
-	inline void SetObjectManager(ObjectManager* objectManager) {
-		this->objectManager_ = objectManager;
-	}
-
-	/// <summary>
 	/// レベルデータ管理クラスとハンドルの設定
 	/// </summary>
 	/// <param name="levelDataManager"></param>
@@ -149,8 +136,6 @@ private:
 
 	//プレイヤー
 	Player* player_ = nullptr;
-	//オブジェクト管理クラス
-	ObjectManager* objectManager_ = nullptr;
 	//レベルデータ管理クラス
 	LevelDataManager* levelDataManager_ = nullptr;
 	//レベルデータのハンドル

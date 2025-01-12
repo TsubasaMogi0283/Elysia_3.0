@@ -13,7 +13,7 @@
 #include "WorldTransform.h"
 #include "Material.h"
 #include "Enemy/EnemyCondition.h"
-#include "Collider/Collider.h"
+#include "Collider.h"
 
 
 #pragma region 前方宣言
@@ -32,7 +32,6 @@ struct SpotLight;
 
 
 
-//はやくColliderを継承させるのやめなさい！！！
 
 /// <summary>
 /// 強敵

@@ -6,61 +6,104 @@
  * @author 茂木翼
  */
 
-#include "GameManager.h"
 #include "WindowsSetup.h"
 #include "DirectXSetup.h"
+#include "GameManager.h"
 
 //Ellysia(エリシア・エレシア)
 //Aile + Sheer...「エイル・エル(フランス語で自分の名前になる)」と「シア」
 //sheer・・・全くの、完全な。混じりけのない、純粋な
-//「Ellysia Engine」というように、後ろにEngine加えても自然だと思う
+//「Ellysia Engine」というように、後ろにEngine加えても自然な語感だと思う
 
 //崩〇3〇dじゃないよ
 //Elysiaでもないよ。誤字ではないよ。
 
+
+
+
+
+
+
+#pragma region 前方宣言
+
 /// <summary>
-/// エンジン
-/// mainにベタ書きではなくこっちに書いてあるよ
+/// ウィンドウクラス
+/// </summary>
+class WindowsSetup;
+
+/// <summary>
+/// DirectXクラス
+/// </summary>
+class DirectXSetup;
+
+/// <summary>
+/// SRV管理クラス
+/// </summary>
+class SrvManager;
+
+/// <summary>
+/// RTV管理クラス
+/// </summary>
+class RtvManager;
+
+/// <summary>
+/// ImGui管理クラス
+/// </summary>
+class ImGuiManager;
+
+/// <summary>
+/// パイプライン管理クラス
+/// </summary>
+class PipelineManager;
+
+/// <summary>
+/// 入力クラス
+/// </summary>
+class Input;
+
+/// <summary>
+/// オーディオクラス
+/// </summary>
+class Audio;
+
+/// <summary>
+/// JSON読み込み(グローバル変数)
+/// </summary>
+class GlobalVariables;
+
+/// <summary>
+/// レベルデータ管理クラス
+/// </summary>
+class LevelDataManager;
+
+
+#pragma endregion
+
+
+
+
+/// <summary>
+/// Ellysia Engine
 /// </summary>
 class Ellysia final{
-private:
+public:
 	
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Ellysia() = default;
+	Ellysia();
 		
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~Ellysia()=default;
 
-public:
-	/// <summary>
-	/// インスタンスの取得
-	/// </summary>
-	/// <returns></returns>
-	static Ellysia* GetInstance();
-
-	/// <summary>
-	/// コピーコンストラクタ禁止
-	/// </summary>
-	/// <param name="ellysia"></param>
-	Ellysia(const Ellysia& ellysia) = delete;
-
-	/// <summary>
-	/// 代入演算子を無効にする
-	/// </summary>
-	/// <param name="ellysia"></param>
-	/// <returns></returns>
-	Ellysia& operator=(const Ellysia& ellysia) = delete;
-
-
-public:
 	/// <summary>
 	/// 実行
 	/// </summary>
 	void Run();
+
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Ellysia() = default;
 
 
 private:
@@ -95,7 +138,43 @@ private:
 	void Release();
 
 private:
+
+	//ウィンドウクラス
+	WindowsSetup* windowsSetup_ = nullptr;
+
+	//DirectXクラス
+	DirectXSetup* directXSetup_=nullptr;
+
+	//SRV管理クラス
+	SrvManager* srvManager_ = nullptr;
+
+	//RTV管理クラス
+	RtvManager* rtvManager_ = nullptr;
+
+	//ImGui管理クラス
+	ImGuiManager* imGuiManager_ = nullptr;
+
+	//パイプライン管理クラス
+	PipelineManager* pipelineManager_ = nullptr;
+
+	//Inputクラス
+	Input* input_ = nullptr;
+
+	//オーディオクラス
+	Audio* audio_ = nullptr;
+
+	//JSON読み込み(グローバル変数)
+	GlobalVariables* globalVariables_ = nullptr;
+
+	//レベルデータ管理クラス
+	LevelDataManager* levelDataManager_ = nullptr;
 	
+
+
+
+private:
+	
+
 	//ゲームの管理クラス
 	std::unique_ptr<GameManager> gameManager_ = nullptr;
 

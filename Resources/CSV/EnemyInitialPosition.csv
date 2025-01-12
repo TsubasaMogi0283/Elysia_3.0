@@ -1,7 +1,7 @@
 //Enemyの初期座標決め。,,,
 //速度はランダムで決める予定なので無し。,,,
 //この下は敵の種類,X座標,Y座標,Z座標
-//NormalEnemy,0,0,-30
-//NormalEnemy,-5,0,15
-NormalEnemy,4,0,30
-//StrongEnemy,,,
+NormalEnemy,0,0,-20
+NormalEnemy,-5,0,15
+NormalEnemy,4,0,20
+StrongEnemy,-30,0,30

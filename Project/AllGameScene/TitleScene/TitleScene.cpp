@@ -215,7 +215,7 @@ void TitleScene::Update(GameManager* gameManager){
 }
 
 void TitleScene::DrawObject3D(){
-
+	//ステージオブジェクト
 	levelDataManager_->Draw(levelHandle_,camera_, material_, directionalLight_);
 
 
@@ -231,7 +231,7 @@ void TitleScene::DrawPostEffect(){
 
 void TitleScene::DrawSprite(){
 	//背景
-	//backGround_->Draw();
+	backGround_->Draw();
 
 	//テキスト
 	text_->Draw();

@@ -6,7 +6,7 @@
  * @author 茂木翼
  */
 
-#include "Collider/Collider.h"
+#include "Collider.h"
 
 
 /// <summary>

@@ -1,6 +1,6 @@
 #include "EnemyFlashLightCollision.h"
 #include <imgui.h>
-#include <Collider/CollisionConfig.h>
+#include "CollisionConfig.h"
 
 void EnemyFlashLightCollision::Initialize(){
 

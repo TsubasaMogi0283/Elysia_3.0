@@ -1,5 +1,5 @@
 #include "PlayerCollisionToAudioObject.h"
-#include <Collider/CollisionConfig.h>
+#include "CollisionConfig.h"
 #include <imgui.h>
 
 void PlayerCollisionToAudioObject::Initialize(){

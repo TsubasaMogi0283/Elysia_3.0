@@ -23,7 +23,7 @@
 
 #include "Player/Player.h"
 #include "Enemy/Enemy.h"
-#include "Collider/CollisionManager.h"
+#include "CollisionManager.h"
 #include "Key/Key.h"
 #include "Key/KeyManager.h"
 #include "Light/FlashLight/FlashLight.h"
@@ -247,9 +247,6 @@ private:
 	//Bボタンのトリガー
 	uint32_t bTriggerTime_ = 0u;
 	bool isBTrigger_ = false;
-
-	//オブジェクトマネージャー
-	std::unique_ptr<ObjectManager> objectManager_ = nullptr;
 
 
 #pragma region レベルエディタに引っ越します

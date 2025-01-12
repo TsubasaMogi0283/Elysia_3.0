@@ -139,6 +139,10 @@ void KeyManager::Delete(){
 	});
 }
 
+void KeyManager::StopAudio(){
+	audio_->ChangeVolume(notificationSEHandle_, 0.0f);
+}
+
 void KeyManager::Update(){
 
 	//全ての要素を消す
@@ -214,6 +218,7 @@ void KeyManager::DrawSprite(const uint32_t& playeresKey){
 }
 
 KeyManager::~KeyManager(){
+	
 	//消す
 	for (Key* key : keyes_) {
 		delete  key;

@@ -81,13 +81,7 @@ public:
 		return collosionToAudioObject_.get();
 	}
 
-	/// <summary>
-	/// コライダー(ステージ用)取得
-	/// </summary>
-	/// <returns></returns>
-	PlayerCollisionToStageObject* GetCollosionToStageObject() const {
-		return collosionToStageObject_.get();
-	}
+
 
 
 
@@ -121,7 +115,4 @@ private:
 	//コライダー
 	//オーディオ用
 	std::unique_ptr<PlayerCollisionToAudioObject>collosionToAudioObject_ = nullptr;
-	//ステージ用
-	std::unique_ptr<PlayerCollisionToStageObject>collosionToStageObject_ = nullptr;
-
 };

@@ -119,7 +119,6 @@ void LevelEditorSample::Update(GameManager* gameManager){
 
 	//プレイヤーのコライダーを登録
 	collisionManager_->RegisterList(player_->GetCollosionToAudioObject());
-	collisionManager_->RegisterList(player_->GetCollosionToStageObject());
 
 
 	//レベルエディタで使うリスナーの設定
@@ -145,7 +144,7 @@ void LevelEditorSample::Update(GameManager* gameManager){
 	}
 
 	//プレイヤーのAABB
-	AABB playerAABB = player_->GetCollosionToStageObject()->GetAABB();
+	AABB playerAABB = player_->GetAABB();
 	//プレイヤーの方向
 	Vector3 playerDirection = player_->GetDirection();
 

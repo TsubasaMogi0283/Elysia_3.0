@@ -1,5 +1,5 @@
 #include "PlayerCollisionToStageObject.h"
-#include "Collider/CollisionConfig.h"
+#include "CollisionConfig.h"
 #include <imgui.h>
 
 void PlayerCollisionToStageObject::Initialize(){

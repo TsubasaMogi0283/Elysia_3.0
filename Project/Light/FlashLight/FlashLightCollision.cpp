@@ -1,7 +1,7 @@
 #include "FlashLightCollision.h"
 #include <imgui.h>
 
-#include <Collider/CollisionConfig.h>
+#include "CollisionConfig.h"
 
 
 void FlashLightCollision::Initialize(){

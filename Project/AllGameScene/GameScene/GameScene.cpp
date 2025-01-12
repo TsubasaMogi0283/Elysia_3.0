@@ -76,10 +76,6 @@ void GameScene::Initialize() {
 
 	
 #pragma region オブジェクト
-	//生成
-	objectManager_ = std::make_unique<ObjectManager>();
-	//初期化
-	objectManager_->Initialize();
 
 	#pragma region 地面
 	//四隅の座標を取得
@@ -172,8 +168,6 @@ void GameScene::Initialize() {
 	enemyManager_ = std::make_unique<EnemyManager>();
 	//プレイヤーの設定
 	enemyManager_->SetPlayer(player_.get());
-	//オブジェクト管理クラスの設定
-	enemyManager_->SetObjectManager(objectManager_.get());
 	//レベルデータ管理クラスの設定
 	enemyManager_->SetLevelDataManager(levelDataManager_, levelHandle_);
 	//初期化
@@ -279,6 +273,8 @@ void GameScene::Initialize() {
 	vignettePow_ = 0.0f;
 	vignette_->SetPow(vignettePow_);
 
+
+	//レベルエディタ内でやるかクラスに分けようね。
 	//マテリアルの初期化
 	material_.Initialize();
 	//ライティングの種類を設定
@@ -882,7 +878,7 @@ void GameScene::Update(GameManager* gameManager) {
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
 			//懐中電灯に対して
-			//collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 			
 			//攻撃
 			if (enemy->GetIsAttack() == true) {
@@ -901,7 +897,7 @@ void GameScene::Update(GameManager* gameManager) {
 		//オーディオオブジェクトに対してのコライダーを登録
 		collisionManager_->RegisterList(player_->GetCollisionToAudioObject());
 		//懐中電灯に対してのコライダーを登録
-		//collisionManager_->RegisterList(player_->GetFlashLightCollision());
+		collisionManager_->RegisterList(player_->GetFlashLightCollision());
 		//当たると一発アウトの敵をコリジョンマネージャーへ
 		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
 		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
@@ -990,6 +986,9 @@ void GameScene::Update(GameManager* gameManager) {
 		//負け専用のクラスを作りたい
 		const uint32_t MIN_HP = 0u;
 		if (player_->GetHP() <= MIN_HP || isTouchStrongEnemy_==true) {
+
+			//鍵の音を止める
+			keyManager_->StopAudio();
 
 			//敵の動きが止まりブラックアウト
 			//プレイヤーことカメラが倒れる感じが良いかも

@@ -1,5 +1,5 @@
 #include "StageObjectForLevelEditorCollider.h"
-#include <Collider/CollisionConfig.h>
+#include "CollisionConfig.h"
 #include <imgui.h>
 
 void StageObjectForLevelEditorCollider::Initialize() {
