@@ -17,7 +17,7 @@
 #include "Material.h"
 #include "BackText.h"
 #include "LevelDataManager.h"
-#include "Collider/CollisionManager.h"
+#include "CollisionManager.h"
 #include "Particle3D.h"
 
 #include "Audio.h"

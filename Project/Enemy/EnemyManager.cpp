@@ -3,7 +3,6 @@
 #include <cassert>
 
 #include "Player/Player.h"
-#include "Stage/ObjectManager/ObjectManager.h"
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
 #include "Input.h"
@@ -12,16 +11,12 @@
 //Enemyのこれからやること
 //1.追跡システムを単純化する
 //2.ポリモーフィズムを上手く使おう
-//3.オブジェクトマネージャーからレベルエディタに変えていく
 
-
-//管理しにくいのでCSVにする
 
 void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& strongEnemyModel, const std::string& csvPath){
 	
 	//空だったら引っかかるようにしている
 	assert(player_!=nullptr);
-	assert(objectManager_ != nullptr);
 	assert(levelDataManager_ != nullptr);
 
 
@@ -186,12 +181,14 @@ void EnemyManager::GenarateStrongEnemy(const Vector3& position){
 
 	//スピード(方向)を決める
 	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
-	Vector3 speed = {.x= speedDistribute(randomEngine),.y= 0.0f,.z= speedDistribute(randomEngine) };
+	speedDistribute;
+	Vector3 speed = {.x= 0.01f,.y= 0.0f,.z= 0.00f };
 
 
 
 	//初期化
 	enemy->Initialize(strongEnemyModelHandle_, position, speed);
+	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
 	//挿入
 	strongEnemyes_.push_back(enemy);
 }

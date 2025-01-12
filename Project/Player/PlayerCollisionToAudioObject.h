@@ -6,7 +6,7 @@
  */
 
 
-#include "Collider/Collider.h"
+#include "Collider.h"
 
 /// <summary>
 /// オーディオオブジェクトに対してのコライダー

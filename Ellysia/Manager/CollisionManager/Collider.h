@@ -49,6 +49,13 @@ public:
 	virtual Vector3 GetWorldPosition() = 0;
 
 public:
+	/// <summary>
+	/// 名前を取得
+	/// </summary>
+	/// <returns></returns>
+	inline std::string GetName()const {
+		return name_;
+	}
 
 	/// <summary>
 	/// 半径を取得
@@ -58,9 +65,6 @@ public:
 		return radius_;
 	}
 
-#pragma region AABB
-
-
 	/// <summary>
 	/// AABBの取得
 	/// </summary>
@@ -69,7 +73,6 @@ public:
 		return aabb_;
 	}
 
-#pragma endregion
 
 	/// <summary>
 	/// 3Dの扇の取得
@@ -100,7 +103,7 @@ public:
 	/// 衝突判定で使う形の種類の値を取得
 	/// </summary>
 	/// <returns></returns>
-	inline uint32_t GetCollisionType() {
+	inline uint32_t GetCollisionType()const {
 		return collisionType_;
 	}
 
@@ -125,6 +128,9 @@ public:
 	}
 
 protected:
+	//名前
+	std::string name_ = "";
+
 
 	//当たり判定の種類
 	//デフォルトで球にしておく

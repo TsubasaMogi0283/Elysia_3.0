@@ -1,18 +1,51 @@
 #include "Ellysia.h"
 
-#include <PipelineManager.h>
+
+#include "WindowsSetup.h"
+#include "DirectXSetup.h"
+#include "PipelineManager.h"
 #include "ImGuiManager.h"
-#include <Input.h>
-#include <TextureManager.h>
+#include "Input.h"
 #include "SrvManager.h"
 #include "RtvManager.h"
-#include <Audio.h>
-#include <LevelDataManager.h>
+#include "Audio.h"
+#include "LevelDataManager.h"
 #include "GlobalVariables/GlobalVariables.h"
 
-Ellysia* Ellysia::GetInstance() {
-	static Ellysia instance;
-	return &instance;
+Ellysia::Ellysia(){
+
+	//インスタンスの取得
+	//ウィンドウ
+	windowsSetup_ = WindowsSetup::GetInstance();
+
+	//DirectX
+	directXSetup_ = DirectXSetup::GetInstance();
+
+	//SRV
+	srvManager_ = SrvManager::GetInstance();
+
+	//RTV
+	rtvManager_ = RtvManager::GetInstance();
+
+	//ImGui管理クラス
+	imGuiManager_ = ImGuiManager::GetInstance();
+
+	//パイプライン
+	pipelineManager_ = PipelineManager::GetInstance();
+
+	//入力
+	input_ = Input::GetInstance();
+
+	//Audio
+	audio_ = Audio::GetInstance();
+
+	//JSON読み込み
+	globalVariables_ = GlobalVariables::GetInstance();
+
+	//レベルデータ管理クラス
+	levelDataManager_ = LevelDataManager::GetInstance();
+
+
 }
 
 void Ellysia::Initialize(){
@@ -26,7 +59,7 @@ void Ellysia::Initialize(){
 
 	//初期化
 	//ウィンドウ
-	WindowsSetup::GetInstance()->Initialize(TITLE_BAR_NAME,WINDOW_SIZE_WIDTH,WINDOW_SIZE_HEIGHT);
+	windowsSetup_->Initialize(TITLE_BAR_NAME,WINDOW_SIZE_WIDTH,WINDOW_SIZE_HEIGHT);
 	
 	//COMの初期化
 	//COM...ComponentObjectModel、Microsoftの提唱する設計技術の１つ
@@ -37,37 +70,44 @@ void Ellysia::Initialize(){
 	assert(SUCCEEDED(hResult));
 
 	//DirectX第1初期化
-	DirectXSetup::GetInstance()->FirstInitialize();
+	directXSetup_->FirstInitialize();
 	
 	//SRV初期化
-	SrvManager::GetInstance()->Initialize();
+	srvManager_->Initialize();
 
 	//RTVの初期化
-	RtvManager::GetInstance()->Initialize();
+	rtvManager_->Initialize();
 
 	///DirectX第2の初期化
-	DirectXSetup::GetInstance()->SecondInitialize();
+	directXSetup_->SecondInitialize();
 
 	
 #ifdef _DEBUG
 	//ImGuiManagerの初期化
-	ImGuiManager::GetInstance()->Initialize();
+	imGuiManager_->Initialize();
 #endif
 
 
 	//パイプラインの初期化
-	PipelineManager::GetInstance()->Initialize();
+	pipelineManager_->Initialize();
 
 	//Inputの初期化
-	Input::GetInstance()->Initialize();
+	input_->Initialize();
 	
 	
 	//Audioの初期化
-	Audio::GetInstance()->Initialize();
+	audio_->Initialize();
 
 	//JSON読み込みの初期化
-	GlobalVariables::GetInstance()->LoadFile();
+	globalVariables_->LoadFile();
 
+
+
+
+
+	//依存関係がおかしいとのこと
+	// 
+	//抽象か
 	//GameManagerの初期化
 	gameManager_ = std::make_unique<GameManager>();
 	gameManager_->Initialize();
@@ -81,22 +121,22 @@ void Ellysia::Initialize(){
 void Ellysia::BeginFrame(){
 	
 	//SRVの更新
-	SrvManager::GetInstance()->PreDraw();
+	srvManager_->PreDraw();
 
 #ifdef _DEBUG
 	//ImGuiの開始
-	ImGuiManager::GetInstance()->BeginFrame();
+	imGuiManager_->BeginFrame();
 #endif
 }
 
 void Ellysia::Update(){
 	//JSON用
 	//グローバル変数の更新
-	GlobalVariables::GetInstance()->GetInstance()->Update();
+	globalVariables_->Update();
 
 
 	//入力の更新
-	Input::GetInstance()->Update();
+	input_->Update();
 	
 	//ゲームシーンの更新
 	gameManager_->Update();
@@ -131,7 +171,7 @@ void Ellysia::Draw(){
 	
 #ifdef _DEBUG
 	//ImGuiの描画
-	ImGuiManager::GetInstance()->Draw();
+	imGuiManager_->Draw();
 	
 #endif
 }
@@ -140,10 +180,10 @@ void Ellysia::Draw(){
 void Ellysia::EndFrame() {
 #ifdef _DEBUG
 	////ImGuiのフレーム終わり
-	ImGuiManager::GetInstance()->EndDraw();
+	imGuiManager_->EndDraw();
 #endif
 	//最後で切り替える
-	DirectXSetup::GetInstance()->EndDraw();
+	directXSetup_->EndDraw();
 
 	
 }
@@ -153,21 +193,21 @@ void Ellysia::EndFrame() {
 void Ellysia::Release() {
 
 	//レベルエディタの解放
-	LevelDataManager::GetInstance()->Release();
+	levelDataManager_->Release();
 
 	//オーディオの解放
-	Audio::GetInstance()->Release();
+	audio_->Release();
 
 #ifdef _DEBUG
 	//ImGuiの解放	
-	ImGuiManager::GetInstance()->Release();
+	imGuiManager_->Release();
 #endif
 
 	//DirectXの解放
-	DirectXSetup::GetInstance()->Release();
+	directXSetup_->Release();
 	
 	//Windowsの解放
-	WindowsSetup::GetInstance()->Close();
+	windowsSetup_->Close();
 
 	//ゲーム終了時にはCOMの終了処理を行っておく
 	CoUninitialize();
@@ -175,12 +215,12 @@ void Ellysia::Release() {
 }
 
 
+
+
 void Ellysia::Run(){
 	//初期化
 	Initialize();
 	
-	
-
 	//メインループ
 	//ウィンドウの✕ボタンが押されるまでループ
 	MSG msg = {};
@@ -189,7 +229,7 @@ void Ellysia::Run(){
 		//Windowにメッセージが来てたら最優先で処理させる
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			//メッセージを送る
-			WindowsSetup::GetInstance()->WindowsMSG(msg);
+			windowsSetup_->WindowsMSG(msg);
 
 		}
 		else {
@@ -201,7 +241,7 @@ void Ellysia::Run(){
 			Update();
 
 			//ESCAPE押されたら終了
-			if (Input::GetInstance()->IsPushKey(DIK_ESCAPE)) {
+			if (input_->IsPushKey(DIK_ESCAPE)) {
 				break;
 			}
 

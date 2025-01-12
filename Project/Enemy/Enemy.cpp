@@ -1,6 +1,6 @@
 #include "Enemy.h"
 
-#include "../Collider/CollisionConfig.h"
+#include "CollisionConfig.h"
 #include <VectorCalculation.h>
 
 #include "SpotLight.h"

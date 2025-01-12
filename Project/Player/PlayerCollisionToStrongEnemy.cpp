@@ -1,5 +1,5 @@
 #include "PlayerCollisionToStrongEnemy.h"
-#include <Collider/CollisionConfig.h>
+#include "CollisionConfig.h"
 #include <ModelManager.h>
 
 void PlayerCollisionToStrongEnemy::Initialize(){

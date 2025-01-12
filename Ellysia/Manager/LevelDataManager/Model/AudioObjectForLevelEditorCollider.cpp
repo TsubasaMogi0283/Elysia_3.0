@@ -1,5 +1,5 @@
 #include "AudioObjectForLevelEditorCollider.h"
-#include <Collider/CollisionConfig.h>
+#include "CollisionConfig.h"
 #include <imgui.h>
 
 void AudioObjectForLevelEditorCollider::Initialize(){

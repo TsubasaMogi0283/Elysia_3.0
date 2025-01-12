@@ -1,5 +1,5 @@
 #include "EnemyAttackCollision.h"
-#include <Collider/CollisionConfig.h>
+#include "CollisionConfig.h"
 #include <VectorCalculation.h>
 
 

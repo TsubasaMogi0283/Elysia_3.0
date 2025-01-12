@@ -5,7 +5,7 @@
 #include "Camera.h"
 #include "SpotLight.h"
 #include <VectorCalculation.h>
-#include <Collider/CollisionConfig.h>
+#include "CollisionConfig.h"
 
 
 void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position,const Vector3& speed){

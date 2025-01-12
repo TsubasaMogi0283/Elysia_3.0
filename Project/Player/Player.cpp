@@ -9,14 +9,20 @@
 #include "Stage/ObjectManager/ObjectManager.h"
 #include "GameScene/GameScene.h"
 #include "SingleCalculation.h"
-#include "Collider/CollisionConfig.h"
+#include "CollisionConfig.h"
 #include "ModelManager.h"
 
 void Player::Initialize(){
 
 	//モデルの生成 
+	
+	//別別になっている
+	//出来ればModelはModelManagerに管理させても良さそう
 	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
 	model_.reset(Model::Create(modelHandle));
+
+
+
 
 	//初期はコントロールできない
 	isControll_ = false;
@@ -35,6 +41,12 @@ void Player::Initialize(){
 	const Vector3 INITIAL_POSITION = { .x=0.0f,.y=0.0f,.z=-15.0f };
 	worldTransform_.translate = INITIAL_POSITION;
 
+
+	//PlayerCllsion基底クラスを作ろう
+	//std::unique_ptr<PlayerCollisionToNormalEnemyAttack> colliderToNormalEnemy_ = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
+	//colliderToNormalEnemy_->Initialize();
+	////そのまま入れることは出来ないので所有権を移すstd::moveを使うよ
+	//colliders_.push_back(std::move(colliderToNormalEnemy_));
 
 
 	//通常
@@ -146,7 +158,7 @@ void Player::Update(){
 	aabb_.max.y = worldPosition.y + SIDE_SIZE;
 	aabb_.max.z = worldPosition.z + SIDE_SIZE;
 
-
+	//PMで綺麗にまとめられるかも
 	//通常の敵用の当たり判定の更新
 	colliderToNormalEnemy_->SetPlayerPosition(worldPosition);
 	colliderToNormalEnemy_->Update();

@@ -5,12 +5,13 @@
  * @author 茂木翼
  */
 
-#include "Collider/Collider.h"
+#include "IPlayerCollision.h"
+
 
 /// <summary>
 /// ステージオブジェクトに対するCollision
 /// </summary>
-class PlayerCollisionToStageObject :public Collider {
+class PlayerCollisionToStageObject :public IPlayerCollision {
 public:
 
 	/// <summary>
@@ -60,17 +61,11 @@ public:
 	/// ワールド座標を設定
 	/// </summary>
 	/// <param name="position"></param>
-	inline void SetPlayerGetWorldPosition(const Vector3& position) {
+	inline void SetPlayerPosition(const Vector3& position)override {
 		this->position_ = position;
 	}
 
-	/// <summary>
-	/// 衝突
-	/// </summary>
-	/// <returns></returns>
-	inline bool GetIsTouch()const {
-		return isTouch_;
-	}
+	
 
 
 private:

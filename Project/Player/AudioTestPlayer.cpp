@@ -19,10 +19,6 @@ void AudioTestPlayer::Initialize(){
 	//オーディオ
 	collosionToAudioObject_ = std::make_unique<PlayerCollisionToAudioObject>();
 	collosionToAudioObject_->Initialize();
-	//ステージ
-	collosionToStageObject_ = std::make_unique<PlayerCollisionToStageObject>();
-	collosionToStageObject_->Initialize();
-
 }
 
 void AudioTestPlayer::Update(){
@@ -57,8 +53,8 @@ void AudioTestPlayer::Update(){
 	collosionToAudioObject_->SetPlayerPosition(worldTransform_.GetWorldPosition());
 	collosionToAudioObject_->Update();
 	//ステージ
-	collosionToStageObject_->SetPlayerGetWorldPosition(worldTransform_.GetWorldPosition());
-	collosionToStageObject_->Update();
+	//collosionToStageObject_->SetPlayerPosition(worldTransform_.GetWorldPosition());
+	//collosionToStageObject_->Update();
 
 }
 

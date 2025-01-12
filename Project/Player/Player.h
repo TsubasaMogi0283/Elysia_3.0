@@ -6,10 +6,13 @@
  * @author 茂木翼
  */
 
+#include <memory>
+#include <list>
+
 
 #include "WorldTransform.h"
 #include "Model.h"
-#include <memory>
+
 #include "Stage/Ground/StageRect.h"
 #include "AABB.h"
 #include "PlayerCollisionToStrongEnemy.h"
@@ -36,10 +39,6 @@ struct Material;
 /// </summary>
 class GameScene;
 
-/// <summary>
-/// オブジェクト管理クラス
-/// </summary>
-class ObjectManager;
 
 
 #pragma endregion
@@ -332,6 +331,8 @@ private:
 	//オーディオオブジェクト用
 	std::unique_ptr<PlayerCollisionToAudioObject>collosionToAudioObject_ = nullptr;
 
+	//当たり判定のリスト
+	//std::list<std::unique_ptr<Collider>> colliders_ = {};
 
 
 private:

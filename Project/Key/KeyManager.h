@@ -134,6 +134,11 @@ public:
 		this->player_ = player;
 	};
 
+	/// <summary>
+	/// 音が止まる
+	/// </summary>
+	void StopAudio();
+
 
 
 private:

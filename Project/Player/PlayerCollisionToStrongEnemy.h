@@ -4,7 +4,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Material.h"
-#include "Collider/Collider.h"
+#include "Collider.h"
 
 struct Camera;
 struct SpotLight;

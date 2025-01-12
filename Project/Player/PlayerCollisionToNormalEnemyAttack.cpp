@@ -1,5 +1,5 @@
 #include "PlayerCollisionToNormalEnemyAttack.h"
-#include <Collider/CollisionConfig.h>
+#include "CollisionConfig.h"
 #include <ModelManager.h>
 
 void PlayerCollisionToNormalEnemyAttack::Initialize(){

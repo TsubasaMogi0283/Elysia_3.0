@@ -238,9 +238,6 @@
     <Filter Include="Project\Enemy">
       <UniqueIdentifier>{50da64de-7949-4d78-9976-41a9e659d7be}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Collision">
-      <UniqueIdentifier>{c1aa45b5-8f1f-4832-9f1f-70cd41ad017e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Player">
       <UniqueIdentifier>{64043a22-c8f5-4bb5-9fd8-8f56b10eb819}</UniqueIdentifier>
     </Filter>
@@ -382,6 +379,12 @@
     <Filter Include="Project\Camera\TitleRailCamera">
       <UniqueIdentifier>{d5dff015-e7ce-422c-8ab2-1a450b24d437}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Player\Collision">
+      <UniqueIdentifier>{32b25b1e-d1a9-45a3-9a3b-830c6437a4fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Player\Collision\IPlayerCollision">
+      <UniqueIdentifier>{7342fb61-2dae-4860-88b9-6d4531dde844}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -522,12 +525,6 @@
     <ClCompile Include="Project\Enemy\Enemy.cpp">
       <Filter>Project\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Math\Collision\CollisionCalculation.cpp">
-      <Filter>Project\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Collider\CollisionManager.cpp">
-      <Filter>Project\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Player\Player.cpp">
       <Filter>Project\Player</Filter>
     </ClCompile>
@@ -554,9 +551,6 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp">
       <Filter>Project\GameScene\Lose</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\LevelEditorSample\LevelEditorSample.cpp">
-      <Filter>Project\GameScene\LevelEditorSample</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp">
       <Filter>Project\Enemy\EnemyAttackCollision</Filter>
@@ -641,6 +635,15 @@
     </ClCompile>
     <ClCompile Include="Project\RailCamera\TitleRailCamera.cpp">
       <Filter>Project\Camera\TitleRailCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Math\Collision\CollisionCalculation.cpp">
+      <Filter>Ellysia\Source File\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\CollisionManager\CollisionManager.cpp">
+      <Filter>Ellysia\Source File\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\IPlayerCollision.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -955,18 +958,6 @@
     <ClInclude Include="Project\Enemy\Enemy.h">
       <Filter>Project\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Collider\Collider.h">
-      <Filter>Project\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Math\Collision\CollisionCalculation.h">
-      <Filter>Project\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Collider\CollisionConfig.h">
-      <Filter>Project\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Collider\CollisionManager.h">
-      <Filter>Project\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Player\Player.h">
       <Filter>Project\Player</Filter>
     </ClInclude>
@@ -1002,12 +993,6 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h">
       <Filter>Project\GameScene\Lose</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Stage\StageObject\StageObject.h">
-      <Filter>Project\ObjectManager\StageObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\LevelEditorSample\LevelEditorSample.h">
-      <Filter>Project\GameScene\LevelEditorSample</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\EnemyCondition.h">
       <Filter>Project\Enemy</Filter>
@@ -1104,6 +1089,21 @@
     </ClInclude>
     <ClInclude Include="Project\RailCamera\TitleRailCamera.h">
       <Filter>Project\Camera\TitleRailCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Collision\CollisionCalculation.h">
+      <Filter>Ellysia\Header File\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\CollisionConfig\CollisionConfig.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\CollisionManager\Collider.h">
+      <Filter>Ellysia\Header File\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\CollisionManager\CollisionManager.h">
+      <Filter>Ellysia\Header File\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\IPlayerCollision.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
