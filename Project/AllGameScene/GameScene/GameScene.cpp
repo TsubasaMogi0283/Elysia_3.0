@@ -986,7 +986,8 @@ void GameScene::Update(GameManager* gameManager) {
 		//負け専用のクラスを作りたい
 		const uint32_t MIN_HP = 0u;
 		if (player_->GetHP() <= MIN_HP || isTouchStrongEnemy_==true) {
-
+			//敵の音を止める
+			enemyManager_->StopAudio();
 			//鍵の音を止める
 			keyManager_->StopAudio();
 
@@ -1029,6 +1030,10 @@ void GameScene::Update(GameManager* gameManager) {
 	//ホワイトアウト
 	//StatePatternにしたい
 	if (isWhiteFadeOut_ == true) {
+		//音を止める
+		enemyManager_->StopAudio();
+
+		//非表示
 		escapeText_->SetInvisible(true);
 		//振動しないようにする
 		player_->SetIsAbleToControll(false);

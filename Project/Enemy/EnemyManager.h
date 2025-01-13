@@ -110,6 +110,11 @@ public:
 	void DeleteEnemy();
 	
 	/// <summary>
+	/// 音を止める
+	/// </summary>
+	void StopAudio();
+
+	/// <summary>
 	/// プレイヤーの設定
 	/// </summary>
 	/// <param name="player"></param>

@@ -126,6 +126,10 @@ void EnemyManager::DeleteEnemy(){
 	});
 }
 
+void EnemyManager::StopAudio(){
+	audio_->Stop(audioHandle_);
+}
+
 
 void EnemyManager::GenarateNormalEnemy(const Vector3& position) {
 	//通常の敵の生成
