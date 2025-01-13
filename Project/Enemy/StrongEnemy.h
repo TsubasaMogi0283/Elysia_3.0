@@ -107,6 +107,13 @@ public:
 		return isTouchPlayer_;
 	}
 
+	/// <summary>
+	/// 向きを取得
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetDirection() const {
+		return direction_;
+	}
 
 public:
 

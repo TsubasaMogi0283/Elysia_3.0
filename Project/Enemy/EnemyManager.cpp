@@ -105,33 +105,6 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 
 
 
-	//強敵生成
-	StrongEnemy* enemy = new StrongEnemy();
-	std::random_device seedGenerator;
-	std::mt19937 randomEngine(seedGenerator());
-	
-	//位置を決める
-	std::uniform_real_distribution<float> positionDistribute(-30.0f, 30.0f);
-	Vector3 position = { positionDistribute(randomEngine),0.0f,positionDistribute(randomEngine) };
-	
-	
-	//スピードを決める
-	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
-	Vector3 speed = { speedDistribute(randomEngine),0.0f,speedDistribute(randomEngine) };
-#ifdef _DEBUG
-	position = {.x= -20.0f,.y= 0.0f,.z= 10.0f };
-	speed = {.x= 0.01f,.y= 0.0f,.z= -0.03f };
-#endif // _DEBUG
-
-	
-	
-	//強敵の初期化
-	enemy->Initialize(strongEnemyModelHandle_, position, speed);
-	//追跡開始距離の設定
-	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
-	//挿入
-	//strongEnemyes_.push_back(enemy);
-	delete enemy;
 
 	//接近BGMの設定
 	audio_ = Audio::GetInstance();
@@ -159,7 +132,7 @@ void EnemyManager::GenarateNormalEnemy(const Vector3& position) {
 	Enemy* enemy = new Enemy();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
-	std::uniform_real_distribution<float> speedDistribute(-0.1f, 0.1f);
+	std::uniform_real_distribution<float> speedDistribute(-0.01f, 0.01f);
 
 	
 	//スピード決め
@@ -574,7 +547,85 @@ void EnemyManager::Update(){
 		AABB strongEnemyAABB = strongEnemy->GetAABB();
 
 
-		
+		//AABB
+		AABB enemyAABB = strongEnemy->GetAABB();
+
+		//移動中の時
+		if (strongEnemy->GetCondition() == EnemyCondition::Move) {
+
+#pragma region ステージオブジェクト
+
+
+			//レベルエディタから持ってくる
+			//座標
+			std::vector<Vector3> positions = levelDataManager_->GetStageObjectPositions(levelDataHandle_);
+			//AABB
+			std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelDataHandle_);
+			//コライダーを持っているかどうか
+			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_);
+			//衝突判定
+			for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
+
+
+				//AABBを取得
+				AABB objectAABB = aabbs[i];
+				//位置を取得
+				Vector3 objectPosition = positions[i];
+
+
+				//お互いのAABBが接触している場合
+				if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
+					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
+					//オブジェクトとの差分ベクトル
+					Vector3 defference = VectorCalculation::Subtract(objectPosition, strongEnemy->GetWorldPosition());
+					//正規化
+					Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
+
+
+					//敵の向いている方向
+					Vector3 enemyDirection = strongEnemy->GetDirection();
+
+					//前にある場合だけ計算
+					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
+
+					//進行方向上にあるときだけ計算する
+					if (dot > FRONT_DOT) {
+
+						//差分ベクトルのXとZの大きさを比べ
+						//値が大きい方で反転させる
+						float defferenceValueX = std::abs(defference.x);
+						float defferenceValueZ = std::abs(defference.z);
+
+
+						//X軸反転
+						if (defferenceValueX >= defferenceValueZ) {
+							strongEnemy->InvertSpeedX();
+						}
+						//Z軸反転
+						else {
+							strongEnemy->InvertSpeedZ();
+						}
+
+
+
+#ifdef _DEBUG
+						ImGui::Begin("DemoObjectEnemy");
+						ImGui::InputFloat("Dot", &dot);
+						ImGui::InputFloat3("defference", &defference.x);
+						ImGui::InputFloat("defferenceValueX", &defferenceValueX);
+						ImGui::InputFloat("defferenceValueZ", &defferenceValueZ);
+						ImGui::End();
+#endif // _DEBUG
+
+					}
+				}
+
+			}
+
+
+
+#pragma endregion
+		}
 
 		//差分を求める
 		Vector3 playerStrongEnemyDifference = VectorCalculation::Subtract(playerPosition, strongEnemy->GetWorldPosition());
@@ -597,7 +648,7 @@ void EnemyManager::Update(){
 		}
 		else {
 			//再生
-			//audio_->Play(audioHandle_, true);
+			audio_->Play(audioHandle_, true);
 		}
 
 		//音量変化

@@ -59,7 +59,6 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 
 		Vector3 position = {};
 		//X座標
-		std::getline(lineStream, word, ',');
 		position.x = static_cast<float>(std::atof(word.c_str()));
 
 		//Y座標

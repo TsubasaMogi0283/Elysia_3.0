@@ -483,23 +483,27 @@ void LevelDataManager::Update(const uint32_t& levelDataHandle){
 void LevelDataManager::Delete(const uint32_t& levelDataHandle){
 
 
-	for (auto& [key, levelData] : levelDatas_) {
-		if (levelData->handle == levelDataHandle) {
+	//一度全てのオブジェクトのデータを消す
+	for (auto& [key, levelDataPtr] : levelDatas_) {
+		if (levelDataPtr->handle == levelDataHandle) {
 
-			////モデルを消す
-			//for (auto& object : levelData->objectDatas) {
-			//	// Modelの解放
-			//	if (object.model != nullptr) {
-			//		delete object.model;
-			//	}
-			//	//ワールドトランスフォームの解放
-			//	delete object.worldTransform;
-			//}
+			//モデルを消す
+			for (auto& object : levelDataPtr->objectDatas) {
+				// Modelの解放
+				if (object.objectForLeveEditor != nullptr) {
+					delete object.objectForLeveEditor;
+				}
+				if (object.levelDataObjectCollider != nullptr) {
+					delete object.levelDataObjectCollider;
+				}
+
+			}
+
 
 			//listにある情報を全て消す
-			levelData->objectDatas.clear();
+			levelDataPtr->objectDatas.clear();
 
-			//無駄な処理をしないようにする
+			//無駄なループ処理をしないようにする
 			break;
 		}
 	}
