@@ -3,9 +3,10 @@
 
 #include "DirectXSetup.h"
 #include "Camera.h"
+#include "Calculation/QuaternionCalculation.h"
 
 void WorldTransform::Initialize() {
-	//Resource作成
+	//リソースの作成
 	bufferResource = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(WorldTransformData)).Get();
 
 	//初期値
@@ -19,8 +20,25 @@ void WorldTransform::Initialize() {
 
 
 void WorldTransform::Update() {
-	//SRT合成
-	worldMatrix = Matrix4x4Calculation::MakeAffineMatrix(scale, rotate, translate);
+
+	//クォータニオンを使う場合
+	if (isUseQuarternion_==true) {
+		//Scale
+		Matrix4x4 scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(scale);
+		//Rotate。行列へ変換
+		Matrix4x4 rotateMatrix = QuaternionCalculation::MakeRotateMatrix(quaternion_);
+		//Translate
+		Matrix4x4 translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(translate);
+
+		//合成
+		worldMatrix = Matrix4x4Calculation::Multiply(scaleMatrix, Matrix4x4Calculation::Multiply(rotateMatrix, translateMatrix));
+	}
+	//使わない場合
+	else {
+		//そのままSRT合成
+		worldMatrix = Matrix4x4Calculation::MakeAffineMatrix(scale, rotate, translate);
+
+	}
 
 	//逆転置行列
 	//ワールド行列を逆転置にする
@@ -30,7 +48,7 @@ void WorldTransform::Update() {
 	worldInverseTransposeMatrix = Matrix4x4Calculation::MakeTransposeMatrix(worldInverseMatrix);
 
 	//親があれば親のワールド行列を掛ける
-	if (parent) {
+	if (parent!=nullptr) {
 		worldMatrix = Matrix4x4Calculation::Multiply(worldMatrix, parent->worldMatrix);
 	}
 

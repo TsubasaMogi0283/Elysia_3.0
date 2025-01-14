@@ -154,6 +154,11 @@ private:
 
 
 
+
+	std::unique_ptr<Model>debugModel_ = nullptr;
+	WorldTransform worldTransform_ = {};
+	float radius_ = 0.0f;
+	Vector3 axis = { 0.0f,1.0f,0.0f };
 #pragma region ポストエフェクト
 	//今は使わない
 	std::unique_ptr<BackText> backText_ = nullptr;
@@ -161,7 +166,7 @@ private:
 
 	//ランダムノイズ
 	std::unique_ptr<RandomEffect> randomEffect_ = nullptr;
-	int32_t randomEffectTime_ = 0u;
+	float randomEffectTime_ = 0u;
 	bool isDisplayRandomEffect_ = false;
 	bool isEndDisplayRandomEffect_ = false;
 

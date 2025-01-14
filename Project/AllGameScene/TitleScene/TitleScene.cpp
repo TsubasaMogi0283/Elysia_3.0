@@ -11,8 +11,9 @@
 
 #include "TextureManager.h"
 #include "LevelDataManager.h"
-#include <VectorCalculation.h>
-#include <SingleCalculation.h>
+#include "VectorCalculation.h"
+#include "SingleCalculation.h"
+#include <Calculation/QuaternionCalculation.h>
 
 TitleScene::TitleScene(){
 	//テクスチャ管理クラスの取得
@@ -45,8 +46,12 @@ void TitleScene::Initialize(){
 	const float INITIAL_TRANSPARENCY = 0.0f;
 	blackFade_->SetTransparency(INITIAL_TRANSPARENCY);
 
-
+	//レベルデータの読み込み
 	levelHandle_ = levelDataManager_->Load("TitleStage/TitleStage.json");
+
+
+	uint32_t debugModel = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
+	debugModel_.reset(Model::Create(debugModel));
 
 	isStart_ = false;
 	isFlash_ = true;
@@ -64,7 +69,7 @@ void TitleScene::Initialize(){
 	//カメラの初期化
 	camera_.Initialize();
 	//座標
-	camera_.translate = {.x = 0.0f,.y = 0.0f,.z = -9.8f };
+	camera_.translate = {.x = 0.0f,.y = 0.0f,.z = -30.8f };
 
 	//レールカメラ
 	titleRailCamera_ = std::make_unique<TitleRailCamera>();
@@ -83,6 +88,10 @@ void TitleScene::Initialize(){
 	//初期化
 	randomEffect_->Initialize();
 	
+
+	worldTransform_.Initialize();
+	worldTransform_.scale = { 3.0f,3.0f,3.0f };
+	worldTransform_.translate.z = 5.0f;
 
 }
 
@@ -193,31 +202,30 @@ void TitleScene::Update(GameManager* gameManager){
 	//シーン遷移演出
 	if (isStart_ == true) {
 
-		text_->SetInvisible(false);
+		//スタートのテキストを非表示にさせる
+		text_->SetInvisible(true);
 
 		//時間の加算
-		const int32_t DELTA_TIME = 1u;
+		const float DELTA_TIME = 1.0f/60.0f;
 		randomEffectTime_ += DELTA_TIME;
 
 		//開始時間
-		const int32_t RANDOM_EFFECT_DISPLAY_START_TIME_[DISPLAY_LENGTH_QUANTITY_] = {00u,140u};
+		const float RANDOM_EFFECT_DISPLAY_START_TIME_[DISPLAY_LENGTH_QUANTITY_] = {0.0f,2.5f};
 		//表示の長さ
-		const int32_t RANDOM_EFFECT_DISPLAY_LENGTH_[DISPLAY_LENGTH_QUANTITY_] = { 60u,180u };
+		const float RANDOM_EFFECT_DISPLAY_LENGTH_[DISPLAY_LENGTH_QUANTITY_] = { 1.0f,3.0f };
 
 
 #ifdef _DEBUG
 		ImGui::Begin("TitleFade&Effect");
-		ImGui::InputInt("Count", &randomEffectTime_);
+		ImGui::InputFloat("Count", &randomEffectTime_);
 		ImGui::Checkbox("IsDisplay", &isDisplayRandomEffect_);
 		ImGui::End();
 #endif // _DEBUG
 
 
-		for (uint32_t i = 0; i < DISPLAY_LENGTH_QUANTITY_; ++i) {
-			
-		}
-		
 
+
+		//for文でまとめたかったが上手く出来なかった
 		if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME_[0] &&
 			randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME_[0] + RANDOM_EFFECT_DISPLAY_LENGTH_[0]) {
 			isDisplayRandomEffect_ = true;
@@ -280,12 +288,33 @@ void TitleScene::Update(GameManager* gameManager){
 
 	//レールカメラの更新
 	titleRailCamera_->Update();
-	camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
-	camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
+	//camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
+	//camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
+
+
 
 	//カメラの更新
-	camera_.Transfer();
+	camera_.Update();
+	//camera_.Transfer();
 
+
+
+#ifdef _DEBUG
+	ImGui::Begin("DebugModel"); 
+	ImGui::SliderFloat("radius_", &radius_, -3.0f, 3.0f);
+	ImGui::SliderFloat3("axis", &axis.x, -3.0f, 3.0f);
+
+	ImGui::SliderFloat4("Q", &worldTransform_.quaternion_.x, -6.0f, 6.0f);
+	ImGui::SliderFloat3("Rotate", &worldTransform_.rotate.x, -3.0f, 3.0f);
+	ImGui::SliderFloat3("Translate", &worldTransform_.translate.x,-30.0f,30.0f);
+	ImGui::End();
+#endif // _DEBUG
+
+
+	worldTransform_.isUseQuarternion_ = true;
+
+	worldTransform_.quaternion_ = QuaternionCalculation::MakeRotateAxisAngleQuaternion(axis, radius_);
+	worldTransform_.Update();
 
 
 
@@ -295,6 +324,10 @@ void TitleScene::DrawObject3D(){
 	//ステージオブジェクト
 	levelDataManager_->Draw(levelHandle_,camera_, material_, directionalLight_);
 
+
+
+
+	debugModel_->Draw(worldTransform_, camera_, material_, directionalLight_);
 
 }
 

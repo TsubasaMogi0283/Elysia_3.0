@@ -7,6 +7,7 @@
 
 #include "Matrix4x4.h"
 #include "Vector3.h"
+#include "Quaternion.h"
 
 #include "DirectXSetup.h"
 
@@ -76,6 +77,11 @@ public:
 	Vector3 rotate = { 0.0f, 0.0f, 0.0f };
 	//座標
 	Vector3 translate = { 0.0f, 0.0f, 0.0f };
+
+	//クォータニオンを使うかどうか
+	bool isUseQuarternion_ = false;
+	//クォータニオン
+	Quaternion quaternion_ = {};
 
 
 	//定数バッファ

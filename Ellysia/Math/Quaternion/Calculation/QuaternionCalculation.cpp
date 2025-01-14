@@ -262,3 +262,13 @@ Quaternion QuaternionCalculation::QuaternionSlerp(const Quaternion& q0, const Qu
 
     return result;
 }
+
+Vector3 QuaternionCalculation::ConvertToEuler(const Quaternion& q){
+    q;
+    return Vector3();
+}
+
+Quaternion QuaternionCalculation::ConvertToQuaternion(const Vector3& v){
+    v;
+    return Quaternion();
+}
