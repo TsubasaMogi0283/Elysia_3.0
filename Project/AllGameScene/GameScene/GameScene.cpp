@@ -411,10 +411,19 @@ void GameScene::ObjectCollision(){
 			Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
 
 			//内積
-			//これが無いと接触したまま動けなくなってしまうので入れる
+			//進行方向上にオブジェクトがあるかないかを計算したい
 			float dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
-			const float DOT_OFFSET = 0.7f;
-			AABB aabb = aabbs[i];
+			const float DOT_OFFSET = 0.5f;
+
+#ifdef _DEBUG
+			ImGui::Begin("StageObjectCollision");
+			ImGui::InputFloat("Dot", &dot);
+			ImGui::InputFloat3("PlayerAABBMax", &playerAABB.max.x);
+			ImGui::InputFloat3("PlayerAABBMin", &playerAABB.min.x);
+
+			ImGui::End();
+#endif // _DEBUG
+
 
 			//衝突判定
 			//Y成分はいらない
