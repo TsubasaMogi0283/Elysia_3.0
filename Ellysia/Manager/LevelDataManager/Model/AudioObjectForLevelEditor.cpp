@@ -17,7 +17,7 @@ void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Tr
 	worldTransform_.translate = transform.translate;
 
 	//インスタンスの取得
-	audio_ = Audio::GetInstance();
+	audio_ = Ellysia::Audio::GetInstance();
 
 	//オーディオの種類によって数値を変える
 	if (audioDataForLevelEditor_.type == "BGM") {

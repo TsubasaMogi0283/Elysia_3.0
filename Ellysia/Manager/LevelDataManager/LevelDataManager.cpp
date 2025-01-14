@@ -120,6 +120,13 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 				}
 				//AABB
 				else if (objectData.colliderType == "AABB") {
+
+					Vector3 center = {};
+					center.x = static_cast<float>(collider["center"][0]);
+					center.y = static_cast<float>(collider["center"][2]);
+					center.z = static_cast<float>(collider["center"][1]);
+
+
 					//中心座標
 					objectData.center.x = static_cast<float>(collider["center"][0]) + objectData.transform.translate.x;
 					objectData.center.y = static_cast<float>(collider["center"][2]) + objectData.transform.translate.y;
@@ -203,7 +210,7 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 void LevelDataManager::Ganarate(LevelData& levelData) {
 
 	//オーディオのインスタンスを取得
-	Audio* audio = Audio::GetInstance();
+	Ellysia::Audio* audio = Ellysia::Audio::GetInstance();
 
 	//ディレクトリパス
 	std::string levelEditorDirectoryPath = LEVEL_DATA_PATH_ + levelData.folderName;
@@ -469,6 +476,7 @@ void LevelDataManager::Update(const uint32_t& levelDataHandle){
 					bool isTouch = object.levelDataObjectCollider->GetIsTouch();
 					object.objectForLeveEditor->SetIsTouch(isTouch);
 					object.levelDataObjectCollider->SetObjectPosition(objectWorldPosition);
+					object.levelDataObjectCollider->SetCenterPosition(object.center);
 					object.levelDataObjectCollider->Update();
 				}
 

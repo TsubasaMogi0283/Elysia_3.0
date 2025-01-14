@@ -12,7 +12,7 @@
 #include "LevelDataManager.h"
 #include "GlobalVariables/GlobalVariables.h"
 
-Ellysia::Ellysia(){
+EllysiaEngine::EllysiaEngine(){
 
 	//インスタンスの取得
 	//ウィンドウ
@@ -37,7 +37,7 @@ Ellysia::Ellysia(){
 	input_ = Input::GetInstance();
 
 	//Audio
-	audio_ = Audio::GetInstance();
+	audio_ = Ellysia::Audio::GetInstance();
 
 	//JSON読み込み
 	globalVariables_ = GlobalVariables::GetInstance();
@@ -48,7 +48,7 @@ Ellysia::Ellysia(){
 
 }
 
-void Ellysia::Initialize(){
+void EllysiaEngine::Initialize(){
 	//ここでタイトルバーの名前を決めてね
 	const wchar_t* TITLE_BAR_NAME = L"静寂の霊園";
 	//ウィンドウのサイズを決める
@@ -118,7 +118,7 @@ void Ellysia::Initialize(){
 
 #pragma region ゲームループ内の関数
 
-void Ellysia::BeginFrame(){
+void EllysiaEngine::BeginFrame(){
 	
 	//SRVの更新
 	srvManager_->PreDraw();
@@ -129,7 +129,7 @@ void Ellysia::BeginFrame(){
 #endif
 }
 
-void Ellysia::Update(){
+void EllysiaEngine::Update(){
 	//JSON用
 	//グローバル変数の更新
 	globalVariables_->Update();
@@ -142,7 +142,7 @@ void Ellysia::Update(){
 	gameManager_->Update();
 }
 
-void Ellysia::Draw(){
+void EllysiaEngine::Draw(){
 	
 #pragma region PostEffect
 	
@@ -177,7 +177,7 @@ void Ellysia::Draw(){
 }
 
 
-void Ellysia::EndFrame() {
+void EllysiaEngine::EndFrame() {
 #ifdef _DEBUG
 	////ImGuiのフレーム終わり
 	imGuiManager_->EndDraw();
@@ -190,7 +190,7 @@ void Ellysia::EndFrame() {
 #pragma endregion
 
 
-void Ellysia::Release() {
+void EllysiaEngine::Release() {
 
 	//レベルエディタの解放
 	levelDataManager_->Release();
@@ -217,7 +217,7 @@ void Ellysia::Release() {
 
 
 
-void Ellysia::Run(){
+void EllysiaEngine::Run(){
 	//初期化
 	Initialize();
 	

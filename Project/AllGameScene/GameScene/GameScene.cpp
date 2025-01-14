@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include <imgui.h>
 #include <numbers>
+#include <algorithm>
 
 #include "Input.h"
 #include "WinScene/WinScene.h"
@@ -149,7 +150,7 @@ void GameScene::Initialize() {
 #pragma endregion
 	
 	//ハンドルの取得
-	levelHandle_=levelDataManager_->Load("GameStage/GameStage.json");
+	levelHandle_=levelDataManager_->Load("GameStage/GameStageGateCheck.json");
 
 
 
@@ -413,13 +414,16 @@ void GameScene::ObjectCollision(){
 			//これが無いと接触したまま動けなくなってしまうので入れる
 			float dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
 			const float DOT_OFFSET = 0.7f;
-
+			AABB aabb = aabbs[i];
 
 			//衝突判定
 			//Y成分はいらない
 			if ((playerAABB.min.x <= aabbs[i].max.x && playerAABB.max.x >= aabbs[i].min.x) &&
 				(playerAABB.min.z <= aabbs[i].max.z && playerAABB.max.z >= aabbs[i].min.z) &&
 				(dot > DOT_OFFSET)) {
+
+
+
 				uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
 				player_->SetMoveCondition(newCondition);
 

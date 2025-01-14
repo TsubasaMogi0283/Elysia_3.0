@@ -2,7 +2,7 @@
 
 /**
  * @file Ellysia.h
- * @brief 敵のクラス
+ * @brief EllysiaEngine(メインフレーム)のクラス
  * @author 茂木翼
  */
 
@@ -15,7 +15,7 @@
 //sheer・・・全くの、完全な。混じりけのない、純粋な
 //「Ellysia Engine」というように、後ろにEngine加えても自然な語感だと思う
 
-//崩〇3〇dじゃないよ
+//崩〇3〇dじゃないよ。
 //Elysiaでもないよ。誤字ではないよ。
 
 
@@ -61,10 +61,14 @@ class PipelineManager;
 /// </summary>
 class Input;
 
-/// <summary>
-/// オーディオクラス
-/// </summary>
-class Audio;
+
+namespace Ellysia {
+	/// <summary>
+	/// オーディオクラス
+	/// </summary>
+	class Audio;
+
+}
 
 /// <summary>
 /// JSON読み込み(グローバル変数)
@@ -83,15 +87,15 @@ class LevelDataManager;
 
 
 /// <summary>
-/// Ellysia Engine
+/// EllysiaEngine(メインフレーム)
 /// </summary>
-class Ellysia final{
+class EllysiaEngine final{
 public:
 	
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Ellysia();
+	EllysiaEngine();
 		
 
 	/// <summary>
@@ -103,7 +107,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Ellysia() = default;
+	~EllysiaEngine() = default;
 
 
 private:
@@ -161,7 +165,7 @@ private:
 	Input* input_ = nullptr;
 
 	//オーディオクラス
-	Audio* audio_ = nullptr;
+	Ellysia::Audio* audio_ = nullptr;
 
 	//JSON読み込み(グローバル変数)
 	GlobalVariables* globalVariables_ = nullptr;

@@ -77,7 +77,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 			position.z = static_cast<float>(std::atof(word.c_str()));
 
 			//生成
-			GenarateNormalEnemy(position);
+			//GenarateNormalEnemy(position);
 
 		}
 		//強敵の場合
@@ -96,7 +96,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 			position.z = static_cast<float>(std::atof(word.c_str()));
 
 			//生成
-			GenarateStrongEnemy(position);
+			//GenarateStrongEnemy(position);
 
 		}
 
@@ -107,7 +107,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 
 
 	//接近BGMの設定
-	audio_ = Audio::GetInstance();
+	audio_ = Ellysia::Audio::GetInstance();
 	audioHandle_ = audio_->Load("Resources/Audio/Enemy/TrackingToPlayer.mp3");
 }
 
@@ -177,7 +177,6 @@ void EnemyManager::Update(){
 	const float TRACKING_START_DISTANCE_ = 15.0f;
 	//攻撃するときの距離
 	const float ATTACK_START_DISTANCE_ = 6.0f;
-
 	//プレイヤーの座標
 	Vector3 playerPosition = player_->GetWorldPosition();
 	//最小の距離
@@ -268,15 +267,9 @@ void EnemyManager::Update(){
 
 					}
 				}
-
 			}
-
-
-
 			#pragma endregion
 		}
-
-
 	}
 	
 	//現在の敵の数
@@ -609,18 +602,6 @@ void EnemyManager::Update(){
 						else {
 							strongEnemy->InvertSpeedZ();
 						}
-
-
-
-#ifdef _DEBUG
-						ImGui::Begin("DemoObjectEnemy");
-						ImGui::InputFloat("Dot", &dot);
-						ImGui::InputFloat3("defference", &defference.x);
-						ImGui::InputFloat("defferenceValueX", &defferenceValueX);
-						ImGui::InputFloat("defferenceValueZ", &defferenceValueZ);
-						ImGui::End();
-#endif // _DEBUG
-
 					}
 				}
 

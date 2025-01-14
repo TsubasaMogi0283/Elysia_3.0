@@ -32,6 +32,8 @@ void StageObjectForLevelEditorCollider::Update(){
 
 #ifdef _DEBUG
 	ImGui::Begin("ステージオブジェクト");
+	ImGui::InputFloat3("MAX", &aabb_.max.x);
+	ImGui::InputFloat3("MIN", &aabb_.min.x);
 	ImGui::InputFloat3("位置", &objectPosition_.x);
 	ImGui::Checkbox("衝突", &isTouch_);
 	ImGui::End();

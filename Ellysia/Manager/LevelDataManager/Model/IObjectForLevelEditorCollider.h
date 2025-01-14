@@ -41,6 +41,14 @@ public:
 	}
 
 	/// <summary>
+	/// 中心座標
+	/// </summary>
+	/// <param name="size"></param>
+	virtual void SetCenterPosition(const Vector3& centerPosition) {
+		this->centerPosition_ = centerPosition;
+	}
+
+	/// <summary>
 	/// サイズの設定
 	/// </summary>
 	/// <param name="size"></param>
@@ -59,6 +67,9 @@ public:
 protected:
 	//オブジェクトの座標
 	Vector3 objectPosition_ = {};
+
+	//中心座標
+	Vector3 centerPosition_ = {};
 
 	//サイズ
 	Vector3 size_ = {};

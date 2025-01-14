@@ -9,6 +9,7 @@
 #include <list>
 #include <sstream>
 
+#include "Audio.h"
 #include "Key.h"
 #include "Sprite.h"
 
@@ -30,10 +31,14 @@ struct SpotLight;
 /// </summary>
 class Player;
 
-/// <summary>
-/// オーディオ
-/// </summary>
-class Audio;
+
+namespace Ellysia{
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
+
+}
 
 /// <summary>
 /// テクスチャ管理クラス
@@ -143,7 +148,7 @@ public:
 
 private:
 	//オーディオ
-	Audio* audio_ = nullptr;
+	Ellysia::Audio* audio_ = nullptr;
 
 	//テクスチャ管理クラス
 	TextureManager* textureManager_ = nullptr;
