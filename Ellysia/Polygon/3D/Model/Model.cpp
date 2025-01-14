@@ -36,7 +36,7 @@ Model::Model(){
 
 Model* Model::Create(const uint32_t& modelHandle) {
 	
-	//新たなModel型のインスタンスのメモリを確保
+	//生成
 	Model* model = new Model();
 
 	//テクスチャの読み込み

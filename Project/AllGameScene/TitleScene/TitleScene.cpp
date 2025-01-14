@@ -29,14 +29,21 @@ void TitleScene::Initialize(){
 	uint32_t logoTextureHandle = textureManager_->LoadTexture("Resources/Title/StartText.png");
 	//タイトルテクスチャ
 	uint32_t titleTextureHandle = textureManager_->LoadTexture("Resources/Title/Title.png");
+	//黒フェード
+	uint32_t blackTexureHandle= textureManager_->LoadTexture("Resources/Sprite/Back/Black.png");
 
-	//初期化
+	//初期座標
 	const Vector2 INITIAL_POSITION = {.x=0.0f,.y=0.0f};
-	//生成
+	
 	//テキスト
 	text_.reset(Sprite::Create(logoTextureHandle, INITIAL_POSITION));
-	//毎系
+	//ロゴ
 	backGround_.reset(Sprite::Create(titleTextureHandle, INITIAL_POSITION));
+	//黒フェード
+	blackFade_.reset(Sprite::Create(blackTexureHandle, INITIAL_POSITION));
+	//初期の透明度設定
+	const float INITIAL_TRANSPARENCY = 0.0f;
+	blackFade_->SetTransparency(INITIAL_TRANSPARENCY);
 
 
 	levelHandle_ = levelDataManager_->Load("TitleStage/TitleStage.json");
@@ -69,6 +76,14 @@ void TitleScene::Initialize(){
 	back_ = std::make_unique<BackText>();
 	//初期化
 	back_->Initialize();
+
+
+	//ランダムエフェクトの生成
+	randomEffect_ = std::make_unique<RandomEffect>();
+	//初期化
+	randomEffect_->Initialize();
+	
+
 }
 
 
@@ -112,7 +127,7 @@ void TitleScene::Update(GameManager* gameManager){
 
 	}
 	
-
+#pragma region スタート演出
 	//コントローラーのBを押すと高速点滅
 	if (input_->IsConnetGamePad() == true) {
 
@@ -146,12 +161,11 @@ void TitleScene::Update(GameManager* gameManager){
 	const uint32_t FLASH_INTERVAL = 2u;
 
 	//高速点滅
-	if (isFastFlash_ == true) {
+	if (isFastFlash_ == true&& isStart_==false) {
 		fastFlashTime_ += INCREASE_VALUE;
 		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
 			//もう一度学び直したが
 			//単純に+1にしたいなら前置インクリメント「++(名前)」がいいらしい
-
 			//加算される前の値を入れたいなら後置インクリメント「(名前)++」にしよう
 			++textDisplayCount_;
 		}
@@ -171,12 +185,75 @@ void TitleScene::Update(GameManager* gameManager){
 			isStart_ = true;
 		}
 	}
-	//脱出
+
+
+#pragma endregion
+
+
+	//シーン遷移演出
 	if (isStart_ == true) {
-		gameManager->ChangeScene(new GameScene());
-		return;
+
+		text_->SetInvisible(false);
+
+		//時間の加算
+		const int32_t DELTA_TIME = 1u;
+		randomEffectTime_ += DELTA_TIME;
+
+		//開始時間
+		const int32_t RANDOM_EFFECT_DISPLAY_START_TIME_[DISPLAY_LENGTH_QUANTITY_] = {00u,140u};
+		//表示の長さ
+		const int32_t RANDOM_EFFECT_DISPLAY_LENGTH_[DISPLAY_LENGTH_QUANTITY_] = { 60u,180u };
+
+
+#ifdef _DEBUG
+		ImGui::Begin("TitleFade&Effect");
+		ImGui::InputInt("Count", &randomEffectTime_);
+		ImGui::Checkbox("IsDisplay", &isDisplayRandomEffect_);
+		ImGui::End();
+#endif // _DEBUG
+
+
+		for (uint32_t i = 0; i < DISPLAY_LENGTH_QUANTITY_; ++i) {
+			
+		}
+		
+
+		if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME_[0] &&
+			randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME_[0] + RANDOM_EFFECT_DISPLAY_LENGTH_[0]) {
+			isDisplayRandomEffect_ = true;
+		}
+		else if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME_[1] &&
+			randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME_[1] + RANDOM_EFFECT_DISPLAY_LENGTH_[1]) {
+			isDisplayRandomEffect_ = true;
+		}
+		else {
+			isDisplayRandomEffect_ = false;
+		}
+
+
+
+		//ランダムの終了
+		if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME_[1] + RANDOM_EFFECT_DISPLAY_LENGTH_[1]) {
+			isEndDisplayRandomEffect_ = true;
+		}
+		
+		if (isEndDisplayRandomEffect_ == true) {
+			const float FADE_INCREASE_VALUE = 0.01f;
+			blackFadeTransparency_ += FADE_INCREASE_VALUE;
+			
+		}
+
+
+		if (blackFadeTransparency_ > 2.0f) {
+			gameManager->ChangeScene(new GameScene());
+			return;
+		}
+		
 	}
 
+
+
+	blackFade_->SetTransparency(blackFadeTransparency_);
 
 	//ステージデータの更新
 	Listener listener = {
@@ -222,18 +299,39 @@ void TitleScene::DrawObject3D(){
 }
 
 void TitleScene::PreDrawPostEffectFirst(){
-	back_->PreDraw();
+	if (isDisplayRandomEffect_ == false) {
+		back_->PreDraw();
+
+	}
+	else {
+		//ランダム
+		randomEffect_->PreDraw();
+	}
+
+	
+	
 }
 
 void TitleScene::DrawPostEffect(){
-	back_->Draw();
+	if (isDisplayRandomEffect_ == false) {
+		back_->Draw();
+	}
+	else {
+		//ランダムエフェクト
+		randomEffect_->Draw();
+
+	}
+	
 }
 
 void TitleScene::DrawSprite(){
 	//背景
-	backGround_->Draw();
+	//backGround_->Draw();
 
 	//テキスト
 	text_->Draw();
 	
+	//黒フェード
+	blackFade_->Draw();
+
 }

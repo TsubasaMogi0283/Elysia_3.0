@@ -88,6 +88,16 @@ public:
 	/// </summary>
 	~BackText()=default;
 
+
+public:
+	/// <summary>
+	/// 色の設定
+	/// </summary>
+	/// <param name="color"></param>
+	void SetColour(const Vector4& color) {
+		this->renderTargetClearValue_ = color;
+	}
+
 private:
 	//別々で分けたい
 	ComPtr<ID3D12Resource> effectResource_ = nullptr;
