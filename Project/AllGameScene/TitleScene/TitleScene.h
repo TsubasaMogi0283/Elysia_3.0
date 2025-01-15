@@ -154,11 +154,6 @@ private:
 
 
 
-
-	std::unique_ptr<Model>debugModel_ = nullptr;
-	WorldTransform worldTransform_ = {};
-	float radius_ = 0.0f;
-	Vector3 axis = { 0.0f,1.0f,0.0f };
 #pragma region ポストエフェクト
 	//今は使わない
 	std::unique_ptr<BackText> backText_ = nullptr;

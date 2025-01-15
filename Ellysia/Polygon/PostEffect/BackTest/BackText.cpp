@@ -27,8 +27,7 @@ void BackText::Initialize(){
 	gaussianFilterResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(GaussianFilterInformation));
 	gaussianFilterInformation_.sigma = 2.0f;
 
-	//色
-	renderTargetClearValue_ = { 0.0f,0.5f,0.5f,1.0f };
+
 	//リソース作成
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, renderTargetClearValue_);
 	

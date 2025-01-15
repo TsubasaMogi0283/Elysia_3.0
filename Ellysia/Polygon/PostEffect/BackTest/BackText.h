@@ -119,7 +119,7 @@ private:
 	uint32_t rtvHandle_=0;
 	//RTV
 	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
-	Vector4 renderTargetClearValue_ = {};
+	Vector4 renderTargetClearValue_ = {.x= 0.0f,.y= 0.5f,.z= 0.5f,.w= 1.0f };
 	uint32_t srvHandle_ = 0;
 
 	//バリア

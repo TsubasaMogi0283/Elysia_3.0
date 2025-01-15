@@ -50,9 +50,6 @@ void TitleScene::Initialize(){
 	levelHandle_ = levelDataManager_->Load("TitleStage/TitleStage.json");
 
 
-	uint32_t debugModel = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
-	debugModel_.reset(Model::Create(debugModel));
-
 	isStart_ = false;
 	isFlash_ = true;
 	isFastFlash_ = false;
@@ -65,6 +62,8 @@ void TitleScene::Initialize(){
 	spotLight.Initialize();
 
 	directionalLight_.Initialize();
+	directionalLight_.color = { .x = 1.0f,.y = 0.220f,.z = 0.0f,.w = 1.0f };
+	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
 
 	//カメラの初期化
 	camera_.Initialize();
@@ -80,6 +79,7 @@ void TitleScene::Initialize(){
 	//ポストエフェクト
 	back_ = std::make_unique<BackText>();
 	//初期化
+	back_->SetColour(directionalLight_.color);
 	back_->Initialize();
 
 
@@ -89,9 +89,7 @@ void TitleScene::Initialize(){
 	randomEffect_->Initialize();
 	
 
-	worldTransform_.Initialize();
-	worldTransform_.scale = { 3.0f,3.0f,3.0f };
-	worldTransform_.translate.z = 5.0f;
+
 
 }
 
@@ -169,6 +167,16 @@ void TitleScene::Update(GameManager* gameManager){
 	//点滅の間隔
 	const uint32_t FLASH_INTERVAL = 2u;
 
+
+#ifdef _DEBUG
+	ImGui::Begin("平行光源");
+	ImGui::SliderFloat4("色", &directionalLight_.color.x, 0.0f, 1.0f);
+	ImGui::SliderFloat3("方向", &directionalLight_.direction.x, -1.0f, 1.0f);
+	ImGui::End();
+#endif // _DEBUG
+
+	
+
 	//高速点滅
 	if (isFastFlash_ == true&& isStart_==false) {
 		fastFlashTime_ += INCREASE_VALUE;
@@ -220,6 +228,10 @@ void TitleScene::Update(GameManager* gameManager){
 		ImGui::InputFloat("Count", &randomEffectTime_);
 		ImGui::Checkbox("IsDisplay", &isDisplayRandomEffect_);
 		ImGui::End();
+
+
+		
+
 #endif // _DEBUG
 
 
@@ -288,33 +300,13 @@ void TitleScene::Update(GameManager* gameManager){
 
 	//レールカメラの更新
 	titleRailCamera_->Update();
-	//camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
-	//camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
+	camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
+	camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
 
 
 
 	//カメラの更新
-	camera_.Update();
-	//camera_.Transfer();
-
-
-
-#ifdef _DEBUG
-	ImGui::Begin("DebugModel"); 
-	ImGui::SliderFloat("radius_", &radius_, -3.0f, 3.0f);
-	ImGui::SliderFloat3("axis", &axis.x, -3.0f, 3.0f);
-
-	ImGui::SliderFloat4("Q", &worldTransform_.quaternion_.x, -6.0f, 6.0f);
-	ImGui::SliderFloat3("Rotate", &worldTransform_.rotate.x, -3.0f, 3.0f);
-	ImGui::SliderFloat3("Translate", &worldTransform_.translate.x,-30.0f,30.0f);
-	ImGui::End();
-#endif // _DEBUG
-
-
-	worldTransform_.isUseQuarternion_ = true;
-
-	worldTransform_.quaternion_ = QuaternionCalculation::MakeRotateAxisAngleQuaternion(axis, radius_);
-	worldTransform_.Update();
+	camera_.Transfer();
 
 
 
@@ -327,7 +319,6 @@ void TitleScene::DrawObject3D(){
 
 
 
-	debugModel_->Draw(worldTransform_, camera_, material_, directionalLight_);
 
 }
 
