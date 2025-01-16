@@ -147,7 +147,7 @@ void WinScene::Update(GameManager* gameManager){
 
 	//タイトルシーンへ
 	if (blackOutTime_ > CHANGE_TO_TITLE_TIME_) {
-		gameManager->ChangeScene(std::move(std::unique_ptr<TitleScene>()));
+		gameManager->ChangeScene(std::move(std::make_unique<TitleScene>()));
 		return;
 	}
 

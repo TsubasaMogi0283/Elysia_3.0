@@ -252,7 +252,7 @@ void TitleScene::Update(GameManager* gameManager){
 
 		//時間も兼ねている
 		if (blackFadeTransparency_ > 2.0f) {
-			gameManager->ChangeScene(std::move(std::unique_ptr<GameScene>()));
+			gameManager->ChangeScene(std::move(std::make_unique<GameScene>()));
 			return;
 		}
 		

@@ -12,7 +12,7 @@ void GameManager::Initialize() {
 	currentGamaScene_ = std::make_unique<TitleScene>();
 	
 #ifdef _DEBUG
-	//currentGamaScene_ = new LevelEditorSample();
+
 	currentGamaScene_ = std::make_unique<TitleScene>();
 #endif // _DEBUG
 
