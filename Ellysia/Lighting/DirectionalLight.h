@@ -40,9 +40,9 @@ public:
 
 public:
 	//ライトの色
-	Vector4 color = {1.0f,1.0f,1.0f,1.0f};
+	Vector4 color = {.x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f};
 	//ライトの向き
-	Vector3 direction = {0.0f,-1.0f,0.0f};
+	Vector3 direction = {.x = 0.0f,.y = -1.0f,.z = 0.0f};
 	//輝度
 	float intensity=5.0f;
 

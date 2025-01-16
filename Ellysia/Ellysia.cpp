@@ -99,7 +99,7 @@ void EllysiaEngine::Initialize(){
 	audio_->Initialize();
 
 	//JSON読み込みの初期化
-	globalVariables_->LoadFile();
+	globalVariables_->LoadAllFile();
 
 
 
@@ -133,7 +133,6 @@ void EllysiaEngine::Update(){
 	//JSON用
 	//グローバル変数の更新
 	globalVariables_->Update();
-
 
 	//入力の更新
 	input_->Update();

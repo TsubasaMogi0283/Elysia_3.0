@@ -75,8 +75,6 @@ void GlobalVariables::AddItem(const std::string& groupName, const std::string& k
     //無かったら追加
     if (itItem == itGroup->second.items.end()) {
         SetValue(groupName, key, value);
-
-
     }
     
 }
@@ -85,14 +83,10 @@ void GlobalVariables::AddItem(const std::string& groupName, const std::string& k
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
-
     //無かったら止める
     assert(itGroup != datas_.end());
 
 
-
-    //for文で探そうと思ったがダメだった
-    //一番上のようにfindでやった方が良いかも
     //まず参照
     Group& group = itGroup->second;
     std::map<std::string, Item>::iterator itItem = group.items.find(key);
@@ -108,14 +102,9 @@ void GlobalVariables::AddItem(const std::string& groupName, const std::string& k
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
-
     //無かったら止める
     assert(itGroup != datas_.end());
 
-
-
-    //for文で探そうと思ったがダメだった
-    //一番上のようにfindでやった方が良いかも
     //まず参照
     Group& group = itGroup->second;
     std::map<std::string, Item>::iterator itItem = group.items.find(key);
@@ -131,14 +120,16 @@ int32_t GlobalVariables::GetIntValue(const std::string& groupName, const std::st
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
+    //無かったら止める
     assert(itGroup != datas_.end());
 
+    //参照
     Group& group = datas_.at(groupName);
-
 
     //キーを検索
     std::map<std::string, Item>::const_iterator itKey = group.items.find(key);
 
+    //無かったら止める
     assert(itKey != group.items.end());
 
     //SaveFileより
@@ -151,13 +142,21 @@ int32_t GlobalVariables::GetIntValue(const std::string& groupName, const std::st
 float GlobalVariables::GetFloatValue(const std::string& groupName, const std::string& key) {
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
+
+    //無かったら止める
     assert(itGroup != datas_.end());
+
+    //参照
     Group& group = datas_.at(groupName);
 
 
     //キーを検索
     std::map<std::string, Item>::const_iterator itKey = group.items.find(key);
+   
+
+    //無かったら止める
     assert(itKey != group.items.end());
+
 
     //SaveFileより
     return std::get<float>(itKey->second.value);
@@ -167,12 +166,18 @@ float GlobalVariables::GetFloatValue(const std::string& groupName, const std::st
 Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std::string& key) {
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
+    
+    //無かったら止める
     assert(itGroup != datas_.end());
+
+    //参照
     Group& group = datas_.at(groupName);
 
 
     //キーを検索
     std::map<std::string, Item>::const_iterator itKey = group.items.find(key);
+    
+    //無かったら止める
     assert(itKey != group.items.end());
 
     //SaveFileより
@@ -261,9 +266,9 @@ void GlobalVariables::SaveFile(const std::string& groupName){
 
 }
 
-void GlobalVariables::LoadFile(){
+void GlobalVariables::LoadAllFile(){
     //保存先ディレクトリのパスをローカル変数で宣言する
-    std::filesystem::path dir(DIRECTORY_PATH_);
+    std::filesystem::path directory(DIRECTORY_PATH_);
 
     //無かったらreturn
     if (!std::filesystem::exists(DIRECTORY_PATH_)) {
@@ -273,9 +278,9 @@ void GlobalVariables::LoadFile(){
 
 
     //各ファイルの処理
-    std::filesystem::directory_iterator dir_it(DIRECTORY_PATH_);
+    std::filesystem::directory_iterator dirIt(DIRECTORY_PATH_);
     //directory_iterator...ディレクトリないのファイルを1つずつ指すためのポインタのようなもの
-    for (const std::filesystem::directory_entry& entry : dir_it) {
+    for (const std::filesystem::directory_entry& entry : dirIt) {
 
         //パスによる判別
         //ファイルパスを取得
@@ -290,8 +295,6 @@ void GlobalVariables::LoadFile(){
 
         //extension...拡張子のみ抽出
         //stem...拡張子を除くファイル名を抽出
-
-
         //ファイル読み込み
         LoadFile(filePath.stem().string());
 
@@ -310,8 +313,6 @@ void GlobalVariables::LoadFile(const std::string& groupName){
 
     //書き込みはofstream
     //読み込みはifstream
-
-
 
     //読み込みが失敗した場合
     if (ifs.fail()) {

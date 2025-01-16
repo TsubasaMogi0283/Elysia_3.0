@@ -11,17 +11,7 @@
 
 #include "DirectXSetup.h"
 
-/// <summary>
-/// シェーダーに送るデータ
-/// </summary>
-struct WorldTransformData {
-	//ワールド
-	Matrix4x4 world;
-	//ノーマル
-	Matrix4x4 normal;
-	//逆転置
-	Matrix4x4 worldInverseTranspose;
-};
+
 
 /// <summary>
 /// ワールドトランスフォーム
@@ -43,7 +33,7 @@ public:
 	/// </summary>
 	/// <param name="parent"></param>
 	inline void SetParent(const WorldTransform* newParent) {
-		parent = newParent;
+		this->parent = newParent;
 	}
 
 	/// <summary>
@@ -67,16 +57,28 @@ private:
 	/// </summary>
 	void Transfer();
 
+private:
+	/// <summary>
+	/// シェーダーに送るデータ
+	/// </summary>
+	struct WorldTransformData {
+		//ワールド
+		Matrix4x4 world;
+		//ノーマル
+		Matrix4x4 normal;
+		//逆転置
+		Matrix4x4 worldInverseTranspose;
+	};
 
 
 public:
 
 	//スケール
-	Vector3 scale = { 1.0f, 1.0f, 1.0f };
+	Vector3 scale = {.x = 1.0f,.y = 1.0f,.z = 1.0f };
 	//回転
-	Vector3 rotate = { 0.0f, 0.0f, 0.0f };
+	Vector3 rotate = {.x = 0.0f,.y = 0.0f,.z = 0.0f };
 	//座標
-	Vector3 translate = { 0.0f, 0.0f, 0.0f };
+	Vector3 translate = {.x = 0.0f,.y = 0.0f,.z = 0.0f };
 
 	//クォータニオンを使うかどうか
 	bool isUseQuarternion_ = false;
@@ -85,7 +87,7 @@ public:
 
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> bufferResource;
+	ComPtr<ID3D12Resource> bufferResource = nullptr;
 	//送るデータ
 	WorldTransformData* tranceformationData = nullptr;
 

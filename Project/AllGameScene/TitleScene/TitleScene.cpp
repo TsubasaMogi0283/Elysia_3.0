@@ -62,7 +62,7 @@ void TitleScene::Initialize(){
 	spotLight.Initialize();
 
 	directionalLight_.Initialize();
-	directionalLight_.color = { .x = 1.0f,.y = 0.220f,.z = 0.0f,.w = 1.0f };
+	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
 	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
 
 	//カメラの初期化
@@ -257,13 +257,14 @@ void TitleScene::Update(GameManager* gameManager){
 			isEndDisplayRandomEffect_ = true;
 		}
 		
+		//ランダムエフェクト表示の演出が終わった場合
 		if (isEndDisplayRandomEffect_ == true) {
 			const float FADE_INCREASE_VALUE = 0.01f;
 			blackFadeTransparency_ += FADE_INCREASE_VALUE;
 			
 		}
 
-
+		//時間も兼ねている
 		if (blackFadeTransparency_ > 2.0f) {
 			gameManager->ChangeScene(new GameScene());
 			return;
@@ -272,25 +273,11 @@ void TitleScene::Update(GameManager* gameManager){
 	}
 
 
-
+	//黒フェードの透明度の変更
 	blackFade_->SetTransparency(blackFadeTransparency_);
 
-	//ステージデータの更新
-	Listener listener = {
-			.position = {},
-			.move = {},
-	};
-	levelDataManager_->SetListener(levelHandle_, listener);
-
+	//更新
 	levelDataManager_->Update(levelHandle_);
-
-
-
-
-
-
-
-	
 
 	//マテリアルの更新
 	material_.Update();
@@ -303,12 +290,8 @@ void TitleScene::Update(GameManager* gameManager){
 	camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
 	camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
 
-
-
 	//カメラの更新
 	camera_.Transfer();
-
-
 
 }
 
