@@ -90,7 +90,7 @@ void TitleRailCamera::Initialize(){
 void TitleRailCamera::Update(){
 
 	//線形補間
-	cameraT_ += 0.001f;
+	cameraT_ += 0.0001f;
 	
 	//少し先のTの値を見て次の位置の計算をする
 	float nextT = cameraT_ + 0.001f;

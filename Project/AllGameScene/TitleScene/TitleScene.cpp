@@ -82,24 +82,9 @@ void TitleScene::Initialize(){
 
 	//背景
 	//ポストエフェクト
-	baseTitleBackTexture_ = std::make_unique<SunsetBackTexture>();
+	baseTitleBackTexture_ = new SunsetBackTexture();
 	baseTitleBackTexture_->Initialize();
 
-	////夕暮れ
-	//sunsetBackTexture_ = std::make_unique<BackTexture>();
-	////色の設定
-	//const Vector4 SUNUSET_BACK_TEXTURE_COLOUR = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
-	//sunsetBackTexture_->SetColour(SUNUSET_BACK_TEXTURE_COLOUR);
-	////初期化
-	//sunsetBackTexture_->Initialize();
-
-	//夜
-	nightBackbackTexture_ = std::make_unique<BackTexture>();
-	//色の設定
-	const Vector4 NIGHT_BACK_TEXTURE_COLOUR = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
-	nightBackbackTexture_->SetColour(NIGHT_BACK_TEXTURE_COLOUR);
-	//初期化
-	//nightBackbackTexture_->Initialize();
 
 
 
@@ -240,17 +225,30 @@ void TitleScene::Update(GameManager* gameManager){
 		for (uint32_t i = 0; i < DISPLAY_LENGTH_QUANTITY_; ++i) {
 			if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[i] &&
 				randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME[i] + RANDOM_EFFECT_DISPLAY_LENGTH[i]) {
+				//ランダムエフェクトの表示
 				isDisplayRandomEffect_ = true;
 				effectCount_ = i;
-				break; 
+
+				break;
+			}
+
+			//2回目のエフェクト
+			const uint32_t FIRST_EFFECT = 0u;
+			if (effectCount_ == FIRST_EFFECT) {
+				//夜へ遷移
+				ChangeBackTexture(new NightBackTexture());
 			}
 
 			//2回目のエフェクト
 			const uint32_t SECOND_EFFECT = 1u;
 			//ランダムの終了
-			if (effectCount_ == SECOND_EFFECT&&
-				randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[SECOND_EFFECT] + RANDOM_EFFECT_DISPLAY_LENGTH[SECOND_EFFECT]) {
-				isEndDisplayRandomEffect_ = true;
+			if (effectCount_ == SECOND_EFFECT) {
+				
+
+				//ランダムの終了
+				if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[SECOND_EFFECT] + RANDOM_EFFECT_DISPLAY_LENGTH[SECOND_EFFECT]) {
+					isEndDisplayRandomEffect_ = true;
+				}
 
 			}
 
@@ -362,11 +360,11 @@ void TitleScene::DisplayImGui(){
 
 }
 
-void TitleScene::ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture> backTexture){
+void TitleScene::ChangeBackTexture(BaseTitleBackTexture* backTexture){
 	//違った時だけ遷移する
 	if (baseTitleBackTexture_ != backTexture) {
-
-		baseTitleBackTexture_ = std::move(backTexture);
+		delete baseTitleBackTexture_;
+		baseTitleBackTexture_ = backTexture;
 		//引数が次に遷移する
 		baseTitleBackTexture_->Initialize();
 	}
