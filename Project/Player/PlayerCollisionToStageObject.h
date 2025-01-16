@@ -5,13 +5,13 @@
  * @author 茂木翼
  */
 
-#include "IPlayerCollision.h"
+#include "BasedPlayerCollision.h"
 
 
 /// <summary>
 /// ステージオブジェクトに対するCollision
 /// </summary>
-class PlayerCollisionToStageObject :public IPlayerCollision {
+class PlayerCollisionToStageObject :public BasedPlayerCollision {
 public:
 
 	/// <summary>

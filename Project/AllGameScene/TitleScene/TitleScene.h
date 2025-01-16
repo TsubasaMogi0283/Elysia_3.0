@@ -96,6 +96,12 @@ public:
 
 
 
+private:
+	/// <summary>
+	/// ImGui用関数
+	/// </summary>
+	void DisplayImGui();
+
 
 private:
 	//テクスチャ管理クラス
@@ -116,6 +122,8 @@ private:
 	//ランダムエフェクトの表示時間
 	static const uint32_t DISPLAY_LENGTH_QUANTITY_ = 2u;
 	
+	//増える時間の値
+	const uint32_t INCREASE_VALUE = 1u;
 
 private:
 
@@ -135,10 +143,6 @@ private:
 
 
 
-	//ポストエフェクト
-	//基本
-	std::unique_ptr<BackText> back_ = nullptr;
-
 
 	//黒フェード
 	std::unique_ptr<Sprite>blackFade_ = nullptr;
@@ -155,9 +159,15 @@ private:
 
 
 #pragma region ポストエフェクト
-	//今は使わない
-	std::unique_ptr<BackText> backText_ = nullptr;
 
+
+	int32_t effectCount_ = -1;
+
+	//夕焼け代わりの背景
+	std::unique_ptr<BackText> sunsetBackTexture_ = nullptr;
+
+	//夜代わりの背景
+	std::unique_ptr<BackText> nightBackbackTexture_ = nullptr;
 
 	//ランダムノイズ
 	std::unique_ptr<RandomEffect> randomEffect_ = nullptr;

@@ -13,8 +13,6 @@ void BackText::Initialize(){
 	//エフェクトの種類を設定
 	effectType_ = NoneEffect;
 
-	
-	
 	//Effect
 	effectResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(int32_t));
 	

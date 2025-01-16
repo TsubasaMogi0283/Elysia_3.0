@@ -385,6 +385,9 @@
     <Filter Include="Project\Player\Collision\IPlayerCollision">
       <UniqueIdentifier>{7342fb61-2dae-4860-88b9-6d4531dde844}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\GameScene\Title\BackTexture">
+      <UniqueIdentifier>{3c98c5d1-fbeb-4fc4-954e-709ff843decc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -642,8 +645,11 @@
     <ClCompile Include="Ellysia\Manager\CollisionManager\CollisionManager.cpp">
       <Filter>Ellysia\Source File\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.cpp">
+      <Filter>Project\GameScene\Title\BackTexture</Filter>
+    </ClCompile>
     <ClCompile Include="Project\Player\IPlayerCollision.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Project</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1102,8 +1108,11 @@
     <ClInclude Include="Ellysia\Manager\CollisionManager\CollisionManager.h">
       <Filter>Ellysia\Header File\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Player\IPlayerCollision.h">
-      <Filter>Ellysia\Header File</Filter>
+    <ClInclude Include="Project\Player\BasedPlayerCollision.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.h">
+      <Filter>Project\GameScene\Title\BackTexture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
