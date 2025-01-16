@@ -6,6 +6,7 @@
  */
 
 #include <cstdint>
+#include <memory>
 
 #include "IGameScene.h"
 
@@ -30,7 +31,7 @@ public:
 	/// シーンチェンジ
 	/// </summary>
 	/// <param name="newGameScene"></param>
-	void ChangeScene(IGameScene* newGameScene);
+	void ChangeScene(std::unique_ptr<IGameScene> newGameScene);
 
 	/// <summary>
 	/// 更新
@@ -60,11 +61,11 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~GameManager();
+	~GameManager() = default;
 
 private:
 
-	//StatePatternに必要な変数
-	IGameScene* currentGamaScene_ = nullptr;
+	//現在入っているシーン
+	std::unique_ptr<IGameScene> currentGamaScene_ = nullptr;
 
 };

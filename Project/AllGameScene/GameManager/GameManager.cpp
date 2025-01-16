@@ -9,11 +9,11 @@
 
 void GameManager::Initialize() {
 	//シーンごとに動作確認したいときはここを変えてね
-	currentGamaScene_ = new TitleScene();
+	currentGamaScene_ = std::make_unique<TitleScene>();
 	
 #ifdef _DEBUG
 	//currentGamaScene_ = new LevelEditorSample();
-	currentGamaScene_ = new TitleScene();
+	currentGamaScene_ = std::make_unique<TitleScene>();
 #endif // _DEBUG
 
 	//初期化
@@ -22,12 +22,14 @@ void GameManager::Initialize() {
 
 }
 
-void GameManager::ChangeScene(IGameScene* newGameScene) {
-	//一度消してから次のシーンにいく
-	delete currentGamaScene_;
-	currentGamaScene_ = newGameScene;
-	//引数が次に遷移するシーン
-	currentGamaScene_->Initialize();
+void GameManager::ChangeScene(std::unique_ptr<IGameScene> newGameScene) {
+	//前回と違った場合だけ通す
+	if (currentGamaScene_ != newGameScene) {
+		currentGamaScene_ = std::move(newGameScene);
+		//引数が次に遷移するシーン
+		currentGamaScene_->Initialize();
+	}
+	
 }
 
 
@@ -60,7 +62,3 @@ void GameManager::DrawPostEffect(){
 
 
 
-GameManager::~GameManager() {
-	//消去
-	delete currentGamaScene_;
-}
