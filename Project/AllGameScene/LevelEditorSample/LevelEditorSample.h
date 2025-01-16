@@ -15,7 +15,7 @@
 #include "Model.h"
 #include "Camera.h"
 #include "Material.h"
-#include "BackText.h"
+#include "BackTexture.h"
 #include "LevelDataManager.h"
 #include "CollisionManager.h"
 #include "Particle3D.h"
@@ -83,12 +83,9 @@ public:
 	/// </summary>
 	~LevelEditorSample();
 
-
-
-
 private:
 	//ビネット
-	std::unique_ptr<BackText> back_ = nullptr;
+	std::unique_ptr<BackTexture> back_ = nullptr;
 	//カメラ
 	Camera camera_ = {};
 	//マテリアル

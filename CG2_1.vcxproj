@@ -178,7 +178,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Polygon\3D\Particle3D\Particle3D.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Sphere\Sphere.cpp" />
-    <ClCompile Include="Ellysia\Polygon\PostEffect\BackTest\BackText.cpp" />
+    <ClCompile Include="Ellysia\Polygon\PostEffect\BackTest\BackTexture.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\BoxFilter\BoxFilter.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\Dissolve\DissolveEffect.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.cpp" />
@@ -192,6 +192,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\AllGameScene\GameScene\GameScene.cpp" />
     <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.cpp" />
+    <ClCompile Include="Project\AllGameScene\TitleScene\NightBackTexture.cpp" />
+    <ClCompile Include="Project\AllGameScene\TitleScene\SunsetBackTexture.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Project\AllGameScene\WinScene\WinScene.cpp" />
     <ClCompile Include="Project\Enemy\Enemy.cpp" />
@@ -468,7 +470,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle3D.h" />
     <ClInclude Include="Ellysia\Polygon\3D\SkyBox\SkyBox.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Sphere\Sphere.h" />
-    <ClInclude Include="Ellysia\Polygon\PostEffect\BackTest\BackText.h" />
+    <ClInclude Include="Ellysia\Polygon\PostEffect\BackTest\BackTexture.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\BoxFilter\BoxFilter.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\Dissolve\DissolveEffect.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.h" />
@@ -483,6 +485,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\AllGameScene\GameScene\GameScene.h" />
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.h" />
+    <ClInclude Include="Project\AllGameScene\TitleScene\NightBackTexture.h" />
+    <ClInclude Include="Project\AllGameScene\TitleScene\SunsetBackTexture.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\TitleScene.h" />
     <ClInclude Include="Project\AllGameScene\WinScene\WinScene.h" />
     <ClInclude Include="Project\CollisionConfig\CollisionConfig.h" />

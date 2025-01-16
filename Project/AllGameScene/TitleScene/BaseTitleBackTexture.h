@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include <BackText.h>
+#include "BackTexture.h"
 
 /// <summary>
 /// 背景テクスチャの基底クラス
@@ -33,7 +33,7 @@ public:
 
 protected:
 	//背景
-	std::unique_ptr<BackText>backTexture_ = nullptr;
+	std::unique_ptr<BackTexture>backTexture_ = nullptr;
 
 
 };

@@ -26,7 +26,7 @@ void GameManager::ChangeScene(IGameScene* newGameScene) {
 	//一度消してから次のシーンにいく
 	delete currentGamaScene_;
 	currentGamaScene_ = newGameScene;
-	//引数が今入っているシーン
+	//引数が次に遷移するシーン
 	currentGamaScene_->Initialize();
 }
 

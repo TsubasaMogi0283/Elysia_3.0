@@ -262,7 +262,7 @@ void GameScene::Initialize() {
 	//ポストエフェクトの初期化
 	//基本
 	//生成
-	back_ = std::make_unique<BackText>();
+	back_ = std::make_unique<BackTexture>();
 	//初期化
 	back_->Initialize();
 	//ビネット

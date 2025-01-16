@@ -10,7 +10,7 @@
 #include "Sprite.h"
 #include "Model.h"
 #include "Camera.h"
-#include "BackText.h"
+#include "BackTexture.h"
 
 //前方宣言
 

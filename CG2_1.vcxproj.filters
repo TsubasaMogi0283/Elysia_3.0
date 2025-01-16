@@ -462,7 +462,7 @@
     <ClCompile Include="Ellysia\Manager\RtvManager\RtvManager.cpp">
       <Filter>Ellysia\Source File\Manager\RTV</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\PostEffect\BackTest\BackText.cpp">
+    <ClCompile Include="Ellysia\Polygon\PostEffect\BackTest\BackTexture.cpp">
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\PostEffect\Dissolve\DissolveEffect.cpp">
@@ -650,6 +650,12 @@
     </ClCompile>
     <ClCompile Include="Project\Player\IPlayerCollision.cpp">
       <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\SunsetBackTexture.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\NightBackTexture.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -883,7 +889,7 @@
     <ClInclude Include="Ellysia\Manager\RtvManager\RtvManager.h">
       <Filter>Ellysia\Header File\Manager\RTV</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\PostEffect\BackTest\BackText.h">
+    <ClInclude Include="Ellysia\Polygon\PostEffect\BackTest\BackTexture.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\PostEffect\RandomEffect\RandomEffect.h">
@@ -1113,6 +1119,12 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.h">
       <Filter>Project\GameScene\Title\BackTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\SunsetBackTexture.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\NightBackTexture.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

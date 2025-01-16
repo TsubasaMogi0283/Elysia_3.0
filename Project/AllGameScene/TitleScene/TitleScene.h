@@ -12,11 +12,12 @@
 #include "Sprite.h"
 #include "Model.h"
 #include "Camera.h"
-#include "BackText.h"
+#include "BackTexture.h"
 #include "DirectionalLight.h"
 #include "SpotLight.h"
 #include "RailCamera/TitleRailCamera.h"
 #include "RandomEffect.h"
+#include "BaseTitleBackTexture.h"
 
 #pragma region 前方宣言
 
@@ -102,6 +103,11 @@ private:
 	/// </summary>
 	void DisplayImGui();
 
+	/// <summary>
+	/// 背景テクスチャの遷移
+	/// </summary>
+	/// <param name="backTexture"></param>
+	void ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture> backTexture);
 
 private:
 	//テクスチャ管理クラス
@@ -163,11 +169,14 @@ private:
 
 	int32_t effectCount_ = -1;
 
+	//背景(ポストエフェクト)
+	std::unique_ptr<BaseTitleBackTexture> baseTitleBackTexture_ = nullptr;
+
 	//夕焼け代わりの背景
-	std::unique_ptr<BackText> sunsetBackTexture_ = nullptr;
+	std::unique_ptr<BackTexture> sunsetBackTexture_ = nullptr;
 
 	//夜代わりの背景
-	std::unique_ptr<BackText> nightBackbackTexture_ = nullptr;
+	std::unique_ptr<BackTexture> nightBackbackTexture_ = nullptr;
 
 	//ランダムノイズ
 	std::unique_ptr<RandomEffect> randomEffect_ = nullptr;

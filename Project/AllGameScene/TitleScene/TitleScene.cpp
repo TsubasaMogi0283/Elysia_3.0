@@ -13,7 +13,11 @@
 #include "LevelDataManager.h"
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
-#include <Calculation/QuaternionCalculation.h>
+#include "Calculation/QuaternionCalculation.h"
+
+#include "SunsetBackTexture.h"
+#include "NightBackTexture.h"
+
 
 TitleScene::TitleScene(){
 	//テクスチャ管理クラスの取得
@@ -76,17 +80,21 @@ void TitleScene::Initialize(){
 	titleRailCamera_->Initialize();
 	
 
+	//背景
 	//ポストエフェクト
-	//夕暮れ
-	sunsetBackTexture_ = std::make_unique<BackText>();
-	//色の設定
-	const Vector4 SUNUSET_BACK_TEXTURE_COLOUR = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
-	sunsetBackTexture_->SetColour(SUNUSET_BACK_TEXTURE_COLOUR);
-	//初期化
-	sunsetBackTexture_->Initialize();
+	baseTitleBackTexture_ = std::make_unique<SunsetBackTexture>();
+	baseTitleBackTexture_->Initialize();
+
+	////夕暮れ
+	//sunsetBackTexture_ = std::make_unique<BackTexture>();
+	////色の設定
+	//const Vector4 SUNUSET_BACK_TEXTURE_COLOUR = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
+	//sunsetBackTexture_->SetColour(SUNUSET_BACK_TEXTURE_COLOUR);
+	////初期化
+	//sunsetBackTexture_->Initialize();
 
 	//夜
-	nightBackbackTexture_ = std::make_unique<BackText>();
+	nightBackbackTexture_ = std::make_unique<BackTexture>();
 	//色の設定
 	const Vector4 NIGHT_BACK_TEXTURE_COLOUR = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
 	nightBackbackTexture_->SetColour(NIGHT_BACK_TEXTURE_COLOUR);
@@ -304,39 +312,27 @@ void TitleScene::DrawObject3D(){
 
 void TitleScene::PreDrawPostEffectFirst(){
 
-	sunsetBackTexture_->PreDraw();
-	if (isDisplayRandomEffect_ == false) {
-		if (effectCount_ <= 0) {
-			
-		}
-		else if (effectCount_ == 1) {
-			//nightBackbackTexture_->PreDraw();
-		}
-		
-	}
-	else {
+	//ランダム
+	if (isDisplayRandomEffect_ == true) {
 		//ランダム
 		randomEffect_->PreDraw();
+	}
+	else {
+		//背景
+		baseTitleBackTexture_->PreDraw();
 	}
 
 }
 
 void TitleScene::DrawPostEffect(){
-
-	sunsetBackTexture_->Draw();
-	if (isDisplayRandomEffect_ == false) {
-		if (effectCount_ <= 0) {
-			
-		}
-		else if (effectCount_ == 1) {
-			//nightBackbackTexture_->Draw();
-		}
-
+	//ランダム
+	if (isDisplayRandomEffect_ == true) {
+		//ランダム
+		randomEffect_->Draw();
 	}
 	else {
-		//ランダムエフェクト
-		randomEffect_->Draw();
-
+		//背景
+		baseTitleBackTexture_->Draw();
 	}
 }
 
@@ -364,4 +360,14 @@ void TitleScene::DisplayImGui(){
 	ImGui::SliderFloat3("方向", &directionalLight_.direction.x, -1.0f, 1.0f);
 	ImGui::End();
 
+}
+
+void TitleScene::ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture> backTexture){
+	//違った時だけ遷移する
+	if (baseTitleBackTexture_ != backTexture) {
+
+		baseTitleBackTexture_ = std::move(backTexture);
+		//引数が次に遷移する
+		baseTitleBackTexture_->Initialize();
+	}
 }

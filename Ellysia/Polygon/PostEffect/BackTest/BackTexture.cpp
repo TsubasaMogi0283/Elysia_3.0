@@ -1,4 +1,4 @@
-#include "BackText.h"
+#include "BackTexture.h"
 #include "imgui.h"
 
 #include "PipelineManager.h"
@@ -8,7 +8,7 @@
 
 
 
-void BackText::Initialize(){
+void BackTexture::Initialize(){
 
 	//エフェクトの種類を設定
 	effectType_ = NoneEffect;
@@ -45,7 +45,7 @@ void BackText::Initialize(){
 
 }
 
-void BackText::PreDraw(){
+void BackTexture::PreDraw(){
 	
 	//RTの設定
 	const float RENDER_TARGET_CLEAR_VALUE[] = { renderTargetClearValue_.x,renderTargetClearValue_.y,renderTargetClearValue_.z,renderTargetClearValue_.w };
@@ -72,7 +72,7 @@ void BackText::PreDraw(){
 	
 }
 
-void BackText::Draw(){
+void BackTexture::Draw(){
 
 	//ResourceBarrierを張る
 	DirectXSetup::GetInstance()->SetResourceBarrier(

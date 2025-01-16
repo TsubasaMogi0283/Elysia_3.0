@@ -35,7 +35,7 @@
 #include "Input.h"
 #include "Stage/ObjectManager/ObjectManager.h"
 #include "Vignette.h"
-#include "BackText.h"
+#include "BackTexture.h"
 #include "LevelDataManager.h"
 
 
@@ -222,7 +222,7 @@ private:
 
 	//ポストエフェクト
 	//基本
-	std::unique_ptr<BackText> back_ = nullptr;
+	std::unique_ptr<BackTexture> back_ = nullptr;
 	//ビネット
 	std::unique_ptr<Vignette> vignette_ = nullptr;
 	const float MAX_VIGNETTE_POW_ = 1.6f;

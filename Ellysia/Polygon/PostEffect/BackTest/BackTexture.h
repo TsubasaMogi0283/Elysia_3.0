@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file BackText.h
+ * @file BackTexture.h
  * @brief ポストエフェクトのクラス
  * @author 茂木翼
  */
@@ -60,12 +60,12 @@ struct GaussianFilterInformation {
 /// <summary>
 /// ポストエフェクト(通常から他のものまで)
 /// </summary>
-class BackText{
+class BackTexture{
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	BackText()=default;
+	BackTexture()=default;
 
 
 	/// <summary>
@@ -86,7 +86,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~BackText()=default;
+	~BackTexture()=default;
 
 
 public:
