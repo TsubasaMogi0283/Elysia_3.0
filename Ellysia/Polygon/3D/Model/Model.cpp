@@ -36,7 +36,7 @@ Model::Model(){
 
 Model* Model::Create(const uint32_t& modelHandle) {
 	
-	//新たなModel型のインスタンスのメモリを確保
+	//生成
 	Model* model = new Model();
 
 	//テクスチャの読み込み
@@ -135,7 +135,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 	}
 
 	//DirectionalLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLight.bufferResource->GetGPUVirtualAddress());
 
 	//カメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());

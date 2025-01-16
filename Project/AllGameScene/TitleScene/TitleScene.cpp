@@ -11,8 +11,9 @@
 
 #include "TextureManager.h"
 #include "LevelDataManager.h"
-#include <VectorCalculation.h>
-#include <SingleCalculation.h>
+#include "VectorCalculation.h"
+#include "SingleCalculation.h"
+#include <Calculation/QuaternionCalculation.h>
 
 TitleScene::TitleScene(){
 	//テクスチャ管理クラスの取得
@@ -29,17 +30,25 @@ void TitleScene::Initialize(){
 	uint32_t logoTextureHandle = textureManager_->LoadTexture("Resources/Title/StartText.png");
 	//タイトルテクスチャ
 	uint32_t titleTextureHandle = textureManager_->LoadTexture("Resources/Title/Title.png");
+	//黒フェード
+	uint32_t blackTexureHandle= textureManager_->LoadTexture("Resources/Sprite/Back/Black.png");
 
-	//初期化
+	//初期座標
 	const Vector2 INITIAL_POSITION = {.x=0.0f,.y=0.0f};
-	//生成
+	
 	//テキスト
 	text_.reset(Sprite::Create(logoTextureHandle, INITIAL_POSITION));
-	//毎系
+	//ロゴ
 	backGround_.reset(Sprite::Create(titleTextureHandle, INITIAL_POSITION));
+	//黒フェード
+	blackFade_.reset(Sprite::Create(blackTexureHandle, INITIAL_POSITION));
+	//初期の透明度設定
+	const float INITIAL_TRANSPARENCY = 0.0f;
+	blackFade_->SetTransparency(INITIAL_TRANSPARENCY);
 
-
+	//レベルデータの読み込み
 	levelHandle_ = levelDataManager_->Load("TitleStage/TitleStage.json");
+
 
 	isStart_ = false;
 	isFlash_ = true;
@@ -53,11 +62,13 @@ void TitleScene::Initialize(){
 	spotLight.Initialize();
 
 	directionalLight_.Initialize();
+	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
+	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
 
 	//カメラの初期化
 	camera_.Initialize();
 	//座標
-	camera_.translate = {.x = 0.0f,.y = 0.0f,.z = -9.8f };
+	camera_.translate = {.x = 0.0f,.y = 0.0f,.z = -30.8f };
 
 	//レールカメラ
 	titleRailCamera_ = std::make_unique<TitleRailCamera>();
@@ -68,7 +79,18 @@ void TitleScene::Initialize(){
 	//ポストエフェクト
 	back_ = std::make_unique<BackText>();
 	//初期化
+	back_->SetColour(directionalLight_.color);
 	back_->Initialize();
+
+
+	//ランダムエフェクトの生成
+	randomEffect_ = std::make_unique<RandomEffect>();
+	//初期化
+	randomEffect_->Initialize();
+	
+
+
+
 }
 
 
@@ -112,7 +134,7 @@ void TitleScene::Update(GameManager* gameManager){
 
 	}
 	
-
+#pragma region スタート演出
 	//コントローラーのBを押すと高速点滅
 	if (input_->IsConnetGamePad() == true) {
 
@@ -145,13 +167,22 @@ void TitleScene::Update(GameManager* gameManager){
 	//点滅の間隔
 	const uint32_t FLASH_INTERVAL = 2u;
 
+
+#ifdef _DEBUG
+	ImGui::Begin("平行光源");
+	ImGui::SliderFloat4("色", &directionalLight_.color.x, 0.0f, 1.0f);
+	ImGui::SliderFloat3("方向", &directionalLight_.direction.x, -1.0f, 1.0f);
+	ImGui::End();
+#endif // _DEBUG
+
+	
+
 	//高速点滅
-	if (isFastFlash_ == true) {
+	if (isFastFlash_ == true&& isStart_==false) {
 		fastFlashTime_ += INCREASE_VALUE;
 		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
 			//もう一度学び直したが
 			//単純に+1にしたいなら前置インクリメント「++(名前)」がいいらしい
-
 			//加算される前の値を入れたいなら後置インクリメント「(名前)++」にしよう
 			++textDisplayCount_;
 		}
@@ -171,29 +202,82 @@ void TitleScene::Update(GameManager* gameManager){
 			isStart_ = true;
 		}
 	}
-	//脱出
+
+
+#pragma endregion
+
+
+	//シーン遷移演出
 	if (isStart_ == true) {
-		gameManager->ChangeScene(new GameScene());
-		return;
+
+		//スタートのテキストを非表示にさせる
+		text_->SetInvisible(true);
+
+		//時間の加算
+		const float DELTA_TIME = 1.0f/60.0f;
+		randomEffectTime_ += DELTA_TIME;
+
+		//開始時間
+		const float RANDOM_EFFECT_DISPLAY_START_TIME_[DISPLAY_LENGTH_QUANTITY_] = {0.0f,2.5f};
+		//表示の長さ
+		const float RANDOM_EFFECT_DISPLAY_LENGTH_[DISPLAY_LENGTH_QUANTITY_] = { 1.0f,3.0f };
+
+
+#ifdef _DEBUG
+		ImGui::Begin("TitleFade&Effect");
+		ImGui::InputFloat("Count", &randomEffectTime_);
+		ImGui::Checkbox("IsDisplay", &isDisplayRandomEffect_);
+		ImGui::End();
+
+
+		
+
+#endif // _DEBUG
+
+
+
+
+		//for文でまとめたかったが上手く出来なかった
+		if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME_[0] &&
+			randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME_[0] + RANDOM_EFFECT_DISPLAY_LENGTH_[0]) {
+			isDisplayRandomEffect_ = true;
+		}
+		else if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME_[1] &&
+			randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME_[1] + RANDOM_EFFECT_DISPLAY_LENGTH_[1]) {
+			isDisplayRandomEffect_ = true;
+		}
+		else {
+			isDisplayRandomEffect_ = false;
+		}
+
+
+
+		//ランダムの終了
+		if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME_[1] + RANDOM_EFFECT_DISPLAY_LENGTH_[1]) {
+			isEndDisplayRandomEffect_ = true;
+		}
+		
+		//ランダムエフェクト表示の演出が終わった場合
+		if (isEndDisplayRandomEffect_ == true) {
+			const float FADE_INCREASE_VALUE = 0.01f;
+			blackFadeTransparency_ += FADE_INCREASE_VALUE;
+			
+		}
+
+		//時間も兼ねている
+		if (blackFadeTransparency_ > 2.0f) {
+			gameManager->ChangeScene(new GameScene());
+			return;
+		}
+		
 	}
 
 
-	//ステージデータの更新
-	Listener listener = {
-			.position = {},
-			.move = {},
-	};
-	levelDataManager_->SetListener(levelHandle_, listener);
+	//黒フェードの透明度の変更
+	blackFade_->SetTransparency(blackFadeTransparency_);
 
+	//更新
 	levelDataManager_->Update(levelHandle_);
-
-
-
-
-
-
-
-	
 
 	//マテリアルの更新
 	material_.Update();
@@ -209,9 +293,6 @@ void TitleScene::Update(GameManager* gameManager){
 	//カメラの更新
 	camera_.Transfer();
 
-
-
-
 }
 
 void TitleScene::DrawObject3D(){
@@ -219,21 +300,45 @@ void TitleScene::DrawObject3D(){
 	levelDataManager_->Draw(levelHandle_,camera_, material_, directionalLight_);
 
 
+
+
+
 }
 
 void TitleScene::PreDrawPostEffectFirst(){
-	back_->PreDraw();
+	if (isDisplayRandomEffect_ == false) {
+		back_->PreDraw();
+
+	}
+	else {
+		//ランダム
+		randomEffect_->PreDraw();
+	}
+
+	
+	
 }
 
 void TitleScene::DrawPostEffect(){
-	back_->Draw();
+	if (isDisplayRandomEffect_ == false) {
+		back_->Draw();
+	}
+	else {
+		//ランダムエフェクト
+		randomEffect_->Draw();
+
+	}
+	
 }
 
 void TitleScene::DrawSprite(){
 	//背景
-	backGround_->Draw();
+	//backGround_->Draw();
 
 	//テキスト
 	text_->Draw();
 	
+	//黒フェード
+	blackFade_->Draw();
+
 }

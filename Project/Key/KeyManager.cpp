@@ -2,16 +2,17 @@
 
 #include <stdlib.h>
 
-#include "Audio.h"
+
 #include "TextureManager.h"
 #include "VectorCalculation.h"
 #include "Player/Player.h"
 #include "SingleCalculation.h"
 
+
 KeyManager::KeyManager(){
 
 	//オーディオの取得
-	audio_ = Audio::GetInstance();
+	audio_ = Ellysia::Audio::GetInstance();
 	
 	//テクスチャ管理クラスの取得
 	textureManager_ = TextureManager::GetInstance();
@@ -59,7 +60,6 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 
 		Vector3 position = {};
 		//X座標
-		std::getline(lineStream, word, ',');
 		position.x = static_cast<float>(std::atof(word.c_str()));
 
 		//Y座標

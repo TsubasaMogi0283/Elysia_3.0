@@ -16,7 +16,7 @@
 #include "DirectionalLight.h"
 #include "SpotLight.h"
 #include "RailCamera/TitleRailCamera.h"
-
+#include "RandomEffect.h"
 
 #pragma region 前方宣言
 
@@ -108,6 +108,15 @@ private:
 	LevelDataManager* levelDataManager_ = nullptr;
 	uint32_t levelHandle_ = 0u;
 
+
+private:
+	//時間の変化
+	const float DELTA_TIME_ = 1.0f / 60.0f;
+
+	//ランダムエフェクトの表示時間
+	static const uint32_t DISPLAY_LENGTH_QUANTITY_ = 2u;
+	
+
 private:
 
 	//カメラ
@@ -131,6 +140,12 @@ private:
 	std::unique_ptr<BackText> back_ = nullptr;
 
 
+	//黒フェード
+	std::unique_ptr<Sprite>blackFade_ = nullptr;
+	//透明度
+	float blackFadeTransparency_ = 0.0f;
+
+
 	//テキスト
 	std::unique_ptr<Sprite> text_ = nullptr;
 	
@@ -139,9 +154,18 @@ private:
 
 
 
-	//ポストエフェクト
+#pragma region ポストエフェクト
 	//今は使わない
 	std::unique_ptr<BackText> backText_ = nullptr;
+
+
+	//ランダムノイズ
+	std::unique_ptr<RandomEffect> randomEffect_ = nullptr;
+	float randomEffectTime_ = 0u;
+	bool isDisplayRandomEffect_ = false;
+	bool isEndDisplayRandomEffect_ = false;
+
+#pragma endregion
 
 	//Bボタンのトリガー
 	//時間

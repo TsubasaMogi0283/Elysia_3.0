@@ -558,7 +558,7 @@ void Particle3D::Draw(const Camera& camera,const  Material& material,const Direc
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource->GetGPUVirtualAddress());
 
 	//平行光源
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, directionalLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, directionalLight.bufferResource->GetGPUVirtualAddress());
 
 	//PS用のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());

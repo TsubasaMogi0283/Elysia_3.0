@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include <imgui.h>
 #include <numbers>
+#include <algorithm>
 
 #include "Input.h"
 #include "WinScene/WinScene.h"
@@ -149,7 +150,7 @@ void GameScene::Initialize() {
 #pragma endregion
 	
 	//ハンドルの取得
-	levelHandle_=levelDataManager_->Load("GameStage/GameStage.json");
+	levelHandle_=levelDataManager_->Load("GameStage/GameStageGateCheck.json");
 
 
 
@@ -410,9 +411,18 @@ void GameScene::ObjectCollision(){
 			Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
 
 			//内積
-			//これが無いと接触したまま動けなくなってしまうので入れる
+			//進行方向上にオブジェクトがあるかないかを計算したい
 			float dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
-			const float DOT_OFFSET = 0.7f;
+			const float DOT_OFFSET = 0.5f;
+
+#ifdef _DEBUG
+			ImGui::Begin("StageObjectCollision");
+			ImGui::InputFloat("Dot", &dot);
+			ImGui::InputFloat3("PlayerAABBMax", &playerAABB.max.x);
+			ImGui::InputFloat3("PlayerAABBMin", &playerAABB.min.x);
+
+			ImGui::End();
+#endif // _DEBUG
 
 
 			//衝突判定
@@ -420,6 +430,9 @@ void GameScene::ObjectCollision(){
 			if ((playerAABB.min.x <= aabbs[i].max.x && playerAABB.max.x >= aabbs[i].min.x) &&
 				(playerAABB.min.z <= aabbs[i].max.z && playerAABB.max.z >= aabbs[i].min.z) &&
 				(dot > DOT_OFFSET)) {
+
+
+
 				uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
 				player_->SetMoveCondition(newCondition);
 
@@ -986,7 +999,8 @@ void GameScene::Update(GameManager* gameManager) {
 		//負け専用のクラスを作りたい
 		const uint32_t MIN_HP = 0u;
 		if (player_->GetHP() <= MIN_HP || isTouchStrongEnemy_==true) {
-
+			//敵の音を止める
+			enemyManager_->StopAudio();
 			//鍵の音を止める
 			keyManager_->StopAudio();
 
@@ -1029,6 +1043,10 @@ void GameScene::Update(GameManager* gameManager) {
 	//ホワイトアウト
 	//StatePatternにしたい
 	if (isWhiteFadeOut_ == true) {
+		//音を止める
+		enemyManager_->StopAudio();
+
+		//非表示
 		escapeText_->SetInvisible(true);
 		//振動しないようにする
 		player_->SetIsAbleToControll(false);

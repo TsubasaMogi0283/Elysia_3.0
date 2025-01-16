@@ -110,6 +110,11 @@ public:
 	void DeleteEnemy();
 	
 	/// <summary>
+	/// 音を止める
+	/// </summary>
+	void StopAudio();
+
+	/// <summary>
 	/// プレイヤーの設定
 	/// </summary>
 	/// <param name="player"></param>
@@ -171,7 +176,7 @@ private:
 
 
 	//接近BGM用
-	Audio* audio_ = nullptr;
+	Ellysia::Audio* audio_ = nullptr;
 	//ハンドル
 	uint32_t audioHandle_ = 0u;
 

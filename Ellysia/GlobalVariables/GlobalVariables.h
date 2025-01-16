@@ -188,7 +188,7 @@ public:
 	/// <summary>
 	/// ディレクトリの「全ファイル」の読み込み
 	/// </summary>
-	void LoadFile();
+	void LoadAllFile();
 
 	/// <summary>
 	/// ファイルから読み込む

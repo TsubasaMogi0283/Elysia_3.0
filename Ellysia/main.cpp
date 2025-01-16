@@ -8,7 +8,7 @@ static D3DResourceLeakChecker checker;
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
 	//インスタンスを取得
-	std::unique_ptr<Ellysia> myEngine = std::make_unique<Ellysia>();
+	std::unique_ptr<EllysiaEngine> myEngine = std::make_unique<EllysiaEngine>();
 
 	//実行
 	myEngine->Run();

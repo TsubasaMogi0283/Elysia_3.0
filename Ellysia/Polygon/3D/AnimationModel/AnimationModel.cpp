@@ -134,7 +134,7 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	}
 
 	//DirectionalLight
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLight.bufferResource_->GetGPUVirtualAddress());
+	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLight.bufferResource->GetGPUVirtualAddress());
 
 	//カメラ
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource->GetGPUVirtualAddress());

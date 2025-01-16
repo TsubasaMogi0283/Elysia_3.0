@@ -120,6 +120,13 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 				}
 				//AABB
 				else if (objectData.colliderType == "AABB") {
+
+					Vector3 center = {};
+					center.x = static_cast<float>(collider["center"][0]);
+					center.y = static_cast<float>(collider["center"][2]);
+					center.z = static_cast<float>(collider["center"][1]);
+
+
 					//中心座標
 					objectData.center.x = static_cast<float>(collider["center"][0]) + objectData.transform.translate.x;
 					objectData.center.y = static_cast<float>(collider["center"][2]) + objectData.transform.translate.y;
@@ -203,7 +210,7 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 void LevelDataManager::Ganarate(LevelData& levelData) {
 
 	//オーディオのインスタンスを取得
-	Audio* audio = Audio::GetInstance();
+	Ellysia::Audio* audio = Ellysia::Audio::GetInstance();
 
 	//ディレクトリパス
 	std::string levelEditorDirectoryPath = LEVEL_DATA_PATH_ + levelData.folderName;
@@ -469,6 +476,7 @@ void LevelDataManager::Update(const uint32_t& levelDataHandle){
 					bool isTouch = object.levelDataObjectCollider->GetIsTouch();
 					object.objectForLeveEditor->SetIsTouch(isTouch);
 					object.levelDataObjectCollider->SetObjectPosition(objectWorldPosition);
+					object.levelDataObjectCollider->SetCenterPosition(object.center);
 					object.levelDataObjectCollider->Update();
 				}
 
@@ -483,23 +491,27 @@ void LevelDataManager::Update(const uint32_t& levelDataHandle){
 void LevelDataManager::Delete(const uint32_t& levelDataHandle){
 
 
-	for (auto& [key, levelData] : levelDatas_) {
-		if (levelData->handle == levelDataHandle) {
+	//一度全てのオブジェクトのデータを消す
+	for (auto& [key, levelDataPtr] : levelDatas_) {
+		if (levelDataPtr->handle == levelDataHandle) {
 
-			////モデルを消す
-			//for (auto& object : levelData->objectDatas) {
-			//	// Modelの解放
-			//	if (object.model != nullptr) {
-			//		delete object.model;
-			//	}
-			//	//ワールドトランスフォームの解放
-			//	delete object.worldTransform;
-			//}
+			//モデルを消す
+			for (auto& object : levelDataPtr->objectDatas) {
+				// Modelの解放
+				if (object.objectForLeveEditor != nullptr) {
+					delete object.objectForLeveEditor;
+				}
+				if (object.levelDataObjectCollider != nullptr) {
+					delete object.levelDataObjectCollider;
+				}
+
+			}
+
 
 			//listにある情報を全て消す
-			levelData->objectDatas.clear();
+			levelDataPtr->objectDatas.clear();
 
-			//無駄な処理をしないようにする
+			//無駄なループ処理をしないようにする
 			break;
 		}
 	}

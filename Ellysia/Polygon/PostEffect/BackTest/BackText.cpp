@@ -27,8 +27,7 @@ void BackText::Initialize(){
 	gaussianFilterResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(GaussianFilterInformation));
 	gaussianFilterInformation_.sigma = 2.0f;
 
-	//色
-	renderTargetClearValue_ = { 0.0f,0.5f,0.5f,1.0f };
+
 	//リソース作成
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, renderTargetClearValue_);
 	
@@ -97,43 +96,6 @@ void BackText::Draw(){
 
 	effectResource_->Unmap(0, nullptr);
 
-
-	//Vignette
-	if (effectType_ == VignetteEffect) {
-#ifdef _DEBUG
-
-		ImGui::Begin("Vignette");
-		ImGui::SliderFloat("Pow", &vignetteInformation_.pow, 0.1f, 10.0f);
-		ImGui::SliderFloat("Scale", &vignetteInformation_.scale, 0.1f, 100.0f);
-
-		ImGui::End();
-
-#endif // _DEBUG
-
-		vignetteResource_->Map(0, nullptr, reinterpret_cast<void**>(&vignetteData_));
-		vignetteData_->pow = vignetteInformation_.pow;
-		vignetteData_->scale = vignetteInformation_.scale;
-
-		vignetteResource_->Unmap(0, nullptr);
-	}
-	//GaussianFilter
-	if (effectType_ == GaussianFilter3x3a ||
-		effectType_ == GaussianFilter5x5a) {
-#ifdef _DEBUG
-
-		ImGui::Begin("GaussianFilter");
-		ImGui::SliderFloat("Sigma", &gaussianFilterInformation_.sigma, 0.1f, 100.0f);
-
-		ImGui::End();
-
-#endif // _DEBUG
-
-		gaussianFilterResource_->Map(0, nullptr, reinterpret_cast<void**>(&gaussianFilterData_));
-		gaussianFilterData_->sigma=gaussianFilterInformation_.sigma;
-		gaussianFilterResource_->Unmap(0, nullptr);
-
-	}
-	
 
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetFullScreenRootSignature().Get());
 	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetFullScreenGraphicsPipelineState().Get());

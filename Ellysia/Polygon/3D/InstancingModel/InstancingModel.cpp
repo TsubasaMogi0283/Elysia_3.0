@@ -140,7 +140,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 	}
 
 	//DirectionalLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLight.bufferResource->GetGPUVirtualAddress());
 
 	//カメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource->GetGPUVirtualAddress());

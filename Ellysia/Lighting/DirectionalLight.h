@@ -40,14 +40,14 @@ public:
 
 public:
 	//ライトの色
-	Vector4 color_ = {1.0f,1.0f,1.0f,1.0f};
+	Vector4 color = {.x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f};
 	//ライトの向き
-	Vector3 direction_ = {0.0f,-1.0f,0.0f};
+	Vector3 direction = {.x = 0.0f,.y = -1.0f,.z = 0.0f};
 	//輝度
-	float intensity_=5.0f;
+	float intensity=5.0f;
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> bufferResource_=nullptr;
+	ComPtr<ID3D12Resource> bufferResource = nullptr;
 
 
 private:

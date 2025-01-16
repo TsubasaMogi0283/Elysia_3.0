@@ -216,6 +216,14 @@ public:
 		this->isAcceptDamegeFromNoemalEnemy_ = isAccept;
 	}
 
+	/// <summary>
+	/// 座標の設定
+	/// </summary>
+	/// <param name="position"></param>
+	inline void SetPosition(const Vector3& position) {
+		this->worldTransform_.translate = position;
+	}
+
 	
 public:
 

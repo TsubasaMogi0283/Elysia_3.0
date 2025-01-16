@@ -17,17 +17,76 @@ void TitleRailCamera::Initialize(){
 
 	//制御点
 	points_ = {
-		{0.0f,0.0f,0.0f},
-		{0.0f,2.0f,4.0f},
-		{0.0f,4.0f,8.0f},
-		{0.0f,2.0f,12.0f},
-		{0.0f,0.0f,16.0f},
+		{0.0f,3.0f,-75.0f},
+		{10.0f,3.0f,-75.0f},
+		{20.0f,3.0f,-75.0f},
+		{30.0f,3.0f,-75.0f},
+		{40.0f,3.0f,-75.0f},
+		{50.0f,3.0f,-75.0f},
+		{60.0f,3.0f,-70.0f},
+		{70.0f,3.0f,-65.0f},
+		{75.0f,3.0f,-60.0f},
+		{75.0f,3.0f,-45.0f},
+		{75.0f,3.0f,-30.0f},
+		{75.0f,3.0f,-20.0f},
+		{75.0f,3.0f,-10.0f},
+		{75.0f,3.0f,-5.0f},
+		{75.0f,3.0f,0.0f},
+		{75.0f,3.0f,5.0f},
+		{75.0f,3.0f,10.0f},
+		{75.0f,3.0f,20.0f},
+		{75.0f,3.0f,25.0f},
+		{75.0f,3.0f,30.0f},
+		{75.0f,3.0f,40.0f},
+		{75.0f,3.0f,50.0f},
+		{70.0f,3.0f,60.0f},
+		{65.0f,3.0f,70.0f},
+		{60.0f,3.0f,75.0f},
+		{50.0f,3.0f,75.0f},
+		{40.0f,3.0f,75.0f},
+		{30.0f,3.0f,75.0f},
+		{20.0f,3.0f,75.0f},
+		{10.0f,3.0f,75.0f},
+		{0.0f,3.0f,75.0f},
+		{-10.0f,3.0f,75.0f},
+		{-20.0f,3.0f,75.0f},
+		{-30.0f,3.0f,75.0f},
+		{-40.0f,3.0f,75.0f},
+		{-50.0f,3.0f,75.0f},
+		{-60.0f,3.0f,75.0f},
+		{-70.0f,3.0f,70.0f},
+		{-75.0f,3.0f,65.0f},
+
+
+
+		{-75.0f,3.0f,60.0f},
+		{-75.0f,3.0f,50.0f},
+		{-75.0f,3.0f,40.0f},
+		{-75.0f,3.0f,30.0f},
+		{-75.0f,3.0f,20.0f},
+		{-75.0f,3.0f,10.0f},
+		{-75.0f,3.0f,0.0f},
+		{-75.0f,3.0f,-10.0f},
+		{-75.0f,3.0f,-20.0f},
+		{-75.0f,3.0f,-30.0f},
+		{-75.0f,3.0f,-40.0f},
+		{-75.0f,3.0f,-50.0f},
+		{-70.0f,3.0f,-60.0f},
+		{-60.0f,3.0f,-70.0f},
+
+
+		{-50.0f,3.0f,-75.0f},
+		{-40.0f,3.0f,-75.0f},
+		{-30.0f,3.0f,-75.0f},
+		{-20.0f,3.0f,-75.0f},
+		{-10.0f,3.0f,-75.0f},
+		{0.0f,3.0f,-75.0f},
 	};
 
 }
 
 
-Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& points,  float t) {
+Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& points, const float& t) {
 	assert(points.size() >= 4 && "制御点は4点以上必要です");
 
 	//区間数は制御点の数-1
@@ -42,10 +101,6 @@ Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& poin
 	t_2 = SingleCalculation::Clamp(0.0f, 1.0f, t_2);
 
 	int index = static_cast<int>(t / areaLength);
-	//区間番号が上限を超えないための計算
-	//index = max(index, 4);
-
-
 	int index0 = index - 1;
 	int index1 = index;
 	int index2 = index + 1;
@@ -93,24 +148,42 @@ Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& poin
 void TitleRailCamera::Update(){
 
 
-
 	//線形補間
-	cameraT_ += 0.001f;
+	cameraT_ += 0.0001f;
 	
 	
 	//座標
 	worldTransform_.translate = CatmullRomPositionLoop(points_, cameraT_);
 
-	//targetとeyeの差分ベクトル(forward)から02_09_ex1より
-	//回転角を求めてワールドトランスフォームの角度に入れる
-	Vector3 target = worldTransform_.translate;
 
-	//atan2(高さ,底辺)
-	//各角度を計算
-	worldTransform_.rotate.y = std::atan2(target.x, target.z);
+	// 現在の位置
+	Vector3 currentPosition = worldTransform_.translate;
+
+
+	//少し先のTの値を見て次の位置の計算をする
+	float nextT = cameraT_ + 0.001f; 
+	
+	//ループ時の補正
+	if (nextT > 1.0f) { 
+		nextT -= 1.0f;
+	}; 
+	//次の座標
+	Vector3 nextPosition = CatmullRomPositionLoop(points_, nextT);
+	//差分
+	Vector3 difference = VectorCalculation::Subtract(nextPosition, currentPosition);
+	//進行方向ベクトル
+	Vector3 forward = VectorCalculation::Normalize(difference);
+
+
+
+	//Y軸の回転
+	worldTransform_.rotate.y = std::atan2(forward.x, forward.z);
+
+	//X軸の回転
 	//XZの長さ
-	float velocityXZ = sqrtf((target.x * target.x) + (target.z * target.z));
-	worldTransform_.rotate.x = std::atan2(-target.y, velocityXZ);
+	float velocityXZ = std::sqrt((forward.x * forward.x) + (forward.z * forward.z));
+	worldTransform_.rotate.x = std::atan2(-forward.y, velocityXZ);
+
 
 
 	//ワールド行列を計算

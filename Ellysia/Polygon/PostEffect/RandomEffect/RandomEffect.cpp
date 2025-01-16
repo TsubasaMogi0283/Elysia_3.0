@@ -9,7 +9,7 @@
 void RandomEffect::Initialize() {
 
 
-	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.1f,0.1f,0.7f,1.0f };
+	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.0f,0.0f,0.0f,1.0f };
 	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
 	randomValue_.isUseTexture = false;
 	const std::string postEffectName = "RandomEffect";
@@ -37,7 +37,7 @@ void RandomEffect::Initialize() {
 void RandomEffect::PreDraw() {
 	
 
-	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.1f,0.1f,0.7f,1.0f };
+	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.0f,0.0f,0.0f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
 		1, &RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), false, &DirectXSetup::GetInstance()->GetDsvHandle());
 

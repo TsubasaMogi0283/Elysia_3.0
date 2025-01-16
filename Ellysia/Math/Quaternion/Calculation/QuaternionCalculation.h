@@ -102,5 +102,21 @@ namespace QuaternionCalculation{
 	Quaternion QuaternionSlerp(const Quaternion& q0,const Quaternion& q1,const float& t);
 
 
+
+	/// <summary>
+	/// オイラー角に直す
+	/// </summary>
+	/// <param name="q"></param>
+	/// <returns></returns>
+	Vector3 ConvertToEuler(const Quaternion& q);
+
+	/// <summary>
+	/// オイラー角からクォータニオンに変換
+	/// </summary>
+	/// <param name="v"></param>
+	/// <returns></returns>
+	Quaternion ConvertToQuaternion(const Vector3& v);
+
+
 };
 

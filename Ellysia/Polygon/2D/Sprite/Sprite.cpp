@@ -84,6 +84,11 @@ void Sprite::Draw() {
 		return;
 	}
 
+
+	//完全に透明になったら通す必要が無いよね
+	if (color_.w <= 0.0f) {
+		return;
+	}
 	
 
 	//TextureCoordinate(テクスチャ座標系)

@@ -58,7 +58,7 @@ private:
 	/// <param name="points"></param>
 	/// <param name="t"></param>
 	/// <returns></returns>
-	Vector3 CatmullRomPositionLoop(const std::vector<Vector3>& points, float t);
+	Vector3 CatmullRomPositionLoop(const std::vector<Vector3>& points,const float& t);
 
 
 private:
