@@ -145,6 +145,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp" />
     <ClCompile Include="Ellysia\Manager\CollisionManager\CollisionManager.cpp" />
     <ClCompile Include="Ellysia\Manager\GameManager\GameManager.cpp" />
+    <ClCompile Include="Ellysia\Manager\GameManager\GameSceneFactory.cpp" />
     <ClCompile Include="Ellysia\Manager\ImGuiManager\ImGuiManager.cpp" />
     <ClCompile Include="Ellysia\Manager\LevelDataManager\LevelDataManager.cpp" />
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.cpp" />
@@ -207,7 +208,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Light\FlashLight\FlashLight.cpp" />
     <ClCompile Include="Project\Light\FlashLight\FlashLightCollision.cpp" />
     <ClCompile Include="Project\Player\AudioTestPlayer.cpp" />
-    <ClCompile Include="Project\Player\IPlayerCollision.cpp" />
     <ClCompile Include="Project\Player\Player.cpp" />
     <ClCompile Include="Project\Player\PlayerCollisionToAudioObject.cpp" />
     <ClCompile Include="Project\Player\PlayerCollisionToNormalEnemyAttack.cpp" />
@@ -215,7 +215,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Player\PlayerCollisionToStrongEnemy.cpp" />
     <ClCompile Include="Project\RailCamera\TitleRailCamera.cpp" />
     <ClCompile Include="Project\Stage\Gate\Gate.cpp" />
-    <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\AnimationObject3D\AnimationObject3D.PS.hlsl">
@@ -410,6 +409,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Manager\CollisionManager\Collider.h" />
     <ClInclude Include="Ellysia\Manager\CollisionManager\CollisionManager.h" />
     <ClInclude Include="Ellysia\Manager\GameManager\GameManager.h" />
+    <ClInclude Include="Ellysia\Manager\GameManager\GameSceneFactory.h" />
     <ClInclude Include="Ellysia\Manager\GameManager\IGameScene.h" />
     <ClInclude Include="Ellysia\Manager\ImGuiManager\ImGuiManager.h" />
     <ClInclude Include="Ellysia\Manager\LevelDataManager\LevelDataManager.h" />
@@ -511,7 +511,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Player\PlayerCollisionToStrongEnemy.h" />
     <ClInclude Include="Project\RailCamera\TitleRailCamera.h" />
     <ClInclude Include="Project\Stage\Gate\Gate.h" />
-    <ClInclude Include="Project\Stage\ObjectManager\ObjectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

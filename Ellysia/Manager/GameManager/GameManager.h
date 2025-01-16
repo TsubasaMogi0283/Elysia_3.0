@@ -30,7 +30,7 @@ public:
 	/// <summary>
 	/// シーンチェンジ
 	/// </summary>
-	/// <param name="newGameScene"></param>
+	/// <param name="newGameScene">新しいシーン</param>
 	void ChangeScene(std::unique_ptr<IGameScene> newGameScene);
 
 	/// <summary>

@@ -17,13 +17,12 @@
 
 //外部の,、つまり自分が作ったものではないファイルなどは
 //<>でインクルードさせた方が良い
-
 //その他自分で作ったものは""でインクルードさせてね
 
 //extern...グローバル変数を共有する
 
 /// <summary>
-/// ImGuiで使うもの
+///	ウィンドウプロシージャで使うもの
 /// </summary>
 /// <param name="hwnd"></param>
 /// <param name="msg"></param>
@@ -33,151 +32,158 @@
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam);
 
 /// <summary>
-/// Windowsの設定(シングルトン)
+/// Ellysia
 /// </summary>
-class WindowsSetup final{
-private:
-	//インスタンスを作れないようにする
-	//コンストラクタをprivateに
-	
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	WindowsSetup()=default;
+namespace Ellysia {
 
 	/// <summary>
-	/// デストラクタ
+	/// Windowsの設定(シングルトン)
 	/// </summary>
-	~WindowsSetup() = default;
+	class WindowsSetup final {
+	private:
+		//インスタンスを作れないようにする
+		//コンストラクタをprivateに
 
-public:
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		WindowsSetup() = default;
 
-	#pragma region 禁止事項
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~WindowsSetup() = default;
 
-	/// <summary>
-	/// コピーコンストラクタ禁止
-	/// </summary>
-	/// <param name="winApp"></param>
-	WindowsSetup(const WindowsSetup& winApp) = delete;
+	public:
 
-	/// <summary>
-	/// 代入演算子を無効にする
-	/// </summary>
-	/// <param name="winApp"></param>
-	/// <returns></returns>
-	WindowsSetup& operator=(const WindowsSetup& winApp) = delete;
+#pragma region 禁止事項
 
-	#pragma endregion
+		/// <summary>
+		/// コピーコンストラクタ禁止
+		/// </summary>
+		/// <param name="winApp"></param>
+		WindowsSetup(const WindowsSetup& winApp) = delete;
 
-	/// <summary>
-	/// インスタンスの取得
-	/// </summary>
-	/// <returns></returns>
-	static WindowsSetup* GetInstance();
+		/// <summary>
+		/// 代入演算子を無効にする
+		/// </summary>
+		/// <param name="winApp"></param>
+		/// <returns></returns>
+		WindowsSetup& operator=(const WindowsSetup& winApp) = delete;
 
+#pragma endregion
 
-	/// <summary>
-	/// ウィンドウプロシージャ(コールバック関数だよ)
-	/// </summary>
-	/// <param name="hwnd"></param>
-	/// <param name="msg"></param>
-	/// <param name="wparam"></param>
-	/// <param name="lparam"></param>
-	/// <returns></returns>
-	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-
-	/// <summary>
-	/// 出力の所に文字を出す
-	/// </summary>
-	/// <param name="stringText"></param>
-	static void OutputText(std::string& stringText);
-
-private:
-
-	/// <summary>
-	/// //ウィンドウクラスを登録
-	/// </summary>
-	void RegisterWindowsClass();
-
-	/// <summary>
-	/// Windowを表示
-	/// </summary>
-	void DisplayWindow();
+		/// <summary>
+		/// インスタンスの取得
+		/// </summary>
+		/// <returns></returns>
+		static WindowsSetup* GetInstance();
 
 
-public:
+		/// <summary>
+		/// ウィンドウプロシージャ
+		/// </summary>
+		/// <param name="hwnd"></param>
+		/// <param name="msg"></param>
+		/// <param name="wparam"></param>
+		/// <param name="lparam"></param>
+		/// <returns></returns>
+		static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="title"></param>
-	/// <param name="clientWidth"></param>
-	/// <param name="clientHeight"></param>
-	void Initialize(const wchar_t* title, int32_t clientWidth,int32_t clientHeight);
+		/// <summary>
+		/// 出力の所に文字を出す
+		/// </summary>
+		/// <param name="stringText"></param>
+		static void OutputText(std::string& stringText);
 
-	/// <summary>
-	/// メッセージ
-	/// </summary>
-	/// <param name="msg"></param>
-	void WindowsMSG(MSG& msg);
+	private:
 
-	/// <summary>
-	/// 閉じる
-	/// </summary>
-	void Close();
+		/// <summary>
+		/// //ウィンドウクラスを登録
+		/// </summary>
+		void RegisterWindowsClass();
 
-public:
-
-	/// <summary>
-	/// クライアントの横幅
-	/// </summary>
-	/// <returns></returns>
-	uint32_t GetClientWidth() const{
-		return clientWidth_;
-	}
-
-	/// <summary>
-	/// クライアントの縦幅
-	/// </summary>
-	/// <returns></returns>
-	uint32_t GetClientHeight() const{
-		return clientHeight_;
-	}
-
-	/// <summary>
-	/// Hwndの取得
-	/// </summary>
-	/// <returns></returns>
-	HWND GetHwnd()const {
-		return hwnd_;
-	}
-
-	/// <summary>
-	/// hInstanceの取得
-	/// </summary>
-	/// <returns></returns>
-	HINSTANCE GetHInstance() const{
-		return windowClass_.hInstance;
-	}
+		/// <summary>
+		/// Windowを表示
+		/// </summary>
+		void DisplayWindow();
 
 
+	public:
 
-private:
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		/// <param name="title">タイトル名</param>
+		/// <param name="clientWidth">横サイズ</param>
+		/// <param name="clientHeight">縦サイズ</param>
+		void Initialize(const wchar_t* title, int32_t clientWidth, int32_t clientHeight);
 
-	//タイトルバー
-	const wchar_t* title_=L"Ellysia";
-	
-	//クライアントのサイズ
-	uint32_t clientWidth_=0;
-	uint32_t clientHeight_=0;
-	
-	//ウィンドウハンドル
-	HWND hwnd_=0;
+		/// <summary>
+		/// メッセージ
+		/// </summary>
+		/// <param name="msg">メッセージ</param>
+		void WindowsMSG(MSG& msg);
 
-	//ウィンドウクラス
-	WNDCLASS windowClass_{};
+		/// <summary>
+		/// 閉じる
+		/// </summary>
+		void Close();
 
-	
+	public:
+
+		/// <summary>
+		/// クライアントの横幅
+		/// </summary>
+		/// <returns></returns>
+		uint32_t GetClientWidth() const {
+			return clientWidth_;
+		}
+
+		/// <summary>
+		/// クライアントの縦幅
+		/// </summary>
+		/// <returns></returns>
+		uint32_t GetClientHeight() const {
+			return clientHeight_;
+		}
+
+		/// <summary>
+		/// Hwndの取得
+		/// </summary>
+		/// <returns></returns>
+		HWND GetHwnd()const {
+			return hwnd_;
+		}
+
+		/// <summary>
+		/// hInstanceの取得
+		/// </summary>
+		/// <returns></returns>
+		HINSTANCE GetHInstance() const {
+			return windowClass_.hInstance;
+		}
+
+
+
+	private:
+
+		//タイトルバー
+		const wchar_t* title_ = L"Ellysia";
+
+		//クライアントのサイズ
+		uint32_t clientWidth_ = 0;
+		uint32_t clientHeight_ = 0;
+
+		//ウィンドウハンドル
+		HWND hwnd_ = 0;
+
+		//ウィンドウクラス
+		WNDCLASS windowClass_{};
+
+
+
+	};
+
 
 };
-

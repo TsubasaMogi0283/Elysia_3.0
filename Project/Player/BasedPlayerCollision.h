@@ -15,6 +15,12 @@ struct SpotLight;
 
 #pragma endregion
 
+/**
+ * @file BasedPlayerCollision.h
+ * @brief プレイヤー用のコリジョンクラス
+ * @author 茂木翼
+ */
+
 /// <summary>
 /// プレイヤー用のコリジョン
 /// </summary>

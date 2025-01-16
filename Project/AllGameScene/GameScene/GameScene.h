@@ -33,7 +33,6 @@
 #include "CollisionCalculation.h"
 
 #include "Input.h"
-#include "Stage/ObjectManager/ObjectManager.h"
 #include "Vignette.h"
 #include "BackTexture.h"
 #include "LevelDataManager.h"
@@ -168,6 +167,7 @@ private:
 	ModelManager* modelManager_ = nullptr;
 	//レベルエディタ
 	LevelDataManager* levelDataManager_ = nullptr;
+	//ハンドル
 	uint32_t levelHandle_ = 0u;
 
 

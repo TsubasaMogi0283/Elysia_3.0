@@ -30,14 +30,7 @@ using Microsoft::WRL::ComPtr;
 #include "Vector4.h"
 
 
-/// <summary>
-/// スワップチェインで使う変数をまとめた
-/// </summary>
-struct SwapChain {
-	ComPtr<IDXGISwapChain4> m_pSwapChain;
-	ComPtr<ID3D12Resource> m_pResource[2];
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-};
+
 
 
 
@@ -60,72 +53,77 @@ struct D3DResourceLeakChecker {
 
 
 /// <summary>
-/// DirectXの機能をまとめたクラス
-/// フレームワークなど
+/// EllysiaEngine
 /// </summary>
-class DirectXSetup final {
-private:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	DirectXSetup() = default;
+namespace Ellysia{
 
 	/// <summary>
-	/// デストラクタ
+	/// DirectXの機能をまとめたクラス
+	/// フレームワークなど
 	/// </summary>
-	~DirectXSetup() = default;
+	class DirectXSetup final {
+	private:
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		DirectXSetup() = default;
 
-public:
-	/// <summary>
-	/// インスタンスの取得
-	/// </summary>
-	/// <returns></returns>
-	static DirectXSetup* GetInstance();
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~DirectXSetup() = default;
 
-	/// <summary>
-	/// コピーコンストラクタ禁止
-	/// </summary>
-	/// <param name="directXSetup"></param>
-	DirectXSetup(const DirectXSetup& directXSetup) = delete;
+	public:
+		/// <summary>
+		/// インスタンスの取得
+		/// </summary>
+		/// <returns>インスタンス</returns>
+		static DirectXSetup* GetInstance();
 
-	/// <summary>
-	/// 代入演算子を無効にする
-	/// </summary>
-	/// <param name="directXSetup"></param>
-	/// <returns></returns>
-	DirectXSetup& operator=(const DirectXSetup& directXSetup) = delete;
+		/// <summary>
+		/// コピーコンストラクタ禁止
+		/// </summary>
+		/// <param name="directXSetup"></param>
+		DirectXSetup(const DirectXSetup& directXSetup) = delete;
 
-	
-	/// <summary>
-	/// DescriptorHeapの作成関数
-	/// </summary>
-	/// <param name="heapType"></param>
-	/// <param name="numDescriptors"></param>
-	/// <param name="shaderVisible"></param>
-	/// <returns></returns>
-	static ComPtr<ID3D12DescriptorHeap> GenarateDescriptorHeap(
-		D3D12_DESCRIPTOR_HEAP_TYPE heapType,
-		UINT numDescriptors, bool shaderVisible);
+		/// <summary>
+		/// 代入演算子を無効にする
+		/// </summary>
+		/// <param name="directXSetup"></param>
+		/// <returns></returns>
+		DirectXSetup& operator=(const DirectXSetup& directXSetup) = delete;
 
 
-
-private:
-	//DepthStencilTexture...奥行の根幹をなすものであり、非常に大量の読み書きを高速に行う必要がある
-	//						Textureの中でも特に例外的な扱いが必要となっている
-	//						とのこと。Depthと名前の通り奥行きの情報を持っているものだね
-
-	/// <summary>
-	/// DepthのResourceを生成する
-	/// </summary>
-	/// <param name="width"></param>
-	/// <param name="height"></param>
-	/// <returns></returns>
-	static ComPtr<ID3D12Resource> GenerateDepthStencilTextureResource(const uint32_t& width, const uint32_t& height);
+		/// <summary>
+		/// DescriptorHeapの作成関数
+		/// </summary>
+		/// <param name="heapType"></param>
+		/// <param name="numDescriptors"></param>
+		/// <param name="shaderVisible"></param>
+		/// <returns></returns>
+		static ComPtr<ID3D12DescriptorHeap> GenarateDescriptorHeap(
+			D3D12_DESCRIPTOR_HEAP_TYPE heapType,
+			UINT numDescriptors, bool shaderVisible);
 
 
-	//まとめたのが下の「Initialize」
-	//他の所では使わないからprivateにしても良さそう
-	//アロー演算子を使ったとき邪魔になるから
+
+	private:
+		//DepthStencilTexture...奥行の根幹をなすものであり、非常に大量の読み書きを高速に行う必要がある
+		//						Textureの中でも特に例外的な扱いが必要となっている
+		//						とのこと。Depthと名前の通り奥行きの情報を持っているものだね
+
+		/// <summary>
+		/// DepthのResourceを生成する
+		/// </summary>
+		/// <param name="width"></param>
+		/// <param name="height"></param>
+		/// <returns></returns>
+		static ComPtr<ID3D12Resource> GenerateDepthStencilTextureResource(const uint32_t& width, const uint32_t& height);
+
+
+		//まとめたのが下の「Initialize」
+		//他の所では使わないからprivateにしても良さそう
+		//アロー演算子を使ったとき邪魔になるから
 
 
 #pragma region 初期化について
@@ -133,239 +131,253 @@ private:
 	/// <summary>
 	/// DXGIFactoryの生成
 	/// </summary>
-	static void GenerateDXGIFactory();
+		static void GenerateDXGIFactory();
 
-	/// <summary>
-	/// アダプターの生成
-	/// </summary>
-	static void SelectAdapter();
+		/// <summary>
+		/// アダプターの生成
+		/// </summary>
+		static void SelectAdapter();
 
-	/// <summary>
-	/// デバイスの生成
-	/// </summary>
-	static void GenerateD3D12Device();
+		/// <summary>
+		/// デバイスの生成
+		/// </summary>
+		static void GenerateD3D12Device();
 
-	/// <summary>
-	/// エラーが起こったら止める
-	/// </summary>
-	static void StopErrorWarning();
+		/// <summary>
+		/// エラーが起こったら止める
+		/// </summary>
+		static void StopErrorWarning();
 
-	/// <summary>
-	/// コマンドの生成
-	/// </summary>
-	static void GenerateCommand();
+		/// <summary>
+		/// コマンドの生成
+		/// </summary>
+		static void GenerateCommand();
 
-	/// <summary>
-	/// スワップチェーンの生成
-	/// </summary>
-	static void GenerateSwapChain();
+		/// <summary>
+		/// スワップチェーンの生成
+		/// </summary>
+		static void GenerateSwapChain();
 
-	/// <summary>
-	/// ディスクリプタヒープの生成
-	/// </summary>
-	static void GenarateDescriptorHeap();
+		/// <summary>
+		/// ディスクリプタヒープの生成
+		/// </summary>
+		static void GenarateDescriptorHeap();
 
-	/// <summary>
-	/// スワップチェーンを引っ張ってくる
-	/// </summary>
-	static void PullResourcesFromSwapChain();
-
-
-	/// <summary>
-	/// フェンスの生成
-	/// </summary>
-	static void GenarateFence();
+		/// <summary>
+		/// スワップチェーンを引っ張ってくる
+		/// </summary>
+		static void PullResourcesFromSwapChain();
 
 
-public:
-	/// <summary>
-	/// ビューポートの生成
-	/// </summary>
-	/// <param name="width">横幅</param>
-	/// <param name="height">縦幅</param>
-	static void GenarateViewport(const uint32_t& width, const uint32_t& height);
-
-	
-	/// <summary>
-	/// シザーの生成
-	/// </summary>
-	/// <param name="right">横幅</param>
-	/// <param name="bottom">立幅</param>
-	static void GenarateScissor(const uint32_t& right, const uint32_t& bottom);
+		/// <summary>
+		/// フェンスの生成
+		/// </summary>
+		static void GenarateFence();
 
 
-	/// <summary>
-	/// リソースバリアの設定
-	/// </summary>
-	/// <param name="resource"></param>
-	/// <param name="beforeState"></param>
-	/// <param name="afterState"></param>
-	static void SetResourceBarrier(const ComPtr<ID3D12Resource>& resource, const D3D12_RESOURCE_STATES& beforeState, const D3D12_RESOURCE_STATES& afterState);
-	
-	/// <summary>
-	/// リソースバリアの設定(スワップチェイン用)
-	/// </summary>
-	/// <param name="beforeState"></param>
-	/// <param name="afterState"></param>
-	static void SetResourceBarrierForSwapChain(const D3D12_RESOURCE_STATES& beforeState, const D3D12_RESOURCE_STATES& afterState);
+	public:
+		/// <summary>
+		/// ビューポートの生成
+		/// </summary>
+		/// <param name="width">横幅</param>
+		/// <param name="height">縦幅</param>
+		static void GenarateViewport(const uint32_t& width, const uint32_t& height);
+
+
+		/// <summary>
+		/// シザーの生成
+		/// </summary>
+		/// <param name="right">横幅</param>
+		/// <param name="bottom">立幅</param>
+		static void GenarateScissor(const uint32_t& right, const uint32_t& bottom);
+
+
+		/// <summary>
+		/// リソースバリアの設定
+		/// </summary>
+		/// <param name="resource"></param>
+		/// <param name="beforeState"></param>
+		/// <param name="afterState"></param>
+		static void SetResourceBarrier(const ComPtr<ID3D12Resource>& resource, const D3D12_RESOURCE_STATES& beforeState, const D3D12_RESOURCE_STATES& afterState);
+
+		/// <summary>
+		/// リソースバリアの設定(スワップチェイン用)
+		/// </summary>
+		/// <param name="beforeState"></param>
+		/// <param name="afterState"></param>
+		static void SetResourceBarrierForSwapChain(const D3D12_RESOURCE_STATES& beforeState, const D3D12_RESOURCE_STATES& afterState);
 
 
 #pragma endregion
 
-private:
-	/// <summary>
-	/// FPS固定初期化
-	/// </summary>
-	static void InitializeFPS();
+	private:
+		/// <summary>
+		/// FPS固定初期化
+		/// </summary>
+		static void InitializeFPS();
 
-	/// <summary>
-	/// FPS固定更新
-	/// </summary>
-	static void UpdateFPS();
-
-
-public:
-	/// <summary>
-	/// 第一初期化
-	/// </summary>
-	static void FirstInitialize();
-
-	/// <summary>
-	/// 第二初期化
-	/// </summary>
-	static void SecondInitialize();
-
-	/// <summary>
-	/// Resource作成の関数化
-	/// </summary>
-	/// <param name="sizeInBytes"></param>
-	/// <returns></returns>
-	ComPtr<ID3D12Resource> CreateBufferResource(const size_t& sizeInBytes);
-
-	/// <summary>
-	/// Depthリソースの取得
-	/// </summary>
-	/// <returns></returns>
-	inline ComPtr<ID3D12Resource> GerDepthStencilResource() const{
-		return depthStencilResource_;
-	}
-
-	
-#pragma region whileの中身
-	/// <summary>
-	/// 描画開始
-	/// </summary>
-	void StartDraw();
-
-	/// <summary>
-	/// 描画衆力
-	/// </summary>
-	void EndDraw();
-
-#pragma endregion
+		/// <summary>
+		/// FPS固定更新
+		/// </summary>
+		static void UpdateFPS();
 
 
-	/// <summary>
-	/// 解放
-	/// </summary>
-	void Release();
+	public:
+		/// <summary>
+		/// 第一初期化
+		/// </summary>
+		static void FirstInitialize();
+
+		/// <summary>
+		/// 第二初期化
+		/// </summary>
+		static void SecondInitialize();
+
+		/// <summary>
+		/// Resource作成の関数化
+		/// </summary>
+		/// <param name="sizeInBytes"></param>
+		/// <returns>リソース</returns>
+		ComPtr<ID3D12Resource> CreateBufferResource(const size_t& sizeInBytes);
+
+		
+		
 
 
-public:
+		/// <summary>
+		/// 描画開始
+		/// </summary>
+		void StartDraw();
 
-
-	/// <summary>
-	/// デバイスの取得
-	/// </summary>
-	/// <returns></returns>
-	inline ComPtr<ID3D12Device> GetDevice() const{
-		return device_;
-	}
-
-	/// <summary>
-	/// コマンドリストの取得
-	/// </summary>
-	/// <returns></returns>
-	inline ComPtr<ID3D12GraphicsCommandList> GetCommandList() const{
-		return DirectXSetup::GetInstance()->commandList_;
-	}
-
-	/// <summary>
-	/// DSVディスクリプタヒープの取得
-	/// </summary>
-	/// <returns></returns>
-	inline ComPtr<ID3D12DescriptorHeap> GetDsvDescriptorHeap() const{
-		return  dsvDescriptorHeap_;
-	}
-
-
-	/// <summary>
-	/// スワップチェーンの取得
-	/// </summary>
-	/// <returns></returns>
-	inline SwapChain GetSwapChain() const{
-		return DirectXSetup::GetInstance()->swapChain;
-	}
-
-	/// <summary>
-	/// DSVハンドルの取得
-	/// </summary>
-	/// <returns></returns>
-	inline D3D12_CPU_DESCRIPTOR_HANDLE& GetDsvHandle(){
-		return dsvHandle_;
-	}
-
-private:
-
-	//ファクトリー
-	ComPtr<IDXGIFactory7> dxgiFactory_ = nullptr;
-	//アダプター
-	ComPtr<IDXGIAdapter4> useAdapter_ = nullptr;
-	//デバイス
-	ComPtr<ID3D12Device> device_ = nullptr;
-
-	//コマンドリスト
-	ComPtr<ID3D12GraphicsCommandList> commandList_ = nullptr;
-	//コマンドキュー
-	ComPtr<ID3D12CommandQueue> m_commandQueue_ = nullptr;
-	//コマンドアロケータ
-	ComPtr<ID3D12CommandAllocator> m_commandAllocator_ = nullptr;
-
-	//DSV
-	ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap_ = nullptr;
-	//リソース
-	ComPtr<ID3D12Resource> depthStencilResource_ = nullptr;
-	//ハンドル
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_ = {};
-
-	//スワップチェイン
-	SwapChain swapChain = {};
-	UINT backBufferIndex_ = {};
-	//バリア
-	D3D12_RESOURCE_BARRIER barrier_{};
-
-
-	//スワップチェーン
-	//RTVハンドル
-	uint32_t rtvHandle_[2] = {};
-	std::string swapChainName_[2] = {};
-
-	
-	//Fence
-	ComPtr<ID3D12Fence> fence_ = nullptr;
-	//バリュー
-	uint64_t fenceValue_ = 0;
-	//イベント
-	HANDLE fenceEvent_ = nullptr;
-
-	//デバッグコントローラー
-	ComPtr<ID3D12Debug1> debugController_ = nullptr;
+		/// <summary>
+		/// 描画衆力
+		/// </summary>
+		void EndDraw();
 
 
 
+		/// <summary>
+		/// 解放
+		/// </summary>
+		void Release();
 
-	//FPS
-	//記録時間(FPS固定用)
-	std::chrono::steady_clock::time_point frameEndTime_;
+
+		/// <summary>
+		/// スワップチェインで使う変数をまとめた
+		/// </summary>
+		struct SwapChain {
+			ComPtr<IDXGISwapChain4> m_pSwapChain;
+			ComPtr<ID3D12Resource> m_pResource[2];
+			DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
+		};
+
+
+	public:
+
+
+		/// <summary>
+		/// デバイスの取得
+		/// </summary>
+		/// <returns></returns>
+		inline ComPtr<ID3D12Device> GetDevice() const {
+			return device_;
+		}
+
+		/// <summary>
+		/// コマンドリストの取得
+		/// </summary>
+		/// <returns></returns>
+		inline ComPtr<ID3D12GraphicsCommandList> GetCommandList() const {
+			return DirectXSetup::GetInstance()->commandList_;
+		}
+
+		/// <summary>
+		/// DSVディスクリプタヒープの取得
+		/// </summary>
+		/// <returns></returns>
+		inline ComPtr<ID3D12DescriptorHeap> GetDsvDescriptorHeap() const {
+			return  dsvDescriptorHeap_;
+		}
+
+
+		/// <summary>
+		/// スワップチェーンの取得
+		/// </summary>
+		/// <returns></returns>
+		inline SwapChain GetSwapChain() const {
+			return DirectXSetup::GetInstance()->swapChain;
+		}
+
+		/// <summary>
+		/// DSVハンドルの取得
+		/// </summary>
+		/// <returns></returns>
+		inline D3D12_CPU_DESCRIPTOR_HANDLE& GetDsvHandle() {
+			return dsvHandle_;
+		}
+
+
+		/// <summary>
+		/// Depthリソースの取得
+		/// </summary>
+		/// <returns></returns>
+		inline ComPtr<ID3D12Resource> GetDepthStencilResource() const {
+			return depthStencilResource_;
+		}
+
+	private:
+
+		//ファクトリー
+		ComPtr<IDXGIFactory7> dxgiFactory_ = nullptr;
+		//アダプター
+		ComPtr<IDXGIAdapter4> useAdapter_ = nullptr;
+		//デバイス
+		ComPtr<ID3D12Device> device_ = nullptr;
+
+		//コマンドリスト
+		ComPtr<ID3D12GraphicsCommandList> commandList_ = nullptr;
+		//コマンドキュー
+		ComPtr<ID3D12CommandQueue> m_commandQueue_ = nullptr;
+		//コマンドアロケータ
+		ComPtr<ID3D12CommandAllocator> m_commandAllocator_ = nullptr;
+
+		//DSV
+		ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap_ = nullptr;
+		//リソース
+		ComPtr<ID3D12Resource> depthStencilResource_ = nullptr;
+		//ハンドル
+		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_ = {};
+
+		//スワップチェイン
+		SwapChain swapChain = {};
+		UINT backBufferIndex_ = {};
+		//バリア
+		D3D12_RESOURCE_BARRIER barrier_{};
+
+
+		//スワップチェーン
+		//RTVハンドル
+		uint32_t rtvHandle_[2] = {};
+		std::string swapChainName_[2] = {};
+
+
+		//Fence
+		ComPtr<ID3D12Fence> fence_ = nullptr;
+		//バリュー
+		uint64_t fenceValue_ = 0;
+		//イベント
+		HANDLE fenceEvent_ = nullptr;
+
+		//デバッグコントローラー
+		ComPtr<ID3D12Debug1> debugController_ = nullptr;
+
+
+
+
+		//FPS
+		//記録時間(FPS固定用)
+		std::chrono::steady_clock::time_point frameEndTime_;
+
+	};
 
 };

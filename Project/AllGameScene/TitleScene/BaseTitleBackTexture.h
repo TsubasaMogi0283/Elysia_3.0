@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+ * @file BaseTitleBackTexture.h
+ * @brief 背景テクスチャの基底クラス
+ * @author 茂木翼
+ */
+
 #include <memory>
 
 #include "BackTexture.h"

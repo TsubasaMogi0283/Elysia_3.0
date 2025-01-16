@@ -580,7 +580,7 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle,const Camera& camera
 #pragma endregion
 
 
-void LevelDataManager::Release(){
+void LevelDataManager::Finalize(){
 
 	//全て解放
 	for (auto& [key, levelData] : levelDatas_) {

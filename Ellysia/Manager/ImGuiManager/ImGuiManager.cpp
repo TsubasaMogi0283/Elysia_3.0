@@ -79,7 +79,7 @@ void ImGuiManager::EndDraw() {
 
 
 
-void ImGuiManager::Release() {
+void ImGuiManager::Finalize() {
 	//解放
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();

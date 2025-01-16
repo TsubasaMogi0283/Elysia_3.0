@@ -1,4 +1,11 @@
 #pragma once
+
+/**
+ * @file SunsetBackTexture.h
+ * @brief 夕暮れの背景
+ * @author 茂木翼
+ */
+
 #include "BaseTitleBackTexture.h"
 
 /// <summary>

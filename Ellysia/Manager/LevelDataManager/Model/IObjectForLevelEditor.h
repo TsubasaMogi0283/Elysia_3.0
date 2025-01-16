@@ -17,7 +17,9 @@
 /// オブジェクトの種類
 /// </summary>
 enum LevelEditorObjectType {
+	//ステージ
 	StageObject,
+	//オーディオ
 	AudioObject,
 };
 
@@ -66,9 +68,6 @@ public:
 	/// <param name="spotLight"></param>
 	virtual void Draw(const Camera& camera,const Material& material,const SpotLight& spotLight)=0;
 
-
-
-
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -80,13 +79,17 @@ public:
 	/// ワールド座標の取得
 	/// </summary>
 	/// <returns></returns>
-	virtual Vector3 GetWorldPosition() = 0;
+	virtual Vector3 GetWorldPosition()const {
+		return worldTransform_.GetWorldPosition();
+	};
 
 	/// <summary>
 	/// AABBの取得
 	/// </summary>
 	/// <returns></returns>
-	virtual AABB GetAABB() = 0;
+	virtual AABB GetAABB() const{
+		return aabb_;
+	};
 
 	/// <summary>
 	/// 衝突したかどうかの設定

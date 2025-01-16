@@ -64,7 +64,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	/// <param name="gameManager"></param>
+	/// <param name="gameManager">ゲーム管理クラス</param>
 	void Update(GameManager* gameManager)override;
 
 
@@ -106,7 +106,7 @@ private:
 	/// <summary>
 	/// 背景テクスチャの遷移
 	/// </summary>
-	/// <param name="backTexture"></param>
+	/// <param name="backTexture">背景テクスチャ(ポストエフェクト)</param>
 	void ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture>);
 
 private:

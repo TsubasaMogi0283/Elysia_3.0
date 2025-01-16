@@ -491,23 +491,23 @@ void Sphere::Release() {
 //
 //
 ////解放
-//void Sphere::Release() {
+//void Sphere::Finalize() {
 //	//初期化
-//	vertexResourceSphere_->Release();
+//	vertexResourceSphere_->Finalize();
 //
 //	//マテリアル用のリソースを作る
-//	materialResourceSphere_->Release();
+//	materialResourceSphere_->Finalize();
 //
 //
 //	//球を描画するとき用のTransformationMatrix用のリソースを作る。
 //	//Matrix4x4 1つ分サイズを用意する
-//	transformationMatrixResourceSphere_->Release();
+//	transformationMatrixResourceSphere_->Finalize();
 //
 //	//画像読み込み
-//	textureResource_->Release();
-//	resource_->Release();
+//	textureResource_->Finalize();
+//	resource_->Finalize();
 //
-//	intermediateResource_->Release();
+//	intermediateResource_->Finalize();
 //
 //
 //}

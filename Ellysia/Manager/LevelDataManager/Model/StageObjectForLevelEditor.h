@@ -58,21 +58,8 @@ public:
 
 
 public:
-	/// <summary>
-	/// ワールド座標の取得
-	/// </summary>
-	/// <returns></returns>
-	inline Vector3 GetWorldPosition()override {
-		return worldTransform_.GetWorldPosition();
-	};
 
-	/// <summary>
-	/// AABBの取得
-	/// </summary>
-	/// <returns></returns>
-	inline AABB GetAABB() override{
-		return aabb_;
-	}
+
 
 	/// <summary>
 	/// AABB用のサイズを設定。コライダーのサイズから取得してね。

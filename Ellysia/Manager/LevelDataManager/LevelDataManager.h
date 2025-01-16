@@ -79,19 +79,19 @@ public:
 	/// <summary>
 	/// インスタンスの取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>インスタンス</returns>
 	static LevelDataManager* GetInstance();
 
 	/// <summary>
 	/// コピーコンストラクタ禁止
 	/// </summary>
-	/// <param name="levelDataManager"></param>
+	/// <param name="levelDataManager">レベル管理クラス</param>
 	LevelDataManager(const LevelDataManager& levelDataManager) = delete;
 
 	/// <summary>
 	/// 代入演算子を無効にする
 	/// </summary>
-	/// <param name="levelDataManager"></param>
+	/// <param name="levelDataManager">レベル管理クラス</param>
 	/// <returns></returns>
 	LevelDataManager& operator=(const LevelDataManager& levelDataManager) = delete;
 
@@ -99,25 +99,26 @@ public:
 	/// <summary>
 	/// レベルデータの読み込み
 	/// </summary>
-	/// <param name="filePath">jsonファイル</param>
+	/// <param name="filePath">ファイルパス</param>
+	/// <returns>ハンドル</returns>
 	uint32_t Load(const std::string& filePath);
 
 	/// <summary>
 	/// 再読み込み
 	/// </summary>
-	/// <param name="levelDataHandle"></param>
+	/// <param name="levelDataHandle">ハンドル</param>
 	void Reload(const uint32_t& levelDataHandle);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
-	/// <param name="levelDataHandle"></param>
+	/// <param name="levelDataHandle">ハンドル</param>
 	void Update(const uint32_t&levelDataHandle);
 
 	/// <summary>
 	/// 消去
 	/// </summary>
-	/// <param name="levelDataHandle"></param>
+	/// <param name="levelDataHandle">ハンドル</param>
 	void Delete(const uint32_t& levelDataHandle);
 
 
@@ -126,28 +127,28 @@ public:
 	/// <summary>
 	/// 描画(平行光源)
 	/// </summary>
-	/// <param name="levelDataHandle"></param>
-	/// <param name="camera"></param>
-	/// <param name="material"></param>
-	/// <param name="directionalLight"></param>
+	/// <param name="levelDataHandle">ハンドル</param>
+	/// <param name="camera">カメラ</param>
+	/// <param name="material">マテリアル</param>
+	/// <param name="directionalLight">平行光源</param>
 	void Draw(const uint32_t& levelDataHandle,const Camera& camera, const Material& material, const DirectionalLight& directionalLight);
 
 	/// <summary>
 	/// 描画(点光源)
 	/// </summary>
-	/// <param name="levelDataHandle"></param>
-	/// <param name="camera"></param>
-	/// <param name="material"></param>
-	/// <param name="pointLight"></param>
+	/// <param name="levelDataHandle">ハンドル</param>
+	/// <param name="camera">カメラ</param>
+	/// <param name="material">マテリアル</param>
+	/// <param name="pointLight">点光源</param>
 	void Draw(const uint32_t& levelDataHandle,const Camera& camera, const Material& material, const PointLight& pointLight);
 
 	/// <summary>
 	/// 描画(スポットライト)
 	/// </summary>
-	/// <param name="levelDataHandle"></param>
-	/// <param name="camera"></param>
-	/// <param name="material"></param>
-	/// <param name="spotLight"></param>
+	/// <param name="levelDataHandle">ハンドル</param>
+	/// <param name="camera">カメラ</param>
+	/// <param name="material">マテリアル</param>
+	/// <param name="spotLight">スポットライト</param>
 	void Draw(const uint32_t& levelDataHandle,const Camera& camera,const Material & material,const SpotLight& spotLight);
 
 
@@ -157,7 +158,7 @@ public:
 	/// 解放
 	/// デストラクタの代わり
 	/// </summary>
-	void Release();
+	void Finalize();
 
 
 public:
@@ -165,8 +166,8 @@ public:
 	/// <summary>
 	/// データにある分だけColliderを取得する
 	/// </summary>
-	/// <param name="handle"></param>
-	/// <returns></returns>
+	/// <param name="handle">ハンドル</param>
+	/// <returns>持っている分のコライダー</returns>
 	inline std::vector<IObjectForLevelEditorCollider*> GetCollider(const uint32_t& handle) {
 		std::vector<IObjectForLevelEditorCollider*> colliders = {};
 
@@ -193,8 +194,8 @@ public:
 	/// <summary>
 	/// オーディオの方のコライダーを取得
 	/// </summary>
-	/// <param name="handle"></param>
-	/// <returns></returns>
+	/// <param name="handle">ハンドル</param>
+	/// <returns> オーディオコライダー</returns>
 	inline std::vector<IObjectForLevelEditorCollider*>GetAudioCollider(const uint32_t& handle) {
 		std::vector<IObjectForLevelEditorCollider*> colliders = {};
 
@@ -222,8 +223,8 @@ public:
 	/// <summary>
 	/// ステージオブジェクトの座標を取得
 	/// </summary>
-	/// <param name="handle"></param>
-	/// <returns></returns>
+	/// <param name="handle">ハンドル</param>
+	/// <returns>ステージオブジェクトの座標</returns>
 	inline std::vector<Vector3> GetStageObjectPositions(const uint32_t& handle) {
 		std::vector<Vector3> positions = {};
 
@@ -253,8 +254,8 @@ public:
 	/// <summary>
 	/// ステージオブジェクトのAABBを取得
 	/// </summary>
-	/// <param name="handle"></param>
-	/// <returns></returns>
+	/// <param name="handle">ハンドル</param>
+	/// <returns>ステージオブジェクトのAABB</returns>
 	inline std::vector<AABB> GetStageObjectAABBs(const uint32_t& handle) {
 		std::vector<AABB> aabbs = {};
 
@@ -284,8 +285,8 @@ public:
 	/// <summary>
 	/// コライダーを持っているかどうかの取得
 	/// </summary>
-	/// <param name="handle"></param>
-	/// <returns></returns>
+	/// <param name="handle">ハンドル</param>
+	/// <returns>コライダーを持っているかどうかのフラグ</returns>
 	inline std::vector<bool> GetIsHavingColliders(const uint32_t& handle) {
 		std::vector<bool> colliders = {};
 
@@ -386,8 +387,8 @@ private:
 	/// <summary>
 	/// 指定したオブジェクトの取得
 	/// </summary>
-	/// <param name="handle"></param>
-	/// <returns></returns>
+	/// <param name="handle">ハンドル</param>
+	/// <returns>オブジェクトのリスト</returns>
 	inline std::list<LevelData::ObjectData> GetObject(const uint32_t& handle) {
 		
 		for (const auto& [key, levelData] : levelDatas_) {
@@ -409,8 +410,8 @@ public:
 	/// <summary>
 	/// リスナーの設定
 	/// </summary>
-	/// <param name="handle"></param>
-	/// <param name="listener"></param>
+	/// <param name="handle">ハンドル</param>
+	/// <param name="listener">リスナー</param>
 	inline void SetListener(const uint32_t& handle, const Listener& listener) {
 		for (const auto& [key, levelData] : levelDatas_) {
 
@@ -426,12 +427,14 @@ private:
 	/// <summary>
 	/// 配置
 	/// </summary>
+	/// <param name="objects">オブジェクト</param>
+	/// <param name="levelData">レベルデータ</param>
 	void Place(nlohmann::json& objects, LevelData& levelData);
 
 	/// <summary>
 	/// 生成
 	/// </summary>
-	/// <param name="directoryPath"></param>
+	/// <param name="directoryPath">ディレクトリーパス</param>
 	void Ganarate(LevelData& levelData);
 
 	
@@ -445,9 +448,9 @@ private:
 	/// <summary>
 	/// 拡張子を取得
 	/// </summary>
-	/// <param name="directory"></param>
-	/// <param name="baseFileName"></param>
-	/// <returns></returns>
+	/// <param name="directory">ディレクトリー</param>
+	/// <param name="baseFileName">元のファイル名</param>
+	/// <returns>拡張子</returns>
 	std::string FindExtension(const std::string& directory, const std::string& baseFileName);
 private:
 

@@ -2,15 +2,15 @@
 #include "WindowsSetup.h"
 
 
-D3D12_CPU_DESCRIPTOR_HANDLE RtvManager::rtvHandles_[RtvManager::RTV_DESCRIPTOR_SIZE_] = {};
+D3D12_CPU_DESCRIPTOR_HANDLE Ellysia::RtvManager::rtvHandles_[RtvManager::RTV_DESCRIPTOR_SIZE_] = {};
 
-RtvManager* RtvManager::GetInstance(){
+Ellysia::RtvManager* Ellysia::RtvManager::GetInstance(){
     static RtvManager instance;
     return &instance;
 }
 
 
-ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResource(DXGI_FORMAT format, const Vector4 clearColor) {
+ComPtr<ID3D12Resource> Ellysia::RtvManager::CreateRenderTextureResource(const DXGI_FORMAT& format, const Vector4& clearColor) {
 
 	uint32_t width = WindowsSetup::GetInstance()->GetClientWidth();
 	uint32_t height= WindowsSetup::GetInstance()->GetClientHeight();
@@ -68,7 +68,7 @@ ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResource(DXGI_FORMAT forma
 	return resource;
 }
 
-ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResourceForDepth(DXGI_FORMAT format, const Vector4 clearColor){
+ComPtr<ID3D12Resource>  Ellysia::RtvManager::CreateRenderTextureResourceForDepth(const DXGI_FORMAT& format, const Vector4& clearColor){
 
 	uint32_t width = WindowsSetup::GetInstance()->GetClientWidth();
 	uint32_t height = WindowsSetup::GetInstance()->GetClientHeight();
@@ -127,14 +127,14 @@ ComPtr<ID3D12Resource> RtvManager::CreateRenderTextureResourceForDepth(DXGI_FORM
 }
 
 
-uint32_t RtvManager::Allocate(const std::string& name){
+uint32_t  Ellysia::RtvManager::Allocate(const std::string& name){
 	//上限だったらasset
 	assert(index_ < RTV_DESCRIPTOR_SIZE_);
 
 	//既存だったらindexを返す
 	for (uint32_t i = 0; i < RTV_DESCRIPTOR_SIZE_; ++i) {
-		if (RtvManager::GetInstance()->rtvInformation_[i].name_ == name) {
-			uint32_t index = RtvManager::GetInstance()->rtvInformation_[i].index_;
+		if (RtvManager::GetInstance()->rtvInformation_[i].name == name) {
+			uint32_t index = RtvManager::GetInstance()->rtvInformation_[i].index;
 			return index;
 		}
 
@@ -148,8 +148,8 @@ uint32_t RtvManager::Allocate(const std::string& name){
 	//次のために番号を1進める
 	index_++;
 
-	RtvManager::GetInstance()->rtvInformation_[index].name_ = name;
-	RtvManager::GetInstance()->rtvInformation_[index].index_ =index;
+	RtvManager::GetInstance()->rtvInformation_[index].name = name;
+	RtvManager::GetInstance()->rtvInformation_[index].index =index;
 
 
 
@@ -159,7 +159,7 @@ uint32_t RtvManager::Allocate(const std::string& name){
 
 }
 
-void RtvManager::GenarateRenderTargetView(const ComPtr<ID3D12Resource>& resource,const uint32_t& handle){
+void  Ellysia::RtvManager::GenarateRenderTargetView(const ComPtr<ID3D12Resource>& resource,const uint32_t& handle){
 	//RTVの設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;				//出力結果をSRGBに変換して書き込む
@@ -172,7 +172,7 @@ void RtvManager::GenarateRenderTargetView(const ComPtr<ID3D12Resource>& resource
 	if (handle == 0) {
 		//ディスクリプタの先頭を取得する
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
-		rtvStartHandle = m_rtvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+		rtvStartHandle = rtvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 		rtvHandles_[0] = rtvStartHandle;
 	}
 	else {
@@ -192,18 +192,17 @@ void RtvManager::GenarateRenderTargetView(const ComPtr<ID3D12Resource>& resource
 
 
 
-void RtvManager::Initialize(){
+void Ellysia::RtvManager::Initialize(){
 	//Resourceに対して作業を行うにはViewが必要
 	//Viewは作業方法
 	
 	//DescriptorHeapを作る
-	m_rtvDescriptorHeap_ = DirectXSetup::GetInstance()->GenarateDescriptorHeap(
+	rtvDescriptorHeap_ = DirectXSetup::GetInstance()->GenarateDescriptorHeap(
 		D3D12_DESCRIPTOR_HEAP_TYPE_RTV, RTV_DESCRIPTOR_SIZE_, false);
 
 
 	//RTVの設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	SwapChain swapChain = DirectXSetup::GetInstance()->GetSwapChain();
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;				//出力結果をSRGBに変換して書き込む
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;			//2dテクスチャとして書き込む
 	

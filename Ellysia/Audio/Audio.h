@@ -346,7 +346,7 @@ namespace Ellysia {
 		/// <summary>
 		/// 解放
 		/// </summary>
-		void Release();
+		void Finalize();
 
 	private:
 

@@ -1,4 +1,11 @@
 #pragma once
+
+/**
+ * @file NightBackTexture.h
+ * @brief 夜の背景クラス
+ * @author 茂木翼
+ */
+
 #include "BaseTitleBackTexture.h"
 
 

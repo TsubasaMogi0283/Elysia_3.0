@@ -400,6 +400,15 @@
     <Filter Include="Ellysia\Source File\Manager\GameManager">
       <UniqueIdentifier>{7690ffa8-4779-4e42-90d0-25165ee7f139}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Source File\Manager\Collision">
+      <UniqueIdentifier>{ba94c54b-d80e-46d4-834c-6e3e9665569d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Manager\Collision">
+      <UniqueIdentifier>{bced4636-b924-4c13-8142-3411bc1ea6c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Manager\GameManager\Factory">
+      <UniqueIdentifier>{04d219fe-0398-4560-b32d-f5f89ca69cd4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -558,9 +567,6 @@
     <ClCompile Include="Project\AllGameScene\TitleScene\TitleScene.cpp">
       <Filter>Project\GameScene\Title</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp">
-      <Filter>Project\ObjectManager</Filter>
-    </ClCompile>
     <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp">
       <Filter>Project\GameScene\Lose</Filter>
     </ClCompile>
@@ -651,9 +657,6 @@
     <ClCompile Include="Ellysia\Math\Collision\CollisionCalculation.cpp">
       <Filter>Ellysia\Source File\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Manager\CollisionManager\CollisionManager.cpp">
-      <Filter>Ellysia\Source File\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.cpp">
       <Filter>Project\GameScene\Title\BackTexture\Base</Filter>
     </ClCompile>
@@ -663,10 +666,13 @@
     <ClCompile Include="Project\AllGameScene\TitleScene\SunsetBackTexture.cpp">
       <Filter>Project\GameScene\Title\BackTexture\Sunset</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Player\IPlayerCollision.cpp">
-      <Filter>Project\Player\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Manager\GameManager\GameManager.cpp">
+      <Filter>Ellysia\Source File\Manager\GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\CollisionManager\CollisionManager.cpp">
+      <Filter>Ellysia\Source File\Manager\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\GameManager\GameSceneFactory.cpp">
       <Filter>Ellysia\Source File\Manager\GameManager</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1009,9 +1015,6 @@
     <ClInclude Include="Ellysia\Polygon\PostEffect\GrayScale\GrayScale.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Stage\ObjectManager\ObjectManager.h">
-      <Filter>Project\ObjectManager</Filter>
-    </ClInclude>
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h">
       <Filter>Project\GameScene\Lose</Filter>
     </ClInclude>
@@ -1117,15 +1120,6 @@
     <ClInclude Include="Project\CollisionConfig\CollisionConfig.h">
       <Filter>Project</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Manager\CollisionManager\Collider.h">
-      <Filter>Ellysia\Header File\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Manager\CollisionManager\CollisionManager.h">
-      <Filter>Ellysia\Header File\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Player\BasedPlayerCollision.h">
-      <Filter>Project</Filter>
-    </ClInclude>
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.h">
       <Filter>Project\GameScene\Title\BackTexture\Base</Filter>
     </ClInclude>
@@ -1140,6 +1134,18 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\GameManager\IGameScene.h">
       <Filter>Ellysia\Header File\Manager\GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\CollisionManager\CollisionManager.h">
+      <Filter>Ellysia\Header File\Manager\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\CollisionManager\Collider.h">
+      <Filter>Ellysia\Header File\Manager\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\BasedPlayerCollision.h">
+      <Filter>Project\Player\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\GameManager\GameSceneFactory.h">
+      <Filter>Ellysia\Header File\Manager\GameManager\Factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

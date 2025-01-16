@@ -6,7 +6,6 @@
 #include "VectorCalculation.h"
 #include "Material.h"
 #include "SpotLight.h"
-#include "Stage/ObjectManager/ObjectManager.h"
 #include "GameScene/GameScene.h"
 #include "SingleCalculation.h"
 #include "CollisionConfig.h"
