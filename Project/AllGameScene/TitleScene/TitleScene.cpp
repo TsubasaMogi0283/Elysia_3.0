@@ -82,11 +82,8 @@ void TitleScene::Initialize(){
 
 	//背景
 	//ポストエフェクト
-	baseTitleBackTexture_ = new SunsetBackTexture();
+	baseTitleBackTexture_ = std::make_unique<SunsetBackTexture>();
 	baseTitleBackTexture_->Initialize();
-
-
-
 
 	//ランダムエフェクトの生成
 	randomEffect_ = std::make_unique<RandomEffect>();
@@ -94,11 +91,6 @@ void TitleScene::Initialize(){
 	randomEffect_->Initialize();
 	
 }
-
-
-
-
-
 
 void TitleScene::Update(GameManager* gameManager){
 
@@ -227,30 +219,26 @@ void TitleScene::Update(GameManager* gameManager){
 				randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME[i] + RANDOM_EFFECT_DISPLAY_LENGTH[i]) {
 				//ランダムエフェクトの表示
 				isDisplayRandomEffect_ = true;
-				effectCount_ = i;
 
 				break;
 			}
 
 			//2回目のエフェクト
 			const uint32_t FIRST_EFFECT = 0u;
-			if (effectCount_ == FIRST_EFFECT) {
-				//夜へ遷移
-				ChangeBackTexture(new NightBackTexture());
-			}
-
 			//2回目のエフェクト
 			const uint32_t SECOND_EFFECT = 1u;
-			//ランダムの終了
-			if (effectCount_ == SECOND_EFFECT) {
-				
 
+			if (i == FIRST_EFFECT) {
+				//夜へ遷移
+				ChangeBackTexture(std::move(std::make_unique<NightBackTexture>()));
+			}
+			else if (i == SECOND_EFFECT) {
 				//ランダムの終了
 				if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[SECOND_EFFECT] + RANDOM_EFFECT_DISPLAY_LENGTH[SECOND_EFFECT]) {
 					isEndDisplayRandomEffect_ = true;
 				}
-
 			}
+			
 
 		}
 
@@ -348,7 +336,6 @@ void TitleScene::DrawSprite(){
 
 void TitleScene::DisplayImGui(){
 	ImGui::Begin("TitleFade&Effect");
-	ImGui::InputInt("エフェクトの番号", &effectCount_);
 	ImGui::InputFloat("Count", &randomEffectTime_);
 	ImGui::Checkbox("IsDisplay", &isDisplayRandomEffect_);
 	ImGui::End();
@@ -360,11 +347,10 @@ void TitleScene::DisplayImGui(){
 
 }
 
-void TitleScene::ChangeBackTexture(BaseTitleBackTexture* backTexture){
+void TitleScene::ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture> backTexture){
 	//違った時だけ遷移する
 	if (baseTitleBackTexture_ != backTexture) {
-		delete baseTitleBackTexture_;
-		baseTitleBackTexture_ = backTexture;
+		baseTitleBackTexture_ = std::move(backTexture);
 		//引数が次に遷移する
 		baseTitleBackTexture_->Initialize();
 	}

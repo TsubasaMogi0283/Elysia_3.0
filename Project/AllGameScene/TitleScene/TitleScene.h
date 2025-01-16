@@ -107,7 +107,7 @@ private:
 	/// 背景テクスチャの遷移
 	/// </summary>
 	/// <param name="backTexture"></param>
-	void ChangeBackTexture(BaseTitleBackTexture* backTexture);
+	void ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture>);
 
 private:
 	//テクスチャ管理クラス
@@ -167,10 +167,9 @@ private:
 #pragma region ポストエフェクト
 
 
-	int32_t effectCount_ = -1;
 
 	//背景(ポストエフェクト)
-	BaseTitleBackTexture* baseTitleBackTexture_ = nullptr;
+	std::unique_ptr<BaseTitleBackTexture> baseTitleBackTexture_ = nullptr;
 
 
 	//ランダムノイズ
