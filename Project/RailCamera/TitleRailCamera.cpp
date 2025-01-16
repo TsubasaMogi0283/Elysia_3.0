@@ -109,19 +109,21 @@ void TitleRailCamera::Update(){
 	//差分
 	Vector3 difference = VectorCalculation::Subtract(nextPosition, currentPosition);
 	//進行方向ベクトル
-	Vector3 forward = VectorCalculation::Normalize(difference);
+	direction_ = VectorCalculation::Normalize(difference);
 
 	//Y軸の回転
-	worldTransform_.rotate.y = std::atan2(forward.x, forward.z);
+	worldTransform_.rotate.y = std::atan2(direction_.x, direction_.z);
 	//X軸の回転
 	//XZの長さ.まず先に長さを求めてから回転を求める.
-	float velocityXZ = std::sqrt((forward.x * forward.x) + (forward.z * forward.z));
-	worldTransform_.rotate.x = std::atan2(-forward.y, velocityXZ);
+	float velocityXZ = std::sqrt((direction_.x * direction_.x) + (direction_.z * direction_.z));
+	worldTransform_.rotate.x = std::atan2(-direction_.y, velocityXZ);
 
 	//ワールド行列を計算
 	worldTransform_.worldMatrix = Matrix4x4Calculation::MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	//ビュー行列の計算
 	camera_.viewMatrix = Matrix4x4Calculation::Inverse(worldTransform_.worldMatrix);
+
+
 
 #ifdef _DEBUG
 	//IMGui表示用
@@ -133,9 +135,10 @@ void TitleRailCamera::Update(){
 
 void TitleRailCamera::DisplayImGui(){
 	ImGui::Begin("レールカメラ");
-	ImGui::DragFloat3("Position", &worldTransform_.translate.x);
+	ImGui::DragFloat3("座標", &worldTransform_.translate.x);
+	ImGui::InputFloat3("方向", &direction_.x);
 	ImGui::SliderFloat("T", &cameraT_, 0.0f, 1.0f);
-	ImGui::InputFloat3("Rotate", &worldTransform_.rotate.x);
+	ImGui::InputFloat3("回転", &worldTransform_.rotate.x);
 	ImGui::End();
 
 }

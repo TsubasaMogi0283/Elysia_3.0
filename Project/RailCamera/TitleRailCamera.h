@@ -57,11 +57,17 @@ public:
 	/// カメラの取得
 	/// </summary>
 	/// <returns></returns>
-	Camera GetCamera() const{
+	inline Camera GetCamera() const{
 		return camera_;
 	};
 
-
+	/// <summary>
+	/// 方向の取得
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetDirection()const {
+		return direction_;
+	}
 
 
 private:
@@ -69,6 +75,9 @@ private:
 	WorldTransform worldTransform_ = {};
 	//カメラ
 	Camera camera_ = {};
+
+	//方向
+	Vector3 direction_ = {};
 
 	//線形補間用
 	float cameraT_ = 0.0f;
