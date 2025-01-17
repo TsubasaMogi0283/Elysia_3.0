@@ -176,7 +176,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Model\Model.cpp" />
-    <ClCompile Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Particle3D\Particle3D.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Ellysia\Polygon\3D\Sphere\Sphere.cpp" />
@@ -400,6 +399,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Ellysia.h" />
     <ClInclude Include="Ellysia\GlobalVariables\GlobalVariables.h" />
     <ClInclude Include="Ellysia\Input\Input.h" />
+    <ClInclude Include="Ellysia\Input\MouseInformation.h" />
     <ClInclude Include="Ellysia\Lighting\DirectionalLight.h" />
     <ClInclude Include="Ellysia\Lighting\LightingType.h" />
     <ClInclude Include="Ellysia\Lighting\PointLight.h" />
@@ -413,7 +413,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Manager\GameManager\IGameScene.h" />
     <ClInclude Include="Ellysia\Manager\ImGuiManager\ImGuiManager.h" />
     <ClInclude Include="Ellysia\Manager\LevelDataManager\LevelDataManager.h" />
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.h" />
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Listener.h" />
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.h" />
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.h" />
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditor.h" />
@@ -434,6 +434,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Manager\ModelManager\VertexInfluence.h" />
     <ClInclude Include="Ellysia\Manager\ModelManager\VertexWeightData.h" />
     <ClInclude Include="Ellysia\Manager\ModelManager\WellForGPU.h" />
+    <ClInclude Include="Ellysia\Manager\PipelineManager\BlendMode.h" />
     <ClInclude Include="Ellysia\Manager\PipelineManager\PipelineManager.h" />
     <ClInclude Include="Ellysia\Manager\RtvManager\RtvManager.h" />
     <ClInclude Include="Ellysia\Manager\SrvManager\SrvManager.h" />
@@ -466,7 +467,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.h" />
     <ClInclude Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Model\Model.h" />
-    <ClInclude Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\AccelerationField.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle.h" />
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle3D.h" />

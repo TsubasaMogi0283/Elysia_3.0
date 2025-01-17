@@ -20,7 +20,7 @@
 GameScene::GameScene(){
 
 	//入力
-	input_ = Input::GetInstance();
+	input_ = Ellysia::Input::GetInstance();
 
 	//テクスチャ管理クラス
 	texturemanager_ = TextureManager::GetInstance();
@@ -29,7 +29,7 @@ GameScene::GameScene(){
 	modelManager_ = ModelManager::GetInstance();
 
 	//レベルエディタ管理クラスの取得
-	levelDataManager_ = LevelDataManager::GetInstance();
+	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 }
 
 void GameScene::Initialize() {

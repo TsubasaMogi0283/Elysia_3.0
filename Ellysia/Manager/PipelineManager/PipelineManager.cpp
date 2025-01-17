@@ -1,16 +1,15 @@
 #include "PipelineManager.h"
 
-
 #include <vector>
 
-PipelineManager* PipelineManager::GetInstance() {
-	//関数内static変数として宣言する
-	static PipelineManager instance;
+#include "BlendMode.h"
 
+Ellysia::PipelineManager* Ellysia::PipelineManager::GetInstance() {
+	static PipelineManager instance;
 	return &instance;
 }
 
-void PipelineManager::GenaratePSO(PSOInformation& psoInformation, D3D12_INPUT_LAYOUT_DESC& inputLayoutDesc, D3D12_BLEND_DESC& blendDesc, D3D12_RASTERIZER_DESC& rasterizerDesc){
+void Ellysia::PipelineManager::GenaratePSO(PSOInformation& psoInformation,const D3D12_INPUT_LAYOUT_DESC& inputLayoutDesc,const D3D12_BLEND_DESC& blendDesc,const D3D12_RASTERIZER_DESC& rasterizerDesc){
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	graphicsPipelineStateDesc.pRootSignature = psoInformation.rootSignature_.Get();
@@ -57,7 +56,7 @@ void PipelineManager::GenaratePSO(PSOInformation& psoInformation, D3D12_INPUT_LA
 
 }
 
-void PipelineManager::Initialize(){
+void Ellysia::PipelineManager::Initialize(){
 	
 	//ブレンドモード
 	const uint32_t BLEND_MODE = BlemdMode::BlendModeNormal;
@@ -120,8 +119,7 @@ void PipelineManager::Initialize(){
 	GenarateSkyBoxPSO();
 }
 
-//線
-void PipelineManager::GenaratedLinePSO() {
+void Ellysia::PipelineManager::GenaratedLinePSO() {
 	//RootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように間レンズけるかを示したオブジェクトである
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature_{};
@@ -328,8 +326,7 @@ void PipelineManager::GenaratedLinePSO() {
 
 }
 
-//スプライト用
-void PipelineManager::GenerateSpritePSO() {
+void Ellysia::PipelineManager::GenerateSpritePSO() {
 
 	//PSO
 	////RootSignatureを作成
@@ -628,8 +625,7 @@ void PipelineManager::GenerateSpritePSO() {
 
 }
 
-//モデル用
-void PipelineManager::GenerateModelPSO() {
+void Ellysia::PipelineManager::GenerateModelPSO() {
 
 	//PSO
 	////RootSignatureを作成
@@ -941,8 +937,7 @@ void PipelineManager::GenerateModelPSO() {
 
 }
 
-
-void PipelineManager::GenerateAnimationModelPSO() {
+void Ellysia::PipelineManager::GenerateAnimationModelPSO() {
 
 	//PSO
 	////RootSignatureを作成
@@ -1341,9 +1336,7 @@ void PipelineManager::GenerateAnimationModelPSO() {
 
 }
 
-
-//3Dパーティクル用
-void PipelineManager::GenerateParticle3DPSO() {
+void Ellysia::PipelineManager::GenerateParticle3DPSO() {
 
 	//PSO
 	////RootSignatureを作成
@@ -1617,7 +1610,7 @@ void PipelineManager::GenerateParticle3DPSO() {
 
 }
 
-void PipelineManager::GenarateFullScreenPSO() {
+void Ellysia::PipelineManager::GenarateFullScreenPSO() {
 
 	//RootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
@@ -1776,7 +1769,7 @@ void PipelineManager::GenarateFullScreenPSO() {
 
 }
 
-void PipelineManager::GenarateGrayScalePSO(){
+void Ellysia::PipelineManager::GenarateGrayScalePSO(){
 	//RootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature_{};
@@ -1945,7 +1938,7 @@ void PipelineManager::GenarateGrayScalePSO(){
 
 }
 
-void PipelineManager::GenarateSepiaScalePSO(){
+void Ellysia::PipelineManager::GenarateSepiaScalePSO(){
 	//RootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature_{};
@@ -2113,7 +2106,7 @@ void PipelineManager::GenarateSepiaScalePSO(){
 
 }
 
-void PipelineManager::GenarateVignettePSO(){
+void Ellysia::PipelineManager::GenarateVignettePSO(){
 	//RootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature_{};
@@ -2248,7 +2241,7 @@ void PipelineManager::GenarateVignettePSO(){
 
 }
 
-void PipelineManager::GenarateBoxFilterPSO(){
+void Ellysia::PipelineManager::GenarateBoxFilterPSO(){
 	//RootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature_{};
@@ -2430,7 +2423,7 @@ void PipelineManager::GenarateBoxFilterPSO(){
 
 }
 
-void PipelineManager::GenarateGaussianFilterPSO(){
+void Ellysia::PipelineManager::GenarateGaussianFilterPSO(){
 	//RootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature_{};
@@ -2607,7 +2600,7 @@ void PipelineManager::GenarateGaussianFilterPSO(){
 	assert(SUCCEEDED(hResult));
 }
 
-void PipelineManager::GenarateLuminanceBasedOutlinePSO() {
+void Ellysia::PipelineManager::GenarateLuminanceBasedOutlinePSO() {
 
 	///ootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
@@ -2786,7 +2779,7 @@ void PipelineManager::GenarateLuminanceBasedOutlinePSO() {
 
 }
 
-void PipelineManager::GenarateDepthBasedOutlinePSO() {
+void Ellysia::PipelineManager::GenarateDepthBasedOutlinePSO() {
 	///ootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature_{};
@@ -3009,7 +3002,7 @@ void PipelineManager::GenarateDepthBasedOutlinePSO() {
 
 }
 
-void PipelineManager::GenerateRadialBlurPSO() {
+void Ellysia::PipelineManager::GenerateRadialBlurPSO() {
 	///ootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature_{};
@@ -3184,7 +3177,7 @@ void PipelineManager::GenerateRadialBlurPSO() {
 
 }
 
-void PipelineManager::GenarateDissolvePSO() {
+void Ellysia::PipelineManager::GenarateDissolvePSO() {
 
 	///ootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
@@ -3381,7 +3374,7 @@ void PipelineManager::GenarateDissolvePSO() {
 
 }
 
-void PipelineManager::GenarateRandomEffectPSO() {
+void Ellysia::PipelineManager::GenarateRandomEffectPSO() {
 	///ootSignatureを作成
 	//RootSignature・・ShaderとResourceをどのように関連づけるかを示したオブジェクトである
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature_{};
@@ -3562,7 +3555,7 @@ void PipelineManager::GenarateRandomEffectPSO() {
 
 }
 
-void PipelineManager::GenarateSkyBoxPSO() {
+void Ellysia::PipelineManager::GenarateSkyBoxPSO() {
 
 	//PSO
 	////RootSignatureを作成

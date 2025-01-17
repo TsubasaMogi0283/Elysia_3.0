@@ -136,7 +136,7 @@ private:
 	/// <param name="ランダムエンジン"></param>
 	/// <param name="座標"></param>
 	/// <returns></returns>
-	Particle MakeNewParticle(std::mt19937& randomEngine,Vector3 position);
+	Particle MakeNewParticle(std::mt19937& randomEngine,const Vector3& position);
 
 	//エミッタ
 	std::list<Particle> Emission(Vector3 podition, uint32_t count, std::mt19937& randomEngine);
@@ -145,8 +145,6 @@ private:
 private:
 	//ユーザーが付けるグループ名をキーとしてグループを持てるようにする
 	std::unordered_map<std::string, ParticleGrounp>particleGroup_;
-
-
 
 	//C++でいうsrandみたいなやつ
 	//ランダムエンジンの初期化

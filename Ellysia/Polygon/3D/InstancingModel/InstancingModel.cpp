@@ -24,13 +24,13 @@ InstancingModel::InstancingModel() {
 	modelmanager_ = ModelManager::GetInstance();
 
 	//DirectXクラスの取得
-	directXSetup_ = DirectXSetup::GetInstance();
+	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
 
 	//パイプライン管理クラスの取得
-	pipelineManager_ = PipelineManager::GetInstance();
+	pipelineManager_ = Ellysia::PipelineManager::GetInstance();
 
 	//SRV管理クラスも取得
-	srvManager_ = SrvManager::GetInstance();
+	srvManager_ = Ellysia::SrvManager::GetInstance();
 
 }
 

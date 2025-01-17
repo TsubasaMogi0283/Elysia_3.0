@@ -25,13 +25,13 @@ Particle3D::Particle3D() {
 	textureManager_ = TextureManager::GetInstance();
 
 	//DirectXクラスの取得
-	directXSetup_ = DirectXSetup::GetInstance();
+	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
 
 	//SRV管理クラスの取得
-	srvManager_ = SrvManager::GetInstance();
+	srvManager_ = Ellysia::SrvManager::GetInstance();
 
 	//パイプライン管理クラスの取得
-	pipelineManager_ = PipelineManager::GetInstance();
+	pipelineManager_ = Ellysia::PipelineManager::GetInstance();
 
 }
 

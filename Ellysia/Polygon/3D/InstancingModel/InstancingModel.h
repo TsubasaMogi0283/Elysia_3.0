@@ -141,7 +141,7 @@ public:
 
 private:
 	//DirectXクラス
-	DirectXSetup* directXSetup_ = nullptr;
+	Ellysia::DirectXSetup* directXSetup_ = nullptr;
 
 	//テクスチャ管理クラス
 	TextureManager* textureManager_ = nullptr;
@@ -150,10 +150,10 @@ private:
 	ModelManager* modelmanager_ = nullptr;
 
 	//パイプライン管理クラス
-	PipelineManager* pipelineManager_ = nullptr;
+	Ellysia::PipelineManager* pipelineManager_ = nullptr;
 
 	//SRV管理クラス
-	SrvManager* srvManager_ = nullptr;
+	Ellysia::SrvManager* srvManager_ = nullptr;
 
 private:
 	//頂点リソース

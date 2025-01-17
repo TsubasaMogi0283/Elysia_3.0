@@ -32,14 +32,21 @@ class GameManager;
 class TextureManager;
 
 /// <summary>
-/// 入力
+/// EllysiaEngine
 /// </summary>
-class Input;
+namespace Ellysia {
+	/// <summary>
+	/// 入力
+	/// </summary>
+	class Input;
 
-/// <summary>
-/// レベル管理クラス
-/// </summary>
-class LevelDataManager;
+	/// <summary>
+	/// レベル管理クラス
+	/// </summary>
+	class LevelDataManager;
+
+}
+
 
 #pragma endregion
 
@@ -114,10 +121,10 @@ private:
 	TextureManager* textureManager_ = nullptr;
 
 	//入力クラス
-	Input* input_ = nullptr;
+	Ellysia::Input* input_ = nullptr;
 
 	//レベルエディタ
-	LevelDataManager* levelDataManager_ = nullptr;
+	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
 	uint32_t levelHandle_ = 0u;
 
 

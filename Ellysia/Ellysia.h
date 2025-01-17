@@ -66,7 +66,6 @@ namespace Ellysia {
 	/// </summary>
 	class Audio;
 
-
 	/// <summary>
 	/// JSON読み込み(グローバル変数)
 	/// </summary>
@@ -77,10 +76,7 @@ namespace Ellysia {
 	/// </summary>
 	class LevelDataManager;
 
-
 #pragma endregion
-
-
 
 
 	/// <summary>
@@ -94,18 +90,15 @@ namespace Ellysia {
 		/// </summary>
 		Framework();
 
-
 		/// <summary>
 		/// 実行
 		/// </summary>
 		void Run();
 
-
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
 		~Framework() = default;
-
 
 	private:
 		/// <summary>

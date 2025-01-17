@@ -9,7 +9,7 @@
 WinScene::WinScene(){
 
 	//入力のインスタンスを取得
-	input_ = Input::GetInstance();
+	input_ = Ellysia::Input::GetInstance();
 }
 
 void WinScene::Initialize() {

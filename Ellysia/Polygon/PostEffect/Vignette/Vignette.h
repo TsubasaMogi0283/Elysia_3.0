@@ -9,6 +9,37 @@
 #include "Vector3.h"
 
 /// <summary>
+/// EllysiaEngine
+/// </summary>
+namespace Ellysia{
+	/// <summary>
+	/// ウィンドウクラス
+	/// </summary>
+	class WindowsSetup;
+
+	/// <summary>
+	/// DirectXクラス
+	/// </summary>
+	class DirectXSetup;
+
+	/// <summary>
+	/// パイプライン管理クラス
+	/// </summary>
+	class PipelineManager;
+
+	/// <summary>
+	/// RTV管理クラス
+	/// </summary>
+	class RtvManager;
+
+	/// <summary>
+	/// SRV管理クラス
+	/// </summary>
+	class SrvManager;
+}
+
+
+/// <summary>
 /// ビネット
 /// </summary>
 class Vignette {
@@ -16,8 +47,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Vignette() = default;
-
+	Vignette();
 
 	/// <summary>
 	/// 初期化
@@ -38,6 +68,14 @@ public:
 	/// デストラクタ
 	/// </summary>
 	~Vignette() = default;
+
+private:
+	/// <summary>
+	/// 書き込みし、送る関数
+	/// </summary>
+	void Transfer();
+
+
 
 public:
 
@@ -78,18 +116,29 @@ private:
 
 	};
 
-
+private:
+	//ウィンドウクラス
+	Ellysia::WindowsSetup* windowsSetup_ = nullptr;
+	//DirectXクラス
+	Ellysia::DirectXSetup* directXSetup_ = nullptr;
+	//パイプライン管理クラス
+	Ellysia::PipelineManager* pipelinemanager_ = nullptr;
+	//RTV管理クラス
+	Ellysia::RtvManager* rtvManager_ = nullptr;
+	//SRV管理クラス
+	Ellysia::SrvManager* srvManager_ = nullptr;
 
 private:
-
+	//ハンドル
 	uint32_t rtvHandle_ = 0;
 	//RTV
 	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
 	//SRV
 	uint32_t srvHandle_ = 0;
 
-	//
+	//リソース
 	ComPtr<ID3D12Resource> valueResource_ = nullptr;
+	//送るデータ
 	VignetteData* vignetteData_ = nullptr;
 	float scale_ = 0.0f;
 	float pow_ = 0.0f;
@@ -97,7 +146,6 @@ private:
 
 	//リソースバリア
 	D3D12_RESOURCE_BARRIER barrier = {};
-
 
 };
 

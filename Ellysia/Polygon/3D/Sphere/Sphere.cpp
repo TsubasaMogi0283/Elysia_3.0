@@ -31,7 +31,7 @@ void Sphere::GenerateVertexBufferView() {
 
 //初期化
 void Sphere::Initialize() {
-	this->directXSetup_ = DirectXSetup::GetInstance();
+	this->directXSetup_ = Ellysia::DirectXSetup::GetInstance();
 
 	//ここでBufferResourceを作る
 	//頂点を6に増やす
@@ -218,7 +218,7 @@ void Sphere::Draw(SphereShape sphereCondtion, Transform transform,Matrix4x4 view
 	//遠視投影行列
 	Matrix4x4 viewMatrixSphere = Matrix4x4Calculation::MakeIdentity4x4();
 	
-	Matrix4x4 projectionMatrixSphere = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrixSphere = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(Ellysia::WindowsSetup::GetInstance()->GetClientWidth()), float(Ellysia::WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 	
 	//WVP行列を作成
 	Matrix4x4 worldViewProjectionMatrixSphere = Matrix4x4Calculation::Multiply(worldMatrixSphere, Matrix4x4Calculation::Multiply(viewMatrix, projectionMatrix));

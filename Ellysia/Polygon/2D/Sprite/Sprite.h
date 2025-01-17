@@ -17,6 +17,20 @@
 #include "Material.h"
 #include "TransformationMatrix.h"
 
+/// <summary>
+/// EllysiaEngine
+/// </summary>
+namespace Ellysia {
+
+	//DirectXクラス
+	class DirectXSetup;
+
+	//パイプライン管理クラス
+	class PipelineManager;
+
+}
+
+
 
 /// <summary>
 /// スプライト
@@ -27,7 +41,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Sprite()=default;
+	Sprite();
 
 	/// <summary>
 	/// 生成
@@ -37,19 +51,15 @@ public:
 	/// <returns></returns>
 	static Sprite* Create(const uint32_t& textureHandle,const Vector2& position);
 
-
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw();
 
-
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
 	~Sprite()=default;
-
-
 	
 public:
 	/// <summary>
@@ -68,8 +78,6 @@ public:
 		this->color_ = color;
 	}
 
-
-
 	/// <summary>
 	/// スケールの設定
 	/// </summary>
@@ -77,9 +85,6 @@ public:
 	void SetScale(const Vector2& scale) {
 		this->scale_ = scale;
 	}
-
-
-
 
 	/// <summary>
 	/// 回転の設定
@@ -89,8 +94,6 @@ public:
 		this->rotate_ = rotate;
 	}
 
-
-
 	/// <summary>
 	/// 位置の設定
 	/// </summary>
@@ -99,8 +102,6 @@ public:
 		this->position_ = position;
 	}
 
-
-
 	/// <summary>
 	/// アンカーポイントの設定
 	/// </summary>
@@ -108,8 +109,6 @@ public:
 	void SetAnchorPoint(Vector2 point) {
 		this->anchorPoint_ = point;
 	}
-	
-
 
 	/// <summary>
 	/// X軸フリップ
@@ -127,7 +126,6 @@ public:
 		this->isFlipY_=isFlipY;
 	}
 
-
 	/// <summary>
 	/// 見えなくするかどうか
 	/// </summary>
@@ -136,7 +134,6 @@ public:
 		this->isInvisible_ = isInvisible;
 	}
 
-
 	/// <summary>
 	/// 後ろにするかどうか
 	/// </summary>
@@ -144,7 +141,6 @@ public:
 	void SetIsBack(const bool& isBack) {
 		this->isBack_ = isBack;
 	}
-
 
 	/// <summary>
 	/// UV座標系左上の設定
@@ -170,10 +166,6 @@ public:
 		this->isUVSetting_ = isUVMode;
 	}
 
-
-
-
-
 private:
 	/// <summary>
 	/// 初期化
@@ -184,7 +176,13 @@ private:
 	
 
 private:
+	//DirectXクラス
+	Ellysia::DirectXSetup* directXSetup_ = nullptr;
+	//パイプライン管理クラス
+	Ellysia::PipelineManager* pipelineManager_ = nullptr;
 
+
+private:
 
 	//頂点リソース
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;

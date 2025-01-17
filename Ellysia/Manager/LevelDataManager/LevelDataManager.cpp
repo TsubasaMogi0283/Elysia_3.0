@@ -17,14 +17,14 @@
 #include "Model/StageObjectForLevelEditor.h"
 
 
-LevelDataManager* LevelDataManager::GetInstance(){
+Ellysia::LevelDataManager* Ellysia::LevelDataManager::GetInstance(){
 	static LevelDataManager instance;
 	return &instance;
 }
 
 
 
-std::string LevelDataManager::FindExtension(const std::string& directory, const std::string& baseFileName) {
+std::string Ellysia::LevelDataManager::FindExtension(const std::string& directory, const std::string& baseFileName) {
 	
 	//拡張子を探す
 	for (const auto& entry : std::filesystem::directory_iterator(directory)) {
@@ -40,7 +40,7 @@ std::string LevelDataManager::FindExtension(const std::string& directory, const 
 	return {};
 }
 
-void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
+void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 	//"objects"の全オブジェクトを走査
 	for (nlohmann::json& object : objects) {
@@ -207,7 +207,7 @@ void LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
 
 }
 
-void LevelDataManager::Ganarate(LevelData& levelData) {
+void Ellysia::LevelDataManager::Ganarate(LevelData& levelData) {
 
 	//オーディオのインスタンスを取得
 	Ellysia::Audio* audio = Ellysia::Audio::GetInstance();
@@ -298,7 +298,7 @@ void LevelDataManager::Ganarate(LevelData& levelData) {
 	}
 }
 
-nlohmann::json LevelDataManager::Deserialize(const std::string& fullFilePath){
+nlohmann::json Ellysia::LevelDataManager::Deserialize(const std::string& fullFilePath){
 	std::ifstream file;
 	//ファイルを開ける
 	file.open(fullFilePath);
@@ -331,7 +331,7 @@ nlohmann::json LevelDataManager::Deserialize(const std::string& fullFilePath){
 
 }
 
-uint32_t LevelDataManager::Load(const std::string& filePath){
+uint32_t Ellysia::LevelDataManager::Load(const std::string& filePath){
 
 	//パスの結合
 	std::string fullFilePath = LEVEL_DATA_PATH_ + filePath;
@@ -380,7 +380,7 @@ uint32_t LevelDataManager::Load(const std::string& filePath){
 
 }
 
-void LevelDataManager::Reload(const uint32_t& levelDataHandle){
+void Ellysia::LevelDataManager::Reload(const uint32_t& levelDataHandle){
 
 
 	//一度全てのオブジェクトのデータを消す
@@ -441,7 +441,7 @@ void LevelDataManager::Reload(const uint32_t& levelDataHandle){
 
 }
 
-void LevelDataManager::Update(const uint32_t& levelDataHandle){
+void Ellysia::LevelDataManager::Update(const uint32_t& levelDataHandle){
 
 	//この書き方はC++17からの構造化束縛というものらしい
 	//イテレータではなくこっちでやった方が良いかな
@@ -488,7 +488,7 @@ void LevelDataManager::Update(const uint32_t& levelDataHandle){
 	}
 }
 
-void LevelDataManager::Delete(const uint32_t& levelDataHandle){
+void Ellysia::LevelDataManager::Delete(const uint32_t& levelDataHandle){
 
 
 	//一度全てのオブジェクトのデータを消す
@@ -519,7 +519,7 @@ void LevelDataManager::Delete(const uint32_t& levelDataHandle){
 
 #pragma region 描画
 
-void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material, const DirectionalLight& directionalLight){
+void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material, const DirectionalLight& directionalLight){
 	
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
@@ -538,7 +538,7 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 	}
 }
 
-void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material,const PointLight& pointLight){
+void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material,const PointLight& pointLight){
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
@@ -556,7 +556,7 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camer
 	}
 }
 
-void LevelDataManager::Draw(const uint32_t& levelDataHandle,const Camera& camera,const Material& material,const SpotLight& spotLight){
+void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material, const SpotLight& spotLight) {
 	
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
@@ -580,7 +580,7 @@ void LevelDataManager::Draw(const uint32_t& levelDataHandle,const Camera& camera
 #pragma endregion
 
 
-void LevelDataManager::Finalize(){
+void Ellysia::LevelDataManager::Finalize(){
 
 	//全て解放
 	for (auto& [key, levelData] : levelDatas_) {
@@ -593,12 +593,8 @@ void LevelDataManager::Finalize(){
 			if (object.levelDataObjectCollider != nullptr) {
 				delete object.levelDataObjectCollider;
 			}
-
-			
 		}
-
 	}
-
 	//クリア
 	levelDatas_.clear();
 }

@@ -2,24 +2,21 @@
 
 
 //シングルインスタンス
-Input* Input::GetInstance() {
-	//関数内static変数として宣言する
+Ellysia::Input* Ellysia::Input::GetInstance() {
 	static Input instance;
-
 	return &instance;
 }
 
 
 
-void Input::Initialize() {
+void Ellysia::Input::Initialize() {
 	
 
-	HRESULT hr = {};
 	
 
 	//DirectInputオブジェクトの生成
 	//これは一つだけで良い
-	hr = DirectInput8Create(
+	HRESULT hr = DirectInput8Create(
 		WindowsSetup::GetInstance()->GetHInstance(),
 		DIRECTINPUT_VERSION, 
 		IID_IDirectInput8, 
@@ -82,8 +79,7 @@ void Input::Initialize() {
 
 #pragma region キーボード
 
-//Push状態
-bool Input::IsPushKey(const uint8_t& keyNumber) const{
+bool Ellysia::Input::IsPushKey(const uint8_t& keyNumber) const{
 	//指定されていたキーを押していればtrueを返す
 	if (currentKey_[keyNumber]!=0) {
 		return true;
@@ -93,8 +89,7 @@ bool Input::IsPushKey(const uint8_t& keyNumber) const{
 
 }
 
-//トリガー
-bool Input::IsTriggerKey(const uint8_t& keyNumber) const{
+bool Ellysia::Input::IsTriggerKey(const uint8_t& keyNumber) const{
 	if (currentKey_[keyNumber]!=0 && preKey_[keyNumber]==0) {
 		return true;
 	}
@@ -104,16 +99,15 @@ bool Input::IsTriggerKey(const uint8_t& keyNumber) const{
 #pragma endregion
 
 #pragma region マウス
-//Push状態
-bool Input::IsPushMouse(const int32_t& mouseNumber)const {
+bool Ellysia::Input::IsPushMouse(const uint32_t& mouseNumber)const {
 	if (currentMouse_.rgbButtons[mouseNumber] != 0) {
 		return true;
 	}
 	return false;
 }
 
-//Trigger状態
-bool Input::IsTriggerMouse(const int32_t& mouseNumber)const {
+
+bool Ellysia::Input::IsTriggerMouse(const uint32_t& mouseNumber)const {
 	if (currentMouse_.rgbButtons[mouseNumber] != 0 && preMouse_.rgbButtons[mouseNumber] == 0) {
 		return true;
 	}
@@ -123,8 +117,7 @@ bool Input::IsTriggerMouse(const int32_t& mouseNumber)const {
 
 #pragma region コントローラー
 
-//状態を取得
-bool Input::IsConnetGamePad(){
+bool Ellysia::Input::IsConnetGamePad(){
 	//trueだと繋がっているよ
 	DWORD dwResult = XInputGetState(0, &state_);
 	if (dwResult == ERROR_SUCCESS){
@@ -133,7 +126,7 @@ bool Input::IsConnetGamePad(){
 	return false;
 }
 
-bool Input::IsPushButton(const int32_t& button)const {
+bool Ellysia::Input::IsPushButton(const int32_t& button)const {
 	if (state_.Gamepad.wButtons & button) {
 		return true;
 	}
@@ -141,7 +134,7 @@ bool Input::IsPushButton(const int32_t& button)const {
 }
 
 
-void Input::SetVibration(const float& leftMotor, const float& rightMotor){
+void Ellysia::Input::SetVibration(const float& leftMotor, const float& rightMotor){
 	XINPUT_VIBRATION vibration;
 	ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 	//0から65535まで
@@ -153,7 +146,7 @@ void Input::SetVibration(const float& leftMotor, const float& rightMotor){
 	XInputSetState(0, &vibration);
 }
 
-void Input::StopVibration(){
+void Ellysia::Input::StopVibration(){
 	XINPUT_VIBRATION vibration;
 	ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 	vibration = {
@@ -163,7 +156,7 @@ void Input::StopVibration(){
 	XInputSetState(0, &vibration);
 }
 
-void Input::SetIsDisplayCursor(const bool& isDisplay){
+void Ellysia::Input::SetIsDisplayCursor(const bool& isDisplay){
 	//カーソルの表示をするかどうか
 	ShowCursor(isDisplay);
 }
@@ -171,7 +164,7 @@ void Input::SetIsDisplayCursor(const bool& isDisplay){
 
 #pragma endregion
 
-void Input::Update() {
+void Ellysia::Input::Update() {
 
 	// コントローラーの再初期化
 	//接続されたらまたデバイスを作り直す

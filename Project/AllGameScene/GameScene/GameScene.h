@@ -160,13 +160,13 @@ private:
 
 private:
 	//インプット
-	Input* input_=nullptr;
+	Ellysia::Input* input_=nullptr;
 	//テクスチャ管理クラス
 	TextureManager* texturemanager_ = nullptr;
 	//モデル管理クラス
 	ModelManager* modelManager_ = nullptr;
 	//レベルエディタ
-	LevelDataManager* levelDataManager_ = nullptr;
+	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelHandle_ = 0u;
 

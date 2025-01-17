@@ -115,12 +115,6 @@
     <Filter Include="Ellysia\Header File\Lighting">
       <UniqueIdentifier>{6894304a-98cd-4168-b852-c62f99047467}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ellysia\Header File\Polygone\3D\Particle3DManager">
-      <UniqueIdentifier>{d8dd8122-9282-4dc5-83dd-13e2bca63bf8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ellysia\Source File\Polygone\3D\Particle3DManager">
-      <UniqueIdentifier>{3ec739a0-2572-47d0-a8e3-2884e559d8fc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Text">
       <UniqueIdentifier>{86ea6656-3c90-41a3-872c-722ea8f63729}</UniqueIdentifier>
     </Filter>
@@ -458,9 +452,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Math\WorldTransform\WorldTransform.cpp">
       <Filter>Ellysia\Source File\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.cpp">
-      <Filter>Ellysia\Source File\Polygone\3D\Particle3DManager</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\SkyBox</Filter>
@@ -874,9 +865,6 @@
     <ClInclude Include="Ellysia\Lighting\SpotLight.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.h">
-      <Filter>Ellysia\Header File\Polygone\3D\Particle3DManager</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Audio\AudioStruct.h">
       <Filter>Ellysia\Header File\Audio</Filter>
     </ClInclude>
@@ -1042,9 +1030,6 @@
     <ClInclude Include="Project\Player\PlayerCollisionToNormalEnemyAttack.h">
       <Filter>Project\Player\PlayerCollisionToNormalEnemyAttack</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.h">
-      <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Player\PlayerCollisionToAudioObject.h">
       <Filter>Project\Player\PlayerCollisionToAudioObject</Filter>
     </ClInclude>
@@ -1146,6 +1131,15 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\GameManager\GameSceneFactory.h">
       <Filter>Ellysia\Header File\Manager\GameManager\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\PipelineManager\BlendMode.h">
+      <Filter>Ellysia\Header File\Manager\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Input\MouseInformation.h">
+      <Filter>Ellysia\Header File\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Listener.h">
+      <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

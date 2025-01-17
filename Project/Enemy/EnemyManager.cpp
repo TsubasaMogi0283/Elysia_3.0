@@ -13,6 +13,12 @@
 //2.ポリモーフィズムを上手く使おう
 
 
+EnemyManager::EnemyManager(){
+	//レベルデータ管理クラスの取得
+	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+}
+
+
 void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& strongEnemyModel, const std::string& csvPath){
 	
 	//空だったら引っかかるようにしている
@@ -36,7 +42,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	assert(file.is_open());
 
 	//ファイルの内容を文字列ストリームにコピー
-	enemyPositionsFromCSV << file.rdbuf();
+	enemyPositionsFromCSV_ << file.rdbuf();
 	//ファイルを閉じる
 	file.close();
 
@@ -45,7 +51,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 
 
 	//コマンド実行ループ
-	while (std::getline(enemyPositionsFromCSV, line)) {
+	while (std::getline(enemyPositionsFromCSV_, line)) {
 
 		//1行分の文字列をストリームに変換して解析しやすくする
 		std::istringstream lineStream(line);

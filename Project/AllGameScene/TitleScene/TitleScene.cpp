@@ -23,9 +23,9 @@ TitleScene::TitleScene(){
 	//テクスチャ管理クラスの取得
 	textureManager_ = TextureManager::GetInstance();
 	//入力クラスの取得
-	input_ = Input::GetInstance();
+	input_ = Ellysia::Input::GetInstance();
 	//レベルエディタ管理クラスの取得
-	levelDataManager_ = LevelDataManager::GetInstance();
+	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 }
 
 void TitleScene::Initialize(){

@@ -44,10 +44,11 @@ void Ellysia::SrvManager::CreateSRVForTexture2D(const uint32_t& srvIndex, ID3D12
 	srvDesc.Format = format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
+	//キューブマップの場合
 	if (isCubeMap == true) {
 		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
 		//unionがTextureCubeになったが、内部パラメータの意味はTexture2Dと変わらない
-		srvDesc.TextureCube.MostDetailedMip = 0;
+		srvDesc.TextureCube.MostDetailedMip = 0u;
 		srvDesc.TextureCube.MipLevels = UINT_MAX;
 		srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
 	}
@@ -64,15 +65,25 @@ void Ellysia::SrvManager::CreateSRVForTexture2D(const uint32_t& srvIndex, ID3D12
 }
 
 void Ellysia::SrvManager::CreateSRVForStructuredBuffer(const uint32_t& srvIndex, ID3D12Resource* pResource, const UINT& numElements, const UINT& structureByteStride){
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc={};
-	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-	srvDesc.Buffer.FirstElement = 0;
-	srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-	srvDesc.Buffer.NumElements = numElements;
-	srvDesc.Buffer.StructureByteStride = structureByteStride;
+	
+	//SRVの設定
+	D3D12_BUFFER_SRV bufferSRV = {
+		.FirstElement = 0u,
+		.NumElements = numElements,
+		.StructureByteStride = structureByteStride,
+		.Flags = D3D12_BUFFER_SRV_FLAG_NONE,
+	};
 
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc={
+		.Format = DXGI_FORMAT_UNKNOWN,
+		.ViewDimension = D3D12_SRV_DIMENSION_BUFFER,
+		.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING,
+		.Buffer = bufferSRV,
+	
+	};
+	
+	
+	//SRVの作成
 	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(
 		pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
 
@@ -81,27 +92,40 @@ void Ellysia::SrvManager::CreateSRVForStructuredBuffer(const uint32_t& srvIndex,
 void Ellysia::SrvManager::CreateSRVForRenderTexture(ID3D12Resource* pResource,const uint32_t& handle){
 	//SRVの設定
 	//FormatはResourceと同じにしておく
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = 1;
-
+	D3D12_TEX2D_SRV tex2DRV = {
+		.MipLevels = 1u,
+	};
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc={
+		.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+		.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D,
+		.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING,
+		.Texture2D = tex2DRV,
+		
+	};
+	
+	
 	//SRVの生成
 	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(
 		pResource, &srvDesc, GetCPUDescriptorHandle(handle));
 
-
-
 }
 
 void Ellysia::SrvManager::CreateSRVForDepthTexture(const uint32_t& handle){
-	D3D12_SHADER_RESOURCE_VIEW_DESC depthTextureSrvDesc{};
-	//DXGI_FORMAT_D24_UNIFORM_S8_UNITのDepthを読むときはDXGI_FORMAT_R24_UNIFORM_X8_TYPELESS
-	depthTextureSrvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-	depthTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	depthTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	depthTextureSrvDesc.Texture2D.MipLevels = 1;
+
+
+	D3D12_TEX2D_SRV tex2DRV = {
+		.MipLevels = 1u,
+	};
+	D3D12_SHADER_RESOURCE_VIEW_DESC depthTextureSrvDesc={
+		.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS,
+		.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D,
+		.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING,
+		.Texture2D = tex2DRV,
+	
+	};
+	
+
+
 	ComPtr<ID3D12Resource> resource = DirectXSetup::GetInstance()->GetDepthStencilResource();
 	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(resource.Get(), &depthTextureSrvDesc, GetCPUDescriptorHandle(handle));
 
@@ -114,8 +138,6 @@ void Ellysia::SrvManager::PreDraw() {
 	DirectXSetup::GetInstance()->GetCommandList()->SetDescriptorHeaps(1, descriptorHeaps);
 
 }
-
-
 
 void Ellysia::SrvManager::SetGraphicsRootDescriptorTable(const UINT& rootParameterIndex,const uint32_t& srvIndex){
 	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(

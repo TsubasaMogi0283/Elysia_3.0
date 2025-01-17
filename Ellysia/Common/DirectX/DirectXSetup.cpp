@@ -35,7 +35,6 @@ ComPtr<ID3D12DescriptorHeap> Ellysia::DirectXSetup::GenarateDescriptorHeap(D3D12
 
 }
 
-
 ComPtr<ID3D12Resource> Ellysia::DirectXSetup::CreateBufferResource(const size_t& sizeInBytes) {
 
 	ComPtr<ID3D12Resource> resource = nullptr;
@@ -125,9 +124,6 @@ ComPtr<ID3D12Resource> Ellysia::DirectXSetup::GenerateDepthStencilTextureResourc
 	return resource;
 
 }
-
-
-
 
 #pragma region Initializeの所で使う関数
 

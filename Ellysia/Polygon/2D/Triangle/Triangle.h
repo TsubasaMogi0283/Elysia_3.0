@@ -15,10 +15,25 @@
 #include "Matrix4x4Calculation.h"
 #include "Transform.h"
 #include "VertexData.h"
-
-
 #include "Material.h"
 #include "TransformationMatrix.h"
+
+/// <summary>
+/// EllysiaEngine
+/// </summary>
+namespace Ellysia{
+	/// <summary>
+	/// ウィンドウクラス
+	/// </summary>
+	class WindowsSetup;
+
+	/// <summary>
+	/// DirectXクラス
+	/// </summary>
+	class DirectXSetup;
+	
+}
+
 
 /// <summary>
 /// 三角形
@@ -28,7 +43,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Triangle()=default;
+	Triangle();
 
 	/// <summary>
 	/// 初期化
@@ -48,24 +63,29 @@ public:
 	/// </summary>
 	~Triangle()=default;
 
+private:
+	//ウィンドウクラス
+	Ellysia::WindowsSetup* windowsSetup_ = nullptr;
+	//DirectXクラス
+	Ellysia::DirectXSetup* directXSetup_ = nullptr;
 
 
 private:
 	//頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
-
-	//Resource
+	//リソース
 	ComPtr<ID3D12Resource> vertexResouce_;
-
-	//Resourceにデータを書き込む
+	//頂点データ
 	VertexData* vertexData_;
 	
-	//マテリアル用のリソースを作る
+	//マテリアル用のリソース
 	ComPtr<ID3D12Resource> materialResource_ = nullptr;
+	//マテリアルデータ
 	MaterialData* materialData_ = nullptr;
 	
-	//TransformationMatrix用のResource
+	//TransformationMatrix用のリソース
 	ComPtr<ID3D12Resource> wvpResource_ = nullptr;
+	//TransformationMatrixのデータ
 	TransformationMatrix* wvpData_=nullptr;
 
 	//テクスチャハンドル

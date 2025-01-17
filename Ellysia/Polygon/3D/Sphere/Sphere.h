@@ -74,7 +74,7 @@ private:
 private:
 
 	//DirectX内にある情報を取り入れる
-	DirectXSetup* directXSetup_ = nullptr;
+	Ellysia::DirectXSetup* directXSetup_ = nullptr;
 
 
 

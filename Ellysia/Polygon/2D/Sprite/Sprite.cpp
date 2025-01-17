@@ -6,9 +6,16 @@
 #include "Matrix4x4.h"
 #include "Matrix4x4Calculation.h"
 
+Sprite::Sprite() {
+	//DirectXクラスを取得
+	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
+
+	//パイプライン管理クラスを取得
+	pipelineManager_ = Ellysia::PipelineManager::GetInstance();
+
+}
 
 
-//初期化
 void Sprite::Initialize(const uint32_t& textureHandle, const Vector2& position) {
 	this->textureHandle_ = textureHandle;
 	this->position_ = position;
@@ -22,9 +29,9 @@ void Sprite::Initialize(const uint32_t& textureHandle, const Vector2& position) 
 	
 
 	//頂点リソースを作る
-	vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * 6).Get();
+	vertexResource_ = directXSetup_->CreateBufferResource(sizeof(VertexData) * 6).Get();
 	//index用のリソースを作る
-	indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * 6).Get();
+	indexResource_ = directXSetup_->CreateBufferResource(sizeof(uint32_t) * 6).Get();
 	
 
 	//頂点バッファビューを作成する
@@ -47,9 +54,9 @@ void Sprite::Initialize(const uint32_t& textureHandle, const Vector2& position) 
 
 
 	//マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	materialResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
+	materialResource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
 	//TransformationMatrix用のリソースを作る。
-	transformationMatrixResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(TransformationMatrix)).Get();
+	transformationMatrixResource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(TransformationMatrix)).Get();
 
 
 	//UVトランスフォームの初期化
@@ -62,6 +69,8 @@ void Sprite::Initialize(const uint32_t& textureHandle, const Vector2& position) 
 
 	
 }
+
+
 
 Sprite* Sprite::Create(const uint32_t& textureHandle, const Vector2& position) {
 	//生成
@@ -199,7 +208,7 @@ void Sprite::Draw() {
 	//遠視投影行列を計算
 	Matrix4x4 viewMatrix = Matrix4x4Calculation::MakeIdentity4x4();
 	//プロジェクション行列を計算
-	Matrix4x4 projectionMatrix = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(Ellysia::WindowsSetup::GetInstance()->GetClientWidth()), float(Ellysia::WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 	
 	//WVP行列を作成
 	Matrix4x4 worldViewProjectionMatrixSprite = Matrix4x4Calculation::Multiply(affineMatrix, Matrix4x4Calculation::Multiply(viewMatrix, projectionMatrix));
@@ -226,21 +235,21 @@ void Sprite::Draw() {
 
 
 	//コマンドを積む
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetSpriteRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetSpriteGraphicsPipelineState().Get());
+	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetSpriteRootSignature().Get());
+	directXSetup_->GetCommandList()->SetPipelineState(pipelineManager_->GetSpriteGraphicsPipelineState().Get());
 
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	//IBVを設定
-	DirectXSetup::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
+	directXSetup_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 	
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
-	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
 	//CBVを設定する
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
 	
 	
 	if (textureHandle_ != 0) {
@@ -250,7 +259,7 @@ void Sprite::Draw() {
 	
 	//今度はこっちでドローコールをするよ
 	//描画(DrawCall)6個のインデックスを使用し1つのインスタンスを描画。
-	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	directXSetup_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
 
 }
