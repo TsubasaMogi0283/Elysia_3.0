@@ -90,13 +90,8 @@ void Ellysia::Framework::Initialize(){
 	globalVariables_->LoadAllFile();
 
 
-	//シーンファクトリー
-	//sceneFactory_ = std::make_unique<IAbstractSceneFactory>();
-
-
 	//ゲームシーン管理クラスの生成
 	gameManager_ = std::make_unique<GameManager>();
-	//gameManager_->SetAbstractSceneFactory(std::move(sceneFactory_));
 	//初期化
 	gameManager_->Initialize();
 

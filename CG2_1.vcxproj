@@ -145,7 +145,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp" />
     <ClCompile Include="Ellysia\Manager\CollisionManager\CollisionManager.cpp" />
     <ClCompile Include="Ellysia\Manager\GameManager\GameManager.cpp" />
-    <ClCompile Include="Ellysia\Manager\GameManager\GameSceneFactory.cpp" />
     <ClCompile Include="Ellysia\Manager\ImGuiManager\ImGuiManager.cpp" />
     <ClCompile Include="Ellysia\Manager\LevelDataManager\LevelDataManager.cpp" />
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.cpp" />
@@ -188,6 +187,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Polygon\PostEffect\RandomEffect\RandomEffect.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\SepiaScale\SepiaScale.cpp" />
     <ClCompile Include="Ellysia\Polygon\PostEffect\Vignette\Vignette.cpp" />
+    <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp" />
     <ClCompile Include="Project\AllGameScene\GameScene\GameScene.cpp" />
     <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.cpp" />
@@ -407,9 +407,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h" />
     <ClInclude Include="Ellysia\Manager\CollisionManager\Collider.h" />
     <ClInclude Include="Ellysia\Manager\CollisionManager\CollisionManager.h" />
-    <ClInclude Include="Ellysia\Manager\GameManager\AbstractSceneFactory.h" />
+    <ClInclude Include="Ellysia\Manager\GameManager\IAbstractSceneFactory.h" />
     <ClInclude Include="Ellysia\Manager\GameManager\GameManager.h" />
-    <ClInclude Include="Ellysia\Manager\GameManager\GameSceneFactory.h" />
     <ClInclude Include="Ellysia\Manager\GameManager\IGameScene.h" />
     <ClInclude Include="Ellysia\Manager\ImGuiManager\ImGuiManager.h" />
     <ClInclude Include="Ellysia\Manager\LevelDataManager\LevelDataManager.h" />
@@ -483,6 +482,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Polygon\PostEffect\SepiaScale\SepiaScale.h" />
     <ClInclude Include="Ellysia\Polygon\PostEffect\Vignette\Vignette.h" />
     <ClInclude Include="Project\AllGameScene\GameManager\IGameScene.h" />
+    <ClInclude Include="Project\AllGameScene\GameSceneFactory.h" />
     <ClInclude Include="Project\AllGameScene\GameScene\GameScene.h" />
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.h" />

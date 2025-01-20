@@ -9,7 +9,7 @@
 #include <memory>
 
 #include "IGameScene.h"
-#include "AbstractSceneFactory.h"
+#include "IAbstractSceneFactory.h"
 
 /// <summary>
 /// ゲーム管理クラス
@@ -26,13 +26,7 @@ public:
 	/// 初期化
 	/// </summary>
 	void Initialize();
-
-	/// <summary>
-	/// シーンチェンジ
-	/// </summary>
-	/// <param name="newGameScene">新しいシーン</param>
-	void ChangeScene(std::unique_ptr<IGameScene> newGameScene);
-
+	
 	/// <summary>
 	/// シーン遷移
 	/// </summary>
@@ -69,15 +63,6 @@ public:
 	/// </summary>
 	~GameManager() = default;
 
-public:
-	/// <summary>
-	/// シーンファクトリーの設定
-	/// </summary>
-	/// <param name="abstractSceneFactory">シーンファクトリー</param>
-	void SetAbstractSceneFactory(std::unique_ptr<IAbstractSceneFactory> abstractSceneFactory) {
-		this->abstractSceneFactory_ = std::move(abstractSceneFactory);
-	}
-
 
 private:
 	//シーンファクトリー
@@ -85,6 +70,7 @@ private:
 
 	//現在入っているシーン
 	std::unique_ptr<IGameScene> currentGamaScene_ = nullptr;
+	std::string  preSceneName_ = "";
 	std::string  currentSceneName_ = "";
 	
 };

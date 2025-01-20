@@ -7,7 +7,7 @@
  */
 
 #include "IGameScene.h"
-#include "AbstractSceneFactory.h"
+#include "IAbstractSceneFactory.h"
 
 /// <summary>
 /// ゲームシーンファクトリー

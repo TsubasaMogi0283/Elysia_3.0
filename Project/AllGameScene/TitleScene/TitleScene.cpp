@@ -4,11 +4,9 @@
 #include <array>
 
 #include "Input.h"
-#include "GameScene/GameScene.h"
 #include "GameManager.h"
 #include "ModelManager.h"
 #include "AnimationManager.h"
-
 #include "TextureManager.h"
 #include "LevelDataManager.h"
 #include "VectorCalculation.h"
@@ -252,7 +250,7 @@ void TitleScene::Update(GameManager* gameManager){
 
 		//時間も兼ねている
 		if (blackFadeTransparency_ > 2.0f) {
-			gameManager->ChangeScene(std::move(std::make_unique<GameScene>()));
+			gameManager->ChangeScene("Game");
 			return;
 		}
 		

@@ -9,7 +9,7 @@
 #include "WindowsSetup.h"
 #include "DirectXSetup.h"
 #include "GameManager.h"
-#include "AbstractSceneFactory.h"
+#include "IAbstractSceneFactory.h"
 
 //Ellysia(エリシア・エレシア)
 //Aile + Sheer...「エイル・エル(フランス語で自分の名前になる)」と「シア」

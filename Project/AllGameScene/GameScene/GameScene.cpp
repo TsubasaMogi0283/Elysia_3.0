@@ -1014,7 +1014,7 @@ void GameScene::Update(GameManager* gameManager) {
 
 			//負けシーンへ
 			if (blackFadeTransparency_ > CHANGE_TO_LOSE_SCENE_VALUE_) {
-				gameManager->ChangeScene(std::move(std::make_unique<LoseScene>()));
+				gameManager->ChangeScene("Lose");
 				return;
 			}
 			
@@ -1060,7 +1060,7 @@ void GameScene::Update(GameManager* gameManager) {
 		//本当は1.0fだけど新しく変数を作るとネストが増えるので一緒にやることにした。
 		const float MAX_TRANSPARENCY = 2.0f;
 		if (whiteFadeTransparency_ > MAX_TRANSPARENCY) {
-			gameManager->ChangeScene(std::move(std::make_unique<WinScene>()));
+			gameManager->ChangeScene("Win");
 			return;
 		}
 		

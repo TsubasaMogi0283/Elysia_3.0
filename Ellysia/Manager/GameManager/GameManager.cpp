@@ -5,16 +5,20 @@
 #include "TitleScene/TitleScene.h"
 #include "LevelEditorSample/LevelEditorSample.h"
 
-#include "AbstractSceneFactory.h"
+#include "GameSceneFactory.h"
 
 
 void GameManager::Initialize() {
-	//シーンごとに動作確認したいときはここを変えてね
-	currentGamaScene_ = std::make_unique<TitleScene>();
 	
-#ifdef _DEBUG
+	//シーンファクトリーの生成
+	abstractSceneFactory_ = std::make_unique<GameSceneFactory>();
+	
+	//シーンごとに動作確認したいときはここを変えてね
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
 
-	currentGamaScene_ = std::make_unique<TitleScene>();
+#ifdef _DEBUG
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
+
 #endif // _DEBUG
 
 	//初期化
@@ -23,32 +27,22 @@ void GameManager::Initialize() {
 
 }
 
-void GameManager::ChangeScene(std::unique_ptr<IGameScene> newGameScene) {
-	//前回と違った場合だけ通す
-	if (currentGamaScene_ != newGameScene) {
-		currentGamaScene_ = std::move(newGameScene);
-		//引数が次に遷移するシーン
-		currentGamaScene_->Initialize();
-	}
-	
-}
-
 
 
 void GameManager::ChangeScene(const std::string& sceneName){
+	//新しいシーンに遷移するためにPreの所に入っていたものを入れる
+	preSceneName_ = currentSceneName_;
 	//現在入っているシーン名を更新
 	currentSceneName_ = sceneName;
 
-	//前回と違った場合だけ通す
-	if (currentSceneName_ != sceneName) {
-		currentGamaScene_ = abstractSceneFactory_->CreateScene(currentSceneName_);
-
-		//空ではない時初期化処理に入る
-		if (currentGamaScene_ != nullptr) {
-			//引数が次に遷移するシーン
-			currentGamaScene_->Initialize();
-		}
-	}
+	//シーンの値を取ってくる
+	currentGamaScene_ = abstractSceneFactory_->CreateScene(currentSceneName_);
+	//空ではない時初期化処理に入る
+	assert(currentGamaScene_ != nullptr);
+	//初期化
+	currentGamaScene_->Initialize();
+	
+	
 }
 
 void GameManager::Update() {
