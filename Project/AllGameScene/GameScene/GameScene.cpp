@@ -75,19 +75,6 @@ void GameScene::Initialize() {
 	
 #pragma region オブジェクト
 
-	#pragma region 地面
-	//四隅の座標を取得
-	StageRect stageRect = {};
-	//四隅
-	const float SCALE_SIZE_ = 40.0f;
-	stageRect.leftBack = { .x = -SCALE_SIZE_ ,.y = 0.0f ,.z = SCALE_SIZE_ };
-	stageRect.rightBack = { .x = SCALE_SIZE_ ,.y = 0.0f ,.z = SCALE_SIZE_ };
-	stageRect.leftFront = { .x = -SCALE_SIZE_ ,.y = 0.0f ,.z = -SCALE_SIZE_ };
-	stageRect.rightFront = { .x = SCALE_SIZE_ ,.y = 0.0f ,.z = -SCALE_SIZE_ };
-
-
-	#pragma endregion
-
 	
 	#pragma region ゲート
 
@@ -151,16 +138,16 @@ void GameScene::Initialize() {
 
 
 
-#pragma region 敵
+	#pragma region 敵
 	//敵モデルの読み込み
 	//通常
 	uint32_t enemyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
 	//強敵
 	uint32_t strongEnemyModelHandle= modelManager_->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
 
-#ifdef _DEBUG
+	#ifdef _DEBUG
 	enemyModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube", "Cube.obj");
-#endif // _DEBUG
+	#endif // _DEBUG
 
 	//敵管理システム
 	enemyManager_ = std::make_unique<EnemyManager>();
@@ -225,7 +212,7 @@ void GameScene::Initialize() {
 	//生成
 	pickUpKey_.reset(Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));
 	
-#pragma endregion
+	#pragma endregion
 
 	#pragma region UI
 	uint32_t playerHPTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHP.png");
@@ -257,13 +244,7 @@ void GameScene::Initialize() {
 	theta_ = std::numbers::pi_v<float> / 2.0f;
 	
 	//ポストエフェクトの初期化
-	//基本
-	//生成
-	backTexture_ = std::make_unique<Ellysia::BackTexture>();
-	//初期化
-	backTexture_->Initialize();
-	//ビネット
-	//生成
+	//ビネット生成
 	vignette_ = std::make_unique<Ellysia::Vignette>();
 	//初期化
 	vignette_->Initialize();
