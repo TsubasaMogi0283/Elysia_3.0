@@ -33,9 +33,15 @@ struct SpotLight;
 class Player;
 
 /// <summary>
-/// レベルデータ管理クラス
+/// EllysiaEngine
 /// </summary>
-class LevelDataManager;
+namespace Ellysia {
+	/// <summary>
+	/// レベルデータ管理クラス
+	/// </summary>
+	class LevelDataManager;
+
+}
 
 #pragma endregion
 
@@ -47,7 +53,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	EnemyManager() = default;
+	EnemyManager();
 	
 	/// <summary>
 	/// 初期化
@@ -74,29 +80,12 @@ public:
 	~EnemyManager();
 
 public:
-	/// <summary>
-	/// エネミーのリストを取得
-	/// </summary>
-	/// <returns></returns>
-	inline std::list<Enemy*> GetEnemyes() const{
-		return enemyes_;
-	}
-	
-	/// <summary>
-	/// 強敵の取得
-	/// </summary>
-	/// <returns></returns>
-	inline std::list<StrongEnemy*>GetStrongEnemyes()const {
-		return strongEnemyes_;
-	}
-
 
 	/// <summary>
 	/// 通常の敵の生成
 	/// </summary>
 	/// <param name="position"></param>
 	void GenarateNormalEnemy(const Vector3& position);
-
 
 	/// <summary>
 	/// 強敵を生成
@@ -108,16 +97,33 @@ public:
 	/// エネミーを消す処理
 	/// </summary>
 	void DeleteEnemy();
-	
+
 	/// <summary>
 	/// 音を止める
 	/// </summary>
 	void StopAudio();
 
+public:
+	/// <summary>
+	/// エネミーのリストを取得
+	/// </summary>
+	/// <returns></returns>
+	inline std::list<Enemy*> GetEnemyes() const{
+		return enemyes_;
+	}
+	
+	/// <summary>
+	/// 強敵の取得
+	/// </summary>
+	/// <returns>リスト</returns>
+	inline std::list<StrongEnemy*>GetStrongEnemyes()const {
+		return strongEnemyes_;
+	}
+
 	/// <summary>
 	/// プレイヤーの設定
 	/// </summary>
-	/// <param name="player"></param>
+	/// <param name="player">プレイヤー</param>
 	inline void SetPlayer(Player* player) {
 		this->player_=player;
 	}
@@ -125,44 +131,33 @@ public:
 	/// <summary>
 	/// レベルデータ管理クラスとハンドルの設定
 	/// </summary>
-	/// <param name="levelDataManager"></param>
-	/// <param name="levelDataHandle"></param>
-	inline void SetLevelDataManager(LevelDataManager* levelDataManager, uint32_t levelDataHandle) {
+	/// <param name="levelDataManager">レベルデータ管理クラス</param>
+	/// <param name="levelDataHandle">ハンドル</param>
+	inline void SetLevelDataManager(Ellysia::LevelDataManager* levelDataManager, uint32_t levelDataHandle) {
 		this->levelDataManager_ = levelDataManager;
 		this->levelDataHandle_ = levelDataHandle;
 	}
 
-
-
-
-
-
 private:
-
 	//プレイヤー
 	Player* player_ = nullptr;
 	//レベルデータ管理クラス
-	LevelDataManager* levelDataManager_ = nullptr;
+	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
 	//レベルデータのハンドル
 	uint32_t levelDataHandle_ = 0u;
-
 
 private:
 	//前方にいるかどうかの内積
 	const float FRONT_DOT = 0.7f;
-
 	//追跡開始の距離
 	const float STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
 
 private:
-	
 	//エネミーのリスト
 	//通常
 	std::list<Enemy*>enemyes_ = {};
 	//強敵
 	std::list<StrongEnemy*>strongEnemyes_ = {};
-
-	
 
 	//モデルハンドル
 	//通常
@@ -172,8 +167,7 @@ private:
 
 
 	//生成の文字列を入れる
-	std::stringstream enemyPositionsFromCSV;
-
+	std::stringstream enemyPositionsFromCSV_;
 
 	//接近BGM用
 	Ellysia::Audio* audio_ = nullptr;

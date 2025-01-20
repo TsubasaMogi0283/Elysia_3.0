@@ -26,15 +26,7 @@ class TextureManager;
 /// </summary>
 class ModelManager;
 
-/// <summary>
-/// パイプライン管理クラス
-/// </summary>
-class PipelineManager;
 
-/// <summary>
-/// SRV管理クラス
-/// </summary>
-class SrvManager;
 
 /// <summary>
 /// ワールドトランスフォーム
@@ -72,6 +64,28 @@ struct PointLight;
 struct SpotLight;
 
 #pragma endregion
+
+
+/// <summary>
+/// EllysiaEngine
+/// </summary>
+namespace Ellysia{
+
+	/// <summary>
+	/// DirectXクラス
+	/// </summary>
+	class DirectXSetup;
+
+	/// <summary>
+	/// パイプライン管理クラス
+	/// </summary>
+	class PipelineManager;
+
+	/// <summary>
+	/// SRV管理クラス
+	/// </summary>
+	class SrvManager;
+};
 
 /// <summary>
 /// モデル
@@ -140,7 +154,7 @@ public:
 
 private:
 	//DirectXクラス
-	DirectXSetup* directXSetup_ = nullptr;
+	Ellysia::DirectXSetup* directXSetup_ = nullptr;
 
 	//テクスチャ管理クラス
 	TextureManager* textureManager_ = nullptr;
@@ -149,10 +163,10 @@ private:
 	ModelManager* modelmanager_ = nullptr;
 	
 	//パイプライン管理クラス
-	PipelineManager* pipelineManager_ = nullptr;
+	Ellysia::PipelineManager* pipelineManager_ = nullptr;
 
 	//SRV管理クラス
-	SrvManager* srvManager_ = nullptr;
+	Ellysia::SrvManager* srvManager_ = nullptr;
 
 private:
 	//頂点リソース

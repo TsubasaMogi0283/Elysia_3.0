@@ -31,7 +31,7 @@ void Sphere::GenerateVertexBufferView() {
 
 //初期化
 void Sphere::Initialize() {
-	this->directXSetup_ = DirectXSetup::GetInstance();
+	this->directXSetup_ = Ellysia::DirectXSetup::GetInstance();
 
 	//ここでBufferResourceを作る
 	//頂点を6に増やす
@@ -218,7 +218,7 @@ void Sphere::Draw(SphereShape sphereCondtion, Transform transform,Matrix4x4 view
 	//遠視投影行列
 	Matrix4x4 viewMatrixSphere = Matrix4x4Calculation::MakeIdentity4x4();
 	
-	Matrix4x4 projectionMatrixSphere = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrixSphere = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(Ellysia::WindowsSetup::GetInstance()->GetClientWidth()), float(Ellysia::WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
 	
 	//WVP行列を作成
 	Matrix4x4 worldViewProjectionMatrixSphere = Matrix4x4Calculation::Multiply(worldMatrixSphere, Matrix4x4Calculation::Multiply(viewMatrix, projectionMatrix));
@@ -284,11 +284,11 @@ void Sphere::Release() {
 //
 //	//vertexResourceがnullらしい
 //	//リソースの先頭のアドレスから使う
-//	vertexBufferViewSphere_.BufferLocation = vertexResourceSphere_->GetGPUVirtualAddress();
+//	vertexBufferView_.BufferLocation = vertexResourceSphere_->GetGPUVirtualAddress();
 //	//使用するリソースのサイズは頂点３つ分のサイズ
-//	vertexBufferViewSphere_.SizeInBytes = sizeof(VertexData) * SUBDIVISION_ * SUBDIVISION_ * 6;
+//	vertexBufferView_.SizeInBytes = sizeof(VertexData) * SUBDIVISION_ * SUBDIVISION_ * 6;
 //	//１頂点あたりのサイズ
-//	vertexBufferViewSphere_.StrideInBytes = sizeof(VertexData);
+//	vertexBufferView_.StrideInBytes = sizeof(VertexData);
 //
 //
 //}
@@ -474,7 +474,7 @@ void Sphere::Release() {
 //	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResourceSphere_->GetGPUVirtualAddress());
 //
 //	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-//	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferViewSphere_);
+//	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
 //
 //	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResourceSphere_->GetGPUVirtualAddress());
 //	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
@@ -491,23 +491,23 @@ void Sphere::Release() {
 //
 //
 ////解放
-//void Sphere::Release() {
+//void Sphere::Finalize() {
 //	//初期化
-//	vertexResourceSphere_->Release();
+//	vertexResourceSphere_->Finalize();
 //
 //	//マテリアル用のリソースを作る
-//	materialResourceSphere_->Release();
+//	materialResourceSphere_->Finalize();
 //
 //
 //	//球を描画するとき用のTransformationMatrix用のリソースを作る。
 //	//Matrix4x4 1つ分サイズを用意する
-//	transformationMatrixResourceSphere_->Release();
+//	transformationMatrixResourceSphere_->Finalize();
 //
 //	//画像読み込み
-//	textureResource_->Release();
-//	resource_->Release();
+//	textureResource_->Finalize();
+//	resource_->Finalize();
 //
-//	intermediateResource_->Release();
+//	intermediateResource_->Finalize();
 //
 //
 //}

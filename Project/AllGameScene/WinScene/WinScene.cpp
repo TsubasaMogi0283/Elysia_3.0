@@ -1,15 +1,13 @@
 #include "WinScene.h"
 #include <TextureManager.h>
 
-#include "TitleScene/TitleScene.h"
-#include "GameScene/GameScene.h"
 #include "GameManager.h"
 
 
 WinScene::WinScene(){
 
 	//入力のインスタンスを取得
-	input_ = Input::GetInstance();
+	input_ = Ellysia::Input::GetInstance();
 }
 
 void WinScene::Initialize() {
@@ -147,7 +145,7 @@ void WinScene::Update(GameManager* gameManager){
 
 	//タイトルシーンへ
 	if (blackOutTime_ > CHANGE_TO_TITLE_TIME_) {
-		gameManager->ChangeScene(new TitleScene());
+		gameManager->ChangeScene("Title");
 		return;
 	}
 

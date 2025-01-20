@@ -7,15 +7,14 @@
 
 
 
-WindowsSetup* WindowsSetup::GetInstance() {
-	static WindowsSetup instance;
-
+Ellysia::WindowsSetup* Ellysia::WindowsSetup::GetInstance() {
+	static Ellysia::WindowsSetup instance;
 	return &instance;
 }
 
 
 
-LRESULT WindowsSetup::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam){
+LRESULT Ellysia::WindowsSetup::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam){
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
 	}
@@ -32,7 +31,7 @@ LRESULT WindowsSetup::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 
 }
 
-void WindowsSetup::OutputText(std::string& stringText){
+void Ellysia::WindowsSetup::OutputText(std::string& stringText){
 
 	//wstringからstringに変換
 	std::wstring newString = ConvertString::ToWString(stringText);
@@ -45,7 +44,7 @@ void WindowsSetup::OutputText(std::string& stringText){
 #pragma region Initializeに入れる関数
 
 //ウィンドウに情報を入れる
-void  WindowsSetup::RegisterWindowsClass() {
+void  Ellysia::WindowsSetup::RegisterWindowsClass() {
 	
 	//ウィンドウプロシャージャ
 	windowClass_.lpfnWndProc = WindowProc;
@@ -65,35 +64,46 @@ void  WindowsSetup::RegisterWindowsClass() {
 	AdjustWindowRect(&wrc_, WS_OVERLAPPEDWINDOW, false);
 	// ウィンドウ生成
 	hwnd_ = CreateWindow(
-		windowClass_.lpszClassName,		//クラス名
-		title_,					//タイトルバーの文字
-		WS_OVERLAPPEDWINDOW,	//標準的なウィンドウスタイル
-		CW_USEDEFAULT,			//標準X座標
-		CW_USEDEFAULT,			//標準Y座標
-		wrc_.right - wrc_.left, //横幅
-		wrc_.bottom - wrc_.top, //縦幅
-		nullptr,				//親ハンドル
-		nullptr,				//メニューハンドル
-		windowClass_.hInstance,			//インスタンスハンドル
-		nullptr					//オプション
+		//クラス名
+		windowClass_.lpszClassName,
+		//タイトルバーの文字
+		title_,
+		//標準的なウィンドウスタイル
+		WS_OVERLAPPEDWINDOW,
+		//標準X座標
+		CW_USEDEFAULT,
+		//標準Y座標
+		CW_USEDEFAULT,
+		//横幅
+		wrc_.right - wrc_.left,
+		//縦幅
+		wrc_.bottom - wrc_.top,
+		//親ハンドル
+		nullptr,
+		//メニューハンドル
+		nullptr,
+		//インスタンスハンドル
+		windowClass_.hInstance,
+		//オプション
+		nullptr					
 	);
 
 		
 	
 }
 
-void WindowsSetup::DisplayWindow() {
+void Ellysia::WindowsSetup::DisplayWindow() {
 	//ウィンドウを表示
 	ShowWindow(hwnd_, SW_SHOW);
 }
 
 #pragma endregion
 
-void WindowsSetup::Initialize(const wchar_t* title, int32_t clientWidth,int32_t clientHeight) {
+void Ellysia::WindowsSetup::Initialize(const wchar_t* title, int32_t clientWidth,int32_t clientHeight) {
 	//値を入れる
-	this->title_ = title;
-	this->clientWidth_ = clientWidth;
-	this->clientHeight_ = clientHeight;
+	title_ = title;
+	clientWidth_ = clientWidth;
+	clientHeight_ = clientHeight;
 
 	//システムタイマーの分解能を上げる
 	timeBeginPeriod(1);
@@ -105,21 +115,13 @@ void WindowsSetup::Initialize(const wchar_t* title, int32_t clientWidth,int32_t 
 	DisplayWindow();
 }
 
-
-
-
-
-
-void WindowsSetup::WindowsMSG(MSG& msg) {
+void Ellysia::WindowsSetup::WindowsMSG(MSG& msg) {
 	TranslateMessage(&msg);
 	DispatchMessage(&msg);
 }
 
-
-
-//ウィンドウを閉じる
-void WindowsSetup::Close() {
-	
+void Ellysia::WindowsSetup::Close() {
+	//ウィンドウを閉じる
 	CloseWindow(hwnd_);
 }
 

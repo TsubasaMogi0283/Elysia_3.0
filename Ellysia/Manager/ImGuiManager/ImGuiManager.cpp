@@ -8,18 +8,12 @@
 #include "RtvManager.h"
 
 
-
-
-
-ImGuiManager* ImGuiManager::GetInstance() {
+Ellysia::ImGuiManager* Ellysia::ImGuiManager::GetInstance() {
 	static ImGuiManager instance;
 	return &instance;
 }
 
-
-
-
-void ImGuiManager::Initialize() {
+void Ellysia::ImGuiManager::Initialize() {
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -46,11 +40,9 @@ void ImGuiManager::Initialize() {
 	// フォントテクスチャの作成
 	ImGui_ImplDX12_CreateDeviceObjects();
 
-
-
 }
 
-void ImGuiManager::BeginFrame() {
+void Ellysia::ImGuiManager::BeginFrame() {
 	//フレーム始まり
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -61,7 +53,7 @@ void ImGuiManager::BeginFrame() {
 
 
 
-void ImGuiManager::Draw() {
+void Ellysia::ImGuiManager::Draw() {
 	//描画
 	ImGui::Render();
 
@@ -71,7 +63,7 @@ void ImGuiManager::Draw() {
 }
 
 
-void ImGuiManager::EndDraw() {
+void Ellysia::ImGuiManager::EndDraw() {
 	//コマンドを積む
 	//実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), DirectXSetup::GetInstance()->GetCommandList().Get());
@@ -79,7 +71,7 @@ void ImGuiManager::EndDraw() {
 
 
 
-void ImGuiManager::Release() {
+void Ellysia::ImGuiManager::Finalize() {
 	//解放
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();

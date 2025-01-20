@@ -10,7 +10,7 @@
 #include "Sprite.h"
 #include "Model.h"
 #include "Camera.h"
-#include "BackText.h"
+#include "BackTexture.h"
 
 //前方宣言
 
@@ -18,6 +18,23 @@
 /// ゲーム管理クラス
 /// </summary>
 class GameManager;
+
+/// <summary>
+/// テクスチャ管理クラス
+/// </summary>
+class TextureManager;
+
+
+/// <summary>
+/// EllysiaEngine
+/// </summary>
+namespace Ellysia {
+	/// <summary>
+	/// 入力
+	/// </summary>
+	class Input;
+};
+
 
 /// <summary>
 /// 負けシーン
@@ -28,8 +45,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	LoseScene() = default;
-
+	LoseScene();
 
 	/// <summary>
 	/// 初期化
@@ -67,15 +83,19 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~LoseScene();
+	~LoseScene()=default;
+
+private:
+	//入力クラス
+	Ellysia::Input* input_ = nullptr;
+	//テクスチャ管理クラス
+	TextureManager* textureManager_ = nullptr;
 
 private:
 	//間隔
 	const float TRANSPARENCY_INTERVAL_ = 0.01f;
-
 	//点滅どのくらい
 	const uint32_t FLASH_TIME_LIMIT_ = 30u;
-
 
 	//高速点滅どのくらい
 	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60u;
@@ -83,6 +103,10 @@ private:
 	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
 	//タイトルに変わる時間
 	const uint32_t CHANGE_TO_TITLE_TIME_ = 60 * 2;
+
+
+
+
 
 private:
 	//失敗

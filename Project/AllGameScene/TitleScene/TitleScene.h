@@ -12,11 +12,12 @@
 #include "Sprite.h"
 #include "Model.h"
 #include "Camera.h"
-#include "BackText.h"
+#include "BackTexture.h"
 #include "DirectionalLight.h"
 #include "SpotLight.h"
 #include "RailCamera/TitleRailCamera.h"
 #include "RandomEffect.h"
+#include "BaseTitleBackTexture.h"
 
 #pragma region 前方宣言
 
@@ -31,14 +32,21 @@ class GameManager;
 class TextureManager;
 
 /// <summary>
-/// 入力
+/// EllysiaEngine
 /// </summary>
-class Input;
+namespace Ellysia {
+	/// <summary>
+	/// 入力
+	/// </summary>
+	class Input;
 
-/// <summary>
-/// レベル管理クラス
-/// </summary>
-class LevelDataManager;
+	/// <summary>
+	/// レベル管理クラス
+	/// </summary>
+	class LevelDataManager;
+
+}
+
 
 #pragma endregion
 
@@ -54,7 +62,6 @@ public:
 	/// </summary>
 	TitleScene();
 
-
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -63,10 +70,8 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	/// <param name="gameManager"></param>
+	/// <param name="gameManager">ゲーム管理クラス</param>
 	void Update(GameManager* gameManager)override;
-
-
 
 	/// <summary>
 	/// 3Dオブジェクト
@@ -96,16 +101,27 @@ public:
 
 
 
+private:
+	/// <summary>
+	/// ImGui用関数
+	/// </summary>
+	void DisplayImGui();
+
+	/// <summary>
+	/// 背景テクスチャの遷移
+	/// </summary>
+	/// <param name="backTexture">背景テクスチャ(ポストエフェクト)</param>
+	void ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture>);
 
 private:
 	//テクスチャ管理クラス
 	TextureManager* textureManager_ = nullptr;
 
 	//入力クラス
-	Input* input_ = nullptr;
+	Ellysia::Input* input_ = nullptr;
 
 	//レベルエディタ
-	LevelDataManager* levelDataManager_ = nullptr;
+	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
 	uint32_t levelHandle_ = 0u;
 
 
@@ -116,6 +132,8 @@ private:
 	//ランダムエフェクトの表示時間
 	static const uint32_t DISPLAY_LENGTH_QUANTITY_ = 2u;
 	
+	//増える時間の値
+	const uint32_t INCREASE_VALUE = 1u;
 
 private:
 
@@ -135,10 +153,6 @@ private:
 
 
 
-	//ポストエフェクト
-	//基本
-	std::unique_ptr<BackText> back_ = nullptr;
-
 
 	//黒フェード
 	std::unique_ptr<Sprite>blackFade_ = nullptr;
@@ -155,8 +169,11 @@ private:
 
 
 #pragma region ポストエフェクト
-	//今は使わない
-	std::unique_ptr<BackText> backText_ = nullptr;
+
+
+
+	//背景(ポストエフェクト)
+	std::unique_ptr<BaseTitleBackTexture> baseTitleBackTexture_ = nullptr;
 
 
 	//ランダムノイズ

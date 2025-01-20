@@ -4,9 +4,6 @@
 #include <algorithm>
 
 #include "Input.h"
-#include "WinScene/WinScene.h"
-#include "LoseScene/LoseScene.h"
-
 #include "SingleCalculation.h"
 #include "VectorCalculation.h"
 
@@ -20,7 +17,7 @@
 GameScene::GameScene(){
 
 	//入力
-	input_ = Input::GetInstance();
+	input_ = Ellysia::Input::GetInstance();
 
 	//テクスチャ管理クラス
 	texturemanager_ = TextureManager::GetInstance();
@@ -29,7 +26,7 @@ GameScene::GameScene(){
 	modelManager_ = ModelManager::GetInstance();
 
 	//レベルエディタ管理クラスの取得
-	levelDataManager_ = LevelDataManager::GetInstance();
+	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 }
 
 void GameScene::Initialize() {
@@ -262,12 +259,12 @@ void GameScene::Initialize() {
 	//ポストエフェクトの初期化
 	//基本
 	//生成
-	back_ = std::make_unique<BackText>();
+	backTexture_ = std::make_unique<Ellysia::BackTexture>();
 	//初期化
-	back_->Initialize();
+	backTexture_->Initialize();
 	//ビネット
 	//生成
-	vignette_ = std::make_unique<Vignette>();
+	vignette_ = std::make_unique<Ellysia::Vignette>();
 	//初期化
 	vignette_->Initialize();
 	//値の設定
@@ -1014,7 +1011,7 @@ void GameScene::Update(GameManager* gameManager) {
 
 			//負けシーンへ
 			if (blackFadeTransparency_ > CHANGE_TO_LOSE_SCENE_VALUE_) {
-				gameManager->ChangeScene(new LoseScene());
+				gameManager->ChangeScene("Lose");
 				return;
 			}
 			
@@ -1060,7 +1057,7 @@ void GameScene::Update(GameManager* gameManager) {
 		//本当は1.0fだけど新しく変数を作るとネストが増えるので一緒にやることにした。
 		const float MAX_TRANSPARENCY = 2.0f;
 		if (whiteFadeTransparency_ > MAX_TRANSPARENCY) {
-			gameManager->ChangeScene(new WinScene());
+			gameManager->ChangeScene("Win");
 			return;
 		}
 		

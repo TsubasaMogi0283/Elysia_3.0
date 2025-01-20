@@ -7,7 +7,7 @@
 
 void WorldTransform::Initialize() {
 	//リソースの作成
-	bufferResource = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(WorldTransformData)).Get();
+	resource = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(WorldTransformData)).Get();
 
 	//初期値
 	//スケール
@@ -59,10 +59,14 @@ void WorldTransform::Update() {
 
 void WorldTransform::Transfer() {
 
-	//Resourceに書き込む
-	bufferResource->Map(0, nullptr, reinterpret_cast<void**>(&tranceformationData));
+	//書き込み書き込む
+	resource->Map(0u, nullptr, reinterpret_cast<void**>(&tranceformationData));
+	//ワールド
 	tranceformationData->world = worldMatrix;
+	//ノーマル
 	tranceformationData->normal = Matrix4x4Calculation::MakeIdentity4x4();
+	//ワールド逆転置
 	tranceformationData->worldInverseTranspose = worldInverseTransposeMatrix;
-	bufferResource->Unmap(0, nullptr);
+	//書き込み終了
+	resource->Unmap(0u, nullptr);
 }

@@ -81,16 +81,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	AudioObjectForLevelEditor()=default;
-
-
-	/// <summary>
-	/// オーディオのハンドルを設定
-	/// 初期化より先でやってね
-	/// </summary>
-	inline void SetLevelDataAudioData(const AudioDataForLevelEditor& levelDataAudioData) {
-		this->audioDataForLevelEditor_ = levelDataAudioData;
-	}
+	AudioObjectForLevelEditor();
 
 	/// <summary>
 	/// 初期化
@@ -133,18 +124,7 @@ public:
 
 
 #pragma endregion
-public:
-	/// <summary>
-	/// ワールド座標の取得
-	/// </summary>
-	/// <returns></returns>
-	Vector3 GetWorldPosition()override;
 
-	/// <summary>
-	/// AABBの取得
-	/// </summary>
-	/// <returns></returns>
-	AABB GetAABB()override;
 
 private:
 	/// <summary>
@@ -158,6 +138,16 @@ private:
 	void Action();
 
 	
+
+public:
+	/// <summary>
+	/// オーディオのハンドルを設定
+	/// 初期化より先でやってね
+	/// </summary>
+	inline void SetLevelDataAudioData(const AudioDataForLevelEditor& levelDataAudioData) {
+		this->audioDataForLevelEditor_ = levelDataAudioData;
+	}
+
 	
 private:
 	//オーディオ

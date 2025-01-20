@@ -54,7 +54,41 @@ struct SpotLight;
 /// </summary>
 struct Material;
 
+
+/// <summary>
+/// EllysiaEngine
+/// </summary>
+namespace Ellysia {
+	/// <summary>
+	/// DirectXのクラス
+	/// </summary>
+	class DirectXSetup;
+
+	/// <summary>
+	/// パイプライン管理クラス
+	/// </summary>
+	class PipelineManager;
+	
+	/// <summary>
+	/// SRV管理クラス
+	/// </summary>
+	class SrvManager;
+
+};
+
 #pragma endregion
+
+
+/// <summary>
+/// テクスチャ管理クラス
+/// </summary>
+class TextureManager;
+
+/// <summary>
+/// モデル管理クラス
+/// </summary>
+class ModelManager;
+
 
 
 /// <summary>
@@ -65,61 +99,80 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	AnimationModel() {};
+	AnimationModel();
 
 	/// <summary>
 	/// 生成
 	/// </summary>
-	/// <param name="modelHandle"></param>
+	/// <param name="modelHandle">ハンドル</param>
 	/// <returns></returns>
-	static AnimationModel* Create(uint32_t modelHandle);
-
+	static AnimationModel* Create(const uint32_t& modelHandle);
 
 
 	/// <summary>
 	/// 描画(平行光源)
 	/// </summary>
-	/// <param name="worldTransform"></param>
-	/// <param name="camera"></param>
-	/// <param name="skinCluster"></param>
-	/// <param name="directionalLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, DirectionalLight& directionalLight);
+	/// <param name="worldTransform">ワールドトランスフォーム</param>
+	/// <param name="camera">カメラ</param>
+	/// <param name="skinCluster">スキンクラスター</param>
+	/// <param name="material">マテリアル</param>
+	/// <param name="directionalLight">平行光源</param>
+	void Draw(const WorldTransform& worldTransform,const Camera& camera,const SkinCluster& skinCluster, const Material& material,const DirectionalLight& directionalLight);
 
 	/// <summary>
 	/// 描画(点光源)
 	/// </summary>
-	/// <param name="worldTransform"></param>
-	/// <param name="camera"></param>
-	/// <param name="skinCluster"></param>
-	/// <param name="pointLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, PointLight& pointLight);
-
+	/// <param name="worldTransform">ワールドトランスフォーム</param>
+	/// <param name="camera">カメラ</param>
+	/// <param name="skinCluster">スキンクラスター</param>
+	/// <param name="material">マテリアル</param>
+	/// <param name="pointLight">点光源</param>
+	void Draw(const WorldTransform& worldTransform,const Camera& camera,const SkinCluster& skinCluster,const Material& material,const PointLight& pointLight);
 
 	/// <summary>
 	/// 描画(スポットライト)
 	/// </summary>
-	/// <param name="worldTransform"></param>
-	/// <param name="camera"></param>
-	/// <param name="skinCluster"></param>
-	/// <param name="spotLight"></param>
-	void Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, SpotLight& spotLight);
+	/// <param name="worldTransform">ワールドトランスフォーム</param>
+	/// <param name="camera">カメラ</param>
+	/// <param name="skinCluster">スキンクラスター</param>
+	/// <param name="material">マテリアル</param>
+	/// <param name="spotLight">スポットライト</param>
+	void Draw(const WorldTransform& worldTransform,const Camera& camera,const SkinCluster& skinCluster,const Material& material,const SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~AnimationModel() {};
+	~AnimationModel()=default;
 
 
 public:
-	void SetEviromentTexture(uint32_t textureHandle) {
+	/// <summary>
+	/// 環境マップで使うテクスチャのの設定
+	/// </summary>
+	/// <param name="textureHandle"></param>
+	void SetEviromentTexture(const uint32_t& textureHandle) {
 		this->eviromentTextureHandle_ = textureHandle;
 	}
+
+
+private:
+	
+	//DirectXのクラス
+	Ellysia::DirectXSetup* directXSetup_ = nullptr;
+	//パイプライン管理クラス
+	Ellysia::PipelineManager* pipelineManager_ = nullptr;
+	//SRV管理クラス
+	Ellysia::SrvManager* srvManager_ = nullptr;
+	//テクスチャ管理クラス
+	TextureManager* textureManager_ = nullptr;
+	//モデル管理クラス
+	ModelManager* modelManager_ = nullptr;
+
 
 
 
 private:
 	//頂点リソースを作る
-	//頂点バッファビューを作成する
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
@@ -151,10 +204,8 @@ private:
 	//後々シェーダーで渡す
 	Matrix4x4 animationLocalMatrix_ = {};
 
-	//デフォルトはα加算
-	int32_t blendModeNumber_ = 1;
 
-
+	//アニメーションをするかどうか
 	bool isAnimation_ = false;
 
 

@@ -106,23 +106,11 @@
     <Filter Include="Project">
       <UniqueIdentifier>{b6cfa1df-9916-48ad-8c18-f653946103ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\GameScene">
-      <UniqueIdentifier>{d00a8998-a08f-48ce-850f-96c0eddb4980}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\GameManager">
-      <UniqueIdentifier>{6783ae0e-f5a0-4867-a365-1d65f9d0e07e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Header File\Math\Shape">
       <UniqueIdentifier>{4de1d903-5e8b-49b9-b9c0-f0d9591a86c2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ellysia\Header File\Lighting">
       <UniqueIdentifier>{6894304a-98cd-4168-b852-c62f99047467}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ellysia\Header File\Polygone\3D\Particle3DManager">
-      <UniqueIdentifier>{d8dd8122-9282-4dc5-83dd-13e2bca63bf8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Ellysia\Source File\Polygone\3D\Particle3DManager">
-      <UniqueIdentifier>{3ec739a0-2572-47d0-a8e3-2884e559d8fc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Text">
       <UniqueIdentifier>{86ea6656-3c90-41a3-872c-722ea8f63729}</UniqueIdentifier>
@@ -265,14 +253,8 @@
     <Filter Include="Ellysia\Resource File\Line3D">
       <UniqueIdentifier>{10f964f7-878d-4c2f-bd56-002547dadcf5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\GameScene\Title">
-      <UniqueIdentifier>{92919d9a-660d-4a63-8767-0a9223021c5b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Enemy\EnemyAttackCollision">
       <UniqueIdentifier>{20d87d40-77b6-425d-8fb0-6466f81f7d5a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\GameScene\Lose">
-      <UniqueIdentifier>{57682276-21c2-48e2-83ee-02eed279de4a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\ObjectManager">
       <UniqueIdentifier>{07691779-7717-47c0-8eaf-66d662b47822}</UniqueIdentifier>
@@ -282,9 +264,6 @@
     </Filter>
     <Filter Include="Project\ObjectManager\StageObject\Gate">
       <UniqueIdentifier>{04fdbc6f-7a4a-4b0a-ad10-68fef5f36d90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\GameScene\LevelEditorSample">
-      <UniqueIdentifier>{cb24ff76-ddbd-45d1-b26d-09fce883e618}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Enemy\StrongEnemy">
       <UniqueIdentifier>{53f59d92-040d-4e5f-a0f1-6da83d07e9ea}</UniqueIdentifier>
@@ -310,9 +289,6 @@
     <Filter Include="Ellysia\Source File\Math\Vector">
       <UniqueIdentifier>{929f13fb-1c6e-45a3-bedc-381d7b8cb4a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\GameScene\GameScene">
-      <UniqueIdentifier>{e3a0acb5-08b3-41f0-a41e-4357a3698e46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Enemy\EnemyFlashLightCollision">
       <UniqueIdentifier>{94a9085e-5e7c-4aca-abdd-af0623868eeb}</UniqueIdentifier>
     </Filter>
@@ -330,9 +306,6 @@
     </Filter>
     <Filter Include="Ellysia\Header File\Manager\LevelEditor\Object\Collider">
       <UniqueIdentifier>{24502959-2abd-41b3-be4e-b042ee8bd26b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\GameScene\WinScene">
-      <UniqueIdentifier>{c06d8e17-a723-4892-983a-90de5852100f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ellysia\Header File\GlobalVariables">
       <UniqueIdentifier>{790ca7fe-3aed-4cdc-bdf7-edc3fdacdae6}</UniqueIdentifier>
@@ -385,6 +358,51 @@
     <Filter Include="Project\Player\Collision\IPlayerCollision">
       <UniqueIdentifier>{7342fb61-2dae-4860-88b9-6d4531dde844}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\Manager\GameManager">
+      <UniqueIdentifier>{6783ae0e-f5a0-4867-a365-1d65f9d0e07e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager\GameManager">
+      <UniqueIdentifier>{7690ffa8-4779-4e42-90d0-25165ee7f139}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Manager\Collision">
+      <UniqueIdentifier>{ba94c54b-d80e-46d4-834c-6e3e9665569d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Manager\Collision">
+      <UniqueIdentifier>{bced4636-b924-4c13-8142-3411bc1ea6c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Factory">
+      <UniqueIdentifier>{04d219fe-0398-4560-b32d-f5f89ca69cd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\SceneFactory">
+      <UniqueIdentifier>{46739212-6394-4202-aa19-ce67b783584f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene">
+      <UniqueIdentifier>{d00a8998-a08f-48ce-850f-96c0eddb4980}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title">
+      <UniqueIdentifier>{92919d9a-660d-4a63-8767-0a9223021c5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\BackTexture">
+      <UniqueIdentifier>{3c98c5d1-fbeb-4fc4-954e-709ff843decc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\BackTexture\Base">
+      <UniqueIdentifier>{1a8ba4e9-2995-4a38-876b-bc3672aa1833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\BackTexture\Night">
+      <UniqueIdentifier>{3eda95b9-7a37-4b75-8967-8fe6084d9219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\BackTexture\Sunset">
+      <UniqueIdentifier>{2c299317-3b0e-4484-8699-d2309df3e09c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Lose">
+      <UniqueIdentifier>{57682276-21c2-48e2-83ee-02eed279de4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\WinScene">
+      <UniqueIdentifier>{c06d8e17-a723-4892-983a-90de5852100f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Game">
+      <UniqueIdentifier>{e3a0acb5-08b3-41f0-a41e-4357a3698e46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -395,9 +413,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Input\Input.cpp">
       <Filter>Ellysia\Source File\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\GameManager\GameManager.cpp">
-      <Filter>Project\GameManager</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Audio\Audio.cpp">
       <Filter>Ellysia\Source File\Audio</Filter>
@@ -438,9 +453,6 @@
     <ClCompile Include="Ellysia\Math\WorldTransform\WorldTransform.cpp">
       <Filter>Ellysia\Source File\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.cpp">
-      <Filter>Ellysia\Source File\Polygone\3D\Particle3DManager</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\SkyBox</Filter>
     </ClCompile>
@@ -459,7 +471,7 @@
     <ClCompile Include="Ellysia\Manager\RtvManager\RtvManager.cpp">
       <Filter>Ellysia\Source File\Manager\RTV</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Polygon\PostEffect\BackTest\BackText.cpp">
+    <ClCompile Include="Ellysia\Polygon\PostEffect\BackTest\BackTexture.cpp">
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\PostEffect\Dissolve\DissolveEffect.cpp">
@@ -544,13 +556,10 @@
       <Filter>Project\ObjectManager\StageObject\Gate</Filter>
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\TitleScene\TitleScene.cpp">
-      <Filter>Project\GameScene\Title</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Stage\ObjectManager\ObjectManager.cpp">
-      <Filter>Project\ObjectManager</Filter>
+      <Filter>Project\Scene\Title</Filter>
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp">
-      <Filter>Project\GameScene\Lose</Filter>
+      <Filter>Project\Scene\Lose</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp">
       <Filter>Project\Enemy\EnemyAttackCollision</Filter>
@@ -574,7 +583,7 @@
       <Filter>Ellysia\Source File\Math\Vector</Filter>
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\GameScene\GameScene.cpp">
-      <Filter>Project\GameScene\GameScene</Filter>
+      <Filter>Project\Scene\Game</Filter>
     </ClCompile>
     <ClCompile Include="Project\Player\PlayerCollisionToNormalEnemyAttack.cpp">
       <Filter>Project\Player\PlayerCollisionToNormalEnemyAttack</Filter>
@@ -583,7 +592,7 @@
       <Filter>Project\Player\PlayerCollisionToAudioObject</Filter>
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\WinScene\WinScene.cpp">
-      <Filter>Project\GameScene\WinScene</Filter>
+      <Filter>Project\Scene\WinScene</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\EnemyFlashLightCollision.cpp">
       <Filter>Project\Enemy\EnemyFlashLightCollision</Filter>
@@ -595,9 +604,6 @@
       <Filter>Ellysia\Source File\GlobalVariables</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\LevelDataManager\LevelDataManager.cpp">
-      <Filter>Ellysia\Source File\Manager\LevelData</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.cpp">
       <Filter>Ellysia\Source File\Manager\LevelData</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.cpp">
@@ -639,11 +645,23 @@
     <ClCompile Include="Ellysia\Math\Collision\CollisionCalculation.cpp">
       <Filter>Ellysia\Source File\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Manager\CollisionManager\CollisionManager.cpp">
-      <Filter>Ellysia\Source File\Manager</Filter>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.cpp">
+      <Filter>Project\Scene\Title\BackTexture\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Player\IPlayerCollision.cpp">
-      <Filter>Ellysia\Source File</Filter>
+    <ClCompile Include="Project\AllGameScene\TitleScene\NightBackTexture.cpp">
+      <Filter>Project\Scene\Title\BackTexture\Night</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\SunsetBackTexture.cpp">
+      <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\GameManager\GameManager.cpp">
+      <Filter>Ellysia\Source File\Manager\GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Manager\CollisionManager\CollisionManager.cpp">
+      <Filter>Ellysia\Source File\Manager\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp">
+      <Filter>Project\SceneFactory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -782,16 +800,13 @@
       <Filter>Ellysia\Header File\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\GameManager\IGameScene.h">
-      <Filter>Project\GameScene</Filter>
+      <Filter>Project\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Math\BPMCalculation\BPMSetting.h">
       <Filter>Ellysia\Header File\Math</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Common\Windows\WindowsSetup.h">
       <Filter>Ellysia\Header File\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\GameManager\GameManager.h">
-      <Filter>Project\GameManager</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Camera\Camera.h">
       <Filter>Ellysia\Header File\Camera</Filter>
@@ -847,9 +862,6 @@
     <ClInclude Include="Ellysia\Lighting\SpotLight.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\3D\Particle3DManager\Particle3DManager.h">
-      <Filter>Ellysia\Header File\Polygone\3D\Particle3DManager</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Audio\AudioStruct.h">
       <Filter>Ellysia\Header File\Audio</Filter>
     </ClInclude>
@@ -877,7 +889,7 @@
     <ClInclude Include="Ellysia\Manager\RtvManager\RtvManager.h">
       <Filter>Ellysia\Header File\Manager\RTV</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\PostEffect\BackTest\BackText.h">
+    <ClInclude Include="Ellysia\Polygon\PostEffect\BackTest\BackTexture.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\PostEffect\RandomEffect\RandomEffect.h">
@@ -983,16 +995,13 @@
       <Filter>Project\ObjectManager\StageObject\Gate</Filter>
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\TitleScene\TitleScene.h">
-      <Filter>Project\GameScene\Title</Filter>
+      <Filter>Project\Scene\Title</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\PostEffect\GrayScale\GrayScale.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Stage\ObjectManager\ObjectManager.h">
-      <Filter>Project\ObjectManager</Filter>
-    </ClInclude>
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h">
-      <Filter>Project\GameScene\Lose</Filter>
+      <Filter>Project\Scene\Lose</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\EnemyCondition.h">
       <Filter>Project\Enemy</Filter>
@@ -1013,13 +1022,10 @@
       <Filter>Ellysia\Header File\Math\Single</Filter>
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\GameScene\GameScene.h">
-      <Filter>Project\GameScene\GameScene</Filter>
+      <Filter>Project\Scene\Game</Filter>
     </ClInclude>
     <ClInclude Include="Project\Player\PlayerCollisionToNormalEnemyAttack.h">
       <Filter>Project\Player\PlayerCollisionToNormalEnemyAttack</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.h">
-      <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
     </ClInclude>
     <ClInclude Include="Project\Player\PlayerCollisionToAudioObject.h">
       <Filter>Project\Player\PlayerCollisionToAudioObject</Filter>
@@ -1046,7 +1052,7 @@
       <Filter>Ellysia\Header File\Manager\LevelEditor\Object\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\WinScene\WinScene.h">
-      <Filter>Project\GameScene\WinScene</Filter>
+      <Filter>Project\Scene\WinScene</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\EnemyFlashLightCollision.h">
       <Filter>Project\Enemy\EnemyFlashLightCollision</Filter>
@@ -1096,14 +1102,44 @@
     <ClInclude Include="Project\CollisionConfig\CollisionConfig.h">
       <Filter>Project</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Manager\CollisionManager\Collider.h">
-      <Filter>Ellysia\Header File\Manager</Filter>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.h">
+      <Filter>Project\Scene\Title\BackTexture\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\NightBackTexture.h">
+      <Filter>Project\Scene\Title\BackTexture\Night</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\SunsetBackTexture.h">
+      <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\GameManager\GameManager.h">
+      <Filter>Ellysia\Header File\Manager\GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\GameManager\IGameScene.h">
+      <Filter>Ellysia\Header File\Manager\GameManager</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\CollisionManager\CollisionManager.h">
-      <Filter>Ellysia\Header File\Manager</Filter>
+      <Filter>Ellysia\Header File\Manager\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Player\IPlayerCollision.h">
-      <Filter>Ellysia\Header File</Filter>
+    <ClInclude Include="Ellysia\Manager\CollisionManager\Collider.h">
+      <Filter>Ellysia\Header File\Manager\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\BasedPlayerCollision.h">
+      <Filter>Project\Player\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\PipelineManager\BlendMode.h">
+      <Filter>Ellysia\Header File\Manager\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Input\MouseInformation.h">
+      <Filter>Ellysia\Header File\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Listener.h">
+      <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\GameManager\IAbstractSceneFactory.h">
+      <Filter>Ellysia\Header File\Manager\GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\GameSceneFactory.h">
+      <Filter>Project\SceneFactory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

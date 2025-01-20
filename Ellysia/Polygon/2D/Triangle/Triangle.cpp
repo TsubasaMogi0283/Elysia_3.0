@@ -1,27 +1,36 @@
 #include "Triangle.h"
+
+#include <vector>
+
+#include "WindowsSetup.h"
+#include "DirectXSetup.h"
+#include "TextureManager.h"
 #include "Transform.h"
 
-//補助ライブラリ
-#include <d3dx12.h>
-//動的配列
-#include <vector>
-#include <TextureManager.h>
 
 
 
+Triangle::Triangle(){
+
+	//ウィンドウクラスの取得
+	windowsSetup_ = Ellysia::WindowsSetup::GetInstance();
+	//DirectXクラスの取得
+	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
+
+}
 
 void Triangle::Initialize() {
 
 	//ここでBufferResourceを作る
 	//頂点を6に増やす
-	vertexResouce_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * 6);
+	vertexResouce_ = directXSetup_->CreateBufferResource(sizeof(VertexData) * 6);
 	////マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	materialResource_=DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
+	materialResource_= directXSetup_->CreateBufferResource(sizeof(MaterialData));
 
 	
 
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
-	wvpResource_ =DirectXSetup::GetInstance()-> CreateBufferResource(sizeof(TransformationMatrix));
+	wvpResource_ = directXSetup_-> CreateBufferResource(sizeof(TransformationMatrix));
 
 	//頂点バッファビューを作成する
 	//リソースの先頭のアドレスから使う
@@ -97,7 +106,7 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 	//遠視投影行列
 	Matrix4x4 viewMatrixSprite = Matrix4x4Calculation::MakeIdentity4x4();
 	
-	Matrix4x4 projectionMatrixSprite = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(WindowsSetup::GetInstance()->GetClientWidth()), float(WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrixSprite = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(windowsSetup_->GetClientWidth()), float(windowsSetup_->GetClientHeight()), 0.0f, 100.0f);
 	
 
 	//WVP行列を作成
@@ -116,30 +125,26 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 	wvpResource_->Unmap(0, nullptr);
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
-	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//マテリアルCBufferの場所を設定
 	//ここでの[0]はregisterの0ではないよ。rootParameter配列の0番目
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//CBVを設定する
 	//wvp用のCBufferの場所を指定
 	//今回はRootParameter[1]に対してCBVの設定を行っている
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
-	
 	if (textureHandle_ != 0) {
 		TextureManager::GraphicsCommand(2,textureHandle_);
-
 	}
-	//directXSetup_->GetCommandList()->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU_);
-	
 
 	//描画(DrawCall)３頂点で１つのインスタンス。
-	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(6, 1, 0, 0);
+	directXSetup_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 
 }
 

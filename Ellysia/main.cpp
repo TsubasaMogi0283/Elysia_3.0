@@ -3,17 +3,15 @@
 //リリースチェッカー
 static D3DResourceLeakChecker checker;
 
-
 //main関数
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-	
-	//インスタンスを取得
-	std::unique_ptr<EllysiaEngine> myEngine = std::make_unique<EllysiaEngine>();
+	//フレームワークの生成
+	std::unique_ptr<Ellysia::Framework> ellysia = std::make_unique<Ellysia::Framework>();
 
 	//実行
-	myEngine->Run();
+	ellysia->Run();
 
-
+	//終了
 	return 0;
 }
 

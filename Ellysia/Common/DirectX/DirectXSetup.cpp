@@ -3,32 +3,39 @@
 #include <d3dx12.h>
 
 
-#include <PipelineManager.h>
-#include <SrvManager.h>
+#include "PipelineManager.h"
+#include "SrvManager.h"
 #include "../RtvManager/RtvManager.h"
 
-DirectXSetup* DirectXSetup::GetInstance() {
+Ellysia::DirectXSetup* Ellysia::DirectXSetup::GetInstance() {
 	//関数内static変数として宣言する
 	static DirectXSetup instance;
 	return &instance;
 }
 
 
-ComPtr<ID3D12DescriptorHeap> DirectXSetup::GenarateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType,UINT numDescriptors, bool shaderVisible) {
+ComPtr<ID3D12DescriptorHeap> Ellysia::DirectXSetup::GenarateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType,UINT numDescriptors, bool shaderVisible) {
 
 	ComPtr<ID3D12DescriptorHeap> descriptorHeap= nullptr;
-	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
-	descriptorHeapDesc.Type = heapType;
-	descriptorHeapDesc.NumDescriptors = numDescriptors;
-	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc={
+		//型
+		.Type = heapType,
+		//ディスクリプタの数
+		.NumDescriptors = numDescriptors,
+		//フラグの設定
+		.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE,
+
+	};
+	
+	//生成
 	HRESULT hr = DirectXSetup::GetInstance()->device_->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
 	assert(SUCCEEDED(hr));
+
 	return descriptorHeap;
 
 }
 
-
-ComPtr<ID3D12Resource> DirectXSetup::CreateBufferResource(const size_t& sizeInBytes) {
+ComPtr<ID3D12Resource> Ellysia::DirectXSetup::CreateBufferResource(const size_t& sizeInBytes) {
 
 	ComPtr<ID3D12Resource> resource = nullptr;
 	
@@ -61,7 +68,7 @@ ComPtr<ID3D12Resource> DirectXSetup::CreateBufferResource(const size_t& sizeInBy
 	return resource;
 }
 
-ComPtr<ID3D12Resource> DirectXSetup::GenerateDepthStencilTextureResource(const uint32_t& width, const uint32_t& height) {
+ComPtr<ID3D12Resource> Ellysia::DirectXSetup::GenerateDepthStencilTextureResource(const uint32_t& width, const uint32_t& height) {
 	D3D12_RESOURCE_DESC resourceDesc{
 		//2次元
 		.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D,
@@ -99,25 +106,28 @@ ComPtr<ID3D12Resource> DirectXSetup::GenerateDepthStencilTextureResource(const u
 
 	//Resourceの作成
 	ComPtr<ID3D12Resource> resource = nullptr;
-	HRESULT hr = DirectXSetup::GetInstance()->device_->CreateCommittedResource(
-		&heapProperties,					//Heapの設定 
-		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定。特になし。
-		&resourceDesc,						//Resourceの設定
-		D3D12_RESOURCE_STATE_DEPTH_WRITE,	//深度値を書き込む状態にしておく
-		&depthClearValue,					//Clear最適値
-		IID_PPV_ARGS(&resource));			//作成するResourceポインタへのポインタ
+	HRESULT hr = Ellysia::DirectXSetup::GetInstance()->device_->CreateCommittedResource(
+		//Heapの設定 
+		&heapProperties,
+		//Heapの特殊な設定。特になし。
+		D3D12_HEAP_FLAG_NONE,
+		//Resourceの設定
+		&resourceDesc,
+		//深度値を書き込む状態にしておく
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		//Clear最適値
+		&depthClearValue,
+		//作成するResourceポインタへのポインタ
+		IID_PPV_ARGS(&resource));
 	assert(SUCCEEDED(hr));
 
 	return resource;
 
 }
 
-
-
-
 #pragma region Initializeの所で使う関数
 
-void DirectXSetup::GenerateDXGIFactory() {
+void Ellysia::DirectXSetup::GenerateDXGIFactory() {
 	//DXGIファクトリーの生成
 #ifdef _DEBUG
 	ComPtr<ID3D12Debug1> debugController;
@@ -133,7 +143,7 @@ void DirectXSetup::GenerateDXGIFactory() {
 	
 }
 
-void DirectXSetup::SelectAdapter() {
+void Ellysia::DirectXSetup::SelectAdapter() {
 	//仕様するアダプタ用の変数、最初にnullptrを入れておく
 
 	ComPtr<IDXGIFactory7> dxgiFactory;
@@ -177,7 +187,7 @@ void DirectXSetup::SelectAdapter() {
 
 }
 
-void DirectXSetup::GenerateD3D12Device() {
+void Ellysia::DirectXSetup::GenerateD3D12Device() {
 	//機能レベルとログ出力用の文字
 	D3D_FEATURE_LEVEL featureLevels[] = {
 		D3D_FEATURE_LEVEL_12_2,
@@ -209,7 +219,7 @@ void DirectXSetup::GenerateD3D12Device() {
 
 }
 
-void DirectXSetup::StopErrorWarning() {
+void Ellysia::DirectXSetup::StopErrorWarning() {
 
 #ifdef _DEBUG
 	
@@ -253,7 +263,7 @@ void DirectXSetup::StopErrorWarning() {
 
 }
 
-void DirectXSetup::GenerateCommand() {
+void Ellysia::DirectXSetup::GenerateCommand() {
 	
 	//コマンドキューを生成する
 	HRESULT hr = {};
@@ -287,21 +297,45 @@ void DirectXSetup::GenerateCommand() {
 	DirectXSetup::GetInstance()->commandList_ = commandList;
 }
 
-void DirectXSetup::GenerateSwapChain() {
+void Ellysia::DirectXSetup::GenerateSwapChain() {
 	
 	//60fpsそのまま映すと大変なので2枚用意して
 	//描画(フロントバッファ)と表示(バックバッファ、プライマリバッファ)に分ける。
 	//このことをダブルバッファリングという。
 	HWND hwnd = WindowsSetup::GetInstance()->GetHwnd();
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-	swapChainDesc.Width = WindowsSetup::GetInstance()->GetClientWidth();		//画面の幅。ウィンドウのクライアント領域を同じものにしておく
-	swapChainDesc.Height = WindowsSetup::GetInstance()->GetClientHeight();		//画面の高さ。ウィンドウのクライアント領域を同じものにしておく
-	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;							//色の形式
-	swapChainDesc.SampleDesc.Count = 1;											//マルチサンプルしない
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;				//描画のターゲットとして利用する
-	swapChainDesc.BufferCount = 2;												//ダブルバッファ
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;					//モニタにうつしたら中身を破棄
 
+
+
+	DXGI_SAMPLE_DESC sampleDesc = {
+		//カウント
+		.Count = 1u,
+	};
+
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc={
+		//画面の幅。ウィンドウのクライアント領域を同じものにしておく
+		.Width = WindowsSetup::GetInstance()->GetClientWidth(),
+		
+		//画面の高さ。ウィンドウのクライアント領域を同じものにしておく
+		.Height = WindowsSetup::GetInstance()->GetClientHeight(),
+		
+		//色の形式
+		.Format = DXGI_FORMAT_R8G8B8A8_UNORM,
+		
+		//マルチサンプルしない
+		.SampleDesc = sampleDesc,
+
+		//描画のターゲットとして利用する
+		.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT,				
+		
+		//ダブルバッファ
+		.BufferCount = 2,
+
+		//モニタにうつしたら中身を破棄
+		.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD,					
+
+	
+	};
+	
 
 	//コマンドキュー、ウィンドウハンドル、設定を渡して生成する
 	HRESULT hr = DirectXSetup::GetInstance()->dxgiFactory_->CreateSwapChainForHwnd(
@@ -317,7 +351,7 @@ void DirectXSetup::GenerateSwapChain() {
 
 }
 
-void DirectXSetup::GenarateDescriptorHeap() {
+void Ellysia::DirectXSetup::GenarateDescriptorHeap() {
 	
 	ComPtr<ID3D12Resource> depthStencilResource_ = GenerateDepthStencilTextureResource(
 		WindowsSetup::GetInstance()->GetClientWidth(),
@@ -343,7 +377,7 @@ void DirectXSetup::GenarateDescriptorHeap() {
 	DirectXSetup::GetInstance()->depthStencilResource_ = depthStencilResource_;
 }
 
-void DirectXSetup::PullResourcesFromSwapChain() {
+void Ellysia::DirectXSetup::PullResourcesFromSwapChain() {
 	 
 	HRESULT hr = DirectXSetup::GetInstance()->swapChain.m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(& DirectXSetup::GetInstance()->swapChain.m_pResource[0]));
 	//上手く取得できなければ起動できない
@@ -355,7 +389,7 @@ void DirectXSetup::PullResourcesFromSwapChain() {
 
 }
 
-void DirectXSetup::GenarateFence() {
+void Ellysia::DirectXSetup::GenarateFence() {
 
 	//上の2つはSwapChain用
 
@@ -389,7 +423,7 @@ void DirectXSetup::GenarateFence() {
 
 
 
-void DirectXSetup::GenarateViewport(const uint32_t& width,const uint32_t& height) {
+void Ellysia::DirectXSetup::GenarateViewport(const uint32_t& width,const uint32_t& height) {
 	//クライアント領域のサイズと一緒にして画面全体に表示
 	D3D12_VIEWPORT viewport = {
 		.TopLeftX = 0.0f,
@@ -406,7 +440,7 @@ void DirectXSetup::GenarateViewport(const uint32_t& width,const uint32_t& height
 
 }
 
-void DirectXSetup::GenarateScissor(const uint32_t& right,const uint32_t& bottom) {
+void Ellysia::DirectXSetup::GenarateScissor(const uint32_t& right,const uint32_t& bottom) {
 	
 	//基本的にビューポートと同じ矩形が構成されるようにする
 
@@ -424,7 +458,7 @@ void DirectXSetup::GenarateScissor(const uint32_t& right,const uint32_t& bottom)
 
 }
 
-void DirectXSetup::SetResourceBarrier(const ComPtr<ID3D12Resource>& resource,const D3D12_RESOURCE_STATES& beforeState,const D3D12_RESOURCE_STATES& afterState){
+void Ellysia::DirectXSetup::SetResourceBarrier(const ComPtr<ID3D12Resource>& resource,const D3D12_RESOURCE_STATES& beforeState,const D3D12_RESOURCE_STATES& afterState){
 	
 
 	//TransitionBarrierを張るコード
@@ -449,7 +483,7 @@ void DirectXSetup::SetResourceBarrier(const ComPtr<ID3D12Resource>& resource,con
 
 }
 
-void DirectXSetup::SetResourceBarrierForSwapChain(const D3D12_RESOURCE_STATES& beforeState,const D3D12_RESOURCE_STATES& afterState){
+void Ellysia::DirectXSetup::SetResourceBarrierForSwapChain(const D3D12_RESOURCE_STATES& beforeState,const D3D12_RESOURCE_STATES& afterState){
 
 	//TransitionBarrierを張るコード
 	//現在のResourceStateを設定する必要がある → ResorceがどんなStateなのかを追跡する必要がある
@@ -477,7 +511,7 @@ void DirectXSetup::SetResourceBarrierForSwapChain(const D3D12_RESOURCE_STATES& b
 
 
 //FPS固定初期化
-void DirectXSetup::InitializeFPS() {
+void Ellysia::DirectXSetup::InitializeFPS() {
 	//現在時間を記録する
 	//初期化前の時間を記録
 	//std::chrono::steady_clock...逆行しないタイマー
@@ -488,7 +522,7 @@ void DirectXSetup::InitializeFPS() {
 
 #pragma endregion
 
-void DirectXSetup::FirstInitialize() {
+void Ellysia::DirectXSetup::FirstInitialize() {
 	//出力ウィンドウへの文字出力
 	OutputDebugStringA("Hello,DirectX!\n");
 
@@ -534,7 +568,7 @@ void DirectXSetup::FirstInitialize() {
 
 }
 
-void DirectXSetup::SecondInitialize() {
+void Ellysia::DirectXSetup::SecondInitialize() {
 
 	//名前を設定
 	DirectXSetup::GetInstance()->swapChainName_[0] = "SwapChainNumber1";
@@ -557,7 +591,7 @@ void DirectXSetup::SecondInitialize() {
 
 
 
-void DirectXSetup::UpdateFPS() {
+void Ellysia::DirectXSetup::UpdateFPS() {
 	//1/60秒ピッタリの時間
 	//1フレームの時間
 	const std::chrono::microseconds MIN_TIME(uint64_t(1000000.0f / 60.0f));
@@ -593,7 +627,7 @@ void DirectXSetup::UpdateFPS() {
 
 
 
-void DirectXSetup::StartDraw() {
+void Ellysia::DirectXSetup::StartDraw() {
 
 	////コマンドをキックする
 	//コマンドを積む・・・CommandListに処理を追加していくこと
@@ -646,7 +680,7 @@ void DirectXSetup::StartDraw() {
 
 
 
-void DirectXSetup::EndDraw() {
+void Ellysia::DirectXSetup::EndDraw() {
 	////画面表示出来るようにする
 	//ここがflameの最後
 	//画面に描く処理は「全て終わり」、画面に映すので、状態を遷移
@@ -705,7 +739,7 @@ void DirectXSetup::EndDraw() {
 	assert(SUCCEEDED(hr));
 }
 
-void DirectXSetup::Release() {
+void Ellysia::DirectXSetup::Release() {
 
 	//解放処理
 	CloseHandle(fenceEvent_);

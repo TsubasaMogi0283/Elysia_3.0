@@ -47,7 +47,7 @@ public:
 	float intensity=5.0f;
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> bufferResource = nullptr;
+	ComPtr<ID3D12Resource> resource = nullptr;
 
 
 private:

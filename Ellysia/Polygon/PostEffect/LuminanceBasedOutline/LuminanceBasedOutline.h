@@ -12,45 +12,95 @@
 #include "Vector3.h"
 #include "VertexData.h"
 
+
 /// <summary>
-/// アウトライン(輝度)
+/// EllysiaEngine
 /// </summary>
-class LuminanceBasedOutline{
-public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	LuminanceBasedOutline()=default;
+namespace Ellysia {
 
 	/// <summary>
-	/// 初期化
+	/// ウィンドウクラス
 	/// </summary>
-	void Initialize();
+	class WindowsSetup;
 
 	/// <summary>
-	/// 描画前の処理
+	/// DirectXクラス
 	/// </summary>
-	void PreDraw();
+	class DirectXSetup;
 
 	/// <summary>
-	/// 描画
+	/// パイプライン管理クラス
 	/// </summary>
-	void Draw();
+	class PipelineManager;
 
-	
 	/// <summary>
-	/// デストラクタ
+	/// RTV管理クラス
 	/// </summary>
-	~LuminanceBasedOutline()=default;
+	class RtvManager;
 
-private:
+	/// <summary>
+	/// SRV管理クラス
+	/// </summary>
+	class SrvManager;
 
-	//SRV
-	uint32_t srvHandle_ = 0;
+	/// <summary>
+	/// アウトライン(輝度)
+	/// </summary>
+	class LuminanceBasedOutline {
+	public:
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		LuminanceBasedOutline();
 
-	//RTV
-	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
-	uint32_t rtvHandle_ = 0;
-	D3D12_RESOURCE_BARRIER barrier = {};
-};
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize();
 
+		/// <summary>
+		/// 描画前の処理
+		/// </summary>
+		void PreDraw();
+
+		/// <summary>
+		/// 描画
+		/// </summary>
+		void Draw();
+
+
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~LuminanceBasedOutline() = default;
+
+
+	private:
+		//Windowクラス
+		Ellysia::WindowsSetup* windowSetup_ = nullptr;
+		//DirectXクラス
+		Ellysia::DirectXSetup* directXSetup_ = nullptr;
+		//パイプライン管理クラス
+		Ellysia::PipelineManager* pipelineManager_ = nullptr;
+		//RTV管理クラス
+		Ellysia::RtvManager* rtvManager_ = nullptr;
+		//SRV管理クラス
+		Ellysia::SrvManager* srvManager_ = nullptr;
+
+	private:
+
+		//SRV
+		//ハンドル
+		uint32_t srvHandle_ = 0;
+
+		//RTV
+		//リソース
+		ComPtr<ID3D12Resource> rtvResource_ = nullptr;
+		//ハンドル
+		uint32_t rtvHandle_ = 0;
+
+		//バリア
+		D3D12_RESOURCE_BARRIER barrier = {};
+	};
+
+}

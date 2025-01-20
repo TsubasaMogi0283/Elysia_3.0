@@ -20,7 +20,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	virtual ~IGameScene() {};
+	virtual ~IGameScene()=default;
 	
 	/// <summary>
 	/// 初期化

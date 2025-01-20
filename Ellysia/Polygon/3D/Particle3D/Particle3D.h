@@ -51,16 +51,23 @@ class ModelManager;
 /// </summary>
 class TextureManager;
 
-/// <summary>
-/// SRV管理クラス
-/// </summary>
-class SrvManager;
 
-/// <summary>
-/// パイプライン管理クラス
-/// </summary>
-class PipelineManager;
+namespace Ellysia {
+	/// <summary>
+	/// DirectXクラス
+	/// </summary>
+	class DirectSetup;
 
+	/// <summary>
+	/// SRV管理クラス
+	/// </summary>
+	class SrvManager;
+
+	/// <summary>
+	/// パイプライン管理クラス
+	/// </summary>
+	class PipelineManager;
+};
 
 #pragma endregion
 
@@ -273,13 +280,13 @@ private:
 	TextureManager* textureManager_ = nullptr;
 
 	//DirectXクラス
-	DirectXSetup* directXSetup_ = nullptr;
+	Ellysia::DirectXSetup* directXSetup_ = nullptr;
 
 	//SRV管理クラス
-	SrvManager* srvManager_ = nullptr;
+	Ellysia::SrvManager* srvManager_ = nullptr;
 
 	//パイプライン管理クラス
-	PipelineManager* pipelineManager_ = nullptr;
+	Ellysia::PipelineManager* pipelineManager_ = nullptr;
 
 private:
 	

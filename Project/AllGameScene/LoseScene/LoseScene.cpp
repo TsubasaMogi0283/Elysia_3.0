@@ -1,11 +1,17 @@
 #include "LoseScene.h"
-#include <TextureManager.h>
-#include <Input.h>
-#include "TitleScene/TitleScene.h"
-#include "GameScene/GameScene.h"
+
+#include "TextureManager.h"
+#include "Input.h"
 #include "GameManager.h"
 
 
+
+LoseScene::LoseScene(){
+	//入力クラスの取得
+	input_ = Ellysia::Input::GetInstance();
+	//テクスチャ管理クラス
+	textureManager_ = TextureManager::GetInstance();
+}
 
 void LoseScene::Initialize(){
 
@@ -13,16 +19,16 @@ void LoseScene::Initialize(){
 	const Vector2 INITIAL_SPRITE_POSITION_ = { .x = 0.0f,.y = 0.0f };
 
 	//メイン
-	uint32_t failedTextureHandle = TextureManager::LoadTexture("Resources/Sprite/Result/Lose/EscapeFailed.png");
+	uint32_t failedTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Result/Lose/EscapeFailed.png");
 	failedTexture_.reset(Sprite::Create(failedTextureHandle, INITIAL_SPRITE_POSITION_));
 
 
 	//Text
-	uint32_t textHandle = TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Result/Lose/LoseText.png");
+	uint32_t textHandle = textureManager_->LoadTexture("Resources/Sprite/Result/Lose/LoseText.png");
 	text_.reset(Sprite::Create(textHandle, INITIAL_SPRITE_POSITION_));
 
 	//黒背景
-	uint32_t blackTextureHandle = TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Back/Black.png");
+	uint32_t blackTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Back/Black.png");
 	black_.reset(Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION_));
 	//透明度の設定
 	transparency_ = 0.0f;
@@ -67,14 +73,14 @@ void LoseScene::Update(GameManager* gameManager){
 	}
 
 	//コントローラー接続時
-	if (Input::GetInstance()->IsConnetGamePad() == true) {
+	if (input_->IsConnetGamePad() == true) {
 
 		//Bボタンを押したとき
-		if (Input::GetInstance()->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+		if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 			bTriggerTime_ += INCREASE_VALUE;
 
 		}
-		if ((Input::GetInstance()->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+		if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
 			bTriggerTime_ = NO_REACT_TIME;
 		}
 
@@ -84,7 +90,7 @@ void LoseScene::Update(GameManager* gameManager){
 		}
 	}
 	//次のシーンへ
-	if (Input::GetInstance()->IsTriggerKey(DIK_SPACE) == true) {
+	if (input_->IsTriggerKey(DIK_SPACE) == true) {
 		isReturnTitle = true;
 	}
 
@@ -132,7 +138,7 @@ void LoseScene::Update(GameManager* gameManager){
 
 	//タイトルへ
 	if (blackOutTime_ > CHANGE_TO_TITLE_TIME_) {
-		gameManager->ChangeScene(new TitleScene());
+		gameManager->ChangeScene("Title");
 		return;
 	}
 
@@ -154,16 +160,11 @@ void LoseScene::DrawPostEffect()
 }
 
 void LoseScene::DrawSprite(){
+	//負け
 	failedTexture_->Draw();
+	//テキスト
 	text_->Draw();
-
-
 	//フェードイン
 	black_->Draw();
-
-
 }
 
-LoseScene::~LoseScene()
-{
-}

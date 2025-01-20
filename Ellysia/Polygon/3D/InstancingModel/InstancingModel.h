@@ -16,25 +16,7 @@
 #include "ModelData.h"
 
 #pragma region 前方宣言
- /// <summary>
- /// テクスチャ管理クラス
- /// </summary>
-class TextureManager;
 
-/// <summary>
-/// モデル管理クラス
-/// </summary>
-class ModelManager;
-
-/// <summary>
-/// パイプライン管理クラス
-/// </summary>
-class PipelineManager;
-
-/// <summary>
-/// SRV管理クラス
-/// </summary>
-class SrvManager;
 
 /// <summary>
 /// ワールドトランスフォーム
@@ -70,6 +52,35 @@ struct PointLight;
 /// スポットライト
 /// </summary>
 struct SpotLight;
+
+
+/// <summary>
+/// テクスチャ管理クラス
+/// </summary>
+class TextureManager;
+
+/// <summary>
+/// モデル管理クラス
+/// </summary>
+class ModelManager;
+
+/// <summary>
+/// EllysiaEngine
+/// </summary>
+namespace Ellysia {
+	
+
+	/// <summary>
+	/// パイプライン管理クラス
+	/// </summary>
+	class PipelineManager;
+
+	/// <summary>
+	/// SRV管理クラス
+	/// </summary>
+	class SrvManager;
+};
+
 
 #pragma endregion
 
@@ -141,29 +152,27 @@ public:
 
 private:
 	//DirectXクラス
-	DirectXSetup* directXSetup_ = nullptr;
-
+	Ellysia::DirectXSetup* directXSetup_ = nullptr;
 	//テクスチャ管理クラス
 	TextureManager* textureManager_ = nullptr;
-
 	//モデル管理クラス
 	ModelManager* modelmanager_ = nullptr;
-
 	//パイプライン管理クラス
-	PipelineManager* pipelineManager_ = nullptr;
-
+	Ellysia::PipelineManager* pipelineManager_ = nullptr;
 	//SRV管理クラス
-	SrvManager* srvManager_ = nullptr;
+	Ellysia::SrvManager* srvManager_ = nullptr;
 
 private:
-	//頂点リソース
+	//頂点
+	//リソース
 	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
-	//頂点バッファビュー
+	//バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 
-	//インデックスリソース
+	//インデックス
+	//リソース
 	ComPtr<ID3D12Resource> indexResource_ = nullptr;
-	//インデックスバッファビュー
+	//バッファビュー
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
 

@@ -6,17 +6,17 @@
 #include "WindowsSetup.h"
 
 
-GlobalVariables* GlobalVariables::GetInstance(){
+Ellysia::GlobalVariables* Ellysia::GlobalVariables::GetInstance(){
     static GlobalVariables instance;
     return &instance;
 }
 
-void GlobalVariables::CreateGroup(const std::string& groupName){
+void Ellysia::GlobalVariables::CreateGroup(const std::string& groupName){
     //指定名のオブジェクトが無ければ追加
     datas_[groupName];
 }
 
-void GlobalVariables::SetValue(const std::string& groupName, const std::string& key,const int32_t& value){
+void Ellysia::GlobalVariables::SetValue(const std::string& groupName, const std::string& key,const int32_t& value){
     //グループの参照
     Group& group = datas_[groupName];
     
@@ -29,7 +29,7 @@ void GlobalVariables::SetValue(const std::string& groupName, const std::string& 
 
 }
 
-void GlobalVariables::SetValue(const std::string& groupName, const std::string& key,const float& value){
+void Ellysia::GlobalVariables::SetValue(const std::string& groupName, const std::string& key,const float& value){
     //グループの参照
     Group& group = datas_[groupName];
 
@@ -42,7 +42,7 @@ void GlobalVariables::SetValue(const std::string& groupName, const std::string& 
 
 }
 
-void GlobalVariables::SetValue(const std::string& groupName, const std::string& key, const Vector3& value){
+void Ellysia::GlobalVariables::SetValue(const std::string& groupName, const std::string& key, const Vector3& value){
     //グループの参照
     Group& group = datas_[groupName];
 
@@ -55,7 +55,7 @@ void GlobalVariables::SetValue(const std::string& groupName, const std::string& 
 
 }
 
-void GlobalVariables::AddItem(const std::string& groupName, const std::string& key,const int32_t& value){
+void Ellysia::GlobalVariables::AddItem(const std::string& groupName, const std::string& key,const int32_t& value){
     
 
     //グループを検索
@@ -79,7 +79,7 @@ void GlobalVariables::AddItem(const std::string& groupName, const std::string& k
     
 }
 
-void GlobalVariables::AddItem(const std::string& groupName, const std::string& key,const float& value){
+void Ellysia::GlobalVariables::AddItem(const std::string& groupName, const std::string& key,const float& value){
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
@@ -98,7 +98,7 @@ void GlobalVariables::AddItem(const std::string& groupName, const std::string& k
     }
 }
 
-void GlobalVariables::AddItem(const std::string& groupName, const std::string& key, const Vector3& value){
+void Ellysia::GlobalVariables::AddItem(const std::string& groupName, const std::string& key, const Vector3& value){
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
@@ -116,7 +116,7 @@ void GlobalVariables::AddItem(const std::string& groupName, const std::string& k
     }
 }
 
-int32_t GlobalVariables::GetIntValue(const std::string& groupName, const std::string& key) {
+int32_t Ellysia::GlobalVariables::GetIntValue(const std::string& groupName, const std::string& key) {
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
@@ -139,7 +139,7 @@ int32_t GlobalVariables::GetIntValue(const std::string& groupName, const std::st
 
 }
 
-float GlobalVariables::GetFloatValue(const std::string& groupName, const std::string& key) {
+float Ellysia::GlobalVariables::GetFloatValue(const std::string& groupName, const std::string& key) {
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
@@ -163,7 +163,7 @@ float GlobalVariables::GetFloatValue(const std::string& groupName, const std::st
 
 }
 
-Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std::string& key) {
+Vector3 Ellysia::GlobalVariables::GetVector3Value(const std::string& groupName, const std::string& key) {
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
     
@@ -186,7 +186,7 @@ Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std
 
 }
 
-void GlobalVariables::SaveFile(const std::string& groupName){
+void Ellysia::GlobalVariables::SaveFile(const std::string& groupName){
     //グループを検索
     std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
@@ -266,7 +266,7 @@ void GlobalVariables::SaveFile(const std::string& groupName){
 
 }
 
-void GlobalVariables::LoadAllFile(){
+void Ellysia::GlobalVariables::LoadAllFile(){
     //保存先ディレクトリのパスをローカル変数で宣言する
     std::filesystem::path directory(DIRECTORY_PATH_);
 
@@ -304,7 +304,7 @@ void GlobalVariables::LoadAllFile(){
 
 }
 
-void GlobalVariables::LoadFile(const std::string& groupName){
+void Ellysia::GlobalVariables::LoadFile(const std::string& groupName){
     //読み込むJSONファイルのフルパスを合成する
     std::string filePath = DIRECTORY_PATH_ + groupName + ".json";
     //読み込み用のファイルストリーム
@@ -368,7 +368,7 @@ void GlobalVariables::LoadFile(const std::string& groupName){
 
 }
 
-void GlobalVariables::Update(){
+void Ellysia::GlobalVariables::Update(){
 #ifdef _DEBUG
 
     //メニューバーを使用可能なフラグを付けてウィンドウを開く

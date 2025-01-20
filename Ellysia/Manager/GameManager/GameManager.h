@@ -6,9 +6,10 @@
  */
 
 #include <cstdint>
+#include <memory>
 
 #include "IGameScene.h"
-
+#include "IAbstractSceneFactory.h"
 
 /// <summary>
 /// ゲーム管理クラス
@@ -25,12 +26,12 @@ public:
 	/// 初期化
 	/// </summary>
 	void Initialize();
-
+	
 	/// <summary>
-	/// シーンチェンジ
+	/// シーン遷移
 	/// </summary>
-	/// <param name="newGameScene"></param>
-	void ChangeScene(IGameScene* newGameScene);
+	/// <param name="sceneName"></param>
+	void ChangeScene(const std::string& sceneName);
 
 	/// <summary>
 	/// 更新
@@ -60,11 +61,16 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~GameManager();
+	~GameManager() = default;
+
 
 private:
+	//シーンファクトリー
+	std::unique_ptr<IAbstractSceneFactory> abstractSceneFactory_ = nullptr;
 
-	//StatePatternに必要な変数
-	IGameScene* currentGamaScene_ = nullptr;
-
+	//現在入っているシーン
+	std::unique_ptr<IGameScene> currentGamaScene_ = nullptr;
+	std::string  preSceneName_ = "";
+	std::string  currentSceneName_ = "";
+	
 };

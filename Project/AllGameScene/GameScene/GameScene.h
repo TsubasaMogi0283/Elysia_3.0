@@ -33,9 +33,8 @@
 #include "CollisionCalculation.h"
 
 #include "Input.h"
-#include "Stage/ObjectManager/ObjectManager.h"
 #include "Vignette.h"
-#include "BackText.h"
+#include "BackTexture.h"
 #include "LevelDataManager.h"
 
 
@@ -161,13 +160,14 @@ private:
 
 private:
 	//インプット
-	Input* input_=nullptr;
+	Ellysia::Input* input_=nullptr;
 	//テクスチャ管理クラス
 	TextureManager* texturemanager_ = nullptr;
 	//モデル管理クラス
 	ModelManager* modelManager_ = nullptr;
 	//レベルエディタ
-	LevelDataManager* levelDataManager_ = nullptr;
+	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	//ハンドル
 	uint32_t levelHandle_ = 0u;
 
 
@@ -222,9 +222,9 @@ private:
 
 	//ポストエフェクト
 	//基本
-	std::unique_ptr<BackText> back_ = nullptr;
+	std::unique_ptr<Ellysia::BackTexture> backTexture_ = nullptr;
 	//ビネット
-	std::unique_ptr<Vignette> vignette_ = nullptr;
+	std::unique_ptr<Ellysia::Vignette> vignette_ = nullptr;
 	const float MAX_VIGNETTE_POW_ = 1.6f;
 	float vignettePow_ = 17.0f;
 	float vignetteChangeTime_ = 0.0f;

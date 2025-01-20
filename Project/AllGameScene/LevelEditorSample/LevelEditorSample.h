@@ -15,7 +15,7 @@
 #include "Model.h"
 #include "Camera.h"
 #include "Material.h"
-#include "BackText.h"
+#include "BackTexture.h"
 #include "LevelDataManager.h"
 #include "CollisionManager.h"
 #include "Particle3D.h"
@@ -30,6 +30,18 @@
 /// ゲーム管理クラス
 /// </summary>
 class GameManager;
+
+
+
+/// <summary>
+/// Ellysia
+/// </summary>
+namespace Ellysia {
+	/// <summary>
+	/// レベルデータ管理クラス
+	/// </summary>
+	class LevelDataManager;
+}
 
 /// <summary>
 /// レベルデータの動作確認クラス
@@ -83,12 +95,15 @@ public:
 	/// </summary>
 	~LevelEditorSample();
 
-
+private:
+	//レベルエディタ
+	Ellysia::LevelDataManager* levelEditor_ = nullptr;
+	uint32_t levelHandle_ = 0u;
 
 
 private:
 	//ビネット
-	std::unique_ptr<BackText> back_ = nullptr;
+	std::unique_ptr<Ellysia::BackTexture> back_ = nullptr;
 	//カメラ
 	Camera camera_ = {};
 	//マテリアル
@@ -99,10 +114,7 @@ private:
 	Input* input_ = nullptr;
 
 
-	//レベルエディタ
-	LevelDataManager* levelEditor_ = nullptr;
-	uint32_t levelHandle_ = 0u;
-
+	
 
 	//サンプル
 	uint32_t audioHandle_ = 0u; 

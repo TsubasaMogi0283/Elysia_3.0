@@ -1,27 +1,29 @@
 #include "TitleScene.h"
 #include <imgui.h>
 #include <numbers>
-
+#include <array>
 
 #include "Input.h"
-#include "GameScene/GameScene.h"
 #include "GameManager.h"
 #include "ModelManager.h"
 #include "AnimationManager.h"
-
 #include "TextureManager.h"
 #include "LevelDataManager.h"
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
-#include <Calculation/QuaternionCalculation.h>
+#include "Calculation/QuaternionCalculation.h"
+
+#include "SunsetBackTexture.h"
+#include "NightBackTexture.h"
+
 
 TitleScene::TitleScene(){
 	//テクスチャ管理クラスの取得
 	textureManager_ = TextureManager::GetInstance();
 	//入力クラスの取得
-	input_ = Input::GetInstance();
+	input_ = Ellysia::Input::GetInstance();
 	//レベルエディタ管理クラスの取得
-	levelDataManager_ = LevelDataManager::GetInstance();
+	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 }
 
 void TitleScene::Initialize(){
@@ -76,53 +78,37 @@ void TitleScene::Initialize(){
 	titleRailCamera_->Initialize();
 	
 
+	//背景
 	//ポストエフェクト
-	back_ = std::make_unique<BackText>();
-	//初期化
-	back_->SetColour(directionalLight_.color);
-	back_->Initialize();
-
+	baseTitleBackTexture_ = std::make_unique<SunsetBackTexture>();
+	baseTitleBackTexture_->Initialize();
 
 	//ランダムエフェクトの生成
 	randomEffect_ = std::make_unique<RandomEffect>();
 	//初期化
 	randomEffect_->Initialize();
 	
-
-
-
 }
 
-
-
-
-
-
 void TitleScene::Update(GameManager* gameManager){
-	//増える時間の値
-	const uint32_t INCREASE_VALUE = 1u;
-	//Bトリガーの反応する時間
-	const uint32_t REACT_TIME = 1u;
-	//Bトリガーの反応しない時間
-	const uint32_t NO_REACT_TIME = 0u;
 
-	//再スタート時間
-	const uint32_t RESTART_TIME = 0u;
-
-	
-
+#pragma region 未スタート
 
 	//まだボタンを押していない時
 	//通常点滅
 	if (isFlash_ == true) {
-		
+		//再スタート時間
+		const uint32_t RESTART_TIME = 0u;
+
 		//時間の加算
 		flashTime_ += INCREASE_VALUE;
 
+		//表示
 		if (flashTime_ > FLASH_TIME_LIMIT_ * 0 &&
 			flashTime_ <= FLASH_TIME_LIMIT_ ) {
 			text_->SetInvisible(false);
 		}
+		//非表示
 		if (flashTime_ > FLASH_TIME_LIMIT_ &&
 			flashTime_ <= FLASH_TIME_LIMIT_*2) {
 			text_->SetInvisible(true);
@@ -134,14 +120,19 @@ void TitleScene::Update(GameManager* gameManager){
 
 	}
 	
-#pragma region スタート演出
+
 	//コントローラーのBを押すと高速点滅
 	if (input_->IsConnetGamePad() == true) {
+
+		//Bトリガーの反応しない時間
+		const uint32_t NO_REACT_TIME = 0u;
+		//Bトリガーの反応する時間
+		const uint32_t REACT_TIME = 1u;
+
 
 		//Bボタンを押したとき
 		if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 			bTriggerTime_ += INCREASE_VALUE;
-
 		}
 		//押していない
 		if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
@@ -150,7 +141,6 @@ void TitleScene::Update(GameManager* gameManager){
 
 		//反応
 		if (bTriggerTime_ == REACT_TIME) {
-
 			isFastFlash_ = true;
 		}
 
@@ -162,23 +152,13 @@ void TitleScene::Update(GameManager* gameManager){
 		isFastFlash_ = true;
 	}
 
-	//カウントが増える時間
-	const uint32_t INCREASE_COUNT_TIME = 0u;
-	//点滅の間隔
-	const uint32_t FLASH_INTERVAL = 2u;
-
-
-#ifdef _DEBUG
-	ImGui::Begin("平行光源");
-	ImGui::SliderFloat4("色", &directionalLight_.color.x, 0.0f, 1.0f);
-	ImGui::SliderFloat3("方向", &directionalLight_.direction.x, -1.0f, 1.0f);
-	ImGui::End();
-#endif // _DEBUG
-
-	
 
 	//高速点滅
 	if (isFastFlash_ == true&& isStart_==false) {
+		//カウントが増える時間
+		const uint32_t INCREASE_COUNT_TIME = 0u;
+
+		//時間の加算
 		fastFlashTime_ += INCREASE_VALUE;
 		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
 			//もう一度学び直したが
@@ -186,8 +166,13 @@ void TitleScene::Update(GameManager* gameManager){
 			//加算される前の値を入れたいなら後置インクリメント「(名前)++」にしよう
 			++textDisplayCount_;
 		}
+
 		//表示
 		const uint32_t DISPLAY_MOMENT = 0u;
+		
+		//点滅の間隔
+		const uint32_t FLASH_INTERVAL = 2u;
+
 		if (textDisplayCount_ % FLASH_INTERVAL == DISPLAY_MOMENT) {
 			text_->SetInvisible(true);
 		}
@@ -203,9 +188,9 @@ void TitleScene::Update(GameManager* gameManager){
 		}
 	}
 
-
 #pragma endregion
 
+#pragma region スタート演出
 
 	//シーン遷移演出
 	if (isStart_ == true) {
@@ -218,44 +203,43 @@ void TitleScene::Update(GameManager* gameManager){
 		randomEffectTime_ += DELTA_TIME;
 
 		//開始時間
-		const float RANDOM_EFFECT_DISPLAY_START_TIME_[DISPLAY_LENGTH_QUANTITY_] = {0.0f,2.5f};
+		std::array<float, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_START_TIME = { 0.0f,2.5f };
 		//表示の長さ
-		const float RANDOM_EFFECT_DISPLAY_LENGTH_[DISPLAY_LENGTH_QUANTITY_] = { 1.0f,3.0f };
-
-
-#ifdef _DEBUG
-		ImGui::Begin("TitleFade&Effect");
-		ImGui::InputFloat("Count", &randomEffectTime_);
-		ImGui::Checkbox("IsDisplay", &isDisplayRandomEffect_);
-		ImGui::End();
-
-
-		
-
-#endif // _DEBUG
+		std::array<float, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_LENGTH = { 1.0f,3.0f };
 
 
 
+		//通常はfalse
+		//指定時間内に入ったらtrue
+		isDisplayRandomEffect_ = false;
+		for (uint32_t i = 0; i < DISPLAY_LENGTH_QUANTITY_; ++i) {
+			if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[i] &&
+				randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME[i] + RANDOM_EFFECT_DISPLAY_LENGTH[i]) {
+				//ランダムエフェクトの表示
+				isDisplayRandomEffect_ = true;
 
-		//for文でまとめたかったが上手く出来なかった
-		if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME_[0] &&
-			randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME_[0] + RANDOM_EFFECT_DISPLAY_LENGTH_[0]) {
-			isDisplayRandomEffect_ = true;
+				break;
+			}
+
+			//2回目のエフェクト
+			const uint32_t FIRST_EFFECT = 0u;
+			//2回目のエフェクト
+			const uint32_t SECOND_EFFECT = 1u;
+
+			if (i == FIRST_EFFECT) {
+				//夜へ遷移
+				ChangeBackTexture(std::move(std::make_unique<NightBackTexture>()));
+			}
+			else if (i == SECOND_EFFECT) {
+				//ランダムの終了
+				if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[SECOND_EFFECT] + RANDOM_EFFECT_DISPLAY_LENGTH[SECOND_EFFECT]) {
+					isEndDisplayRandomEffect_ = true;
+				}
+			}
+			
+
 		}
-		else if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME_[1] &&
-			randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME_[1] + RANDOM_EFFECT_DISPLAY_LENGTH_[1]) {
-			isDisplayRandomEffect_ = true;
-		}
-		else {
-			isDisplayRandomEffect_ = false;
-		}
 
-
-
-		//ランダムの終了
-		if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME_[1] + RANDOM_EFFECT_DISPLAY_LENGTH_[1]) {
-			isEndDisplayRandomEffect_ = true;
-		}
 		
 		//ランダムエフェクト表示の演出が終わった場合
 		if (isEndDisplayRandomEffect_ == true) {
@@ -266,12 +250,12 @@ void TitleScene::Update(GameManager* gameManager){
 
 		//時間も兼ねている
 		if (blackFadeTransparency_ > 2.0f) {
-			gameManager->ChangeScene(new GameScene());
+			gameManager->ChangeScene("Game");
 			return;
 		}
 		
 	}
-
+#pragma endregion
 
 	//黒フェードの透明度の変更
 	blackFade_->SetTransparency(blackFadeTransparency_);
@@ -283,52 +267,57 @@ void TitleScene::Update(GameManager* gameManager){
 	material_.Update();
 	//スポットライトの更新
 	spotLight.Update();
+	//平行光源
 	directionalLight_.Update();
 
 	//レールカメラの更新
 	titleRailCamera_->Update();
+	//レールカメラから2つの行列を取得
 	camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
 	camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
 
 	//カメラの更新
 	camera_.Transfer();
 
+
+
+
+#ifdef _DEBUG
+	//ImGui用
+	DisplayImGui();
+#endif
 }
 
 void TitleScene::DrawObject3D(){
 	//ステージオブジェクト
 	levelDataManager_->Draw(levelHandle_,camera_, material_, directionalLight_);
 
-
-
-
-
 }
 
 void TitleScene::PreDrawPostEffectFirst(){
-	if (isDisplayRandomEffect_ == false) {
-		back_->PreDraw();
 
-	}
-	else {
+	//ランダム
+	if (isDisplayRandomEffect_ == true) {
 		//ランダム
 		randomEffect_->PreDraw();
 	}
+	else {
+		//背景
+		baseTitleBackTexture_->PreDraw();
+	}
 
-	
-	
 }
 
 void TitleScene::DrawPostEffect(){
-	if (isDisplayRandomEffect_ == false) {
-		back_->Draw();
+	//ランダム
+	if (isDisplayRandomEffect_ == true) {
+		//ランダム
+		randomEffect_->Draw();
 	}
 	else {
-		//ランダムエフェクト
-		randomEffect_->Draw();
-
+		//背景
+		baseTitleBackTexture_->Draw();
 	}
-	
 }
 
 void TitleScene::DrawSprite(){
@@ -341,4 +330,26 @@ void TitleScene::DrawSprite(){
 	//黒フェード
 	blackFade_->Draw();
 
+}
+
+void TitleScene::DisplayImGui(){
+	ImGui::Begin("TitleFade&Effect");
+	ImGui::InputFloat("Count", &randomEffectTime_);
+	ImGui::Checkbox("IsDisplay", &isDisplayRandomEffect_);
+	ImGui::End();
+
+	ImGui::Begin("平行光源");
+	ImGui::SliderFloat4("色", &directionalLight_.color.x, 0.0f, 1.0f);
+	ImGui::SliderFloat3("方向", &directionalLight_.direction.x, -1.0f, 1.0f);
+	ImGui::End();
+
+}
+
+void TitleScene::ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture> backTexture){
+	//違った時だけ遷移する
+	if (baseTitleBackTexture_ != backTexture) {
+		baseTitleBackTexture_ = std::move(backTexture);
+		//引数が次に遷移する
+		baseTitleBackTexture_->Initialize();
+	}
 }

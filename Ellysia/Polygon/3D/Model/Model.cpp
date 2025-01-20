@@ -19,19 +19,14 @@
 Model::Model(){
 	//テクスチャ管理クラスの取得
 	textureManager_ = TextureManager::GetInstance();
-
 	//モデル管理クラスの取得
 	modelmanager_ = ModelManager::GetInstance();
-
 	//DirectXクラスの取得
-	directXSetup_ = DirectXSetup::GetInstance();
-
+	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
 	//パイプライン管理クラスの取得
-	pipelineManager_ = PipelineManager::GetInstance();
-
+	pipelineManager_ = Ellysia::PipelineManager::GetInstance();
 	//SRV管理クラスも取得
-	srvManager_ = SrvManager::GetInstance();
-
+	srvManager_ = Ellysia::SrvManager::GetInstance();
 }
 
 Model* Model::Create(const uint32_t& modelHandle) {
@@ -126,7 +121,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
@@ -135,7 +130,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 	}
 
 	//DirectionalLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLight.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLight.resource->GetGPUVirtualAddress());
 
 	//カメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
@@ -205,7 +200,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
@@ -282,7 +277,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である

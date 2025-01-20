@@ -2,6 +2,11 @@
 
 
 
+AudioObjectForLevelEditor::AudioObjectForLevelEditor(){
+	//インスタンスの取得
+	audio_ = Ellysia::Audio::GetInstance();
+}
+
 void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Transform& transform){
 	
 	//レベルエディタ用のオブジェクトのタイプ
@@ -16,8 +21,7 @@ void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Tr
 	worldTransform_.rotate = transform.rotate;
 	worldTransform_.translate = transform.translate;
 
-	//インスタンスの取得
-	audio_ = Ellysia::Audio::GetInstance();
+	
 
 	//オーディオの種類によって数値を変える
 	if (audioDataForLevelEditor_.type == "BGM") {
@@ -25,30 +29,6 @@ void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Tr
 	}
 	else if (audioDataForLevelEditor_.type == "Action") {
 		audioType_ = AudioObjectType::ActionType;
-	}
-}
-
-void AudioObjectForLevelEditor::BackGround(){
-	//接触時に鳴らす
-	if (isTouch_ == true) {
-		audio_->Play(audioDataForLevelEditor_.handle, audioDataForLevelEditor_.isLoop);
-
-	}
-	else {
-		audio_->Stop(audioDataForLevelEditor_.handle);
-	}
-
-
-}
-
-void AudioObjectForLevelEditor::Action(){
-
-	//接触かつ動いている時に鳴らす
-	if (isTouch_ == true && isListenerMove_==true) {
-		audio_->Play(audioDataForLevelEditor_.handle, audioDataForLevelEditor_.isLoop);
-	}
-	else {
-		audio_->Stop(audioDataForLevelEditor_.handle);
 	}
 }
 
@@ -104,13 +84,30 @@ void AudioObjectForLevelEditor::Draw(const Camera& camera,const Material& materi
 	model_->Draw(worldTransform_, camera, material, spotLight);
 }
 
-Vector3 AudioObjectForLevelEditor::GetWorldPosition(){
-	return worldTransform_.GetWorldPosition();
+
+
+
+void AudioObjectForLevelEditor::BackGround() {
+	//接触時に鳴らす
+	if (isTouch_ == true) {
+		audio_->Play(audioDataForLevelEditor_.handle, audioDataForLevelEditor_.isLoop);
+
+	}
+	else {
+		audio_->Stop(audioDataForLevelEditor_.handle);
+	}
+
+
 }
 
-AABB AudioObjectForLevelEditor::GetAABB(){
-	//オーディオの場合は基本使わない
-	//必要あれば作るけどね
-	return aabb_;
+void AudioObjectForLevelEditor::Action() {
+
+	//接触かつ動いている時に鳴らす
+	if (isTouch_ == true && isListenerMove_ == true) {
+		audio_->Play(audioDataForLevelEditor_.handle, audioDataForLevelEditor_.isLoop);
+	}
+	else {
+		audio_->Stop(audioDataForLevelEditor_.handle);
+	}
 }
 

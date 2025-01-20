@@ -985,9 +985,9 @@ void Ellysia::Audio::OnEffect(const uint32_t& audioHandle) {
 
 
 //解放
-void Ellysia::Audio::Release() {
+void Ellysia::Audio::Finalize() {
 
-	//pXAPO_->Release();
+	//pXAPO_->Finalize();
 
 	//あるもの全部消す
 	for (std::map<std::string, AudioInformation>::iterator it = audioInformation_.begin(); it != audioInformation_.end();++it) {

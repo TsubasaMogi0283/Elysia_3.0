@@ -79,7 +79,7 @@ public:
 
 private:
 	//入力
-	Input* input_ = nullptr;
+	Ellysia::Input* input_ = nullptr;
 
 
 private:

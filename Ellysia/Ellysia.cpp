@@ -12,50 +12,38 @@
 #include "LevelDataManager.h"
 #include "GlobalVariables/GlobalVariables.h"
 
-EllysiaEngine::EllysiaEngine(){
+Ellysia::Framework::Framework(){
 
 	//インスタンスの取得
 	//ウィンドウ
-	windowsSetup_ = WindowsSetup::GetInstance();
-
+	windowsSetup_ = Ellysia::WindowsSetup::GetInstance();
 	//DirectX
-	directXSetup_ = DirectXSetup::GetInstance();
-
+	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
 	//SRV
-	srvManager_ = SrvManager::GetInstance();
-
+	srvManager_ = Ellysia::SrvManager::GetInstance();
 	//RTV
-	rtvManager_ = RtvManager::GetInstance();
-
+	rtvManager_ = Ellysia::RtvManager::GetInstance();
 	//ImGui管理クラス
-	imGuiManager_ = ImGuiManager::GetInstance();
-
+	imGuiManager_ = Ellysia::ImGuiManager::GetInstance();
 	//パイプライン
-	pipelineManager_ = PipelineManager::GetInstance();
-
+	pipelineManager_ = Ellysia::PipelineManager::GetInstance();
 	//入力
-	input_ = Input::GetInstance();
-
+	input_ = Ellysia::Input::GetInstance();
 	//Audio
 	audio_ = Ellysia::Audio::GetInstance();
-
 	//JSON読み込み
-	globalVariables_ = GlobalVariables::GetInstance();
-
+	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
 	//レベルデータ管理クラス
-	levelDataManager_ = LevelDataManager::GetInstance();
-
+	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 
 }
 
-void EllysiaEngine::Initialize(){
+void Ellysia::Framework::Initialize(){
 	//ここでタイトルバーの名前を決めてね
 	const wchar_t* TITLE_BAR_NAME = L"静寂の霊園";
 	//ウィンドウのサイズを決める
 	const int WINDOW_SIZE_WIDTH = 1280;
 	const int WINDOW_SIZE_HEIGHT = 720;
-
-
 
 	//初期化
 	//ウィンドウ
@@ -102,15 +90,11 @@ void EllysiaEngine::Initialize(){
 	globalVariables_->LoadAllFile();
 
 
-
-
-
-	//依存関係がおかしいとのこと
-	// 
-	//抽象か
-	//GameManagerの初期化
+	//ゲームシーン管理クラスの生成
 	gameManager_ = std::make_unique<GameManager>();
+	//初期化
 	gameManager_->Initialize();
+
 
 
 }
@@ -118,7 +102,7 @@ void EllysiaEngine::Initialize(){
 
 #pragma region ゲームループ内の関数
 
-void EllysiaEngine::BeginFrame(){
+void Ellysia::Framework::BeginFrame(){
 	
 	//SRVの更新
 	srvManager_->PreDraw();
@@ -129,7 +113,7 @@ void EllysiaEngine::BeginFrame(){
 #endif
 }
 
-void EllysiaEngine::Update(){
+void Ellysia::Framework::Update(){
 	//JSON用
 	//グローバル変数の更新
 	globalVariables_->Update();
@@ -141,7 +125,7 @@ void EllysiaEngine::Update(){
 	gameManager_->Update();
 }
 
-void EllysiaEngine::Draw(){
+void Ellysia::Framework::Draw(){
 	
 #pragma region PostEffect
 	
@@ -176,7 +160,7 @@ void EllysiaEngine::Draw(){
 }
 
 
-void EllysiaEngine::EndFrame() {
+void Ellysia::Framework::EndFrame() {
 #ifdef _DEBUG
 	////ImGuiのフレーム終わり
 	imGuiManager_->EndDraw();
@@ -189,17 +173,17 @@ void EllysiaEngine::EndFrame() {
 #pragma endregion
 
 
-void EllysiaEngine::Release() {
+void Ellysia::Framework::Finalize() {
 
 	//レベルエディタの解放
-	levelDataManager_->Release();
+	levelDataManager_->Finalize();
 
 	//オーディオの解放
-	audio_->Release();
+	audio_->Finalize();
 
 #ifdef _DEBUG
 	//ImGuiの解放	
-	imGuiManager_->Release();
+	imGuiManager_->Finalize();
 #endif
 
 	//DirectXの解放
@@ -216,7 +200,7 @@ void EllysiaEngine::Release() {
 
 
 
-void EllysiaEngine::Run(){
+void Ellysia::Framework::Run(){
 	//初期化
 	Initialize();
 	
@@ -240,10 +224,9 @@ void EllysiaEngine::Run(){
 			Update();
 
 			//ESCAPE押されたら終了
-			if (input_->IsPushKey(DIK_ESCAPE)) {
+			if (input_->IsTriggerKey(DIK_ESCAPE)==true) {
 				break;
 			}
-
 
 			//描画
 			Draw();
@@ -254,7 +237,7 @@ void EllysiaEngine::Run(){
 	}
 
 	//解放
-	Release();
+	Finalize();
 
 }
 

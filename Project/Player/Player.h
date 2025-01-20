@@ -17,7 +17,6 @@
 #include "AABB.h"
 #include "PlayerCollisionToStrongEnemy.h"
 #include "PlayerCollisionToNormalEnemyAttack.h"
-#include "Listener/ListenerForLevelEditor.h"
 #include "Light/FlashLight/FlashLight.h"
 #include "SpotLight.h"
 #include "PlayerCollisionToAudioObject.h"
@@ -39,7 +38,21 @@ struct Material;
 /// </summary>
 class GameScene;
 
+/// <summary>
+/// EllysiaEngine
+/// </summary>
+namespace Ellysia {
+	/// <summary>
+	/// 入力クラス
+	/// </summary>
+	class Input;
 
+};
+
+/// <summary>
+/// モデル管理クラス
+/// </summary>
+class ModelManager;
 
 #pragma endregion
 
@@ -62,7 +75,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Player() = default;
+	Player();
 
 	/// <summary>
 	/// 初期化
@@ -97,6 +110,11 @@ private:
 	/// 移動処理
 	/// </summary>
 	void Move();
+
+	/// <summary>
+	/// ImGui表示用
+	/// </summary>
+	void DisplayImGui();
 
 public:
 
@@ -148,8 +166,6 @@ public:
 	inline bool GetIsDamaged()const {
 		return isDameged_;
 	}
-
-
 
 	/// <summary>
 	/// 懐中電灯を取得
@@ -224,7 +240,6 @@ public:
 		this->worldTransform_.translate = position;
 	}
 
-	
 public:
 
 	/// <summary>
@@ -259,9 +274,6 @@ public:
 		return flashLight_->GetFanCollision();
 	}
 
-	
-
-
 private:
 
 	//モデル
@@ -271,8 +283,6 @@ private:
 	//マテリアル
 	Material material_ = {};
 
-
-
 	//持っている鍵の数
 	//可算なのでQuantity
 	uint32_t haveKeyQuantity_ = 0u;
@@ -280,8 +290,6 @@ private:
 	//動く方向
 	Vector3 moveDirection_ = {};
 
-	//幅のサイズ
-	const float SIDE_SIZE = 1.0f;
 	//AABB
 	AABB aabb_ = {};
 
@@ -316,22 +324,19 @@ private:
 	float vibeTime_ = 0u;
 
 private:
-	//歩くスピード
-	const float NORMAL_MOVE_SPEED = 0.1f;
-	//走るスピード
-	const float DASH_MOVE_SPEED = 0.2f;
+	//幅のサイズ
+	const float SIDE_SIZE = 1.0f;
 	//時間変化
 	const float DELTA_TIME = 1.0f / 60.0f;
 
-	//最大の振動の強さ
-	const float MAX_VIBE_ = 1.0f;
-	//最小の振動の強さ
-	const float MIN_VIBE_ = 0.0f;
-
-
 private:
-
-
+	//入力クラス
+	Ellysia::Input* input_ = nullptr;
+	//モデル管理クラス
+	ModelManager* modelManager_ = nullptr;
+private:
+	//当たり判定のリスト
+	//std::list<std::unique_ptr<Collider>> colliders_ = {};
 	//当たり判定(通常の敵)
 	std::unique_ptr<PlayerCollisionToNormalEnemyAttack>colliderToNormalEnemy_ = nullptr;
 	//当たり判定(一発アウトの敵用)
@@ -339,15 +344,7 @@ private:
 	//オーディオオブジェクト用
 	std::unique_ptr<PlayerCollisionToAudioObject>collosionToAudioObject_ = nullptr;
 
-	//当たり判定のリスト
-	//std::list<std::unique_ptr<Collider>> colliders_ = {};
-
-
-private:
-
-
 	//懐中電灯
 	std::unique_ptr<FlashLight>flashLight_ = nullptr;
 
 };
-

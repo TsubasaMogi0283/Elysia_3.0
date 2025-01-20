@@ -47,7 +47,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 
 
 	//読み込むたびにインデックスを増やし重複を防ごう
-	index_ = SrvManager::GetInstance()->Allocate();
+	index_ = Ellysia::SrvManager::GetInstance()->Allocate();
 
 
 
@@ -76,7 +76,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 
 
 	//SRVの生成
-	SrvManager::GetInstance()->CreateSRVForTexture2D(
+	Ellysia::SrvManager::GetInstance()->CreateSRVForTexture2D(
 		textureInfo.handle_,
 		textureInfo.resource_.Get(),
 		metadata.format, UINT(metadata.mipLevels), metadata.IsCubemap());
@@ -194,7 +194,7 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 
 	//3.Resourceを生成する
 
-	HRESULT hResult = DirectXSetup::GetInstance()->GetDevice()->CreateCommittedResource(
+	HRESULT hResult = Ellysia::DirectXSetup::GetInstance()->GetDevice()->CreateCommittedResource(
 		&heapProperties,					//Heapの設定
 		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定
 		&resourceDesc,						//Resourceの設定
@@ -215,10 +215,10 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 ComPtr<ID3D12Resource> TextureManager::TransferTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages) {
 
 	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
-	DirectX::PrepareUpload(DirectXSetup::GetInstance()->GetDevice().Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
+	DirectX::PrepareUpload(Ellysia::DirectXSetup::GetInstance()->GetDevice().Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
 	uint64_t intermidiateSize = GetRequiredIntermediateSize(texture.Get(), 0, UINT(subresources.size()));
-	ComPtr<ID3D12Resource> intermediateSizeResource = DirectXSetup::GetInstance()->CreateBufferResource(intermidiateSize);
-	UpdateSubresources(DirectXSetup::GetInstance()->GetCommandList().Get(), texture.Get(), intermediateSizeResource.Get(), 0, 0, UINT(subresources.size()), subresources.data());
+	ComPtr<ID3D12Resource> intermediateSizeResource = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(intermidiateSize);
+	UpdateSubresources(Ellysia::DirectXSetup::GetInstance()->GetCommandList().Get(), texture.Get(), intermediateSizeResource.Get(), 0, 0, UINT(subresources.size()), subresources.data());
 
 	//Textureへの転送後は利用できるよう、D312_RESOURCE_STATE_COPY_DESTから
 	//D3D12_RESOURCE_STATE_GENERIC_READへResourceStateを変更する
@@ -229,7 +229,7 @@ ComPtr<ID3D12Resource> TextureManager::TransferTextureData(ComPtr<ID3D12Resource
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
-	DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
+	Ellysia::DirectXSetup::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 
 
 	return intermediateSizeResource;
@@ -245,6 +245,6 @@ ComPtr<ID3D12Resource> TextureManager::TransferTextureData(ComPtr<ID3D12Resource
 
 
 void TextureManager::GraphicsCommand(const uint32_t& rootParameter, const uint32_t& textureHandle) {
-	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(rootParameter, textureHandle);
+	Ellysia::SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(rootParameter, textureHandle);
 }
 

@@ -5,15 +5,20 @@
 #include "TitleScene/TitleScene.h"
 #include "LevelEditorSample/LevelEditorSample.h"
 
+#include "GameSceneFactory.h"
 
 
 void GameManager::Initialize() {
-	//シーンごとに動作確認したいときはここを変えてね
-	currentGamaScene_ = new TitleScene();
 	
+	//シーンファクトリーの生成
+	abstractSceneFactory_ = std::make_unique<GameSceneFactory>();
+	
+	//シーンごとに動作確認したいときはここを変えてね
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
+
 #ifdef _DEBUG
-	//currentGamaScene_ = new LevelEditorSample();
-	currentGamaScene_ = new TitleScene();
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
+
 #endif // _DEBUG
 
 	//初期化
@@ -22,15 +27,23 @@ void GameManager::Initialize() {
 
 }
 
-void GameManager::ChangeScene(IGameScene* newGameScene) {
-	//一度消してから次のシーンにいく
-	delete currentGamaScene_;
-	currentGamaScene_ = newGameScene;
-	//引数が今入っているシーン
+
+
+void GameManager::ChangeScene(const std::string& sceneName){
+	//新しいシーンに遷移するためにPreの所に入っていたものを入れる
+	preSceneName_ = currentSceneName_;
+	//現在入っているシーン名を更新
+	currentSceneName_ = sceneName;
+
+	//シーンの値を取ってくる
+	currentGamaScene_ = abstractSceneFactory_->CreateScene(currentSceneName_);
+	//空ではない時初期化処理に入る
+	assert(currentGamaScene_ != nullptr);
+	//初期化
 	currentGamaScene_->Initialize();
+	
+	
 }
-
-
 
 void GameManager::Update() {
 	//更新
@@ -60,7 +73,3 @@ void GameManager::DrawPostEffect(){
 
 
 
-GameManager::~GameManager() {
-	//消去
-	delete currentGamaScene_;
-}

@@ -38,48 +38,97 @@ struct GaussianFilterData {
 };
 
 /// <summary>
-/// ガウシアンフィルタ
+/// EllysiaEngine
 /// </summary>
-class GaussianFilter {
-public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	GaussianFilter()=default;
-
+namespace Ellysia {
 
 	/// <summary>
-	/// 初期化
+	/// ウィンドウクラス
 	/// </summary>
-	void Initialize();
+	class WindowsSetup;
 
 	/// <summary>
-	/// 描画前処理
+	/// DirectXクラス
 	/// </summary>
-	void PreDraw();
+	class DirectXSetup;
 
 	/// <summary>
-	/// 描画
+	/// パイプライン管理クラス
 	/// </summary>
-	void Draw();
+	class PipelineManager;
 
 	/// <summary>
-	/// デストラクタ
+	/// RTV管理クラス
 	/// </summary>
-	~GaussianFilter()=default;
+	class RtvManager;
 
-private:
-	//別々で分けたい
-	ComPtr<ID3D12Resource> boxFilterTypeResource_ = nullptr;
-	GaussianFilterData* boxFilterTypeData_ = nullptr;
-	int32_t boxFilterType_ = GaussianFilter3x3;
-	float sigma_ = 0.0f;
+	/// <summary>
+	/// SRV管理クラス
+	/// </summary>
+	class SrvManager;
 
-	//RTV
-	uint32_t rtvHandle_ = 0;
-	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
-	//SRV
-	uint32_t srvHandle_ = 0;
 
-	D3D12_RESOURCE_BARRIER barrier = {};
-};
+	/// <summary>
+	/// ガウシアンフィルタ
+	/// </summary>
+	class GaussianFilter {
+	public:
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		GaussianFilter();
+
+
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize();
+
+		/// <summary>
+		/// 描画前処理
+		/// </summary>
+		void PreDraw();
+
+		/// <summary>
+		/// 描画
+		/// </summary>
+		void Draw();
+
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~GaussianFilter() = default;
+
+
+	private:
+		//Windowクラス
+		Ellysia::WindowsSetup* windowSetup_ = nullptr;
+		//DirectXクラス
+		Ellysia::DirectXSetup* directXSetup_ = nullptr;
+		//パイプライン管理クラス
+		Ellysia::PipelineManager* pipelineManager_ = nullptr;
+		//RTV管理クラス
+		Ellysia::RtvManager* rtvManager_ = nullptr;
+		//SRV管理クラス
+		Ellysia::SrvManager* srvManager_ = nullptr;
+
+	private:
+		//リソース
+		ComPtr<ID3D12Resource> boxFilterTypeResource_ = nullptr;
+		GaussianFilterData* boxFilterTypeData_ = nullptr;
+		int32_t boxFilterType_ = GaussianFilter3x3;
+		float sigma_ = 0.0f;
+
+		//RTV
+		//ハンドル
+		uint32_t rtvHandle_ = 0;
+		//リソース
+		ComPtr<ID3D12Resource> rtvResource_ = nullptr;
+		
+		//SRVハンドル
+		uint32_t srvHandle_ = 0;
+
+		//バリア
+		D3D12_RESOURCE_BARRIER barrier = {};
+	};
+}

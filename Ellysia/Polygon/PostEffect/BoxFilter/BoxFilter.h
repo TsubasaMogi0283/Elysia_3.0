@@ -31,50 +31,107 @@ struct BoxFilterType {
 
 };
 
-
-
 /// <summary>
-/// ボックスフィルタ
+/// EllysiaEngine
 /// </summary>
-class BoxFilter {
-public:
+namespace Ellysia {
 	/// <summary>
-	/// コンストラクタ
+	/// ウィンドウクラス
 	/// </summary>
-	BoxFilter()=default;
-
+	class WindowsSetup;
 
 	/// <summary>
-	/// 初期化
+	/// DirectXクラス
 	/// </summary>
-	void Initialize();
+	class DirectXSetup;
 
 	/// <summary>
-	/// 描画前処理
+	/// パイプライン管理クラス
 	/// </summary>
-	void PreDraw();
+	class PipelineManager;
 
 	/// <summary>
-	/// 描画
+	/// RTV管理クラス
 	/// </summary>
-	void Draw();
+	class RtvManager;
 
 	/// <summary>
-	/// デストラクタ
+	/// SRV管理クラス
 	/// </summary>
-	~BoxFilter()=default;
+	class SrvManager;
 
-private:
-	//別々で分けたい
-	ComPtr<ID3D12Resource> boxFilterTypeResource_ = nullptr;
-	BoxFilterType* boxFilterTypeData_ = nullptr;
-	int32_t boxFilterType_ = BoxFilter3x3;
 
-	//RTV
-	uint32_t rtvHandle_=0;
-	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
-	//SRV
-	uint32_t srvHandle_ = 0;
+	/// <summary>
+	/// ボックスフィルタ
+	/// </summary>
+	class BoxFilter {
+	public:
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		BoxFilter();
 
-	D3D12_RESOURCE_BARRIER barrier = {};
-};
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize();
+
+		/// <summary>
+		/// 描画前処理
+		/// </summary>
+		void PreDraw();
+
+		/// <summary>
+		/// 描画
+		/// </summary>
+		void Draw();
+
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~BoxFilter() = default;
+
+	public:
+		/// <summary>
+		/// 色の設定
+		/// </summary>
+		/// <param name="color"></param>
+		inline void SetColor(const Vector4& color) {
+			this->color_ = color;
+		}
+
+
+	private:
+		//Windowクラス
+		Ellysia::WindowsSetup* windowSetup_ = nullptr;
+		//DirectXクラス
+		Ellysia::DirectXSetup* directXSetup_ = nullptr;
+		//パイプライン管理クラス
+		Ellysia::PipelineManager* pipelineManager_ = nullptr;
+		//RTV管理クラス
+		Ellysia::RtvManager* rtvManager_ = nullptr;
+		//SRV管理クラス
+		Ellysia::SrvManager* srvManager_ = nullptr;
+
+	private:
+		//リソース
+		ComPtr<ID3D12Resource> boxFilterTypeResource_ = nullptr;
+		//データ
+		BoxFilterType* boxFilterTypeData_ = nullptr;
+		//型
+		uint32_t boxFilterType_ = BoxFilter3x3;
+
+		//RTV
+		uint32_t rtvHandle_ = 0;
+		ComPtr<ID3D12Resource> rtvResource_ = nullptr;
+
+		//SRV
+		uint32_t srvHandle_ = 0;
+
+		//色
+		Vector4 color_ = { .x = 1.0f,.y = 0.0f,.z = 0.0f,.w = 1.0f };
+
+		//バリア
+		D3D12_RESOURCE_BARRIER barrier = {};
+	};
+}
