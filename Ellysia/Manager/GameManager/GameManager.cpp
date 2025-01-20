@@ -5,6 +5,7 @@
 #include "TitleScene/TitleScene.h"
 #include "LevelEditorSample/LevelEditorSample.h"
 
+#include "AbstractSceneFactory.h"
 
 
 void GameManager::Initialize() {
@@ -33,6 +34,22 @@ void GameManager::ChangeScene(std::unique_ptr<IGameScene> newGameScene) {
 }
 
 
+
+void GameManager::ChangeScene(const std::string& sceneName){
+	//現在入っているシーン名を更新
+	currentSceneName_ = sceneName;
+
+	//前回と違った場合だけ通す
+	if (currentSceneName_ != sceneName) {
+		currentGamaScene_ = abstractSceneFactory_->CreateScene(currentSceneName_);
+
+		//空ではない時初期化処理に入る
+		if (currentGamaScene_ != nullptr) {
+			//引数が次に遷移するシーン
+			currentGamaScene_->Initialize();
+		}
+	}
+}
 
 void GameManager::Update() {
 	//更新

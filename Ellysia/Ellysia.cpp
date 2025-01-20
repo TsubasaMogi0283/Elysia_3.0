@@ -17,34 +17,24 @@ Ellysia::Framework::Framework(){
 	//インスタンスの取得
 	//ウィンドウ
 	windowsSetup_ = Ellysia::WindowsSetup::GetInstance();
-
 	//DirectX
 	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
-
 	//SRV
 	srvManager_ = Ellysia::SrvManager::GetInstance();
-
 	//RTV
 	rtvManager_ = Ellysia::RtvManager::GetInstance();
-
 	//ImGui管理クラス
 	imGuiManager_ = Ellysia::ImGuiManager::GetInstance();
-
 	//パイプライン
 	pipelineManager_ = Ellysia::PipelineManager::GetInstance();
-
 	//入力
 	input_ = Ellysia::Input::GetInstance();
-
 	//Audio
 	audio_ = Ellysia::Audio::GetInstance();
-
 	//JSON読み込み
 	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
-
 	//レベルデータ管理クラス
 	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
-
 
 }
 
@@ -54,8 +44,6 @@ void Ellysia::Framework::Initialize(){
 	//ウィンドウのサイズを決める
 	const int WINDOW_SIZE_WIDTH = 1280;
 	const int WINDOW_SIZE_HEIGHT = 720;
-
-
 
 	//初期化
 	//ウィンドウ
@@ -102,15 +90,16 @@ void Ellysia::Framework::Initialize(){
 	globalVariables_->LoadAllFile();
 
 
+	//シーンファクトリー
+	//sceneFactory_ = std::make_unique<IAbstractSceneFactory>();
 
 
-
-	//依存関係がおかしいとのこと
-	// 
-	//抽象か
-	//GameManagerの初期化
+	//ゲームシーン管理クラスの生成
 	gameManager_ = std::make_unique<GameManager>();
+	//gameManager_->SetAbstractSceneFactory(std::move(sceneFactory_));
+	//初期化
 	gameManager_->Initialize();
+
 
 
 }

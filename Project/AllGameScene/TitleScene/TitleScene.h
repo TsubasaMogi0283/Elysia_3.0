@@ -62,7 +62,6 @@ public:
 	/// </summary>
 	TitleScene();
 
-
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -73,8 +72,6 @@ public:
 	/// </summary>
 	/// <param name="gameManager">ゲーム管理クラス</param>
 	void Update(GameManager* gameManager)override;
-
-
 
 	/// <summary>
 	/// 3Dオブジェクト

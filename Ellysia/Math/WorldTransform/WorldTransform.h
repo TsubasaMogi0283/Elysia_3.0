@@ -8,7 +8,6 @@
 #include "Matrix4x4.h"
 #include "Vector3.h"
 #include "Quaternion.h"
-
 #include "DirectXSetup.h"
 
 
@@ -87,7 +86,7 @@ public:
 
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> bufferResource = nullptr;
+	ComPtr<ID3D12Resource> resource = nullptr;
 	//送るデータ
 	WorldTransformData* tranceformationData = nullptr;
 

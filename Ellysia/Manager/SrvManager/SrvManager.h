@@ -32,7 +32,7 @@ namespace Ellysia {
 		/// <summary>
 		/// インスタンスの取得
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>インスタンス</returns>
 		static SrvManager* GetInstance();
 
 		/// <summary>
@@ -68,35 +68,43 @@ namespace Ellysia {
 		/// <summary>
 		/// 2Dテクスチャ用のSRVを作成
 		/// </summary>
-		/// <param name="srvIndex"></param>
-		/// <param name="pResource"></param>
-		/// <param name="format"></param>
-		/// <param name="mipLevels"></param>
-		/// <param name="isCubeMap"></param>
-		void CreateSRVForTexture2D(const uint32_t& srvIndex, ID3D12Resource* pResource, const  DXGI_FORMAT& format, const UINT& mipLevels, const bool& isCubeMap);
+		/// <param name="srvIndex">インデックス</param>
+		/// <param name="resource">リソース</param>
+		/// <param name="format">フォーマット</param>
+		/// <param name="mipLevels">ミップレベル</param>
+		/// <param name="isCubeMap">キューブマップかどうか</param>
+		void CreateSRVForTexture2D(const uint32_t& srvIndex, ID3D12Resource* resource, const  DXGI_FORMAT& format, const UINT& mipLevels, const bool& isCubeMap);
 
 		/// <summary>
 		/// StructureBuffer用のSRVを作成
 		/// </summary>
-		/// <param name="srvIndex"></param>
-		/// <param name="pResource"></param>
-		/// <param name="numElements"></param>
-		/// <param name="structureByteStride"></param>
-		void CreateSRVForStructuredBuffer(const uint32_t& srvIndex, ID3D12Resource* pResource, const UINT& numElements, const UINT& structureByteStride);
+		/// <param name="srvIndex">インデックス</param>
+		/// <param name="resource">リソース</param>
+		/// <param name="numElements">数</param>
+		/// <param name="structureByteStride">サイズ</param>
+		void CreateSRVForStructuredBuffer(const uint32_t& srvIndex, ID3D12Resource* resource, const UINT& numElements, const UINT& structureByteStride);
 
 		/// <summary>
 		/// RenderTexture用のSRVを作成
 		/// </summary>
-		/// <param name="pResource"></param>
-		/// <param name="handle"></param>
-		void CreateSRVForRenderTexture(ID3D12Resource* pResource, const uint32_t& handle);
+		/// <param name="resource">リソース</param>
+		/// <param name="handle">ハンドル</param>
+		void CreateSRVForRenderTexture(ID3D12Resource* resource, const uint32_t& handle);
 
 		/// <summary>
 		/// DepthTexture用のSRVを作成
 		/// </summary>
-		/// <param name="handle"></param>
+		/// <param name="handle">ハンドル</param>
 		void CreateSRVForDepthTexture(const uint32_t& handle);
 
+		/// <summary>
+		/// Palette用のSRVを生成
+		/// </summary>
+		/// <param name="numElements"></param>
+		/// <param name="structureByteStride"></param>
+		/// <param name="resource"></param>
+		/// <param name="handle"></param>
+		void CreateSRVForPalette(const UINT& numElements, const UINT& structureByteStride, ID3D12Resource* resource, const uint32_t& handle);
 
 
 		/// <summary>
@@ -111,8 +119,8 @@ namespace Ellysia {
 		/// <summary>
 		/// CPUのハンドルを取得
 		/// </summary>
-		/// <param name="index"></param>
-		/// <returns></returns>
+		/// <param name="index">インデックス</param>
+		/// <returns>ハンドル</returns>
 		inline D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const uint32_t& index) {
 			D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 			handleCPU.ptr += (descriptorSize_ * index);
@@ -122,8 +130,9 @@ namespace Ellysia {
 		/// <summary>
 		/// GPUのハンドルを取得
 		/// </summary>
+		/// <param name="index">インデックス</param>
 		/// <param name="index"></param>
-		/// <returns></returns>
+		/// <returns>ハンドル</returns>
 		inline D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const uint32_t& index) {
 			D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap_->GetGPUDescriptorHandleForHeapStart();
 			handleGPU.ptr += (descriptorSize_ * index);
@@ -133,7 +142,7 @@ namespace Ellysia {
 		/// <summary>
 		/// ディスクリプタの取得
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>ディスクリプタ</returns>
 		inline ComPtr<ID3D12DescriptorHeap> GetSrvDescriptorHeap() const {
 			return  descriptorHeap_;
 		}

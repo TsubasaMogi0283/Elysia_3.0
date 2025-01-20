@@ -39,7 +39,7 @@ uint32_t Ellysia::SrvManager::Allocate(){
 
 
 
-void Ellysia::SrvManager::CreateSRVForTexture2D(const uint32_t& srvIndex, ID3D12Resource* pResource, const  DXGI_FORMAT& format, const UINT& mipLevels, const bool& isCubeMap) {
+void Ellysia::SrvManager::CreateSRVForTexture2D(const uint32_t& srvIndex, ID3D12Resource* resource, const  DXGI_FORMAT& format, const UINT& mipLevels, const bool& isCubeMap) {
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -60,11 +60,11 @@ void Ellysia::SrvManager::CreateSRVForTexture2D(const uint32_t& srvIndex, ID3D12
 	}
 
 	//SRVを作る
-	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
+	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(resource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
 	
 }
 
-void Ellysia::SrvManager::CreateSRVForStructuredBuffer(const uint32_t& srvIndex, ID3D12Resource* pResource, const UINT& numElements, const UINT& structureByteStride){
+void Ellysia::SrvManager::CreateSRVForStructuredBuffer(const uint32_t& srvIndex, ID3D12Resource* resource, const UINT& numElements, const UINT& structureByteStride){
 	
 	//SRVの設定
 	D3D12_BUFFER_SRV bufferSRV = {
@@ -82,16 +82,15 @@ void Ellysia::SrvManager::CreateSRVForStructuredBuffer(const uint32_t& srvIndex,
 	
 	};
 	
-	
 	//SRVの作成
 	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(
-		pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
+		resource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
 
 }
 
-void Ellysia::SrvManager::CreateSRVForRenderTexture(ID3D12Resource* pResource,const uint32_t& handle){
+void Ellysia::SrvManager::CreateSRVForRenderTexture(ID3D12Resource* resource,const uint32_t& handle){
+
 	//SRVの設定
-	//FormatはResourceと同じにしておく
 	D3D12_TEX2D_SRV tex2DRV = {
 		.MipLevels = 1u,
 	};
@@ -100,19 +99,17 @@ void Ellysia::SrvManager::CreateSRVForRenderTexture(ID3D12Resource* pResource,co
 		.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D,
 		.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING,
 		.Texture2D = tex2DRV,
-		
 	};
-	
 	
 	//SRVの生成
 	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(
-		pResource, &srvDesc, GetCPUDescriptorHandle(handle));
+		resource, &srvDesc, GetCPUDescriptorHandle(handle));
 
 }
 
 void Ellysia::SrvManager::CreateSRVForDepthTexture(const uint32_t& handle){
 
-
+	//情報を設定
 	D3D12_TEX2D_SRV tex2DRV = {
 		.MipLevels = 1u,
 	};
@@ -124,11 +121,38 @@ void Ellysia::SrvManager::CreateSRVForDepthTexture(const uint32_t& handle){
 	
 	};
 	
-
-
+	//リソースを持ってくる
 	ComPtr<ID3D12Resource> resource = DirectXSetup::GetInstance()->GetDepthStencilResource();
+	//SRVの生成
 	DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(resource.Get(), &depthTextureSrvDesc, GetCPUDescriptorHandle(handle));
 
+
+}
+
+void Ellysia::SrvManager::CreateSRVForPalette(const UINT& numElements, const UINT& structureByteStride, ID3D12Resource* resource, const uint32_t& handle){
+	
+	
+	//SRVの設定
+	D3D12_BUFFER_SRV bufferSRV = {
+		.FirstElement = 0u,
+		.NumElements = numElements,
+		.StructureByteStride = structureByteStride,
+		.Flags = D3D12_BUFFER_SRV_FLAG_NONE,
+	};
+
+
+	//palette用のSRV情報を設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC paletteSrvDesc={
+		.Format = DXGI_FORMAT_UNKNOWN,
+		.ViewDimension = D3D12_SRV_DIMENSION_BUFFER,
+		.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING,
+		.Buffer = bufferSRV,
+
+	};
+
+	//SRVを作る
+	Ellysia::DirectXSetup::GetInstance()->GetDevice()->CreateShaderResourceView(
+		resource, &paletteSrvDesc, GetCPUDescriptorHandle(handle));
 
 }
 

@@ -1,37 +1,52 @@
 #include "AnimationModel.h"
-#include <PipelineManager.h>
-#include <TextureManager.h>
-#include "SkinCluster.h"
-#include <ModelManager.h>
+
 #include <numbers>
-#include <Matrix4x4Calculation.h>
 
 
-#include <SrvManager.h>
+#include "SrvManager.h"
+#include "TextureManager.h"
+#include "ModelManager.h"
+#include "PipelineManager.h"
+
 #include "WorldTransform.h"
 #include "Material.h"
-#include <Camera.h>
-#include <SpotLight.h>
-#include <PointLight.h>
-#include <DirectionalLight.h>
+#include "Matrix4x4Calculation.h"
+#include "SkinCluster.h"
+#include "Camera.h"
+#include "SpotLight.h"
+#include "PointLight.h"
+#include "DirectionalLight.h"
 
 
-AnimationModel* AnimationModel::Create(uint32_t modelHandle){
+AnimationModel::AnimationModel(){
+	//DirectXのクラスを取得
+	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
+	//パイプライン管理クラスを取得
+	pipelineManager_ = Ellysia::PipelineManager::GetInstance();
+	//SRV管理クラスを取得
+	srvManager_ = Ellysia::SrvManager::GetInstance();
+	//テクスチャ管理クラスを取得
+	textureManager_ = TextureManager::GetInstance();
+	//モデル管理クラスを取得
+	modelManager_ = ModelManager::GetInstance();
+
+}
+
+AnimationModel* AnimationModel::Create(const uint32_t& modelHandle){
 	//新たなModel型のインスタンスのメモリを確保
 	AnimationModel* model = new AnimationModel();
 
 	//テクスチャの読み込み
-	model->textureHandle_ = TextureManager::GetInstance()->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
+	model->textureHandle_ = model->textureManager_->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
 	//Drawでも使いたいので取り入れる
 	model->modelHandle_ = modelHandle;
 
 	//モデルデータ
-	model->modelData_ = ModelManager::GetInstance()->GetModelData(modelHandle);
+	model->modelData_ = model->modelManager_->GetModelData(modelHandle);
 
-	//頂点リソースを作る
-	model->vertexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VertexData) * ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size()).Get();
-
-	//読み込みのところでバッファインデックスを作った方がよさそう
+	//頂点
+	//リソースを作る
+	model->vertexResource_ = model->directXSetup_->CreateBufferResource(sizeof(VertexData) * ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size()).Get(); 
 	//リソースの先頭のアドレスから使う
 	model->vertexBufferView_.BufferLocation = model->vertexResource_->GetGPUVirtualAddress();
 	//使用するリソースは頂点のサイズ
@@ -39,26 +54,25 @@ AnimationModel* AnimationModel::Create(uint32_t modelHandle){
 	//１頂点あたりのサイズ
 	model->vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
-
-
-	//解析したデータを使ってResourceとBufferViewを作成する
-	model->indexResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(uint32_t) * ModelManager::GetInstance()->GetModelData(modelHandle).indices.size()).Get();
+	//インデックス
+	//ソースの作成
+	model->indexResource_ = model->directXSetup_->CreateBufferResource(sizeof(uint32_t) * ModelManager::GetInstance()->GetModelData(modelHandle).indices.size()).Get();
+	//リソースの先頭のアドレスから使う
 	model->indexBufferView_.BufferLocation = model->indexResource_->GetGPUVirtualAddress();
-	size_t indicesSize = model->modelData_.indices.size();
-	model->indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * indicesSize);
+	//サイズ
+	model->indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * model->modelData_.indices.size());
+	//フォーマット
 	model->indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
-
-
 	//カメラ
-	model->cameraResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraForGPU)).Get();
+	model->cameraResource_ = model->directXSetup_->CreateBufferResource(sizeof(CameraForGPU)).Get();
 
 	return model;
 
 	
 }
 
-void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, DirectionalLight& directionalLight){
+void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const DirectionalLight& directionalLight){
 	//Materialのライティングの設定が平行光源ではない場合止める
 	assert(material.lightingKinds_ == Directional);
 
@@ -68,95 +82,66 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
+	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
 	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-	vertexResource_->Unmap(0, nullptr);
+	vertexResource_->Unmap(0u, nullptr);
 
-#pragma endregion
-
-#pragma region Index描画
-
+	//Index
 	uint32_t* mappedIndex = nullptr;
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
+	indexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&mappedIndex));
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-	indexResource_->Unmap(0, nullptr);
+	indexResource_->Unmap(0u, nullptr);
 
-#pragma endregion
-
-
-
-#pragma region PixelShaderに送る方のカメラ
-	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
-	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.worldMatrix.m[3][0];
-	cameraWorldPosition.y = camera.worldMatrix.m[3][1];
-	cameraWorldPosition.z = camera.worldMatrix.m[3][2];
-
-	cameraForGPU_->worldPosition = cameraWorldPosition;
-	cameraResource_->Unmap(0, nullptr);
-#pragma endregion
+	//PixelShaderに送る方のカメラ
+	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+	cameraForGPU_->worldPosition = camera.GetWorldPosition();
+	cameraResource_->Unmap(0u, nullptr);
 
 
 	//コマンドを積む
+	//パイプラインの設定
+	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetAnimationModelRootSignature().Get());
+	directXSetup_->GetCommandList()->SetPipelineState(pipelineManager_->GetAnimationModelGraphicsPipelineState().Get());
 
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetAnimationModelRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetAnimationModelGraphicsPipelineState().Get());
-
-
-	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+	//頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[2] = {
 		//VertexDataのVBV
 		vertexBufferView_,
-
 		//InfluenceのVBV
-		skinCluster.influenceBufferView_
+		skinCluster.influenceBufferView
 	};
-
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 2u, vertexBufferViews);
 	//IBVを設定
-	DirectXSetup::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
+	directXSetup_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
-	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
+	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
-
-
-	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
-	//コマンド送ってGPUで計算
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform.bufferResource->GetGPUVirtualAddress());
-
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	//ワールドトランスフォーム
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
-	if (textureHandle_ != 0) {
-		TextureManager::GraphicsCommand(2,textureHandle_);
+	if (textureHandle_ != 0u) {
+		textureManager_->GetInstance()->GraphicsCommand(2u,textureHandle_);
 	}
-
 	//DirectionalLight
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLight.bufferResource->GetGPUVirtualAddress());
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLight.resource->GetGPUVirtualAddress());
 	//カメラ
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource->GetGPUVirtualAddress());
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
 	//PixelShaderに送る方のカメラ
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//paletteSrvHandle
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(8, skinCluster.paletteSrvHandle_.second);
-
-
-	if (material.isEnviromentMap_==true && eviromentTextureHandle_ != 0) {
-		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(9, eviromentTextureHandle_);
+	directXSetup_->GetCommandList()->SetGraphicsRootDescriptorTable(8u, skinCluster.paletteSrvHandle.second);
+	//環境マップを使う場合
+	if (material.isEnviromentMap_==true && eviromentTextureHandle_ != 0u) {
+		srvManager_->SetGraphicsRootDescriptorTable(9u, eviromentTextureHandle_);
 	}
-
-
 	//DrawCall
-	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+	directXSetup_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1u, 0u, 0u, 0u);
 
 }
 
-void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, PointLight& pointLight){
+void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const PointLight& pointLight){
 	
 	//Materialのライティングの設定が点光源ではない場合止める
 	assert(material.lightingKinds_ == Point);
@@ -164,102 +149,72 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するとのこと
-#pragma region 頂点バッファ
-	//頂点バッファにデータを書き込む
+	
+	//頂点
 	VertexData* vertexData = nullptr;
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
+	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
 	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-	vertexResource_->Unmap(0, nullptr);
+	vertexResource_->Unmap(0u, nullptr);
 
-#pragma endregion
-
-#pragma region Index描画
-
+	//Index
 	uint32_t* mappedIndex = nullptr;
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
+	indexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&mappedIndex));
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-	indexResource_->Unmap(0, nullptr);
+	indexResource_->Unmap(0u, nullptr);
 
-#pragma endregion
 
-#pragma region PixelShaderに送る方のカメラ
-	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
-	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.worldMatrix.m[3][0];
-	cameraWorldPosition.y = camera.worldMatrix.m[3][1];
-	cameraWorldPosition.z = camera.worldMatrix.m[3][2];
-
-	cameraForGPU_->worldPosition = cameraWorldPosition;
-	cameraResource_->Unmap(0, nullptr);
-#pragma endregion
-
+	//PixelShaderに送る方のカメラ
+	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+	cameraForGPU_->worldPosition = camera.GetWorldPosition();
+	cameraResource_->Unmap(0u, nullptr);
 
 	//コマンドを積む
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetAnimationModelRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetAnimationModelGraphicsPipelineState().Get());
+	//パイプラインの設定
+	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetAnimationModelRootSignature().Get());
+	directXSetup_->GetCommandList()->SetPipelineState(pipelineManager_->GetAnimationModelGraphicsPipelineState().Get());
 
-
-	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+	//頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[2] = {
 		//VertexDataのVBV
 		vertexBufferView_,
-
 		//InfluenceのVBV
-		skinCluster.influenceBufferView_
+		skinCluster.influenceBufferView
 	};
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 2u, vertexBufferViews);
 	//IBVを設定
-	DirectXSetup::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
+	directXSetup_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
-	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
+	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
-
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform.bufferResource->GetGPUVirtualAddress());
-
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
-	if (textureHandle_ != 0) {
-		TextureManager::GraphicsCommand(2, textureHandle_);
+	if (textureHandle_ != 0u) {
+		textureManager_->GetInstance()->GraphicsCommand(2u, textureHandle_);
 	}
-
-
-	
 
 	//カメラ
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource->GetGPUVirtualAddress());
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
 	//PixelShaderに送る方のカメラ
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//PointLight
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(6, pointLight.bufferResource_->GetGPUVirtualAddress());
-
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6u, pointLight.bufferResource_->GetGPUVirtualAddress());
 	//paletteSrvHandle
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(8, skinCluster.paletteSrvHandle_.second);
-
-
-	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0) {
-
-
-		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(9, eviromentTextureHandle_);
+	directXSetup_->GetCommandList()->SetGraphicsRootDescriptorTable(8u, skinCluster.paletteSrvHandle.second);
+	//環境マップを使う場合
+	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
+		srvManager_->SetGraphicsRootDescriptorTable(9u, eviromentTextureHandle_);
 	}
 
-
-
-
 	//DrawCall
-	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+	directXSetup_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1u, 0u, 0u, 0u);
 }
 
-void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCluster& skinCluster, Material& material, SpotLight& spotLight){
+void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const SpotLight& spotLight){
 	
 	//Materialのライティングの設定がスポットライトではない場合止める
 	assert(material.lightingKinds_ == Spot);
@@ -267,96 +222,66 @@ void AnimationModel::Draw(WorldTransform& worldTransform, Camera& camera, SkinCl
 	// 資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
 	//プログラムが安定するとのこと
-#pragma region 頂点バッファ
-	//頂点バッファにデータを書き込む
+	
+	//頂点
 	VertexData * vertexData = nullptr;
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
+	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
 	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-	vertexResource_->Unmap(0, nullptr);
+	vertexResource_->Unmap(0u, nullptr);
 
-#pragma endregion
-
-#pragma region Index描画
-
+	
+	//Index
 	uint32_t* mappedIndex = nullptr;
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
+	indexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&mappedIndex));
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-	indexResource_->Unmap(0, nullptr);
+	indexResource_->Unmap(0u, nullptr);
 
-#pragma endregion
-
-
-#pragma region PixelShaderに送る方のカメラ
-	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
-	Vector3 cameraWorldPosition = {};
-	cameraWorldPosition.x = camera.worldMatrix.m[3][0];
-	cameraWorldPosition.y = camera.worldMatrix.m[3][1];
-	cameraWorldPosition.z = camera.worldMatrix.m[3][2];
-
-	cameraForGPU_->worldPosition = cameraWorldPosition;
-	cameraResource_->Unmap(0, nullptr);
-#pragma endregion
+	//PixelShaderに送る方のカメラ
+	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+	cameraForGPU_->worldPosition = camera.GetWorldPosition();
+	cameraResource_->Unmap(0u, nullptr);
 
 
 	//コマンドを積む
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetAnimationModelRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetAnimationModelGraphicsPipelineState().Get());
+	//パイプラインの設定
+	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetAnimationModelRootSignature().Get());
+	directXSetup_->GetCommandList()->SetPipelineState(pipelineManager_->GetAnimationModelGraphicsPipelineState().Get());
 
-
-	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+	//頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[2] = {
 		//VertexDataのVBV
 		vertexBufferView_,
-
 		//InfluenceのVBV
-		skinCluster.influenceBufferView_
+		skinCluster.influenceBufferView
 	};
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	DirectXSetup::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 2u, vertexBufferViews);
 	//IBVを設定
-	DirectXSetup::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
+	directXSetup_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
-	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
+	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
-
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform.bufferResource->GetGPUVirtualAddress());
-
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
-	if (textureHandle_ != 0) {
-		TextureManager::GraphicsCommand(2, textureHandle_);
+	if (textureHandle_ != 0u) {
+		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
-
-
-
-
 	//カメラ
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera.bufferResource->GetGPUVirtualAddress());
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
 	//PixelShaderに送る方のカメラ
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//SpotLight
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLight.bufferResource_->GetGPUVirtualAddress());
-	
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.bufferResource_->GetGPUVirtualAddress());
 	//paletteSrvHandle
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(8, skinCluster.paletteSrvHandle_.second);
-
-
-
-	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0) {
-		SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(9, eviromentTextureHandle_);
+	directXSetup_->GetCommandList()->SetGraphicsRootDescriptorTable(8u, skinCluster.paletteSrvHandle.second);
+	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
+		srvManager_->SetGraphicsRootDescriptorTable(9u, eviromentTextureHandle_);
 	}
-
-
 
 	//DrawCall
-	DirectXSetup::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+	directXSetup_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1u, 0u, 0u, 0u);
 }

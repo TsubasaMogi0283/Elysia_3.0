@@ -148,7 +148,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Ellysia\Manager\GameManager\GameSceneFactory.cpp" />
     <ClCompile Include="Ellysia\Manager\ImGuiManager\ImGuiManager.cpp" />
     <ClCompile Include="Ellysia\Manager\LevelDataManager\LevelDataManager.cpp" />
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.cpp" />
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.cpp" />
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.cpp" />
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditor.cpp" />
@@ -408,6 +407,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h" />
     <ClInclude Include="Ellysia\Manager\CollisionManager\Collider.h" />
     <ClInclude Include="Ellysia\Manager\CollisionManager\CollisionManager.h" />
+    <ClInclude Include="Ellysia\Manager\GameManager\AbstractSceneFactory.h" />
     <ClInclude Include="Ellysia\Manager\GameManager\GameManager.h" />
     <ClInclude Include="Ellysia\Manager\GameManager\GameSceneFactory.h" />
     <ClInclude Include="Ellysia\Manager\GameManager\IGameScene.h" />

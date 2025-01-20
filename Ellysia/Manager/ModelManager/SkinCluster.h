@@ -22,7 +22,7 @@
 /// スキンクラスター
 /// </summary>
 struct SkinCluster {
-
+public:
 	/// <summary>
 	/// SkinClusterを作る
 	/// </summary>
@@ -33,33 +33,31 @@ struct SkinCluster {
 	/// <summary>
 	/// 更新
 	/// </summary>
-	/// <param name="skeleton"></param>
-	void Update(const Skeleton& skeleton);
+	/// <param name="newSkeleton"></param>
+	void Update(const Skeleton& newSkeleton);
 
 	
-	//SkinClusterStruct skinClusterStruct_ = {};
-	std::vector<Matrix4x4> inverseBindPoseMatrices;
+public:
+	//逆転置行列
+	std::vector<Matrix4x4> inverseBindPoseMatrices = {};
 
 	//Influence
 	//頂点に対して影響を与えるパラメータ群
-	ComPtr<ID3D12Resource> influenceResource_;
-	D3D12_VERTEX_BUFFER_VIEW influenceBufferView_;
-	std::span<VertexInfluence>mappedInfluence_;
-
-
-
+	ComPtr<ID3D12Resource> influenceResource = nullptr;
+	D3D12_VERTEX_BUFFER_VIEW influenceBufferView = {};
+	std::span<VertexInfluence>mappedInfluence = {};
 
 	//MatrixPalette
 	//Skinningを行う際に必要な行列をSkeletonの全Jointの数だけ格納した配列
-	ComPtr<ID3D12Resource>paletteResource_;
-	std::span<WellForGPU> mappedPalette_;
-	std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> paletteSrvHandle_;
+	ComPtr<ID3D12Resource>paletteResource = nullptr;
+	std::span<WellForGPU> mappedPalette = {};
+	std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> paletteSrvHandle = {};
 	
 	//SRV
-	uint32_t srvIndex_;
+	uint32_t srvIndex = 0u;
 	
 	//スケルトン
-	Skeleton skeleton_;
+	Skeleton skeleton = {};
 	
 
 

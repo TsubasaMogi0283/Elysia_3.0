@@ -11,7 +11,7 @@
 /// <summary>
 /// EllysiaEngine
 /// </summary>
-namespace Ellysia{
+namespace Ellysia {
 	/// <summary>
 	/// ウィンドウクラス
 	/// </summary>
@@ -36,116 +36,113 @@ namespace Ellysia{
 	/// SRV管理クラス
 	/// </summary>
 	class SrvManager;
-}
 
 
-/// <summary>
-/// ビネット
-/// </summary>
-class Vignette {
-public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	Vignette();
 
 	/// <summary>
-	/// 初期化
+	/// ビネット
 	/// </summary>
-	void Initialize();
+	class Vignette {
+	public:
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		Vignette();
 
-	/// <summary>
-	/// 描画前処理
-	/// </summary>
-	void PreDraw();
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize();
 
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw();
+		/// <summary>
+		/// 描画前処理
+		/// </summary>
+		void PreDraw();
 
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~Vignette() = default;
+		/// <summary>
+		/// 描画
+		/// </summary>
+		void Draw();
 
-private:
-	/// <summary>
-	/// 書き込みし、送る関数
-	/// </summary>
-	void Transfer();
-
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~Vignette() = default;
 
 
-public:
 
-	/// <summary>
-	/// 何倍にするかの設定
-	/// </summary>
-	/// <param name="scale"></param>
-	inline void SetScale(const float& scale) {
-		this->scale_ = scale;
-	}
+	public:
 
-	/// <summary>
-	/// 何乗するかの設定
-	/// </summary>
-	/// <param name="pow"></param>
-	inline void SetPow(const float& pow) {
-		this->pow_ = pow;
-	}
+		/// <summary>
+		/// 何倍にするかの設定
+		/// </summary>
+		/// <param name="scale"></param>
+		inline void SetScale(const float& scale) {
+			this->vignetteValue_.scale = scale;
+		}
 
-	/// <summary>
-	/// 色の設定
-	/// </summary>
-	/// <param name="color"></param>
-	inline void SetColor(const Vector3& color) {
-		this->color_ = color;
-	}
+		/// <summary>
+		/// 何乗するかの設定
+		/// </summary>
+		/// <param name="pow"></param>
+		inline void SetPow(const float& pow) {
+			this->vignetteValue_.pow = pow;
+		}
 
-private:
-	//送るデータ
-	struct VignetteData {
-		//倍
-		float scale;
-		//乗
-		float pow;
-		//色
-		Vector3 color;
-		float padding[3];
+		/// <summary>
+		/// 色の設定
+		/// </summary>
+		/// <param name="color"></param>
+		inline void SetColor(const Vector3& color) {
+			this->vignetteValue_.color = color;
+		}
+
+	private:
+		//送るデータ
+		struct VignetteData {
+		public:
+			//倍
+			float scale;
+			//乗
+			float pow;
+			//色
+			Vector3 color;
+
+		private:
+			float padding[3];
+
+		};
+
+	private:
+		//ウィンドウクラス
+		Ellysia::WindowsSetup* windowsSetup_ = nullptr;
+		//DirectXクラス
+		Ellysia::DirectXSetup* directXSetup_ = nullptr;
+		//パイプライン管理クラス
+		Ellysia::PipelineManager* pipelinemanager_ = nullptr;
+		//RTV管理クラス
+		Ellysia::RtvManager* rtvManager_ = nullptr;
+		//SRV管理クラス
+		Ellysia::SrvManager* srvManager_ = nullptr;
+
+	private:
+		//ハンドル
+		uint32_t rtvHandle_ = 0;
+		//RTV
+		ComPtr<ID3D12Resource> rtvResource_ = nullptr;
+		//SRV
+		uint32_t srvHandle_ = 0;
+
+		//リソース
+		ComPtr<ID3D12Resource> valueResource_ = nullptr;
+		//送るデータ
+		VignetteData* vignetteData_ = nullptr;
+		//値
+		VignetteData vignetteValue_ = {};
+
+		//リソースバリア
+		D3D12_RESOURCE_BARRIER barrier = {};
 
 	};
 
-private:
-	//ウィンドウクラス
-	Ellysia::WindowsSetup* windowsSetup_ = nullptr;
-	//DirectXクラス
-	Ellysia::DirectXSetup* directXSetup_ = nullptr;
-	//パイプライン管理クラス
-	Ellysia::PipelineManager* pipelinemanager_ = nullptr;
-	//RTV管理クラス
-	Ellysia::RtvManager* rtvManager_ = nullptr;
-	//SRV管理クラス
-	Ellysia::SrvManager* srvManager_ = nullptr;
-
-private:
-	//ハンドル
-	uint32_t rtvHandle_ = 0;
-	//RTV
-	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
-	//SRV
-	uint32_t srvHandle_ = 0;
-
-	//リソース
-	ComPtr<ID3D12Resource> valueResource_ = nullptr;
-	//送るデータ
-	VignetteData* vignetteData_ = nullptr;
-	float scale_ = 0.0f;
-	float pow_ = 0.0f;
-	Vector3 color_ = {};
-
-	//リソースバリア
-	D3D12_RESOURCE_BARRIER barrier = {};
-
 };
-

@@ -7,48 +7,95 @@
 
 #include "DirectXSetup.h"
 
-/// <summary>
-/// セピア
-/// </summary>
-class SepiaScale{
-public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	SepiaScale() = default;
 
+ /// <summary>
+ /// EllysiaEngine
+ /// </summary>
+namespace Ellysia {
 
 	/// <summary>
-	/// 初期化
+	/// ウィンドウクラス
 	/// </summary>
-	void Initialize();
+	class WindowsSetup;
 
 	/// <summary>
-	/// 描画前処理
+	/// DirectXクラス
 	/// </summary>
-	void PreDraw();
+	class DirectXSetup;
 
 	/// <summary>
-	/// 描画
+	/// パイプライン管理クラス
 	/// </summary>
-	void Draw();
+	class PipelineManager;
 
 	/// <summary>
-	/// デストラクタ
+	/// RTV管理クラス
 	/// </summary>
-	~SepiaScale() = default;
+	class RtvManager;
+
+	/// <summary>
+	/// SRV管理クラス
+	/// </summary>
+	class SrvManager;
 
 
-private:
-	//RTVハンドル
-	uint32_t rtvHandle_ = 0;
-	//RTV
-	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
-	//SRVハンドル
-	uint32_t srvHandle_ = 0;
-	//バリア
-	D3D12_RESOURCE_BARRIER barrier = {};
+	/// <summary>
+	/// セピア
+	/// </summary>
+	class SepiaScale {
+	public:
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		SepiaScale();
 
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize();
+
+		/// <summary>
+		/// 描画前処理
+		/// </summary>
+		void PreDraw();
+
+		/// <summary>
+		/// 描画
+		/// </summary>
+		void Draw();
+
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~SepiaScale() = default;
+
+	private:
+		//Windowクラス
+		Ellysia::WindowsSetup* windowSetup_ = nullptr;
+		//DirectXクラス
+		Ellysia::DirectXSetup* directXSetup_ = nullptr;
+		//パイプライン管理クラス
+		Ellysia::PipelineManager* pipelineManager_ = nullptr;
+		//RTV管理クラス
+		Ellysia::RtvManager* rtvManager_ = nullptr;
+		//SRV管理クラス
+		Ellysia::SrvManager* srvManager_ = nullptr;
+
+
+	private:
+		//RTV
+		//リソース
+		ComPtr<ID3D12Resource> rtvResource_ = nullptr;
+		//ハンドル
+		uint32_t rtvHandle_ = 0;
+
+		//SRVハンドル
+		uint32_t srvHandle_ = 0;
+
+		//バリア
+		D3D12_RESOURCE_BARRIER barrier = {};
+
+
+	};
 
 };
-

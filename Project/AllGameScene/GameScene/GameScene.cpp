@@ -262,12 +262,12 @@ void GameScene::Initialize() {
 	//ポストエフェクトの初期化
 	//基本
 	//生成
-	back_ = std::make_unique<BackTexture>();
+	backTexture_ = std::make_unique<Ellysia::BackTexture>();
 	//初期化
-	back_->Initialize();
+	backTexture_->Initialize();
 	//ビネット
 	//生成
-	vignette_ = std::make_unique<Vignette>();
+	vignette_ = std::make_unique<Ellysia::Vignette>();
 	//初期化
 	vignette_->Initialize();
 	//値の設定

@@ -2,13 +2,13 @@
 
 void PointLight::Initialize(){
 	//Resource作成
-	bufferResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(PointLightData)).Get();
+	bufferResource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(PointLightData)).Get();
 
 	//初期値
 	//色
-	color_= { 1.0f,1.0f,1.0f,1.0f };
+	color_= { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
 	//位置
-	position_= { 0.0f,0.0f,0.0f };
+	position_= {.x = 0.0f,.y = 0.0f,.z = 0.0f };
 	//輝度
 	intensity_ = 4.0f;
 	//ライトに届く最大距離
@@ -19,12 +19,18 @@ void PointLight::Initialize(){
 }
 
 void PointLight::Update(){
-	bufferResource_->Map(0, nullptr, reinterpret_cast<void**>(&pointLightdata_));
+	//書き込み
+	bufferResource_->Map(0u, nullptr, reinterpret_cast<void**>(&pointLightdata_));
+	//色
 	pointLightdata_->color = color_;
+	//座標
 	pointLightdata_->position= position_;
+	//輝度
 	pointLightdata_->intensity = intensity_;
+	//ライトに届く最大距離
 	pointLightdata_->radius = radius_;
+	//減衰率
 	pointLightdata_->decay = decay_;
-
-	bufferResource_->Unmap(0, nullptr);
+	//書き込み終了
+	bufferResource_->Unmap(0u, nullptr);
 }

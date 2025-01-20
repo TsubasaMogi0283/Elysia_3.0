@@ -274,9 +274,6 @@
     <Filter Include="Project\ObjectManager\StageObject\Gate">
       <UniqueIdentifier>{04fdbc6f-7a4a-4b0a-ad10-68fef5f36d90}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\GameScene\LevelEditorSample">
-      <UniqueIdentifier>{cb24ff76-ddbd-45d1-b26d-09fce883e618}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Enemy\StrongEnemy">
       <UniqueIdentifier>{53f59d92-040d-4e5f-a0f1-6da83d07e9ea}</UniqueIdentifier>
     </Filter>
@@ -604,9 +601,6 @@
       <Filter>Ellysia\Source File\GlobalVariables</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\LevelDataManager\LevelDataManager.cpp">
-      <Filter>Ellysia\Source File\Manager\LevelData</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Listener\ListenerForLevelEditor.cpp">
       <Filter>Ellysia\Source File\Manager\LevelData</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.cpp">
@@ -1140,6 +1134,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Listener.h">
       <Filter>Ellysia\Header File\Manager\LevelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Manager\GameManager\AbstractSceneFactory.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

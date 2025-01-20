@@ -26,15 +26,7 @@ class TextureManager;
 /// </summary>
 class ModelManager;
 
-/// <summary>
-/// パイプライン管理クラス
-/// </summary>
-class PipelineManager;
 
-/// <summary>
-/// SRV管理クラス
-/// </summary>
-class SrvManager;
 
 /// <summary>
 /// ワールドトランスフォーム
@@ -72,6 +64,28 @@ struct PointLight;
 struct SpotLight;
 
 #pragma endregion
+
+
+/// <summary>
+/// EllysiaEngine
+/// </summary>
+namespace Ellysia{
+
+	/// <summary>
+	/// DirectXクラス
+	/// </summary>
+	class DirectXSetup;
+
+	/// <summary>
+	/// パイプライン管理クラス
+	/// </summary>
+	class PipelineManager;
+
+	/// <summary>
+	/// SRV管理クラス
+	/// </summary>
+	class SrvManager;
+};
 
 /// <summary>
 /// モデル

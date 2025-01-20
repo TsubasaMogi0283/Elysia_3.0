@@ -6,21 +6,20 @@
  * @author 茂木翼
  */
 
-#include <string>
-
 #include "IGameScene.h"
+#include "AbstractSceneFactory.h"
 
 /// <summary>
 /// ゲームシーンファクトリー
 /// </summary>
-class GameSceneFactory{
+class GameSceneFactory : public IAbstractSceneFactory {
 public:
 	/// <summary>
 	/// シーンの生成
 	/// </summary>
 	/// <param name="sceneName">シーンの名前</param>
 	/// <returns>生成したシーン</returns>
-	IGameScene* CreateScene(const std::string& sceneName);
+	std::unique_ptr<IGameScene> CreateScene(const std::string& sceneName)override;
 
 };
 

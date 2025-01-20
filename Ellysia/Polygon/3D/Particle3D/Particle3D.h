@@ -51,16 +51,23 @@ class ModelManager;
 /// </summary>
 class TextureManager;
 
-/// <summary>
-/// SRV管理クラス
-/// </summary>
-class SrvManager;
 
-/// <summary>
-/// パイプライン管理クラス
-/// </summary>
-class PipelineManager;
+namespace Ellysia {
+	/// <summary>
+	/// DirectXクラス
+	/// </summary>
+	class DirectSetup;
 
+	/// <summary>
+	/// SRV管理クラス
+	/// </summary>
+	class SrvManager;
+
+	/// <summary>
+	/// パイプライン管理クラス
+	/// </summary>
+	class PipelineManager;
+};
 
 #pragma endregion
 

@@ -2,34 +2,29 @@
 
 #include "TitleScene/TitleScene.h"
 #include "GameScene/GameScene.h"
-#include "LevelEditorSample/LevelEditorSample.h"
 #include "WinScene/WinScene.h"
 #include "LoseScene/LoseScene.h"
 
-IGameScene* GameSceneFactory::CreateScene(const std::string& sceneName){
+std::unique_ptr<IGameScene> GameSceneFactory::CreateScene(const std::string& sceneName){
 
     //シーンを生成
-    IGameScene* newScene = nullptr;
+    std::unique_ptr<IGameScene> newScene = nullptr;
 
     //タイトル
     if (sceneName == "Title") {
-        newScene = new TitleScene();
+        newScene = std::make_unique<TitleScene>();
     }
     //ゲーム
     else if (sceneName == "Game") {
-        newScene = new GameScene();
+        newScene = std::make_unique<GameScene>();
     }
     //勝ち
     else if (sceneName == "Win") {
-        newScene = new WinScene();
+        newScene = std::make_unique<WinScene>();
     }
     //負け
     else if (sceneName == "Lose") {
-        newScene = new LoseScene();
-    }
-    //レベルデータ確認用
-    else if (sceneName == "LevelEdhitorSample") {
-        newScene = new LevelEditorSample();
+        newScene = std::make_unique<LoseScene>();
     }
 
 

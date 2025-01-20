@@ -9,6 +9,7 @@
 #include "WindowsSetup.h"
 #include "DirectXSetup.h"
 #include "GameManager.h"
+#include "AbstractSceneFactory.h"
 
 //Ellysia(エリシア・エレシア)
 //Aile + Sheer...「エイル・エル(フランス語で自分の名前になる)」と「シア」
@@ -23,8 +24,6 @@
 /// EllysiaEngine
 /// </summary>
 namespace Ellysia {
-
-#pragma region 前方宣言
 
 	/// <summary>
 	/// ウィンドウクラス
@@ -76,7 +75,6 @@ namespace Ellysia {
 	/// </summary>
 	class LevelDataManager;
 
-#pragma endregion
 
 
 	/// <summary>
@@ -135,42 +133,30 @@ namespace Ellysia {
 
 		//ウィンドウクラス
 		WindowsSetup* windowsSetup_ = nullptr;
-
 		//DirectXクラス
 		DirectXSetup* directXSetup_ = nullptr;
-
 		//SRV管理クラス
 		SrvManager* srvManager_ = nullptr;
-
 		//RTV管理クラス
 		RtvManager* rtvManager_ = nullptr;
-
 		//ImGui管理クラス
 		ImGuiManager* imGuiManager_ = nullptr;
-
 		//パイプライン管理クラス
 		PipelineManager* pipelineManager_ = nullptr;
-
 		//Inputクラス
 		Input* input_ = nullptr;
-
 		//オーディオクラス
 		Audio* audio_ = nullptr;
-
 		//JSON読み込み(グローバル変数)
 		GlobalVariables* globalVariables_ = nullptr;
-
 		//レベルデータ管理クラス
 		LevelDataManager* levelDataManager_ = nullptr;
 
-
-
-
 	private:
-
-
 		//ゲームの管理クラス
 		std::unique_ptr<GameManager> gameManager_ = nullptr;
+		//シーンファクトリー
+		std::unique_ptr<IAbstractSceneFactory> sceneFactory_ = nullptr;
 
 	};
-};
+}

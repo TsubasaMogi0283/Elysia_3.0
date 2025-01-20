@@ -284,11 +284,11 @@ void Sphere::Release() {
 //
 //	//vertexResourceがnullらしい
 //	//リソースの先頭のアドレスから使う
-//	vertexBufferViewSphere_.BufferLocation = vertexResourceSphere_->GetGPUVirtualAddress();
+//	vertexBufferView_.BufferLocation = vertexResourceSphere_->GetGPUVirtualAddress();
 //	//使用するリソースのサイズは頂点３つ分のサイズ
-//	vertexBufferViewSphere_.SizeInBytes = sizeof(VertexData) * SUBDIVISION_ * SUBDIVISION_ * 6;
+//	vertexBufferView_.SizeInBytes = sizeof(VertexData) * SUBDIVISION_ * SUBDIVISION_ * 6;
 //	//１頂点あたりのサイズ
-//	vertexBufferViewSphere_.StrideInBytes = sizeof(VertexData);
+//	vertexBufferView_.StrideInBytes = sizeof(VertexData);
 //
 //
 //}
@@ -474,7 +474,7 @@ void Sphere::Release() {
 //	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResourceSphere_->GetGPUVirtualAddress());
 //
 //	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-//	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferViewSphere_);
+//	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
 //
 //	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResourceSphere_->GetGPUVirtualAddress());
 //	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である

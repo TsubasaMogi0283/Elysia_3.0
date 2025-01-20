@@ -294,9 +294,7 @@ void EnemyManager::Update(){
 			//向き
 			Vector3 enemyDirection = enemy->GetDirection();
 
-			//それぞれのAABB
-			//プレイヤー
-			AABB playerAABB = player_->GetAABB();
+
 			//敵
 			AABB enemyAABB = enemy->GetAABB();
 

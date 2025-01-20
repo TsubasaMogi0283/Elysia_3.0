@@ -1,81 +1,87 @@
 #include "BackTexture.h"
 #include "imgui.h"
 
+#include "WindowsSetup.h"
 #include "PipelineManager.h"
 #include "TextureManager.h"
 #include "SrvManager.h"
 #include "RtvManager.h"
 
+Ellysia::BackTexture::BackTexture() {
+	//ウィンドウクラスの取得
+	windowsSetup_ = Ellysia::WindowsSetup::GetInstance();
+	//DirectXクラスの取得
+	directXSetup_= Ellysia::DirectXSetup::GetInstance();
+	//RTV管理クラスの取得
+	rtvManager_ = Ellysia::RtvManager::GetInstance();
+	//SRV管理クラスの取得
+	srvManager_ = Ellysia::SrvManager::GetInstance();
+	//パイプライン管理クラスの取得
+	pipelineManager_ = Ellysia::PipelineManager::GetInstance();
+}
 
-
-void BackTexture::Initialize(){
+void Ellysia::BackTexture::Initialize(){
 
 	//エフェクトの種類を設定
 	effectType_ = NoneEffect;
-
 	//Effect
-	effectResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(int32_t));
+	effectResource_ = directXSetup_->CreateBufferResource(sizeof(int32_t));
 	
 	//Vignette
-	vignetteResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(VignetteInformation));
+	vignetteResource_ = directXSetup_->CreateBufferResource(sizeof(VignetteInformation));
 	vignetteInformation_.pow = 0.8f;
 	vignetteInformation_.scale = 16.0f;
 
 	//GaussianFilter
-	gaussianFilterResource_ = DirectXSetup::GetInstance()->CreateBufferResource(sizeof(GaussianFilterInformation));
+	gaussianFilterResource_ = directXSetup_->CreateBufferResource(sizeof(GaussianFilterInformation));
 	gaussianFilterInformation_.sigma = 2.0f;
 
 
 	//リソース作成
-	rtvResource_ = RtvManager::GetInstance()->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, renderTargetClearValue_);
-	
+	rtvResource_ = rtvManager_->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, color_);
 	//ハンドルの取得
-	rtvHandle_= RtvManager::GetInstance()->Allocate("BackText");
-
+	rtvHandle_= rtvManager_->Allocate("BackText");
 	//RTV作成
-	RtvManager::GetInstance()->GenarateRenderTargetView(rtvResource_, rtvHandle_);
+	rtvManager_->GenarateRenderTargetView(rtvResource_, rtvHandle_);
 
 
 	//SRV
-	srvHandle_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVForRenderTexture(rtvResource_.Get(), srvHandle_);
-
-	
-	
+	srvHandle_ = srvManager_->Allocate();
+	srvManager_->CreateSRVForRenderTexture(rtvResource_.Get(), srvHandle_);
 
 }
 
-void BackTexture::PreDraw(){
+void Ellysia::BackTexture::PreDraw(){
 	
 	//RTの設定
-	const float RENDER_TARGET_CLEAR_VALUE[] = { renderTargetClearValue_.x,renderTargetClearValue_.y,renderTargetClearValue_.z,renderTargetClearValue_.w };
-	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(
-		1, &RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), false, &DirectXSetup::GetInstance()->GetDsvHandle());
+	const float RENDER_TARGET_CLEAR_VALUE[] = { color_.x,color_.y,color_.z,color_.w };
+	directXSetup_->GetCommandList()->OMSetRenderTargets(
+		1, &rtvManager_->GetRtvHandle(rtvHandle_), false, &directXSetup_->GetDsvHandle());
 
 	//RTVのクリア
-	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(
-		RtvManager::GetInstance()->GetRtvHandle(rtvHandle_), RENDER_TARGET_CLEAR_VALUE, 0, nullptr);
+	directXSetup_->GetCommandList()->ClearRenderTargetView(
+		rtvManager_->GetRtvHandle(rtvHandle_), RENDER_TARGET_CLEAR_VALUE, 0u, nullptr);
 
 	//Depthのクリア
-	DirectXSetup::GetInstance()->GetCommandList()->ClearDepthStencilView(
-		DirectXSetup::GetInstance()->GetDsvHandle(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	directXSetup_->GetCommandList()->ClearDepthStencilView(
+		directXSetup_->GetDsvHandle(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0u, 0u, nullptr);
 
 	//クライアントサイズの取得
-	uint32_t width = WindowsSetup::GetInstance()->GetClientWidth();
-	uint32_t height = WindowsSetup::GetInstance()->GetClientHeight();
+	uint32_t width = windowsSetup_->GetClientWidth();
+	uint32_t height = windowsSetup_->GetClientHeight();
 
 	//ビューポート
-	DirectXSetup::GetInstance()->GenarateViewport(width,height);
+	directXSetup_->GenarateViewport(width,height);
 	
 	//シザー矩形 
-	DirectXSetup::GetInstance()->GenarateScissor(width, height);
+	directXSetup_->GenarateScissor(width, height);
 	
 }
 
-void BackTexture::Draw(){
+void Ellysia::BackTexture::Draw(){
 
 	//ResourceBarrierを張る
-	DirectXSetup::GetInstance()->SetResourceBarrier(
+	directXSetup_->SetResourceBarrier(
 		rtvResource_.Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
@@ -88,46 +94,34 @@ void BackTexture::Draw(){
 
 	//書き込むためのアドレスを取得
 	//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	effectResource_->Map(0, nullptr, reinterpret_cast<void**>(&effectTypeData_));
+	effectResource_->Map(0u, nullptr, reinterpret_cast<void**>(&effectTypeData_));
 	//選択したEffectTypeを書き込み
 	*effectTypeData_ = effectType_;
+	effectResource_->Unmap(0u, nullptr);
 
-	effectResource_->Unmap(0, nullptr);
-
-
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootSignature(PipelineManager::GetInstance()->GetFullScreenRootSignature().Get());
-	DirectXSetup::GetInstance()->GetCommandList()->SetPipelineState(PipelineManager::GetInstance()->GetFullScreenGraphicsPipelineState().Get());
-
+	//パイプラインの設定
+	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetFullScreenRootSignature().Get());
+	directXSetup_->GetCommandList()->SetPipelineState(pipelineManager_->GetFullScreenGraphicsPipelineState().Get());
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
-	DirectXSetup::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
+	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Effect
-	DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, effectResource_->GetGPUVirtualAddress());
-
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, effectResource_->GetGPUVirtualAddress());
 	//Vignette
 	if (effectType_ == VignetteEffect) {
-		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, vignetteResource_->GetGPUVirtualAddress());
+		directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, vignetteResource_->GetGPUVirtualAddress());
 	}
-
 	//Texture
-	TextureManager::GraphicsCommand(2,srvHandle_);
-
+	TextureManager::GraphicsCommand(2u,srvHandle_);
 	//GaussianFilter
 	if (effectType_ == GaussianFilter3x3a ||
 		effectType_ == GaussianFilter5x5a) {
-		DirectXSetup::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, gaussianFilterResource_->GetGPUVirtualAddress());
+		directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, gaussianFilterResource_->GetGPUVirtualAddress());
 	}
-
-
-
-
 	//描画(DrawCall)３頂点で１つのインスタンス。
-	DirectXSetup::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
-
-
+	directXSetup_->GetCommandList()->DrawInstanced(3u, 1u, 0u, 0u);
 
 	//ResourceBarrierを張る
-	DirectXSetup::GetInstance()->SetResourceBarrier(
+	directXSetup_->SetResourceBarrier(
 		rtvResource_.Get(),
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
 

@@ -121,7 +121,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
@@ -130,7 +130,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 	}
 
 	//DirectionalLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLight.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLight.resource->GetGPUVirtualAddress());
 
 	//カメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
@@ -200,7 +200,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
@@ -277,7 +277,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である

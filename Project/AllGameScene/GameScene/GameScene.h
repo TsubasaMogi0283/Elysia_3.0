@@ -222,9 +222,9 @@ private:
 
 	//ポストエフェクト
 	//基本
-	std::unique_ptr<BackTexture> back_ = nullptr;
+	std::unique_ptr<Ellysia::BackTexture> backTexture_ = nullptr;
 	//ビネット
-	std::unique_ptr<Vignette> vignette_ = nullptr;
+	std::unique_ptr<Ellysia::Vignette> vignette_ = nullptr;
 	const float MAX_VIGNETTE_POW_ = 1.6f;
 	float vignettePow_ = 17.0f;
 	float vignetteChangeTime_ = 0.0f;

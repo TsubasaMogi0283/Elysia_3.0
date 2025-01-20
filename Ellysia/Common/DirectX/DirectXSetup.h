@@ -59,7 +59,6 @@ namespace Ellysia{
 
 	/// <summary>
 	/// DirectXの機能をまとめたクラス
-	/// フレームワークなど
 	/// </summary>
 	class DirectXSetup final {
 	private:
