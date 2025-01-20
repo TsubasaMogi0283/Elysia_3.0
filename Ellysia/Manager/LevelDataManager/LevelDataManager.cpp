@@ -163,6 +163,11 @@ void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelD
 				objectData.isHavingCollider = false;
 			}
 
+			//非表示設定
+			if (object.contains("is_invisible")) {
+				objectData.isInvisible_ = object["is_invisible"];
+			}
+
 
 			//オーディオの読み込み
 			//まずあるかどうか

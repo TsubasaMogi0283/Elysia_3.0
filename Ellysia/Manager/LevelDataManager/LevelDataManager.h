@@ -347,6 +347,10 @@ namespace Ellysia {
 				Vector3 downSize;
 #pragma endregion
 
+
+				//非表示設定
+				bool isInvisible_ = false;
+
 				//レベルデータのオーディオ
 				AudioDataForLevelEditor levelAudioData;
 
