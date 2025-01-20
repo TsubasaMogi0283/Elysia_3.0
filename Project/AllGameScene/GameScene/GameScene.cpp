@@ -280,6 +280,9 @@ void GameScene::Initialize() {
 
 void GameScene::KeyCollision(){
 
+	//この関数の中身KeyManagerで管理した方が良いかも
+
+
 	//鍵
 	std::list<Key*> keyes = keyManager_->GetKeyes();
 	for (Key* key : keyes) {
@@ -359,6 +362,11 @@ void GameScene::KeyCollision(){
 
 void GameScene::ObjectCollision(){
 	
+
+	//新しくゲームシーンでの描画用のレベルデータクラスを用意して
+	//ついでにこの関数内のめり込みを防ぐ処理を書いた方が良さそう。
+
+
 	//ただ衝突判定を設定するだけだと出来なかったので
 	//内積の計算も入れて可能にする
 
