@@ -1,8 +1,6 @@
 #include "WinScene.h"
 #include <TextureManager.h>
 
-#include "TitleScene/TitleScene.h"
-#include "GameScene/GameScene.h"
 #include "GameManager.h"
 
 

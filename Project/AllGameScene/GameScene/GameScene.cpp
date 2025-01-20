@@ -4,9 +4,6 @@
 #include <algorithm>
 
 #include "Input.h"
-#include "WinScene/WinScene.h"
-#include "LoseScene/LoseScene.h"
-
 #include "SingleCalculation.h"
 #include "VectorCalculation.h"
 
