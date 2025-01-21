@@ -221,8 +221,6 @@ private:
 	Material material_ = {};
 
 	//ポストエフェクト
-	//基本
-	std::unique_ptr<Ellysia::BackTexture> backTexture_ = nullptr;
 	//ビネット
 	std::unique_ptr<Ellysia::Vignette> vignette_ = nullptr;
 	const float MAX_VIGNETTE_POW_ = 1.6f;

@@ -221,7 +221,17 @@ private:
 	/// </summary>
 	void Damaged();
 
+	/// <summary>
+	/// 絶命
+	/// </summary>
+	void Dead();
 
+	/// <summary>
+	/// ImGuiの表示
+	/// </summary>
+	void DisplayImGui();
+
+	
 
 private:
 	//状態
@@ -230,11 +240,9 @@ private:
 
 
 private:
-	//スケールサイズ
-	const float SCALE_SIZE = 10.0f;
+	
 
-	//スピードの量
-	const float SPEED_AMOUNT_ = 0.05f;
+	
 
 	//幅
 	const float RADIUS_ = 1.0f;
@@ -251,10 +259,13 @@ private:
 	
 	//モデル
 	std::unique_ptr<Model> model_ = nullptr;
-
+	//パーティクル
+	std::unique_ptr<Particle3D> particle_ = {};
 	//マテリアル
-	Material material_ = {};
+	Material mainMaterial_ = {};
+	Material particleMaterial_ = {};
 
+	uint32_t debugModelHandle = 0;
 	//移動速度
 	Vector3 preSpeed_ = {};
 	Vector3 speed_ = {};
@@ -295,5 +306,8 @@ private:
 	std::unique_ptr<EnemyAttackCollision> attackCollision_ = nullptr;
 	//懐中電灯用の当たり判定
 	std::unique_ptr<EnemyFlashLightCollision> enemyFlashLightCollision_ = nullptr;
+
+	
+
 
 };

@@ -75,19 +75,6 @@ void GameScene::Initialize() {
 	
 #pragma region オブジェクト
 
-	#pragma region 地面
-	//四隅の座標を取得
-	StageRect stageRect = {};
-	//四隅
-	const float SCALE_SIZE_ = 40.0f;
-	stageRect.leftBack = { .x = -SCALE_SIZE_ ,.y = 0.0f ,.z = SCALE_SIZE_ };
-	stageRect.rightBack = { .x = SCALE_SIZE_ ,.y = 0.0f ,.z = SCALE_SIZE_ };
-	stageRect.leftFront = { .x = -SCALE_SIZE_ ,.y = 0.0f ,.z = -SCALE_SIZE_ };
-	stageRect.rightFront = { .x = SCALE_SIZE_ ,.y = 0.0f ,.z = -SCALE_SIZE_ };
-
-
-	#pragma endregion
-
 	
 	#pragma region ゲート
 
@@ -147,20 +134,20 @@ void GameScene::Initialize() {
 #pragma endregion
 	
 	//ハンドルの取得
-	levelHandle_=levelDataManager_->Load("GameStage/GameStageGateCheck.json");
+	levelHandle_=levelDataManager_->Load("GameStage/GameStage.json");
 
 
 
-#pragma region 敵
+	#pragma region 敵
 	//敵モデルの読み込み
 	//通常
 	uint32_t enemyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
 	//強敵
 	uint32_t strongEnemyModelHandle= modelManager_->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
 
-#ifdef _DEBUG
+	#ifdef _DEBUG
 	enemyModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube", "Cube.obj");
-#endif // _DEBUG
+	#endif // _DEBUG
 
 	//敵管理システム
 	enemyManager_ = std::make_unique<EnemyManager>();
@@ -225,7 +212,7 @@ void GameScene::Initialize() {
 	//生成
 	pickUpKey_.reset(Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));
 	
-#pragma endregion
+	#pragma endregion
 
 	#pragma region UI
 	uint32_t playerHPTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHP.png");
@@ -257,13 +244,7 @@ void GameScene::Initialize() {
 	theta_ = std::numbers::pi_v<float> / 2.0f;
 	
 	//ポストエフェクトの初期化
-	//基本
-	//生成
-	backTexture_ = std::make_unique<Ellysia::BackTexture>();
-	//初期化
-	backTexture_->Initialize();
-	//ビネット
-	//生成
+	//ビネット生成
 	vignette_ = std::make_unique<Ellysia::Vignette>();
 	//初期化
 	vignette_->Initialize();
@@ -298,6 +279,9 @@ void GameScene::Initialize() {
 
 
 void GameScene::KeyCollision(){
+
+	//この関数の中身KeyManagerで管理した方が良いかも
+
 
 	//鍵
 	std::list<Key*> keyes = keyManager_->GetKeyes();
@@ -378,17 +362,15 @@ void GameScene::KeyCollision(){
 
 void GameScene::ObjectCollision(){
 	
+
+	//新しくゲームシーンでの描画用のレベルデータクラスを用意して
+	//ついでにこの関数内のめり込みを防ぐ処理を書いた方が良さそう。
+
 	//ただ衝突判定を設定するだけだと出来なかったので
 	//内積の計算も入れて可能にする
 
-
-	//プレイヤーの移動方向
-	Vector3 direction = playerMoveDirection_;
 	//プレイヤーの当たり判定AABB
 	AABB playerAABB = player_->GetAABB();
-
-
-
 
 	//座標
 	std::vector<Vector3> positions = levelDataManager_->GetStageObjectPositions(levelHandle_);
@@ -409,7 +391,7 @@ void GameScene::ObjectCollision(){
 
 			//内積
 			//進行方向上にオブジェクトがあるかないかを計算したい
-			float dot = SingleCalculation::Dot(direction, normalizedDemoAndPlayer);
+			float dot = SingleCalculation::Dot(playerMoveDirection_, normalizedDemoAndPlayer);
 			const float DOT_OFFSET = 0.5f;
 
 #ifdef _DEBUG
@@ -420,7 +402,6 @@ void GameScene::ObjectCollision(){
 
 			ImGui::End();
 #endif // _DEBUG
-
 
 			//衝突判定
 			//Y成分はいらない
@@ -455,11 +436,6 @@ void GameScene::ObjectCollision(){
 void GameScene::EscapeCondition(){
 	//ゲート
 	if (gate_->isCollision(player_->GetWorldPosition())) {
-#ifdef _DEBUG
-		ImGui::Begin("InSpaceGate");
-		ImGui::End();
-
-#endif // _DEBUG
 
 		//3個取得したら脱出できる
 		uint32_t playerKeyQuantity = player_->GetHavingKey();
@@ -513,7 +489,6 @@ void GameScene::PlayerMove(){
 	isPlayerMoveKey_ = false;
 	isPlayerMove_ = false;
 	playerMoveDirection_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
-
 
 	#pragma region キーボード
 	//移動
@@ -638,7 +613,6 @@ void GameScene::PlayerMove(){
 
 #pragma endregion
 
-
 	//プレイヤーが動いている時
 	if (isPlayerMove_ == true) {
 		//状態の設定
@@ -663,13 +637,8 @@ void GameScene::PlayerMove(){
 				else {
 					isPlayerDash_ = false;
 				}
-
 			}
 		}
-		
-		
-
-
 	}
 	//動いていない時
 	else {
@@ -702,8 +671,6 @@ void GameScene::Update(GameManager* gameManager) {
 	//フェードの透明度の設定
 	whiteFade_->SetTransparency(whiteFadeTransparency_);
 
-	
-
 	//StatePatternにしたい
 	//フェードイン
 	if (isWhiteFadeIn==true) {
@@ -716,7 +683,7 @@ void GameScene::Update(GameManager* gameManager) {
 			isWhiteFadeIn = false;
 			isExplain_ = true;
 			//1枚目
-			howToPlayTextureNumber_ = 1;
+			howToPlayTextureNumber_ = 1u;
 		}
 	}
 
@@ -755,6 +722,7 @@ void GameScene::Update(GameManager* gameManager) {
 				isGamePlay_ = true;
 			}
 		}
+		//プレイ
 		if (isGamePlay_ == true) {
 			//コントロール可能にする
 			player_->SetIsAbleToControll(true);
@@ -769,8 +737,6 @@ void GameScene::Update(GameManager* gameManager) {
 			enemyManager_->DeleteEnemy();
 		}
 		
-		
-
 		#pragma region 回転
 
 		#pragma region Y軸に旋回
@@ -867,21 +833,12 @@ void GameScene::Update(GameManager* gameManager) {
 
 		#pragma endregion
 
-
 		//プレイヤーの移動
 		PlayerMove();
 
-
-
-		//数学とプログラムで回る向きが違うことに煩わしさを感じるので
-		//無理矢理直す
-		float phi = -originPhi_;
-
 		//プレイヤーにそれぞれの角度を設定する
 		player_->GetFlashLight()->SetTheta(theta_);
-		player_->GetFlashLight()->SetPhi(phi);
-		
-
+		player_->GetFlashLight()->SetPhi(-originPhi_);		
 
 		//エネミーをコリジョンマネージャーに追加
 		//通常の敵のリストの取得
@@ -935,7 +892,6 @@ void GameScene::Update(GameManager* gameManager) {
 		levelDataManager_->Update(levelHandle_);
 
 		std::vector<IObjectForLevelEditorCollider*> audioColliders =levelDataManager_->GetAudioCollider(levelHandle_);
-
 		for (std::vector<IObjectForLevelEditorCollider*>::iterator it = audioColliders.begin(); it != audioColliders.end(); ++it) {
 			collisionManager_->RegisterList(*it);
 
@@ -956,7 +912,7 @@ void GameScene::Update(GameManager* gameManager) {
 
 		//もとに戻す
 		//カメラの回転の計算
-		camera_.rotate.x = -phi;
+		camera_.rotate.x = originPhi_;
 		camera_.rotate.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
 		camera_.rotate.z = 0.0f;
 
@@ -969,7 +925,7 @@ void GameScene::Update(GameManager* gameManager) {
 		#pragma region 鍵の取得処理
 		keyQuantity_ = keyManager_->GetKeyQuantity();
 		//鍵が0より多ければ通る
-		if (keyQuantity_ > 0) {
+		if (keyQuantity_ > 0u) {
 			KeyCollision();
 		}
 		else {
@@ -1031,7 +987,7 @@ void GameScene::Update(GameManager* gameManager) {
 		ImGui::SliderFloat3("位置", &cameraTranslate.x, -100.0f, 100.0f);
 		ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
 		ImGui::InputFloat("Theta", &theta_);
-		ImGui::InputFloat("Phi", &phi);
+		ImGui::InputFloat("Phi", &originPhi_);
 		ImGui::End();
 #endif
 
@@ -1146,13 +1102,11 @@ void GameScene::DrawObject3D() {
 	//懐中電灯を取得
 	SpotLight spotLight = player_->GetFlashLight()->GetSpotLight();
 
-	//ゲート
-	//gate_->Draw(camera_, spotLight);
-	//敵
-	enemyManager_->Draw(camera_, spotLight);
-
 	//レベルエディタ  
 	levelDataManager_->Draw(levelHandle_, camera_, material_, spotLight);
+
+	//敵
+	enemyManager_->Draw(camera_, spotLight);
 
 	//プレイヤー
 	player_->Draw(camera_, spotLight);

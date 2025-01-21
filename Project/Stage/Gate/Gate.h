@@ -20,7 +20,7 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="modelHandle"></param>
-	void Initialize(uint32_t modelHandle);
+	void Initialize(const uint32_t& modelHandle);
 
 	/// <summary>
 	/// 更新
@@ -52,7 +52,7 @@ public:
 	/// </summary>
 	/// <param name="playerPosition"></param>
 	/// <returns></returns>
-	bool isCollision(Vector3 playerPosition);
+	bool isCollision(const Vector3& playerPosition);
 
 private:
 	//モデル

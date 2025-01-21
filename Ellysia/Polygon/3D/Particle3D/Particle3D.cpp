@@ -46,9 +46,9 @@ Particle3D* Particle3D::Create(const uint32_t& moveType){
 	//発生頻度用の時刻。0.0で初期化
 	particle3D->emitter_.frequencyTime = 0.0f;
 	//SRT
-	particle3D->emitter_.transform.scale = { 10.0f,10.0f,10.0f };
-	particle3D->emitter_.transform.rotate = { 0.0f,0.0f,0.0f };
-	particle3D->emitter_.transform.translate = { 0.0f,0.0f,4.0f };
+	particle3D->emitter_.transform.scale = {.x = 10.0f,.y = 10.0f,.z = 10.0f };
+	particle3D->emitter_.transform.rotate = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+	particle3D->emitter_.transform.translate = { .x = 0.0f,.y = 0.0f,.z = 4.0f };
 
 	//モデルの読み込み
 	uint32_t modelHandle = particle3D->modelManager_->LoadModelFile("Resources/External/Model/Plane", "plane.obj");
@@ -258,6 +258,7 @@ void Particle3D::Update(const Camera& camera) {
 		Matrix4x4 translateMatrix = {};
 		Matrix4x4 billBoardMatrix = {};
 		Matrix4x4 backToFrontMatrix = {};
+
 		//加速
 		float accel = -0.001f;
 		particleIterator->currentTime += DELTA_TIME;
@@ -274,7 +275,7 @@ void Particle3D::Update(const Camera& camera) {
 			}
 
 			
-			particleIterator->transform.translate.y += 0.001f;
+			particleIterator->transform.translate.y += 0.0001f;
 			
 			//Y軸でπ/2回転
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
@@ -466,15 +467,15 @@ void Particle3D::Update(const Camera& camera) {
 	
 }
 
-void Particle3D::Draw(const Camera& camera, const Material& material){
+void Particle3D::Draw(const Camera& camera, Material& material){
 
 	//更新
 	Update(camera);
 
 	//PS用のカメラ
-	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
+	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
 	*cameraPositionData_ = camera.GetWorldPosition();
-	cameraResource_->Unmap(0, nullptr);
+	cameraResource_->Unmap(0u, nullptr);
 
 
 	//コマンドを積む
@@ -484,32 +485,34 @@ void Particle3D::Draw(const Camera& camera, const Material& material){
 
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	//強制的にNoneにして予想外のライトニングにならないようにする
+	material.lightingKinds_ = None;
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
 
 	//インスタンシング
-	srvManager_->SetGraphicsRootDescriptorTable(1, instancingIndex_);
+	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
 
 	//テクスチャ
-	if (textureHandle_ != 0) {
-		textureManager_->GraphicsCommand(2, textureHandle_);
+	if (textureHandle_ != 0u) {
+		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.bufferResource->GetGPUVirtualAddress());
 
 
 	//PS用のカメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 
 	//DrawCall
-	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0, 0);
+	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0u, 0u);
 
 
 }
@@ -525,9 +528,9 @@ void Particle3D::Draw(const Camera& camera,const  Material& material,const Direc
 	Update(camera);
 
 	//PS用のカメラ
-	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
+	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
 	*cameraPositionData_ = camera.GetWorldPosition();
-	cameraResource_->Unmap(0, nullptr);
+	cameraResource_->Unmap(0u, nullptr);
 
 
 	//コマンドを積む
@@ -537,34 +540,34 @@ void Particle3D::Draw(const Camera& camera,const  Material& material,const Direc
 
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
 
 	//インスタンシング
-	srvManager_->SetGraphicsRootDescriptorTable(1, instancingIndex_);
+	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
 
 	//テクスチャ
-	if (textureHandle_ != 0) {
-		textureManager_->GraphicsCommand(2, textureHandle_);
+	if (textureHandle_ != 0u) {
+		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.bufferResource->GetGPUVirtualAddress());
 
 	//平行光源
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4, directionalLight.resource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, directionalLight.resource->GetGPUVirtualAddress());
 
 	//PS用のカメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 
 	//DrawCall
-	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0, 0);
+	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0u, 0u);
 
 }
 
@@ -578,9 +581,9 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Poin
 	Update(camera);
 
 	//PS用のカメラ
-	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
+	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
 	*cameraPositionData_ = camera.GetWorldPosition();
-	cameraResource_->Unmap(0, nullptr);
+	cameraResource_->Unmap(0u, nullptr);
 
 
 	//コマンドを積む
@@ -589,34 +592,34 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Poin
 
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
 
 	//インスタンシング
-	srvManager_->SetGraphicsRootDescriptorTable(1, instancingIndex_);
+	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
 
 	//テクスチャ
-	if (textureHandle_ != 0) {
-		textureManager_->GraphicsCommand(2, textureHandle_);
+	if (textureHandle_ != 0u) {
+		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.bufferResource->GetGPUVirtualAddress());
 
 	//PS用のカメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 
 	//点光源
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6, pointLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6u, pointLight.bufferResource_->GetGPUVirtualAddress());
 
 	//DrawCall
-	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0, 0);
+	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0u, 0u);
 
 }
 
@@ -630,9 +633,9 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Spot
 	Update(camera);
 
 	//PS用のカメラ
-	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
+	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
 	*cameraPositionData_ = camera.GetWorldPosition();
-	cameraResource_->Unmap(0, nullptr);
+	cameraResource_->Unmap(0u, nullptr);
 
 
 	//コマンドを積む
@@ -642,35 +645,35 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Spot
 
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
 
 	//インスタンシング
-	srvManager_->SetGraphicsRootDescriptorTable(1, instancingIndex_);
+	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
 
 	//テクスチャ
-	if (textureHandle_ != 0) {
-		textureManager_->GraphicsCommand(2, textureHandle_);
+	if (textureHandle_ != 0u) {
+		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.bufferResource->GetGPUVirtualAddress());
 
 	//PS用のカメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	
 	//SpotLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7, spotLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.bufferResource_->GetGPUVirtualAddress());
 
 
 	//DrawCall
-	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0, 0);
+	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0u, 0u);
 
 }
 

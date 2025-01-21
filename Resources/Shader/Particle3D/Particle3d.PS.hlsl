@@ -30,8 +30,7 @@ struct Material{
 };
 
 //平行光源
-struct DirectionalLight
-{
+struct DirectionalLight{
 	//ライトの色
     float4 color;
 	//ライトの向き
@@ -41,8 +40,7 @@ struct DirectionalLight
 };
 
 //ポイントライト
-struct PointLight
-{
+struct PointLight{
 	//ライトの色
     float4 color;
 	//ライトの位置
@@ -58,8 +56,7 @@ struct PointLight
 };
 
 //スポットライト
-struct SpotLight
-{
+struct SpotLight{
 	//ライトの色
     float4 color;
 	//ライトの位置
@@ -85,8 +82,7 @@ struct SpotLight
 
 
 //カメラの位置を送る
-struct Camera
-{
+struct Camera{
     //ワールド座標
     float3 worldPosition;
 };
@@ -111,11 +107,8 @@ struct PixelShaderOutput{
     float4 color : SV_TARGET0;
 };
 
-
-
  
-PixelShaderOutput main(VertexShaderOutput input)
-{
+PixelShaderOutput main(VertexShaderOutput input){
     PixelShaderOutput output;
 	
 	//Materialを拡張する
@@ -123,8 +116,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
     output.color = gMaterial.color * textureColor * input.color;
     
-    if (output.color.a <= 0.0f)
-    {
+    if (output.color.a <= 0.0f){
         discard;
     }
     
@@ -132,8 +124,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     
 	
     //DirectionalLightingする場合
-    if (gMaterial.enableLighting == 1)
-    {
+    if (gMaterial.enableLighting == 1){
 	
 		//このままdotだと[-1,1]になる。
 		//光が当たらないところは「当たらない」のでもっと暗くなるわけではない。そこでsaturate関数を使う
@@ -169,8 +160,7 @@ PixelShaderOutput main(VertexShaderOutput input)
 		
     }
     //PointLight
-    else if (gMaterial.enableLighting == 2)
-    {
+    else if (gMaterial.enableLighting == 2){
 		//このままdotだと[-1,1]になる。
 		//光が当たらないところは「当たらない」のでもっと暗くなるわけではない。そこでsaturate関数を使う
 		//saturate関数は値を[0,1]にclampするもの。エフェクターにもSaturationってあるよね。
@@ -209,8 +199,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         
     }
 	//SpotLight
-    else if (gMaterial.enableLighting == 3)
-    {
+    else if (gMaterial.enableLighting == 3){
 		//このままdotだと[-1,1]になる。
 		//光が当たらないところは「当たらない」のでもっと暗くなるわけではない。そこでsaturate関数を使う
 		//saturate関数は値を[0,1]にclampするもの。エフェクターにもSaturationってあるよね。
@@ -255,8 +244,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         
         
     }
-    else
-    {
+    else{
         output.color = gMaterial.color * textureColor * input.color;
     }
 	

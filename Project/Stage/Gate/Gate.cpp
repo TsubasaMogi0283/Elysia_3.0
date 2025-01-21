@@ -1,6 +1,6 @@
 #include "Gate.h"
 
-void Gate::Initialize(uint32_t modelHandle){
+void Gate::Initialize(const uint32_t& modelHandle){
 	//モデル
 	model_ = std::make_unique<Model>();
 	model_.reset(Model::Create(modelHandle));
@@ -23,14 +23,6 @@ void Gate::Initialize(uint32_t modelHandle){
 
 void Gate::Update(){
 
-
-#ifdef _DEBUG
-	ImGui::Begin("Gate");
-	ImGui::InputFloat3("Translate", &worldTransform_.translate.x);
-	ImGui::End();
-#endif
-
-
 	//更新
 	worldTransform_.Update();
 	material_.Update();
@@ -41,15 +33,11 @@ void Gate::Draw(Camera& camera, SpotLight& spotLight){
 }
 
 Vector3 Gate::GetWorldPosition() const{
-	Vector3 result = {};
-	result.x = worldTransform_.worldMatrix.m[3][0];
-	result.y = worldTransform_.worldMatrix.m[3][1];
-	result.z = worldTransform_.worldMatrix.m[3][2];
-
+	Vector3 result = worldTransform_.GetWorldPosition();
 	return result;
 }
 
-bool Gate::isCollision(Vector3 playerPosition){
+bool Gate::isCollision(const Vector3& playerPosition){
 
 
 
