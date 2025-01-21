@@ -1103,7 +1103,7 @@ void GameScene::DrawObject3D() {
 	SpotLight spotLight = player_->GetFlashLight()->GetSpotLight();
 
 	//レベルエディタ  
-	//levelDataManager_->Draw(levelHandle_, camera_, material_, spotLight);
+	levelDataManager_->Draw(levelHandle_, camera_, material_, spotLight);
 
 	//敵
 	enemyManager_->Draw(camera_, spotLight);
@@ -1111,7 +1111,7 @@ void GameScene::DrawObject3D() {
 	//プレイヤー
 	player_->Draw(camera_, spotLight);
 	//鍵
-	//keyManager_->DrawObject3D(camera_, spotLight);
+	keyManager_->DrawObject3D(camera_, spotLight);
 
 }
 

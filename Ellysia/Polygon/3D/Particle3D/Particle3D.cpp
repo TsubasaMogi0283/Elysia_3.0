@@ -382,9 +382,9 @@ void Particle3D::Update(const Camera& camera) {
 		case Rise:
 			#pragma region 上昇
 			//強制的にビルボードにするよ
-			particleIterator->transform.translate.x += particleIterator->velocity.x / 10.0f;
-			particleIterator->transform.translate.y += 0.01f;
-			particleIterator->transform.translate.z += particleIterator->velocity.z / 10.0f;
+			particleIterator->transform.translate.x += particleIterator->velocity.x / 15.0f;
+			particleIterator->transform.translate.y += 0.03f;
+			particleIterator->transform.translate.z += particleIterator->velocity.z / 15.0f;
 			//Y軸でπ/2回転
 			//これからはM_PIじゃなくてstd::numbers::pi_vを使おうね
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);

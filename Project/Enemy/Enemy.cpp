@@ -271,9 +271,12 @@ void Enemy::Damaged() {
 void Enemy::Dead() {
 	//生成
 	if (particle_ == nullptr) {
+		//生成
 		particle_.reset(Particle3D::Create(Rise));
+		//パーティクルの細かい設定
 		particle_->SetTranslate(GetWorldPosition());
-		particle_->SetScale({ .x = 20.0f,.y = 20.0f,.z = 20.0f });
+		const float SCALE_SIZE = 20.0f;
+		particle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
 		particle_->SetCount(20u);
 		particle_->SetIsReleaseOnceMode(true);
 		particle_->SetIsToTransparent(true);
