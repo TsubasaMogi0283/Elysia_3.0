@@ -27,9 +27,9 @@
             "name": "cemetery03.001",
             "transform": {
                 "scaling": [
-                    2.0,
-                    2.0,
-                    2.0
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "rotation": [
                     0.0,

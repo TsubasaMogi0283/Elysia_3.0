@@ -56,12 +56,15 @@ void LoseScene::Initialize(){
 
 	//カメラの初期化
 	camera_.Initialize();
+	camera_.translate = { .x = 0.0f,.y = 2.8f,.z = -28.3f };
 	//マテリアル
 	material_.Initialize();
 	material_.lightingKinds_ = PointLighting;
 	//点光源
 	pointLight_.Initialize();
-
+	pointLight_.position_ = { .x = 0.0f,.y = 6.1f,.z = -2.0f };
+	pointLight_.decay_ = 3.0f;
+	pointLight_.radius_ = 11.8f;
 
 	//点滅
 	isFlash_ = true;
@@ -181,8 +184,13 @@ void LoseScene::Update(GameManager* gameManager){
 	//点光源の更新
 	pointLight_.Update();
 
+	
+#ifdef _DEBUG
+	//ImGui
+	DisplayImGui();
+#endif // _DEBUG
 
-
+	
 }
 
 
@@ -212,6 +220,16 @@ void LoseScene::DrawSprite(){
 void LoseScene::DisplayImGui(){
 
 
+	ImGui::Begin("カメラ");
+	ImGui::SliderFloat3("座標", &camera_.translate.x, -40.0f, 40.0f);
+	ImGui::End();
+
+	ImGui::Begin("点光源");
+	ImGui::SliderFloat3("座標", &pointLight_.position_.x, -40.0f, 40.0f);
+	ImGui::SliderFloat("Decay", &pointLight_.decay_, 0.0f, 20.0f);
+	ImGui::SliderFloat("半径", &pointLight_.radius_, 0.0f, 20.0f);
+
+	ImGui::End();
 
 
 }
