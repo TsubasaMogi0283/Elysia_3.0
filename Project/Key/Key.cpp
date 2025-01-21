@@ -23,7 +23,7 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 	//マテリアルの初期化
 	material_.Initialize();
 	//ライティングの種類
-	material_.lightingKinds_ = Spot;
+	material_.lightingKinds_ = SpotLighting;
 	//色
 	material_.color_ = {.x = 1.0f,.y = 1.0f,. z = 0.0f,. w = 1.0f };
 }

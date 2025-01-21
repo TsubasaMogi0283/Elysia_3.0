@@ -29,10 +29,10 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 
 	//マテリアルの初期化
 	mainMaterial_.Initialize();
-	mainMaterial_.lightingKinds_ = Spot;
+	mainMaterial_.lightingKinds_ = SpotLighting;
 	//パーティクル
 	particleMaterial_.Initialize();
-	particleMaterial_.lightingKinds_ = Spot;
+	particleMaterial_.lightingKinds_ = NoneLighting;
 
 
 	//生存か死亡
@@ -245,7 +245,7 @@ void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 	}
 
 	if (particle_!=nullptr) {
-		particle_->Draw(camera, particleMaterial_, spotLight);
+		particle_->Draw(camera, particleMaterial_);
 	}
 }
 
@@ -271,9 +271,7 @@ void Enemy::Damaged() {
 void Enemy::Dead() {
 	//生成
 	if (particle_ == nullptr) {
-		particle_.reset(Particle3D::Create(debugModelHandle , ThrowUp));
-	}
-	else {
+		particle_.reset(Particle3D::Create(debugModelHandle,NormalRelease));
 		particle_->SetTranslate(GetWorldPosition());
 		particle_->SetScale({ .x = 10.0f,.y = 10.0f,.z = 10.0f });
 		particle_->SetIsReleaseOnceMode(true);

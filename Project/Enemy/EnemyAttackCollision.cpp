@@ -14,7 +14,7 @@ void EnemyAttackCollision::Initialize(const uint32_t& modelHandle){
 	//マテリアルの初期化
 	material_.Initialize();
 	//ライティング
-	material_.lightingKinds_ = Spot;
+	material_.lightingKinds_ = SpotLighting;
 	
 	
 

@@ -53,7 +53,7 @@ public:
 	//色
 	Vector4 color_ = {1.0f,1.0f,1.0f,1.0f};
 	//Lightingの種類
-	int32_t lightingKinds_=Directional;
+	int32_t lightingKinds_=DirectionalLighting;
 	//UV行列
 	Matrix4x4 uvTransform_ = {};
 	//輝度

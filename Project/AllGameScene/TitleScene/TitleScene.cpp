@@ -58,7 +58,7 @@ void TitleScene::Initialize(){
 
 	//マテリアルの初期化
 	material_.Initialize();
-	material_.lightingKinds_ = Directional;
+	material_.lightingKinds_ = DirectionalLighting;
 
 	//スポットライトの初期化
 	spotLight.Initialize();

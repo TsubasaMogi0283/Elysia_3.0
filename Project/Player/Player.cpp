@@ -71,7 +71,7 @@ void Player::Initialize(){
 	
 	//マテリアル
 	material_.Initialize();
-	material_.lightingKinds_ = Spot;
+	material_.lightingKinds_ = SpotLighting;
 }
 
 void Player::Update(){

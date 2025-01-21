@@ -22,7 +22,7 @@ Ellysia::Vignette::Vignette(){
 void Ellysia::Vignette::Initialize() {
 
 	//RTV用のリソースを生成
-	const Vector4 RENDER_TARGET_CLEAR_VALUE = { .x = 1.0f,.y = 0.0f,.z = 0.0f,.w = 1.0f };
+	const Vector4 RENDER_TARGET_CLEAR_VALUE = { .x = 0.0f,.y = 1.0f,.z = 0.0f,.w = 1.0f };
 	//リソースの生成
 	rtvResource_ = rtvManager_->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
 	//ハンドルの取得
@@ -46,7 +46,7 @@ void Ellysia::Vignette::Initialize() {
 
 void Ellysia::Vignette::PreDraw() {
 	//RT
-	const float RENDER_TARGET_CLEAR_VALUE[] = {1.0f, 0.0f,0.0f,1.0f };
+	const float RENDER_TARGET_CLEAR_VALUE[] = {0.0f, 1.0f,0.0f,1.0f };
 	directXSetup_->GetCommandList()->OMSetRenderTargets(
 		1u, &rtvManager_->GetRtvHandle(rtvHandle_), false, &directXSetup_->GetDsvHandle());
 	//クリア

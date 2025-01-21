@@ -13,7 +13,7 @@ void AudioTestPlayer::Initialize(){
 	
 	//マテリアルの初期化
 	material_.Initialize();
-	material_.lightingKinds_ = LightingType::Directional;
+	material_.lightingKinds_ = LightingType::DirectionalLighting;
 
 	//コリジョンの初期化
 	//オーディオ

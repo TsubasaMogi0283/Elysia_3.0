@@ -175,7 +175,7 @@ Particle Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
 	Particle particle;
 	particle.transform.scale = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
 	particle.transform.rotate = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
-	Vector3 randomTranslate = {.x= distribute(randomEngine),.y= distribute(randomEngine),.z= distribute(randomEngine) };
+	Vector3 randomTranslate = {.x= distribute(randomEngine),.y= distribute(randomEngine)+1.0f,.z= distribute(randomEngine) };
 	particle.transform.translate = VectorCalculation::Add(emitter_.transform.translate, randomTranslate);
 	//投げ上げは少しだけ上にずらす
 	if (moveType_ == ThrowUp) {
@@ -467,7 +467,9 @@ void Particle3D::Update(const Camera& camera) {
 	
 }
 
-void Particle3D::Draw(const Camera& camera, Material& material){
+void Particle3D::Draw(const Camera& camera,const Material& material){
+
+	assert(material.lightingKinds_ == NoneLighting);
 
 	//更新
 	Update(camera);
@@ -492,8 +494,6 @@ void Particle3D::Draw(const Camera& camera, Material& material){
 
 	//CBVを設定する
 	//マテリアル
-	//強制的にNoneにして予想外のライトニングにならないようにする
-	material.lightingKinds_ = None;
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
 
 	//インスタンシング
@@ -520,7 +520,7 @@ void Particle3D::Draw(const Camera& camera, Material& material){
 void Particle3D::Draw(const Camera& camera,const  Material& material,const DirectionalLight& directionalLight) {
 
 	//Directionalではなかったらassert
-	if (material.lightingKinds_ != Directional) {
+	if (material.lightingKinds_ != DirectionalLighting) {
 		assert(0);
 	}
 
@@ -573,7 +573,7 @@ void Particle3D::Draw(const Camera& camera,const  Material& material,const Direc
 
 void Particle3D::Draw(const Camera& camera, const Material& material, const PointLight& pointLight){
 	//Pointではなかったらassert
-	if (material.lightingKinds_ != Point) {
+	if (material.lightingKinds_ != PointLighting) {
 		assert(0);
 	}
 
@@ -625,7 +625,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Poin
 
 void Particle3D::Draw(const Camera& camera, const Material& material, const SpotLight& spotLight){
 	//Spotではなかったらassert
-	if (material.lightingKinds_ != Spot) {
+	if (material.lightingKinds_ != SpotLighting) {
 		assert(0);
 	}
 

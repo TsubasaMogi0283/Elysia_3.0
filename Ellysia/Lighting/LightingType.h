@@ -11,13 +11,13 @@
 /// </summary>
 enum LightingType {
 	//無し
-	None,
+	NoneLighting,
 	//平行光源
-	Directional,
+	DirectionalLighting,
 	//点光源
-	Point,
+	PointLighting,
 	//スポット
-	Spot,
+	SpotLighting,
 	//環境マップ
 	EnviromentMap,
 

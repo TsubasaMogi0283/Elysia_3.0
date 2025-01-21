@@ -165,7 +165,7 @@ public:
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
-	void Draw(const Camera& camera, Material& material);
+	void Draw(const Camera& camera,const Material& material);
 
 	/// <summary>
 	/// 描画(平行光源)

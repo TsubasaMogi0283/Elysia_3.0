@@ -257,7 +257,7 @@ void GameScene::Initialize() {
 	//マテリアルの初期化
 	material_.Initialize();
 	//ライティングの種類を設定
-	material_.lightingKinds_ = Spot;
+	material_.lightingKinds_ = SpotLighting;
 	
 
 
@@ -1103,7 +1103,7 @@ void GameScene::DrawObject3D() {
 	SpotLight spotLight = player_->GetFlashLight()->GetSpotLight();
 
 	//レベルエディタ  
-	levelDataManager_->Draw(levelHandle_, camera_, material_, spotLight);
+	//levelDataManager_->Draw(levelHandle_, camera_, material_, spotLight);
 
 	//敵
 	enemyManager_->Draw(camera_, spotLight);
@@ -1111,7 +1111,7 @@ void GameScene::DrawObject3D() {
 	//プレイヤー
 	player_->Draw(camera_, spotLight);
 	//鍵
-	keyManager_->DrawObject3D(camera_, spotLight);
+	//keyManager_->DrawObject3D(camera_, spotLight);
 
 }
 

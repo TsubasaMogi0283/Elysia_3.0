@@ -26,7 +26,7 @@ void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position
 	//マテリアル
 	material_.Initialize();
 	//ライティングの種類
-	material_.lightingKinds_ = Spot;
+	material_.lightingKinds_ = SpotLighting;
 
 	//プレイヤーに当たったかどうか
 	isTouchPlayer_ = false;

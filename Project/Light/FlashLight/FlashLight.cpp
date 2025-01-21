@@ -34,7 +34,7 @@ void FlashLight::Initialize(){
 	//マテリアルの初期化
 	material_.Initialize();
 	//ライティングの設定
-	material_.lightingKinds_ = None;
+	material_.lightingKinds_ = NoneLighting;
 	//色
 	material_.color_ = { .x = 0.5f,.y = 1.0f,.z = 0.5f,.w = 1.0f };
 
@@ -57,7 +57,7 @@ void FlashLight::Initialize(){
 	lightCenterWorldTransform_.Initialize();
 	lightCenterWorldTransform_.scale = { .x = SCALE,.y = SCALE ,.z = SCALE };
 	lightCenterMaterial_.Initialize();
-	lightCenterMaterial_.lightingKinds_ = None;
+	lightCenterMaterial_.lightingKinds_ = NoneLighting;
 
 	//当たり判定の初期化
 	flashLightCollision_ = std::make_unique<FlashLightCollision>();
