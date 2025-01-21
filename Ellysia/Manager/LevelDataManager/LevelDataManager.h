@@ -447,13 +447,7 @@ namespace Ellysia {
 		/// <returns></returns>
 		nlohmann::json Deserialize(const std::string& fullFilePath);
 
-		/// <summary>
-		/// 拡張子を取得
-		/// </summary>
-		/// <param name="directory">ディレクトリー</param>
-		/// <param name="baseFileName">元のファイル名</param>
-		/// <returns>拡張子</returns>
-		std::string FindExtension(const std::string& directory, const std::string& baseFileName);
+		
 	private:
 
 		//ここにデータを入れていく

@@ -403,6 +403,12 @@
     <Filter Include="Project\Scene\Game">
       <UniqueIdentifier>{e3a0acb5-08b3-41f0-a41e-4357a3698e46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\StringOption">
+      <UniqueIdentifier>{8718b1aa-f8db-486b-b963-5908020ee28d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\StringOption">
+      <UniqueIdentifier>{318c7ec3-0e37-41d3-8635-09c9153de3e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -662,6 +668,9 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp">
       <Filter>Project\SceneFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\StringOption\StringOption.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1140,6 +1149,9 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\GameSceneFactory.h">
       <Filter>Project\SceneFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\StringOption\StringOption.h">
+      <Filter>Ellysia\Header File\StringOption</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

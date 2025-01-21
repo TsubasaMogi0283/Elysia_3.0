@@ -145,6 +145,11 @@ private:
 	PointLight pointLight_ = {};
 
 
+	//背景(ポストエフェクト)
+	std::unique_ptr<Ellysia::BackTexture>backTexture_ = nullptr;
+
+
+
 	//失敗
 	std::unique_ptr<Sprite> failedTexture_ = nullptr;
 	//テキスト

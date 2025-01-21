@@ -48,6 +48,11 @@ void LoseScene::Initialize(){
 	levelDataHandle_ = levelDataManager_->Load("LoseStage/LoseStage.json");
 	
 
+	//背景(ポストエフェクト)
+	backTexture_ = std::make_unique<Ellysia::BackTexture>();
+	const Vector4 CLEAR_COLOR = { .x = 0.0f,.y = 0.0f,.z = 0.0f,.w = 1.0f };
+	backTexture_->SetClearColour(CLEAR_COLOR);
+	backTexture_->Initialize();
 
 	//カメラの初期化
 	camera_.Initialize();
@@ -187,17 +192,17 @@ void LoseScene::DrawObject3D(){
 	
 }
 
-void LoseScene::PreDrawPostEffectFirst()
-{
+void LoseScene::PreDrawPostEffectFirst(){
+	backTexture_->PreDraw();
 }
 
-void LoseScene::DrawPostEffect()
-{
+void LoseScene::DrawPostEffect(){
+	backTexture_->Draw();
 }
 
 void LoseScene::DrawSprite(){
 	//負け
-	failedTexture_->Draw();
+	//failedTexture_->Draw();
 	//テキスト
 	text_->Draw();
 	//フェードイン

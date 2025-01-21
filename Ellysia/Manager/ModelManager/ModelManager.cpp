@@ -9,6 +9,7 @@
 
 #include "Matrix4x4Calculation.h"
 #include <Calculation/QuaternionCalculation.h>
+#include <StringOption.h>
 
 static uint32_t modelhandle;
 
@@ -26,7 +27,8 @@ ModelData ModelManager::LoadFileForLeveldata(const std::string& fileNameFolder, 
 
 	//assimpを利用してしてオブジェクトファイルを読んでいく
 	Assimp::Importer importer;
-	std::string filePath = fileNameFolder + "/" + fileName + "/" + fileName + ".obj";
+	std::string directory = fileNameFolder + "/" + fileName + "/";
+	std::string filePath = directory + fileName + ".obj";
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
 	//メッシュがないのは対応しない
 	//後読み込みが出来なかったらここで止まる

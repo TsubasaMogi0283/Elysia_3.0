@@ -42,12 +42,9 @@
 			],
 			"name":"Material.069",
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.1024739220738411,
-					0.1024739220738411,
-					0.1024739220738411,
-					1
-				],
+				"baseColorTexture":{
+					"index":0
+				},
 				"metallicFactor":0,
 				"roughnessFactor":0.5
 			}
@@ -67,6 +64,19 @@
 					"material":0
 				}
 			]
+		}
+	],
+	"textures":[
+		{
+			"sampler":0,
+			"source":0
+		}
+	],
+	"images":[
+		{
+			"mimeType":"image/png",
+			"name":"Grave",
+			"uri":"Grave.png"
 		}
 	],
 	"accessors":[
@@ -129,6 +139,12 @@
 			"byteLength":864,
 			"byteOffset":5984,
 			"target":34963
+		}
+	],
+	"samplers":[
+		{
+			"magFilter":9729,
+			"minFilter":9987
 		}
 	],
 	"buffers":[

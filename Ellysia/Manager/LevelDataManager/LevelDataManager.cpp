@@ -15,29 +15,12 @@
 
 #include "Model/AudioObjectForLevelEditor.h"
 #include "Model/StageObjectForLevelEditor.h"
+#include <StringOption.h>
 
 
 Ellysia::LevelDataManager* Ellysia::LevelDataManager::GetInstance(){
 	static LevelDataManager instance;
 	return &instance;
-}
-
-
-
-std::string Ellysia::LevelDataManager::FindExtension(const std::string& directory, const std::string& baseFileName) {
-	
-	//拡張子を探す
-	for (const auto& entry : std::filesystem::directory_iterator(directory)) {
-		if (entry.is_regular_file()) {
-			std::string fileName = entry.path().stem().string();
-			// 見つかったら返す
-			if (fileName == baseFileName) {
-				return entry.path().extension().string();
-			}
-		}
-	}
-	// 見つからなければ空文字を返す
-	return {};
 }
 
 void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
@@ -251,7 +234,7 @@ void Ellysia::LevelDataManager::Ganarate(LevelData& levelData) {
 	
 			//Audioフォルダの中で読み込み
 			std::string audioDir = levelEditorDirectoryPath + "/"+ objectData.modelFileName+"/";
-			std::string extension = FindExtension(audioDir, objectData.levelAudioData.fileName);
+			std::string extension = StringOption::FindExtension(audioDir, objectData.levelAudioData.fileName);
 			std::string fullPath = audioDir + objectData.levelAudioData.fileName +extension;
 
 			//オーディオデータ

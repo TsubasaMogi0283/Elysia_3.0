@@ -149,10 +149,8 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 }
 
 void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const PointLight& pointLight){
-	//資料にはなかったけどUnMapはあった方がいいらしい
-	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
-	//プログラムが安定するらしいとのこと
-
+	//点光源だけ
+	assert(material.lightingKinds_ == PointLighting);
 
 #pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
