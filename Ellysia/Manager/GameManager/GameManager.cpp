@@ -17,7 +17,7 @@ void GameManager::Initialize() {
 	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
 
 #ifdef _DEBUG
-	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Game");
 
 #endif // _DEBUG
 

@@ -69,12 +69,10 @@ void Ellysia::Framework::Initialize(){
 	///DirectX第2の初期化
 	directXSetup_->SecondInitialize();
 
-	
 #ifdef _DEBUG
 	//ImGuiManagerの初期化
 	imGuiManager_->Initialize();
 #endif
-
 
 	//パイプラインの初期化
 	pipelineManager_->Initialize();
@@ -82,20 +80,16 @@ void Ellysia::Framework::Initialize(){
 	//Inputの初期化
 	input_->Initialize();
 	
-	
 	//Audioの初期化
 	audio_->Initialize();
 
 	//JSON読み込みの初期化
 	globalVariables_->LoadAllFile();
 
-
 	//ゲームシーン管理クラスの生成
 	gameManager_ = std::make_unique<GameManager>();
 	//初期化
 	gameManager_->Initialize();
-
-
 
 }
 
@@ -114,7 +108,7 @@ void Ellysia::Framework::BeginFrame(){
 }
 
 void Ellysia::Framework::Update(){
-	//JSON用
+
 	//グローバル変数の更新
 	globalVariables_->Update();
 
@@ -127,15 +121,8 @@ void Ellysia::Framework::Update(){
 
 void Ellysia::Framework::Draw(){
 	
-#pragma region PostEffect
-	
-	
 	//PostEffectの描画前処理
 	gameManager_->PreDrawPostEffectFirst();
-
-	
-
-#pragma endregion
 
 	//3Dオブジェクトの描画
 	gameManager_->DrawObject3D();
@@ -146,11 +133,8 @@ void Ellysia::Framework::Draw(){
 	//PostEffectの描画
 	gameManager_->DrawPostEffect();
 
-
 	//スプライトの描画
 	gameManager_->DrawSprite();
-	
-
 	
 #ifdef _DEBUG
 	//ImGuiの描画
@@ -161,6 +145,7 @@ void Ellysia::Framework::Draw(){
 
 
 void Ellysia::Framework::EndFrame() {
+
 #ifdef _DEBUG
 	////ImGuiのフレーム終わり
 	imGuiManager_->EndDraw();
@@ -168,7 +153,6 @@ void Ellysia::Framework::EndFrame() {
 	//最後で切り替える
 	directXSetup_->EndDraw();
 
-	
 }
 #pragma endregion
 

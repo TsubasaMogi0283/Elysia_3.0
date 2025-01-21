@@ -83,7 +83,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 			position.z = static_cast<float>(std::atof(word.c_str()));
 
 			//生成
-			//GenarateNormalEnemy(position);
+			GenarateNormalEnemy(position);
 
 		}
 		//強敵の場合
@@ -142,7 +142,7 @@ void EnemyManager::GenarateNormalEnemy(const Vector3& position) {
 	Enemy* enemy = new Enemy();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
-	std::uniform_real_distribution<float> speedDistribute(-0.01f, 0.01f);
+	std::uniform_real_distribution<float> speedDistribute(-0.001f, 0.001f);
 
 	
 	//スピード決め

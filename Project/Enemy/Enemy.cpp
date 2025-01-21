@@ -8,6 +8,7 @@
 #include <numbers>
 #include <ModelManager.h>
 
+
 void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed){
 	
 	//モデルの生成
@@ -15,6 +16,8 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
+	//スケールサイズ
+	const float SCALE_SIZE = 10.0f;
 	worldTransform_.scale = { .x = SCALE_SIZE,.y = SCALE_SIZE ,.z = SCALE_SIZE };
 #ifdef _DEBUG
 	float DEBUG_SCALE = 1.0f;
@@ -25,9 +28,11 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 	worldTransform_.translate = position;
 
 	//マテリアルの初期化
-	material_.Initialize();
-	material_.lightingKinds_ = Spot;
-
+	mainMaterial_.Initialize();
+	mainMaterial_.lightingKinds_ = Spot;
+	//パーティクル
+	particleMaterial_.Initialize();
+	particleMaterial_.lightingKinds_ = Spot;
 
 
 	//生存か死亡
@@ -56,7 +61,7 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 
 
 	//デバッグ用のモデル
-	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
 
 	//攻撃の当たり判定
 	attackCollision_ = std::make_unique<EnemyAttackCollision>();
@@ -70,26 +75,6 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 
 
 
-void Enemy::Damaged(){
-
-
-	//懐中電灯用の当たり判定に当たっていたら色が変わっていくよ
-	if (enemyFlashLightCollision_->GetIsTouched() == true) {
-		const float COLOR_CHANGE_INTERVAL = 0.005f;
-		material_.color_.y -= COLOR_CHANGE_INTERVAL;
-		material_.color_.z -= COLOR_CHANGE_INTERVAL;
-
-	}
-
-	//0になったら絶命
-	if (material_.color_.y < 0.0f &&
-		material_.color_.z < 0.0f) {
-		isAlive_ = false;
-	}
-
-
-
-}
 
 
 
@@ -97,11 +82,12 @@ void Enemy::Update(){
 	
 	//0から始める
 	const uint32_t RESTART_TIME = 0u;
-
+	//スピードの量
+	const float SPEED_AMOUNT_ = 0.05f;
 	//StatePatternにしたい！！
 	//PreTracking消して単純化したい
 
-
+	//生存している時だけ行動するよ
 	if (isAlive_ == true) {
 		//状態遷移
 		switch (condition_) {
@@ -154,13 +140,12 @@ void Enemy::Update(){
 
 		case EnemyCondition::Tracking:
 			//追跡処理
-
-
 			//向きを求める
 			direction_ = VectorCalculation::Subtract(playerPosition_, GetWorldPosition());
 			//正規化
 			direction_ = VectorCalculation::Normalize(direction_);
 
+			
 			//スピードの計算
 			Vector3 speed = VectorCalculation::Multiply(direction_, SPEED_AMOUNT_);
 			//加算
@@ -214,11 +199,9 @@ void Enemy::Update(){
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 	//マテリアルの更新
-	material_.Update();
-
-
-
-
+	mainMaterial_.Update();
+	particleMaterial_.Update();
+	
 
 	//AABBの計算
 	aabb_.max = VectorCalculation::Add(GetWorldPosition(), RADIUS_INTERVAL_);
@@ -235,43 +218,17 @@ void Enemy::Update(){
 	attackCollision_->SetEnemyDirection(direction_);
 	attackCollision_->Update();
 
-	
-
 	//ダメージ演出
 	Damaged();
 
-#ifdef _DEBUG
-
-	ImGui::Begin("敵");
-	ImGui::InputFloat3("方向", &direction_.x);
-	ImGui::Checkbox("攻撃", &isAttack_);
-	ImGui::InputInt("攻撃時間", &attackTime_);
-	
-	if (ImGui::TreeNode("状態")) {
-		int newCondition = static_cast<int>(condition_);
-		int newPreCondition = static_cast<int>(preCondition_);
-		ImGui::InputInt("現在", &newCondition);
-		ImGui::InputInt("前", &newPreCondition);
-		ImGui::TreePop();
+	//死亡したらパーティクルを出して消える
+	if (isAlive_ == false) {
+		Dead();
 	}
-	
 
-	ImGui::InputFloat4("色", &material_.color_.x);
-	ImGui::InputFloat3("座標", &worldTransform_.translate.x);
-	ImGui::InputFloat3("追跡前のプレイヤーの座標", &preTrackingPlayerPosition_.x);
-	ImGui::InputFloat3("追跡前の座標", &preTrackingPosition_.x);
-	ImGui::InputInt("AliveTive", &deleteTime_);
-	ImGui::End();
-#endif // _DEBUG
-
-	
+	//ImGui
+	DisplayImGui();
 }
-
-
-
-
-
-
 
 void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 #ifdef _DEBUG
@@ -282,13 +239,82 @@ void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 	
 #endif // _DEBUG
 
-
 	//本体
 	if (isAlive_ == true) {
-		model_->Draw(worldTransform_, camera,material_, spotLight);
+		model_->Draw(worldTransform_, camera,mainMaterial_, spotLight);
 	}
-	
+
+	if (particle_!=nullptr) {
+		particle_->Draw(camera, particleMaterial_, spotLight);
+	}
+}
+
+
+
+
+void Enemy::Damaged() {
+
+	//懐中電灯用の当たり判定に当たっていたら色が赤に変わっていくよ
+	if (enemyFlashLightCollision_->GetIsTouched() == true) {
+		const float COLOR_CHANGE_INTERVAL = 0.01f;
+		mainMaterial_.color_.y -= COLOR_CHANGE_INTERVAL;
+		mainMaterial_.color_.z -= COLOR_CHANGE_INTERVAL;
+	}
+
+	//0になったら絶命
+	if (mainMaterial_.color_.y < 0.0f &&
+		mainMaterial_.color_.z < 0.0f) {
+		isAlive_ = false;
+	}
+}
+
+void Enemy::Dead() {
+	//生成
+	if (particle_ == nullptr) {
+		particle_.reset(Particle3D::Create(debugModelHandle , ThrowUp));
+	}
+	else {
+		particle_->SetTranslate(GetWorldPosition());
+		particle_->SetScale({ .x = 10.0f,.y = 10.0f,.z = 10.0f });
+		particle_->SetIsReleaseOnceMode(true);
+		particle_->SetIsToTransparent(true);
+	}
+
+
+	//全て消えたら、消えたかどうかのフラグがたつ
+	if (particle_->GetIsAllInvisible() == true) {
+		isDeleted_ = true;
+	}
+
+}
+
+void Enemy::DisplayImGui(){
+#ifdef _DEBUG
+
+	ImGui::Begin("敵");
+	ImGui::InputFloat3("方向", &direction_.x);
+	ImGui::Checkbox("攻撃", &isAttack_);
+	ImGui::Checkbox("生存", &isAlive_);
+	ImGui::InputInt("攻撃時間", &attackTime_);
+
+	if (ImGui::TreeNode("状態")) {
+		int newCondition = static_cast<int>(condition_);
+		int newPreCondition = static_cast<int>(preCondition_);
+		ImGui::InputInt("現在", &newCondition);
+		ImGui::InputInt("前", &newPreCondition);
+		ImGui::TreePop();
+	}
+
+
+	ImGui::InputFloat4("色", &mainMaterial_.color_.x);
+	ImGui::InputFloat3("座標", &worldTransform_.translate.x);
+	ImGui::InputFloat3("追跡前のプレイヤーの座標", &preTrackingPlayerPosition_.x);
+	ImGui::InputFloat3("追跡前の座標", &preTrackingPosition_.x);
+	ImGui::InputInt("AliveTive", &deleteTime_);
+	ImGui::End();
+#endif // _DEBUG
 
 
 }
+
 

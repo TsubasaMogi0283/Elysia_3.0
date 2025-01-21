@@ -51,7 +51,9 @@ class ModelManager;
 /// </summary>
 class TextureManager;
 
-
+/// <summary>
+/// EllysiaEngine
+/// </summary>
 namespace Ellysia {
 	/// <summary>
 	/// DirectXクラス
@@ -148,11 +150,7 @@ private:
 	/// <returns></returns>
 	std::list<Particle> Emission(const Emitter& emmitter, std::mt19937& randomEngine);
 
-
-
 #pragma endregion
-
-public:
 
 	/// <summary>
 	/// 更新
@@ -160,12 +158,14 @@ public:
 	/// <param name="camera"></param>
 	void Update(const Camera& camera);
 
+public:
+
 	/// <summary>
 	/// 通常描画
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
-	void Draw(const Camera& camera, const Material& material);
+	void Draw(const Camera& camera, Material& material);
 
 	/// <summary>
 	/// 描画(平行光源)
@@ -310,7 +310,7 @@ private:
 	int instancingIndex_ = 0;
 
 	//一度だけ出すかどうか
-	bool isReleaseOnceMode_ = false;
+	bool isReleaseOnceMode_ = true;
 	//出し終えたかどうか
 	bool isReeasedOnce_ = false;
 

@@ -75,8 +75,6 @@ namespace Ellysia {
 	/// </summary>
 	class LevelDataManager;
 
-
-
 	/// <summary>
 	/// フレームワーク
 	/// </summary>
