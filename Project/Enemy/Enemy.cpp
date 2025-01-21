@@ -255,7 +255,7 @@ void Enemy::Damaged() {
 
 	//懐中電灯用の当たり判定に当たっていたら色が赤に変わっていくよ
 	if (enemyFlashLightCollision_->GetIsTouched() == true) {
-		const float COLOR_CHANGE_INTERVAL = 0.05f;
+		const float COLOR_CHANGE_INTERVAL = 0.01f;
 		mainMaterial_.color_.y -= COLOR_CHANGE_INTERVAL;
 		mainMaterial_.color_.z -= COLOR_CHANGE_INTERVAL;
 	}
@@ -269,7 +269,7 @@ void Enemy::Damaged() {
 
 void Enemy::Dead() {
 	//消えていくよ
-	const float DELETE_INTERVAL = 0.01f;
+	const float DELETE_INTERVAL = 0.02f;
 	mainMaterial_.color_.w -= DELETE_INTERVAL;
 
 	//生成
@@ -284,7 +284,6 @@ void Enemy::Dead() {
 		particle_->SetIsReleaseOnceMode(true);
 		particle_->SetIsToTransparent(true);
 	}
-
 
 	//全て消えたら、消えたかどうかのフラグがたつ
 	if (particle_->GetIsAllInvisible() == true) {

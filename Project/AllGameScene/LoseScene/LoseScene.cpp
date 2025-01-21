@@ -1,16 +1,26 @@
 #include "LoseScene.h"
 
-#include "TextureManager.h"
 #include "Input.h"
+#include "TextureManager.h"
+#include "ModelManager.h"
+#include "LevelDataManager.h"
+
 #include "GameManager.h"
 
 
 
 LoseScene::LoseScene(){
-	//入力クラスの取得
+
+	//インスタンスの取得
+	//入力クラス
 	input_ = Ellysia::Input::GetInstance();
 	//テクスチャ管理クラス
 	textureManager_ = TextureManager::GetInstance();
+	//レベルデータ管理クラス
+	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	//モデル管理クラス
+	modelManager_ = ModelManager::GetInstance();
+
 }
 
 void LoseScene::Initialize(){
@@ -21,7 +31,6 @@ void LoseScene::Initialize(){
 	//メイン
 	uint32_t failedTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Result/Lose/EscapeFailed.png");
 	failedTexture_.reset(Sprite::Create(failedTextureHandle, INITIAL_SPRITE_POSITION_));
-
 
 	//Text
 	uint32_t textHandle = textureManager_->LoadTexture("Resources/Sprite/Result/Lose/LoseText.png");
@@ -35,7 +44,19 @@ void LoseScene::Initialize(){
 	black_->SetTransparency(transparency_);
 	blackOutTime_ = 0;
 	
+	//負けシーン用のレベルデータを入れる
+	levelDataHandle_ = levelDataManager_->Load("LoseStage/LoseStage.json");
 	
+
+
+	//カメラの初期化
+	camera_.Initialize();
+	//マテリアル
+	material_.Initialize();
+	material_.lightingKinds_ = PointLighting;
+	//点光源
+	pointLight_.Initialize();
+
 
 	//点滅
 	isFlash_ = true;
@@ -95,6 +116,11 @@ void LoseScene::Update(GameManager* gameManager){
 	}
 
 
+	//レベルデータの更新
+	levelDataManager_->Update(levelDataHandle_);
+
+
+
 	//カウントが増える時間
 	const uint32_t INCREASE_COUNT_TIME = 0u;
 	//点滅の間隔
@@ -143,12 +169,22 @@ void LoseScene::Update(GameManager* gameManager){
 	}
 
 
+	//カメラの更新
+	camera_.Update();
+	//マテリアルの更新
+	material_.Update();
+	//点光源の更新
+	pointLight_.Update();
+
+
 
 }
 
 
-void LoseScene::DrawObject3D()
-{
+void LoseScene::DrawObject3D(){
+	//レベルデータ
+	levelDataManager_->Draw(levelDataHandle_, camera_, material_, pointLight_);
+	
 }
 
 void LoseScene::PreDrawPostEffectFirst()
@@ -166,5 +202,12 @@ void LoseScene::DrawSprite(){
 	text_->Draw();
 	//フェードイン
 	black_->Draw();
+}
+
+void LoseScene::DisplayImGui(){
+
+
+
+
 }
 

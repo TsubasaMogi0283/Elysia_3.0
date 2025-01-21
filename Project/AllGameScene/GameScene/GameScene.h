@@ -61,6 +61,16 @@ class ModelManager;
 class Input;
 
 
+/// <summary>
+/// EllysiaEngine
+/// </summary>
+namespace Ellysia {
+	/// <summary>
+	/// レベルエディタ
+	/// </summary>
+	class LevelDataManager;
+}
+
 #pragma endregion
 
 

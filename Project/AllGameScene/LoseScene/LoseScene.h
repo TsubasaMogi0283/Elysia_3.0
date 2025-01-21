@@ -10,6 +10,7 @@
 #include "Sprite.h"
 #include "Model.h"
 #include "Camera.h"
+#include "PointLight.h" 
 #include "BackTexture.h"
 
 //前方宣言
@@ -24,6 +25,11 @@ class GameManager;
 /// </summary>
 class TextureManager;
 
+/// <summary>
+/// モデル管理クラス
+/// </summary>
+class ModelManager;
+
 
 /// <summary>
 /// EllysiaEngine
@@ -33,6 +39,12 @@ namespace Ellysia {
 	/// 入力
 	/// </summary>
 	class Input;
+
+	/// <summary>
+	/// レベルデータ管理クラス
+	/// </summary>
+	class LevelDataManager;
+
 };
 
 
@@ -86,10 +98,26 @@ public:
 	~LoseScene()=default;
 
 private:
+	/// <summary>
+	/// /ImGUiの表示
+	/// </summary>
+	void DisplayImGui();
+
+
+
+private:
 	//入力クラス
 	Ellysia::Input* input_ = nullptr;
 	//テクスチャ管理クラス
 	TextureManager* textureManager_ = nullptr;
+	//レベルデータ管理クラス
+	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	//ハンドル
+	uint32_t levelDataHandle_ = 0u;
+
+	//モデル管理クラス
+	ModelManager* modelManager_ = nullptr;
+
 
 private:
 	//間隔
@@ -109,6 +137,14 @@ private:
 
 
 private:
+	//カメラ
+	Camera camera_ = {};
+	//マテリアル
+	Material material_ = {};
+	//点光源
+	PointLight pointLight_ = {};
+
+
 	//失敗
 	std::unique_ptr<Sprite> failedTexture_ = nullptr;
 	//テキスト

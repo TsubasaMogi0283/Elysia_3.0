@@ -1,10 +1,5 @@
 #include "GameManager.h"
-#include "GameScene/GameScene.h"
-#include "WinScene/WinScene.h"
-#include "LoseScene/LoseScene.h"
-#include "TitleScene/TitleScene.h"
-#include "LevelEditorSample/LevelEditorSample.h"
-
+#include <cassert>
 #include "GameSceneFactory.h"
 
 
@@ -14,10 +9,10 @@ void GameManager::Initialize() {
 	abstractSceneFactory_ = std::make_unique<GameSceneFactory>();
 	
 	//シーンごとに動作確認したいときはここを変えてね
-	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Game");
 
 #ifdef _DEBUG
-	currentGamaScene_ = abstractSceneFactory_->CreateScene("Game");
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Lose");
 
 #endif // _DEBUG
 
