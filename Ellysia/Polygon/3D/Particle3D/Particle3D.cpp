@@ -40,18 +40,18 @@ Particle3D* Particle3D::Create(const uint32_t& moveType){
 	Particle3D* particle3D = new Particle3D();
 
 #pragma region デフォルトの設定 
-	particle3D->emitter_.count = 3;
+	particle3D->emitter_.count = 10;
 	//0.5秒ごとに発生
 	particle3D->emitter_.frequency = 0.0f;
 	//発生頻度用の時刻。0.0で初期化
 	particle3D->emitter_.frequencyTime = 0.0f;
 	//SRT
-	particle3D->emitter_.transform.scale = {.x = 10.0f,.y = 10.0f,.z = 10.0f };
+	particle3D->emitter_.transform.scale = {.x = 20.0f,.y = 20.0f,.z = 20.0f };
 	particle3D->emitter_.transform.rotate = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
 	particle3D->emitter_.transform.translate = { .x = 0.0f,.y = 0.0f,.z = 4.0f };
 
 	//モデルの読み込み
-	uint32_t modelHandle = particle3D->modelManager_->LoadModelFile("Resources/External/Model/Plane", "plane.obj");
+	uint32_t modelHandle = particle3D->modelManager_->LoadModelFile("Resources/Model/Particle","ParticlePlane.obj");
 
 	//テクスチャの読み込み
 	particle3D->textureHandle_ = particle3D->textureManager_->LoadTexture("Resources/External/Texture/Circle/circle.png");
@@ -245,8 +245,6 @@ void Particle3D::Update(const Camera& camera) {
 	}
 	
 	
-
-
 	//座標の計算など
 	numInstance_ = 0;
 	for (std::list<Particle>::iterator particleIterator = particles_.begin();
@@ -384,9 +382,9 @@ void Particle3D::Update(const Camera& camera) {
 		case Rise:
 			#pragma region 上昇
 			//強制的にビルボードにするよ
-			particleIterator->transform.translate.x += particleIterator->velocity.x / 3.0f;
-			particleIterator->transform.translate.y += 0.1f;
-			particleIterator->transform.translate.z += particleIterator->velocity.z / 3.0f;
+			particleIterator->transform.translate.x += particleIterator->velocity.x / 10.0f;
+			particleIterator->transform.translate.y += 0.01f;
+			particleIterator->transform.translate.z += particleIterator->velocity.z / 10.0f;
 			//Y軸でπ/2回転
 			//これからはM_PIじゃなくてstd::numbers::pi_vを使おうね
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
