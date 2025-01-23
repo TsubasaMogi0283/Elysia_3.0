@@ -120,6 +120,10 @@ private:
 
 
 private:
+
+	//時間変化
+	const float DELTA_TIME = 1.0f / 60.0f;
+
 	//間隔
 	const float TRANSPARENCY_INTERVAL_ = 0.01f;
 	//点滅どのくらい
@@ -139,6 +143,12 @@ private:
 private:
 	//カメラ
 	Camera camera_ = {};
+	//速度
+	Vector3 cameraVelocity_ = {};
+	//移動時間
+	float cameraMoveTime_ = 0.0f;
+
+
 	//マテリアル
 	Material material_ = {};
 	//点光源
@@ -189,6 +199,10 @@ private:
 
 	
 	
+	//ゲームに戻るかどうか
+	bool isReturnToGame_ = false;
+
+
 
 };
 

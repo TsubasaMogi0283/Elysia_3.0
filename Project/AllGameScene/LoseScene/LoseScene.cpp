@@ -6,6 +6,7 @@
 #include "LevelDataManager.h"
 
 #include "GameManager.h"
+#include <VectorCalculation.h>
 
 
 
@@ -101,6 +102,9 @@ void LoseScene::Update(GameManager* gameManager){
 		flashTime_ = RESTART_TIME;
 	}
 
+
+	//ゲームかタイトルか選択する
+
 	//コントローラー接続時
 	if (input_->IsConnetGamePad() == true) {
 
@@ -120,7 +124,10 @@ void LoseScene::Update(GameManager* gameManager){
 	}
 	//次のシーンへ
 	if (input_->IsTriggerKey(DIK_SPACE) == true) {
-		isReturnTitle = true;
+		//ゲームへ
+		isReturnToGame_ = true;
+
+		//isReturnTitle = true;
 	}
 
 
@@ -139,6 +146,7 @@ void LoseScene::Update(GameManager* gameManager){
 	//タイトルへ戻る
 	if (isReturnTitle == true) {
 
+		//点滅
 		fastFlashTime_ += INCREASE_VALUE;
 		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
 			++textDisplayCount_;
@@ -154,10 +162,10 @@ void LoseScene::Update(GameManager* gameManager){
 
 		//指定した時間を超えたらタイトルへ遷移
 		if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
+			//テキストの非表示
 			text_->SetInvisible(true);
 			//透明度の設定
 			black_->SetTransparency(transparency_);
-
 			//暗くなったらシーンチェンジ
 			transparency_ += TRANSPARENCY_INTERVAL_;
 		}
@@ -170,7 +178,48 @@ void LoseScene::Update(GameManager* gameManager){
 
 	}
 
-	//タイトルへ
+
+	//ゲームは墓から遠ざかる
+	if (isReturnToGame_ == true) {
+		//点滅
+		fastFlashTime_ += INCREASE_VALUE;
+		
+		//表示
+		if (textDisplayCount_ % FLASH_INTERVAL == DISPLAY) {
+			text_->SetInvisible(true);
+		}
+		else {
+			text_->SetInvisible(false);
+		}
+
+
+		//指定した時間を超えたらタイトルへ遷移
+		if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
+			//テキストの非表示
+			text_->SetInvisible(true);
+			
+			//加速
+			Vector3 cameraAccelation_ = {.x=0.0f,.y=0.001f,.z=-0.01f};
+			cameraVelocity_ = VectorCalculation::Add(cameraVelocity_,cameraAccelation_);
+		
+			//時間
+			cameraMoveTime_ += DELTA_TIME;
+			
+
+		}
+	}
+
+
+	const float MOVE_FINISH_TIME = 3.0f;
+	if (cameraMoveTime_ > MOVE_FINISH_TIME) {
+		gameManager->ChangeScene("Game");
+		return;
+	}
+
+
+
+
+	//負けはビネット、タイトルへ
 	if (blackOutTime_ > CHANGE_TO_TITLE_TIME_) {
 		gameManager->ChangeScene("Title");
 		return;
@@ -178,6 +227,7 @@ void LoseScene::Update(GameManager* gameManager){
 
 
 	//カメラの更新
+	camera_.translate = VectorCalculation::Add(camera_.translate, cameraVelocity_);
 	camera_.Update();
 	//マテリアルの更新
 	material_.Update();
