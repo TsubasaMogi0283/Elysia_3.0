@@ -218,6 +218,14 @@ void Enemy::Update(){
 	attackCollision_->SetEnemyDirection(direction_);
 	attackCollision_->Update();
 
+
+	if (isAttack_ == true) {
+		attackCollision_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+	}
+	else {
+		attackCollision_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+	}
+
 	//ダメージ演出
 	Damaged();
 
@@ -233,9 +241,7 @@ void Enemy::Update(){
 void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 #ifdef _DEBUG
 	//攻撃
-	if (isAttack_ == true) {
-		attackCollision_->Draw(camera, spotLight);
-	}
+	attackCollision_->Draw(camera, spotLight);
 	
 #endif // _DEBUG
 

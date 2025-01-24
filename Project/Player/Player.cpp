@@ -134,7 +134,7 @@ void Player::Draw(const Camera& camera, const SpotLight& spotLight){
 	//通常
 	colliderToNormalEnemy_->Draw(camera, material_, spotLight);
 	//強敵	
-	collisionToStrongEnemy_->Draw(camera, material_, spotLight);
+	//collisionToStrongEnemy_->Draw(camera, material_, spotLight);
 	//懐中電灯
 	flashLight_->Draw(camera);
 #endif // _DEBUG
@@ -153,6 +153,8 @@ void Player::Damaged() {
 
 		//ダメージを受ける
 		if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
+			//一時的にコントロールを失う
+			isControll_ = false;
 			//ダメージを受ける
 			isDameged_ = true;
 			//体力を減らす
@@ -180,6 +182,9 @@ void Player::Damaged() {
 				vibeTime_ = RESTART_TIME;
 				//ダメージを受けていないようにする
 				isDameged_ = false;
+
+				//コントロールを戻す
+				isControll_ = true;
 			}
 		}
 

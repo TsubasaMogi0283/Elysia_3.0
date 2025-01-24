@@ -950,11 +950,19 @@ void GameScene::Update(GameManager* gameManager) {
 
 
 
+		//プレイヤーがダメージを受けた時のカメラシェイク
+		if (player_->GetIsDamaged() == true) {
+			//camera_.rotate.x -= 0.01f;
+		}
+
+
 		//体力が0になったら負け
 		//または一発アウトの敵に接触した場合
 		//負け専用のクラスを作りたい
 		const uint32_t MIN_HP = 0u;
 		if (player_->GetHP() <= MIN_HP || isTouchStrongEnemy_==true) {
+			//コントロールを失う
+			player_->SetIsAbleToControll(false);
 			//敵の音を止める
 			enemyManager_->StopAudio();
 			//鍵の音を止める
@@ -967,6 +975,8 @@ void GameScene::Update(GameManager* gameManager) {
 			blackFadeTransparency_ += FADE_OUT_INTERVAL_;
 			blackFade_->SetTransparency(blackFadeTransparency_);
 
+			//後ろに倒れる
+			camera_.rotate.x -= 0.01f;
 
 			//負けシーンへ
 			if (blackFadeTransparency_ > CHANGE_TO_LOSE_SCENE_VALUE_) {

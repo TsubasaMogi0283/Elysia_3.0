@@ -102,7 +102,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 			position.z = static_cast<float>(std::atof(word.c_str()));
 
 			//生成
-			GenarateStrongEnemy(position);
+			//GenarateStrongEnemy(position);
 
 		}
 
