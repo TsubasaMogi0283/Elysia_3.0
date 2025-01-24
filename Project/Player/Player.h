@@ -233,6 +233,14 @@ public:
 	}
 
 	/// <summary>
+	/// 通常の敵の攻撃の受け入れを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsAcceptDamegeFromNormalEnemy()const {
+		return isAcceptDamegeFromNoemalEnemy_;
+	}
+
+	/// <summary>
 	/// 座標の設定
 	/// </summary>
 	/// <param name="position"></param>

@@ -845,7 +845,7 @@ void GameScene::Update(GameManager* gameManager) {
 		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
 		for (Enemy* enemy : enemyes) {
 			//懐中電灯に対して
-			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+			//collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 			
 			//攻撃
 			if (enemy->GetIsAttack() == true) {
@@ -855,10 +855,16 @@ void GameScene::Update(GameManager* gameManager) {
 				player_->SetIsAcceptDamegeFromNoemalEnemy(false);
 			}
 			
+
+			if (player_->GetIsAcceptDamegeFromNormalEnemy() == true) {
+				break;
+			}
+
 			//敵の攻撃
 			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 			
 		}
+		
 		//通常の敵に対してのコライダーを登録
 		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
 		//オーディオオブジェクトに対してのコライダーを登録

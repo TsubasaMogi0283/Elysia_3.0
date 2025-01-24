@@ -8,6 +8,11 @@
 struct Camera;
 
 /// <summary>
+/// マテリアル
+/// </summary>
+struct Material;
+
+/// <summary>
 /// スポットライト
 /// </summary>
 struct SpotLight;
@@ -16,21 +21,16 @@ struct SpotLight;
 #pragma endregion
 
 /**
- * @file BasedPlayerCollision.h
- * @brief プレイヤー用のコリジョンクラス
+ * @file BasePlayerCollision.h
+ * @brief プレイヤー用のコリジョン基底クラス
  * @author 茂木翼
  */
 
 /// <summary>
 /// プレイヤー用のコリジョン
 /// </summary>
-class BasedPlayerCollision: public Collider{
+class BasePlayerCollision: public Collider{
 public:
-
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	BasedPlayerCollision() = default;
 
 	/// <summary>
 	/// 初期化
@@ -49,13 +49,33 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	virtual void Draw(const Camera& camera, const SpotLight& spotLight)=0;
+	virtual void Draw(const Camera& camera, const Material& material, const SpotLight& spotLight)=0;
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	virtual ~BasedPlayerCollision() = default;
+	virtual ~BasePlayerCollision() = default;
 
+
+public:
+	/// <summary>
+	/// 接触
+	/// </summary>
+	void OnCollision()override;
+
+	/// <summary>
+	/// 非接触
+	/// </summary>
+	void OffCollision()override;
+
+
+	/// <summary>
+	/// ワールド座標の取得
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetWorldPosition()override {
+		return playerPosition_;
+	};
 
 public:
 	/// <summary>
@@ -63,7 +83,7 @@ public:
 	/// </summary>
 	/// <param name="position"></param>
 	virtual inline void SetPlayerPosition(const Vector3& position) {
-		this->position_ = position;
+		this->playerPosition_ = position;
 	}
 
 	/// <summary>
@@ -78,8 +98,7 @@ public:
 
 protected:
 	//位置
-	Vector3 position_ = {};
-
+	Vector3 playerPosition_ = {};
 
 	//衝突
 	bool isTouch_ = false;

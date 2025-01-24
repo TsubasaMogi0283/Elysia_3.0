@@ -26,7 +26,7 @@ void EnemyAttackCollision::Initialize(const uint32_t& modelHandle){
 	collisionType_ = ColliderType::SphereType;
 
 	//半径
-	radius_ = 2.0f;
+	radius_ = 3.0f;
 
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY_ATTACK);

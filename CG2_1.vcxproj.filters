@@ -355,9 +355,6 @@
     <Filter Include="Project\Player\Collision">
       <UniqueIdentifier>{32b25b1e-d1a9-45a3-9a3b-830c6437a4fd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Player\Collision\IPlayerCollision">
-      <UniqueIdentifier>{7342fb61-2dae-4860-88b9-6d4531dde844}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Header File\Manager\GameManager">
       <UniqueIdentifier>{6783ae0e-f5a0-4867-a365-1d65f9d0e07e}</UniqueIdentifier>
     </Filter>
@@ -670,6 +667,9 @@
       <Filter>Project\SceneFactory</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\StringOption\StringOption.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\BasedPlayerCollision.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1132,7 +1132,7 @@
     <ClInclude Include="Ellysia\Manager\CollisionManager\Collider.h">
       <Filter>Ellysia\Header File\Manager\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Player\BasedPlayerCollision.h">
+    <ClInclude Include="Project\Player\BasePlayerCollision.h">
       <Filter>Project\Player\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\PipelineManager\BlendMode.h">
