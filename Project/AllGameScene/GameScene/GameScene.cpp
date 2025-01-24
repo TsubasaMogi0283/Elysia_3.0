@@ -856,9 +856,6 @@ void GameScene::Update(GameManager* gameManager) {
 			}
 			
 
-			if (player_->GetIsAcceptDamegeFromNormalEnemy() == true) {
-				break;
-			}
 
 			//敵の攻撃
 			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
