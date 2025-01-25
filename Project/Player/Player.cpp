@@ -42,23 +42,31 @@ void Player::Initialize(){
 	worldTransform_.translate = INITIAL_POSITION;
 
 	//PlayerCllsion基底クラスを作ろう
-	//std::unique_ptr<PlayerCollisionToNormalEnemyAttack> colliderToNormalEnemy_ = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
-	//colliderToNormalEnemy_->Initialize();
-	////そのまま入れることは出来ないので所有権を移すstd::moveを使うよ
-	//colliders_.push_back(std::move(colliderToNormalEnemy_));
+	//通常の敵
+	std::unique_ptr<PlayerCollisionToNormalEnemyAttack> colliderToNormalEnemy = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
+	colliderToNormalEnemy->Initialize();
+	//そのまま入れることは出来ないので所有権を移すstd::moveを使うよ
+	colliders_.push_back(std::move(colliderToNormalEnemy));
 
 
 	//通常
-	colliderToNormalEnemy_ = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
-	colliderToNormalEnemy_->Initialize();
+	//colliderToNormalEnemy_ = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
+	//colliderToNormalEnemy_->Initialize();
 
 	//強敵
-	collisionToStrongEnemy_ = std::make_unique<PlayerCollisionToStrongEnemy>();
-	collisionToStrongEnemy_->Initialize();
+	std::unique_ptr<PlayerCollisionToStrongEnemy> collisionToStrongEnemy = std::make_unique<PlayerCollisionToStrongEnemy>();
+	collisionToStrongEnemy->Initialize();
+	colliders_.push_back(std::move(collisionToStrongEnemy));
+	//collisionToStrongEnemy_ = std::make_unique<PlayerCollisionToStrongEnemy>();
+	//collisionToStrongEnemy_->Initialize();
+	//
 
-
-	collosionToAudioObject_ = std::make_unique<PlayerCollisionToAudioObject>();
-	collosionToAudioObject_->Initialize();
+	//オーディオオブジェクト
+	std::unique_ptr<PlayerCollisionToAudioObject> collosionToAudioObject= std::make_unique<PlayerCollisionToAudioObject>();
+	collosionToAudioObject->Initialize();
+	colliders_.push_back(std::move(collosionToAudioObject));
+	//collosionToAudioObject_ = std::make_unique<PlayerCollisionToAudioObject>();
+	//collosionToAudioObject_->Initialize();
 
 
 	//懐中電灯
@@ -99,16 +107,23 @@ void Player::Update(){
 
 	//PMで綺麗にまとめられるかも
 	//通常の敵用の当たり判定の更新
-	colliderToNormalEnemy_->SetPlayerPosition(worldPosition);
-	colliderToNormalEnemy_->Update();
+	for (std::unique_ptr<BasePlayerCollision> &collision : colliders_) {
+		//プレイヤーの座標を設定
+		collision->SetPlayerPosition(worldPosition);
+		//更新
+		collision->Update();
+	}
 
-	//一発アウト用の当たり判定
-	collisionToStrongEnemy_->SetPlayerPosition(worldPosition);
-	collisionToStrongEnemy_->Update();
-
-	//オーディオオブジェクトに対しての当たり判定
-	collosionToAudioObject_->SetPlayerPosition(worldPosition);
-	collosionToAudioObject_->Update();
+	//colliderToNormalEnemy_->SetPlayerPosition(worldPosition);
+	//colliderToNormalEnemy_->Update();
+	//
+	////一発アウト用の当たり判定
+	//collisionToStrongEnemy_->SetPlayerPosition(worldPosition);
+	//collisionToStrongEnemy_->Update();
+	//
+	////オーディオオブジェクトに対しての当たり判定
+	//collosionToAudioObject_->SetPlayerPosition(worldPosition);
+	//collosionToAudioObject_->Update();
 
 	//懐中電灯の更新
 	//角度はゲームシーンで取得する
@@ -132,7 +147,7 @@ void Player::Draw(const Camera& camera, const SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera,material_,spotLight);
 
 	//通常
-	colliderToNormalEnemy_->Draw(camera, material_, spotLight);
+	//colliderToNormalEnemy_->Draw(camera, material_, spotLight);
 	//強敵	
 	//collisionToStrongEnemy_->Draw(camera, material_, spotLight);
 	//懐中電灯
@@ -149,7 +164,7 @@ Player::~Player() {
 
 void Player::Damaged() {
 	//通常の敵に当たった場合
-	if (colliderToNormalEnemy_->GetIsTouch() == true) {
+	//if (colliderToNormalEnemy_->GetIsTouch() == true) {
 
 		//ダメージを受ける
 		if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
@@ -188,13 +203,13 @@ void Player::Damaged() {
 			}
 		}
 
-	}
-	else {
-		//ダメージを受けない
-		//当たっていないので
-		isDameged_ = false;
-
-	}
+	//}
+	//else {
+	//	//ダメージを受けない
+	//	//当たっていないので
+	//	isDameged_ = false;
+	//
+	//}
 }
 
 void Player::Move() {

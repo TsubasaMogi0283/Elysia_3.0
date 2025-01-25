@@ -668,8 +668,9 @@ void GameScene::Update(GameManager* gameManager) {
 	//フレーム初めに
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
-	//フェードの透明度の設定
-	whiteFade_->SetTransparency(whiteFadeTransparency_);
+
+
+	
 
 	//StatePatternにしたい
 	//フェードイン
@@ -840,77 +841,6 @@ void GameScene::Update(GameManager* gameManager) {
 		player_->GetFlashLight()->SetTheta(theta_);
 		player_->GetFlashLight()->SetPhi(-originPhi_);		
 
-		//エネミーをコリジョンマネージャーに追加
-		//通常の敵のリストの取得
-		std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
-		for (Enemy* enemy : enemyes) {
-			//懐中電灯に対して
-			//collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
-			
-			//攻撃
-			if (enemy->GetIsAttack() == true) {
-				player_->SetIsAcceptDamegeFromNoemalEnemy(true);
-			}
-			else {
-				player_->SetIsAcceptDamegeFromNoemalEnemy(false);
-			}
-			
-
-
-			//敵の攻撃
-			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
-			
-		}
-		
-		//通常の敵に対してのコライダーを登録
-		collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
-		//オーディオオブジェクトに対してのコライダーを登録
-		collisionManager_->RegisterList(player_->GetCollisionToAudioObject());
-		//懐中電灯に対してのコライダーを登録
-		collisionManager_->RegisterList(player_->GetFlashLightCollision());
-		//当たると一発アウトの敵をコリジョンマネージャーへ
-		collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
-		std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
-		for (StrongEnemy* strongEnemy : strongEnemyes) {
-			bool isTouch = strongEnemy->GetIsTouchPlayer();
-
-			collisionManager_->RegisterList(strongEnemy);
-			//接触
-			if (isTouch == true) {
-
-				isTouchStrongEnemy_ = true;
-			}
-		}
-
-
-
-		//レベルエディタで使うリスナーの設定
-		Listener listener = {
-			.position = player_->GetWorldPosition(),
-			.move = player_->GetDirection(),
-		};
-		levelDataManager_->SetListener(levelHandle_, listener);
-
-		//レベルエディタの更新
-		levelDataManager_->Update(levelHandle_);
-
-		std::vector<IObjectForLevelEditorCollider*> audioColliders =levelDataManager_->GetAudioCollider(levelHandle_);
-		for (std::vector<IObjectForLevelEditorCollider*>::iterator it = audioColliders.begin(); it != audioColliders.end(); ++it) {
-			collisionManager_->RegisterList(*it);
-
-		}
-
-
-#ifdef _DEBUG
-		if (input_->IsTriggerKey(DIK_R) == true) {
-			levelDataManager_->Reload(levelHandle_);
-		}
-#endif // _DEBUG
-
-
-
-		//当たり判定チェック
-		collisionManager_->CheckAllCollision();
 
 
 		//もとに戻す
@@ -921,8 +851,6 @@ void GameScene::Update(GameManager* gameManager) {
 
 		//位置の計算
 		camera_.translate = VectorCalculation::Add(player_->GetWorldPosition(), cameraPositionOffset_);
-
-
 
 
 		#pragma region 鍵の取得処理
@@ -940,13 +868,11 @@ void GameScene::Update(GameManager* gameManager) {
 		//脱出の仕組み
 		EscapeCondition();
 		
-		
-		
-		//鍵
-		keyManager_->Update();
-
 		//オブジェクトの当たり判定
 		ObjectCollision();
+
+		//鍵
+		keyManager_->Update();
 
 
 
@@ -969,7 +895,6 @@ void GameScene::Update(GameManager* gameManager) {
 			keyManager_->StopAudio();
 
 			//敵の動きが止まりブラックアウト
-			//プレイヤーことカメラが倒れる感じが良いかも
 			isBlackFadeOut_ = true;
 
 			blackFadeTransparency_ += FADE_OUT_INTERVAL_;
@@ -986,23 +911,9 @@ void GameScene::Update(GameManager* gameManager) {
 			
 		}
 
-
-
 		//現在のプレイヤーの体力を取得
 		currentDisplayHP_ = player_->GetHP();
 		
-		
-		
-
-#ifdef _DEBUG
-		ImGui::Begin("カメラ");
-		ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
-		ImGui::SliderFloat3("位置", &cameraTranslate.x, -100.0f, 100.0f);
-		ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
-		ImGui::InputFloat("Theta", &theta_);
-		ImGui::InputFloat("Phi", &originPhi_);
-		ImGui::End();
-#endif
 
 	}
 	
@@ -1032,6 +943,19 @@ void GameScene::Update(GameManager* gameManager) {
 		
 	}
 
+
+	//フェードの透明度の設定
+	whiteFade_->SetTransparency(whiteFadeTransparency_);
+
+	//レベルエディタで使うリスナーの設定
+	Listener listener = {
+		.position = player_->GetWorldPosition(),
+		.move = player_->GetDirection(),
+	};
+	levelDataManager_->SetListener(levelHandle_, listener);
+
+	//レベルエディタの更新
+	levelDataManager_->Update(levelHandle_);
 	
 	//カメラの更新
 	camera_.Update();
@@ -1039,12 +963,9 @@ void GameScene::Update(GameManager* gameManager) {
 	//更新
 	material_.Update();
 
-
-
 	//プレイヤーの更新
 	player_->Update();
 	
-
 	//門
 	gate_->Update();
 
@@ -1082,7 +1003,23 @@ void GameScene::Update(GameManager* gameManager) {
 	}
 	vignette_->SetPow(vignettePow_);
 
+#pragma endregion
+
 #ifdef _DEBUG
+	
+	//再読み込み
+	if (input_->IsTriggerKey(DIK_R) == true) {
+		levelDataManager_->Reload(levelHandle_);
+	}
+
+	ImGui::Begin("カメラ");
+	ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
+	ImGui::SliderFloat3("位置", &cameraTranslate.x, -100.0f, 100.0f);
+	ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
+	ImGui::InputFloat("Theta", &theta_);
+	ImGui::InputFloat("Phi", &originPhi_);
+	ImGui::End();
+	
 	ImGui::Begin("ビネットの確認");
 	ImGui::InputFloat("POW", &vignettePow_);
 	ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
@@ -1094,12 +1031,71 @@ void GameScene::Update(GameManager* gameManager) {
 	ImGui::End();
 
 
+
 #endif // _DEBUG
 
 
 
+	//エネミーをコリジョンマネージャーに追加
+	//通常の敵のリストの取得
+	std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
+	for (Enemy* enemy : enemyes) {
+		//懐中電灯に対して
+		//collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+		//攻撃
+		if (enemy->GetIsAttack() == true) {
+			player_->SetIsAcceptDamegeFromNoemalEnemy(true);
+		}
+		else {
+			player_->SetIsAcceptDamegeFromNoemalEnemy(false);
+		}
+		//敵の攻撃
+		collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
+	}
 
-#pragma endregion
+	
+	
+	
+	////通常の敵に対してのコライダーを登録
+	//collisionManager_->RegisterList(player_->GetCollisionToNormalEnemy());
+	////オーディオオブジェクトに対してのコライダーを登録
+	//collisionManager_->RegisterList(player_->GetCollisionToAudioObject());
+	////強敵をコリジョンマネージャーへ
+	//collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
+
+	//プレイヤーのコライダー
+	std::vector<BasePlayerCollision*> playerColliders = player_->GetColliders();
+	for (const auto& collider : playerColliders) {
+		collisionManager_->RegisterList(collider);
+	}
+
+
+	//懐中電灯に対してのコライダーを登録
+	collisionManager_->RegisterList(player_->GetFlashLightCollision());
+	
+	std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
+	for (StrongEnemy* strongEnemy : strongEnemyes) {
+		bool isTouch = strongEnemy->GetIsTouchPlayer();
+		collisionManager_->RegisterList(strongEnemy);
+		//接触
+		if (isTouch == true) {
+			isTouchStrongEnemy_ = true;
+		}
+	}
+
+	
+
+
+	std::vector<IObjectForLevelEditorCollider*> audioColliders = levelDataManager_->GetAudioCollider(levelHandle_);
+	for (std::vector<IObjectForLevelEditorCollider*>::iterator it = audioColliders.begin(); it != audioColliders.end(); ++it) {
+		collisionManager_->RegisterList(*it);
+
+	}
+
+	//当たり判定チェック
+	collisionManager_->CheckAllCollision();
+
+
 
 }
 

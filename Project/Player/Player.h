@@ -250,29 +250,42 @@ public:
 
 public:
 
-	/// <summary>
-	/// 通常の敵の当たり判定
-	/// </summary>
-	/// <returns></returns>
-	inline PlayerCollisionToNormalEnemyAttack* GetCollisionToNormalEnemy()const {
-		return colliderToNormalEnemy_.get();
-	}
+	///// <summary>
+	///// 通常の敵の当たり判定
+	///// </summary>
+	///// <returns></returns>
+	//inline PlayerCollisionToNormalEnemyAttack* GetCollisionToNormalEnemy()const {
+	//	return colliderToNormalEnemy_.get();
+	//}
+	//
+	///// <summary>
+	///// 強敵の当たり判定
+	///// </summary>
+	///// <returns></returns>
+	//inline PlayerCollisionToStrongEnemy* GetCollisionToStrongEnemy()const {
+	//	return collisionToStrongEnemy_.get();
+	//}
+	//
+	///// <summary>
+	///// オーディオオブジェクトに対しての当たり判定
+	///// </summary>
+	///// <returns></returns>
+	//inline PlayerCollisionToAudioObject* GetCollisionToAudioObject()const {
+	//	return collosionToAudioObject_.get();
+	//}
 
 	/// <summary>
-	/// 強敵の当たり判定
+	/// プレイヤー用のコライダーを取得
 	/// </summary>
 	/// <returns></returns>
-	inline PlayerCollisionToStrongEnemy* GetCollisionToStrongEnemy()const {
-		return collisionToStrongEnemy_.get();
-	}
+	inline std::vector<BasePlayerCollision*> GetColliders()const{
+		std::vector<BasePlayerCollision*> colliders;
+		for (const auto& collider : colliders_) {
+			colliders.push_back(collider.get());
+		}
+		return colliders;
+	};
 
-	/// <summary>
-	/// オーディオオブジェクトに対しての当たり判定
-	/// </summary>
-	/// <returns></returns>
-	inline PlayerCollisionToAudioObject* GetCollisionToAudioObject()const {
-		return collosionToAudioObject_.get();
-	}
 
 	/// <summary>
 	/// 懐中電灯の当たり判定
@@ -344,13 +357,13 @@ private:
 	ModelManager* modelManager_ = nullptr;
 private:
 	//当たり判定のリスト
-	//std::list<std::unique_ptr<Collider>> colliders_ = {};
-	//当たり判定(通常の敵)
-	std::unique_ptr<PlayerCollisionToNormalEnemyAttack>colliderToNormalEnemy_ = nullptr;
-	//当たり判定(一発アウトの敵用)
-	std::unique_ptr<PlayerCollisionToStrongEnemy>collisionToStrongEnemy_ = nullptr;
-	//オーディオオブジェクト用
-	std::unique_ptr<PlayerCollisionToAudioObject>collosionToAudioObject_ = nullptr;
+	std::list<std::unique_ptr<BasePlayerCollision>> colliders_ = {};
+	////当たり判定(通常の敵)
+	//std::unique_ptr<PlayerCollisionToNormalEnemyAttack>colliderToNormalEnemy_ = nullptr;
+	////当たり判定(一発アウトの敵用)
+	//std::unique_ptr<PlayerCollisionToStrongEnemy>collisionToStrongEnemy_ = nullptr;
+	////オーディオオブジェクト用
+	//std::unique_ptr<PlayerCollisionToAudioObject>collosionToAudioObject_ = nullptr;
 
 	//懐中電灯
 	std::unique_ptr<FlashLight>flashLight_ = nullptr;
