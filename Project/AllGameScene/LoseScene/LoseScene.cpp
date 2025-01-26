@@ -65,7 +65,7 @@ void LoseScene::Initialize(){
 	pointLight_.Initialize();
 	pointLight_.position_ = { .x = 0.0f,.y = 6.1f,.z = -2.0f };
 	pointLight_.decay_ = 3.0f;
-	pointLight_.radius_ = 11.8f;
+	pointLight_.radius_ = 0.0f;
 
 	//点滅
 	isFlash_ = true;
@@ -86,6 +86,14 @@ void LoseScene::Update(GameManager* gameManager){
 	//再スタート時間
 	const uint32_t RESTART_TIME = 0u;
 
+	//始め
+	//ライトアップをする
+	if (isFinishLightUp_ == false) {
+		pointLight_.radius_;
+
+		
+	}
+	
 
 	//通常の点滅
 	flashTime_ += INCREASE_VALUE;

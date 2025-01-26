@@ -406,6 +406,9 @@
     <Filter Include="Ellysia\Source File\StringOption">
       <UniqueIdentifier>{318c7ec3-0e37-41d3-8635-09c9153de3e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\Math\Easing">
+      <UniqueIdentifier>{027a9b32-f216-4b0c-85b6-716c733a7ba1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -670,6 +673,9 @@
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Project\Player\BasedPlayerCollision.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Math\Easing\Easing.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1152,6 +1158,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\StringOption\StringOption.h">
       <Filter>Ellysia\Header File\StringOption</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Easing\Easing.h">
+      <Filter>Ellysia\Header File\Math\Easing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

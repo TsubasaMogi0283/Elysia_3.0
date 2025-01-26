@@ -137,8 +137,9 @@ private:
 	const uint32_t CHANGE_TO_TITLE_TIME_ = 60 * 2;
 
 
-
-
+	//最大の半径
+	const float MAX_LIGHT_RADIUS_ = 11.8f;
+	
 
 private:
 	//カメラ
@@ -153,7 +154,8 @@ private:
 	Material material_ = {};
 	//点光源
 	PointLight pointLight_ = {};
-
+	//半径の線形補間
+	float lightRadiusT_ = 0.0f;
 
 	//背景(ポストエフェクト)
 	std::unique_ptr<Ellysia::BackTexture>backTexture_ = nullptr;
@@ -198,6 +200,8 @@ private:
 	uint32_t fastFlashTime_ = 0u;
 
 	
+
+	bool isFinishLightUp_ = false;
 	
 	//ゲームに戻るかどうか
 	bool isReturnToGame_ = false;

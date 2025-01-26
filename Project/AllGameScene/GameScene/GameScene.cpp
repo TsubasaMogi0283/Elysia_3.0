@@ -1062,9 +1062,10 @@ void GameScene::Update(GameManager* gameManager) {
 	//collisionManager_->RegisterList(player_->GetCollisionToAudioObject());
 	////強敵をコリジョンマネージャーへ
 	//collisionManager_->RegisterList(player_->GetCollisionToStrongEnemy());
-
+	
 	//プレイヤーのコライダー
 	std::vector<BasePlayerCollision*> playerColliders = player_->GetColliders();
+	
 	for (const auto& collider : playerColliders) {
 		collisionManager_->RegisterList(collider);
 	}
