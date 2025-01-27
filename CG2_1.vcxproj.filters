@@ -675,9 +675,6 @@
     <ClCompile Include="Project\Player\BasedPlayerCollision.cpp">
       <Filter>Project</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Math\Easing\Easing.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">

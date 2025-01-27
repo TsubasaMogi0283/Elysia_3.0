@@ -6,7 +6,9 @@
 #include "LevelDataManager.h"
 
 #include "GameManager.h"
-#include <VectorCalculation.h>
+#include "VectorCalculation.h"
+#include "GlobalVariables.h"
+#include "Easing.h"
 
 
 
@@ -21,7 +23,8 @@ LoseScene::LoseScene(){
 	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 	//モデル管理クラス
 	modelManager_ = ModelManager::GetInstance();
-
+	//グローバル変数クラス
+	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
 }
 
 void LoseScene::Initialize(){
@@ -57,15 +60,29 @@ void LoseScene::Initialize(){
 
 	//カメラの初期化
 	camera_.Initialize();
+
+	
 	camera_.translate = { .x = 0.0f,.y = 2.8f,.z = -28.3f };
 	//マテリアル
 	material_.Initialize();
 	material_.lightingKinds_ = PointLighting;
+
 	//点光源
+	//調整項目として記録
+	globalVariables_->CreateGroup(POINT_LIGHT_NAME);
+	globalVariables_->AddItem(POINT_LIGHT_NAME, "Translate", pointLight_.position_);
+	globalVariables_->AddItem(POINT_LIGHT_NAME, "Decay", pointLight_.decay_);
+
+	//初期化
 	pointLight_.Initialize();
-	pointLight_.position_ = { .x = 0.0f,.y = 6.1f,.z = -2.0f };
-	pointLight_.decay_ = 3.0f;
+	pointLight_.position_ = globalVariables_->GetVector3Value(POINT_LIGHT_NAME, "Translate");
+	pointLight_.decay_ = globalVariables_->GetFloatValue(POINT_LIGHT_NAME,"Decay");
 	pointLight_.radius_ = 0.0f;
+
+	
+	
+
+	isFinishLightUp_ = false;
 
 	//点滅
 	isFlash_ = true;
@@ -78,160 +95,162 @@ void LoseScene::Update(GameManager* gameManager){
 
 	//増える時間の値
 	const uint32_t INCREASE_VALUE = 1u;
-	//Bトリガーの反応する時間
-	const uint32_t REACT_TIME = 1u;
-	//Bトリガーの反応しない時間
-	const uint32_t NO_REACT_TIME = 0u;
-
-	//再スタート時間
-	const uint32_t RESTART_TIME = 0u;
-
+	
 	//始め
 	//ライトアップをする
 	if (isFinishLightUp_ == false) {
-		pointLight_.radius_;
+		//増える間隔
+		const float INTERVAL = 0.01f;
+		lightRadiusT_ += INTERVAL;
+		pointLight_.radius_=Easing::EaseOutSine(lightRadiusT_)* MAX_LIGHT_RADIUS_;
 
 		
+		if (lightRadiusT_ > 1.0f) {
+			isFinishLightUp_ = true;
+		}
 	}
+	else {
+		//通常の点滅
+		flashTime_ += INCREASE_VALUE;
+		if (flashTime_ > FLASH_TIME_LIMIT_ * 0 &&
+			flashTime_ <= FLASH_TIME_LIMIT_) {
+			text_->SetInvisible(false);
+		}
+		if (flashTime_ > FLASH_TIME_LIMIT_ &&
+			flashTime_ <= FLASH_TIME_LIMIT_ * 2) {
+			text_->SetInvisible(true);
+
+		}
+		if (flashTime_ > FLASH_TIME_LIMIT_ * 2) {
+			//再スタート時間
+			const uint32_t RESTART_TIME = 0u;
+			flashTime_ = RESTART_TIME;
+		}
+
+
+		//ゲームかタイトルか選択する
+
+		//コントローラー接続時
+		if (input_->IsConnetGamePad() == true) {
+
+			//Bボタンを押したとき
+			if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+				bTriggerTime_ += INCREASE_VALUE;
+
+			}
+			if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+				//Bトリガーの反応しない時間
+				const uint32_t NO_REACT_TIME = 0u;
+				bTriggerTime_ = NO_REACT_TIME;
+			}
+
+			//Bトリガーの反応する時間
+			const uint32_t REACT_TIME = 1u;
+			if (bTriggerTime_ == REACT_TIME) {
+
+				isReturnTitle = true;
+			}
+		}
+		//次のシーンへ
+		if (input_->IsTriggerKey(DIK_SPACE) == true) {
+			//ゲームへ
+			isReturnToGame_ = true;
+
+		}
+
+		
+
+
+		//カウントが増える時間
+		const uint32_t INCREASE_COUNT_TIME = 0u;
+		//点滅の間隔
+		const uint32_t FLASH_INTERVAL = 2u;
+		//表示
+		const uint32_t DISPLAY = 0u;
+
+		//タイトルへ戻る
+		if (isReturnTitle == true) {
+
+			//点滅
+			fastFlashTime_ += INCREASE_VALUE;
+			if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
+				++textDisplayCount_;
+			}
+			//表示
+			if (textDisplayCount_ % FLASH_INTERVAL == DISPLAY) {
+				text_->SetInvisible(true);
+			}
+			else {
+				text_->SetInvisible(false);
+			}
+
+
+			//指定した時間を超えたらタイトルへ遷移
+			if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
+				//テキストの非表示
+				text_->SetInvisible(true);
+				//透明度の設定
+				black_->SetTransparency(transparency_);
+				//暗くなったらシーンチェンジ
+				transparency_ += TRANSPARENCY_INTERVAL_;
+			}
+
+			const float MAX_TRANSPARENCY = 1.0f;
+			if (transparency_ > MAX_TRANSPARENCY) {
+				blackOutTime_ += INCREASE_VALUE;
+			}
+
+
+		}
+
+
+		//ゲームは墓から遠ざかる
+		if (isReturnToGame_ == true) {
+			//点滅
+			fastFlashTime_ += INCREASE_VALUE;
+
+			//表示
+			if (textDisplayCount_ % FLASH_INTERVAL == DISPLAY) {
+				text_->SetInvisible(true);
+			}
+			else {
+				text_->SetInvisible(false);
+			}
+
+
+			//指定した時間を超えたらタイトルへ遷移
+			if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
+				//テキストの非表示
+				text_->SetInvisible(true);
+
+				//加速
+				Vector3 cameraAccelation_ = { .x = 0.0f,.y = 0.001f,.z = -0.01f };
+				cameraVelocity_ = VectorCalculation::Add(cameraVelocity_, cameraAccelation_);
+
+				//時間
+				cameraMoveTime_ += DELTA_TIME;
+
+
+			}
+		}
+
+
+		const float MOVE_FINISH_TIME = 3.0f;
+		if (cameraMoveTime_ > MOVE_FINISH_TIME) {
+			gameManager->ChangeScene("Game");
+			return;
+		}
+
+		//負けはビネット、タイトルへ
+		if (blackOutTime_ > CHANGE_TO_TITLE_TIME_) {
+			gameManager->ChangeScene("Title");
+			return;
+		}
+	}
+
 	
-
-	//通常の点滅
-	flashTime_ += INCREASE_VALUE;
-	if (flashTime_ > FLASH_TIME_LIMIT_ * 0 &&
-		flashTime_ <= FLASH_TIME_LIMIT_) {
-		text_->SetInvisible(false);
-	}
-	if (flashTime_ > FLASH_TIME_LIMIT_ &&
-		flashTime_ <= FLASH_TIME_LIMIT_ * 2) {
-		text_->SetInvisible(true);
-
-	}
-	if (flashTime_ > FLASH_TIME_LIMIT_ * 2) {
-		flashTime_ = RESTART_TIME;
-	}
-
-
-	//ゲームかタイトルか選択する
-
-	//コントローラー接続時
-	if (input_->IsConnetGamePad() == true) {
-
-		//Bボタンを押したとき
-		if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-			bTriggerTime_ += INCREASE_VALUE;
-
-		}
-		if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-			bTriggerTime_ = NO_REACT_TIME;
-		}
-
-		if (bTriggerTime_ == REACT_TIME) {
-
-			isReturnTitle = true;
-		}
-	}
-	//次のシーンへ
-	if (input_->IsTriggerKey(DIK_SPACE) == true) {
-		//ゲームへ
-		isReturnToGame_ = true;
-
-		//isReturnTitle = true;
-	}
-
-
 	//レベルデータの更新
 	levelDataManager_->Update(levelDataHandle_);
-
-
-
-	//カウントが増える時間
-	const uint32_t INCREASE_COUNT_TIME = 0u;
-	//点滅の間隔
-	const uint32_t FLASH_INTERVAL = 2u;
-	//表示
-	const uint32_t DISPLAY = 0u;
-
-	//タイトルへ戻る
-	if (isReturnTitle == true) {
-
-		//点滅
-		fastFlashTime_ += INCREASE_VALUE;
-		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
-			++textDisplayCount_;
-		}
-		//表示
-		if (textDisplayCount_ % FLASH_INTERVAL == DISPLAY) {
-			text_->SetInvisible(true);
-		}
-		else {
-			text_->SetInvisible(false);
-		}
-
-
-		//指定した時間を超えたらタイトルへ遷移
-		if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
-			//テキストの非表示
-			text_->SetInvisible(true);
-			//透明度の設定
-			black_->SetTransparency(transparency_);
-			//暗くなったらシーンチェンジ
-			transparency_ += TRANSPARENCY_INTERVAL_;
-		}
-
-		const float MAX_TRANSPARENCY = 1.0f;
-		if (transparency_ > MAX_TRANSPARENCY) {
-			blackOutTime_ += INCREASE_VALUE;
-		}
-
-
-	}
-
-
-	//ゲームは墓から遠ざかる
-	if (isReturnToGame_ == true) {
-		//点滅
-		fastFlashTime_ += INCREASE_VALUE;
-		
-		//表示
-		if (textDisplayCount_ % FLASH_INTERVAL == DISPLAY) {
-			text_->SetInvisible(true);
-		}
-		else {
-			text_->SetInvisible(false);
-		}
-
-
-		//指定した時間を超えたらタイトルへ遷移
-		if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
-			//テキストの非表示
-			text_->SetInvisible(true);
-			
-			//加速
-			Vector3 cameraAccelation_ = {.x=0.0f,.y=0.001f,.z=-0.01f};
-			cameraVelocity_ = VectorCalculation::Add(cameraVelocity_,cameraAccelation_);
-		
-			//時間
-			cameraMoveTime_ += DELTA_TIME;
-			
-
-		}
-	}
-
-
-	const float MOVE_FINISH_TIME = 3.0f;
-	if (cameraMoveTime_ > MOVE_FINISH_TIME) {
-		gameManager->ChangeScene("Game");
-		return;
-	}
-
-
-
-
-	//負けはビネット、タイトルへ
-	if (blackOutTime_ > CHANGE_TO_TITLE_TIME_) {
-		gameManager->ChangeScene("Title");
-		return;
-	}
 
 
 	//カメラの更新
@@ -240,14 +259,18 @@ void LoseScene::Update(GameManager* gameManager){
 	//マテリアルの更新
 	material_.Update();
 	//点光源の更新
+	pointLight_.position_ = globalVariables_->GetVector3Value(POINT_LIGHT_NAME, "Translate");
+	pointLight_.decay_ = globalVariables_->GetFloatValue(POINT_LIGHT_NAME, "Decay");
 	pointLight_.Update();
-
+	//調整
+	Adjustment();
 	
 #ifdef _DEBUG
 	//ImGui
 	DisplayImGui();
+	
 #endif // _DEBUG
-
+	
 	
 }
 
@@ -283,12 +306,18 @@ void LoseScene::DisplayImGui(){
 	ImGui::End();
 
 	ImGui::Begin("点光源");
+	ImGui::InputFloat("T", &lightRadiusT_);
 	ImGui::SliderFloat3("座標", &pointLight_.position_.x, -40.0f, 40.0f);
 	ImGui::SliderFloat("Decay", &pointLight_.decay_, 0.0f, 20.0f);
 	ImGui::SliderFloat("半径", &pointLight_.radius_, 0.0f, 20.0f);
 
 	ImGui::End();
 
+
+}
+
+void LoseScene::Adjustment(){
+	globalVariables_->SaveFile(POINT_LIGHT_NAME);
 
 }
 

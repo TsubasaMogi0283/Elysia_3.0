@@ -66,9 +66,6 @@ void Ellysia::GlobalVariables::AddItem(const std::string& groupName, const std::
     assert(itGroup != datas_.end());
 
     
-
-    //for文で探そうと思ったがダメだった
-    //一番上のようにfindでやった方が良いかも
     //まず参照
     Group& group = itGroup->second;
     std::map<std::string, Item>::iterator itItem = group.items.find(key);
@@ -122,16 +119,12 @@ int32_t Ellysia::GlobalVariables::GetIntValue(const std::string& groupName, cons
 
     //無かったら止める
     assert(itGroup != datas_.end());
-
     //参照
     Group& group = datas_.at(groupName);
-
     //キーを検索
     std::map<std::string, Item>::const_iterator itKey = group.items.find(key);
-
     //無かったら止める
     assert(itKey != group.items.end());
-
     //SaveFileより
     return std::get<int32_t>(itKey->second.value);
 
@@ -145,19 +138,12 @@ float Ellysia::GlobalVariables::GetFloatValue(const std::string& groupName, cons
 
     //無かったら止める
     assert(itGroup != datas_.end());
-
     //参照
     Group& group = datas_.at(groupName);
-
-
     //キーを検索
     std::map<std::string, Item>::const_iterator itKey = group.items.find(key);
-   
-
     //無かったら止める
     assert(itKey != group.items.end());
-
-
     //SaveFileより
     return std::get<float>(itKey->second.value);
 
@@ -169,17 +155,12 @@ Vector3 Ellysia::GlobalVariables::GetVector3Value(const std::string& groupName, 
     
     //無かったら止める
     assert(itGroup != datas_.end());
-
     //参照
     Group& group = datas_.at(groupName);
-
-
     //キーを検索
     std::map<std::string, Item>::const_iterator itKey = group.items.find(key);
-    
     //無かったら止める
     assert(itKey != group.items.end());
-
     //SaveFileより
     return std::get<Vector3>(itKey->second.value);
 
@@ -359,7 +340,7 @@ void Ellysia::GlobalVariables::LoadFile(const std::string& groupName){
         //要素数3の配列であれば
         else if (itItem->is_array() && itItem->size() == 3) {
             //float型のison配列登録
-            Vector3 value = {(itItem->at(0), itItem->at(1), itItem->at(2))};
+            Vector3 value = { itItem->at(0).get<float>(),itItem->at(1).get<float>(),itItem->at(2).get<float>() };
             SetValue(groupName, itemName, value);
         }
 
@@ -426,14 +407,14 @@ void Ellysia::GlobalVariables::Update(){
             else if (std::holds_alternative<float>(item.value)) {
                 //ポインタの取得
                 float* ptr = std::get_if<float>(&item.value);
-                ImGui::SliderFloat(itItemName.c_str(), ptr, 0.0f, 100.0f);
+                ImGui::SliderFloat(itItemName.c_str(), ptr,0.0f, 100.0f);
             }
             //Vector3型を持っている場合
             else if (std::holds_alternative<Vector3>(item.value)) {
                 //ポインタの取得
                 Vector3* ptr = std::get_if<Vector3>(&item.value);
                 //ここではVector3をfloatの配列ということにする
-                ImGui::SliderFloat3(itItemName.c_str(), reinterpret_cast<float*>(ptr), -10.0f, 10.0f);
+                ImGui::SliderFloat3(itItemName.c_str(), reinterpret_cast<float*>(ptr), 0.0f, 100.0f);
             }
 
 

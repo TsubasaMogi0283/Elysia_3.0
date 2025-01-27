@@ -515,7 +515,9 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 
 			//描画
 			for (auto& object : levelData->objectDatas) {
-				object.objectForLeveEditor->Draw(camera, material, directionalLight);
+				if (object.isInvisible_ == false) {
+					object.objectForLeveEditor->Draw(camera, material, directionalLight);
+				}
 			}
 
 			//無駄なループ処理を防ぐよ
@@ -533,7 +535,9 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 
 			//描画
 			for (auto& object : levelData->objectDatas) {
-				object.objectForLeveEditor->Draw(camera, material, pointLight);
+				if (object.isInvisible_ == false){
+					object.objectForLeveEditor->Draw(camera, material, pointLight);
+				}
 			}
 			
 			//無駄なループ処理を防ぐよ
@@ -553,7 +557,10 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 			//描画
 			for (auto& object : levelData->objectDatas) {
 				//描画
-				object.objectForLeveEditor->Draw(camera, material, spotLight);
+				if (object.isInvisible_ == false) {
+					object.objectForLeveEditor->Draw(camera, material, spotLight);
+				}
+				
 				
 			}
 			//無駄なループ処理を防ぐよ

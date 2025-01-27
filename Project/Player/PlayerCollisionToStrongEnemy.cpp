@@ -11,10 +11,6 @@ void PlayerCollisionToStrongEnemy::Initialize(){
 	//初期化
 	worldTransform_.Initialize();
 
-
-	//球じゃなくてAABBの方が良いかもね
-	//計算の量が減るからね
-
 	//種類
 	collisionType_ = ColliderType::SphereType;
 

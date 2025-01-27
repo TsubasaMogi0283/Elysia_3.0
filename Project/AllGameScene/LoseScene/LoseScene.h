@@ -45,6 +45,10 @@ namespace Ellysia {
 	/// </summary>
 	class LevelDataManager;
 
+	/// <summary>
+	/// グローバル変数
+	/// </summary>
+	class GlobalVariables;
 };
 
 
@@ -103,7 +107,10 @@ private:
 	/// </summary>
 	void DisplayImGui();
 
-
+	/// <summary>
+	/// 調整
+	/// </summary>
+	void Adjustment();
 
 private:
 	//入力クラス
@@ -117,9 +124,12 @@ private:
 
 	//モデル管理クラス
 	ModelManager* modelManager_ = nullptr;
-
-
+	//グローバル変数クラス
+	Ellysia::GlobalVariables* globalVariables_ = nullptr;
+	
 private:
+
+	const std::string POINT_LIGHT_NAME = "LoseScenePointLight";
 
 	//時間変化
 	const float DELTA_TIME = 1.0f / 60.0f;

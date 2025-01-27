@@ -23,7 +23,7 @@
 namespace Ellysia {
 
 	/// <summary>
-	/// 調整項目クラス
+	/// 調整項目クラス(グローバル変数クラス)
 	/// </summary>
 	class GlobalVariables {
 	private:
@@ -212,7 +212,7 @@ namespace Ellysia {
 
 	private:
 		//グローバル変数の保存先ファイルパス
-		const std::string DIRECTORY_PATH_ = "Resources/JsonFile/";
+		const std::string DIRECTORY_PATH_ = "Resources/AdjustmentValues/";
 
 	private:
 		//全データ
