@@ -22,7 +22,7 @@ Particle3D::Particle3D() {
 	modelManager_ = ModelManager::GetInstance();
 
 	//テクスチャ管理クラスの取得
-	textureManager_ = TextureManager::GetInstance();
+	textureManager_ = Ellysia::TextureManager::GetInstance();
 
 	//DirectXクラスの取得
 	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
@@ -492,7 +492,7 @@ void Particle3D::Draw(const Camera& camera,const Material& material){
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
@@ -545,7 +545,7 @@ void Particle3D::Draw(const Camera& camera,const  Material& material,const Direc
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
@@ -597,7 +597,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Poin
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
@@ -650,7 +650,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Spot
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);

@@ -15,16 +15,16 @@ void WinScene::Initialize() {
 	const Vector2 INITIAL_SPRITE_POSITION = { .x = 0.0f,.y = 0.0f };
 
 	//脱出成功のテクスチャ
-	uint32_t succeededTextureHandle = TextureManager::LoadTexture("Resources/Sprite/Result/Win/EscapeSucceeded.png");
+	uint32_t succeededTextureHandle = Ellysia::TextureManager::LoadTexture("Resources/Sprite/Result/Win/EscapeSucceeded.png");
 	//生成
 	succeeded_.reset(Sprite::Create(succeededTextureHandle, INITIAL_SPRITE_POSITION));
 
 	//テキスト(タイトルへのやつ)
-	uint32_t textHandle = TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Result/Win/WinText.png");
+	uint32_t textHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Result/Win/WinText.png");
 	text_.reset(Sprite::Create(textHandle, INITIAL_SPRITE_POSITION));
 
 	//黒背景
-	uint32_t blackTexturehandle = TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Back/Black.png");
+	uint32_t blackTexturehandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Back/Black.png");
 	//生成
 	black_.reset(Sprite::Create(blackTexturehandle, INITIAL_SPRITE_POSITION));
 	//透明度の設定

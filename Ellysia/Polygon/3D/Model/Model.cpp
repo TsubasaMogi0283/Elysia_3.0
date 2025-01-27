@@ -18,7 +18,7 @@
 
 Model::Model(){
 	//テクスチャ管理クラスの取得
-	textureManager_ = TextureManager::GetInstance();
+	textureManager_ = Ellysia::TextureManager::GetInstance();
 	//モデル管理クラスの取得
 	modelmanager_ = ModelManager::GetInstance();
 	//DirectXクラスの取得
@@ -116,7 +116,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
@@ -193,7 +193,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
@@ -270,7 +270,7 @@ void Model::Draw(const WorldTransform& worldTransform,const Camera& camera,const
 
 
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった

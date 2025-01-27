@@ -15,7 +15,7 @@ KeyManager::KeyManager(){
 	audio_ = Ellysia::Audio::GetInstance();
 	
 	//テクスチャ管理クラスの取得
-	textureManager_ = TextureManager::GetInstance();
+	textureManager_ = Ellysia::TextureManager::GetInstance();
 }
 
 void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvPath){

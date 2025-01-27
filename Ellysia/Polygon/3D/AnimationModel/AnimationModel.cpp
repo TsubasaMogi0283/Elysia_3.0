@@ -26,7 +26,7 @@ AnimationModel::AnimationModel(){
 	//SRV管理クラスを取得
 	srvManager_ = Ellysia::SrvManager::GetInstance();
 	//テクスチャ管理クラスを取得
-	textureManager_ = TextureManager::GetInstance();
+	textureManager_ = Ellysia::TextureManager::GetInstance();
 	//モデル管理クラスを取得
 	modelManager_ = ModelManager::GetInstance();
 
@@ -117,7 +117,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 	//ワールドトランスフォーム
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
@@ -188,7 +188,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
@@ -262,7 +262,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());

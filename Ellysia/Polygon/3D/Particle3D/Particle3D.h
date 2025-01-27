@@ -46,10 +46,7 @@ struct SpotLight;
 /// </summary>
 class ModelManager;
 
-/// <summary>
-/// テクスチャ管理クラス
-/// </summary>
-class TextureManager;
+
 
 /// <summary>
 /// EllysiaEngine
@@ -69,6 +66,11 @@ namespace Ellysia {
 	/// パイプライン管理クラス
 	/// </summary>
 	class PipelineManager;
+
+	/// <summary>
+/// テクスチャ管理クラス
+/// </summary>
+	class TextureManager;
 };
 
 #pragma endregion
@@ -277,7 +279,7 @@ private:
 	ModelManager* modelManager_ = nullptr;
 
 	//テクスチャ管理クラス
-	TextureManager* textureManager_ = nullptr;
+	Ellysia::TextureManager* textureManager_ = nullptr;
 
 	//DirectXクラス
 	Ellysia::DirectXSetup* directXSetup_ = nullptr;

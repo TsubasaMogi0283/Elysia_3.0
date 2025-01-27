@@ -115,7 +115,7 @@ private:
 
 private:
 	//テクスチャ管理クラス
-	TextureManager* textureManager_ = nullptr;
+	Ellysia::TextureManager* textureManager_ = nullptr;
 
 	//入力クラス
 	Ellysia::Input* input_ = nullptr;

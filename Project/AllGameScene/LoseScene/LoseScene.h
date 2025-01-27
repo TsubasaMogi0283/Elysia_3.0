@@ -13,7 +13,7 @@
 #include "PointLight.h" 
 #include "BackTexture.h"
 #include "DissolveEffect.h"
-
+#include "Dissolve.h"
 
 //前方宣言
 
@@ -22,10 +22,6 @@
 /// </summary>
 class GameManager;
 
-/// <summary>
-/// テクスチャ管理クラス
-/// </summary>
-class TextureManager;
 
 /// <summary>
 /// モデル管理クラス
@@ -51,6 +47,12 @@ namespace Ellysia {
 	/// グローバル変数
 	/// </summary>
 	class GlobalVariables;
+
+	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
+	class TextureManager;
+
 };
 
 
@@ -118,7 +120,7 @@ private:
 	//入力クラス
 	Ellysia::Input* input_ = nullptr;
 	//テクスチャ管理クラス
-	TextureManager* textureManager_ = nullptr;
+	Ellysia::TextureManager* textureManager_ = nullptr;
 	//レベルデータ管理クラス
 	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
@@ -130,8 +132,11 @@ private:
 	Ellysia::GlobalVariables* globalVariables_ = nullptr;
 	
 private:
-
+	//調整項目
+	//点光源
 	const std::string POINT_LIGHT_NAME = "LoseScenePointLight";
+	//ディゾルブ
+	const std::string DISSOLVE_NAME_ = "LoseSceneDissolve";
 
 	//時間変化
 	const float DELTA_TIME = 1.0f / 60.0f;
@@ -172,7 +177,8 @@ private:
 	//背景(ポストエフェクト)
 	std::unique_ptr<Ellysia::BackTexture>backTexture_ = nullptr;
 	//ディゾルブ
-	std::unique_ptr<Ellysia::DissolveEffect> dissolveEffect_ = nullptr;
+	std::unique_ptr<Ellysia::DissolvePostEffect> dissolveEffect_ = nullptr;
+	Dissolve dissolve_ = {};
 
 	//テキスト
 	std::unique_ptr<Sprite> text_ = nullptr;

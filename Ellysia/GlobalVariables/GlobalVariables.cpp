@@ -378,7 +378,7 @@ void Ellysia::GlobalVariables::Update(){
         Group& group = itGroup->second;
 
         //グループメニューを追加する処理
-        if (!ImGui::BeginMenu(groupName.c_str())) {
+        if (ImGui::BeginMenu(groupName.c_str())==false) {
             continue;
         }
 

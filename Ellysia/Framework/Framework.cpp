@@ -1,4 +1,4 @@
-#include "Ellysia.h"
+#include "Framework.h"
 
 
 #include "WindowsSetup.h"
@@ -10,7 +10,7 @@
 #include "RtvManager.h"
 #include "Audio.h"
 #include "LevelDataManager.h"
-#include "GlobalVariables/GlobalVariables.h"
+#include "GlobalVariables.h"
 
 Ellysia::Framework::Framework(){
 

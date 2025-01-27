@@ -18,7 +18,7 @@ LoseScene::LoseScene(){
 	//入力クラス
 	input_ = Ellysia::Input::GetInstance();
 	//テクスチャ管理クラス
-	textureManager_ = TextureManager::GetInstance();
+	textureManager_ = Ellysia::TextureManager::GetInstance();
 	//レベルデータ管理クラス
 	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 	//モデル管理クラス
@@ -55,10 +55,23 @@ void LoseScene::Initialize(){
 	backTexture_->Initialize();
 
 	//ディゾルブ
-	dissolveEffect_ = std::make_unique<Ellysia::DissolveEffect>();
+	dissolveEffect_ = std::make_unique<Ellysia::DissolvePostEffect>();
 	dissolveEffect_->Initialize(CLEAR_COLOR);
-	uint32_t maskTexture = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise0.png");
-	dissolveEffect_->SetMaskTexture(maskTexture);
+	//マスクテクスチャ
+	uint32_t maskTexture = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/External/Texture/Dissolve/noise0.png");
+
+
+	//調整項目として記録
+	globalVariables_->CreateGroup(DISSOLVE_NAME_);
+	globalVariables_->AddItem(DISSOLVE_NAME_, "Thinkness", dissolve_.edgeThinkness);
+	globalVariables_->AddItem(DISSOLVE_NAME_, "Threshold", dissolve_.threshold);
+
+
+	//初期化
+	dissolve_.Initialize();
+	dissolve_.maskTextureHandle = maskTexture;
+	dissolve_.edgeThinkness = globalVariables_->GetFloatValue(DISSOLVE_NAME_, "Thinkness");
+	dissolve_.threshold = globalVariables_->GetFloatValue(DISSOLVE_NAME_, "Threshold");
 
 	//カメラの初期化
 	camera_.Initialize();
@@ -106,7 +119,8 @@ void LoseScene::Update(GameManager* gameManager){
 		lightRadiusT_ += INTERVAL;
 		pointLight_.radius_=Easing::EaseOutSine(lightRadiusT_)* MAX_LIGHT_RADIUS_;
 
-		
+		//まだテキストは表示させない
+		text_->SetInvisible(true);
 		if (lightRadiusT_ > 1.0f) {
 			isFinishLightUp_ = true;
 		}
@@ -159,7 +173,11 @@ void LoseScene::Update(GameManager* gameManager){
 			isReturnToGame_ = true;
 
 		}
+		else if (input_->IsTriggerKey(DIK_T) == true) {
+			//ゲームへ
+			isReturnTitle = true;
 
+		}
 		
 
 
@@ -264,6 +282,12 @@ void LoseScene::Update(GameManager* gameManager){
 	pointLight_.position_ = globalVariables_->GetVector3Value(POINT_LIGHT_NAME, "Translate");
 	pointLight_.decay_ = globalVariables_->GetFloatValue(POINT_LIGHT_NAME, "Decay");
 	pointLight_.Update();
+	//ディゾルブの更新
+	dissolve_.edgeThinkness = globalVariables_->GetFloatValue(DISSOLVE_NAME_, "Thinkness");
+	dissolve_.threshold = globalVariables_->GetFloatValue(DISSOLVE_NAME_, "Threshold");
+	dissolve_.Update();
+
+
 	//調整
 	Adjustment();
 	
@@ -289,7 +313,7 @@ void LoseScene::PreDrawPostEffectFirst(){
 }
 
 void LoseScene::DrawPostEffect(){
-	dissolveEffect_->Draw();
+	dissolveEffect_->Draw(dissolve_);
 	//backTexture_->Draw();
 }
 
@@ -312,13 +336,17 @@ void LoseScene::DisplayImGui(){
 	ImGui::SliderFloat3("座標", &pointLight_.position_.x, -40.0f, 40.0f);
 	ImGui::SliderFloat("Decay", &pointLight_.decay_, 0.0f, 20.0f);
 	ImGui::SliderFloat("半径", &pointLight_.radius_, 0.0f, 20.0f);
-
 	ImGui::End();
 
-
+	ImGui::Begin("ディゾルブ");
+	ImGui::SliderFloat("閾値", &dissolve_.threshold, 0.0f, 2.0f);
+	ImGui::SliderFloat("厚さ", &dissolve_.edgeThinkness, 0.0f, 2.0f);
+	
+	ImGui::End();
 }
 
 void LoseScene::Adjustment(){
+	globalVariables_->SaveFile(DISSOLVE_NAME_);
 	globalVariables_->SaveFile(POINT_LIGHT_NAME);
 
 }

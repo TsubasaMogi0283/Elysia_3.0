@@ -20,7 +20,7 @@ GameScene::GameScene(){
 	input_ = Ellysia::Input::GetInstance();
 
 	//テクスチャ管理クラス
-	texturemanager_ = TextureManager::GetInstance();
+	texturemanager_ = Ellysia::TextureManager::GetInstance();
 
 	//モデル管理クラス
 	modelManager_ = ModelManager::GetInstance();

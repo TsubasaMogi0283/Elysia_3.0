@@ -409,6 +409,21 @@
     <Filter Include="Ellysia\Header File\Math\Easing">
       <UniqueIdentifier>{027a9b32-f216-4b0c-85b6-716c733a7ba1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Source File\Framework">
+      <UniqueIdentifier>{fb563d2c-ed9e-4543-90ca-53d2dc6ea5ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Framework">
+      <UniqueIdentifier>{fc69f8c0-8bce-49f2-89ed-dfd0982d50d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Math\Transform">
+      <UniqueIdentifier>{45b805ea-9918-4a1b-b099-2cdf15bc2dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\EffectData">
+      <UniqueIdentifier>{8e5f658a-9b01-41ae-a1e2-042760ec9c04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\EffectData">
+      <UniqueIdentifier>{6e6a2122-997b-42d9-b4e5-f2801a4c304f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -431,9 +446,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\Model\Model.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Ellysia.cpp">
-      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\ConvertFunction\ConvertColor\ConvertColor.cpp">
       <Filter>Ellysia\Source File\ConvertFunction</Filter>
@@ -630,9 +642,6 @@
     <ClCompile Include="Project\Player\AudioTestPlayer.cpp">
       <Filter>Project\Player\Test</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Material\Material.cpp">
-      <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
     <ClCompile Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.cpp">
       <Filter>Ellysia\Source File\Math\Quaternion</Filter>
     </ClCompile>
@@ -669,11 +678,20 @@
     <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp">
       <Filter>Project\SceneFactory</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\Framework\Framework.cpp">
+      <Filter>Ellysia\Source File\Framework</Filter>
+    </ClCompile>
     <ClCompile Include="Ellysia\StringOption\StringOption.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Ellysia\Source File\StringOption</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Material\Material.cpp">
+      <Filter>Ellysia\Source File\EffectData</Filter>
     </ClCompile>
     <ClCompile Include="Project\Player\BasedPlayerCollision.cpp">
-      <Filter>Project</Filter>
+      <Filter>Project\Player\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\EffectData\Dissolve\Dissolve.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -829,9 +847,6 @@
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle3D.h">
       <Filter>Ellysia\Header File\Polygone\3D\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Ellysia.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Math\Matrix\Matrix3x3.h">
       <Filter>Ellysia\Header File\Math\Matrix</Filter>
     </ClInclude>
@@ -865,9 +880,6 @@
     <ClInclude Include="Ellysia\Math\Shape\AABB.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\WorldTransform\WorldTransform.h">
-      <Filter>Ellysia\Header File\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Lighting\PointLight.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
     </ClInclude>
@@ -879,9 +891,6 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Shape\SphereShape.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Math\Transform\EulerTransform.h">
-      <Filter>Ellysia\Header File\Math</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Lighting\LightingType.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
@@ -1093,9 +1102,6 @@
     <ClInclude Include="Project\Player\PlayerCollisionToStageObject.h">
       <Filter>Project\Player\PlayerCollisionToStageObject</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Material\Material.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\SkyBox\SkyBox.h">
       <Filter>Ellysia\Header File\Polygone\3D\SkyBox</Filter>
     </ClInclude>
@@ -1158,6 +1164,21 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Easing\Easing.h">
       <Filter>Ellysia\Header File\Math\Easing</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Framework\Framework.h">
+      <Filter>Ellysia\Header File\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Transform\EulerTransform.h">
+      <Filter>Ellysia\Header File\Math\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\WorldTransform\WorldTransform.h">
+      <Filter>Ellysia\Header File\Math\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Material\Material.h">
+      <Filter>Ellysia\Header File\EffectData</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\EffectData\Dissolve\Dissolve.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

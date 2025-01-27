@@ -14,14 +14,14 @@ void Material::Initialize(){
 	//環境マップ
 	isEnviromentMap_ = false;
 	//リソースを生成
-	bufferResource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
+	resource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
 
 }
 
 void Material::Update(){
 
 	//書き込み
-	bufferResource_->Map(0u, nullptr, reinterpret_cast<void**>(&materialData_));
+	resource_->Map(0u, nullptr, reinterpret_cast<void**>(&materialData_));
 	//色
 	materialData_->color = color_;
 	//ライティングの種類
@@ -33,5 +33,5 @@ void Material::Update(){
 	//環境マップ
 	materialData_->isEnviromentMap = isEnviromentMap_;
 	//書き込み終了
-	bufferResource_->Unmap(0u, nullptr);
+	resource_->Unmap(0u, nullptr);
 }

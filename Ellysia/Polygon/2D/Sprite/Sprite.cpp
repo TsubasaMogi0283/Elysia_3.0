@@ -22,7 +22,7 @@ void Sprite::Initialize(const uint32_t& textureHandle, const Vector2& position) 
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
 	
 	//テクスチャの情報を取得
-	resourceDesc_ = TextureManager::GetInstance()->GetResourceDesc(textureHandle_);
+	resourceDesc_ = Ellysia::TextureManager::GetInstance()->GetResourceDesc(textureHandle_);
 	size_ = { float(resourceDesc_.Width),float(resourceDesc_.Height) };
 
 
@@ -122,7 +122,7 @@ void Sprite::Draw() {
 
 
 	//書き込むためのアドレスを取得
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData_));
 
 	float left = (0.0f-anchorPoint_.x) * size_.x;
 	float right = (1.0f-anchorPoint_.x) * size_.x;
@@ -180,7 +180,7 @@ void Sprite::Draw() {
 
 	//IndexResourceにデータを書き込む
 	//インデックスデータにデータを書き込む
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
+	indexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&indexData_));
 	indexData_[0] = 0;
 	indexData_[1] = 1;
 	indexData_[2] = 2;
@@ -191,7 +191,7 @@ void Sprite::Draw() {
 
 
 	//トランスフォームデータに書き込み
-	transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
+	transformationMatrixResource_->Map(0u, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
 	
 	//座標の再設定
 	Vector3 newPosition = {};
@@ -216,7 +216,7 @@ void Sprite::Draw() {
 	transformationMatrixData_->WVP = worldViewProjectionMatrixSprite;
 	transformationMatrixData_->World = Matrix4x4Calculation::MakeIdentity4x4();
 
-	transformationMatrixResource_->Unmap(0, nullptr);
+	transformationMatrixResource_->Unmap(0u, nullptr);
 
 
 	//マテリアルにデータを書き込む
@@ -240,7 +240,7 @@ void Sprite::Draw() {
 
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
 	//IBVを設定
 	directXSetup_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 	
@@ -248,18 +248,18 @@ void Sprite::Draw() {
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
 	//CBVを設定する
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, materialResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, transformationMatrixResource_->GetGPUVirtualAddress());
 	
 	
-	if (textureHandle_ != 0) {
-		TextureManager::GraphicsCommand(2,textureHandle_);
+	if (textureHandle_ != 0u) {
+		Ellysia::TextureManager::GetInstance()->GraphicsCommand(2u,textureHandle_);
 
 	}
 	
 	//今度はこっちでドローコールをするよ
 	//描画(DrawCall)6個のインデックスを使用し1つのインスタンスを描画。
-	directXSetup_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	directXSetup_->GetCommandList()->DrawIndexedInstanced(6u, 1u, 0u, 0u, 0u);
 
 
 }

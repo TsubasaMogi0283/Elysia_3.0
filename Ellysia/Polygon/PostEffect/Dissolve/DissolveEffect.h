@@ -12,21 +12,11 @@
 #include "Vector3.h"
 #include "VertexData.h"
 
-
 /// <summary>
-/// データ
+/// ディゾルブ
 /// </summary>
-struct DissolveData {
-	//Edgeを使うかどうか
-	bool isUseEdge;
-	//Edgeの色
-	Vector3 edgeColor;
-	//Edgeの厚さ
-	float edgeThinkness;
-	//閾値
-	float threshold;
+struct Dissolve;
 
-};
 
 /// <summary>
 /// EllysiaEngine
@@ -58,14 +48,14 @@ namespace Ellysia {
 	class SrvManager;
 
 	/// <summary>
-	/// ディゾルブ
+	/// ディゾルブ(ポストエフェクト)
 	/// </summary>
-	class DissolveEffect {
+	class DissolvePostEffect {
 	public:
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		DissolveEffect();
+		DissolvePostEffect();
 
 		/// <summary>
 		/// 初期化
@@ -81,53 +71,13 @@ namespace Ellysia {
 		/// <summary>
 		/// 描画
 		/// </summary>
-		void Draw();
+		/// <param name="dissolve">ディゾルブ</param>
+		void Draw(const Dissolve& dissolve);
 
 		/// <summary>
 		/// デストラク
 		/// </summary>
-		~DissolveEffect() = default;
-
-	public:
-		/// <summary>
-		/// マスクテクスチャの設定
-		/// </summary>
-		/// <param name="maskTextureHandle">テクスチャハンドル</param>
-		inline void SetMaskTexture(const uint32_t& maskTextureHandle) {
-			this->maskTextureHandle_ = maskTextureHandle;
-		}
-
-		/// <summary>
-		/// Edgeを使うかどうか
-		/// </summary>
-		/// <param name="useEdge"></param>
-		inline void SetUseEdge(const bool& useEdge) {
-			this->dessolveValue_.isUseEdge = useEdge;
-		}
-
-		/// <summary>
-		/// Edgeの色
-		/// </summary>
-		/// <param name="color"></param>
-		inline void SetEdgeColor(const Vector3& color) {
-			this->dessolveValue_.edgeColor = color;
-		}
-
-		/// <summary>
-		/// Edgeの厚さ
-		/// </summary>
-		/// <param name="thinkness"></param>
-		inline void SetEdgeThinkness(const float& thinkness) {
-			this->dessolveValue_.edgeThinkness = thinkness;
-		}
-
-		/// <summary>
-		/// 閾値
-		/// </summary>
-		/// <param name="threshold"></param>
-		inline void SetThreshold(const float& threshold) {
-			this->dessolveValue_.threshold = threshold;
-		}
+		~DissolvePostEffect() = default;
 
 	private:
 		//Windowクラス
@@ -143,12 +93,7 @@ namespace Ellysia {
 
 	private:
 
-		//リソース
-		ComPtr<ID3D12Resource> dissolveResource_ = nullptr;
-		//値
-		DissolveData dessolveValue_ = {};
-		//データ
-		DissolveData* dissolveData_ = nullptr;
+		
 
 		//RTV
 		ComPtr<ID3D12Resource> rtvResource_ = nullptr;
@@ -158,8 +103,9 @@ namespace Ellysia {
 		Vector4 renderTargetClearColor_ = {};
 		//SRVハンドル
 		uint32_t srvHandle_ = 0;
-		//マスクのテクスチャハンドル
-		uint32_t maskTextureHandle_ = 0;
+		//マスクテクスチャハンドル
+		uint32_t maskTextureHandle = 0u;
+
 		//バリア
 		D3D12_RESOURCE_BARRIER barrier = {};
 	};

@@ -172,7 +172,7 @@ private:
 	//インプット
 	Ellysia::Input* input_=nullptr;
 	//テクスチャ管理クラス
-	TextureManager* texturemanager_ = nullptr;
+	Ellysia::TextureManager* texturemanager_ = nullptr;
 	//モデル管理クラス
 	ModelManager* modelManager_ = nullptr;
 	//レベルエディタ
