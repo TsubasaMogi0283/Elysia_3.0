@@ -110,6 +110,29 @@
             "file_name": "Grass",
             "object_type": "Stage",
             "is_invisible": false
+        },
+        {
+            "type": "MESH",
+            "name": "テキスト",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    2.0,
+                    1.0
+                ],
+                "rotation": [
+                    89.99999237060547,
+                    8.428941811189361e-08,
+                    2.000000238418579
+                ],
+                "translation": [
+                    0.0,
+                    0.0,
+                    4.170000076293945
+                ]
+            },
+            "file_name": "FailedEscape",
+            "object_type": "Stage"
         }
     ]
 }

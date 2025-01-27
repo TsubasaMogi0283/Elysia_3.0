@@ -70,7 +70,8 @@ namespace Ellysia {
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize();
+		/// <param name="clearColor"></param>
+		void Initialize(const Vector4& clearColor);
 
 		/// <summary>
 		/// 描画前処理
@@ -154,7 +155,7 @@ namespace Ellysia {
 		//RTVハンドル
 		uint32_t rtvHandle_ = 0;
 		//レンダーの色
-		Vector4 renderTargetClearColor = {};
+		Vector4 renderTargetClearColor_ = {};
 		//SRVハンドル
 		uint32_t srvHandle_ = 0;
 		//マスクのテクスチャハンドル

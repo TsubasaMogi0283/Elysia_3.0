@@ -8,9 +8,7 @@
 #include "Input.h"
 #include "LevelDataManager.h"
 
-//Enemyのこれからやること
-//1.追跡システムを単純化する
-//2.ポリモーフィズムを上手く使おう
+
 
 
 EnemyManager::EnemyManager(){
@@ -190,8 +188,6 @@ void EnemyManager::Update(){
 	
 
 
-	//ポリモーフィズムでまとめたい
-	//↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 	//通常の敵
 	for (Enemy* enemy : enemyes_) {
 		//プレイヤーの位置を設定

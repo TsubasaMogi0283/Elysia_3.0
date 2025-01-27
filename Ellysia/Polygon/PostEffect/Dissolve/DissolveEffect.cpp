@@ -18,7 +18,7 @@ Ellysia::DissolveEffect::DissolveEffect(){
 	srvManager_ = Ellysia::SrvManager::GetInstance();
 }
 
-void Ellysia::DissolveEffect::Initialize(){
+void Ellysia::DissolveEffect::Initialize(const Vector4& clearColor){
 	
 	//PixelShaderに送る値の初期化
 	dissolveResource_ = directXSetup_->CreateBufferResource(sizeof(DissolveData));
@@ -29,9 +29,9 @@ void Ellysia::DissolveEffect::Initialize(){
 
 
 	
-	renderTargetClearColor = { 0.0f,1.0f,0.0f,1.0f };
+	renderTargetClearColor_ = clearColor;
 	//リソースの作成
-	rtvResource_ = rtvManager_->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, renderTargetClearColor);
+	rtvResource_ = rtvManager_->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, renderTargetClearColor_);
 	//ハンドルの取得
 	rtvHandle_ = rtvManager_->Allocate("Dissolve");
 	//作成
@@ -47,7 +47,7 @@ void Ellysia::DissolveEffect::Initialize(){
 
 void Ellysia::DissolveEffect::PreDraw(){
 	
-	const float CLEAR_COLOR[] = { renderTargetClearColor.x,renderTargetClearColor.y,renderTargetClearColor.z,renderTargetClearColor.w };
+	const float CLEAR_COLOR[] = { renderTargetClearColor_.x,renderTargetClearColor_.y,renderTargetClearColor_.z,renderTargetClearColor_.w };
 	//RT
 	directXSetup_->GetCommandList()->OMSetRenderTargets(
 		1u, &rtvManager_->GetRtvHandle(rtvHandle_), false, &directXSetup_->GetDsvHandle());

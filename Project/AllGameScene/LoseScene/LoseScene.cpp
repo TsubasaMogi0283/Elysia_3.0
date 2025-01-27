@@ -32,10 +32,6 @@ void LoseScene::Initialize(){
 	//スプライトの初期座標
 	const Vector2 INITIAL_SPRITE_POSITION_ = { .x = 0.0f,.y = 0.0f };
 
-	//メイン
-	uint32_t failedTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Result/Lose/EscapeFailed.png");
-	failedTexture_.reset(Sprite::Create(failedTextureHandle, INITIAL_SPRITE_POSITION_));
-
 	//Text
 	uint32_t textHandle = textureManager_->LoadTexture("Resources/Sprite/Result/Lose/LoseText.png");
 	text_.reset(Sprite::Create(textHandle, INITIAL_SPRITE_POSITION_));
@@ -46,7 +42,7 @@ void LoseScene::Initialize(){
 	//透明度の設定
 	transparency_ = 0.0f;
 	black_->SetTransparency(transparency_);
-	blackOutTime_ = 0;
+	blackOutTime_ = 0u;
 	
 	//負けシーン用のレベルデータを入れる
 	levelDataHandle_ = levelDataManager_->Load("LoseStage/LoseStage.json");
@@ -58,11 +54,17 @@ void LoseScene::Initialize(){
 	backTexture_->SetClearColour(CLEAR_COLOR);
 	backTexture_->Initialize();
 
+	//ディゾルブ
+	dissolveEffect_ = std::make_unique<Ellysia::DissolveEffect>();
+	dissolveEffect_->Initialize(CLEAR_COLOR);
+	uint32_t maskTexture = TextureManager::GetInstance()->LoadTexture("Resources/CG5/00/08/noise0.png");
+	dissolveEffect_->SetMaskTexture(maskTexture);
+
 	//カメラの初期化
 	camera_.Initialize();
 
 	
-	camera_.translate = { .x = 0.0f,.y = 2.8f,.z = -28.3f };
+	camera_.translate = { .x = 0.0f,.y = 2.8f,.z = -23.0f };
 	//マテリアル
 	material_.Initialize();
 	material_.lightingKinds_ = PointLighting;
@@ -100,7 +102,7 @@ void LoseScene::Update(GameManager* gameManager){
 	//ライトアップをする
 	if (isFinishLightUp_ == false) {
 		//増える間隔
-		const float INTERVAL = 0.01f;
+		const float INTERVAL = 0.008f;
 		lightRadiusT_ += INTERVAL;
 		pointLight_.radius_=Easing::EaseOutSine(lightRadiusT_)* MAX_LIGHT_RADIUS_;
 
@@ -282,16 +284,16 @@ void LoseScene::DrawObject3D(){
 }
 
 void LoseScene::PreDrawPostEffectFirst(){
-	backTexture_->PreDraw();
+	dissolveEffect_->PreDraw();
+	//backTexture_->PreDraw();
 }
 
 void LoseScene::DrawPostEffect(){
-	backTexture_->Draw();
+	dissolveEffect_->Draw();
+	//backTexture_->Draw();
 }
 
 void LoseScene::DrawSprite(){
-	//負け
-	//failedTexture_->Draw();
 	//テキスト
 	text_->Draw();
 	//フェードイン

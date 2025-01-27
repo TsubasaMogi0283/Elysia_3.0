@@ -12,8 +12,14 @@
 #include <list>
 #include <map>
 
-#include <ModelData.h>
+#include "ModelData.h"
 #include "Animation.h"
+
+
+
+namespace Ellysia {
+
+}
 
 /// <summary>
 /// モデル管理クラス
@@ -94,7 +100,11 @@ public:
 public:
 
 
-
+	/// <summary>
+	/// モデルデータを取得
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
 	ModelData GetModelData(uint32_t handle) {
 		for (const auto& [filePath, modelInfo] : modelInfromtion_) {
 			if (modelInfo.handle == handle) {
@@ -106,6 +116,11 @@ public:
 		return{};
 	}
 
+	/// <summary>
+	/// モデルアニメーションデータを取得
+	/// </summary>
+	/// <param name="handle"></param>
+	/// <returns></returns>
 	Animation GetModelAnimation(uint32_t handle) {
 		for (const auto& [filePath, modelInfo] : modelInfromtion_) {
 			if (modelInfo.handle == handle) {
@@ -119,7 +134,9 @@ public:
 
 
 private:
-
+	/// <summary>
+	/// モデル情報
+	/// </summary>
 	struct ModelInformation {
 		//モデルデータ
 		ModelData modelData;

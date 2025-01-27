@@ -12,6 +12,8 @@
 #include "Camera.h"
 #include "PointLight.h" 
 #include "BackTexture.h"
+#include "DissolveEffect.h"
+
 
 //前方宣言
 
@@ -169,11 +171,9 @@ private:
 
 	//背景(ポストエフェクト)
 	std::unique_ptr<Ellysia::BackTexture>backTexture_ = nullptr;
+	//ディゾルブ
+	std::unique_ptr<Ellysia::DissolveEffect> dissolveEffect_ = nullptr;
 
-
-
-	//失敗
-	std::unique_ptr<Sprite> failedTexture_ = nullptr;
 	//テキスト
 	std::unique_ptr<Sprite> text_ = nullptr;
 	//黒背景
