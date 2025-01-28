@@ -320,6 +320,9 @@ namespace Ellysia {
 				//今はステージかオーディオのどちらか
 				std::string type;
 
+				//個別の名前
+				std::string name;
+
 				//ファイル名
 				std::string modelFileName;
 
@@ -349,7 +352,7 @@ namespace Ellysia {
 
 
 				//非表示設定
-				bool isInvisible_ = false;
+				bool isInvisible = false;
 
 				//レベルデータのオーディオ
 				AudioDataForLevelEditor levelAudioData;
@@ -362,8 +365,6 @@ namespace Ellysia {
 
 
 			};
-
-
 
 			//ハンドル
 			uint32_t handle = 0u;

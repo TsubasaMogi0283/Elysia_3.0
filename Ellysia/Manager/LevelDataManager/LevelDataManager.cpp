@@ -40,6 +40,13 @@ void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelD
 			levelData.objectDatas.emplace_back(LevelData::ObjectData{});
 			//今追加した要素の参照を得る
 			LevelData::ObjectData& objectData = levelData.objectDatas.back();
+
+
+			if (object.contains("name")) {
+				objectData.name = object["name"];
+			}
+
+
 			//ここでのファイルネームはオブジェクトの名前
 			if (object.contains("file_name")) {
 				//ファイル名
@@ -148,7 +155,7 @@ void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelD
 
 			//非表示設定
 			if (object.contains("is_invisible")) {
-				objectData.isInvisible_ = object["is_invisible"];
+				objectData.isInvisible = object["is_invisible"];
 			}
 
 
@@ -515,7 +522,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 
 			//描画
 			for (auto& object : levelData->objectDatas) {
-				if (object.isInvisible_ == false) {
+				if (object.isInvisible == false) {
 					object.objectForLeveEditor->Draw(camera, material, directionalLight);
 				}
 			}
@@ -535,7 +542,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 
 			//描画
 			for (auto& object : levelData->objectDatas) {
-				if (object.isInvisible_ == false){
+				if (object.isInvisible == false){
 					object.objectForLeveEditor->Draw(camera, material, pointLight);
 				}
 			}
@@ -557,7 +564,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 			//描画
 			for (auto& object : levelData->objectDatas) {
 				//描画
-				if (object.isInvisible_ == false) {
+				if (object.isInvisible == false) {
 					object.objectForLeveEditor->Draw(camera, material, spotLight);
 				}
 				
