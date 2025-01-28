@@ -12,7 +12,7 @@ void GameManager::Initialize() {
 	currentGamaScene_ = abstractSceneFactory_->CreateScene("Game");
 
 #ifdef _DEBUG
-	currentGamaScene_ = abstractSceneFactory_->CreateScene("Win");
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Lose");
 
 #endif // _DEBUG
 

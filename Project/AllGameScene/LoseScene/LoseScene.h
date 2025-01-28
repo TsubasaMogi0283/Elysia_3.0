@@ -151,7 +151,7 @@ private:
 	//高速点滅間隔
 	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
 	//タイトルに変わる時間
-	const uint32_t CHANGE_TO_TITLE_TIME_ = 60 * 2;
+	const uint32_t CHANGE_TO_TITLE_TIME_ = 60 * 1;
 
 
 	//最大の半径
@@ -199,7 +199,7 @@ private:
 	bool isBTrigger_ = false;
 	//タイトル
 	bool isReturnTitle = false;
-
+	float returnToTitleDissolveThresholdT_ = 0.0f;
 
 
 

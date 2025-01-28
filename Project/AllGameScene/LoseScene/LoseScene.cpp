@@ -64,15 +64,13 @@ void LoseScene::Initialize(){
 	//調整項目として記録
 	globalVariables_->CreateGroup(DISSOLVE_NAME_);
 	globalVariables_->AddItem(DISSOLVE_NAME_, "Thinkness", dissolve_.edgeThinkness);
-	globalVariables_->AddItem(DISSOLVE_NAME_, "Threshold", dissolve_.threshold);
 
 
 	//初期化
 	dissolve_.Initialize();
 	dissolve_.maskTextureHandle = maskTexture;
 	dissolve_.edgeThinkness = globalVariables_->GetFloatValue(DISSOLVE_NAME_, "Thinkness");
-	dissolve_.threshold = globalVariables_->GetFloatValue(DISSOLVE_NAME_, "Threshold");
-
+	dissolve_.threshold = 0.0f;
 	//カメラの初期化
 	camera_.Initialize();
 
@@ -191,7 +189,7 @@ void LoseScene::Update(GameManager* gameManager){
 		//タイトルへ戻る
 		if (isReturnTitle == true) {
 
-			//点滅
+			//高速点滅
 			fastFlashTime_ += INCREASE_VALUE;
 			if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
 				++textDisplayCount_;
@@ -207,10 +205,13 @@ void LoseScene::Update(GameManager* gameManager){
 
 			//指定した時間を超えたらタイトルへ遷移
 			if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
+				returnToTitleDissolveThresholdT_ += 0.01f;
+				dissolve_.threshold = Easing::EaseInSine(returnToTitleDissolveThresholdT_);
+
 				//テキストの非表示
 				text_->SetInvisible(true);
 				//透明度の設定
-				black_->SetTransparency(transparency_);
+				//black_->SetTransparency(transparency_);
 				//暗くなったらシーンチェンジ
 				transparency_ += TRANSPARENCY_INTERVAL_;
 			}
@@ -284,7 +285,6 @@ void LoseScene::Update(GameManager* gameManager){
 	pointLight_.Update();
 	//ディゾルブの更新
 	dissolve_.edgeThinkness = globalVariables_->GetFloatValue(DISSOLVE_NAME_, "Thinkness");
-	dissolve_.threshold = globalVariables_->GetFloatValue(DISSOLVE_NAME_, "Threshold");
 	dissolve_.Update();
 
 
