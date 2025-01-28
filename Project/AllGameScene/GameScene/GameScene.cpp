@@ -920,6 +920,16 @@ void GameScene::Update(GameManager* gameManager) {
 	//ホワイトアウト
 	//StatePatternにしたい
 	if (isWhiteFadeOut_ == true) {
+
+
+		gateRotateTheta_ += 0.01f;
+		std::string right = "GateDoorRight";
+		std::string left = "GateDoorLeft";
+
+		levelDataManager_->SetRotate(levelHandle_, right, { .x = 0.0f,.y = gateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelHandle_, left, { .x = 0.0f,.y = -gateRotateTheta_,.z = 0.0f });
+
+
 		//音を止める
 		enemyManager_->StopAudio();
 
@@ -1014,7 +1024,6 @@ void GameScene::Update(GameManager* gameManager) {
 
 	ImGui::Begin("カメラ");
 	ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
-	ImGui::SliderFloat3("位置", &cameraTranslate.x, -100.0f, 100.0f);
 	ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
 	ImGui::InputFloat("Theta", &theta_);
 	ImGui::InputFloat("Phi", &originPhi_);

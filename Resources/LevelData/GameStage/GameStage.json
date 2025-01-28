@@ -2235,7 +2235,7 @@
         },
         {
             "type": "MESH",
-            "name": "Gate_Plane.001",
+            "name": "GateDoorRight",
             "transform": {
                 "scaling": [
                     1.422791838645935,
@@ -2271,7 +2271,7 @@
         },
         {
             "type": "MESH",
-            "name": "Gate_Plane.002",
+            "name": "GatePillerRight",
             "transform": {
                 "scaling": [
                     1.0,
@@ -2307,7 +2307,7 @@
         },
         {
             "type": "MESH",
-            "name": "Gate_Plane.003",
+            "name": "GateDoorLeft",
             "transform": {
                 "scaling": [
                     1.4409635066986084,
@@ -2343,7 +2343,7 @@
         },
         {
             "type": "MESH",
-            "name": "Gate_Plane.004",
+            "name": "GatePillerLeft",
             "transform": {
                 "scaling": [
                     1.0,
