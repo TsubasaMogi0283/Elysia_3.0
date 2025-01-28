@@ -431,7 +431,7 @@ namespace Ellysia {
 		/// <param name="handle"></param>
 		/// <param name="name"></param>
 		/// <param name="scale"></param>
-		inline void SetScale(const uint32_t& handle, std::string& name, const Vector3& scale) {
+		inline void SetScale(const uint32_t& handle,const std::string& name, const Vector3& scale) {
 
 			for (const auto& [key, levelData] : levelDatas_) {
 				if (levelData->handle == handle) {
@@ -459,7 +459,7 @@ namespace Ellysia {
 		/// <param name="handle"></param>
 		/// <param name="name"></param>
 		/// <param name="rotate"></param>
-		inline void SetRotate(const uint32_t& handle, std::string& name, const Vector3& rotate) {
+		inline void SetRotate(const uint32_t& handle,const std::string& name, const Vector3& rotate) {
 
 			for (const auto& [key, levelData] : levelDatas_) {
 				if (levelData->handle == handle) {
@@ -486,7 +486,7 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="handle"></param>
 		/// <param name="name"></param>
-		inline void SetPosition(const uint32_t& handle, std::string& name,const Vector3& translate) {
+		inline void SetPosition(const uint32_t& handle,const std::string& name,const Vector3& translate) {
 
 			for (const auto& [key, levelData] : levelDatas_) {
 				if (levelData->handle == handle) {
