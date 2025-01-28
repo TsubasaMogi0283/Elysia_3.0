@@ -16,16 +16,14 @@
 
 GameScene::GameScene(){
 
+	//インスタンスの取得
 	//入力
 	input_ = Ellysia::Input::GetInstance();
-
 	//テクスチャ管理クラス
 	texturemanager_ = Ellysia::TextureManager::GetInstance();
-
 	//モデル管理クラス
 	modelManager_ = ModelManager::GetInstance();
-
-	//レベルエディタ管理クラスの取得
+	//レベルエディタ管理クラス
 	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 }
 
@@ -85,8 +83,6 @@ void GameScene::Initialize() {
 	//初期化
 	gate_->Initialize(gateModelhandle);
 
-
-
 	//「脱出せよ」の画像読み込み
 	uint32_t escapeTextureHandle = texturemanager_->LoadTexture("Resources/Game/Escape/EscapeText.png");
 	//生成
@@ -113,14 +109,8 @@ void GameScene::Initialize() {
 	bTriggerTime_ = 0;
 	//Bトリガーの初期化
 	isBTrigger_ = false;
-
-	
-
-
-
 #pragma endregion
 
-#pragma region 鍵
 	//鍵のモデルの読み込み
 	uint32_t keyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/key","Key.obj");
 	//生成
@@ -131,7 +121,6 @@ void GameScene::Initialize() {
 	const std::string keyPositionCSV = "Resources/CSV/KeyPosition.csv";
 	keyManager_->Initialize(keyModelHandle, keyPositionCSV);
 	
-#pragma endregion
 	
 	//ハンドルの取得
 	levelHandle_=levelDataManager_->Load("GameStage/GameStage.json");

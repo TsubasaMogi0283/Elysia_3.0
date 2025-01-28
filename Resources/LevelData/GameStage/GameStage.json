@@ -2436,6 +2436,7 @@
             },
             "file_name": "Cube",
             "object_type": "Stage",
+            "is_invisible": true,
             "collider": {
                 "type": "BOX",
                 "center": [
@@ -2444,7 +2445,7 @@
                     0.0
                 ],
                 "size": [
-                    8.449999809265137,
+                    9.680000305175781,
                     1.0,
                     1.0
                 ]

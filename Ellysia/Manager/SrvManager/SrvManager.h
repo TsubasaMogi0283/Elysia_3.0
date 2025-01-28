@@ -162,7 +162,7 @@ namespace Ellysia {
 		D3D12_GPU_DESCRIPTOR_HANDLE handleGPU_ = {};
 
 		//次に使用するSRVインデックス
-		uint32_t useIndex_ = 1;
+		uint32_t useIndex_ = 1u;
 
 
 
