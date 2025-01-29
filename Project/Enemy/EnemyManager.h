@@ -141,6 +141,10 @@ public:
 private:
 	//プレイヤー
 	Player* player_ = nullptr;
+	//接近BGM用
+	Ellysia::Audio* audio_ = nullptr;
+	//ハンドル
+	uint32_t audioHandle_ = 0u;
 	//レベルデータ管理クラス
 	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
 	//レベルデータのハンドル
@@ -169,10 +173,7 @@ private:
 	//生成の文字列を入れる
 	std::stringstream enemyPositionsFromCSV_;
 
-	//接近BGM用
-	Ellysia::Audio* audio_ = nullptr;
-	//ハンドル
-	uint32_t audioHandle_ = 0u;
+	
 
 };
 

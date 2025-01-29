@@ -688,7 +688,7 @@
       <Filter>Project\Player\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\EffectData\Dissolve\Dissolve.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Ellysia\Source File\EffectData</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -230,12 +230,17 @@ public:
 		return isAllInvisible_;
 	}
 
-
+	/// <summary>
+	/// 地面のオフセット
+	/// </summary>
+	/// <param name="offset"></param>
+	inline void SetGroundOffset(const float& offset) {
+		this->groundOffset_ = offset;
+	}
 
 #pragma region エミッタの中の設定
 
 
-#pragma region SRT
 	//Scale
 	inline void SetScale(const Vector3& scale) {
 		this->emitter_.transform.scale = scale;
@@ -257,7 +262,6 @@ public:
 		return emitter_.transform.translate;
 	}
 
-#pragma endregion
 
 	//発生数
 	inline void SetCount(const uint32_t& count) {
@@ -337,7 +341,8 @@ private:
 
 	//鉛直投げ上げ
 	float velocityY_ = 1.2f;
-
+	//地面の高さ設定
+	float groundOffset_ = 0.0f;
 
 
 	//カメラ

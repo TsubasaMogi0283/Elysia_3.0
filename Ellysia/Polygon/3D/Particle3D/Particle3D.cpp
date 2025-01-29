@@ -364,8 +364,8 @@ void Particle3D::Update(const Camera& camera) {
 					.z = worldMatrix.m[3][2]
 				};
 
-				//0より小さくなったら透明
-				if (worldPosition.y < 0.0f) {
+				//設定した地面の高さより小さくなったら透明
+				if (worldPosition.y < groundOffset_) {
 					//アルファはVector4でのwだね
 					instancingData_[numInstance_].color.w = 0.0f;
 
