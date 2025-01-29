@@ -14,8 +14,13 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 	worldTransform_.scale = {.x= 5.0f,.y= 5.0f,.z= 5.0f };
 
 
+	//名前の設定
+	name_ = "ToNormalEnemyAttack";
+
 	//種類
 	collisionType_ = ColliderType::SphereType;
+
+
 
 	//半径
 	radius_ = 5.0f;

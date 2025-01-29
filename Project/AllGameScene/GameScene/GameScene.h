@@ -269,10 +269,6 @@ private:
 	bool isTouchStrongEnemy_ = false;
 	
 #pragma region ゲーム中のUI
-
-	//UIManagerを作った方がよさそう
-	//ベタ書き過ぎるので
-
 	//UIを表示するかどうか
 	bool isDisplayUI_ = false;
 

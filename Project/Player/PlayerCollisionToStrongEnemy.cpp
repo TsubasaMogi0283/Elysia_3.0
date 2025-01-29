@@ -11,12 +11,13 @@ void PlayerCollisionToStrongEnemy::Initialize(){
 	//初期化
 	worldTransform_.Initialize();
 
+	//名前の設定
+	name_ = "ToStrongEnemy";
+
 	//種類
 	collisionType_ = ColliderType::SphereType;
-
 	//半径
 	radius_ = 2.0f;
-
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_PLAYER2);
 	//相手

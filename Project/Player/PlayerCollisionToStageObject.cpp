@@ -3,6 +3,11 @@
 #include <imgui.h>
 
 void PlayerCollisionToStageObject::Initialize(){
+	
+	//名前の設定
+	name_ = "ToStageObject";
+
+	//種類
 	collisionType_ = ColliderType::AABBType;
 
 	//自分

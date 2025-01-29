@@ -3,7 +3,10 @@
 #include <imgui.h>
 
 void PlayerCollisionToAudioObject::Initialize(){
-	//点の方が良いかも
+	//名前の設定
+	name_ = "ToAudioObject";
+
+	//種類
 	collisionType_ = ColliderType::PointType;
 
 	//自分
