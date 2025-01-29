@@ -104,7 +104,7 @@ void LoseScene::Initialize(){
 	isReturnTitle = false;
 }
 
-void LoseScene::Update(GameManager* gameManager){
+void LoseScene::Update(Ellysia::GameManager* gameManager){
 
 	//増える時間の値
 	const uint32_t INCREASE_VALUE = 1u;

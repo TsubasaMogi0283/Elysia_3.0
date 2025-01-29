@@ -3,7 +3,7 @@
 #include "GameSceneFactory.h"
 
 
-void GameManager::Initialize() {
+void Ellysia::GameManager::Initialize() {
 	
 	//シーンファクトリーの生成
 	abstractSceneFactory_ = std::make_unique<GameSceneFactory>();
@@ -12,7 +12,7 @@ void GameManager::Initialize() {
 	currentGamaScene_ = abstractSceneFactory_->CreateScene("Game");
 
 #ifdef _DEBUG
-	currentGamaScene_ = abstractSceneFactory_->CreateScene("Lose");
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Game");
 
 #endif // _DEBUG
 
@@ -24,7 +24,7 @@ void GameManager::Initialize() {
 
 
 
-void GameManager::ChangeScene(const std::string& sceneName){
+void Ellysia::GameManager::ChangeScene(const std::string& sceneName){
 	//新しいシーンに遷移するためにPreの所に入っていたものを入れる
 	preSceneName_ = currentSceneName_;
 	//現在入っているシーン名を更新
@@ -40,28 +40,28 @@ void GameManager::ChangeScene(const std::string& sceneName){
 	
 }
 
-void GameManager::Update() {
+void Ellysia::GameManager::Update() {
 	//更新
 	currentGamaScene_->Update(this);
 }
 
-void GameManager::DrawObject3D() {
+void Ellysia::GameManager::DrawObject3D() {
 	//3Dオブジェクトの描画
 	currentGamaScene_->DrawObject3D();
 }
 
-void GameManager::DrawSprite(){
+void Ellysia::GameManager::DrawSprite(){
 	//スプライトの描画
 	currentGamaScene_->DrawSprite();
 }
 
-void GameManager::PreDrawPostEffectFirst(){
+void Ellysia::GameManager::PreDrawPostEffectFirst(){
 	//ポストエフェクト描画処理前
 	currentGamaScene_->PreDrawPostEffectFirst();
 }
 
 
-void GameManager::DrawPostEffect(){
+void Ellysia::GameManager::DrawPostEffect(){
 	//ポストエフェクト描画前
 	currentGamaScene_->DrawPostEffect();
 }

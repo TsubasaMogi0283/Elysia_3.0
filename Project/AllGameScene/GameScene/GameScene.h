@@ -38,40 +38,37 @@
 #include "LevelDataManager.h"
 
 
-#pragma region 前方宣言
-
 /// <summary>
-/// ゲーム管理クラス
-/// </summary>
-class GameManager;
-
-/// <summary>
-/// テクスチャ管理クラス
-/// </summary>
-class TextureManager;
-
-/// <summary>
-/// モデル管理クラス
-/// </summary>
-class ModelManager;
-
-/// <summary>
-/// 入力クラス
-/// </summary>
-class Input;
-
-
-/// <summary>
-/// EllysiaEngine
+/// EllysiaEngine(前方宣言)
 /// </summary>
 namespace Ellysia {
 	/// <summary>
 	/// レベルエディタ
 	/// </summary>
 	class LevelDataManager;
-}
 
-#pragma endregion
+	/// <summary>
+	/// ゲーム管理クラス
+	/// </summary>
+	class GameManager;
+
+	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
+	class TextureManager;
+
+	/// <summary>
+	/// モデル管理クラス
+	/// </summary>
+	class ModelManager;
+
+	/// <summary>
+	/// 入力クラス
+	/// </summary>
+	class Input;
+
+
+}
 
 
 /// <summary>
@@ -94,7 +91,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gameManager"></param>
-	void Update(GameManager* gameManager)override;
+	void Update(Ellysia::GameManager* gameManager)override;
 
 	/// <summary>
 	/// 3Dオブジェクト

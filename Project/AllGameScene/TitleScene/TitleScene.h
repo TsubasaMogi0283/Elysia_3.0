@@ -21,15 +21,6 @@
 
 #pragma region 前方宣言
 
-/// <summary>
-/// ゲーム管理クラス
-/// </summary>
-class GameManager;
-
-/// <summary>
-/// テクスチャ管理クラス
-/// </summary>
-class TextureManager;
 
 /// <summary>
 /// EllysiaEngine
@@ -44,6 +35,17 @@ namespace Ellysia {
 	/// レベル管理クラス
 	/// </summary>
 	class LevelDataManager;
+	
+	/// <summary>
+	/// ゲーム管理クラス
+	/// </summary>
+	class GameManager;
+
+	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
+	class TextureManager;
+
 
 }
 
@@ -71,7 +73,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gameManager">ゲーム管理クラス</param>
-	void Update(GameManager* gameManager)override;
+	void Update(Ellysia::GameManager* gameManager)override;
 
 	/// <summary>
 	/// 3Dオブジェクト

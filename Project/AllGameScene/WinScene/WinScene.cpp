@@ -61,7 +61,7 @@ void WinScene::Initialize() {
 
 }
 
-void WinScene::Update(GameManager* gameManager){
+void WinScene::Update(Ellysia::GameManager* gameManager){
 
 	//増える時間の値
 	const uint32_t INCREASE_VALUE = 1u;

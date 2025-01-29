@@ -90,7 +90,7 @@ void TitleScene::Initialize(){
 	
 }
 
-void TitleScene::Update(GameManager* gameManager){
+void TitleScene::Update(Ellysia::GameManager* gameManager){
 
 #pragma region 未スタート
 

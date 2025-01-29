@@ -15,22 +15,11 @@
 #include "DissolveEffect.h"
 #include "Dissolve.h"
 
-//前方宣言
 
-/// <summary>
-/// ゲーム管理クラス
-/// </summary>
-class GameManager;
 
 
 /// <summary>
-/// モデル管理クラス
-/// </summary>
-class ModelManager;
-
-
-/// <summary>
-/// EllysiaEngine
+/// EllysiaEngine(前方宣言)
 /// </summary>
 namespace Ellysia {
 	/// <summary>
@@ -52,6 +41,18 @@ namespace Ellysia {
 	/// テクスチャ管理クラス
 	/// </summary>
 	class TextureManager;
+
+	/// <summary>
+	/// ゲーム管理クラス
+	/// </summary>
+	class GameManager;
+
+
+	/// <summary>
+	/// モデル管理クラス
+	/// </summary>
+	class ModelManager;
+
 
 };
 
@@ -76,7 +77,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gameManager"></param>
-	void Update(GameManager* gameManager)override;
+	void Update(Ellysia::GameManager* gameManager)override;
 
 
 	/// <summary>

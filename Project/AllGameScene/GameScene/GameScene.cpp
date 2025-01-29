@@ -652,7 +652,7 @@ void GameScene::PlayerMove(){
 }
 
 
-void GameScene::Update(GameManager* gameManager) {
+void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 	//フレーム初めに
 	//コリジョンリストのクリア

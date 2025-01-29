@@ -14,15 +14,11 @@
 #include "DirectionalLight.h"
 #include "BackTexture.h"
 
-#pragma region 前方宣言
+
+
 
 /// <summary>
-/// ゲーム管理クラス
-/// </summary>
-class GameManager;
-
-/// <summary>
-/// EllysiaEngine
+/// EllysiaEngine(前方宣言)
 /// </summary>
 namespace Ellysia {
 
@@ -35,12 +31,17 @@ namespace Ellysia {
 	/// レベルデータ管理クラス
 	/// </summary>
 	class LevelDataManager;
+
+
+	/// <summary>
+	/// ゲーム管理クラス
+	/// </summary>
+	class GameManager;
+
+
 }
 
 
-
-
-#pragma endregion
 
 /// <summary>
 /// 勝利シーン
@@ -61,7 +62,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gameManager"></param>
-	void Update(GameManager* gameManager)override;
+	void Update(Ellysia::GameManager* gameManager)override;
 
 	/// <summary>
 	/// ポストエフェクト描画処理前
