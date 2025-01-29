@@ -166,7 +166,7 @@ private:
 	std::unique_ptr<Sprite> text_ = nullptr;
 	
 	//背景
-	std::unique_ptr<Sprite> backGround_ = nullptr;
+	std::unique_ptr<Sprite> logo = nullptr;
 
 
 
