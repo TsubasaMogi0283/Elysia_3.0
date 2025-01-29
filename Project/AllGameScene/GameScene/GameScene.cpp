@@ -661,7 +661,6 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 	
 
-	//StatePatternにしたい
 	//フェードイン
 	if (isWhiteFadeIn==true) {
 		const float FADE_IN_INTERVAL = 0.01f;
@@ -678,7 +677,6 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	}
 
 	//ゲーム
-	//StatePatternにしたい
 	if (isWhiteFadeIn == false && isWhiteFadeOut_ == false) {
 		whiteFadeTransparency_ = PERFECT_TRANSPARENT_;
 		

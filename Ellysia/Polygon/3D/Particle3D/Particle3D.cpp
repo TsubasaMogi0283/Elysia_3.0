@@ -198,9 +198,6 @@ Particle Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
 	particle.lifeTime = distTime(randomEngine);
 	particle.currentTime = 0;
 
-	//見えるかどうか
-	//color.wが0になったらtrue
-	//particle.isInvisible = false;
 
 	return particle;
 
@@ -422,6 +419,7 @@ void Particle3D::Update(const Camera& camera) {
 				if (isToTransparent_ == true) {
 					//アルファはVector4でのwだね
 					float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
+					particleIterator->color.w = alpha;
 					instancingData_[numInstance_].color.w = alpha;
 				}
 
@@ -442,15 +440,14 @@ void Particle3D::Update(const Camera& camera) {
 
 
 	//全て見えなくなったらisAllInvisible_がtrueになる
-	if (isReleaseOnceMode_ == true) {
+	if (isReeasedOnce_ == true) {
 		
 		//all_ofは中にある全ての要素が満たす時にtrueを返す
 		//今回の場合はparticles_にあるisInvisibleが全てtrueに鳴ったらtrueを返すという仕組みになっている
 		isAllInvisible_ = std::all_of(particles_.begin(), particles_.end(), [](const Particle& particle) {
 			return particle.isInvisible == true;
 		});
-
-
+		
 
 
 #ifdef _DEBUG
@@ -459,11 +456,6 @@ void Particle3D::Update(const Camera& camera) {
 		ImGui::End();
 #endif // _DEBUG
 	}
-
-
-
-
-	
 }
 
 void Particle3D::Draw(const Camera& camera,const Material& material){
