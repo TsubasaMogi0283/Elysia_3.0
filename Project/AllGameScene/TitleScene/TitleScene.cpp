@@ -84,7 +84,7 @@ void TitleScene::Initialize(){
 	baseTitleBackTexture_->Initialize();
 
 	//ランダムエフェクトの生成
-	randomEffect_ = std::make_unique<RandomEffect>();
+	randomEffect_ = std::make_unique<Ellysia::RandomEffect>();
 	//初期化
 	randomEffect_->Initialize();
 	

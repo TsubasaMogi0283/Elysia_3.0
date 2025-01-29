@@ -177,7 +177,7 @@ private:
 
 
 	//ランダムノイズ
-	std::unique_ptr<RandomEffect> randomEffect_ = nullptr;
+	std::unique_ptr<Ellysia::RandomEffect> randomEffect_ = nullptr;
 	float randomEffectTime_ = 0u;
 	bool isDisplayRandomEffect_ = false;
 	bool isEndDisplayRandomEffect_ = false;
