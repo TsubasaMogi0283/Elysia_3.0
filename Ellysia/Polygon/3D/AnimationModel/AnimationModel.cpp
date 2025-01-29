@@ -28,7 +28,7 @@ AnimationModel::AnimationModel(){
 	//テクスチャ管理クラスを取得
 	textureManager_ = Ellysia::TextureManager::GetInstance();
 	//モデル管理クラスを取得
-	modelManager_ = ModelManager::GetInstance();
+	modelManager_ = Ellysia::ModelManager::GetInstance();
 
 }
 
@@ -37,7 +37,7 @@ AnimationModel* AnimationModel::Create(const uint32_t& modelHandle){
 	AnimationModel* model = new AnimationModel();
 
 	//テクスチャの読み込み
-	model->textureHandle_ = model->textureManager_->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
+	model->textureHandle_ = model->textureManager_->LoadTexture(Ellysia::ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
 	//Drawでも使いたいので取り入れる
 	model->modelHandle_ = modelHandle;
 
@@ -46,7 +46,7 @@ AnimationModel* AnimationModel::Create(const uint32_t& modelHandle){
 
 	//頂点
 	//リソースを作る
-	model->vertexResource_ = model->directXSetup_->CreateBufferResource(sizeof(VertexData) * ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size()).Get(); 
+	model->vertexResource_ = model->directXSetup_->CreateBufferResource(sizeof(VertexData) * Ellysia::ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size()).Get(); 
 	//リソースの先頭のアドレスから使う
 	model->vertexBufferView_.BufferLocation = model->vertexResource_->GetGPUVirtualAddress();
 	//使用するリソースは頂点のサイズ
@@ -56,7 +56,7 @@ AnimationModel* AnimationModel::Create(const uint32_t& modelHandle){
 
 	//インデックス
 	//ソースの作成
-	model->indexResource_ = model->directXSetup_->CreateBufferResource(sizeof(uint32_t) * ModelManager::GetInstance()->GetModelData(modelHandle).indices.size()).Get();
+	model->indexResource_ = model->directXSetup_->CreateBufferResource(sizeof(uint32_t) * Ellysia::ModelManager::GetInstance()->GetModelData(modelHandle).indices.size()).Get();
 	//リソースの先頭のアドレスから使う
 	model->indexBufferView_.BufferLocation = model->indexResource_->GetGPUVirtualAddress();
 	//サイズ

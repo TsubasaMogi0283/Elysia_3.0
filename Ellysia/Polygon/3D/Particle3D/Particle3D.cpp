@@ -19,7 +19,7 @@
 
 Particle3D::Particle3D() {
 	//モデル管理クラスの取得
-	modelManager_ = ModelManager::GetInstance();
+	modelManager_ = Ellysia::ModelManager::GetInstance();
 
 	//テクスチャ管理クラスの取得
 	textureManager_ = Ellysia::TextureManager::GetInstance();
@@ -63,6 +63,7 @@ Particle3D* Particle3D::Create(const uint32_t& moveType){
 	particle3D->moveType_ = moveType;
 
 	//頂点リソースを作る
+	particle3D->vertices_ = particle3D->modelManager_->GetModelData(modelHandle).vertices;
 	particle3D->vertices_ = particle3D->modelManager_->GetModelData(modelHandle).vertices;
 	particle3D->vertexResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(VertexData) * particle3D->vertices_.size());
 

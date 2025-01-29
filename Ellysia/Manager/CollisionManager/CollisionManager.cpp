@@ -4,20 +4,20 @@
 #include "AABB.h"
 #include <CollisionCalculation.h>
 
-void CollisionManager::RegisterList(Collider* collider){
+void Ellysia::CollisionManager::RegisterList(Collider* collider) {
 	//引数から登録
 	colliders_.push_back(collider);
 }
 
 
-void CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* colliderB) {
+void Ellysia::CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* colliderB) {
 
 	//コライダーAのワールド座標を取得
 	Vector3 colliderPositionA = colliderA->GetWorldPosition();
-	
+
 	//コライダーBのワールド座標を取得
 	Vector3 colliderPositionB = colliderB->GetWorldPosition();
-	
+
 	//衝突フィルタリング
 	//ビット演算だから&で
 	//当たらないなら計算する必要はないのでreturn
@@ -35,10 +35,10 @@ void CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* c
 	Vector3 difference = VectorCalculation::Subtract(colliderPositionA, colliderPositionB);
 
 	//距離を計算
-	float distance = sqrtf((difference.x * difference.x) + 
-		(difference.y * difference.y) + 
+	float distance = sqrtf((difference.x * difference.x) +
+		(difference.y * difference.y) +
 		(difference.z * difference.z));
-	
+
 	//当たった時
 	if (distance <= colliderA->GetRadius() + colliderB->GetRadius()) {
 		colliderA->OnCollision();
@@ -53,7 +53,7 @@ void CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Collider* c
 
 }
 
-void CollisionManager::CheckAABBCollisionPair(Collider* colliderA, Collider* colliderB){
+void Ellysia::CollisionManager::CheckAABBCollisionPair(Collider* colliderA, Collider* colliderB) {
 
 	//衝突フィルタリング
 	//ビット演算だから&で
@@ -83,7 +83,7 @@ void CollisionManager::CheckAABBCollisionPair(Collider* colliderA, Collider* col
 
 
 
-void CollisionManager::CheckFanAndPoint(Collider* colliderA, Collider* colliderB){
+void Ellysia::CollisionManager::CheckFanAndPoint(Collider* colliderA, Collider* colliderB) {
 
 	//衝突フィルタリング
 	//ビット演算だから&で
@@ -93,7 +93,7 @@ void CollisionManager::CheckFanAndPoint(Collider* colliderA, Collider* colliderB
 		return;
 	}
 
-	
+
 	if (colliderA->GetCollisionType() == ColliderType::PointType) {
 		//衝突判定の計算
 		if (CollisionCalculation::IsFanCollision(colliderB->GetFan3D(), colliderA->GetWorldPosition()) == true) {
@@ -118,11 +118,11 @@ void CollisionManager::CheckFanAndPoint(Collider* colliderA, Collider* colliderB
 	}
 
 
-	
+
 
 }
 
-void CollisionManager::CheckPlaneAndPoint(Collider* colliderA, Collider* colliderB){
+void Ellysia::CollisionManager::CheckPlaneAndPoint(Collider* colliderA, Collider* colliderB) {
 
 
 	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
@@ -133,7 +133,7 @@ void CollisionManager::CheckPlaneAndPoint(Collider* colliderA, Collider* collide
 
 	if (colliderA->GetCollisionType() == ColliderType::PointType) {
 		//衝突判定の計算
-		if (CollisionCalculation::IsCollisionPlaneAndPoint(colliderA->GetWorldPosition(), colliderB->GetPlane())==true) {
+		if (CollisionCalculation::IsCollisionPlaneAndPoint(colliderA->GetWorldPosition(), colliderB->GetPlane()) == true) {
 			colliderA->OnCollision();
 			colliderB->OnCollision();
 		}
@@ -144,7 +144,7 @@ void CollisionManager::CheckPlaneAndPoint(Collider* colliderA, Collider* collide
 	}
 	else if (colliderA->GetCollisionType() == ColliderType::PlaneType) {
 		//衝突判定の計算
-		if (CollisionCalculation::IsCollisionPlaneAndPoint(colliderB->GetWorldPosition(), colliderA->GetPlane())==true) {
+		if (CollisionCalculation::IsCollisionPlaneAndPoint(colliderB->GetWorldPosition(), colliderA->GetPlane()) == true) {
 			colliderA->OnCollision();
 			colliderB->OnCollision();
 		}
@@ -154,17 +154,17 @@ void CollisionManager::CheckPlaneAndPoint(Collider* colliderA, Collider* collide
 		}
 
 	}
-	
+
 }
 
 
-void CollisionManager::CheckAllCollision(){
+void Ellysia::CollisionManager::CheckAllCollision() {
 
 
 	//総当たりの判定
 	std::list<Collider*>::iterator itrA = colliders_.begin();
 	for (; itrA != colliders_.end(); ++itrA) {
-		
+
 		//itrAの*は「参照」
 		//itrAを全通りcolliderAに登録しているよ
 		Collider* colliderA = *itrA;
@@ -175,6 +175,10 @@ void CollisionManager::CheckAllCollision(){
 
 		for (; itrB != colliders_.end(); ++itrB) {
 			Collider* colliderB = *itrB;
+
+			if (colliderB == nullptr) {
+				continue;
+			}
 
 			//球同士
 			if (colliderA->GetCollisionType() == ColliderType::SphereType &&
@@ -189,22 +193,20 @@ void CollisionManager::CheckAllCollision(){
 			}
 
 			//扇と点
-			if ((colliderA->GetCollisionType() == ColliderType::FanType && colliderB->GetCollisionType() == ColliderType::PointType)||
+			if ((colliderA->GetCollisionType() == ColliderType::FanType && colliderB->GetCollisionType() == ColliderType::PointType) ||
 				(colliderA->GetCollisionType() == ColliderType::PointType && colliderB->GetCollisionType() == ColliderType::FanType)) {
 				CheckFanAndPoint(colliderA, colliderB);
 			}
 			//平面と点
-			if ((colliderA->GetCollisionType() == ColliderType::PointType && colliderB->GetCollisionType() == ColliderType::PlaneType)||
+			if ((colliderA->GetCollisionType() == ColliderType::PointType && colliderB->GetCollisionType() == ColliderType::PlaneType) ||
 				(colliderA->GetCollisionType() == ColliderType::PlaneType && colliderB->GetCollisionType() == ColliderType::PointType)) {
 				CheckPlaneAndPoint(colliderA, colliderB);
 			}
-
 		}
-
 	}
 }
 
 
-void CollisionManager::ClearList(){
+void Ellysia::CollisionManager::ClearList() {
 	colliders_.clear();
 }

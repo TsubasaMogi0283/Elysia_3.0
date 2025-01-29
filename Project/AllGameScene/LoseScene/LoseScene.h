@@ -127,7 +127,7 @@ private:
 	uint32_t levelDataHandle_ = 0u;
 
 	//モデル管理クラス
-	ModelManager* modelManager_ = nullptr;
+	Ellysia::ModelManager* modelManager_ = nullptr;
 	//グローバル変数クラス
 	Ellysia::GlobalVariables* globalVariables_ = nullptr;
 	

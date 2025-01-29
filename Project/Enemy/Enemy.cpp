@@ -12,7 +12,7 @@
 void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed){
 	
 	//モデルの生成
-	model_.reset(Model::Create(modelHandle));
+	model_.reset(Ellysia::Model::Create(modelHandle));
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -61,7 +61,7 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 
 
 	//デバッグ用のモデル
-	debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	debugModelHandle = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
 
 	//攻撃の当たり判定
 	attackCollision_ = std::make_unique<EnemyAttackCollision>();

@@ -20,7 +20,7 @@ InstancingModel::InstancingModel() {
 	//テクスチャ管理クラスの取得
 	textureManager_ = Ellysia::TextureManager::GetInstance();
 	//モデル管理クラスの取得
-	modelmanager_ = ModelManager::GetInstance();
+	modelmanager_ = Ellysia::ModelManager::GetInstance();
 	//DirectXクラスの取得
 	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
 	//パイプライン管理クラスの取得

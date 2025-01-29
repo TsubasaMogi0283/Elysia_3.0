@@ -13,15 +13,15 @@
 
 static uint32_t modelhandle;
 
-ModelManager* ModelManager::GetInstance() {
+Ellysia::ModelManager* Ellysia::ModelManager::GetInstance() {
 	//関数内static変数として宣言する
-	static ModelManager instance;
+	static Ellysia::ModelManager instance;
 	return &instance;
 }
 
 #pragma region レベルエディタ用
 
-ModelData ModelManager::LoadFileForLeveldata(const std::string& fileNameFolder, const std::string& fileName) {
+ModelData Ellysia::ModelManager::LoadFileForLeveldata(const std::string& fileNameFolder, const std::string& fileName) {
 	ModelData modelData;
 
 
@@ -129,21 +129,21 @@ ModelData ModelManager::LoadFileForLeveldata(const std::string& fileNameFolder, 
 	return modelData;
 }
 
-uint32_t ModelManager::LoadModelFileForLevelData(const std::string& directoryPath, const std::string& fileName) {
-	
+uint32_t Ellysia::ModelManager::LoadModelFileForLevelData(const std::string& directoryPath, const std::string& fileName) {
+
 
 	//一度読み込んだものはその値を返す
 	//新規は勿論読み込みをする
 	//Resources\LevelData\Test\Ground\Ground.obj"
 	std::string filePath = directoryPath + "/" + fileName + "/" + fileName;
-	if (ModelManager::GetInstance()->modelInfromtion_.find(filePath) != ModelManager::GetInstance()->modelInfromtion_.end()) {
-		return ModelManager::GetInstance()->modelInfromtion_[filePath].handle;
+	if (Ellysia::ModelManager::GetInstance()->modelInfromtion_.find(filePath) != Ellysia::ModelManager::GetInstance()->modelInfromtion_.end()) {
+		return Ellysia::ModelManager::GetInstance()->modelInfromtion_[filePath].handle;
 	}
 
 	modelhandle++;
 
 	//モデルの読み込み
-	ModelData newModelData = ModelManager::GetInstance()->LoadFileForLeveldata(directoryPath, fileName);
+	ModelData newModelData = Ellysia::ModelManager::GetInstance()->LoadFileForLeveldata(directoryPath, fileName);
 	//ハンドル
 	uint32_t handle = modelhandle;
 	//パス
@@ -161,7 +161,7 @@ uint32_t ModelManager::LoadModelFileForLevelData(const std::string& directoryPat
 	};
 
 	//登録
-	ModelManager::GetInstance()->modelInfromtion_[filePath] = modelInformation;
+	Ellysia::ModelManager::GetInstance()->modelInfromtion_[filePath] = modelInformation;
 
 	//値を返す
 	return modelhandle;
@@ -172,7 +172,7 @@ uint32_t ModelManager::LoadModelFileForLevelData(const std::string& directoryPat
 
 #pragma region 通常
 
-ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::string& fileName) {
+ModelData Ellysia::ModelManager::LoadFile(const std::string& directoryPath, const std::string& fileName) {
 	//1.中で必要となる変数の宣言
 	ModelData modelData;
 	//assimpでモデルを読む
@@ -245,7 +245,7 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			Matrix4x4 translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(translateAfter);
 
 
-			
+
 			Matrix4x4 bindPoseMatrix = Matrix4x4Calculation::Multiply(scaleMatrix, Matrix4x4Calculation::Multiply(rotateMatrix, translateMatrix));
 			jointWeightData.inverseBindPoseMatrix = Matrix4x4Calculation::Inverse(bindPoseMatrix);
 
@@ -277,19 +277,19 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 	return modelData;
 }
 
-uint32_t ModelManager::LoadModelFile(const std::string& directoryPath, const std::string& fileName) {
+uint32_t Ellysia::ModelManager::LoadModelFile(const std::string& directoryPath, const std::string& fileName) {
 
 	//一度読み込んだものはその値を返す
 	//新規は勿論読み込みをする
 	std::string filePath = directoryPath + "/" + fileName;
-	if (ModelManager::GetInstance()->modelInfromtion_.find(filePath) != ModelManager::GetInstance()->modelInfromtion_.end()) {
-		return ModelManager::GetInstance()->modelInfromtion_[filePath].handle;
+	if (Ellysia::ModelManager::GetInstance()->modelInfromtion_.find(filePath) != Ellysia::ModelManager::GetInstance()->modelInfromtion_.end()) {
+		return Ellysia::ModelManager::GetInstance()->modelInfromtion_[filePath].handle;
 	}
 
 	modelhandle++;
 
 	//モデルの読み込み
-	ModelData newModelData = ModelManager::GetInstance()->LoadFile(directoryPath, fileName);
+	ModelData newModelData = Ellysia::ModelManager::GetInstance()->LoadFile(directoryPath, fileName);
 	//ハンドル
 	uint32_t handle = modelhandle;
 	//パス
@@ -298,33 +298,32 @@ uint32_t ModelManager::LoadModelFile(const std::string& directoryPath, const std
 	std::string name = fileName;
 
 	//新しいデータを入力
-	ModelInformation modelInformation = { 
+	ModelInformation modelInformation = {
 		.modelData = newModelData ,
-		.animationData = {}, 
-		.handle = handle, 
-		.filePath = path, 
-		.folderName = name 
+		.animationData = {},
+		.handle = handle,
+		.filePath = path,
+		.folderName = name
 	};
 
 	//登録
-	ModelManager::GetInstance()->modelInfromtion_[filePath] = modelInformation;
+	Ellysia::ModelManager::GetInstance()->modelInfromtion_[filePath] = modelInformation;
 
 	//値を返す
 	return modelhandle;
 }
 
-uint32_t ModelManager::LoadModelFile(const std::string& directoryPath, const std::string& fileName, bool isAnimationLoad) {
+uint32_t Ellysia::ModelManager::LoadModelFile(const std::string& directoryPath, const std::string& fileName, bool isAnimationLoad) {
 	//一度読み込んだものはその値を返す
 	//新規は勿論読み込みをする
 	std::string filePath = directoryPath + "/" + fileName;
 
-	// Check if the model is already loaded
-	if (ModelManager::GetInstance()->modelInfromtion_.find(filePath) != ModelManager::GetInstance()->modelInfromtion_.end()) {
-		return ModelManager::GetInstance()->modelInfromtion_[filePath].handle;
+	if (Ellysia::ModelManager::GetInstance()->modelInfromtion_.find(filePath) != ModelManager::GetInstance()->modelInfromtion_.end()) {
+		return Ellysia::ModelManager::GetInstance()->modelInfromtion_[filePath].handle;
 	}
 
 
-	
+	//ハンドルを増やす
 	modelhandle++;
 
 
@@ -334,7 +333,7 @@ uint32_t ModelManager::LoadModelFile(const std::string& directoryPath, const std
 		newAnimation = LoadAnimationFile(directoryPath, fileName);
 
 	}
-	
+
 	//モデルの読み込み
 	ModelData newModelData = ModelManager::GetInstance()->LoadFile(directoryPath, fileName);
 	//ハンドル

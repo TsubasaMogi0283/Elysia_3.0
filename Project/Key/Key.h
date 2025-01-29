@@ -116,7 +116,7 @@ private:
 
 private:
 	//モデル
-	std::unique_ptr<Model> model_ = nullptr;
+	std::unique_ptr<Ellysia::Model> model_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 	//マテリアル

@@ -22,7 +22,7 @@ LoseScene::LoseScene(){
 	//レベルデータ管理クラス
 	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 	//モデル管理クラス
-	modelManager_ = ModelManager::GetInstance();
+	modelManager_ = Ellysia::ModelManager::GetInstance();
 	//グローバル変数クラス
 	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
 }

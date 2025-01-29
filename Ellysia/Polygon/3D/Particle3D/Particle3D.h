@@ -41,10 +41,6 @@ struct PointLight;
 /// </summary>
 struct SpotLight;
 
-/// <summary>
-/// モデル管理クラス
-/// </summary>
-class ModelManager;
 
 
 
@@ -68,9 +64,15 @@ namespace Ellysia {
 	class PipelineManager;
 
 	/// <summary>
-/// テクスチャ管理クラス
-/// </summary>
+	/// テクスチャ管理クラス
+	/// </summary>
 	class TextureManager;
+
+	/// <summary>
+	/// モデル管理クラス
+	/// </summary>
+	class ModelManager;
+
 };
 
 #pragma endregion
@@ -276,17 +278,13 @@ public:
 private:
 
 	//モデル管理クラス
-	ModelManager* modelManager_ = nullptr;
-
+	Ellysia::ModelManager* modelManager_ = nullptr;
 	//テクスチャ管理クラス
 	Ellysia::TextureManager* textureManager_ = nullptr;
-
 	//DirectXクラス
 	Ellysia::DirectXSetup* directXSetup_ = nullptr;
-
 	//SRV管理クラス
 	Ellysia::SrvManager* srvManager_ = nullptr;
-
 	//パイプライン管理クラス
 	Ellysia::PipelineManager* pipelineManager_ = nullptr;
 

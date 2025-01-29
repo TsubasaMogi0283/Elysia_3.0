@@ -3,7 +3,7 @@
 
 void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 	//モデルの生成
-	model_.reset(Model::Create(modelhandle));
+	model_.reset(Ellysia::Model::Create(modelhandle));
 	
 	//スケールのサイズ
 	const float SCALE = 0.4f;

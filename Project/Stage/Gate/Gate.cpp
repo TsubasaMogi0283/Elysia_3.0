@@ -2,8 +2,7 @@
 
 void Gate::Initialize(const uint32_t& modelHandle){
 	//モデル
-	model_ = std::make_unique<Model>();
-	model_.reset(Model::Create(modelHandle));
+	model_.reset(Ellysia::Model::Create(modelHandle));
 
 	//マテリアルの初期化
 	material_.Initialize();

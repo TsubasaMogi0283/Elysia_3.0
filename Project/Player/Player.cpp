@@ -15,14 +15,14 @@ Player::Player(){
 	//入力クラスの取得
 	input_ = Ellysia::Input::GetInstance();
 	//モデル管理クラス
-	modelManager_ = ModelManager::GetInstance();
+	modelManager_ = Ellysia::ModelManager::GetInstance();
 }
 
 void Player::Initialize(){
 
 	//モデルの生成 	
 	uint32_t modelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
-	model_.reset(Model::Create(modelHandle));
+	model_.reset(Ellysia::Model::Create(modelHandle));
 
 	//初期はコントロールできない
 	isControll_ = false;

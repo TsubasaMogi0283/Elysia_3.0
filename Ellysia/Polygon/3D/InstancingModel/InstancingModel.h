@@ -55,10 +55,7 @@ struct SpotLight;
 
 
 
-/// <summary>
-/// モデル管理クラス
-/// </summary>
-class ModelManager;
+
 
 /// <summary>
 /// EllysiaEngine
@@ -77,10 +74,14 @@ namespace Ellysia {
 	class SrvManager;
 
 	/// <summary>
-/// テクスチャ管理クラス
-/// </summary>
+	/// テクスチャ管理クラス
+	/// </summary>
 	class TextureManager;
 
+	/// <summary>
+	/// モデル管理クラス
+	/// </summary>
+	class ModelManager;
 };
 
 
@@ -158,7 +159,7 @@ private:
 	//テクスチャ管理クラス
 	Ellysia::TextureManager* textureManager_ = nullptr;
 	//モデル管理クラス
-	ModelManager* modelmanager_ = nullptr;
+	Ellysia::ModelManager* modelmanager_ = nullptr;
 	//パイプライン管理クラス
 	Ellysia::PipelineManager* pipelineManager_ = nullptr;
 	//SRV管理クラス

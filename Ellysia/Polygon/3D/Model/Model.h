@@ -17,16 +17,11 @@
 
 #pragma region 前方宣言
 
-/// <summary>
-/// モデル管理クラス
-/// </summary>
-class ModelManager;
 
 
-
-/// <summary>
-/// ワールドトランスフォーム
-/// </summary>
+ /// <summary>
+ /// ワールドトランスフォーム
+ /// </summary>
 struct WorldTransform;
 
 /// <summary>
@@ -65,7 +60,7 @@ struct SpotLight;
 /// <summary>
 /// EllysiaEngine
 /// </summary>
-namespace Ellysia{
+namespace Ellysia {
 
 	/// <summary>
 	/// DirectXクラス
@@ -87,118 +82,115 @@ namespace Ellysia{
 	/// </summary>
 	class TextureManager;
 
-
-};
-
-/// <summary>
-/// モデル
-/// </summary>
-class Model {
-public:
-
 	/// <summary>
-	/// コンストラクタ
+	/// モデル管理クラス
 	/// </summary>
-	Model();
-
-	/// <summary>
-	/// 生成
-	/// </summary>
-	/// <param name="modelHandle">モデルハンドル</param>
-	/// <returns></returns>
-	static Model* Create(const uint32_t& modelHandle);
-
-	#pragma region 描画
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	/// <param name="worldTransform">ワールドトランスフォーム</param>
-	/// <param name="camera">カメラ</param>
-	/// <param name="directionalLight">平行光源</param>
-	void Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const DirectionalLight& directionalLight);
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	/// <param name="worldTransform"></param>
-	/// <param name="camera"></param>
-	/// <param name="pointLight"></param>
-	void Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const PointLight& pointLight);
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	/// <param name="worldTransform"></param>
-	/// <param name="camera"></param>
-	/// <param name="spotLight"></param>
-	void Draw(const WorldTransform& worldTransform,const Camera& camera,const Material& material,const SpotLight& spotLight);
-
-#pragma endregion
-
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~Model() = default;
-
-
-public:
+	class ModelManager;
 
 
 	/// <summary>
-	/// 環境マップテクスチャの設定
+	/// モデル
 	/// </summary>
-	/// <param name="textureHandle"></param>
-	void SetEviromentTexture(const uint32_t& textureHandle) {
-		this->eviromentTextureHandle_ = textureHandle;
-	}
+	class Model {
+	public:
+
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		Model();
+
+		/// <summary>
+		/// 生成
+		/// </summary>
+		/// <param name="modelHandle">モデルハンドル</param>
+		/// <returns></returns>
+		static Model* Create(const uint32_t& modelHandle);
+
+		/// <summary>
+		/// 描画
+		/// </summary>
+		/// <param name="worldTransform">ワールドトランスフォーム</param>
+		/// <param name="camera">カメラ</param>
+		/// <param name="directionalLight">平行光源</param>
+		void Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const DirectionalLight& directionalLight);
+
+		/// <summary>
+		/// 描画
+		/// </summary>
+		/// <param name="worldTransform"></param>
+		/// <param name="camera"></param>
+		/// <param name="pointLight"></param>
+		void Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const PointLight& pointLight);
+
+		/// <summary>
+		/// 描画
+		/// </summary>
+		/// <param name="worldTransform"></param>
+		/// <param name="camera"></param>
+		/// <param name="spotLight"></param>
+		void Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const SpotLight& spotLight);
+
+
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~Model() = default;
+
+
+	public:
+
+
+		/// <summary>
+		/// 環境マップテクスチャの設定
+		/// </summary>
+		/// <param name="textureHandle"></param>
+		void SetEviromentTexture(const uint32_t& textureHandle) {
+			this->eviromentTextureHandle_ = textureHandle;
+		}
 
 
 
-private:
-	//DirectXクラス
-	Ellysia::DirectXSetup* directXSetup_ = nullptr;
+	private:
+		//DirectXクラス
+		Ellysia::DirectXSetup* directXSetup_ = nullptr;
+		//テクスチャ管理クラス
+		Ellysia::TextureManager* textureManager_ = nullptr;
+		//モデル管理クラス
+		Ellysia::ModelManager* modelmanager_ = nullptr;
+		//パイプライン管理クラス
+		Ellysia::PipelineManager* pipelineManager_ = nullptr;
+		//SRV管理クラス
+		Ellysia::SrvManager* srvManager_ = nullptr;
 
-	//テクスチャ管理クラス
-	Ellysia::TextureManager* textureManager_ = nullptr;
+	private:
+		//頂点リソース
+		ComPtr<ID3D12Resource> vertexResource_ = nullptr;
+		//頂点バッファビュー
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 
-	//モデル管理クラス
-	ModelManager* modelmanager_ = nullptr;
-	
-	//パイプライン管理クラス
-	Ellysia::PipelineManager* pipelineManager_ = nullptr;
-
-	//SRV管理クラス
-	Ellysia::SrvManager* srvManager_ = nullptr;
-
-private:
-	//頂点リソース
-	ComPtr<ID3D12Resource> vertexResource_ = nullptr;
-	//頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
-
-	//インデックスリソース
-	ComPtr<ID3D12Resource> indexResource_ = nullptr;
-	//インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
+		//インデックスリソース
+		ComPtr<ID3D12Resource> indexResource_ = nullptr;
+		//インデックスバッファビュー
+		D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
 
-	//カメラリソース
-	ComPtr<ID3D12Resource> cameraResource_ = nullptr;
-	//PixelShaderにカメラの座標を送る為の変数
-	CameraForGPU* cameraForGPU_ = {};
+		//カメラリソース
+		ComPtr<ID3D12Resource> cameraResource_ = nullptr;
+		//PixelShaderにカメラの座標を送る為の変数
+		CameraForGPU* cameraForGPU_ = {};
 
 
-	//テクスチャハンドル
-	uint32_t textureHandle_ = 0u;
+		//テクスチャハンドル
+		uint32_t textureHandle_ = 0u;
 
-	//環境マップ
-	uint32_t eviromentTextureHandle_ = 0;
+		//環境マップ
+		uint32_t eviromentTextureHandle_ = 0;
 
-	//モデルハンドル
-	ModelData modelData_ = {};
+		//モデルハンドル
+		ModelData modelData_ = {};
 
 
 
 
-};
+	};
+}

@@ -75,20 +75,21 @@ namespace Ellysia {
 	class SrvManager;
 
 	/// <summary>
-/// テクスチャ管理クラス
-/// </summary>
+	/// テクスチャ管理クラス
+	/// </summary>
 	class TextureManager;
+
+	/// <summary>
+	/// モデル管理クラス
+	/// </summary>
+	class ModelManager;
+
 
 };
 
 #pragma endregion
 
 
-
-/// <summary>
-/// モデル管理クラス
-/// </summary>
-class ModelManager;
 
 
 
@@ -167,7 +168,7 @@ private:
 	//テクスチャ管理クラス
 	Ellysia::TextureManager* textureManager_ = nullptr;
 	//モデル管理クラス
-	ModelManager* modelManager_ = nullptr;
+	Ellysia::ModelManager* modelManager_ = nullptr;
 
 
 

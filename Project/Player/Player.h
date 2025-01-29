@@ -298,7 +298,7 @@ public:
 private:
 
 	//モデル
-	std::unique_ptr<Model> model_ = nullptr;
+	std::unique_ptr<Ellysia::Model> model_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_={};
 	//マテリアル
@@ -354,7 +354,7 @@ private:
 	//入力クラス
 	Ellysia::Input* input_ = nullptr;
 	//モデル管理クラス
-	ModelManager* modelManager_ = nullptr;
+	Ellysia:: ModelManager* modelManager_ = nullptr;
 private:
 	//当たり判定のリスト
 	std::list<std::unique_ptr<BasePlayerCollision>> colliders_ = {};

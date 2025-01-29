@@ -174,7 +174,7 @@ private:
 	//テクスチャ管理クラス
 	Ellysia::TextureManager* texturemanager_ = nullptr;
 	//モデル管理クラス
-	ModelManager* modelManager_ = nullptr;
+	Ellysia::ModelManager* modelManager_ = nullptr;
 	//レベルエディタ
 	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
@@ -263,7 +263,7 @@ private:
 	float originPhi_ = 0.0f;
 
 	//コリジョン管理
-	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+	std::unique_ptr<Ellysia::CollisionManager> collisionManager_ = nullptr;
 
 	//強い敵と接触したかどうか
 	bool isTouchStrongEnemy_ = false;

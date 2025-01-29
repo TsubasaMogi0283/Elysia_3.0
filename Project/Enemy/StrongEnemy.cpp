@@ -11,7 +11,7 @@
 void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position,const Vector3& speed){
 
 	//モデル
-	model_.reset(Model::Create(modelHandle));
+	model_.reset(Ellysia::Model::Create(modelHandle));
 
 	//ワールドトランスフォーム
 	worldTransform_.Initialize();

@@ -5,8 +5,8 @@
 void PlayerCollisionToStrongEnemy::Initialize(){
 
 	//モデルの生成
-	uint32_t modelHandle= ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
-	model_.reset(Model::Create(modelHandle));
+	uint32_t modelHandle= Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	model_.reset(Ellysia::Model::Create(modelHandle));
 
 	//初期化
 	worldTransform_.Initialize();

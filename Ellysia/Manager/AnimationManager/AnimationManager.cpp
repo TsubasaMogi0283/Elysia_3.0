@@ -165,7 +165,7 @@ void AnimationManager::ApplyAnimation(Skeleton& skeleton, uint32_t animationHand
 
 
     Animation animationData = AnimationManager::GetInstance()->animationInfromtion_[animationHandle].animationData;
-    ModelData modelData = ModelManager::GetInstance()->GetModelData(modelHandle);
+    ModelData modelData = Ellysia::ModelManager::GetInstance()->GetModelData(modelHandle);
     for (Joint& joint : skeleton.joints) {
         //対象のJointのAnimationがあれば、値の適用を行う。下記のif文はC++17から可能になった
 

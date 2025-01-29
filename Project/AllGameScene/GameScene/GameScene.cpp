@@ -22,7 +22,7 @@ GameScene::GameScene(){
 	//テクスチャ管理クラス
 	texturemanager_ = Ellysia::TextureManager::GetInstance();
 	//モデル管理クラス
-	modelManager_ = ModelManager::GetInstance();
+	modelManager_ = Ellysia::ModelManager::GetInstance();
 	//レベルエディタ管理クラス
 	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 }
@@ -227,7 +227,7 @@ void GameScene::Initialize() {
 	
 	
 	//コリジョン管理クラスの生成
-	collisionManager_ = std::make_unique<CollisionManager>();
+	collisionManager_ = std::make_unique<Ellysia::CollisionManager>();
 	//角度の初期化
 	//プレイヤーの向いている向きと合わせていくよ
 	theta_ = std::numbers::pi_v<float> / 2.0f;
