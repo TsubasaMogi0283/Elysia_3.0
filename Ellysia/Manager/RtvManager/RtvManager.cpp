@@ -203,9 +203,10 @@ void Ellysia::RtvManager::Initialize(){
 
 	//RTVの設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;				//出力結果をSRGBに変換して書き込む
-	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;			//2dテクスチャとして書き込む
-	
+	//出力結果をSRGBに変換して書き込む
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;	
+	//2dテクスチャとして書き込む
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;			
 }
 
 

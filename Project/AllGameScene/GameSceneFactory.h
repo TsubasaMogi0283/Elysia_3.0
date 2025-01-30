@@ -19,7 +19,7 @@ public:
 	/// </summary>
 	/// <param name="sceneName">シーンの名前</param>
 	/// <returns>生成したシーン</returns>
-	std::unique_ptr<IGameScene> CreateScene(const std::string& sceneName)override;
+	std::unique_ptr<Ellysia::IGameScene> CreateScene(const std::string& sceneName)override;
 
 };
 
