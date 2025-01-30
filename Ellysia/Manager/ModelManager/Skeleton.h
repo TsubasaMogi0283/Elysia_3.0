@@ -18,8 +18,7 @@
 /// スケルトン
 /// </summary>
 struct Skeleton {
-#pragma region メンバ関数
-
+public:
 	/// <summary>
 	/// 生成
 	/// </summary>
@@ -32,16 +31,14 @@ struct Skeleton {
 	/// </summary>
 	void Update();
 
-#pragma endregion
 
-
-
+public:
 	//RootJointのIndex
-	int32_t root_;
+	int32_t root;
 	//Joint名とIndexとの辞書
-	std::map<std::string, int32_t>jointMap_;
+	std::map<std::string, int32_t>jointMap;
 	//所属しているジョイント
-	std::vector<Joint> joints_;
+	std::vector<Joint> joints;
 
 
 };

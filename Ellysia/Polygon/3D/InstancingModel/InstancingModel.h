@@ -54,15 +54,8 @@ struct PointLight;
 struct SpotLight;
 
 
-/// <summary>
-/// テクスチャ管理クラス
-/// </summary>
-class TextureManager;
 
-/// <summary>
-/// モデル管理クラス
-/// </summary>
-class ModelManager;
+
 
 /// <summary>
 /// EllysiaEngine
@@ -79,6 +72,16 @@ namespace Ellysia {
 	/// SRV管理クラス
 	/// </summary>
 	class SrvManager;
+
+	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
+	class TextureManager;
+
+	/// <summary>
+	/// モデル管理クラス
+	/// </summary>
+	class ModelManager;
 };
 
 
@@ -154,9 +157,9 @@ private:
 	//DirectXクラス
 	Ellysia::DirectXSetup* directXSetup_ = nullptr;
 	//テクスチャ管理クラス
-	TextureManager* textureManager_ = nullptr;
+	Ellysia::TextureManager* textureManager_ = nullptr;
 	//モデル管理クラス
-	ModelManager* modelmanager_ = nullptr;
+	Ellysia::ModelManager* modelmanager_ = nullptr;
 	//パイプライン管理クラス
 	Ellysia::PipelineManager* pipelineManager_ = nullptr;
 	//SRV管理クラス

@@ -19,10 +19,10 @@
 
 Particle3D::Particle3D() {
 	//モデル管理クラスの取得
-	modelManager_ = ModelManager::GetInstance();
+	modelManager_ = Ellysia::ModelManager::GetInstance();
 
 	//テクスチャ管理クラスの取得
-	textureManager_ = TextureManager::GetInstance();
+	textureManager_ = Ellysia::TextureManager::GetInstance();
 
 	//DirectXクラスの取得
 	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
@@ -40,18 +40,18 @@ Particle3D* Particle3D::Create(const uint32_t& moveType){
 	Particle3D* particle3D = new Particle3D();
 
 #pragma region デフォルトの設定 
-	particle3D->emitter_.count = 3;
+	particle3D->emitter_.count = 10;
 	//0.5秒ごとに発生
 	particle3D->emitter_.frequency = 0.0f;
 	//発生頻度用の時刻。0.0で初期化
 	particle3D->emitter_.frequencyTime = 0.0f;
 	//SRT
-	particle3D->emitter_.transform.scale = {.x = 10.0f,.y = 10.0f,.z = 10.0f };
+	particle3D->emitter_.transform.scale = {.x = 20.0f,.y = 20.0f,.z = 20.0f };
 	particle3D->emitter_.transform.rotate = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
 	particle3D->emitter_.transform.translate = { .x = 0.0f,.y = 0.0f,.z = 4.0f };
 
 	//モデルの読み込み
-	uint32_t modelHandle = particle3D->modelManager_->LoadModelFile("Resources/External/Model/Plane", "plane.obj");
+	uint32_t modelHandle = particle3D->modelManager_->LoadModelFile("Resources/Model/Particle","ParticlePlane.obj");
 
 	//テクスチャの読み込み
 	particle3D->textureHandle_ = particle3D->textureManager_->LoadTexture("Resources/External/Texture/Circle/circle.png");
@@ -63,6 +63,7 @@ Particle3D* Particle3D::Create(const uint32_t& moveType){
 	particle3D->moveType_ = moveType;
 
 	//頂点リソースを作る
+	particle3D->vertices_ = particle3D->modelManager_->GetModelData(modelHandle).vertices;
 	particle3D->vertices_ = particle3D->modelManager_->GetModelData(modelHandle).vertices;
 	particle3D->vertexResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(VertexData) * particle3D->vertices_.size());
 
@@ -175,7 +176,7 @@ Particle Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
 	Particle particle;
 	particle.transform.scale = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
 	particle.transform.rotate = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
-	Vector3 randomTranslate = {.x= distribute(randomEngine),.y= distribute(randomEngine),.z= distribute(randomEngine) };
+	Vector3 randomTranslate = {.x= distribute(randomEngine),.y= distribute(randomEngine)+1.0f,.z= distribute(randomEngine) };
 	particle.transform.translate = VectorCalculation::Add(emitter_.transform.translate, randomTranslate);
 	//投げ上げは少しだけ上にずらす
 	if (moveType_ == ThrowUp) {
@@ -197,9 +198,6 @@ Particle Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
 	particle.lifeTime = distTime(randomEngine);
 	particle.currentTime = 0;
 
-	//見えるかどうか
-	//color.wが0になったらtrue
-	//particle.isInvisible = false;
 
 	return particle;
 
@@ -245,8 +243,6 @@ void Particle3D::Update(const Camera& camera) {
 	}
 	
 	
-
-
 	//座標の計算など
 	numInstance_ = 0;
 	for (std::list<Particle>::iterator particleIterator = particles_.begin();
@@ -368,8 +364,8 @@ void Particle3D::Update(const Camera& camera) {
 					.z = worldMatrix.m[3][2]
 				};
 
-				//0より小さくなったら透明
-				if (worldPosition.y < 0.0f) {
+				//設定した地面の高さより小さくなったら透明
+				if (worldPosition.y < groundOffset_) {
 					//アルファはVector4でのwだね
 					instancingData_[numInstance_].color.w = 0.0f;
 
@@ -384,9 +380,9 @@ void Particle3D::Update(const Camera& camera) {
 		case Rise:
 			#pragma region 上昇
 			//強制的にビルボードにするよ
-			particleIterator->transform.translate.x += particleIterator->velocity.x / 3.0f;
-			particleIterator->transform.translate.y += 0.1f;
-			particleIterator->transform.translate.z += particleIterator->velocity.z / 3.0f;
+			particleIterator->transform.translate.x += particleIterator->velocity.x / 15.0f;
+			particleIterator->transform.translate.y += 0.03f;
+			particleIterator->transform.translate.z += particleIterator->velocity.z / 15.0f;
 			//Y軸でπ/2回転
 			//これからはM_PIじゃなくてstd::numbers::pi_vを使おうね
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
@@ -423,6 +419,7 @@ void Particle3D::Update(const Camera& camera) {
 				if (isToTransparent_ == true) {
 					//アルファはVector4でのwだね
 					float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
+					particleIterator->color.w = alpha;
 					instancingData_[numInstance_].color.w = alpha;
 				}
 
@@ -443,15 +440,14 @@ void Particle3D::Update(const Camera& camera) {
 
 
 	//全て見えなくなったらisAllInvisible_がtrueになる
-	if (isReleaseOnceMode_ == true) {
+	if (isReeasedOnce_ == true) {
 		
 		//all_ofは中にある全ての要素が満たす時にtrueを返す
 		//今回の場合はparticles_にあるisInvisibleが全てtrueに鳴ったらtrueを返すという仕組みになっている
 		isAllInvisible_ = std::all_of(particles_.begin(), particles_.end(), [](const Particle& particle) {
 			return particle.isInvisible == true;
 		});
-
-
+		
 
 
 #ifdef _DEBUG
@@ -460,14 +456,11 @@ void Particle3D::Update(const Camera& camera) {
 		ImGui::End();
 #endif // _DEBUG
 	}
-
-
-
-
-	
 }
 
-void Particle3D::Draw(const Camera& camera, Material& material){
+void Particle3D::Draw(const Camera& camera,const Material& material){
+
+	assert(material.lightingKinds_ == NoneLighting);
 
 	//更新
 	Update(camera);
@@ -492,9 +485,7 @@ void Particle3D::Draw(const Camera& camera, Material& material){
 
 	//CBVを設定する
 	//マテリアル
-	//強制的にNoneにして予想外のライトニングにならないようにする
-	material.lightingKinds_ = None;
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
@@ -520,7 +511,7 @@ void Particle3D::Draw(const Camera& camera, Material& material){
 void Particle3D::Draw(const Camera& camera,const  Material& material,const DirectionalLight& directionalLight) {
 
 	//Directionalではなかったらassert
-	if (material.lightingKinds_ != Directional) {
+	if (material.lightingKinds_ != DirectionalLighting) {
 		assert(0);
 	}
 
@@ -547,7 +538,7 @@ void Particle3D::Draw(const Camera& camera,const  Material& material,const Direc
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
@@ -573,7 +564,7 @@ void Particle3D::Draw(const Camera& camera,const  Material& material,const Direc
 
 void Particle3D::Draw(const Camera& camera, const Material& material, const PointLight& pointLight){
 	//Pointではなかったらassert
-	if (material.lightingKinds_ != Point) {
+	if (material.lightingKinds_ != PointLighting) {
 		assert(0);
 	}
 
@@ -599,7 +590,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Poin
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
@@ -625,7 +616,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Poin
 
 void Particle3D::Draw(const Camera& camera, const Material& material, const SpotLight& spotLight){
 	//Spotではなかったらassert
-	if (material.lightingKinds_ != Spot) {
+	if (material.lightingKinds_ != SpotLighting) {
 		assert(0);
 	}
 
@@ -652,7 +643,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Spot
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);

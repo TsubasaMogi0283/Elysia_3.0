@@ -131,12 +131,12 @@ private:
 		Left,
 	};
 	static const uint32_t SIDE_QUANTITY_ = 2;
-	std::unique_ptr<Model>model_[SIDE_QUANTITY_] = { nullptr };
+	std::unique_ptr<Ellysia::Model>model_[SIDE_QUANTITY_] = { nullptr };
 	WorldTransform worldTransform_[SIDE_QUANTITY_] = {};
 	Material material_ = {};
 
 	//中心
-	std::unique_ptr<Model>lightCenterModel_ = nullptr;
+	std::unique_ptr<Ellysia::Model>lightCenterModel_ = nullptr;
 	WorldTransform lightCenterWorldTransform_ = {};
 	Material lightCenterMaterial_ = {};
 

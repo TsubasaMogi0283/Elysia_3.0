@@ -5,13 +5,17 @@
  * @author 茂木翼
  */
 
-#include "BasedPlayerCollision.h"
+#include <memory>
+
+#include "BasePlayerCollision.h"
+#include "WorldTransform.h"
+#include "Model.h"
 
 
 /// <summary>
-/// ステージオブジェクトに対するCollision
+/// ステージオブジェクトに対するコリジョンクラス
 /// </summary>
-class PlayerCollisionToStageObject :public BasedPlayerCollision {
+class PlayerCollisionToStageObject :public BasePlayerCollision {
 public:
 
 	/// <summary>
@@ -22,31 +26,21 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize()override;
 
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update()override;
 
 
 	/// <summary>
-	/// 衝突
+	/// 描画
 	/// </summary>
-	void OnCollision()override;
-
-
-	/// <summary>
-	/// 非衝突
-	/// </summary>
-	void OffCollision()override;
-
-
-	/// <summary>
-	/// ワールド座標の取得
-	/// </summary>
-	/// <returns></returns>
-	Vector3 GetWorldPosition()override;
+	/// <param name="camera"></param>
+	/// <param name="material"></param>
+	/// <param name="spotLight"></param>
+	void Draw(const Camera& camera, const Material& material, const  SpotLight& spotLight)override;
 
 
 	/// <summary>
@@ -55,25 +49,12 @@ public:
 	~PlayerCollisionToStageObject() = default;
 
 
-public:
-
-	/// <summary>
-	/// ワールド座標を設定
-	/// </summary>
-	/// <param name="position"></param>
-	inline void SetPlayerPosition(const Vector3& position)override {
-		this->position_ = position;
-	}
-
-	
-
-
 private:
-	//位置
-	Vector3 position_ = {};
+	//モデル
+	std::unique_ptr<Ellysia::Model> model_ = nullptr;
+	//ワールドトランスフォーム
+	WorldTransform worldTransform_ = {};
 
-	//衝突
-	bool isTouch_ = false;
 
 };
 

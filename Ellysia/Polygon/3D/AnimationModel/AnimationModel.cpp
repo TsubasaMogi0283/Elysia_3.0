@@ -26,9 +26,9 @@ AnimationModel::AnimationModel(){
 	//SRV管理クラスを取得
 	srvManager_ = Ellysia::SrvManager::GetInstance();
 	//テクスチャ管理クラスを取得
-	textureManager_ = TextureManager::GetInstance();
+	textureManager_ = Ellysia::TextureManager::GetInstance();
 	//モデル管理クラスを取得
-	modelManager_ = ModelManager::GetInstance();
+	modelManager_ = Ellysia::ModelManager::GetInstance();
 
 }
 
@@ -37,7 +37,7 @@ AnimationModel* AnimationModel::Create(const uint32_t& modelHandle){
 	AnimationModel* model = new AnimationModel();
 
 	//テクスチャの読み込み
-	model->textureHandle_ = model->textureManager_->LoadTexture(ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
+	model->textureHandle_ = model->textureManager_->LoadTexture(Ellysia::ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
 	//Drawでも使いたいので取り入れる
 	model->modelHandle_ = modelHandle;
 
@@ -46,7 +46,7 @@ AnimationModel* AnimationModel::Create(const uint32_t& modelHandle){
 
 	//頂点
 	//リソースを作る
-	model->vertexResource_ = model->directXSetup_->CreateBufferResource(sizeof(VertexData) * ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size()).Get(); 
+	model->vertexResource_ = model->directXSetup_->CreateBufferResource(sizeof(VertexData) * Ellysia::ModelManager::GetInstance()->GetModelData(modelHandle).vertices.size()).Get(); 
 	//リソースの先頭のアドレスから使う
 	model->vertexBufferView_.BufferLocation = model->vertexResource_->GetGPUVirtualAddress();
 	//使用するリソースは頂点のサイズ
@@ -56,7 +56,7 @@ AnimationModel* AnimationModel::Create(const uint32_t& modelHandle){
 
 	//インデックス
 	//ソースの作成
-	model->indexResource_ = model->directXSetup_->CreateBufferResource(sizeof(uint32_t) * ModelManager::GetInstance()->GetModelData(modelHandle).indices.size()).Get();
+	model->indexResource_ = model->directXSetup_->CreateBufferResource(sizeof(uint32_t) * Ellysia::ModelManager::GetInstance()->GetModelData(modelHandle).indices.size()).Get();
 	//リソースの先頭のアドレスから使う
 	model->indexBufferView_.BufferLocation = model->indexResource_->GetGPUVirtualAddress();
 	//サイズ
@@ -74,7 +74,7 @@ AnimationModel* AnimationModel::Create(const uint32_t& modelHandle){
 
 void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const DirectionalLight& directionalLight){
 	//Materialのライティングの設定が平行光源ではない場合止める
-	assert(material.lightingKinds_ == Directional);
+	assert(material.lightingKinds_ == DirectionalLighting);
 
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
@@ -117,7 +117,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 	//ワールドトランスフォーム
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
@@ -144,7 +144,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const PointLight& pointLight){
 	
 	//Materialのライティングの設定が点光源ではない場合止める
-	assert(material.lightingKinds_ == Point);
+	assert(material.lightingKinds_ == PointLighting);
 
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
@@ -188,7 +188,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
@@ -217,7 +217,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const SpotLight& spotLight){
 	
 	//Materialのライティングの設定がスポットライトではない場合止める
-	assert(material.lightingKinds_ == Spot);
+	assert(material.lightingKinds_ == SpotLighting);
 	
 	// 資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
@@ -262,7 +262,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());

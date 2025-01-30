@@ -1,15 +1,13 @@
 #include "Particle3d.hlsli"
 
 //GPU用のデータ
-struct ParticleForGPU
-{
+struct ParticleForGPU{
     float4x4 World;
     float4 color;
 };
 
 //カメラ
-struct Camera
-{
+struct Camera{
 	//必要なのはこの3つ
 	//ビュー行列
     float4x4 viewMatrix_;
@@ -24,16 +22,14 @@ struct Camera
 StructuredBuffer<ParticleForGPU> gParticle : register(t0);
 ConstantBuffer<Camera> gCamera : register(b0);
 
-struct VertexShaderInput
-{
+struct VertexShaderInput{
     float4 position : POSITION0;
     float2 texcoord : TEXCOORD0;
     float3 normal : NORMAL0;
 };
 
 
-VertexShaderOutput main(VertexShaderInput input, uint instanceId : SV_InstanceID)
-{
+VertexShaderOutput main(VertexShaderInput input, uint instanceId : SV_InstanceID){
     VertexShaderOutput output;
     
     //VP

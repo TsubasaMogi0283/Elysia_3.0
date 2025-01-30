@@ -4,19 +4,19 @@
 #include "d3dx12.h"
 #include <vector>
 
-uint32_t TextureManager::index_ = 0u;
+uint32_t Ellysia::TextureManager::index_ = 0u;
 
 
-TextureManager* TextureManager::GetInstance() {
+Ellysia::TextureManager* Ellysia::TextureManager::GetInstance() {
 
-	static TextureManager instance;
+	static Ellysia::TextureManager instance;
 	return &instance;
 }
 
 
 
 
-const D3D12_RESOURCE_DESC TextureManager::GetResourceDesc(const uint32_t& textureHandle) {
+const D3D12_RESOURCE_DESC Ellysia::TextureManager::GetResourceDesc(const uint32_t& textureHandle) {
 	//テクスチャの情報を取得
 	// handleからfilePathを取得
 	auto it = handleToFilePathMap_.find(textureHandle);
@@ -33,9 +33,9 @@ const D3D12_RESOURCE_DESC TextureManager::GetResourceDesc(const uint32_t& textur
 
 
 //統合させた関数
-uint32_t TextureManager::LoadTexture(const std::string& filePath) {
+uint32_t Ellysia::TextureManager::LoadTexture(const std::string& filePath) {
 
-	TextureManager* textureManager = TextureManager::GetInstance();
+	Ellysia::TextureManager* textureManager = TextureManager::GetInstance();
 
 	//一度読み込んだものはその値を返す
 	//新規は勿論読み込みをする
@@ -119,7 +119,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath) {
 //Textureを読み込むためのLoad関数
 //1.TextureデータそのものをCPUで読み込む
 
-DirectX::ScratchImage TextureManager::LoadTextureData(const std::string& filePath) {
+DirectX::ScratchImage Ellysia::TextureManager::LoadTextureData(const std::string& filePath) {
 
 	HRESULT hResult = {};
 
@@ -159,7 +159,7 @@ DirectX::ScratchImage TextureManager::LoadTextureData(const std::string& filePat
 
 //2.DirectX12のTextureResourceを作る
 
-ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexMetadata& metadata) {
+ComPtr<ID3D12Resource> Ellysia::TextureManager::CreateTextureResource(const DirectX::TexMetadata& metadata) {
 	ComPtr<ID3D12Resource> resource = nullptr;
 
 	//1.metadataを基にResourceの設定
@@ -212,7 +212,7 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 //書き換え
 
 [[nodiscard]]
-ComPtr<ID3D12Resource> TextureManager::TransferTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages) {
+ComPtr<ID3D12Resource> Ellysia::TextureManager::TransferTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages) {
 
 	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
 	DirectX::PrepareUpload(Ellysia::DirectXSetup::GetInstance()->GetDevice().Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
@@ -244,7 +244,7 @@ ComPtr<ID3D12Resource> TextureManager::TransferTextureData(ComPtr<ID3D12Resource
 #pragma endregion
 
 
-void TextureManager::GraphicsCommand(const uint32_t& rootParameter, const uint32_t& textureHandle) {
+void Ellysia::TextureManager::GraphicsCommand(const uint32_t& rootParameter, const uint32_t& textureHandle) {
 	Ellysia::SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(rootParameter, textureHandle);
 }
 

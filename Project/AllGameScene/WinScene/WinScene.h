@@ -8,27 +8,40 @@
 
 #include "IGameScene.h"
 #include "Sprite.h"
-#include "Transform.h"
-#include "Particle3D.h"
-#include "Audio.h"
 #include "Model.h"
-#include "Input.h"
+#include "Camera.h"
+#include "Material.h"
+#include "DirectionalLight.h"
+#include "BackTexture.h"
 
 
-#pragma region 前方宣言
+
 
 /// <summary>
-/// ゲーム管理クラス
+/// EllysiaEngine(前方宣言)
 /// </summary>
-class GameManager;
+namespace Ellysia {
 
-/// <summary>
-/// 入力
-/// </summary>
-class Input;
+	/// <summary>
+	/// 入力
+	/// </summary>
+	class Input;
+
+	/// <summary>
+	/// レベルデータ管理クラス
+	/// </summary>
+	class LevelDataManager;
 
 
-#pragma endregion
+	/// <summary>
+	/// ゲーム管理クラス
+	/// </summary>
+	class GameManager;
+
+
+}
+
+
 
 /// <summary>
 /// 勝利シーン
@@ -49,7 +62,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gameManager"></param>
-	void Update(GameManager* gameManager)override;
+	void Update(Ellysia::GameManager* gameManager)override;
 
 	/// <summary>
 	/// ポストエフェクト描画処理前
@@ -80,15 +93,37 @@ public:
 private:
 	//入力
 	Ellysia::Input* input_ = nullptr;
-
+	//レベルデータ管理クラス
+	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	//ハンドル
+	uint32_t levelDataHandle_ = 0u;
 
 private:
-	//脱出成功のスプライト
-	std::unique_ptr<Sprite> succeeded_ = nullptr;
-	//のスプライト
+	//カメラ
+	Camera camera_ = {};
+	//速度
+	Vector3 cameraVelocity_ = {};
+	//加速
+	Vector3 cameraAcceleration_ = {};
+
+	//マテリアル
+	Material material_ = {};
+	//平行光源
+	DirectionalLight directionalLight_ = {};
+
+
+	//ポストエフェクト
+	std::unique_ptr<Ellysia::BackTexture> backTexture_ = nullptr;
+
+	//オブジェクトの浮遊感を出す
+	float objectFloatingTheta_ = 0.0f;
+
+
+
+	//タイトルへのスプライト
 	std::unique_ptr<Sprite> text_ = nullptr;
 	//背景のスプライト
-	std::unique_ptr<Sprite> black_ = nullptr;
+	std::unique_ptr<Sprite> whiteFade_ = nullptr;
 	//見せるカウント
 	uint32_t textDisplayCount_ = 0u;
 

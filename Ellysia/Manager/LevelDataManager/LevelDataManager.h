@@ -119,9 +119,6 @@ namespace Ellysia {
 		/// <param name="levelDataHandle">ハンドル</param>
 		void Delete(const uint32_t& levelDataHandle);
 
-
-#pragma region 描画
-
 		/// <summary>
 		/// 描画(平行光源)
 		/// </summary>
@@ -148,9 +145,6 @@ namespace Ellysia {
 		/// <param name="material">マテリアル</param>
 		/// <param name="spotLight">スポットライト</param>
 		void Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material, const SpotLight& spotLight);
-
-
-#pragma endregion
 
 		/// <summary>
 		/// 解放
@@ -320,6 +314,9 @@ namespace Ellysia {
 				//今はステージかオーディオのどちらか
 				std::string type;
 
+				//個別の名前
+				std::string name;
+
 				//ファイル名
 				std::string modelFileName;
 
@@ -349,7 +346,7 @@ namespace Ellysia {
 
 
 				//非表示設定
-				bool isInvisible_ = false;
+				bool isInvisible = false;
 
 				//レベルデータのオーディオ
 				AudioDataForLevelEditor levelAudioData;
@@ -362,8 +359,6 @@ namespace Ellysia {
 
 
 			};
-
-
 
 			//ハンドル
 			uint32_t handle = 0u;
@@ -425,6 +420,97 @@ namespace Ellysia {
 		}
 
 
+
+
+
+
+
+		/// <summary>
+		/// 個別のスケールの変更
+		/// </summary>
+		/// <param name="handle"></param>
+		/// <param name="name"></param>
+		/// <param name="scale"></param>
+		inline void SetScale(const uint32_t& handle,const std::string& name, const Vector3& scale) {
+
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
+
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+						//名前が一致したらスケールの変更
+						if (objectData.name == name) {
+							objectData.objectForLeveEditor->SetScale(scale);
+						}
+						
+
+					}
+
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+
+		}
+
+		/// <summary>
+		/// 個別の回転を変える
+		/// </summary>
+		/// <param name="handle"></param>
+		/// <param name="name"></param>
+		/// <param name="rotate"></param>
+		inline void SetRotate(const uint32_t& handle,const std::string& name, const Vector3& rotate) {
+
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
+
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+						//一致したら回転の変更
+						if (objectData.name == name) {
+							objectData.objectForLeveEditor->SetRotate(rotate);
+						}
+					}
+
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+
+		}
+
+
+
+		/// <summary>
+		/// 個別の座標を変更
+		/// </summary>
+		/// <param name="handle"></param>
+		/// <param name="name"></param>
+		inline void SetPosition(const uint32_t& handle,const std::string& name,const Vector3& translate) {
+
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
+
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+						//一致したら座標の変更
+						if (objectData.name == name) {
+							objectData.objectForLeveEditor->SetPositione(translate);
+						}
+					}
+
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+
+		}
+
+
+
+
+
+
 	private:
 		/// <summary>
 		/// 配置
@@ -447,13 +533,7 @@ namespace Ellysia {
 		/// <returns></returns>
 		nlohmann::json Deserialize(const std::string& fullFilePath);
 
-		/// <summary>
-		/// 拡張子を取得
-		/// </summary>
-		/// <param name="directory">ディレクトリー</param>
-		/// <param name="baseFileName">元のファイル名</param>
-		/// <returns>拡張子</returns>
-		std::string FindExtension(const std::string& directory, const std::string& baseFileName);
+		
 	private:
 
 		//ここにデータを入れていく

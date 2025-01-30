@@ -5,12 +5,20 @@
  * @author 茂木翼
  */
 
-//前方宣言
+
 
 /// <summary>
-/// ゲーム管理クラス
+/// EllysiaEngine(前方宣言)
 /// </summary>
-class GameManager;
+namespace Ellysia {
+	/// <summary>
+	/// ゲーム管理クラス
+	/// </summary>
+	class GameManager;
+
+}
+
+
 
 /// <summary>
 /// ゲームシーンのインターフェイス
@@ -31,7 +39,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gamaManager"></param>
-	virtual void Update(GameManager* gamaManager)=0;
+	virtual void Update(Ellysia::GameManager* gamaManager)=0;
 	
 
 	/// <summary>

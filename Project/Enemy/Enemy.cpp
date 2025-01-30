@@ -7,12 +7,18 @@
 #include <SingleCalculation.h>
 #include <numbers>
 #include <ModelManager.h>
+#include "GlobalVariables.h"
 
+Enemy::Enemy(){
+	//インスタンスの取得
+	//グローバル変数クラス
+	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
+}
 
 void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed){
 	
 	//モデルの生成
-	model_.reset(Model::Create(modelHandle));
+	model_.reset(Ellysia::Model::Create(modelHandle));
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -29,10 +35,10 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 
 	//マテリアルの初期化
 	mainMaterial_.Initialize();
-	mainMaterial_.lightingKinds_ = Spot;
+	mainMaterial_.lightingKinds_ = SpotLighting;
 	//パーティクル
 	particleMaterial_.Initialize();
-	particleMaterial_.lightingKinds_ = Spot;
+	particleMaterial_.lightingKinds_ = NoneLighting;
 
 
 	//生存か死亡
@@ -61,7 +67,7 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 
 
 	//デバッグ用のモデル
-	debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	debugModelHandle = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
 
 	//攻撃の当たり判定
 	attackCollision_ = std::make_unique<EnemyAttackCollision>();
@@ -71,6 +77,12 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 	enemyFlashLightCollision_ = std::make_unique<EnemyFlashLightCollision>();
 	enemyFlashLightCollision_->Initialize();
 
+
+	//グローバル変数
+	globalVariables_->CreateGroup(GROUNP_NAME_);
+	//振動
+	globalVariables_->AddItem(GROUNP_NAME_, "ShakeOffset", shakeOffset_);
+	shakeOffset_ = globalVariables_->GetFloatValue(GROUNP_NAME_, "ShakeOffset");
 }
 
 
@@ -218,6 +230,14 @@ void Enemy::Update(){
 	attackCollision_->SetEnemyDirection(direction_);
 	attackCollision_->Update();
 
+
+	if (isAttack_ == true) {
+		attackCollision_->SetColor({ 1.0f,0.0f,0.0f,1.0f });
+	}
+	else {
+		attackCollision_->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+	}
+
 	//ダメージ演出
 	Damaged();
 
@@ -233,24 +253,22 @@ void Enemy::Update(){
 void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 #ifdef _DEBUG
 	//攻撃
-	if (isAttack_ == true) {
-		attackCollision_->Draw(camera, spotLight);
-	}
+	attackCollision_->Draw(camera, spotLight);
 	
 #endif // _DEBUG
 
 	//本体
-	if (isAlive_ == true) {
-		model_->Draw(worldTransform_, camera,mainMaterial_, spotLight);
-	}
+	model_->Draw(worldTransform_, camera,mainMaterial_, spotLight);
+	
 
 	if (particle_!=nullptr) {
-		particle_->Draw(camera, particleMaterial_, spotLight);
+		particle_->Draw(camera, particleMaterial_);
 	}
 }
 
-
-
+Enemy::~Enemy(){
+	globalVariables_->SaveFile(GROUNP_NAME_);
+}
 
 void Enemy::Damaged() {
 
@@ -259,6 +277,22 @@ void Enemy::Damaged() {
 		const float COLOR_CHANGE_INTERVAL = 0.01f;
 		mainMaterial_.color_.y -= COLOR_CHANGE_INTERVAL;
 		mainMaterial_.color_.z -= COLOR_CHANGE_INTERVAL;
+
+		//生存している時だけ振動
+		if (isAlive_ == true) {
+			//振動演出
+			//体力減っていくと同時に振動幅が大きくなっていくよ
+			std::random_device seedGenerator;
+			std::mt19937 randomEngine(seedGenerator());
+			std::uniform_real_distribution<float> distribute(-1.0f, 1.0f);
+
+
+			//現在の座標に加える
+			worldTransform_.translate.x += distribute(randomEngine) * (1.0f - mainMaterial_.color_.y) * shakeOffset_;
+			worldTransform_.translate.z += distribute(randomEngine) * (1.0f - mainMaterial_.color_.y) * shakeOffset_;
+		}
+		
+
 	}
 
 	//0になったら絶命
@@ -269,17 +303,22 @@ void Enemy::Damaged() {
 }
 
 void Enemy::Dead() {
+	//消えていくよ
+	const float DELETE_INTERVAL = 0.01f;
+	mainMaterial_.color_.w -= DELETE_INTERVAL;
+
 	//生成
 	if (particle_ == nullptr) {
-		particle_.reset(Particle3D::Create(debugModelHandle , ThrowUp));
-	}
-	else {
+		//生成
+		particle_.reset(Particle3D::Create(Rise));
+		//パーティクルの細かい設定
 		particle_->SetTranslate(GetWorldPosition());
-		particle_->SetScale({ .x = 10.0f,.y = 10.0f,.z = 10.0f });
+		const float SCALE_SIZE = 20.0f;
+		particle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
+		particle_->SetCount(20u);
 		particle_->SetIsReleaseOnceMode(true);
 		particle_->SetIsToTransparent(true);
 	}
-
 
 	//全て消えたら、消えたかどうかのフラグがたつ
 	if (particle_->GetIsAllInvisible() == true) {

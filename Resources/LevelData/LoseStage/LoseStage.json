@@ -1,0 +1,138 @@
+{
+    "name": "scene",
+    "objects": [
+        {
+            "type": "EMPTY",
+            "name": "fence_01.001",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    0.094696044921875,
+                    12.504263877868652,
+                    1.6611281633377075
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "cemetery03.001",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage"
+        },
+        {
+            "type": "LIGHT",
+            "name": "Light",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    0.9999999403953552,
+                    1.0
+                ],
+                "rotation": [
+                    37.26104736328125,
+                    3.1637091636657715,
+                    106.93632507324219
+                ],
+                "translation": [
+                    4.076245307922363,
+                    1.0054539442062378,
+                    5.903861999511719
+                ]
+            }
+        },
+        {
+            "type": "CAMERA",
+            "name": "Camera",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    63.559295654296875,
+                    2.2983238068263745e-07,
+                    46.69194412231445
+                ],
+                "translation": [
+                    7.358891487121582,
+                    -6.925790786743164,
+                    4.958309173583984
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "平面",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "file_name": "Grass",
+            "object_type": "Stage",
+            "is_invisible": false
+        },
+        {
+            "type": "MESH",
+            "name": "テキスト",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    2.0,
+                    1.0
+                ],
+                "rotation": [
+                    89.99999237060547,
+                    8.428941811189361e-08,
+                    2.000000238418579
+                ],
+                "translation": [
+                    0.0,
+                    0.0,
+                    4.170000076293945
+                ]
+            },
+            "file_name": "FailedEscape",
+            "object_type": "Stage"
+        }
+    ]
+}

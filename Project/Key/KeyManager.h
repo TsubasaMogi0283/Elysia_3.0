@@ -38,12 +38,13 @@ namespace Ellysia{
 	/// </summary>
 	class Audio;
 
+	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
+	class TextureManager;
+
 }
 
-/// <summary>
-/// テクスチャ管理クラス
-/// </summary>
-class TextureManager;
 
 #pragma endregion
 
@@ -151,7 +152,7 @@ private:
 	Ellysia::Audio* audio_ = nullptr;
 
 	//テクスチャ管理クラス
-	TextureManager* textureManager_ = nullptr;
+	Ellysia::TextureManager* textureManager_ = nullptr;
 
 	//プレイヤー
 	Player* player_ = nullptr;

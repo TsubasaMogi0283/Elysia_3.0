@@ -103,9 +103,15 @@ public:
 	/// </summary>
 	void OffCollision()override;
 
+
+	inline void SetColor(const Vector4& color) {
+		material_.color_ = color;
+	}
+
+
 private:
 	//モデル
-	std::unique_ptr<Model> model_ = nullptr;
+	std::unique_ptr<Ellysia::Model> model_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 	//マテリアル

@@ -11,66 +11,76 @@
 #include "IGameScene.h"
 #include "IAbstractSceneFactory.h"
 
+
 /// <summary>
-/// ゲーム管理クラス
+/// EllysiaEngine
 /// </summary>
-class GameManager {
-public:
+namespace Ellysia {
+
+
 
 	/// <summary>
-	/// コンストラクタ
+	/// ゲーム管理クラス
 	/// </summary>
-	GameManager() = default;
+	class GameManager {
+	public:
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize();
-	
-	/// <summary>
-	/// シーン遷移
-	/// </summary>
-	/// <param name="sceneName"></param>
-	void ChangeScene(const std::string& sceneName);
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		GameManager() = default;
 
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void Update();
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize();
 
-	/// <summary>
-	/// 描画(3Dオブジェクト)
-	/// </summary>
-	void DrawObject3D();
+		/// <summary>
+		/// シーン遷移
+		/// </summary>
+		/// <param name="sceneName"></param>
+		void ChangeScene(const std::string& sceneName);
 
-	/// <summary>
-	/// 描画(スプライト)
-	/// </summary>
-	void DrawSprite();
+		/// <summary>
+		/// 更新
+		/// </summary>
+		void Update();
 
-	/// <summary>
-	/// ポストエフェクト描画前処理
-	/// </summary>
-	void PreDrawPostEffectFirst();
+		/// <summary>
+		/// 描画(3Dオブジェクト)
+		/// </summary>
+		void DrawObject3D();
 
-	/// <summary>
-	/// 描画(ポストエフェクト)
-	/// </summary>
-	void DrawPostEffect();
+		/// <summary>
+		/// 描画(スプライト)
+		/// </summary>
+		void DrawSprite();
 
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~GameManager() = default;
+		/// <summary>
+		/// ポストエフェクト描画前処理
+		/// </summary>
+		void PreDrawPostEffectFirst();
+
+		/// <summary>
+		/// 描画(ポストエフェクト)
+		/// </summary>
+		void DrawPostEffect();
+
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~GameManager() = default;
 
 
-private:
-	//シーンファクトリー
-	std::unique_ptr<IAbstractSceneFactory> abstractSceneFactory_ = nullptr;
+	private:
+		//シーンファクトリー
+		std::unique_ptr<IAbstractSceneFactory> abstractSceneFactory_ = nullptr;
 
-	//現在入っているシーン
-	std::unique_ptr<IGameScene> currentGamaScene_ = nullptr;
-	std::string  preSceneName_ = "";
-	std::string  currentSceneName_ = "";
-	
-};
+		//現在入っているシーン
+		std::unique_ptr<IGameScene> currentGamaScene_ = nullptr;
+		std::string  preSceneName_ = "";
+		std::string  currentSceneName_ = "";
+
+	};
+
+}

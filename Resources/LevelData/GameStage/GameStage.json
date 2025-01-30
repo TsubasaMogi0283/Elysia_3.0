@@ -2235,7 +2235,7 @@
         },
         {
             "type": "MESH",
-            "name": "Gate_Plane.001",
+            "name": "GateDoorRight",
             "transform": {
                 "scaling": [
                     1.422791838645935,
@@ -2271,7 +2271,7 @@
         },
         {
             "type": "MESH",
-            "name": "Gate_Plane.002",
+            "name": "GatePillerRight",
             "transform": {
                 "scaling": [
                     1.0,
@@ -2307,7 +2307,7 @@
         },
         {
             "type": "MESH",
-            "name": "Gate_Plane.003",
+            "name": "GateDoorLeft",
             "transform": {
                 "scaling": [
                     1.4409635066986084,
@@ -2343,7 +2343,7 @@
         },
         {
             "type": "MESH",
-            "name": "Gate_Plane.004",
+            "name": "GatePillerLeft",
             "transform": {
                 "scaling": [
                     1.0,
@@ -2374,6 +2374,80 @@
                     2.0,
                     2.0,
                     2.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    179.99998474121094
+                ],
+                "translation": [
+                    4.705353260040283,
+                    39.451690673828125,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    8.449999809265137,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.001",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    179.99998474121094
+                ],
+                "translation": [
+                    -3.7792582511901855,
+                    39.451690673828125,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    9.680000305175781,
+                    1.0,
+                    1.0
                 ]
             }
         }

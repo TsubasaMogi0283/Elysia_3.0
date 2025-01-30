@@ -12,133 +12,151 @@
 #include <list>
 #include <map>
 
-#include <ModelData.h>
+#include "ModelData.h"
 #include "Animation.h"
 
-/// <summary>
-/// モデル管理クラス
-/// </summary>
-class ModelManager final{
-private:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	ModelManager()=default;
-	
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~ModelManager()=default;
 
-public:
-	//シングルインスタンス
-	static ModelManager* GetInstance();
-
-	//コピーコンストラクタ禁止
-	ModelManager(const ModelManager& modelManager) = delete;
-
-	//代入演算子を無効にする
-	ModelManager& operator=(const ModelManager& modelManager) = delete;
-
-
-private:
+ /// <summary>
+ /// EllysiaEngine
+ /// </summary>
+namespace Ellysia {
 
 	/// <summary>
-	/// 通常のモデルデータの読み込み
+	/// モデル管理クラス
 	/// </summary>
-	/// <param name="directoryPath"></param>
-	/// <param name="fileName"></param>
-	/// <returns></returns>
-	static ModelData LoadFile(const std::string& directoryPath, const std::string& fileName);
+	class ModelManager final {
+	private:
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		ModelManager() = default;
 
-	/// <summary>
-	/// レベルエディタ専用のモデルデータの読み込み
-	/// </summary>
-	/// <param name="fileNameFolder"></param>
-	/// <param name="fileName"></param>
-	/// <returns></returns>
-	static ModelData LoadFileForLeveldata(const std::string& fileNameFolder, const std::string& fileName);
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~ModelManager() = default;
 
-public:
+	public:
+		//シングルインスタンス
+		static ModelManager* GetInstance();
 
+		//コピーコンストラクタ禁止
+		ModelManager(const ModelManager& modelManager) = delete;
 
-
-	/// <summary>
-	/// モデルデータの読み込み(ハンドルを登録する)
-	/// </summary>
-	/// <param name="directoryPath">パス</param>
-	/// <param name="fileName">ファイル名</param>
-	/// <returns></returns>
-	static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName);
+		//代入演算子を無効にする
+		ModelManager& operator=(const ModelManager& modelManager) = delete;
 
 
-	/// <summary>
-	/// モデルデータの読み込み
-	/// </summary>
-	static uint32_t LoadModelFileForLevelData(const std::string& directoryPath, const std::string& fileName);
+	private:
 
-	/// <summary>
-	/// アニメーション付きのglTFを読み込みたいときはこっちで
-	/// falseにすればobjも読み込めるよ
-	/// </summary>
-	/// <param name="directoryPath">パス</param>
-	/// <param name="fileName">ファイル名</param>
-	/// <param name="isAnimationLoad">アニメーションを読み込むかどうか</param>
-	/// <returns></returns>
-	static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName,bool isAnimationLoad);
+		/// <summary>
+		/// 通常のモデルデータの読み込み
+		/// </summary>
+		/// <param name="directoryPath"></param>
+		/// <param name="fileName"></param>
+		/// <returns></returns>
+		static ModelData LoadFile(const std::string& directoryPath, const std::string& fileName);
 
+		/// <summary>
+		/// レベルエディタ専用のモデルデータの読み込み
+		/// </summary>
+		/// <param name="fileNameFolder"></param>
+		/// <param name="fileName"></param>
+		/// <returns></returns>
+		static ModelData LoadFileForLeveldata(const std::string& fileNameFolder, const std::string& fileName);
 
-
-
-
-public:
+	public:
 
 
 
-	ModelData GetModelData(uint32_t handle) {
-		for (const auto& [filePath, modelInfo] : modelInfromtion_) {
-			if (modelInfo.handle == handle) {
-				return modelInfo.modelData;
+		/// <summary>
+		/// モデルデータの読み込み(ハンドルを登録する)
+		/// </summary>
+		/// <param name="directoryPath">パス</param>
+		/// <param name="fileName">ファイル名</param>
+		/// <returns></returns>
+		static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName);
+
+
+		/// <summary>
+		/// モデルデータの読み込み
+		/// </summary>
+		static uint32_t LoadModelFileForLevelData(const std::string& directoryPath, const std::string& fileName);
+
+		/// <summary>
+		/// アニメーション付きのglTFを読み込みたいときはこっちで
+		/// falseにすればobjも読み込めるよ
+		/// </summary>
+		/// <param name="directoryPath">パス</param>
+		/// <param name="fileName">ファイル名</param>
+		/// <param name="isAnimationLoad">アニメーションを読み込むかどうか</param>
+		/// <returns></returns>
+		static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName, bool isAnimationLoad);
+
+
+
+
+
+	public:
+
+
+		/// <summary>
+		/// モデルデータを取得
+		/// </summary>
+		/// <param name="handle"></param>
+		/// <returns></returns>
+		ModelData GetModelData(uint32_t handle) {
+			for (const auto& [filePath, modelInfo] : modelInfromtion_) {
+				if (modelInfo.handle == handle) {
+					return modelInfo.modelData;
+				}
 			}
-		}
-		
-		//無かったら空のデータを返す
-		return{};
-	}
 
-	Animation GetModelAnimation(uint32_t handle) {
-		for (const auto& [filePath, modelInfo] : modelInfromtion_) {
-			if (modelInfo.handle == handle) {
-				return modelInfo.animationData;
+			//無かったら空のデータを返す
+			return{};
+		}
+
+		/// <summary>
+		/// モデルアニメーションデータを取得
+		/// </summary>
+		/// <param name="handle"></param>
+		/// <returns></returns>
+		Animation GetModelAnimation(uint32_t handle) {
+			for (const auto& [filePath, modelInfo] : modelInfromtion_) {
+				if (modelInfo.handle == handle) {
+					return modelInfo.animationData;
+				}
 			}
+
+			//無かったら空のデータを返す
+			return{};
 		}
-		
-		//無かったら空のデータを返す
-		return{};
-	}
 
 
-private:
+	private:
+		/// <summary>
+		/// モデル情報
+		/// </summary>
+		struct ModelInformation {
+			//モデルデータ
+			ModelData modelData;
+			//アニメーション
+			Animation animationData;
 
-	struct ModelInformation {
-		//モデルデータ
-		ModelData modelData;
-		//アニメーション
-		Animation animationData;
+			//ハンドル
+			uint32_t handle;
 
-		//ハンドル
-		uint32_t handle;
+			//ファイル名など
+			std::string directoryPath;
+			std::string filePath;
 
-		//ファイル名など
-		std::string directoryPath;
-		std::string filePath;
+			//レベルデータ用
+			std::string folderName;
+		};
 
-		//レベルデータ用
-		std::string folderName;
+
+
+		//ここにどんどんデータを入れていく
+		std::map<std::string, ModelInformation> modelInfromtion_{};
 	};
-
-
-
-	//ここにどんどんデータを入れていく
-	std::map<std::string, ModelInformation> modelInfromtion_{};
-};
+}

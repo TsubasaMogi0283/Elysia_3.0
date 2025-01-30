@@ -4,8 +4,9 @@
 #include "PipelineManager.h"
 #include "SrvManager.h"
 #include "RtvManager.h"
+#include "Dissolve.h"
 
-Ellysia::DissolveEffect::DissolveEffect(){
+Ellysia::DissolvePostEffect::DissolvePostEffect(){
 	//ウィンドウクラスの取得
 	windowSetup_ = Ellysia::WindowsSetup::GetInstance();
 	//DirectXクラスの取得
@@ -18,20 +19,12 @@ Ellysia::DissolveEffect::DissolveEffect(){
 	srvManager_ = Ellysia::SrvManager::GetInstance();
 }
 
-void Ellysia::DissolveEffect::Initialize(){
+void Ellysia::DissolvePostEffect::Initialize(const Vector4& clearColor){
 	
-	//PixelShaderに送る値の初期化
-	dissolveResource_ = directXSetup_->CreateBufferResource(sizeof(DissolveData));
-	dessolveValue_.isUseEdge = true;
-	dessolveValue_.edgeThinkness = 0.04f;
-	dessolveValue_.edgeColor = { 1.0f,1.0f,1.0f };
-	dessolveValue_.threshold = 0.5f;
-
-
 	
-	renderTargetClearColor = { 0.0f,1.0f,0.0f,1.0f };
+	renderTargetClearColor_ = clearColor;
 	//リソースの作成
-	rtvResource_ = rtvManager_->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, renderTargetClearColor);
+	rtvResource_ = rtvManager_->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, renderTargetClearColor_);
 	//ハンドルの取得
 	rtvHandle_ = rtvManager_->Allocate("Dissolve");
 	//作成
@@ -45,9 +38,9 @@ void Ellysia::DissolveEffect::Initialize(){
 
 }
 
-void Ellysia::DissolveEffect::PreDraw(){
+void Ellysia::DissolvePostEffect::PreDraw(){
 	
-	const float CLEAR_COLOR[] = { renderTargetClearColor.x,renderTargetClearColor.y,renderTargetClearColor.z,renderTargetClearColor.w };
+	const float CLEAR_COLOR[] = { renderTargetClearColor_.x,renderTargetClearColor_.y,renderTargetClearColor_.z,renderTargetClearColor_.w };
 	//RT
 	directXSetup_->GetCommandList()->OMSetRenderTargets(
 		1u, &rtvManager_->GetRtvHandle(rtvHandle_), false, &directXSetup_->GetDsvHandle());
@@ -70,25 +63,13 @@ void Ellysia::DissolveEffect::PreDraw(){
 
 }
 
-void Ellysia::DissolveEffect::Draw(){
+void Ellysia::DissolvePostEffect::Draw(const Dissolve& dissolve){
 
 	//ResourceBarrierを張る
 	directXSetup_->SetResourceBarrier(
 		rtvResource_,
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-	//書き込み
-	dissolveResource_->Map(0, nullptr, reinterpret_cast<void**>(&dissolveData_));
-	//エッジを使うかどうか
-	dissolveData_->isUseEdge = dessolveValue_.isUseEdge;
-	//エッジの厚さ
-	dissolveData_->edgeThinkness = dessolveValue_.edgeThinkness;
-	//エッジの色
-	dissolveData_->edgeColor = dessolveValue_.edgeColor;
-	//閾値
-	dissolveData_->threshold = dessolveValue_.threshold;
-	//書き込み終了
-	dissolveResource_->Unmap(0u, nullptr);
 
 	//パイプラインの設定
 	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetDissolveRootSignature().Get());
@@ -98,9 +79,9 @@ void Ellysia::DissolveEffect::Draw(){
 	//SRV
 	srvManager_->SetGraphicsRootDescriptorTable(0u, srvHandle_);
 	//マスクテクスチャ
-	srvManager_->SetGraphicsRootDescriptorTable(1u, maskTextureHandle_);
+	srvManager_->SetGraphicsRootDescriptorTable(1u, dissolve.maskTextureHandle);
 	//ディゾルブ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(2u, dissolveResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(2u, dissolve.resource->GetGPUVirtualAddress());
 	//描画(DrawCall)３頂点で１つのインスタンス。
 	directXSetup_->GetCommandList()->DrawInstanced(3u, 1u, 0u, 0u);
 	

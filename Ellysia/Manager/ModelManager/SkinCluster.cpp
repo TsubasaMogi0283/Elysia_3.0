@@ -16,18 +16,18 @@ void  SkinCluster::Create(const Skeleton& newSkeleton, const ModelData& modelDat
 
 
     //palette用のリソースを生成
-    paletteResource = directXSetup->CreateBufferResource(sizeof(WellForGPU) * skeleton.joints_.size());
+    paletteResource = directXSetup->CreateBufferResource(sizeof(WellForGPU) * skeleton.joints.size());
     WellForGPU* wellForGPU = nullptr;
     paletteResource->Map(0u, nullptr, reinterpret_cast<void**>(&wellForGPU));
     //spanを使ってアクセスするようにする
-    mappedPalette = { wellForGPU,skeleton.joints_.size() };
+    mappedPalette = { wellForGPU,skeleton.joints.size() };
     srvIndex = srvManager->Allocate();
     paletteSrvHandle.first = srvManager->GetCPUDescriptorHandle(srvIndex);
     paletteSrvHandle.second = srvManager->GetGPUDescriptorHandle(srvIndex);
     paletteResource->Unmap(0u, nullptr);
 
     //Palette用のSRVの生成
-    srvManager->CreateSRVForPalette(static_cast<UINT>(skeleton.joints_.size()), sizeof(WellForGPU), paletteResource.Get(), srvIndex);
+    srvManager->CreateSRVForPalette(static_cast<UINT>(skeleton.joints.size()), sizeof(WellForGPU), paletteResource.Get(), srvIndex);
 
 
 
@@ -47,7 +47,7 @@ void  SkinCluster::Create(const Skeleton& newSkeleton, const ModelData& modelDat
     influenceResource->Unmap(0u, nullptr);
 
     //InfluenceBindPoseMatrixの保存領域を作成
-    inverseBindPoseMatrices.resize(skeleton.joints_.size());
+    inverseBindPoseMatrices.resize(skeleton.joints.size());
     //最後の所は「関数ポインタ」
     //()を付けないでね。ここ重要。
     std::generate(inverseBindPoseMatrices.begin(), inverseBindPoseMatrices.end(), Matrix4x4Calculation::MakeIdentity4x4);
@@ -64,8 +64,8 @@ void  SkinCluster::Create(const Skeleton& newSkeleton, const ModelData& modelDat
     //ModelDataのSkinCluster情報を解析してInfluenceの中身を埋める
     for (const auto& jointWeight : modelData.skinClusterData) {
         //JointWeight.firstはjoint名なので、skeletonに対象となるjointが含まれているか判断
-        auto it = skeleton.jointMap_.find(jointWeight.first);
-        if (it == skeleton.jointMap_.end()) {
+        auto it = skeleton.jointMap.find(jointWeight.first);
+        if (it == skeleton.jointMap.end()) {
             //その名前のJointは存在しないので次に回す
             continue;
         }
@@ -89,11 +89,11 @@ void  SkinCluster::Create(const Skeleton& newSkeleton, const ModelData& modelDat
 }
 
 void SkinCluster::Update(const Skeleton& newSkeleton){
-    for (size_t jointIndex = 0; jointIndex < newSkeleton.joints_.size(); ++jointIndex) {
+    for (size_t jointIndex = 0; jointIndex < newSkeleton.joints.size(); ++jointIndex) {
         assert(jointIndex < inverseBindPoseMatrices.size());
         //それぞれの行列を計算
         mappedPalette[jointIndex].skeletonSpaceMatrix =
-            Matrix4x4Calculation::Multiply(inverseBindPoseMatrices[jointIndex], newSkeleton.joints_[jointIndex].skeletonSpaceMatrix);
+            Matrix4x4Calculation::Multiply(inverseBindPoseMatrices[jointIndex], newSkeleton.joints[jointIndex].skeletonSpaceMatrix);
         mappedPalette[jointIndex].skeletonSpaceIncerseTransposeMatrix = 
             Matrix4x4Calculation::MakeTransposeMatrix(Matrix4x4Calculation::Inverse(mappedPalette[jointIndex].skeletonSpaceMatrix));
     }

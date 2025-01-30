@@ -83,20 +83,20 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 	vertexData_[5].position = {0.5f,-0.5f,-0.5f,1.0f} ;
 	vertexData_[5].texCoord = { 1.0f,1.0f };
 
-	vertexResouce_->Unmap(0, nullptr);
+	vertexResouce_->Unmap(0u, nullptr);
 
 	//マテリアルにデータを書き込む
 	
 
 	//書き込むためのアドレスを取得
 	//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	materialResource_->Map(0u, nullptr, reinterpret_cast<void**>(&materialData_));
 
 	materialData_->color = color;
 	materialData_->lightingKinds = 0;
 	materialData_->uvTransform = Matrix4x4Calculation::MakeIdentity4x4();
 	
-	materialResource_->Unmap(0, nullptr);
+	materialResource_->Unmap(0u, nullptr);
 	
 	//サイズに注意を払ってね！！！！！
 	//どれだけのサイズが必要なのか考えよう
@@ -113,7 +113,7 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 	Matrix4x4 worldViewProjectionMatrix = Matrix4x4Calculation::Multiply(worldMatrix, Matrix4x4Calculation::Multiply(viewMatrixSprite, projectionMatrixSprite));
 
 	//書き込む為のアドレスを取得
-	wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpData_));
+	wvpResource_->Map(0u, nullptr, reinterpret_cast<void**>(&wvpData_));
 	
 	
 	
@@ -122,7 +122,7 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 	wvpData_->World = Matrix4x4Calculation::MakeIdentity4x4();
 	
 
-	wvpResource_->Unmap(0, nullptr);
+	wvpResource_->Unmap(0u, nullptr);
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
@@ -131,20 +131,20 @@ void Triangle::Draw(Transform transform, Vector4 color) {
 
 	//マテリアルCBufferの場所を設定
 	//ここでの[0]はregisterの0ではないよ。rootParameter配列の0番目
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, materialResource_->GetGPUVirtualAddress());
 	//CBVを設定する
 	//wvp用のCBufferの場所を指定
 	//今回はRootParameter[1]に対してCBVの設定を行っている
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, wvpResource_->GetGPUVirtualAddress());
 
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
 	if (textureHandle_ != 0) {
-		TextureManager::GraphicsCommand(2,textureHandle_);
+		Ellysia::TextureManager::GetInstance()->GraphicsCommand(2u,textureHandle_);
 	}
 
 	//描画(DrawCall)３頂点で１つのインスタンス。
-	directXSetup_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
+	directXSetup_->GetCommandList()->DrawInstanced(6u, 1u, 0u, 0u);
 
 }
 

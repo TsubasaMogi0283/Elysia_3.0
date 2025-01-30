@@ -19,7 +19,7 @@
 
 TitleScene::TitleScene(){
 	//テクスチャ管理クラスの取得
-	textureManager_ = TextureManager::GetInstance();
+	textureManager_ = Ellysia::TextureManager::GetInstance();
 	//入力クラスの取得
 	input_ = Ellysia::Input::GetInstance();
 	//レベルエディタ管理クラスの取得
@@ -31,7 +31,7 @@ void TitleScene::Initialize(){
 	//ロゴ
 	uint32_t logoTextureHandle = textureManager_->LoadTexture("Resources/Title/StartText.png");
 	//タイトルテクスチャ
-	uint32_t titleTextureHandle = textureManager_->LoadTexture("Resources/Title/Title.png");
+	uint32_t titleTextureHandle = textureManager_->LoadTexture("Resources/Title/TitleNormal.png");
 	//黒フェード
 	uint32_t blackTexureHandle= textureManager_->LoadTexture("Resources/Sprite/Back/Black.png");
 
@@ -41,7 +41,7 @@ void TitleScene::Initialize(){
 	//テキスト
 	text_.reset(Sprite::Create(logoTextureHandle, INITIAL_POSITION));
 	//ロゴ
-	backGround_.reset(Sprite::Create(titleTextureHandle, INITIAL_POSITION));
+	logo.reset(Sprite::Create(titleTextureHandle, INITIAL_POSITION));
 	//黒フェード
 	blackFade_.reset(Sprite::Create(blackTexureHandle, INITIAL_POSITION));
 	//初期の透明度設定
@@ -58,7 +58,7 @@ void TitleScene::Initialize(){
 
 	//マテリアルの初期化
 	material_.Initialize();
-	material_.lightingKinds_ = Directional;
+	material_.lightingKinds_ = DirectionalLighting;
 
 	//スポットライトの初期化
 	spotLight.Initialize();
@@ -84,13 +84,13 @@ void TitleScene::Initialize(){
 	baseTitleBackTexture_->Initialize();
 
 	//ランダムエフェクトの生成
-	randomEffect_ = std::make_unique<RandomEffect>();
+	randomEffect_ = std::make_unique<Ellysia::RandomEffect>();
 	//初期化
 	randomEffect_->Initialize();
 	
 }
 
-void TitleScene::Update(GameManager* gameManager){
+void TitleScene::Update(Ellysia::GameManager* gameManager){
 
 #pragma region 未スタート
 
@@ -196,6 +196,7 @@ void TitleScene::Update(GameManager* gameManager){
 	if (isStart_ == true) {
 
 		//スタートのテキストを非表示にさせる
+		logo->SetInvisible(true);
 		text_->SetInvisible(true);
 
 		//時間の加算
@@ -322,7 +323,7 @@ void TitleScene::DrawPostEffect(){
 
 void TitleScene::DrawSprite(){
 	//背景
-	//backGround_->Draw();
+	logo->Draw();
 
 	//テキスト
 	text_->Draw();

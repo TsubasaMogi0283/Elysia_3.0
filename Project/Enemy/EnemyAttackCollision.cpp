@@ -5,7 +5,7 @@
 
 void EnemyAttackCollision::Initialize(const uint32_t& modelHandle){
 	//モデルの生成
-	model_.reset(Model::Create(modelHandle));
+	model_.reset(Ellysia::Model::Create(modelHandle));
 
 
 	//ワールドトランスフォームの初期化
@@ -14,9 +14,10 @@ void EnemyAttackCollision::Initialize(const uint32_t& modelHandle){
 	//マテリアルの初期化
 	material_.Initialize();
 	//ライティング
-	material_.lightingKinds_ = Spot;
+	material_.lightingKinds_ = SpotLighting;
 	
 	
+
 
 
 	#pragma region 当たり判定
@@ -26,7 +27,7 @@ void EnemyAttackCollision::Initialize(const uint32_t& modelHandle){
 	collisionType_ = ColliderType::SphereType;
 
 	//半径
-	radius_ = 2.0f;
+	radius_ = 3.0f;
 
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY_ATTACK);

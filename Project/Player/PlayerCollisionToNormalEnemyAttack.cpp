@@ -4,20 +4,23 @@
 
 void PlayerCollisionToNormalEnemyAttack::Initialize(){
 
-	uint32_t modelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere","Sphere.obj");
-	model_.reset(Model::Create(modelHandle));
+	//モデルの生成
+	uint32_t modelHandle = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere","Sphere.obj");
+	model_.reset(Ellysia::Model::Create(modelHandle));
 
 
 	//初期化
 	worldTransform_.Initialize();
 	worldTransform_.scale = {.x= 5.0f,.y= 5.0f,.z= 5.0f };
-	playerWorldPosition_ = {};
 
 
-#pragma region 当たり判定
+	//名前の設定
+	name_ = "ToNormalEnemyAttack";
 
 	//種類
 	collisionType_ = ColliderType::SphereType;
+
+
 
 	//半径
 	radius_ = 5.0f;
@@ -28,7 +31,6 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 	//相手
 	SetCollisionMask(COLLISION_ATTRIBUTE_ENEMY_ATTACK);
 
-#pragma endregion
 
 	
 
@@ -37,7 +39,7 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 void PlayerCollisionToNormalEnemyAttack::Update(){
 
 	//プレイヤーの座標を持ってくる
-	worldTransform_.translate = playerWorldPosition_;
+	worldTransform_.translate = playerPosition_;
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 
@@ -45,7 +47,7 @@ void PlayerCollisionToNormalEnemyAttack::Update(){
 #ifdef _DEBUG
 	ImGui::Begin("敵からの攻撃"); 
 	ImGui::Checkbox("接触", &isTouch_);
-	ImGui::InputFloat3("座標", &playerWorldPosition_.x);
+	ImGui::InputFloat3("座標", &playerPosition_.x);
 	ImGui::End();
 #endif // _DEBUG
 

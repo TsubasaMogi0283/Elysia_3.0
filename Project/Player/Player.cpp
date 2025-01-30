@@ -15,14 +15,14 @@ Player::Player(){
 	//入力クラスの取得
 	input_ = Ellysia::Input::GetInstance();
 	//モデル管理クラス
-	modelManager_ = ModelManager::GetInstance();
+	modelManager_ = Ellysia::ModelManager::GetInstance();
 }
 
 void Player::Initialize(){
 
 	//モデルの生成 	
 	uint32_t modelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
-	model_.reset(Model::Create(modelHandle));
+	model_.reset(Ellysia::Model::Create(modelHandle));
 
 	//初期はコントロールできない
 	isControll_ = false;
@@ -42,24 +42,18 @@ void Player::Initialize(){
 	worldTransform_.translate = INITIAL_POSITION;
 
 	//PlayerCllsion基底クラスを作ろう
-	//std::unique_ptr<PlayerCollisionToNormalEnemyAttack> colliderToNormalEnemy_ = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
-	//colliderToNormalEnemy_->Initialize();
-	////そのまま入れることは出来ないので所有権を移すstd::moveを使うよ
-	//colliders_.push_back(std::move(colliderToNormalEnemy_));
-
-
-	//通常
-	colliderToNormalEnemy_ = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
-	colliderToNormalEnemy_->Initialize();
-
+	//通常の敵
+	std::unique_ptr<PlayerCollisionToNormalEnemyAttack> colliderToNormalEnemy = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
+	colliderToNormalEnemy->Initialize();
+	colliders_.push_back(std::move(colliderToNormalEnemy));
 	//強敵
-	collisionToStrongEnemy_ = std::make_unique<PlayerCollisionToStrongEnemy>();
-	collisionToStrongEnemy_->Initialize();
-
-
-	collosionToAudioObject_ = std::make_unique<PlayerCollisionToAudioObject>();
-	collosionToAudioObject_->Initialize();
-
+	std::unique_ptr<PlayerCollisionToStrongEnemy> collisionToStrongEnemy = std::make_unique<PlayerCollisionToStrongEnemy>();
+	collisionToStrongEnemy->Initialize();
+	colliders_.push_back(std::move(collisionToStrongEnemy));
+	//オーディオオブジェクト
+	std::unique_ptr<PlayerCollisionToAudioObject> collosionToAudioObject= std::make_unique<PlayerCollisionToAudioObject>();
+	collosionToAudioObject->Initialize();
+	colliders_.push_back(std::move(collosionToAudioObject));
 
 	//懐中電灯
 	flashLight_ = std::make_unique<FlashLight>();
@@ -71,7 +65,7 @@ void Player::Initialize(){
 	
 	//マテリアル
 	material_.Initialize();
-	material_.lightingKinds_ = Spot;
+	material_.lightingKinds_ = SpotLighting;
 }
 
 void Player::Update(){
@@ -99,17 +93,12 @@ void Player::Update(){
 
 	//PMで綺麗にまとめられるかも
 	//通常の敵用の当たり判定の更新
-	colliderToNormalEnemy_->SetPlayerPosition(worldPosition);
-	colliderToNormalEnemy_->Update();
-
-	//一発アウト用の当たり判定
-	collisionToStrongEnemy_->SetPlayerPosition(worldPosition);
-	collisionToStrongEnemy_->Update();
-
-	//オーディオオブジェクトに対しての当たり判定
-	collosionToAudioObject_->SetPlayerPosition(worldPosition);
-	collosionToAudioObject_->Update();
-
+	for (std::unique_ptr<BasePlayerCollision> &collision : colliders_) {
+		//プレイヤーの座標を設定
+		collision->SetPlayerPosition(worldPosition);
+		//更新
+		collision->Update();
+	}
 	//懐中電灯の更新
 	//角度はゲームシーンで取得する
 	flashLight_->SetPlayerPosition(worldPosition);
@@ -131,10 +120,6 @@ void Player::Draw(const Camera& camera, const SpotLight& spotLight){
 	//1人称視点だからいらないね
 	model_->Draw(worldTransform_, camera,material_,spotLight);
 
-	//通常
-	colliderToNormalEnemy_->Draw(camera, material_, spotLight);
-	//強敵	
-	collisionToStrongEnemy_->Draw(camera, material_, spotLight);
 	//懐中電灯
 	flashLight_->Draw(camera);
 #endif // _DEBUG
@@ -149,47 +134,43 @@ Player::~Player() {
 
 void Player::Damaged() {
 	//通常の敵に当たった場合
-	if (colliderToNormalEnemy_->GetIsTouch() == true) {
-
+	//ダメージを受ける
+	if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
+		//一時的にコントロールを失う
+		isControll_ = false;
 		//ダメージを受ける
-		if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
-			//ダメージを受ける
-			isDameged_ = true;
-			//体力を減らす
-			--hp_;
-			//線形補間で振動処理をする
-			vibeTime_ += DELTA_TIME;
+		isDameged_ = true;
+		//体力を減らす
+		--hp_;
+		//線形補間で振動処理をする
+		vibeTime_ += DELTA_TIME;
 
-			//最大の振動の強さ
-			const float MAX_VIBE_ = 1.0f;
-			//最小の振動の強さ
-			const float MIN_VIBE_ = 0.0f;
+		//最大の振動の強さ
+		const float MAX_VIBE_ = 1.0f;
+		//最小の振動の強さ
+		const float MIN_VIBE_ = 0.0f;
 
-			//線形補間を使い振動を減衰させる
-			vibeStrength_ = SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
-			input_->SetVibration(vibeStrength_, vibeStrength_);
+		//線形補間を使い振動を減衰させる
+		vibeStrength_ = SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
+		input_->SetVibration(vibeStrength_, vibeStrength_);
 
-			//振動を止める
-			if (vibeStrength_ <= MIN_VIBE_) {
-				//振動が止まる
-				input_->StopVibration();
+		//振動を止める
+		if (vibeStrength_ <= MIN_VIBE_) {
+			//振動が止まる
+			input_->StopVibration();
 
-				//戻る時間
-				const float RESTART_TIME = 0.0f;
-				//時間を戻す
-				vibeTime_ = RESTART_TIME;
-				//ダメージを受けていないようにする
-				isDameged_ = false;
-			}
+			//戻る時間
+			const float RESTART_TIME = 0.0f;
+			//時間を戻す
+			vibeTime_ = RESTART_TIME;
+			//ダメージを受けていないようにする
+			isDameged_ = false;
+
+			//コントロールを戻す
+			isControll_ = true;
 		}
-
 	}
-	else {
-		//ダメージを受けない
-		//当たっていないので
-		isDameged_ = false;
 
-	}
 }
 
 void Player::Move() {

@@ -355,9 +355,6 @@
     <Filter Include="Project\Player\Collision">
       <UniqueIdentifier>{32b25b1e-d1a9-45a3-9a3b-830c6437a4fd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Player\Collision\IPlayerCollision">
-      <UniqueIdentifier>{7342fb61-2dae-4860-88b9-6d4531dde844}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ellysia\Header File\Manager\GameManager">
       <UniqueIdentifier>{6783ae0e-f5a0-4867-a365-1d65f9d0e07e}</UniqueIdentifier>
     </Filter>
@@ -369,9 +366,6 @@
     </Filter>
     <Filter Include="Ellysia\Header File\Manager\Collision">
       <UniqueIdentifier>{bced4636-b924-4c13-8142-3411bc1ea6c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Factory">
-      <UniqueIdentifier>{04d219fe-0398-4560-b32d-f5f89ca69cd4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\SceneFactory">
       <UniqueIdentifier>{46739212-6394-4202-aa19-ce67b783584f}</UniqueIdentifier>
@@ -397,11 +391,35 @@
     <Filter Include="Project\Scene\Lose">
       <UniqueIdentifier>{57682276-21c2-48e2-83ee-02eed279de4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Scene\WinScene">
-      <UniqueIdentifier>{c06d8e17-a723-4892-983a-90de5852100f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Scene\Game">
       <UniqueIdentifier>{e3a0acb5-08b3-41f0-a41e-4357a3698e46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\StringOption">
+      <UniqueIdentifier>{8718b1aa-f8db-486b-b963-5908020ee28d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\StringOption">
+      <UniqueIdentifier>{318c7ec3-0e37-41d3-8635-09c9153de3e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Math\Easing">
+      <UniqueIdentifier>{027a9b32-f216-4b0c-85b6-716c733a7ba1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Framework">
+      <UniqueIdentifier>{fb563d2c-ed9e-4543-90ca-53d2dc6ea5ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Framework">
+      <UniqueIdentifier>{fc69f8c0-8bce-49f2-89ed-dfd0982d50d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Math\Transform">
+      <UniqueIdentifier>{45b805ea-9918-4a1b-b099-2cdf15bc2dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\EffectData">
+      <UniqueIdentifier>{8e5f658a-9b01-41ae-a1e2-042760ec9c04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\EffectData">
+      <UniqueIdentifier>{6e6a2122-997b-42d9-b4e5-f2801a4c304f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Win">
+      <UniqueIdentifier>{c06d8e17-a723-4892-983a-90de5852100f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -425,9 +443,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\Model\Model.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Ellysia.cpp">
-      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\ConvertFunction\ConvertColor\ConvertColor.cpp">
       <Filter>Ellysia\Source File\ConvertFunction</Filter>
@@ -592,7 +607,7 @@
       <Filter>Project\Player\PlayerCollisionToAudioObject</Filter>
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\WinScene\WinScene.cpp">
-      <Filter>Project\Scene\WinScene</Filter>
+      <Filter>Project\Scene\Win</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\EnemyFlashLightCollision.cpp">
       <Filter>Project\Enemy\EnemyFlashLightCollision</Filter>
@@ -623,9 +638,6 @@
     </ClCompile>
     <ClCompile Include="Project\Player\AudioTestPlayer.cpp">
       <Filter>Project\Player\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Material\Material.cpp">
-      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.cpp">
       <Filter>Ellysia\Source File\Math\Quaternion</Filter>
@@ -662,6 +674,24 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp">
       <Filter>Project\SceneFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Framework\Framework.cpp">
+      <Filter>Ellysia\Source File\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\StringOption\StringOption.cpp">
+      <Filter>Ellysia\Source File\StringOption</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Material\Material.cpp">
+      <Filter>Ellysia\Source File\EffectData</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\BasedPlayerCollision.cpp">
+      <Filter>Project\Player\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\EffectData\Dissolve\Dissolve.cpp">
+      <Filter>Ellysia\Source File\EffectData</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\StrongEnemyCollisionToPlayer.cpp">
+      <Filter>Project\Enemy\StrongEnemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -817,9 +847,6 @@
     <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle3D.h">
       <Filter>Ellysia\Header File\Polygone\3D\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Ellysia.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Math\Matrix\Matrix3x3.h">
       <Filter>Ellysia\Header File\Math\Matrix</Filter>
     </ClInclude>
@@ -853,9 +880,6 @@
     <ClInclude Include="Ellysia\Math\Shape\AABB.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\WorldTransform\WorldTransform.h">
-      <Filter>Ellysia\Header File\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Lighting\PointLight.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
     </ClInclude>
@@ -867,9 +891,6 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Shape\SphereShape.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Math\Transform\EulerTransform.h">
-      <Filter>Ellysia\Header File\Math</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Lighting\LightingType.h">
       <Filter>Ellysia\Header File\Lighting</Filter>
@@ -1052,7 +1073,7 @@
       <Filter>Ellysia\Header File\Manager\LevelEditor\Object\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\WinScene\WinScene.h">
-      <Filter>Project\Scene\WinScene</Filter>
+      <Filter>Project\Scene\Win</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\EnemyFlashLightCollision.h">
       <Filter>Project\Enemy\EnemyFlashLightCollision</Filter>
@@ -1080,9 +1101,6 @@
     </ClInclude>
     <ClInclude Include="Project\Player\PlayerCollisionToStageObject.h">
       <Filter>Project\Player\PlayerCollisionToStageObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Material\Material.h">
-      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\SkyBox\SkyBox.h">
       <Filter>Ellysia\Header File\Polygone\3D\SkyBox</Filter>
@@ -1123,7 +1141,7 @@
     <ClInclude Include="Ellysia\Manager\CollisionManager\Collider.h">
       <Filter>Ellysia\Header File\Manager\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Player\BasedPlayerCollision.h">
+    <ClInclude Include="Project\Player\BasePlayerCollision.h">
       <Filter>Project\Player\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\PipelineManager\BlendMode.h">
@@ -1140,6 +1158,30 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\GameSceneFactory.h">
       <Filter>Project\SceneFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\StringOption\StringOption.h">
+      <Filter>Ellysia\Header File\StringOption</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Easing\Easing.h">
+      <Filter>Ellysia\Header File\Math\Easing</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Framework\Framework.h">
+      <Filter>Ellysia\Header File\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Transform\EulerTransform.h">
+      <Filter>Ellysia\Header File\Math\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\WorldTransform\WorldTransform.h">
+      <Filter>Ellysia\Header File\Math\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Material\Material.h">
+      <Filter>Ellysia\Header File\EffectData</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\EffectData\Dissolve\Dissolve.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\StrongEnemyCollisionToPlayer.h">
+      <Filter>Project\Enemy\StrongEnemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

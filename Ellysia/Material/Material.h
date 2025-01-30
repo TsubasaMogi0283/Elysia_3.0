@@ -51,9 +51,9 @@ public:
 public:
 
 	//色
-	Vector4 color_ = {1.0f,1.0f,1.0f,1.0f};
+	Vector4 color_ = {.x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f};
 	//Lightingの種類
-	int32_t lightingKinds_=Directional;
+	int32_t lightingKinds_=DirectionalLighting;
 	//UV行列
 	Matrix4x4 uvTransform_ = {};
 	//輝度
@@ -62,7 +62,7 @@ public:
 	bool isEnviromentMap_ = false;
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> bufferResource_ = nullptr;
+	ComPtr<ID3D12Resource> resource_ = nullptr;
 	//書き込みのデータ
 	MaterialData* materialData_ = nullptr;
 

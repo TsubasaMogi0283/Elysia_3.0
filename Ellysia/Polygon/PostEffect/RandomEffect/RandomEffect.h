@@ -44,86 +44,90 @@ namespace Ellysia {
 	/// SRV管理クラス
 	/// </summary>
 	class SrvManager;
-};
 
-/// <summary>
-/// ランダムエフェクト
-/// </summary>
-class RandomEffect{
-public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	RandomEffect();
+
 
 	/// <summary>
-	/// 初期化
+	/// ランダムエフェクト
 	/// </summary>
-	void Initialize();
+	class RandomEffect {
+	public:
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		RandomEffect();
 
-	/// <summary>
-	/// 描画前処理1
-	/// </summary>
-	void PreDraw();
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize();
 
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw();
+		/// <summary>
+		/// 描画前処理1
+		/// </summary>
+		void PreDraw();
 
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~RandomEffect()=default;
+		/// <summary>
+		/// 描画
+		/// </summary>
+		void Draw();
 
-private:
-	//Windowクラス
-	Ellysia::WindowsSetup* windowSetup_ = nullptr;
-	//DirectXクラス
-	Ellysia::DirectXSetup* directXSetup_ = nullptr;
-	//パイプライン管理クラス
-	Ellysia::PipelineManager* pipelineManager_ = nullptr;
-	//RTV管理クラス
-	Ellysia::RtvManager* rtvManager_ = nullptr;
-	//SRV管理クラス
-	Ellysia::SrvManager* srvManager_ = nullptr;
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~RandomEffect() = default;
+
+	private:
+		//Windowクラス
+		Ellysia::WindowsSetup* windowSetup_ = nullptr;
+		//DirectXクラス
+		Ellysia::DirectXSetup* directXSetup_ = nullptr;
+		//パイプライン管理クラス
+		Ellysia::PipelineManager* pipelineManager_ = nullptr;
+		//RTV管理クラス
+		Ellysia::RtvManager* rtvManager_ = nullptr;
+		//SRV管理クラス
+		Ellysia::SrvManager* srvManager_ = nullptr;
 
 
-private:
-	/// <summary>
-	/// ランダムの値
-	/// </summary>
-	struct RandomValue {
+	private:
+		/// <summary>
+		/// ランダムの値
+		/// </summary>
+		struct RandomValue {
+			//値
+			float value;
+			//テクスチャと乗算させるか
+			bool isUseTexture;
+		};
+
+	private:
+		//ランダム
+		//リソース
+		ComPtr<ID3D12Resource> randomValueResource_ = nullptr;
 		//値
-		float value;
-		//テクスチャと乗算させるか
-		bool isUseTexture;
+		RandomValue randomValue_ = {};
+		//データ
+		RandomValue* randomValueData_ = nullptr;
+		//エンジン
+		std::mt19937 randomEngine_ = {};
+
+		//RTV
+		//リソース
+		ComPtr<ID3D12Resource> rtvResource_ = nullptr;
+		//ハンドル
+		uint32_t rtvHandle_ = 0;
+
+
+		//SRVハンドル
+		uint32_t srvHandle_ = 0;
+
+		//バリア
+		D3D12_RESOURCE_BARRIER barrier = {};
+
+
 	};
-	
-private:
-	//ランダム
-	//リソース
-	ComPtr<ID3D12Resource> randomValueResource_ = nullptr;
-	//値
-	RandomValue randomValue_ = {};
-	//データ
-	RandomValue* randomValueData_ = nullptr;
-	//エンジン
-	std::mt19937 randomEngine_ = {};
-
-	//RTV
-	//リソース
-	ComPtr<ID3D12Resource> rtvResource_ = nullptr;
-	//ハンドル
-	uint32_t rtvHandle_ = 0;
 
 
-	//SRVハンドル
-	uint32_t srvHandle_ = 0;
 
-	//バリア
-	D3D12_RESOURCE_BARRIER barrier = {};
-	
-	
 };
-

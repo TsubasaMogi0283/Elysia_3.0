@@ -3,19 +3,19 @@
 #include <Calculation/QuaternionCalculation.h>
 
 void Skeleton::Create(const Node& rootNode){
-    root_ = CreateJoint(rootNode, {}, joints_);
+    root = CreateJoint(rootNode, {}, joints);
 
     //名前とIndexのマッピングを行いアクセスしやすくする。
-    for (const Joint& joint : joints_) {
+    for (const Joint& joint : joints) {
         //emplace...push_backみたいなもの。新しく挿入する。
-        jointMap_.emplace(joint.name, joint.index);
+        jointMap.emplace(joint.name, joint.index);
     }
 
 }
 
 void Skeleton::Update(){
     //全てのJointを更新。親が若いので通常ループで処理可能になっている。
-    for (Joint& joint : joints_) {
+    for (Joint& joint : joints) {
 
         Matrix4x4 scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(joint.transform.scale);
         Matrix4x4 rotateMatrix = QuaternionCalculation::MakeRotateMatrix(joint.transform.rotate);
@@ -26,7 +26,7 @@ void Skeleton::Update(){
 
         //親がいれば親の行列を掛ける
         if (joint.parent) {
-            joint.skeletonSpaceMatrix = Matrix4x4Calculation::Multiply(joint.localMatrix, joints_[*joint.parent].skeletonSpaceMatrix);
+            joint.skeletonSpaceMatrix = Matrix4x4Calculation::Multiply(joint.localMatrix, joints[*joint.parent].skeletonSpaceMatrix);
         }
         //親がいないのでlocalMatrixとskeletonSpaceMatrixは一致する
         else {

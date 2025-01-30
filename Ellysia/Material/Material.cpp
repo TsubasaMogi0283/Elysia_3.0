@@ -5,7 +5,7 @@ void Material::Initialize(){
 	//色
 	color_ = {.x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f};
 	//ライティングの種類
-	lightingKinds_ = Directional;
+	lightingKinds_ = DirectionalLighting;
 	//UV行列
 	uvTransform_= Matrix4x4Calculation::MakeIdentity4x4();
 	//輝度
@@ -14,14 +14,14 @@ void Material::Initialize(){
 	//環境マップ
 	isEnviromentMap_ = false;
 	//リソースを生成
-	bufferResource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
+	resource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
 
 }
 
 void Material::Update(){
 
 	//書き込み
-	bufferResource_->Map(0u, nullptr, reinterpret_cast<void**>(&materialData_));
+	resource_->Map(0u, nullptr, reinterpret_cast<void**>(&materialData_));
 	//色
 	materialData_->color = color_;
 	//ライティングの種類
@@ -33,5 +33,5 @@ void Material::Update(){
 	//環境マップ
 	materialData_->isEnviromentMap = isEnviromentMap_;
 	//書き込み終了
-	bufferResource_->Unmap(0u, nullptr);
+	resource_->Unmap(0u, nullptr);
 }

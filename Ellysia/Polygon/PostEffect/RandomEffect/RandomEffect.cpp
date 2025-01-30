@@ -6,7 +6,7 @@
 #include "RtvManager.h"
 
 
-RandomEffect::RandomEffect(){
+Ellysia::RandomEffect::RandomEffect(){
 	//ウィンドウクラスの取得
 	windowSetup_ = Ellysia::WindowsSetup::GetInstance();
 	//DirectXクラスの取得
@@ -19,7 +19,7 @@ RandomEffect::RandomEffect(){
 	srvManager_ = Ellysia::SrvManager::GetInstance();
 }
 
-void RandomEffect::Initialize() {
+void Ellysia::RandomEffect::Initialize() {
 
 	//RTV
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.0f,0.0f,0.0f,1.0f };
@@ -51,7 +51,7 @@ void RandomEffect::Initialize() {
 
 }
 
-void RandomEffect::PreDraw() {
+void Ellysia::RandomEffect::PreDraw() {
 	
 	//RTの設定
 	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.0f,0.0f,0.0f,1.0f };
@@ -74,7 +74,7 @@ void RandomEffect::PreDraw() {
 
 }
 
-void RandomEffect::Draw() {
+void Ellysia::RandomEffect::Draw() {
 
 	//ResourceBarrierを張る
 	directXSetup_->SetResourceBarrier(

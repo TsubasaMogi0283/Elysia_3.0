@@ -38,30 +38,37 @@
 #include "LevelDataManager.h"
 
 
-#pragma region 前方宣言
-
 /// <summary>
-/// ゲーム管理クラス
+/// EllysiaEngine(前方宣言)
 /// </summary>
-class GameManager;
+namespace Ellysia {
+	/// <summary>
+	/// レベルエディタ
+	/// </summary>
+	class LevelDataManager;
 
-/// <summary>
-/// テクスチャ管理クラス
-/// </summary>
-class TextureManager;
+	/// <summary>
+	/// ゲーム管理クラス
+	/// </summary>
+	class GameManager;
 
-/// <summary>
-/// モデル管理クラス
-/// </summary>
-class ModelManager;
+	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
+	class TextureManager;
 
-/// <summary>
-/// 入力クラス
-/// </summary>
-class Input;
+	/// <summary>
+	/// モデル管理クラス
+	/// </summary>
+	class ModelManager;
+
+	/// <summary>
+	/// 入力クラス
+	/// </summary>
+	class Input;
 
 
-#pragma endregion
+}
 
 
 /// <summary>
@@ -84,7 +91,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gameManager"></param>
-	void Update(GameManager* gameManager)override;
+	void Update(Ellysia::GameManager* gameManager)override;
 
 	/// <summary>
 	/// 3Dオブジェクト
@@ -162,9 +169,9 @@ private:
 	//インプット
 	Ellysia::Input* input_=nullptr;
 	//テクスチャ管理クラス
-	TextureManager* texturemanager_ = nullptr;
+	Ellysia::TextureManager* texturemanager_ = nullptr;
 	//モデル管理クラス
-	ModelManager* modelManager_ = nullptr;
+	Ellysia::ModelManager* modelManager_ = nullptr;
 	//レベルエディタ
 	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
@@ -174,28 +181,21 @@ private:
 private:
 
 	//説明テクスチャの最大数
-	const uint32_t MAX_EXPLANATION_NUMBER_ = 2;
-
+	const uint32_t MAX_EXPLANATION_NUMBER_ = 2u;
 	//時間変化
 	const float DELTA_TIME_ = 1.0f / 60.0f;
-
 	//トリガーの増える値
 	const uint32_t INCREASE_VALUE = 1u;
-
 	//フェードアウトの具合
 	const float FADE_OUT_INTERVAL_ = 0.01f;
-
 	//回転の大きさ
 	const float ROTATE_INTERVAL = 0.025f;
-
 	//反応する
 	const uint32_t B_REACT_TIME_ = 1u;
 	//反応しない
 	const uint32_t B_NO_REACT_TIME_ = 0u;
-
 	//コントローラーの押していない時の値
 	const int32_t NO_PUSH_VALUE_ = 0u;
-
 	//完全に透明になる値
 	const float PERFECT_TRANSPARENT_ = 0.0f;
 
@@ -246,16 +246,10 @@ private:
 	uint32_t bTriggerTime_ = 0u;
 	bool isBTrigger_ = false;
 
-
-#pragma region レベルエディタに引っ越します
-
-
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
 	bool isEscape_ = false;
 
-
-#pragma endregion
 	
 	//敵管理
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
@@ -266,16 +260,12 @@ private:
 	float originPhi_ = 0.0f;
 
 	//コリジョン管理
-	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+	std::unique_ptr<Ellysia::CollisionManager> collisionManager_ = nullptr;
 
 	//強い敵と接触したかどうか
 	bool isTouchStrongEnemy_ = false;
 	
 #pragma region ゲーム中のUI
-
-	//UIManagerを作った方がよさそう
-	//ベタ書き過ぎるので
-
 	//UIを表示するかどうか
 	bool isDisplayUI_ = false;
 
@@ -361,13 +351,7 @@ private:
 
 #pragma endregion
 
-
-#pragma region デバッグ用のオブジェクト
-	//カメラの位置
-	Vector3 cameraTranslate = {};
-
-	
-#pragma endregion
-
+	//門の回転
+	float gateRotateTheta_ = 0.0f;
 
 };

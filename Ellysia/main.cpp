@@ -1,4 +1,4 @@
-#include "Ellysia.h"
+#include "Framework.h"
 
 //リリースチェッカー
 static D3DResourceLeakChecker checker;

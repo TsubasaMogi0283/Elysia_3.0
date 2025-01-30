@@ -148,8 +148,8 @@ namespace Ellysia {
 		}
 
 	private:
-		//最大SRV数(最大テクスチャ数)
-		const uint32_t MAX_SRV_COUNT_ = 512;
+		//最大SRV数
+		const uint32_t MAX_SRV_COUNT_ = 1024u;
 
 		//SRV用のデスクリプタサイズ
 		uint32_t descriptorSize_ = 0;
@@ -162,7 +162,7 @@ namespace Ellysia {
 		D3D12_GPU_DESCRIPTOR_HANDLE handleGPU_ = {};
 
 		//次に使用するSRVインデックス
-		uint32_t useIndex_ = 1;
+		uint32_t useIndex_ = 1u;
 
 
 

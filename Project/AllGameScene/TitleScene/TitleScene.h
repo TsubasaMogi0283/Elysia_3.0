@@ -21,15 +21,6 @@
 
 #pragma region 前方宣言
 
-/// <summary>
-/// ゲーム管理クラス
-/// </summary>
-class GameManager;
-
-/// <summary>
-/// テクスチャ管理クラス
-/// </summary>
-class TextureManager;
 
 /// <summary>
 /// EllysiaEngine
@@ -44,6 +35,17 @@ namespace Ellysia {
 	/// レベル管理クラス
 	/// </summary>
 	class LevelDataManager;
+	
+	/// <summary>
+	/// ゲーム管理クラス
+	/// </summary>
+	class GameManager;
+
+	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
+	class TextureManager;
+
 
 }
 
@@ -71,7 +73,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gameManager">ゲーム管理クラス</param>
-	void Update(GameManager* gameManager)override;
+	void Update(Ellysia::GameManager* gameManager)override;
 
 	/// <summary>
 	/// 3Dオブジェクト
@@ -115,7 +117,7 @@ private:
 
 private:
 	//テクスチャ管理クラス
-	TextureManager* textureManager_ = nullptr;
+	Ellysia::TextureManager* textureManager_ = nullptr;
 
 	//入力クラス
 	Ellysia::Input* input_ = nullptr;
@@ -164,7 +166,7 @@ private:
 	std::unique_ptr<Sprite> text_ = nullptr;
 	
 	//背景
-	std::unique_ptr<Sprite> backGround_ = nullptr;
+	std::unique_ptr<Sprite> logo = nullptr;
 
 
 
@@ -177,7 +179,7 @@ private:
 
 
 	//ランダムノイズ
-	std::unique_ptr<RandomEffect> randomEffect_ = nullptr;
+	std::unique_ptr<Ellysia::RandomEffect> randomEffect_ = nullptr;
 	float randomEffectTime_ = 0u;
 	bool isDisplayRandomEffect_ = false;
 	bool isEndDisplayRandomEffect_ = false;

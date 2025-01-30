@@ -34,30 +34,30 @@ void FlashLight::Initialize(){
 	//マテリアルの初期化
 	material_.Initialize();
 	//ライティングの設定
-	material_.lightingKinds_ = None;
+	material_.lightingKinds_ = NoneLighting;
 	//色
 	material_.color_ = { .x = 0.5f,.y = 1.0f,.z = 0.5f,.w = 1.0f };
 
 
 	//デバッグ用のモデルを生成する
-	uint32_t debugModelHandle = ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	uint32_t debugModelHandle = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
 
 
 	const float SCALE = 0.4f;
 	//左右
 	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
-		model_[i].reset(Model::Create(debugModelHandle));
+		model_[i].reset(Ellysia::Model::Create(debugModelHandle));
 		worldTransform_[i].Initialize();
 		worldTransform_[i].scale = { .x = SCALE,.y = SCALE ,.z = SCALE };
 
 	}
 
 	//中心
-	lightCenterModel_.reset(Model::Create(debugModelHandle));
+	lightCenterModel_.reset(Ellysia::Model::Create(debugModelHandle));
 	lightCenterWorldTransform_.Initialize();
 	lightCenterWorldTransform_.scale = { .x = SCALE,.y = SCALE ,.z = SCALE };
 	lightCenterMaterial_.Initialize();
-	lightCenterMaterial_.lightingKinds_ = None;
+	lightCenterMaterial_.lightingKinds_ = NoneLighting;
 
 	//当たり判定の初期化
 	flashLightCollision_ = std::make_unique<FlashLightCollision>();

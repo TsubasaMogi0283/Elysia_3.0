@@ -15,29 +15,12 @@
 
 #include "Model/AudioObjectForLevelEditor.h"
 #include "Model/StageObjectForLevelEditor.h"
+#include <StringOption.h>
 
 
 Ellysia::LevelDataManager* Ellysia::LevelDataManager::GetInstance(){
 	static LevelDataManager instance;
 	return &instance;
-}
-
-
-
-std::string Ellysia::LevelDataManager::FindExtension(const std::string& directory, const std::string& baseFileName) {
-	
-	//拡張子を探す
-	for (const auto& entry : std::filesystem::directory_iterator(directory)) {
-		if (entry.is_regular_file()) {
-			std::string fileName = entry.path().stem().string();
-			// 見つかったら返す
-			if (fileName == baseFileName) {
-				return entry.path().extension().string();
-			}
-		}
-	}
-	// 見つからなければ空文字を返す
-	return {};
 }
 
 void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelData) {
@@ -57,6 +40,13 @@ void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelD
 			levelData.objectDatas.emplace_back(LevelData::ObjectData{});
 			//今追加した要素の参照を得る
 			LevelData::ObjectData& objectData = levelData.objectDatas.back();
+
+
+			if (object.contains("name")) {
+				objectData.name = object["name"];
+			}
+
+
 			//ここでのファイルネームはオブジェクトの名前
 			if (object.contains("file_name")) {
 				//ファイル名
@@ -165,7 +155,7 @@ void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelD
 
 			//非表示設定
 			if (object.contains("is_invisible")) {
-				objectData.isInvisible_ = object["is_invisible"];
+				objectData.isInvisible = object["is_invisible"];
 			}
 
 
@@ -251,7 +241,7 @@ void Ellysia::LevelDataManager::Ganarate(LevelData& levelData) {
 	
 			//Audioフォルダの中で読み込み
 			std::string audioDir = levelEditorDirectoryPath + "/"+ objectData.modelFileName+"/";
-			std::string extension = FindExtension(audioDir, objectData.levelAudioData.fileName);
+			std::string extension = StringOption::FindExtension(audioDir, objectData.levelAudioData.fileName);
 			std::string fullPath = audioDir + objectData.levelAudioData.fileName +extension;
 
 			//オーディオデータ
@@ -532,7 +522,9 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 
 			//描画
 			for (auto& object : levelData->objectDatas) {
-				object.objectForLeveEditor->Draw(camera, material, directionalLight);
+				if (object.isInvisible == false) {
+					object.objectForLeveEditor->Draw(camera, material, directionalLight);
+				}
 			}
 
 			//無駄なループ処理を防ぐよ
@@ -550,7 +542,9 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 
 			//描画
 			for (auto& object : levelData->objectDatas) {
-				object.objectForLeveEditor->Draw(camera, material, pointLight);
+				if (object.isInvisible == false){
+					object.objectForLeveEditor->Draw(camera, material, pointLight);
+				}
 			}
 			
 			//無駄なループ処理を防ぐよ
@@ -570,7 +564,10 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 			//描画
 			for (auto& object : levelData->objectDatas) {
 				//描画
-				object.objectForLeveEditor->Draw(camera, material, spotLight);
+				if (object.isInvisible == false) {
+					object.objectForLeveEditor->Draw(camera, material, spotLight);
+				}
+				
 				
 			}
 			//無駄なループ処理を防ぐよ
