@@ -45,7 +45,6 @@ void Player::Initialize(){
 	//通常の敵
 	std::unique_ptr<PlayerCollisionToNormalEnemyAttack> colliderToNormalEnemy = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
 	colliderToNormalEnemy->Initialize();
-	//そのまま入れることは出来ないので所有権を移すstd::moveを使うよ
 	colliders_.push_back(std::move(colliderToNormalEnemy));
 	//強敵
 	std::unique_ptr<PlayerCollisionToStrongEnemy> collisionToStrongEnemy = std::make_unique<PlayerCollisionToStrongEnemy>();
@@ -55,6 +54,7 @@ void Player::Initialize(){
 	std::unique_ptr<PlayerCollisionToAudioObject> collosionToAudioObject= std::make_unique<PlayerCollisionToAudioObject>();
 	collosionToAudioObject->Initialize();
 	colliders_.push_back(std::move(collosionToAudioObject));
+
 	//懐中電灯
 	flashLight_ = std::make_unique<FlashLight>();
 	flashLight_->Initialize();
@@ -134,52 +134,43 @@ Player::~Player() {
 
 void Player::Damaged() {
 	//通常の敵に当たった場合
-	//if (colliderToNormalEnemy_->GetIsTouch() == true) {
-
+	//ダメージを受ける
+	if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
+		//一時的にコントロールを失う
+		isControll_ = false;
 		//ダメージを受ける
-		if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
-			//一時的にコントロールを失う
-			isControll_ = false;
-			//ダメージを受ける
-			isDameged_ = true;
-			//体力を減らす
-			--hp_;
-			//線形補間で振動処理をする
-			vibeTime_ += DELTA_TIME;
+		isDameged_ = true;
+		//体力を減らす
+		--hp_;
+		//線形補間で振動処理をする
+		vibeTime_ += DELTA_TIME;
 
-			//最大の振動の強さ
-			const float MAX_VIBE_ = 1.0f;
-			//最小の振動の強さ
-			const float MIN_VIBE_ = 0.0f;
+		//最大の振動の強さ
+		const float MAX_VIBE_ = 1.0f;
+		//最小の振動の強さ
+		const float MIN_VIBE_ = 0.0f;
 
-			//線形補間を使い振動を減衰させる
-			vibeStrength_ = SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
-			input_->SetVibration(vibeStrength_, vibeStrength_);
+		//線形補間を使い振動を減衰させる
+		vibeStrength_ = SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
+		input_->SetVibration(vibeStrength_, vibeStrength_);
 
-			//振動を止める
-			if (vibeStrength_ <= MIN_VIBE_) {
-				//振動が止まる
-				input_->StopVibration();
+		//振動を止める
+		if (vibeStrength_ <= MIN_VIBE_) {
+			//振動が止まる
+			input_->StopVibration();
 
-				//戻る時間
-				const float RESTART_TIME = 0.0f;
-				//時間を戻す
-				vibeTime_ = RESTART_TIME;
-				//ダメージを受けていないようにする
-				isDameged_ = false;
+			//戻る時間
+			const float RESTART_TIME = 0.0f;
+			//時間を戻す
+			vibeTime_ = RESTART_TIME;
+			//ダメージを受けていないようにする
+			isDameged_ = false;
 
-				//コントロールを戻す
-				isControll_ = true;
-			}
+			//コントロールを戻す
+			isControll_ = true;
 		}
+	}
 
-	//}
-	//else {
-	//	//ダメージを受けない
-	//	//当たっていないので
-	//	isDameged_ = false;
-	//
-	//}
 }
 
 void Player::Move() {

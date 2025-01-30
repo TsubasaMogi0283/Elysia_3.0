@@ -35,6 +35,16 @@ struct SpotLight;
 /// </summary>
 class Player;
 
+/// <summary>
+/// EllysiaEngine(前方宣言)
+/// </summary>
+namespace Ellysia {
+	/// <summary>
+	/// グローバル変数
+	/// </summary>
+	class GlobalVariables;
+}
+
 
 #pragma endregion
 
@@ -47,7 +57,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Enemy()=default;
+	Enemy();
 
 	/// <summary>
 	/// 初期化
@@ -73,7 +83,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Enemy()=default;
+	~Enemy();
 
 
 
@@ -238,17 +248,18 @@ private:
 	uint32_t preCondition_ = EnemyCondition::NoneMove;
 	uint32_t condition_ = EnemyCondition::Move;
 
+private:
+	//グローバル変数クラス
+	Ellysia::GlobalVariables* globalVariables_ = nullptr;
+	//グループ名
+	const std::string GROUNP_NAME_ = "NormalEnemy";
 
 private:
 	
-
-	
-
 	//幅
 	const float RADIUS_ = 1.0f;
 	//幅(Vector3)
 	const Vector3 RADIUS_INTERVAL_ = { .x = RADIUS_,.y = RADIUS_,.z = RADIUS_ };
-
 	//0に戻る時間
 	const int32_t RETURN_ATTCK_TIME_ = 240u;
 
@@ -283,31 +294,26 @@ private:
 	//時間とフラグ
 	int32_t deleteTime_ = 0;
 	bool isDeleted_ = false;
-
+	//振動のオフセット
+	float shakeOffset_ = 0.05f;
+	bool isShake_ = false;
 
 	//追跡
 	bool isTracking_ = false;
 	//追跡前の座標
 	Vector3 preTrackingPosition_ = {};
 	Vector3 preTrackingPlayerPosition_ = {};
-
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
-
 
 	//攻撃
 	int32_t attackTime_ = 0;
 	bool isAttack_ = false;
 
-
 private:
-
 	//攻撃用の当たり判定
 	std::unique_ptr<EnemyAttackCollision> attackCollision_ = nullptr;
 	//懐中電灯用の当たり判定
 	std::unique_ptr<EnemyFlashLightCollision> enemyFlashLightCollision_ = nullptr;
-
-	
-
 
 };

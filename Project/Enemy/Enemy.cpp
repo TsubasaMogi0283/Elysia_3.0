@@ -7,7 +7,13 @@
 #include <SingleCalculation.h>
 #include <numbers>
 #include <ModelManager.h>
+#include "GlobalVariables.h"
 
+Enemy::Enemy(){
+	//インスタンスの取得
+	//グローバル変数クラス
+	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
+}
 
 void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed){
 	
@@ -71,6 +77,12 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 	enemyFlashLightCollision_ = std::make_unique<EnemyFlashLightCollision>();
 	enemyFlashLightCollision_->Initialize();
 
+
+	//グローバル変数
+	globalVariables_->CreateGroup(GROUNP_NAME_);
+	//振動
+	globalVariables_->AddItem(GROUNP_NAME_, "ShakeOffset", shakeOffset_);
+	shakeOffset_ = globalVariables_->GetFloatValue(GROUNP_NAME_, "ShakeOffset");
 }
 
 
@@ -254,8 +266,9 @@ void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 	}
 }
 
-
-
+Enemy::~Enemy(){
+	globalVariables_->SaveFile(GROUNP_NAME_);
+}
 
 void Enemy::Damaged() {
 
@@ -264,6 +277,22 @@ void Enemy::Damaged() {
 		const float COLOR_CHANGE_INTERVAL = 0.01f;
 		mainMaterial_.color_.y -= COLOR_CHANGE_INTERVAL;
 		mainMaterial_.color_.z -= COLOR_CHANGE_INTERVAL;
+
+		//生存している時だけ振動
+		if (isAlive_ == true) {
+			//振動演出
+			//体力減っていくと同時に振動幅が大きくなっていくよ
+			std::random_device seedGenerator;
+			std::mt19937 randomEngine(seedGenerator());
+			std::uniform_real_distribution<float> distribute(-1.0f, 1.0f);
+
+
+			//現在の座標に加える
+			worldTransform_.translate.x += distribute(randomEngine) * (1.0f - mainMaterial_.color_.y) * shakeOffset_;
+			worldTransform_.translate.z += distribute(randomEngine) * (1.0f - mainMaterial_.color_.y) * shakeOffset_;
+		}
+		
+
 	}
 
 	//0になったら絶命
@@ -275,7 +304,7 @@ void Enemy::Damaged() {
 
 void Enemy::Dead() {
 	//消えていくよ
-	const float DELETE_INTERVAL = 0.02f;
+	const float DELETE_INTERVAL = 0.01f;
 	mainMaterial_.color_.w -= DELETE_INTERVAL;
 
 	//生成

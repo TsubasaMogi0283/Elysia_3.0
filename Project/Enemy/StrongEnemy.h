@@ -172,35 +172,25 @@ private:
 private:
 	//モデル
 	std::unique_ptr<Ellysia::Model>model_ = nullptr;
-
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
-
 	//マテリアル
 	Material material_ = {};
 
 	//方向
 	Vector3 direction_ = {};
-
 	//移動速度
 	//変更前
 	Vector3 preSpeed_ = {};
 	//通常
 	Vector3 speed_ = {};
-
-
 	//AABB
 	AABB aabb_ = {};
-
-
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
 
-
-
 	//追跡
 	bool isTracking_ = false;
-
 	//追跡開始距離
 	float trackingStartDistance_ = 0.0f;
 

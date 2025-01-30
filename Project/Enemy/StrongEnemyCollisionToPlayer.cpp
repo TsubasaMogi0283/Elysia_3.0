@@ -15,7 +15,6 @@ void StrongEnemyCollisionToPlayer::Initialize(const uint32_t& modelHandle){
 
 	//名前
 	name_ = "ToPlayer";
-
 	//当たり判定で使う種類
 	collisionType_ = ColliderType::SphereType;
 	//半径

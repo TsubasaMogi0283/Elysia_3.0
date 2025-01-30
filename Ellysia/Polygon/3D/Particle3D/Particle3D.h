@@ -137,8 +137,6 @@ public:
 
 private:
 
-#pragma region パーティクルの設定で使う関数
-
 	/// <summary>
 	/// 新しいパーティクルの生成
 	/// </summary>
@@ -153,8 +151,6 @@ private:
 	/// <param name="randomEngine"></param>
 	/// <returns></returns>
 	std::list<Particle> Emission(const Emitter& emmitter, std::mt19937& randomEngine);
-
-#pragma endregion
 
 	/// <summary>
 	/// 更新
@@ -225,7 +221,7 @@ public:
 	/// <summary>
 	/// 全て透明になったかどうか
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>全て消えたことを示すフラグ</returns>
 	inline bool GetIsAllInvisible()const {
 		return isAllInvisible_;
 	}
@@ -233,7 +229,7 @@ public:
 	/// <summary>
 	/// 地面のオフセット
 	/// </summary>
-	/// <param name="offset"></param>
+	/// <param name="offset">オフセット</param>
 	inline void SetGroundOffset(const float& offset) {
 		this->groundOffset_ = offset;
 	}
@@ -241,37 +237,65 @@ public:
 #pragma region エミッタの中の設定
 
 
-	//Scale
+	/// <summary>
+	/// スケールの設定
+	/// </summary>
+	/// <param name="scale">スケールサイズ</param>
 	inline void SetScale(const Vector3& scale) {
 		this->emitter_.transform.scale = scale;
 	}
 
-	//Rotate
+	/// <summary>
+	/// 回転の設定
+	/// </summary>
+	/// <param name="rotate">回転</param>
 	inline void SetRotate(const Vector3 &rotate) {
 		this->emitter_.transform.rotate = rotate;
 	}
+	/// <summary>
+	/// 回転の取得
+	/// </summary>
+	/// <returns></returns>
 	inline Vector3 GetRotate() const {
 		return emitter_.transform.rotate;
 	}
 
-	//Translate
+	/// <summary>
+	/// 座標の設定
+	/// </summary>
+	/// <param name="translate">座標</param>
 	inline void SetTranslate(const Vector3& translate) {
 		this->emitter_.transform.translate = translate;
 	}
+	/// <summary>
+	/// 座標の取得
+	/// </summary>
+	/// <returns></returns>
 	inline Vector3 GetTranslate() const{
 		return emitter_.transform.translate;
 	}
 
 
-	//発生数
+	/// <summary>
+	/// 発生数
+	/// </summary>
+	/// <param name="count"></param>
 	inline void SetCount(const uint32_t& count) {
 		this->emitter_.count = count;
 	}
-	//発生頻度
+
+	/// <summary>
+	/// 発生頻度
+	/// </summary>
+	/// <param name="frequency"></param>
 	inline void SetFrequency(const float& frequency) {
 		this->emitter_.frequency = frequency;
 	}
-	//発生頻度を設定
+
+	/// <summary>
+	/// 発生頻度を設定
+	/// </summary>
+	/// <param name="frequencyTime"></param>
 	inline void SetFrequencyTime(const float& frequencyTime) {
 		this->emitter_.frequencyTime = frequencyTime;
 	}
