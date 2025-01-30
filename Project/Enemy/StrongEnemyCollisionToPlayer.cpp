@@ -1,5 +1,6 @@
 #include "StrongEnemyCollisionToPlayer.h"
 #include "CollisionConfig.h"
+#include "VectorCalculation.h"
 
 void StrongEnemyCollisionToPlayer::Initialize(const uint32_t& modelHandle){
 
@@ -11,6 +12,9 @@ void StrongEnemyCollisionToPlayer::Initialize(const uint32_t& modelHandle){
 	//マテリアルの初期化
 	material_.Initialize();
 	material_.lightingKinds_ = SpotLighting;
+
+	//名前
+	name_ = "ToPlayer";
 
 	//当たり判定で使う種類
 	collisionType_ = ColliderType::SphereType;
@@ -26,6 +30,11 @@ void StrongEnemyCollisionToPlayer::Initialize(const uint32_t& modelHandle){
 }
 
 void StrongEnemyCollisionToPlayer::Update(){
+
+	//AABB
+	aabb_.min = VectorCalculation::Subtract(enemyPosition_, { radius_,radius_, radius_ });
+	aabb_.max = VectorCalculation::Add(enemyPosition_, { radius_,radius_, radius_ });
+
 
 	//ワールドトランスフォームの更新
 	worldTransform_.translate = enemyPosition_;

@@ -68,8 +68,6 @@ public:
 		this->enemyPosition_ = position;
 	}
 
-
-
 	/// <summary>
 	/// プレイヤーと当たったかどうか
 	/// </summary>
@@ -77,8 +75,6 @@ public:
 	inline bool GetIsTouchPlayer()const {
 		return isTouchPlayer_;
 	}
-
-
 
 private:
 	//モデル

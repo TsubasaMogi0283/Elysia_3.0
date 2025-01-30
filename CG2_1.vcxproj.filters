@@ -690,6 +690,9 @@
     <ClCompile Include="Ellysia\EffectData\Dissolve\Dissolve.cpp">
       <Filter>Ellysia\Source File\EffectData</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Enemy\StrongEnemyCollisionToPlayer.cpp">
+      <Filter>Project\Enemy\StrongEnemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -1176,6 +1179,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\EffectData\Dissolve\Dissolve.h">
       <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\StrongEnemyCollisionToPlayer.h">
+      <Filter>Project\Enemy\StrongEnemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

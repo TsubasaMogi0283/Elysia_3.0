@@ -1062,8 +1062,8 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	
 	std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
 	for (StrongEnemy* strongEnemy : strongEnemyes) {
-		bool isTouch = strongEnemy->GetIsTouchPlayer();
-		collisionManager_->RegisterList(strongEnemy);
+		bool isTouch = strongEnemy->GetStrongEnemyCollisionToPlayer()->GetIsTouchPlayer();
+		collisionManager_->RegisterList(strongEnemy->GetStrongEnemyCollisionToPlayer());
 		//接触
 		if (isTouch == true) {
 			isTouchStrongEnemy_ = true;

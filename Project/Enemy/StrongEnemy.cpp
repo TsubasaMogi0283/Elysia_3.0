@@ -4,9 +4,9 @@
 
 #include "Camera.h"
 #include "SpotLight.h"
-#include <VectorCalculation.h>
+#include "VectorCalculation.h"
 #include "CollisionConfig.h"
-
+#include "ModelManager.h"
 
 void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position,const Vector3& speed){
 
@@ -28,30 +28,13 @@ void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position
 	//ライティングの種類
 	material_.lightingKinds_ = SpotLighting;
 
-	//プレイヤーに当たったかどうか
-	isTouchPlayer_ = false;
 
+	//デバッグ用モデル
+	uint32_t collisionDebugModel = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
 
-
-	//状態の初期化
-	condition_ = EnemyCondition::Tracking;
-
-#pragma region 当たり判定
-
-	//当たり判定で使う種類
-	collisionType_ = ColliderType::SphereType;
-	//半径
-	radius_ = 2.0f;
-
-
-	//判定
-	//自分
-	SetCollisionAttribute(COLLISION_ATTRIBUTE_STRONG_ENEMY);
-	//相手
-	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER2);
-
-#pragma endregion
-
+	//プレイヤーに対してのコリジョン
+	collisionToPlayer_ = std::make_unique<StrongEnemyCollisionToPlayer>();
+	collisionToPlayer_->Initialize(collisionDebugModel);
 
 
 
@@ -144,26 +127,21 @@ void StrongEnemy::Update(){
 	material_.Update();
 
 
-	//AABBの計算
-	aabb_.min = VectorCalculation::Subtract(GetWorldPosition(), { radius_ ,radius_ ,radius_ });
-	aabb_.max = VectorCalculation::Add(GetWorldPosition(), { radius_ ,radius_ ,radius_ });
-
+	//更新
+	collisionToPlayer_->Update();
+	collisionToPlayer_->SetEnemyPosition(worldTransform_.GetWorldPosition());
 
 }
 
 void StrongEnemy::Draw(const Camera& camera,const SpotLight& spotLight){
 	//描画
 	model_->Draw(worldTransform_, camera, material_, spotLight);
+
+#ifdef _DEBUG
+	collisionToPlayer_->Draw(camera, spotLight);
+#endif // _DEBUG
+
+
 }
 
 
-
-void StrongEnemy::OnCollision(){
-	//プレイヤーと接触した
-	isTouchPlayer_ = true;
-
-}
-
-void StrongEnemy::OffCollision(){
-
-}

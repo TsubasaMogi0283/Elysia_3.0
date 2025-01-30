@@ -13,7 +13,7 @@
 #include "WorldTransform.h"
 #include "Material.h"
 #include "Enemy/EnemyCondition.h"
-#include "Collider.h"
+#include "StrongEnemyCollisionToPlayer.h"
 
 
 #pragma region 前方宣言
@@ -36,7 +36,7 @@ struct SpotLight;
 /// <summary>
 /// 強敵
 /// </summary>
-class StrongEnemy :public Collider {
+class StrongEnemy{
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -71,22 +71,12 @@ public:
 
 
 public:
-	/// <summary>
-	/// 接触
-	/// </summary>
-	void OnCollision()override;
-
-	/// <summary>
-	/// 非接触
-	/// </summary>
-	void OffCollision()override;
-
 
 	/// <summary>
 	/// ワールド座標
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetWorldPosition()override {
+	Vector3 GetWorldPosition() {
 		return worldTransform_.GetWorldPosition();
 	}
 
@@ -99,13 +89,6 @@ public:
 		this->playerPosition_ = position;
 	}
 
-	/// <summary>
-	/// プレイヤーと当たったかどうか
-	/// </summary>
-	/// <returns></returns>
-	inline bool GetIsTouchPlayer()const {
-		return isTouchPlayer_;
-	}
 
 	/// <summary>
 	/// 向きを取得
@@ -129,7 +112,7 @@ public:
 	/// <summary>
 	/// 状態の取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>状態</returns>
 	inline uint32_t GetCondition() const {
 		return condition_;
 	}
@@ -159,7 +142,7 @@ public:
 	/// <summary>
 	/// AABBの取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>AABB</returns>
 	inline AABB GetAABB() {
 		return aabb_;
 	}
@@ -174,6 +157,13 @@ public:
 	}
 
 
+	/// <summary>
+	/// プレイヤーに対するコリジョンを取得
+	/// </summary>
+	/// <returns>プレイヤーに対するコリジョン</returns>
+	inline StrongEnemyCollisionToPlayer* GetStrongEnemyCollisionToPlayer()const {
+		return collisionToPlayer_.get();
+	}
 
 private:
 	//状態
@@ -203,8 +193,6 @@ private:
 	AABB aabb_ = {};
 
 
-	//プレイヤーに当たったかどうか
-	bool isTouchPlayer_ = false;
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
 
@@ -215,6 +203,13 @@ private:
 
 	//追跡開始距離
 	float trackingStartDistance_ = 0.0f;
+
+
+
+private:
+	//プレイヤーに対してのコリジョン
+	std::unique_ptr<StrongEnemyCollisionToPlayer> collisionToPlayer_ = nullptr;
+
 	
 };
 
