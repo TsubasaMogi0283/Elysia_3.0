@@ -78,7 +78,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~EnemyManager();
+	~EnemyManager()=default;
 
 public:
 

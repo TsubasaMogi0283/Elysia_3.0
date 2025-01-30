@@ -122,11 +122,9 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 void EnemyManager::DeleteEnemy(){
 	//敵が生存していなかったら消す
 	enemies_.remove_if([](const std::unique_ptr<Enemy>& enemy) {
-		if (enemy->GetIsDeleted() == true) {
-			//enemy.reset(nullptr);
-			return true;
-		}
-		return false;
+		//スマートポインタの場合はこれだけで良いよ
+		//勿論こっちもdeleteが無くなってすっきりだね!
+		return enemy->GetIsDeleted();
 	});
 }
 
@@ -694,12 +692,3 @@ void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 	}
 
 }
-
-EnemyManager::~EnemyManager(){
-	//audio_->Stop(audioHandle_);
-
-	
-}
-
-
-
