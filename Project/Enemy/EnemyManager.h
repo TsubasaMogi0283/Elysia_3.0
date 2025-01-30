@@ -108,7 +108,7 @@ public:
 	/// エネミーのリストを取得
 	/// </summary>
 	/// <returns></returns>
-	inline std::list<Enemy*> GetEnemyes() const{
+	inline std::list< std::unique_ptr<Enemy>> GetEnemyes() const{
 		return enemyes_;
 	}
 	
@@ -116,7 +116,7 @@ public:
 	/// 強敵の取得
 	/// </summary>
 	/// <returns>リスト</returns>
-	inline std::list<StrongEnemy*>GetStrongEnemyes()const {
+	inline std::list< std::unique_ptr<StrongEnemy>>GetStrongEnemyes()const {
 		return strongEnemyes_;
 	}
 
@@ -159,9 +159,9 @@ private:
 private:
 	//エネミーのリスト
 	//通常
-	std::list<Enemy*>enemyes_ = {};
+	std::list<std::unique_ptr<Enemy>>enemyes_ = {};
 	//強敵
-	std::list<StrongEnemy*>strongEnemyes_ = {};
+	std::list< std::unique_ptr<StrongEnemy>>strongEnemyes_ = {};
 
 	//モデルハンドル
 	//通常

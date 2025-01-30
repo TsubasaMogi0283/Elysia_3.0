@@ -121,9 +121,9 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 
 void EnemyManager::DeleteEnemy(){
 	//敵が生存していなかったら消す
-	enemyes_.remove_if([](Enemy* enemy) {
+	enemyes_.remove_if([](const std::unique_ptr<Enemy>& enemy) {
 		if (enemy->GetIsDeleted() == true) {
-			delete enemy;
+			//enemy.reset(nullptr);
 			return true;
 		}
 		return false;
@@ -137,7 +137,7 @@ void EnemyManager::StopAudio(){
 
 void EnemyManager::GenarateNormalEnemy(const Vector3& position) {
 	//通常の敵の生成
-	Enemy* enemy = new Enemy();
+	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 	std::uniform_real_distribution<float> speedDistribute(-0.001f, 0.001f);
@@ -154,7 +154,7 @@ void EnemyManager::GenarateNormalEnemy(const Vector3& position) {
 
 void EnemyManager::GenarateStrongEnemy(const Vector3& position){
 	//強敵の生成
-	StrongEnemy* enemy = new StrongEnemy();
+	std::unique_ptr <StrongEnemy> enemy = std::make_unique <StrongEnemy>();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 
@@ -189,7 +189,7 @@ void EnemyManager::Update(){
 
 
 	//通常の敵
-	for (Enemy* enemy : enemyes_) {
+	for (const std::unique_ptr <Enemy>& enemy : enemyes_) {
 		//プレイヤーの位置を設定
 		enemy->SetPlayerPosition(playerPosition);
 
@@ -282,7 +282,7 @@ void EnemyManager::Update(){
 
 	//敵同士の衝突判定をやる必要が無いからね
 	if (enemyAmount == ONLY_ONE) {
-		for (Enemy* enemy : enemyes_) {
+		for (const std::unique_ptr <Enemy>& enemy : enemyes_) {
 			//状態
 			uint32_t condition = enemy->GetCondition();
 
@@ -362,7 +362,7 @@ void EnemyManager::Update(){
 
 	//1体より多い時
 	if (enemyAmount > ONLY_ONE) {
-		for (std::list<Enemy*>::iterator it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
+		for (auto it1 = enemyes_.begin(); it1 != enemyes_.end(); ++it1) {
 
 			//比較する数
 			const uint32_t COMPARE_NUMBER = 2u;
@@ -386,7 +386,7 @@ void EnemyManager::Update(){
 			//敵同士の内積
 			float enemyAndEnemyDot = 0.0f;
 
-			for (std::list<Enemy*>::iterator it2 = enemyes_.begin(); it2 != enemyes_.end(); ++it2) {
+			for (auto it2 = enemyes_.begin(); it2 != enemyes_.end(); ++it2) {
 
 				//it1とit2が一致した場合は計算をせずに次のループへ
 				if (it1 == it2) {
@@ -534,7 +534,7 @@ void EnemyManager::Update(){
 	}
 
 	//強敵の更新
-	for (StrongEnemy* strongEnemy : strongEnemyes_) {
+	for (const std::unique_ptr<StrongEnemy>& strongEnemy : strongEnemyes_) {
 		//一発アウトの敵の更新
 		strongEnemy->Update();
 		//プレイヤーの座標を設定
@@ -684,12 +684,12 @@ void EnemyManager::Update(){
 void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 
 	//描画(通常)
-	for (Enemy* enemy : enemyes_) {
+	for (const std::unique_ptr <Enemy>& enemy : enemyes_) {
 		enemy->Draw(camera,spotLight);
 	}
 
 	//描画(強敵)
-	for (StrongEnemy* strongEnemy : strongEnemyes_) {
+	for (const std::unique_ptr<StrongEnemy>&  strongEnemy : strongEnemyes_) {
 		strongEnemy->Draw(camera, spotLight);
 	}
 
@@ -697,16 +697,6 @@ void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 
 EnemyManager::~EnemyManager(){
 	//audio_->Stop(audioHandle_);
-
-	//消す(通常)
-	for (Enemy* enemy : enemyes_) {
-		delete enemy;
-	}
-
-	//消す(強敵)
-	for (StrongEnemy* strongEnemy : strongEnemyes_) {
-		delete strongEnemy;
-	}
 
 	
 }

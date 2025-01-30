@@ -1034,8 +1034,8 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 	//エネミーをコリジョンマネージャーに追加
 	//通常の敵のリストの取得
-	std::list<Enemy*> enemyes = enemyManager_->GetEnemyes();
-	for (Enemy* enemy : enemyes) {
+	std::list< std::unique_ptr<Enemy>> enemyes = enemyManager_->GetEnemyes();
+	for (const std::unique_ptr<Enemy>& enemy : enemyes) {
 		//懐中電灯に対して
 		collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 		//攻撃
@@ -1060,8 +1060,8 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	//懐中電灯に対してのコライダーを登録
 	collisionManager_->RegisterList(player_->GetFlashLightCollision());
 	
-	std::list<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemyes();
-	for (StrongEnemy* strongEnemy : strongEnemyes) {
+	std::list< std::unique_ptr<StrongEnemy>> strongEnemyes = enemyManager_->GetStrongEnemyes();
+	for (const std::unique_ptr <StrongEnemy>& strongEnemy : strongEnemyes) {
 		bool isTouch = strongEnemy->GetStrongEnemyCollisionToPlayer()->GetIsTouchPlayer();
 		collisionManager_->RegisterList(strongEnemy->GetStrongEnemyCollisionToPlayer());
 		//接触
