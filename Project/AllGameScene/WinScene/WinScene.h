@@ -46,7 +46,7 @@ namespace Ellysia {
 /// <summary>
 /// 勝利シーン
 /// </summary>
-class WinScene : public IGameScene {
+class WinScene : public Ellysia::IGameScene {
 public:
 	/// <summary>
 	/// コンストラクタ

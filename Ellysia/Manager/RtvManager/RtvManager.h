@@ -115,7 +115,7 @@ namespace Ellysia {
 	private:
 
 		//最大のサイズ
-		static const uint32_t RTV_DESCRIPTOR_SIZE_ = 30;
+		static const uint32_t RTV_DESCRIPTOR_SIZE_ = 1024u;
 		//インデックス
 		uint32_t index_ = 0;
 
@@ -131,7 +131,7 @@ namespace Ellysia {
 			//PostEffect名
 			std::string name;
 			//index
-			uint32_t index = 0;
+			uint32_t index;
 
 		};
 

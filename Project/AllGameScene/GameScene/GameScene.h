@@ -74,7 +74,7 @@ namespace Ellysia {
 /// <summary>
 /// ゲームシーン
 /// </summary>
-class GameScene : public IGameScene {
+class GameScene : public Ellysia::IGameScene {
 public:
 
 	/// <summary>

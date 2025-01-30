@@ -60,7 +60,7 @@ namespace Ellysia {
 /// <summary>
 /// 負けシーン
 /// </summary>
-class LoseScene : public IGameScene {
+class LoseScene : public Ellysia::IGameScene {
 public:
 
 	/// <summary>

@@ -5,10 +5,10 @@
 #include "WinScene/WinScene.h"
 #include "LoseScene/LoseScene.h"
 
-std::unique_ptr<IGameScene> GameSceneFactory::CreateScene(const std::string& sceneName){
+std::unique_ptr<Ellysia::IGameScene> GameSceneFactory::CreateScene(const std::string& sceneName){
 
     //シーンを生成
-    std::unique_ptr<IGameScene> newScene = nullptr;
+    std::unique_ptr<Ellysia::IGameScene> newScene = nullptr;
 
     //タイトル
     if (sceneName == "Title") {

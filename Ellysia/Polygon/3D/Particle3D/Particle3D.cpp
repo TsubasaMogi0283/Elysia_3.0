@@ -144,9 +144,9 @@ Particle3D* Particle3D::Create(const uint32_t& modelHandle,const uint32_t& moveT
 
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
-	particle3D->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//
+	particle3D->vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));//
 	std::memcpy(vertexData, particle3D->vertices_.data(), sizeof(VertexData) * particle3D->vertices_.size());
-	particle3D->vertexResource_->Unmap(0, nullptr);
+	particle3D->vertexResource_->Unmap(0u, nullptr);
 
 
 
@@ -157,7 +157,7 @@ Particle3D* Particle3D::Create(const uint32_t& modelHandle,const uint32_t& moveT
 	particle3D->instancingIndex_ = particle3D->srvManager_->Allocate();
 	particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
 	//書き込み
-	particle3D->instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
+	particle3D->instancingResource_->Map(0u, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
 
 
 	//カメラ
