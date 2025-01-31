@@ -13,7 +13,6 @@ KeyManager::KeyManager(){
 
 	//オーディオの取得
 	audio_ = Ellysia::Audio::GetInstance();
-	
 	//テクスチャ管理クラスの取得
 	textureManager_ = Ellysia::TextureManager::GetInstance();
 }
@@ -116,23 +115,22 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 
 void KeyManager::Genarate(const Vector3& position){
 	//生成
-	Key* key = new Key();
+	std::unique_ptr<Key> key = std::make_unique<Key>();
 	//初期化
 	key->Initialize(modelHandle_, position);
 	//リストに入れる
-	keyes_.push_back(key);
+	keies_.push_back(std::move(key));
 }
 
 void KeyManager::Delete(){
 
 	//消去処理
-	//外部の変数を持ってきたいときは[]の中に=を入れよう！
-	keyes_.remove_if([=](Key* key) {
+	//外部の変数()ここではメンバ変数とかを持ってきたいときは[]の中に=を入れよう！
+	keies_.remove_if([=](const std::unique_ptr<Key>& key) {
 		//拾われたら消す
 		if (key->GetIsPickUp() == true) {
 			audio_->Play(pickUpSEHandle, false);
 
-			delete key;
 			return true;
 		}
 		return false;
@@ -149,7 +147,7 @@ void KeyManager::Update(){
 	keyAndPlayerDistances_.clear();
 
 	//鍵
-	for (Key* key : keyes_) {
+	for (const std::unique_ptr<Key>& key : keies_) {
 		//更新
 		key->Update();
 
@@ -191,7 +189,7 @@ void KeyManager::Update(){
 
 
 	//現在の鍵の数
-	size_t currentKeyQuantity = keyes_.size();
+	size_t currentKeyQuantity = keies_.size();
 	if (currentKeyQuantity == 0u) {
 		audio_->Stop(notificationSEHandle_);
 	}
@@ -203,7 +201,7 @@ void KeyManager::Update(){
 
 void KeyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight){
 	//鍵モデルの描画
-	for (Key* key : keyes_) {
+	for (const std::unique_ptr<Key>& key : keies_) {
 		key->Draw(camera, spotLight);
 	}
 }
@@ -216,13 +214,3 @@ void KeyManager::DrawSprite(const uint32_t& playeresKey){
 
 
 }
-
-KeyManager::~KeyManager(){
-	
-	//消す
-	for (Key* key : keyes_) {
-		delete  key;
-	}
-
-}
-
