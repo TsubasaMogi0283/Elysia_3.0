@@ -66,7 +66,7 @@ namespace Ellysia {
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		LevelDataManager() = default;
+		LevelDataManager();
 
 		/// <summary>
 		/// デストラクタ
@@ -304,62 +304,65 @@ namespace Ellysia {
 
 	private:
 
+
+		/// <summary>
+		/// オブジェクトデータ
+		/// </summary>
+		struct ObjectData {
+			//オブジェクトのタイプ
+			//今はステージかオーディオのどちらか
+			std::string type;
+
+			//個別の名前
+			std::string name;
+
+			//ファイル名
+			std::string modelFileName;
+
+			//Transform
+			Transform transform;
+
+
+			//コライダーを持っているかどうか
+			bool isHavingCollider = false;
+
+			//Colliderの種類
+			std::string colliderType;
+
+			uint32_t colliderTypeNumber;
+
+
+			//Sphere,Box
+			Vector3 center;
+			Vector3 size;
+
+			//AABB
+			AABB aabb;
+			Vector3 upSize;
+			Vector3 downSize;
+
+
+			//非表示設定
+			bool isInvisible = false;
+
+			//レベルデータのオーディオ
+			AudioDataForLevelEditor levelAudioData;
+
+			//オブジェクト(ステージかオーディオ)
+			IObjectForLevelEditor* objectForLeveEditor;
+
+			//コライダー
+			IObjectForLevelEditorCollider* levelDataObjectCollider;
+
+
+		};
+
+
 		/// <summary>
 		/// レベルデータ
 		/// </summary>
 		struct LevelData {
-			//モデルオブジェクト
-			struct ObjectData {
-				//オブジェクトのタイプ
-				//今はステージかオーディオのどちらか
-				std::string type;
-
-				//個別の名前
-				std::string name;
-
-				//ファイル名
-				std::string modelFileName;
-
-				//Transform
-				Transform transform;
-
-
-#pragma region コライダー
-				//コライダーを持っているかどうか
-				bool isHavingCollider = false;
-
-				//Colliderの種類
-				std::string colliderType;
-
-				uint32_t colliderTypeNumber;
-
-
-				//Sphere,Box
-				Vector3 center;
-				Vector3 size;
-
-				//AABB
-				AABB aabb;
-				Vector3 upSize;
-				Vector3 downSize;
-#pragma endregion
-
-
-				//非表示設定
-				bool isInvisible = false;
-
-				//レベルデータのオーディオ
-				AudioDataForLevelEditor levelAudioData;
-
-				//オブジェクト(ステージかオーディオ)
-				IObjectForLevelEditor* objectForLeveEditor;
-
-				//コライダー
-				IObjectForLevelEditorCollider* levelDataObjectCollider;
-
-
-			};
-
+			
 			//ハンドル
 			uint32_t handle = 0u;
 
@@ -379,14 +382,12 @@ namespace Ellysia {
 
 		};
 
-
-
 		/// <summary>
 		/// 指定したオブジェクトの取得
 		/// </summary>
 		/// <param name="handle">ハンドル</param>
 		/// <returns>オブジェクトのリスト</returns>
-		inline std::list<LevelData::ObjectData> GetObject(const uint32_t& handle) {
+		inline std::list<ObjectData> GetObject(const uint32_t& handle) {
 
 			for (const auto& [key, levelData] : levelDatas_) {
 
@@ -399,9 +400,6 @@ namespace Ellysia {
 			//見つからない
 			return {};
 		}
-
-
-
 
 	public:
 		/// <summary>
@@ -418,12 +416,6 @@ namespace Ellysia {
 				}
 			}
 		}
-
-
-
-
-
-
 
 		/// <summary>
 		/// 個別のスケールの変更
@@ -479,8 +471,6 @@ namespace Ellysia {
 
 		}
 
-
-
 		/// <summary>
 		/// 個別の座標を変更
 		/// </summary>
@@ -506,12 +496,9 @@ namespace Ellysia {
 
 		}
 
-
-
-
-
-
 	private:
+
+
 		/// <summary>
 		/// 配置
 		/// </summary>
@@ -522,7 +509,7 @@ namespace Ellysia {
 		/// <summary>
 		/// 生成
 		/// </summary>
-		/// <param name="directoryPath">ディレクトリーパス</param>
+		/// <param name="levelData"></param>
 		void Ganarate(LevelData& levelData);
 
 
@@ -532,6 +519,10 @@ namespace Ellysia {
 		/// <param name="fullFilePath"></param>
 		/// <returns></returns>
 		nlohmann::json Deserialize(const std::string& fullFilePath);
+
+	private:
+		//オーディオ
+		Ellysia::Audio* audio_ = nullptr;
 
 		
 	private:

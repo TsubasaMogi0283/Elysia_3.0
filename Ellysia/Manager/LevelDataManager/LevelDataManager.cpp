@@ -18,6 +18,13 @@
 #include <StringOption.h>
 
 
+
+Ellysia::LevelDataManager::LevelDataManager() {
+	//オーディオのインスタンスを取得
+	audio_ = Ellysia::Audio::GetInstance();
+}
+
+
 Ellysia::LevelDataManager* Ellysia::LevelDataManager::GetInstance(){
 	static LevelDataManager instance;
 	return &instance;
@@ -37,9 +44,9 @@ void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelD
 		//MESHの場合
 		if (type.compare("MESH") == 0) {
 			//要素追加
-			levelData.objectDatas.emplace_back(LevelData::ObjectData{});
+			levelData.objectDatas.emplace_back(ObjectData{});
 			//今追加した要素の参照を得る
-			LevelData::ObjectData& objectData = levelData.objectDatas.back();
+			ObjectData& objectData = levelData.objectDatas.back();
 
 
 			if (object.contains("name")) {
@@ -191,12 +198,6 @@ void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelD
 				}
 			}
 
-			
-			//子オブジェクト
-			if (object.contains("children")) {
-				Place(object["children"], levelData);
-			}
-
 		}
 	}
 
@@ -204,13 +205,11 @@ void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelD
 
 void Ellysia::LevelDataManager::Ganarate(LevelData& levelData) {
 
-	//オーディオのインスタンスを取得
-	Ellysia::Audio* audio = Ellysia::Audio::GetInstance();
-
+	
 	//ディレクトリパス
 	std::string levelEditorDirectoryPath = LEVEL_DATA_PATH_ + levelData.folderName;
-	
-	for (LevelData::ObjectData& objectData : levelData.objectDatas) {
+
+	for (ObjectData& objectData : levelData.objectDatas) {
 
 		if(objectData.type=="Stage") {
 
@@ -253,7 +252,7 @@ void Ellysia::LevelDataManager::Ganarate(LevelData& levelData) {
 				.type = objectData.levelAudioData.type,
 
 				//ハンドルは後で入力する
-				.handle = audio->Load(fullPath),
+				.handle = audio_->Load(fullPath),
 
 				//エリア上かどうか
 				.isOnArea = objectData.levelAudioData.isOnArea,
