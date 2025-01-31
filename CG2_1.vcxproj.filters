@@ -256,15 +256,6 @@
     <Filter Include="Project\Enemy\EnemyAttackCollision">
       <UniqueIdentifier>{20d87d40-77b6-425d-8fb0-6466f81f7d5a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\ObjectManager">
-      <UniqueIdentifier>{07691779-7717-47c0-8eaf-66d662b47822}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\ObjectManager\StageObject">
-      <UniqueIdentifier>{3ee82dd3-28aa-419b-817b-b4293c945d9b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\ObjectManager\StageObject\Gate">
-      <UniqueIdentifier>{04fdbc6f-7a4a-4b0a-ad10-68fef5f36d90}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Enemy\StrongEnemy">
       <UniqueIdentifier>{53f59d92-040d-4e5f-a0f1-6da83d07e9ea}</UniqueIdentifier>
     </Filter>
@@ -421,6 +412,9 @@
     <Filter Include="Project\Scene\Win">
       <UniqueIdentifier>{c06d8e17-a723-4892-983a-90de5852100f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Gate">
+      <UniqueIdentifier>{04fdbc6f-7a4a-4b0a-ad10-68fef5f36d90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -567,9 +561,6 @@
     <ClCompile Include="Project\Enemy\EnemyManager.cpp">
       <Filter>Project\Enemy\EnemyManager</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Stage\Gate\Gate.cpp">
-      <Filter>Project\ObjectManager\StageObject\Gate</Filter>
-    </ClCompile>
     <ClCompile Include="Project\AllGameScene\TitleScene\TitleScene.cpp">
       <Filter>Project\Scene\Title</Filter>
     </ClCompile>
@@ -692,6 +683,9 @@
     </ClCompile>
     <ClCompile Include="Project\Enemy\StrongEnemyCollisionToPlayer.cpp">
       <Filter>Project\Enemy\StrongEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Stage\Gate\Gate.cpp">
+      <Filter>Project\Gate</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1012,9 +1006,6 @@
     <ClInclude Include="Project\Enemy\EnemyManager.h">
       <Filter>Project\Enemy\EnemyManager</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Stage\Gate\Gate.h">
-      <Filter>Project\ObjectManager\StageObject\Gate</Filter>
-    </ClInclude>
     <ClInclude Include="Project\AllGameScene\TitleScene\TitleScene.h">
       <Filter>Project\Scene\Title</Filter>
     </ClInclude>
@@ -1182,6 +1173,9 @@
     </ClInclude>
     <ClInclude Include="Project\Enemy\StrongEnemyCollisionToPlayer.h">
       <Filter>Project\Enemy\StrongEnemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Stage\Gate\Gate.h">
+      <Filter>Project\Gate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

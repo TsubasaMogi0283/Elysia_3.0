@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <list>
+#include <vector>
 #include <sstream>
 
 #include "Stage/Ground/StageRect.h"
@@ -77,7 +78,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~EnemyManager();
+	~EnemyManager()=default;
 
 public:
 
@@ -85,13 +86,13 @@ public:
 	/// 通常の敵の生成
 	/// </summary>
 	/// <param name="position"></param>
-	void GenarateNormalEnemy(const Vector3& position);
+	void GenerateNormalEnemy(const Vector3& position);
 
 	/// <summary>
 	/// 強敵を生成
 	/// </summary>
 	/// <param name="position"></param>
-	void GenarateStrongEnemy(const Vector3& position);
+	void GenerateStrongEnemy(const Vector3& position);
 
 	/// <summary>
 	/// エネミーを消す処理
@@ -105,19 +106,27 @@ public:
 
 public:
 	/// <summary>
-	/// エネミーのリストを取得
+	/// エネミーを取得(vector型の方が良いらしい)
 	/// </summary>
 	/// <returns></returns>
-	inline std::list<Enemy*> GetEnemyes() const{
-		return enemyes_;
+	inline std::vector<Enemy*> GetEnemies() const{
+		std::vector<Enemy*> enemies;
+		for (const auto& enemy : enemies_) {
+			enemies.push_back(enemy.get()); 
+		}
+		return enemies;
 	}
 	
 	/// <summary>
 	/// 強敵の取得
 	/// </summary>
 	/// <returns>リスト</returns>
-	inline std::list<StrongEnemy*>GetStrongEnemyes()const {
-		return strongEnemyes_;
+	inline std::vector<StrongEnemy*>GetStrongEnemies()const {
+		std::vector<StrongEnemy*> enemies;
+		for (const auto& enemy : strongEnemies_) {
+			enemies.push_back(enemy.get());
+		}
+		return enemies;
 	}
 
 	/// <summary>
@@ -159,9 +168,9 @@ private:
 private:
 	//エネミーのリスト
 	//通常
-	std::list<Enemy*>enemyes_ = {};
+	std::list<std::unique_ptr<Enemy>>enemies_ = {};
 	//強敵
-	std::list<StrongEnemy*>strongEnemyes_ = {};
+	std::list<std::unique_ptr<StrongEnemy>>strongEnemies_ = {};
 
 	//モデルハンドル
 	//通常

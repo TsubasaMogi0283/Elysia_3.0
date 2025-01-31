@@ -87,7 +87,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~KeyManager();
+	~KeyManager()=default;
 
 
 private:
@@ -110,7 +110,12 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	inline std::list<Key*> GetKeyes() const{
-		return keyes_;
+		std::list <Key*> keys = {};
+		for (const std::unique_ptr<Key>& key : keies_) {
+			keys.push_back(key.get());
+		}
+
+		return keys;
 	}
 
 	/// <summary>
@@ -118,7 +123,7 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	inline uint32_t GetKeyQuantity() const {
-		return static_cast<uint32_t>(keyes_.size());
+		return static_cast<uint32_t>(keies_.size());
 	}
 
 	/// <summary>
@@ -160,17 +165,15 @@ private:
 
 private:
 	//最大数
-	const uint32_t MAX_KEY_QUANTITY_ = 3;
-
+	const uint32_t MAX_KEY_QUANTITY_ = 3u;
 	//数
-	static const uint32_t NUMBER_QUANTITY_ = 10;
-
+	static const uint32_t NUMBER_QUANTITY_ = 10u;
 	//鍵の音が聞こえる最大距離
 	const float MAX_DISTANCE_ = 30.0f;
 
 private:
 	//鍵のリスト
-	std::list<Key*>keyes_ = {};
+	std::list<std::unique_ptr<Key>>keies_ = {};
 
 	//UI
 	std::unique_ptr<Sprite> keySprite_ = nullptr;
