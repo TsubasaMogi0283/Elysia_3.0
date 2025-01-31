@@ -459,7 +459,7 @@ void Ellysia::LevelDataManager::Update(const uint32_t& levelDataHandle){
 
 
 
-			for (auto& object : levelData->objectDatas) {
+			for (const auto& object : levelData->objectDatas) {
 
 				//更新
 				object.objectForLeveEditor->SetIsListenerMove(isListenerMove);
@@ -521,7 +521,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
-			for (auto& object : levelData->objectDatas) {
+			for (const auto& object : levelData->objectDatas) {
 				if (object.isInvisible == false) {
 					object.objectForLeveEditor->Draw(camera, material, directionalLight);
 				}
@@ -541,7 +541,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
-			for (auto& object : levelData->objectDatas) {
+			for (const auto& object : levelData->objectDatas) {
 				if (object.isInvisible == false){
 					object.objectForLeveEditor->Draw(camera, material, pointLight);
 				}
@@ -562,7 +562,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 		if (levelData->handle == levelDataHandle) {
 
 			//描画
-			for (auto& object : levelData->objectDatas) {
+			for (const auto& object : levelData->objectDatas) {
 				//描画
 				if (object.isInvisible == false) {
 					object.objectForLeveEditor->Draw(camera, material, spotLight);
