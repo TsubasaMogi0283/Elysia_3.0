@@ -56,11 +56,23 @@ public:
 	/// </summary>
 	~Key() = default;
 
+
+
+private:
+	/// <summary>
+	/// 上昇し
+	/// </summary>
+	void RiseAndRotate();
+
+
 public:
 	/// <summary>
 	/// 鍵がプレイヤーに取得される
 	/// </summary>
-	void PickedUp();
+	void PickedUp() {
+		//拾う
+		isPickUp_ = true;
+	};
 
 public:
 
@@ -92,7 +104,7 @@ public:
 	/// 取得前
 	/// </summary>
 	/// <param name="isPrePickUp"></param>
-	inline void SetIsPrePickUp(bool isPrePickUp) {
+	inline void SetIsPrePickUp(const bool& isPrePickUp) {
 		this->isPrePickUp_ = isPrePickUp;
 	}
 
@@ -104,14 +116,21 @@ public:
 		return isPrePickUp_;
 	}
 
-
+	/// <summary>
+	/// 消える
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsDelete()const {
+		return isDelete_;
+	}
 
 private:
 	//回転の大きさ
 	const float ROTATE_AMOUNT_ = 0.1f;
 	//上下移動の大きさ
 	const float MOVE_AMOUNT_ = 0.1f;
-
+	//縮小
+	const float SCALE_DOWN_AMOUNT_ = 0.05f;
 
 
 private:
@@ -135,5 +154,13 @@ private:
 
 	//sinの動きにしたいのでthetaを作る
 	float theta_ = 0.0f;
+
+	//回転終わり
+	bool isFinishRise_ = false;
+
+
+	//消える
+	bool isDelete_ = false;
+
 };
 

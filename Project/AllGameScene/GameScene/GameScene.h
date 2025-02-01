@@ -122,11 +122,6 @@ public:
 
 private:
 
-	/// <summary>
-	/// 鍵の取得の処理
-	/// </summary>
-	void KeyCollision();
-
 
 	/// <summary>
 	/// ステージオブジェクトとの当たり判定
@@ -289,10 +284,7 @@ private:
 
 	//鍵管理クラス
 	std::unique_ptr<KeyManager> keyManager_ = {};
-	//鍵の数
-	uint32_t keyQuantity_ = 0u;
-	//鍵を取得できるかどうか
-	bool isAbleToPickUpKey_ = false;
+	
 
 
 	//脱出のスプライト

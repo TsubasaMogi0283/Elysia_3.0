@@ -44,7 +44,8 @@ void Key::Update(){
 	//マテリアルの更新
 	material_.Update();
 
-
+	//上昇回転
+	RiseAndRotate();
 
 
 }
@@ -54,8 +55,8 @@ void Key::Draw(const Camera& camera,const SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera, material_, spotLight);
 }
 
-void Key::PickedUp(){
-	//拾う
-	isPickUp_ = true;
+void Key::RiseAndRotate(){
+
 }
+
 

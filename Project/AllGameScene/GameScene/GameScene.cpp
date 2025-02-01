@@ -196,10 +196,6 @@ void GameScene::Initialize() {
 	//生成
 	operation_.reset(Sprite::Create(operationTextureHandle, {.x=20.0f,.y=0.0f}));
 
-	//拾う画像の読み込み
-	uint32_t pickUpTextureManager = texturemanager_->LoadTexture("Resources/Game/Key/PickUpKey.png");
-	//生成
-	pickUpKey_.reset(Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));
 	
 	#pragma endregion
 
@@ -266,88 +262,6 @@ void GameScene::Initialize() {
 }
 
 
-
-void GameScene::KeyCollision(){
-
-	//この関数の中身KeyManagerで管理した方が良いかも
-
-
-	//鍵
-	std::list<Key*> keyes = keyManager_->GetKeyes();
-	for (Key* key : keyes) {
-
-		//勿論取得されていない時だけ受け付ける
-		if (key->GetIsPickUp() == false) {
-			//判定は円で良いかも
-			Vector3 distance = {
-				.x = std::powf((player_->GetWorldPosition().x - key->GetWorldPosition().x), 2.0f),
-				.y = 0.0f,
-				.z = std::powf((player_->GetWorldPosition().z - key->GetWorldPosition().z), 2.0f),
-			};
-
-			//距離
-			float collisionDistance = sqrtf(distance.x + distance.y + distance.z);
-			
-
-
-			//範囲内にいれば入力を受け付ける
-			if (collisionDistance <= player_->GetSideSize() + key->GetRadius()) {
-
-				//取得可能
-				key->SetIsPrePickUp(true);
-
-				//SPACEキーで取得
-				if (input_->IsPushKey(DIK_SPACE) == true) {
-					//プレイヤーの持っているか鍵の数が増える
-					player_->AddHaveKeyQuantity();
-					//鍵が取得される
-					key->PickedUp();
-				}
-
-				//Bボタンを押したとき
-				if (input_->IsConnetGamePad() == true){
-
-					if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-						
-						bTriggerTime_ += INCREASE_VALUE;
-
-					}
-					if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
-						bTriggerTime_ = B_NO_REACT_TIME_;
-					}
-
-					if (bTriggerTime_ == B_REACT_TIME_) {
-						//プレイヤーの持っているか鍵の数が増える
-						player_->AddHaveKeyQuantity();
-						//鍵が取得される
-						key->PickedUp();
-					}
-				}
-
-			}
-			else {
-				key->SetIsPrePickUp(false);
-			}
-
-
-		}
-	}
-
-	//listにあるKeyの中にある「isPrePickUp_」のどれか一つでもtrueになっていたらtrueを返す
-	//trueの時に取得するかどうかのUIが出る
-	isAbleToPickUpKey_ = std::any_of(keyes.begin(), keyes.end(), [](Key* key) {
-		return key->GetIsPrePickUp() == true;
-	});
-
-
-#ifdef _DEBUG
-	ImGui::Begin("KeyPickUp"); 
-	ImGui::Checkbox("IsPickUp", &isAbleToPickUpKey_);
-	ImGui::End();
-#endif // _DEBUG
-
-
-}
 
 void GameScene::ObjectCollision(){
 	
@@ -841,14 +755,14 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 
 		#pragma region 鍵の取得処理
-		keyQuantity_ = keyManager_->GetKeyQuantity();
-		//鍵が0より多ければ通る
-		if (keyQuantity_ > 0u) {
-			KeyCollision();
-		}
-		else {
-			isAbleToPickUpKey_ = false;
-		}
+		//keyQuantity_ = keyManager_->GetKeyQuantity();
+		////鍵が0より多ければ通る
+		//if (keyQuantity_ > 0u) {
+		//	KeyCollision();
+		//}
+		//else {
+		//	isAbleToPickUpKey_ = false;
+		//}
 
 		#pragma endregion
 
@@ -1138,10 +1052,10 @@ void GameScene::DrawSprite(){
 		//操作説明
 		operation_->Draw();
 
-		//鍵の取得
-		if (isAbleToPickUpKey_ == true) {
-			pickUpKey_->Draw();
-		}
+		////鍵の取得
+		//if (isAbleToPickUpKey_ == true) {
+		//	pickUpKey_->Draw();
+		//}
 		
 		//鍵
 		uint32_t keyQuantity = player_->GetHavingKey();
