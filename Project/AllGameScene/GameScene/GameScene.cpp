@@ -37,7 +37,7 @@ void GameScene::Initialize() {
 	//フェードの初期座標
 	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
 	//生成
-	whiteFade_.reset(Sprite::Create(whiteTextureHandle, INITIAL_FADE_POSITION));
+	whiteFade_.reset(Ellysia::Sprite::Create(whiteTextureHandle, INITIAL_FADE_POSITION));
 	
 	//フェードインから始まる
 	//イン
@@ -54,7 +54,7 @@ void GameScene::Initialize() {
 	//黒画像読み込み
 	uint32_t blackTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Back/Black.png");
 	//生成
-	blackFade_.reset(Sprite::Create(blackTextureHandle, INITIAL_FADE_POSITION));
+	blackFade_.reset(Ellysia::Sprite::Create(blackTextureHandle, INITIAL_FADE_POSITION));
 	
 	//透明度
 	blackFadeTransparency_ = 0.0f;
@@ -86,7 +86,7 @@ void GameScene::Initialize() {
 	//「脱出せよ」の画像読み込み
 	uint32_t escapeTextureHandle = texturemanager_->LoadTexture("Resources/Game/Escape/EscapeText.png");
 	//生成
-	escapeText_.reset(Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
+	escapeText_.reset(Ellysia::Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	//最初は非表示にする
 	escapeText_->SetInvisible(true);
 	#pragma endregion
@@ -175,7 +175,7 @@ void GameScene::Initialize() {
 
 	//生成
 	for (uint32_t i = 0u; i < EXPLANATION_QUANTITY_; ++i) {
-		explanation_[i].reset(Sprite::Create(explanationTextureHandle[i], INITIAL_FADE_POSITION));
+		explanation_[i].reset(Ellysia::Sprite::Create(explanationTextureHandle[i], INITIAL_FADE_POSITION));
 	}
 	
 	//スペースで次への画像読み込み
@@ -184,7 +184,7 @@ void GameScene::Initialize() {
 	spaceToNextTextureHandle[1] = texturemanager_->LoadTexture("Resources/Game/Explanation/ExplanationNext2.png");
 
 	for (uint32_t i = 0; i < SPACE_TO_NEXT_QUANTITY_; ++i) {
-		spaceToNext_[i].reset(Sprite::Create(spaceToNextTextureHandle[i], INITIAL_FADE_POSITION));
+		spaceToNext_[i].reset(Ellysia::Sprite::Create(spaceToNextTextureHandle[i], INITIAL_FADE_POSITION));
 	}
 
 	//最初は0番目
@@ -194,12 +194,8 @@ void GameScene::Initialize() {
 	//操作
 	uint32_t operationTextureHandle = texturemanager_->LoadTexture("Resources/Game/Operation/Operation.png");
 	//生成
-	operation_.reset(Sprite::Create(operationTextureHandle, {.x=20.0f,.y=0.0f}));
+	operation_.reset(Ellysia::Sprite::Create(operationTextureHandle, {.x=20.0f,.y=0.0f}));
 
-	//拾う画像の読み込み
-	uint32_t pickUpTextureManager = texturemanager_->LoadTexture("Resources/Game/Key/PickUpKey.png");
-	//生成
-	pickUpKey_.reset(Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));
 	
 	#pragma endregion
 
@@ -208,16 +204,16 @@ void GameScene::Initialize() {
 	uint32_t playerHPBackFrameTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHPBack.png");
 	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
 	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
-		playerHP_[i].reset(Sprite::Create(playerHPTextureHandle, {.x=static_cast<float>(i)*64+ INITIAL_POSITION.x,.y= INITIAL_POSITION .y}));
+		playerHP_[i].reset(Ellysia::Sprite::Create(playerHPTextureHandle, {.x=static_cast<float>(i)*64+ INITIAL_POSITION.x,.y= INITIAL_POSITION .y}));
 	}
 	
-	playerHPBackFrame_.reset(Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
+	playerHPBackFrame_.reset(Ellysia::Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
 	currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
 
 
 	//ゴールに向かえのテキスト
 	uint32_t toEscapeTextureHandle = texturemanager_->LoadTexture("Resources/Game/Escape/ToGoal.png");
-	toEscape_.reset(Sprite::Create(toEscapeTextureHandle, INITIAL_FADE_POSITION));
+	toEscape_.reset(Ellysia::Sprite::Create(toEscapeTextureHandle, INITIAL_FADE_POSITION));
 
 	#pragma endregion
 
@@ -266,88 +262,6 @@ void GameScene::Initialize() {
 }
 
 
-
-void GameScene::KeyCollision(){
-
-	//この関数の中身KeyManagerで管理した方が良いかも
-
-
-	//鍵
-	std::list<Key*> keyes = keyManager_->GetKeyes();
-	for (Key* key : keyes) {
-
-		//勿論取得されていない時だけ受け付ける
-		if (key->GetIsPickUp() == false) {
-			//判定は円で良いかも
-			Vector3 distance = {
-				.x = std::powf((player_->GetWorldPosition().x - key->GetWorldPosition().x), 2.0f),
-				.y = 0.0f,
-				.z = std::powf((player_->GetWorldPosition().z - key->GetWorldPosition().z), 2.0f),
-			};
-
-			//距離
-			float collisionDistance = sqrtf(distance.x + distance.y + distance.z);
-			
-
-
-			//範囲内にいれば入力を受け付ける
-			if (collisionDistance <= player_->GetSideSize() + key->GetRadius()) {
-
-				//取得可能
-				key->SetIsPrePickUp(true);
-
-				//SPACEキーで取得
-				if (input_->IsPushKey(DIK_SPACE) == true) {
-					//プレイヤーの持っているか鍵の数が増える
-					player_->AddHaveKeyQuantity();
-					//鍵が取得される
-					key->PickedUp();
-				}
-
-				//Bボタンを押したとき
-				if (input_->IsConnetGamePad() == true){
-
-					if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-						
-						bTriggerTime_ += INCREASE_VALUE;
-
-					}
-					if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
-						bTriggerTime_ = B_NO_REACT_TIME_;
-					}
-
-					if (bTriggerTime_ == B_REACT_TIME_) {
-						//プレイヤーの持っているか鍵の数が増える
-						player_->AddHaveKeyQuantity();
-						//鍵が取得される
-						key->PickedUp();
-					}
-				}
-
-			}
-			else {
-				key->SetIsPrePickUp(false);
-			}
-
-
-		}
-	}
-
-	//listにあるKeyの中にある「isPrePickUp_」のどれか一つでもtrueになっていたらtrueを返す
-	//trueの時に取得するかどうかのUIが出る
-	isAbleToPickUpKey_ = std::any_of(keyes.begin(), keyes.end(), [](Key* key) {
-		return key->GetIsPrePickUp() == true;
-	});
-
-
-#ifdef _DEBUG
-	ImGui::Begin("KeyPickUp"); 
-	ImGui::Checkbox("IsPickUp", &isAbleToPickUpKey_);
-	ImGui::End();
-#endif // _DEBUG
-
-
-}
 
 void GameScene::ObjectCollision(){
 	
@@ -841,14 +755,14 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 
 		#pragma region 鍵の取得処理
-		keyQuantity_ = keyManager_->GetKeyQuantity();
-		//鍵が0より多ければ通る
-		if (keyQuantity_ > 0u) {
-			KeyCollision();
-		}
-		else {
-			isAbleToPickUpKey_ = false;
-		}
+		//keyQuantity_ = keyManager_->GetKeyQuantity();
+		////鍵が0より多ければ通る
+		//if (keyQuantity_ > 0u) {
+		//	KeyCollision();
+		//}
+		//else {
+		//	isAbleToPickUpKey_ = false;
+		//}
 
 		#pragma endregion
 
@@ -1122,9 +1036,9 @@ void GameScene::DrawSprite(){
 	
 	
 	//最大数
-	const uint32_t MAX_TEXTURE_QUANTITY = 2;
+	const uint32_t MAX_TEXTURE_QUANTITY = 2u;
 	//説明
-	for (uint32_t i = 0; i < MAX_TEXTURE_QUANTITY; ++i) {
+	for (uint32_t i = 0u; i < MAX_TEXTURE_QUANTITY; ++i) {
 		if (howToPlayTextureNumber_ == i+1) {
 			explanation_[i]->Draw();
 			spaceToNext_[i]->Draw();
@@ -1138,14 +1052,8 @@ void GameScene::DrawSprite(){
 		//操作説明
 		operation_->Draw();
 
-		//鍵の取得
-		if (isAbleToPickUpKey_ == true) {
-			pickUpKey_->Draw();
-		}
-		
 		//鍵
-		uint32_t keyQuantity = player_->GetHavingKey();
-		keyManager_->DrawSprite(keyQuantity);
+		keyManager_->DrawSprite();
 
 		//脱出
 		escapeText_->Draw();

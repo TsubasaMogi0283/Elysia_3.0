@@ -32,6 +32,9 @@ struct SpotLight;
 class Player;
 
 
+/// <summary>
+/// EllysiaEngine(前方宣言)
+/// </summary>
 namespace Ellysia{
 	/// <summary>
 	/// オーディオ
@@ -42,6 +45,11 @@ namespace Ellysia{
 	/// テクスチャ管理クラス
 	/// </summary>
 	class TextureManager;
+
+	/// <summary>
+	/// 入力
+	/// </summary>
+	class Input;
 
 }
 
@@ -81,8 +89,7 @@ public:
 	/// <summary>
 	/// スプライトの描画
 	/// </summary>
-	/// <param name="playeresKey"></param>
-	void DrawSprite(const uint32_t& playeresKey);
+	void DrawSprite();
 
 	/// <summary>
 	/// デストラクタ
@@ -103,6 +110,12 @@ private:
 	/// </summary>
 	void Delete();
 
+	/// <summary>
+	/// 取得
+	/// </summary>
+	void PickUp();
+
+	
 
 public:
 	/// <summary>
@@ -155,10 +168,10 @@ public:
 private:
 	//オーディオ
 	Ellysia::Audio* audio_ = nullptr;
-
 	//テクスチャ管理クラス
 	Ellysia::TextureManager* textureManager_ = nullptr;
-
+	//入力
+	Ellysia::Input* input_ = nullptr;
 	//プレイヤー
 	Player* player_ = nullptr;
 
@@ -170,17 +183,25 @@ private:
 	static const uint32_t NUMBER_QUANTITY_ = 10u;
 	//鍵の音が聞こえる最大距離
 	const float MAX_DISTANCE_ = 30.0f;
-
+	//トリガーの増える値
+	const uint32_t INCREASE_VALUE = 1u;
+	//反応する
+	const uint32_t B_REACT_TIME_ = 1u;
+	//反応しない
+	const uint32_t B_NO_REACT_TIME_ = 0u;
+	//コントローラーの押していない時の値
+	const int32_t NO_PUSH_VALUE_ = 0u;
 private:
 	//鍵のリスト
 	std::list<std::unique_ptr<Key>>keies_ = {};
 
 	//UI
-	std::unique_ptr<Sprite> keySprite_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> keySprite_ = nullptr;
+	
 	//スプライト
-	std::unique_ptr<Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
+	std::unique_ptr<Ellysia::Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
 	//鍵取得するかどうか
-	std::unique_ptr<Sprite> pickUpKey_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> pickUpKey_ = nullptr;
 
 	//プレイヤーと全ての鍵の距離
 	std::list<float>keyAndPlayerDistances_ = {};
@@ -189,13 +210,22 @@ private:
 	uint32_t modelHandle_ = 0u;
 
 	//生成の文字列を入れる
-	std::stringstream enemyPositionsFromCSV;
+	std::stringstream keyPositionsFromCSV_ = {};
 
 
 	//拾う音
 	uint32_t pickUpSEHandle = 0u;
 	//鍵の場所を知らせる音
 	uint32_t notificationSEHandle_ = 0u;
+	//取得可能か
+	bool isAbleToPickUpKey_ = false;
+	//鍵の数
+	uint32_t keyQuantity_ = 0u;
 
+
+
+	//Bボタンのトリガー
+	uint32_t bTriggerTime_ = 0u;
+	bool isBTrigger_ = false;
 };
 

@@ -118,10 +118,8 @@ private:
 private:
 	//テクスチャ管理クラス
 	Ellysia::TextureManager* textureManager_ = nullptr;
-
 	//入力クラス
 	Ellysia::Input* input_ = nullptr;
-
 	//レベルエディタ
 	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
 	uint32_t levelHandle_ = 0u;
@@ -157,22 +155,22 @@ private:
 
 
 	//黒フェード
-	std::unique_ptr<Sprite>blackFade_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite>blackFade_ = nullptr;
 	//透明度
 	float blackFadeTransparency_ = 0.0f;
 
 
 	//テキスト
-	std::unique_ptr<Sprite> text_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> text_ = nullptr;
 	
-	//背景
-	std::unique_ptr<Sprite> logo = nullptr;
-
+	//ロゴ
+	std::unique_ptr<Ellysia::Sprite> logo = nullptr;
+	uint32_t logoTextureHandle_ = 0u;
+	//変化後のテクスチャ
+	uint32_t changedLogoTextureHandle_ = 0u;
 
 
 #pragma region ポストエフェクト
-
-
 
 	//背景(ポストエフェクト)
 	std::unique_ptr<BaseTitleBackTexture> baseTitleBackTexture_ = nullptr;

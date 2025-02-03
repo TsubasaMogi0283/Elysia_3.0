@@ -28,10 +28,12 @@ TitleScene::TitleScene(){
 
 void TitleScene::Initialize(){
 
-	//ロゴ
-	uint32_t logoTextureHandle = textureManager_->LoadTexture("Resources/Title/StartText.png");
+	//
+	uint32_t textTextureHandle = textureManager_->LoadTexture("Resources/Title/StartText.png");
 	//タイトルテクスチャ
-	uint32_t titleTextureHandle = textureManager_->LoadTexture("Resources/Title/TitleNormal.png");
+	uint32_t logoTextureHandle = textureManager_->LoadTexture("Resources/Title/TitleNormal.png");
+	changedLogoTextureHandle_ = textureManager_->LoadTexture("Resources/Title/TitleChanged.png");
+	logoTextureHandle_ = logoTextureHandle;
 	//黒フェード
 	uint32_t blackTexureHandle= textureManager_->LoadTexture("Resources/Sprite/Back/Black.png");
 
@@ -39,11 +41,11 @@ void TitleScene::Initialize(){
 	const Vector2 INITIAL_POSITION = {.x=0.0f,.y=0.0f};
 	
 	//テキスト
-	text_.reset(Sprite::Create(logoTextureHandle, INITIAL_POSITION));
+	text_.reset(Ellysia::Sprite::Create(textTextureHandle, INITIAL_POSITION));
 	//ロゴ
-	logo.reset(Sprite::Create(titleTextureHandle, INITIAL_POSITION));
+	logo.reset(Ellysia::Sprite::Create(logoTextureHandle_, INITIAL_POSITION));
 	//黒フェード
-	blackFade_.reset(Sprite::Create(blackTexureHandle, INITIAL_POSITION));
+	blackFade_.reset(Ellysia::Sprite::Create(blackTexureHandle, INITIAL_POSITION));
 	//初期の透明度設定
 	const float INITIAL_TRANSPARENCY = 0.0f;
 	blackFade_->SetTransparency(INITIAL_TRANSPARENCY);
@@ -196,7 +198,7 @@ void TitleScene::Update(Ellysia::GameManager* gameManager){
 	if (isStart_ == true) {
 
 		//スタートのテキストを非表示にさせる
-		logo->SetInvisible(true);
+		logo->SetInvisible(false);
 		text_->SetInvisible(true);
 
 		//時間の加算
@@ -218,7 +220,7 @@ void TitleScene::Update(Ellysia::GameManager* gameManager){
 				randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME[i] + RANDOM_EFFECT_DISPLAY_LENGTH[i]) {
 				//ランダムエフェクトの表示
 				isDisplayRandomEffect_ = true;
-
+				logo->SetInvisible(true);
 				break;
 			}
 
@@ -230,6 +232,8 @@ void TitleScene::Update(Ellysia::GameManager* gameManager){
 			if (i == FIRST_EFFECT) {
 				//夜へ遷移
 				ChangeBackTexture(std::move(std::make_unique<NightBackTexture>()));
+				//タイトルロゴの変化
+				logoTextureHandle_ = changedLogoTextureHandle_;
 			}
 			else if (i == SECOND_EFFECT) {
 				//ランダムの終了
@@ -244,6 +248,7 @@ void TitleScene::Update(Ellysia::GameManager* gameManager){
 		
 		//ランダムエフェクト表示の演出が終わった場合
 		if (isEndDisplayRandomEffect_ == true) {
+			logo->SetInvisible(true);
 			const float FADE_INCREASE_VALUE = 0.01f;
 			blackFadeTransparency_ += FADE_INCREASE_VALUE;
 			
@@ -323,7 +328,7 @@ void TitleScene::DrawPostEffect(){
 
 void TitleScene::DrawSprite(){
 	//背景
-	logo->Draw();
+	logo->Draw(logoTextureHandle_);
 
 	//テキスト
 	text_->Draw();

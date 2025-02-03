@@ -1153,9 +1153,6 @@
     <ClInclude Include="Ellysia\StringOption\StringOption.h">
       <Filter>Ellysia\Header File\StringOption</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\Easing\Easing.h">
-      <Filter>Ellysia\Header File\Math\Easing</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Framework\Framework.h">
       <Filter>Ellysia\Header File\Framework</Filter>
     </ClInclude>
@@ -1176,6 +1173,9 @@
     </ClInclude>
     <ClInclude Include="Project\Stage\Gate\Gate.h">
       <Filter>Project\Gate</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Easing\Easing.h">
+      <Filter>Ellysia\Header File\Math\Easing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

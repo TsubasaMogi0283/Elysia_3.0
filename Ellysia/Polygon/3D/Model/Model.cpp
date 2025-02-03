@@ -68,6 +68,57 @@ Ellysia::Model* Ellysia::Model::Create(const uint32_t& modelHandle) {
 
 }
 
+void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material){
+	//資料にはなかったけどUnMapはあった方がいいらしい
+	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
+	//プログラムが安定するらしいとのこと
+
+
+	//頂点バッファにデータを書き込む
+	VertexData* vertexData = nullptr;
+	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
+	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
+	vertexResource_->Unmap(0u, nullptr);
+
+	//インデックス
+	uint32_t* index = nullptr;
+	indexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&index));
+	std::memcpy(index, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+	indexResource_->Unmap(0u, nullptr);
+
+	//PixelShaderに送る方のカメラ
+	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+	cameraForGPU_->worldPosition = camera.GetWorldPosition();
+	cameraResource_->Unmap(0u, nullptr);
+
+	//コマンドを積む
+	//パイプラインの設定
+	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetModelRootSignature().Get());
+	directXSetup_->GetCommandList()->SetPipelineState(pipelineManager_->GetModelGraphicsPipelineState().Get());
+	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
+	//IBVを設定
+	directXSetup_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
+	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
+	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//Material
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
+	//コマンド送ってGPUで計算
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
+	//テクスチャ
+	if (textureHandle_ != 0u) {
+		textureManager_->GraphicsCommand(2u, textureHandle_);
+	}
+	//カメラ
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
+	//PixelShaderに送る方のカメラ
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
+	//DrawCall
+	directXSetup_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1u, 0u, 0u, 0u);
+
+}
+
 //描画
 void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const DirectionalLight& directionalLight) {
 	//資料にはなかったけどUnMapはあった方がいいらしい
