@@ -46,15 +46,21 @@ public:
 	/// <summary>
 	/// 生成
 	/// </summary>
-	/// <param name="textureHandle"></param>
-	/// <param name="position"></param>
-	/// <returns></returns>
+	/// <param name="textureHandle">ハンドル</param>
+	/// <param name="position">座標</param>
+	/// <returns>スプライト</returns>
 	static Sprite* Create(const uint32_t& textureHandle,const Vector2& position);
 
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw();
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="texturehandle">ハンドル</param>
+	void Draw(const uint32_t& texturehandle);
 
 	/// <summary>
 	/// デストラクタ
@@ -65,7 +71,7 @@ public:
 	/// <summary>
 	/// 透明度の設定
 	/// </summary>
-	/// <param name="transparency"></param>
+	/// <param name="transparency">透明度</param>
 	inline void SetTransparency(const float& transparency) {
 		this->color_.w = transparency;
 	}
@@ -73,7 +79,7 @@ public:
 	/// <summary>
 	/// 色の設定
 	/// </summary>
-	/// <param name="color"></param>
+	/// <param name="color">色</param>
 	inline void SetColor(const Vector4& color) {
 		this->color_ = color;
 	}
@@ -81,7 +87,7 @@ public:
 	/// <summary>
 	/// スケールの設定
 	/// </summary>
-	/// <param name="scale"></param>
+	/// <param name="scale">スケール</param>
 	void SetScale(const Vector2& scale) {
 		this->scale_ = scale;
 	}
@@ -89,80 +95,80 @@ public:
 	/// <summary>
 	/// 回転の設定
 	/// </summary>
-	/// <param name="rotate"></param>
-	void SetRotate(const float& rotate) {
+	/// <param name="rotate">回転</param>
+	inline void SetRotate(const float& rotate) {
 		this->rotate_ = rotate;
 	}
 
 	/// <summary>
 	/// 位置の設定
 	/// </summary>
-	/// <param name="position"></param>
-	void SetPosition(const Vector2& position) {
+	/// <param name="position">座標</param>
+	inline void SetPosition(const Vector2& position) {
 		this->position_ = position;
 	}
 
 	/// <summary>
 	/// アンカーポイントの設定
 	/// </summary>
-	/// <param name="point"></param>
-	void SetAnchorPoint(Vector2 point) {
+	/// <param name="point">ポイント</param>
+	inline void SetAnchorPoint(Vector2 point) {
 		this->anchorPoint_ = point;
 	}
 
 	/// <summary>
 	/// X軸フリップ
 	/// </summary>
-	/// <param name="isFlipX"></param>
-	void SetFlipX(const bool& isFlipX){
+	/// <param name="isFlipX">X軸のフリップ</param>
+	inline void SetFlipX(const bool& isFlipX){
 		this->isFlipX_=isFlipX;
 	}
 
 	/// <summary>
 	/// Y軸フリップ
 	/// </summary>
-	/// <param name="isFlipY"></param>
-	void SetFlipY(const bool& isFlipY){
+	/// <param name="isFlipY">Y軸のフリップ</param>
+	inline void SetFlipY(const bool& isFlipY){
 		this->isFlipY_=isFlipY;
 	}
 
 	/// <summary>
 	/// 見えなくするかどうか
 	/// </summary>
-	/// <param name="isInvisible"></param>
-	void SetInvisible(const bool& isInvisible) {
+	/// <param name="isInvisible">見えなくするかどうか</param>
+	inline void SetInvisible(const bool& isInvisible) {
 		this->isInvisible_ = isInvisible;
 	}
 
 	/// <summary>
 	/// 後ろにするかどうか
 	/// </summary>
-	/// <param name="isBack"></param>
-	void SetIsBack(const bool& isBack) {
+	/// <param name="isBack">後ろか</param>
+	inline void SetIsBack(const bool& isBack) {
 		this->isBack_ = isBack;
 	}
 
 	/// <summary>
 	/// UV座標系左上の設定
 	/// </summary>
-	/// <param name="textureLeftTop"></param>
-	void SetTextureLeftTop(const Vector2& textureLeftTop) {
+	/// <param name="textureLeftTop">左上の座標</param>
+	inline void SetTextureLeftTop(const Vector2& textureLeftTop) {
 		this->textureLeftTop_ = textureLeftTop;
 	}
 
 	/// <summary>
 	/// テクスチャのサイズの設定
 	/// </summary>
-	/// <param name="textureSize"></param>
-	void SetTextureSize(const Vector2& textureSize) {
+	/// <param name="textureSize">サイズ</param>
+	inline void SetTextureSize(const Vector2& textureSize) {
 		this->textureSize_ = textureSize;
 	}
 
 	/// <summary>
 	/// UV編集モードにするかどうか
 	/// </summary>
-	/// <param name="isUVMode"></param>
-	void SetUVMode(const bool& isUVMode) {
+	/// <param name="isUVMode">編集するかどうか</param>
+	inline void SetUVMode(const bool& isUVMode) {
 		this->isUVSetting_ = isUVMode;
 	}
 
@@ -170,8 +176,8 @@ private:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="textureHandle"></param>
-	/// <param name="position"></param>
+	/// <param name="textureHandle">ハンドル</param>
+	/// <param name="position">座標</param>
 	void Initialize(const uint32_t& textureHandle,const Vector2& position);
 	
 
@@ -180,7 +186,6 @@ private:
 	Ellysia::DirectXSetup* directXSetup_ = nullptr;
 	//パイプライン管理クラス
 	Ellysia::PipelineManager* pipelineManager_ = nullptr;
-
 
 private:
 
@@ -208,13 +213,13 @@ private:
 	//Index用
 	ComPtr<ID3D12Resource> indexResource_ = nullptr;
 	//バッファビュー
-	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
+	D3D12_INDEX_BUFFER_VIEW indexBufferView_={};
 	//インデックスデータ
 	uint32_t* indexData_ = nullptr;
 
 
 	//テクスチャの情報
-	D3D12_RESOURCE_DESC resourceDesc_{};
+	D3D12_RESOURCE_DESC resourceDesc_={};
 
 
 private:
@@ -225,13 +230,10 @@ private:
 	enum VERTEX_POSITION {
 		//左下
 		LeftBottom,
-	
 		//左上
 		LeftTop,
-	
 		//右下
 		RightBottom,
-	
 		//右上
 		RightTop,
 
@@ -273,9 +275,9 @@ private:
 	bool isBack_ = false;
 
 	//テクスチャ範囲設定
-	Vector2 textureLeftTop_ = { 0.0f,0.0f };
+	Vector2 textureLeftTop_ = {};
 	//テクスチャ切り出しサイズ
-	Vector2 textureSize_ = { 100.0f,100.0f };
+	Vector2 textureSize_ = {.x = 100.0f,.y = 100.0f };
 
 	//UVの設定をするかどうか
 	bool isUVSetting_ = false;

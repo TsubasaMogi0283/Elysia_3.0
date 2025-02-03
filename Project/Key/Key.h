@@ -125,8 +125,7 @@ public:
 	}
 
 private:
-	//回転の大きさ
-	const float ROTATE_AMOUNT_ = 0.1f;
+	
 	//上下移動の大きさ
 	const float MOVE_AMOUNT_ = 0.1f;
 	//縮小
@@ -157,10 +156,15 @@ private:
 
 	//回転終わり
 	bool isFinishRise_ = false;
-
+	float upT_ = 0.0f;
 
 	//消える
 	bool isDelete_ = false;
+
+private:
+	std::unique_ptr<Ellysia::Model>debugModel_ = nullptr;
+	WorldTransform debugWorldTransform_= {};
+
 
 };
 
