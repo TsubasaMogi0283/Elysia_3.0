@@ -76,11 +76,10 @@ Ellysia::Sprite* Ellysia::Sprite::Create(const uint32_t& textureHandle, const Ve
 	//生成
 	Ellysia::Sprite* sprite = new Ellysia::Sprite();
 	
-
-
 	//初期化
 	sprite->Initialize(textureHandle,position);
 
+	
 	return sprite;
 
 }
