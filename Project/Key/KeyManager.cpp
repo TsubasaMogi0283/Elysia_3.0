@@ -98,9 +98,9 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 		//テクスチャの読み込み
 		keyNumberQuantity[i] = textureManager_->LoadTexture(filePath);
 		//座標を決める
-		const Vector2 numberPosition = {.x= 64.0f * 2.0f+ INITIAL_POSITION.x,.y= INITIAL_POSITION.y};
+		const Vector2 NUMBER_POSITION = {.x= 64.0f * 2.0f+ INITIAL_POSITION.x,.y= INITIAL_POSITION.y};
 		//生成
-		keyNumber[i].reset(Ellysia::Sprite::Create(keyNumberQuantity[i], numberPosition));
+		keyNumber[i].reset(Ellysia::Sprite::Create(keyNumberQuantity[i], NUMBER_POSITION));
 	}
 
 	//知らせる音の読み込み
@@ -186,7 +186,7 @@ void KeyManager::Update(){
 void KeyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight){
 	//鍵モデルの描画
 	for (const std::unique_ptr<Key>& key : keies_) {
-		key->Draw(camera, spotLight);
+		key->DrawModel(camera, spotLight);
 	}
 }
 
@@ -195,6 +195,11 @@ void KeyManager::DrawSprite(){
 	keySprite_->Draw();
 	//数の描画
 	keyNumber[keyQuantity_]->Draw();
+
+	//鍵(個別)のスプライト
+	for (const std::unique_ptr<Key>& key : keies_) {
+		key->DrawSprite();
+	}
 
 	//鍵の取得
 	if (isAbleToPickUpKey_ == true) {

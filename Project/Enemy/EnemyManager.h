@@ -75,6 +75,7 @@ public:
 	/// <param name="spotLight"></param>
 	void Draw(const Camera& camera ,const SpotLight& spotLight);
 
+
 	/// <summary>
 	/// デストラクタ
 	/// </summary>

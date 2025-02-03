@@ -314,7 +314,7 @@ void LoseScene::PreDrawPostEffectFirst(){
 
 void LoseScene::DrawPostEffect(){
 	dissolveEffect_->Draw(dissolve_);
-	//backTexture_->Draw();
+	//backTexture_->DrawModel();
 }
 
 void LoseScene::DrawSprite(){

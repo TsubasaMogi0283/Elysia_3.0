@@ -123,6 +123,16 @@ Vector3 VectorCalculation::Normalize(const Vector3& v){
 	return result;
 }
 
+Vector2 VectorCalculation::Lerp(const Vector2& v1, const Vector2& v2, const float& t){
+	Vector2 result = {
+		.x = (1.0f - t) * v1.x + t * v2.x,
+		.y = (1.0f - t) * v1.y + t * v2.y,
+
+	};
+
+	return result;
+}
+
 Vector3 VectorCalculation::Lerp(const Vector3& v1, const Vector3& v2, const float& t){
 	Vector3 result = {
 		.x = (1.0f - t) * v1.x + t * v2.x,
@@ -130,7 +140,6 @@ Vector3 VectorCalculation::Lerp(const Vector3& v1, const Vector3& v2, const floa
 		.z = (1.0f - t) * v1.z + t * v2.z,
 
 	};
-
 	
 	return result;
 }

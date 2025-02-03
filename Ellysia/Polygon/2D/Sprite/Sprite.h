@@ -110,7 +110,7 @@ namespace Ellysia {
 		/// アンカーポイントの設定
 		/// </summary>
 		/// <param name="point">ポイント</param>
-		inline void SetAnchorPoint(Vector2 point) {
+		inline void SetAnchorPoint(const Vector2& point) {
 			this->anchorPoint_ = point;
 		}
 
