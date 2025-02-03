@@ -20,12 +20,12 @@ void WinScene::Initialize() {
 
 	//テキスト(タイトルへのやつ)
 	uint32_t textHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Result/Win/WinText.png");
-	text_.reset(Sprite::Create(textHandle, INITIAL_SPRITE_POSITION));
+	text_.reset(Ellysia::Sprite::Create(textHandle, INITIAL_SPRITE_POSITION));
 
 	//白背景
 	uint32_t whiteTexturehandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Back/White.png");
 	//生成
-	whiteFade_.reset(Sprite::Create(whiteTexturehandle, INITIAL_SPRITE_POSITION));
+	whiteFade_.reset(Ellysia::Sprite::Create(whiteTexturehandle, INITIAL_SPRITE_POSITION));
 	//透明度の設定
 	transparency_ = 0.0f;
 	whiteFade_->SetTransparency(transparency_);

@@ -265,22 +265,22 @@ private:
 	bool isDisplayUI_ = false;
 
 	//脱出テキストのスプライト
-	std::unique_ptr<Sprite> escapeText_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> escapeText_ = nullptr;
 
 	//操作のスプライト
-	std::unique_ptr<Sprite> operation_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> operation_ = nullptr;
 
 	//鍵取得のスプライト
-	std::unique_ptr<Sprite> pickUpKey_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> pickUpKey_ = nullptr;
 
 	//プレイヤーの体力
 	static const uint32_t PLAYER_HP_MAX_QUANTITY_ = 3u;
 	//現在のHP
 	uint32_t currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
 	//プレイヤーHPのスプライト
-	std::unique_ptr<Sprite> playerHP_[PLAYER_HP_MAX_QUANTITY_] = { nullptr };
+	std::unique_ptr<Ellysia::Sprite> playerHP_[PLAYER_HP_MAX_QUANTITY_] = { nullptr };
 	//背景フレーム
-	std::unique_ptr<Sprite> playerHPBackFrame_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> playerHPBackFrame_ = nullptr;
 
 	//鍵管理クラス
 	std::unique_ptr<KeyManager> keyManager_ = {};
@@ -288,13 +288,13 @@ private:
 
 
 	//脱出のスプライト
-	std::unique_ptr<Sprite> toEscape_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> toEscape_ = nullptr;
 
 #pragma endregion
 
 #pragma region フェード
 	//白フェードのスプライト
-	std::unique_ptr<Sprite> whiteFade_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> whiteFade_ = nullptr;
 	//透明度
 	float whiteFadeTransparency_ = 1.0f;
 	//イン
@@ -305,7 +305,7 @@ private:
 
 
 	//黒フェードのスプライト
-	std::unique_ptr<Sprite> blackFade_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> blackFade_ = nullptr;
 	//透明度
 	float blackFadeTransparency_ = 0.0f;
 	//イン
@@ -330,13 +330,13 @@ private:
 	//説明の数
 	static const uint32_t EXPLANATION_QUANTITY_ = 2u;
 	//説明スプライト
-	std::unique_ptr<Sprite> explanation_[EXPLANATION_QUANTITY_] = { nullptr };
+	std::unique_ptr<Ellysia::Sprite> explanation_[EXPLANATION_QUANTITY_] = { nullptr };
 
 	//Spaceで次に進むテキスト
 	//数
 	static const uint32_t SPACE_TO_NEXT_QUANTITY_ = 2u;
 	//次へのスプライト
-	std::unique_ptr<Sprite> spaceToNext_[SPACE_TO_NEXT_QUANTITY_] = { nullptr };
+	std::unique_ptr<Ellysia::Sprite> spaceToNext_[SPACE_TO_NEXT_QUANTITY_] = { nullptr };
 
 	//
 	uint32_t howToPlayTextureNumber_ = 0u;

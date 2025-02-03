@@ -89,8 +89,7 @@ public:
 	/// <summary>
 	/// スプライトの描画
 	/// </summary>
-	/// <param name="playeresKey"></param>
-	void DrawSprite(const uint32_t& playeresKey);
+	void DrawSprite();
 
 	/// <summary>
 	/// デストラクタ
@@ -197,11 +196,12 @@ private:
 	std::list<std::unique_ptr<Key>>keies_ = {};
 
 	//UI
-	std::unique_ptr<Sprite> keySprite_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> keySprite_ = nullptr;
+	
 	//スプライト
-	std::unique_ptr<Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
+	std::unique_ptr<Ellysia::Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
 	//鍵取得するかどうか
-	std::unique_ptr<Sprite> pickUpKey_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> pickUpKey_ = nullptr;
 
 	//プレイヤーと全ての鍵の距離
 	std::list<float>keyAndPlayerDistances_ = {};
@@ -210,7 +210,7 @@ private:
 	uint32_t modelHandle_ = 0u;
 
 	//生成の文字列を入れる
-	std::stringstream enemyPositionsFromCSV;
+	std::stringstream keyPositionsFromCSV_ = {};
 
 
 	//拾う音
@@ -221,6 +221,8 @@ private:
 	bool isAbleToPickUpKey_ = false;
 	//鍵の数
 	uint32_t keyQuantity_ = 0u;
+
+
 
 	//Bボタンのトリガー
 	uint32_t bTriggerTime_ = 0u;

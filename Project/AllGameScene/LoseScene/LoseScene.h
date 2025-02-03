@@ -182,9 +182,9 @@ private:
 	Dissolve dissolve_ = {};
 
 	//テキスト
-	std::unique_ptr<Sprite> text_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> text_ = nullptr;
 	//黒背景
-	std::unique_ptr<Sprite> black_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> black_ = nullptr;
 	//透明度
 	float transparency_ = 0.0f;
 	

@@ -34,11 +34,11 @@ void LoseScene::Initialize(){
 
 	//Text
 	uint32_t textHandle = textureManager_->LoadTexture("Resources/Sprite/Result/Lose/LoseText.png");
-	text_.reset(Sprite::Create(textHandle, INITIAL_SPRITE_POSITION_));
+	text_.reset(Ellysia::Sprite::Create(textHandle, INITIAL_SPRITE_POSITION_));
 
 	//黒背景
 	uint32_t blackTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Back/Black.png");
-	black_.reset(Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION_));
+	black_.reset(Ellysia::Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION_));
 	//透明度の設定
 	transparency_ = 0.0f;
 	black_->SetTransparency(transparency_);

@@ -121,9 +121,9 @@ private:
 
 
 	//タイトルへのスプライト
-	std::unique_ptr<Sprite> text_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> text_ = nullptr;
 	//背景のスプライト
-	std::unique_ptr<Sprite> whiteFade_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> whiteFade_ = nullptr;
 	//見せるカウント
 	uint32_t textDisplayCount_ = 0u;
 

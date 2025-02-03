@@ -155,16 +155,16 @@ private:
 
 
 	//黒フェード
-	std::unique_ptr<Sprite>blackFade_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite>blackFade_ = nullptr;
 	//透明度
 	float blackFadeTransparency_ = 0.0f;
 
 
 	//テキスト
-	std::unique_ptr<Sprite> text_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> text_ = nullptr;
 	
 	//ロゴ
-	std::unique_ptr<Sprite> logo = nullptr;
+	std::unique_ptr<Ellysia::Sprite> logo = nullptr;
 	uint32_t logoTextureHandle_ = 0u;
 	//変化後のテクスチャ
 	uint32_t changedLogoTextureHandle_ = 0u;

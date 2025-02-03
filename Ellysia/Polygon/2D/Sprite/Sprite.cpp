@@ -6,7 +6,7 @@
 #include "Matrix4x4.h"
 #include "Matrix4x4Calculation.h"
 
-Sprite::Sprite() {
+Ellysia::Sprite::Sprite() {
 	//DirectXクラスを取得
 	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
 
@@ -16,7 +16,7 @@ Sprite::Sprite() {
 }
 
 
-void Sprite::Initialize(const uint32_t& textureHandle, const Vector2& position) {
+void Ellysia::Sprite::Initialize(const uint32_t& textureHandle, const Vector2& position) {
 	this->textureHandle_ = textureHandle;
 	this->position_ = position;
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
@@ -72,9 +72,9 @@ void Sprite::Initialize(const uint32_t& textureHandle, const Vector2& position) 
 
 
 
-Sprite* Sprite::Create(const uint32_t& textureHandle, const Vector2& position) {
+Ellysia::Sprite* Ellysia::Sprite::Create(const uint32_t& textureHandle, const Vector2& position) {
 	//生成
-	Sprite* sprite = new Sprite();
+	Ellysia::Sprite* sprite = new Ellysia::Sprite();
 	
 
 
@@ -85,7 +85,7 @@ Sprite* Sprite::Create(const uint32_t& textureHandle, const Vector2& position) {
 
 }
 //描画
-void Sprite::Draw() {
+void Ellysia::Sprite::Draw() {
 
 
 	//非表示にするかどうか
@@ -264,7 +264,7 @@ void Sprite::Draw() {
 
 }
 
-void Sprite::Draw(const uint32_t& texturehandle){
+void Ellysia::Sprite::Draw(const uint32_t& texturehandle){
 	//非表示にするかどうか
 	if (isInvisible_ == true) {
 		return;

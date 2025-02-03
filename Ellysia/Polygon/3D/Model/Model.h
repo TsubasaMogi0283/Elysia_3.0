@@ -106,6 +106,15 @@ namespace Ellysia {
 		/// <returns></returns>
 		static Model* Create(const uint32_t& modelHandle);
 
+
+		/// <summary>
+		/// 描画
+		/// </summary>
+		/// <param name="worldTransform"></param>
+		/// <param name="camera"></param>
+		/// <param name="material"></param>
+		void Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material);
+
 		/// <summary>
 		/// 描画
 		/// </summary>

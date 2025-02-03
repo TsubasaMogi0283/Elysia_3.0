@@ -41,11 +41,11 @@ void TitleScene::Initialize(){
 	const Vector2 INITIAL_POSITION = {.x=0.0f,.y=0.0f};
 	
 	//テキスト
-	text_.reset(Sprite::Create(textTextureHandle, INITIAL_POSITION));
+	text_.reset(Ellysia::Sprite::Create(textTextureHandle, INITIAL_POSITION));
 	//ロゴ
-	logo.reset(Sprite::Create(logoTextureHandle_, INITIAL_POSITION));
+	logo.reset(Ellysia::Sprite::Create(logoTextureHandle_, INITIAL_POSITION));
 	//黒フェード
-	blackFade_.reset(Sprite::Create(blackTexureHandle, INITIAL_POSITION));
+	blackFade_.reset(Ellysia::Sprite::Create(blackTexureHandle, INITIAL_POSITION));
 	//初期の透明度設定
 	const float INITIAL_TRANSPARENCY = 0.0f;
 	blackFade_->SetTransparency(INITIAL_TRANSPARENCY);

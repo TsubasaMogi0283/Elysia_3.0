@@ -35,7 +35,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 	assert(file.is_open());
 
 	//ファイルの内容を文字列ストリームにコピー
-	enemyPositionsFromCSV << file.rdbuf();
+	keyPositionsFromCSV_ << file.rdbuf();
 	//ファイルを閉じる
 	file.close();
 
@@ -44,7 +44,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 
 
 	//コマンド実行ループ
-	while (std::getline(enemyPositionsFromCSV, line)) {
+	while (std::getline(keyPositionsFromCSV_, line)) {
 
 		//1行分の文字列をストリームに変換して解析しやすくする
 		std::istringstream lineStream(line);
@@ -85,7 +85,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 	//鍵の画像の位置
 	Vector2 keySpritePosition = { .x= INITIAL_POSITION.x,.y= INITIAL_POSITION.y };
 	//生成
-	keySprite_.reset(Sprite::Create(keySpriteHandle, keySpritePosition));
+	keySprite_.reset(Ellysia::Sprite::Create(keySpriteHandle, keySpritePosition));
 
 	//数字
 	uint32_t keyNumberQuantity[NUMBER_QUANTITY_] = {};
@@ -100,7 +100,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 		//座標を決める
 		const Vector2 numberPosition = {.x= 64.0f * 2.0f+ INITIAL_POSITION.x,.y= INITIAL_POSITION.y};
 		//生成
-		keyNumber[i].reset(Sprite::Create(keyNumberQuantity[i], numberPosition));
+		keyNumber[i].reset(Ellysia::Sprite::Create(keyNumberQuantity[i], numberPosition));
 	}
 
 	//知らせる音の読み込み
@@ -113,7 +113,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 	uint32_t pickUpTextureManager = textureManager_->LoadTexture("Resources/Game/Key/PickUpKey.png");
 	//生成
 	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
-	pickUpKey_.reset(Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));
+	pickUpKey_.reset(Ellysia::Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));
 
 
 	//再生
@@ -170,9 +170,6 @@ void KeyManager::Update(){
 #endif // _DEBUG
 
 
-	//鍵が0より多ければ通る
-	
-
 	//現在の鍵の数
 	size_t currentKeyQuantity = keies_.size();
 	if (currentKeyQuantity == 0u) {
@@ -193,11 +190,11 @@ void KeyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight){
 	}
 }
 
-void KeyManager::DrawSprite(const uint32_t& playeresKey){
+void KeyManager::DrawSprite(){
 	//鍵の画像の描画
 	keySprite_->Draw();
 	//数の描画
-	keyNumber[playeresKey]->Draw();
+	keyNumber[keyQuantity_]->Draw();
 
 	//鍵の取得
 	if (isAbleToPickUpKey_ == true) {
@@ -218,18 +215,17 @@ void KeyManager::Genarate(const Vector3& position) {
 }
 
 void KeyManager::Delete() {
-
 	//消去処理
-	//外部の変数()ここではメンバ変数とかを持ってきたいときは[]の中に=を入れよう！
+	//外部の変数(ここではメンバ変数)とかを持ってきたいときは[]の中に=を入れよう！
 	keies_.remove_if([=](const std::unique_ptr<Key>& key) {
 		//拾われたら消す
-		if (key->GetIsPickUp() == true) {
+		if (key->GetIsDelete() == true) {
 			audio_->Play(pickUpSEHandle, false);
-
+			++keyQuantity_;
 			return true;
 		}
 		return false;
-		});
+	});
 }
 
 void KeyManager::PickUp() {
@@ -297,7 +293,7 @@ void KeyManager::PickUp() {
 	//trueの時に取得するかどうかのUIが出る
 	isAbleToPickUpKey_ = std::any_of(keies_.begin(), keies_.end(), [](const std::unique_ptr<Key>& key) {
 		return key->GetIsPrePickUp() == true;
-		});
+	});
 
 
 #ifdef _DEBUG
