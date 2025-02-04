@@ -1013,7 +1013,7 @@ void GameScene::DrawObject3D() {
 	SpotLight spotLight = player_->GetFlashLight()->GetSpotLight();
 
 	//レベルエディタ  
-	levelDataManager_->Draw(levelHandle_, camera_, material_, spotLight);
+	levelDataManager_->Draw(levelHandle_, camera_, spotLight);
 
 	//敵
 	enemyManager_->Draw(camera_, spotLight);

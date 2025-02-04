@@ -687,6 +687,9 @@
     <ClCompile Include="Project\Stage\Gate\Gate.cpp">
       <Filter>Project\Gate</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditor.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -1165,9 +1168,6 @@
     <ClInclude Include="Ellysia\Material\Material.h">
       <Filter>Ellysia\Header File\EffectData</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\EffectData\Dissolve\Dissolve.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Enemy\StrongEnemyCollisionToPlayer.h">
       <Filter>Project\Enemy\StrongEnemy</Filter>
     </ClInclude>
@@ -1176,6 +1176,9 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Easing\Easing.h">
       <Filter>Ellysia\Header File\Math\Easing</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\EffectData\Dissolve\Dissolve.h">
+      <Filter>Ellysia\Header File\EffectData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

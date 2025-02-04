@@ -76,7 +76,7 @@ struct AudioDataForLevelEditor {
 /// <summary>
 /// オーディオ用のオブジェクト
 /// </summary>
-class AudioObjectForLevelEditor :public IObjectForLevelEditor {
+class AudioObjectForLevelEditor :public BaseObjectForLevelEditor {
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -94,37 +94,6 @@ public:
 	/// 更新
 	/// </summary>
 	void Update() override;
-
-	
-
-#pragma region 描画
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="directionalLight"></param>
-	void Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight)override;
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="pointLight"></param>
-	void Draw(const Camera& camera,const Material& material,const PointLight& pointLight)override;
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="spotLight"></param>
-	void Draw(const Camera& camera,const Material& material,const SpotLight& spotLight)override;
-
-
-
-
-#pragma endregion
-
 
 private:
 	/// <summary>

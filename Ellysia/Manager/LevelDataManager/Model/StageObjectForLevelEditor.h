@@ -12,7 +12,7 @@
 /// <summary>
 /// レベルエディタ用のステージオブジェクト
 /// </summary>
-class StageObjectForLevelEditor :public IObjectForLevelEditor {
+class StageObjectForLevelEditor :public BaseObjectForLevelEditor {
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -31,35 +31,7 @@ public:
 	/// </summary>
 	void Update()override;
 
-
-#pragma region 描画
-
-	/// <summary>
-	/// 描画(平行光源)
-	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="directionalLight"></param>
-	void Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight)override;
-
-	/// <summary>
-	/// 描画(点光源)
-	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="pointLight"></param>
-	void Draw(const Camera& camera,const Material& material,const PointLight& pointLight)override;
-
-	/// <summary>
-	/// 描画(スポットライト)
-	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="spotLight"></param>
-	void Draw(const Camera& camera,const Material& material,const SpotLight& spotLight)override;
-
-
-
 public:
-
-
 
 	/// <summary>
 	/// AABB用のサイズを設定。コライダーのサイズから取得してね。

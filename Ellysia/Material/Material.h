@@ -63,6 +63,9 @@ public:
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> resource_ = nullptr;
+
+private:
+
 	//書き込みのデータ
 	MaterialData* materialData_ = nullptr;
 

@@ -215,7 +215,7 @@ void WinScene::PreDrawPostEffectFirst(){
 
 
 void WinScene::DrawObject3D(){
-	levelDataManager_->Draw(levelDataHandle_, camera_, material_, directionalLight_);
+	levelDataManager_->Draw(levelDataHandle_, camera_, directionalLight_);
 }
 
 void WinScene::DrawPostEffect(){

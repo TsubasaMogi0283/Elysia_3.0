@@ -21,7 +21,8 @@ void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Tr
 	worldTransform_.rotate = transform.rotate;
 	worldTransform_.translate = transform.translate;
 
-	
+	//マテリアルの初期化
+	material_.Initialize();
 
 	//オーディオの種類によって数値を変える
 	if (audioDataForLevelEditor_.type == "BGM") {
@@ -35,8 +36,10 @@ void AudioObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Tr
 
 
 void AudioObjectForLevelEditor::Update(){
+
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
+	//マテリアルはDrawでやっているのでここには無いよ
 
 	switch (audioType_) {
 	case AudioObjectType::BGMType:
@@ -67,23 +70,6 @@ void AudioObjectForLevelEditor::Update(){
 
 
 }
-
-
-void AudioObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight){
-	//モデルの描画
-	model_->Draw(worldTransform_, camera, material, directionalLight);
-}
-
-void AudioObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const PointLight& pointLight){
-	//モデルの描画
-	model_->Draw(worldTransform_, camera, material, pointLight);
-}
-
-void AudioObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight){
-	//モデルの描画
-	model_->Draw(worldTransform_, camera, material, spotLight);
-}
-
 
 
 

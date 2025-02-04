@@ -307,6 +307,19 @@ void Enemy::Dead() {
 	const float DELETE_INTERVAL = 0.01f;
 	mainMaterial_.color_.w -= DELETE_INTERVAL;
 
+	//縮小
+	const float SCALE_DOWN_VALUE = -0.1f;
+	worldTransform_.scale.x += SCALE_DOWN_VALUE;
+	worldTransform_.scale.y += SCALE_DOWN_VALUE;
+	worldTransform_.scale.z += SCALE_DOWN_VALUE;
+
+	if (worldTransform_.scale.z < 0.0f) {
+		worldTransform_.scale.x = 0.0f;
+		worldTransform_.scale.y = 0.0f;
+		worldTransform_.scale.z = 0.0f;
+
+	}
+
 	//生成
 	if (particle_ == nullptr) {
 		//生成

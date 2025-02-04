@@ -126,7 +126,7 @@ namespace Ellysia {
 		/// <param name="camera">カメラ</param>
 		/// <param name="material">マテリアル</param>
 		/// <param name="directionalLight">平行光源</param>
-		void Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material, const DirectionalLight& directionalLight);
+		void Draw(const uint32_t& levelDataHandle, const Camera& camera, const DirectionalLight& directionalLight);
 
 		/// <summary>
 		/// 描画(点光源)
@@ -135,7 +135,7 @@ namespace Ellysia {
 		/// <param name="camera">カメラ</param>
 		/// <param name="material">マテリアル</param>
 		/// <param name="pointLight">点光源</param>
-		void Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material, const PointLight& pointLight);
+		void Draw(const uint32_t& levelDataHandle, const Camera& camera,const PointLight& pointLight);
 
 		/// <summary>
 		/// 描画(スポットライト)
@@ -144,7 +144,7 @@ namespace Ellysia {
 		/// <param name="camera">カメラ</param>
 		/// <param name="material">マテリアル</param>
 		/// <param name="spotLight">スポットライト</param>
-		void Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material, const SpotLight& spotLight);
+		void Draw(const uint32_t& levelDataHandle, const Camera& camera,const SpotLight& spotLight);
 
 		/// <summary>
 		/// 解放
@@ -349,7 +349,7 @@ namespace Ellysia {
 			AudioDataForLevelEditor levelAudioData;
 
 			//オブジェクト(ステージかオーディオ)
-			IObjectForLevelEditor* objectForLeveEditor;
+			BaseObjectForLevelEditor* objectForLeveEditor;
 
 			//コライダー
 			IObjectForLevelEditorCollider* levelDataObjectCollider;

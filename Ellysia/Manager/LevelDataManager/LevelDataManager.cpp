@@ -513,7 +513,7 @@ void Ellysia::LevelDataManager::Delete(const uint32_t& levelDataHandle){
 
 #pragma region 描画
 
-void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material, const DirectionalLight& directionalLight){
+void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const DirectionalLight& directionalLight){
 	
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
@@ -522,7 +522,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 			//描画
 			for (const auto& object : levelData->objectDatas) {
 				if (object.isInvisible == false) {
-					object.objectForLeveEditor->Draw(camera, material, directionalLight);
+					object.objectForLeveEditor->Draw(camera, directionalLight);
 				}
 			}
 
@@ -534,7 +534,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 	}
 }
 
-void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material,const PointLight& pointLight){
+void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera,const PointLight& pointLight){
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
@@ -542,7 +542,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 			//描画
 			for (const auto& object : levelData->objectDatas) {
 				if (object.isInvisible == false){
-					object.objectForLeveEditor->Draw(camera, material, pointLight);
+					object.objectForLeveEditor->Draw(camera, pointLight);
 				}
 			}
 			
@@ -554,7 +554,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 	}
 }
 
-void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const Material& material, const SpotLight& spotLight) {
+void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const SpotLight& spotLight) {
 	
 	//指定したハンドルのデータだけを描画
 	for (auto& [key, levelData] : levelDatas_) {
@@ -564,7 +564,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 			for (const auto& object : levelData->objectDatas) {
 				//描画
 				if (object.isInvisible == false) {
-					object.objectForLeveEditor->Draw(camera, material, spotLight);
+					object.objectForLeveEditor->Draw(camera, spotLight);
 				}
 				
 				

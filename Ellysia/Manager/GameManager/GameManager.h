@@ -17,8 +17,6 @@
 /// </summary>
 namespace Ellysia {
 
-
-
 	/// <summary>
 	/// ゲーム管理クラス
 	/// </summary>

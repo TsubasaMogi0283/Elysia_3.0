@@ -133,6 +133,54 @@
             },
             "file_name": "FailedEscape",
             "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "テキスト.001",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    179.99998474121094
+                ],
+                "translation": [
+                    4.342831611633301,
+                    -2.864208698272705,
+                    1.9280400276184082
+                ]
+            },
+            "file_name": "ToTitle",
+            "object_type": "Stage",
+            "is_invisible": true
+        },
+        {
+            "type": "MESH",
+            "name": "テキスト.002",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    179.99998474121094
+                ],
+                "translation": [
+                    -3.6860132217407227,
+                    -2.818809747695923,
+                    1.9178657531738281
+                ]
+            },
+            "file_name": "ToGame",
+            "object_type": "Stage",
+            "is_invisible": true
         }
     ]
 }

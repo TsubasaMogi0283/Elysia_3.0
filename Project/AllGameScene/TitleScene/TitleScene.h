@@ -148,10 +148,6 @@ private:
 	DirectionalLight directionalLight_ = {};
 	//スポットライト
 	SpotLight spotLight = {};
-	//マテリアル
-	Material material_ = {};
-
-
 
 
 	//黒フェード
