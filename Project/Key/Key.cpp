@@ -162,7 +162,7 @@ void Key::SpriteMove(){
 		sprite_->SetScale({ .x = scaleSize ,.y = scaleSize });
 
 		//回転の設定
-		spriteRotate_ += 0.2f;
+		spriteRotate_ -= 0.5f;
 		sprite_->SetRotate(spriteRotate_);
 
 

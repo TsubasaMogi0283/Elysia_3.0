@@ -687,6 +687,9 @@
     <ClCompile Include="Project\Stage\Gate\Gate.cpp">
       <Filter>Project\Gate</Filter>
     </ClCompile>
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditor.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">

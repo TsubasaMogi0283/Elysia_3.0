@@ -90,11 +90,6 @@ void LoseScene::Initialize(){
 	pointLight_.decay_ = globalVariables_->GetFloatValue(POINT_LIGHT_NAME,"Decay");
 	pointLight_.radius_ = 0.0f;
 
-	
-	
-
-	isFinishLightUp_ = false;
-
 	//点滅
 	isFlash_ = true;
 
@@ -301,7 +296,7 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 
 void LoseScene::DrawObject3D(){
 	//レベルデータ
-	levelDataManager_->Draw(levelDataHandle_, camera_, material_, pointLight_);
+	levelDataManager_->Draw(levelDataHandle_, camera_, pointLight_);
 	
 }
 

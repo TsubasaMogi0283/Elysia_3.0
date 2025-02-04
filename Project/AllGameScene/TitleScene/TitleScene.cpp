@@ -58,10 +58,6 @@ void TitleScene::Initialize(){
 	isFlash_ = true;
 	isFastFlash_ = false;
 
-	//マテリアルの初期化
-	material_.Initialize();
-	material_.lightingKinds_ = DirectionalLighting;
-
 	//スポットライトの初期化
 	spotLight.Initialize();
 
@@ -269,8 +265,6 @@ void TitleScene::Update(Ellysia::GameManager* gameManager){
 	//更新
 	levelDataManager_->Update(levelHandle_);
 
-	//マテリアルの更新
-	material_.Update();
 	//スポットライトの更新
 	spotLight.Update();
 	//平行光源
@@ -296,7 +290,7 @@ void TitleScene::Update(Ellysia::GameManager* gameManager){
 
 void TitleScene::DrawObject3D(){
 	//ステージオブジェクト
-	levelDataManager_->Draw(levelHandle_,camera_, material_, directionalLight_);
+	levelDataManager_->Draw(levelHandle_,camera_, directionalLight_);
 
 }
 

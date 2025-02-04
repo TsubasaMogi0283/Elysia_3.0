@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file IObjectForLevelEditor.h
+ * @file BaseObjectForLevelEditor.h
  * @brief レベルエディタ用のモデル(基底クラス)
  * @author 茂木翼
  */
@@ -27,7 +27,7 @@ enum LevelEditorObjectType {
 /// <summary>
 /// レベルエディタ用のモデル(基底クラス)
 /// </summary>
-class IObjectForLevelEditor {
+class BaseObjectForLevelEditor {
 public:
 
 	/// <summary>
@@ -42,15 +42,13 @@ public:
 	/// </summary>
 	virtual void Update() = 0;
 
-
-
 	/// <summary>
 	/// 平行光源
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="directionalLight"></param>
-	virtual void Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight)=0;
+	virtual void Draw(const Camera& camera, const DirectionalLight& directionalLight);
 
 	/// <summary>
 	/// 描画(点光源)
@@ -58,7 +56,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="pointLight"></param>
-	virtual void Draw(const Camera& camera,const Material& material,const PointLight& pointLight) = 0;
+	virtual void Draw(const Camera& camera, const PointLight& pointLight);
 
 	/// <summary>
 	/// 描画(スポットライト)
@@ -66,12 +64,12 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	virtual void Draw(const Camera& camera,const Material& material,const SpotLight& spotLight)=0;
+	virtual void Draw(const Camera& camera, const SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	virtual ~IObjectForLevelEditor() = default;
+	virtual ~BaseObjectForLevelEditor() = default;
 
 
 public:
@@ -91,6 +89,8 @@ public:
 		return aabb_;
 	};
 
+
+public:
 	/// <summary>
 	/// 衝突したかどうかの設定
 	/// Colliderから持ってくる
@@ -110,9 +110,6 @@ public:
 	}
 
 
-#pragma region SRTの設定.ここで上書きできるよ
-
-
 	/// <summary>
 	/// 拡縮
 	/// </summary>
@@ -121,7 +118,6 @@ public:
 		this->worldTransform_.scale = scale;
 	}
 
-
 	/// <summary>
 	/// 回転
 	/// </summary>
@@ -129,8 +125,6 @@ public:
 	inline void SetRotate(const Vector3& rotate) {
 		this->worldTransform_.rotate = rotate;
 	}
-
-
 
 	/// <summary>
 	/// 座標の設定
@@ -141,14 +135,14 @@ public:
 	}
 
 
-#pragma endregion
-
 protected:
 	//モデル
 	std::unique_ptr<Ellysia::Model> model_ = nullptr;
 
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
+	//マテリアル
+	Material material_ = {};
 
 	//オブジェクトのタイプ
 	//LevelEditorObjectTypeから選ぶよ

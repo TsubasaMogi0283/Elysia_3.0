@@ -13,7 +13,7 @@ void Ellysia::GameManager::Initialize() {
 
 #ifdef _DEBUG
 	//デバッグ時はこっちに入れてね
-	currentGamaScene_ = abstractSceneFactory_->CreateScene("Game");
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
 
 #endif // _DEBUG
 

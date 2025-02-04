@@ -15,12 +15,16 @@ void StageObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Tr
 	worldTransform_.rotate = transform.rotate;
 	worldTransform_.translate = transform.translate;
 
+	//マテリアルの初期化
+	material_.Initialize();
+
 }
 
 void StageObjectForLevelEditor::Update(){
 
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
+	//マテリアルはDrawでやっているのでここには無いよ
 
 	//AABBの設定
 	aabb_ = {
@@ -39,17 +43,4 @@ void StageObjectForLevelEditor::Update(){
 
 
 
-}
-
-void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const DirectionalLight& directionalLight) {
-
-	model_->Draw(worldTransform_, camera, material, directionalLight);
-}
-
-void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const PointLight& pointLight) {
-	model_->Draw(worldTransform_, camera, material, pointLight);
-}
-
-void StageObjectForLevelEditor::Draw(const Camera& camera,const Material& material,const SpotLight& spotLight) {
-	model_->Draw(worldTransform_, camera, material, spotLight);
 }
