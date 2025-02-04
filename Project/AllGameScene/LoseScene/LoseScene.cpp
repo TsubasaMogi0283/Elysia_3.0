@@ -65,7 +65,6 @@ void LoseScene::Initialize(){
 	globalVariables_->CreateGroup(DISSOLVE_NAME_);
 	globalVariables_->AddItem(DISSOLVE_NAME_, "Thinkness", dissolve_.edgeThinkness);
 
-
 	//初期化
 	dissolve_.Initialize();
 	dissolve_.maskTextureHandle = maskTexture;
@@ -74,9 +73,6 @@ void LoseScene::Initialize(){
 	//カメラの初期化
 	camera_.Initialize();
 	camera_.translate = { .x = 0.0f,.y = 2.8f,.z = -23.0f };
-	//マテリアル
-	material_.Initialize();
-	material_.lightingKinds_ = PointLighting;
 
 	//点光源
 	//調整項目として記録
@@ -114,23 +110,7 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 		}
 	}
 	else {
-		//通常の点滅
-		flashTime_ += INCREASE_VALUE_;
-		if (flashTime_ > FLASH_TIME_LIMIT_ * 0 &&
-			flashTime_ <= FLASH_TIME_LIMIT_) {
-			text_->SetInvisible(false);
-		}
-		if (flashTime_ > FLASH_TIME_LIMIT_ &&
-			flashTime_ <= FLASH_TIME_LIMIT_ * 2) {
-			text_->SetInvisible(true);
-
-		}
-		if (flashTime_ > FLASH_TIME_LIMIT_ * 2) {
-			//再スタート時間
-			const uint32_t RESTART_TIME = 0u;
-			flashTime_ = RESTART_TIME;
-		}
-
+		
 		
 
 		//ゲームかタイトルか選択する
@@ -142,6 +122,7 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 		const uint32_t FLASH_INTERVAL = 2u;
 		//表示
 		const uint32_t DISPLAY = 0u;
+
 
 		//タイトルへ戻る
 		if (isReturnTitle == true) {
@@ -180,8 +161,6 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 
 
 		}
-
-
 		//ゲームは墓から遠ざかる
 		if (isReturnToGame_ == true) {
 			//点滅
@@ -234,8 +213,6 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 	//カメラの更新
 	camera_.translate = VectorCalculation::Add(camera_.translate, cameraVelocity_);
 	camera_.Update();
-	//マテリアルの更新
-	material_.Update();
 	//点光源の更新
 	pointLight_.position_ = globalVariables_->GetVector3Value(POINT_LIGHT_NAME, "Translate");
 	pointLight_.decay_ = globalVariables_->GetFloatValue(POINT_LIGHT_NAME, "Decay");
@@ -284,7 +261,93 @@ void LoseScene::DrawSprite(){
 	black_->Draw();
 }
 
-void LoseScene::Select(){
+void LoseScene::Select() {
+
+	//テキストの名前
+	//矢印
+	std::string SELECT_ARROW = "SelectArrow";
+	//ゲーム
+	std::string TO_GAME = "ToGame";
+	//タイトル
+	std::string TO_TITLE = "ToTitle";
+
+
+	//矢印の回転
+	const float ROTATE_VALUE = 0.1f;
+	arrowRotate_ += ROTATE_VALUE;
+	//levelDataManager_->SetRotate(levelDataHandle_, SELECT_ARROW, { .x = 0.0f,.y = arrowRotate_ ,.z = 0.0f });
+
+	//矢印の初期座標を取得
+	Vector3 arrowInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, SELECT_ARROW);
+	//「ゲームへ」の座標を取得
+	Vector3 toGameInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, TO_GAME);
+	//「タイトルへ」の座標を取得
+	Vector3 toTitleInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, TO_TITLE);
+	//選択時のスケール
+	float selectedScale = 1.5f;
+	//非選択時
+	float noSelectedScale = 1.0f;
+	//選択時の高さ
+	float selectedHeight = 1.6f;
+
+	//「ゲームへ」選択時
+	if (isSelectingGame_ == true && isSelectingTitle_ == false) {
+
+		//スケールを大きくする
+		levelDataManager_->SetScale(levelDataHandle_, TO_GAME, { .x = selectedScale,.y = selectedScale ,.z = selectedScale });
+		//Y座標も大きく
+		levelDataManager_->SetTranslate(levelDataHandle_, TO_GAME, { .x = toGameInitialPosition.x,.y = selectedHeight ,.z = toGameInitialPosition.x });
+
+		//選択されていない方は初期位置で
+		levelDataManager_->SetScale(levelDataHandle_, TO_TITLE, { .x = noSelectedScale,.y = noSelectedScale ,.z = noSelectedScale });
+		levelDataManager_->SetTranslate(levelDataHandle_, TO_TITLE, toTitleInitialPosition);
+
+		//右・D押したとき「タイトルへ」に移動
+		if ((input_->IsTriggerKey(DIK_RIGHT) == true) && (input_->IsTriggerKey(DIK_D) == true)) {
+			levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = toTitleInitialPosition.x,.y = 0.0f ,.z = toTitleInitialPosition.z });
+			isSelectingGame_ = false;
+			isSelectingTitle_ = true;
+		}
+
+	}
+	//タイトルへ
+	else if (isSelectingGame_ == false && isSelectingTitle_ == true) {
+
+		//スケールを大きくする
+		levelDataManager_->SetScale(levelDataHandle_, TO_TITLE, { .x = selectedScale,.y = selectedScale ,.z = selectedScale });
+		//Y座標も大きく
+		levelDataManager_->SetTranslate(levelDataHandle_, TO_TITLE, { .x = toTitleInitialPosition.x,.y = selectedHeight ,.z = toTitleInitialPosition.x });
+
+
+		//選択されていない方は初期位置で
+		levelDataManager_->SetScale(levelDataHandle_, TO_GAME, { .x = noSelectedScale,.y = noSelectedScale ,.z = noSelectedScale });
+		levelDataManager_->SetTranslate(levelDataHandle_, TO_GAME, toGameInitialPosition);
+		//左・A押したとき「タイトルへ」に移動
+		if ((input_->IsTriggerKey(DIK_LEFT) == true) && (input_->IsTriggerKey(DIK_A) == true)) {
+			levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = toGameInitialPosition.x,.y = 0.0f ,.z = toGameInitialPosition.z });
+			isSelectingGame_ = true;
+			isSelectingTitle_ = false;
+		}
+
+	}
+
+	//通常の点滅
+	flashTime_ += INCREASE_VALUE_;
+	if (flashTime_ > FLASH_TIME_LIMIT_ * 0 &&
+		flashTime_ <= FLASH_TIME_LIMIT_) {
+		text_->SetInvisible(false);
+	}
+	if (flashTime_ > FLASH_TIME_LIMIT_ &&
+		flashTime_ <= FLASH_TIME_LIMIT_ * 2) {
+		text_->SetInvisible(true);
+	}
+	if (flashTime_ > FLASH_TIME_LIMIT_ * 2) {
+		//再スタート時間
+		const uint32_t RESTART_TIME = 0u;
+		flashTime_ = RESTART_TIME;
+	}
+
+
 	//コントローラー接続時
 	if (input_->IsConnetGamePad() == true) {
 
@@ -310,17 +373,14 @@ void LoseScene::Select(){
 	if (input_->IsTriggerKey(DIK_SPACE) == true) {
 		//ゲームへ
 		isReturnToGame_ = true;
-
 	}
 	else if (input_->IsTriggerKey(DIK_T) == true) {
-		//ゲームへ
+		//タイトル
 		isReturnTitle = true;
-
 	}
 }
 
 void LoseScene::DisplayImGui(){
-
 
 	ImGui::Begin("カメラ");
 	ImGui::SliderFloat3("座標", &camera_.translate.x, -40.0f, 40.0f);
@@ -336,7 +396,6 @@ void LoseScene::DisplayImGui(){
 	ImGui::Begin("ディゾルブ");
 	ImGui::SliderFloat("閾値", &dissolve_.threshold, 0.0f, 2.0f);
 	ImGui::SliderFloat("厚さ", &dissolve_.edgeThinkness, 0.0f, 2.0f);
-	
 	ImGui::End();
 }
 

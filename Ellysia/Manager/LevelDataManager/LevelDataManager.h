@@ -24,9 +24,9 @@
 
 #pragma region 前方宣言
 
-/// <summary>
-/// カメラ
-/// </summary>
+ /// <summary>
+ /// カメラ
+ /// </summary>
 struct Camera;
 
 /// <summary>
@@ -128,7 +128,7 @@ namespace Ellysia {
 		/// <param name="levelDataHandle">ハンドル</param>
 		/// <param name="camera">カメラ</param>
 		/// <param name="pointLight">点光源</param>
-		void Draw(const uint32_t& levelDataHandle, const Camera& camera,const PointLight& pointLight);
+		void Draw(const uint32_t& levelDataHandle, const Camera& camera, const PointLight& pointLight);
 
 		/// <summary>
 		/// 描画(スポットライト)
@@ -136,7 +136,7 @@ namespace Ellysia {
 		/// <param name="levelDataHandle">ハンドル</param>
 		/// <param name="camera">カメラ</param>
 		/// <param name="spotLight">スポットライト</param>
-		void Draw(const uint32_t& levelDataHandle, const Camera& camera,const SpotLight& spotLight);
+		void Draw(const uint32_t& levelDataHandle, const Camera& camera, const SpotLight& spotLight);
 
 		/// <summary>
 		/// 解放
@@ -313,7 +313,8 @@ namespace Ellysia {
 
 			//Transform
 			Transform transform;
-
+			//初期トランスフォーム
+			Transform initialTransform;
 
 			//コライダーを持っているかどうか
 			bool isHavingCollider = false;
@@ -354,7 +355,7 @@ namespace Ellysia {
 		/// レベルデータ
 		/// </summary>
 		struct LevelData {
-			
+
 			//ハンドル
 			uint32_t handle = 0u;
 
@@ -417,7 +418,7 @@ namespace Ellysia {
 		/// <param name="handle"></param>
 		/// <param name="name"></param>
 		/// <param name="scale"></param>
-		inline void SetScale(const uint32_t& handle,const std::string& name, const Vector3& scale) {
+		inline void SetScale(const uint32_t& handle, const std::string& name, const Vector3& scale) {
 
 			for (const auto& [key, levelData] : levelDatas_) {
 				if (levelData->handle == handle) {
@@ -430,7 +431,7 @@ namespace Ellysia {
 							//無駄なループを防ぐ
 							break;
 						}
-						
+
 
 					}
 
@@ -447,15 +448,18 @@ namespace Ellysia {
 		/// <param name="handle"></param>
 		/// <param name="name"></param>
 		/// <param name="rotate"></param>
-		inline void SetRotate(const uint32_t& handle,const std::string& name, const Vector3& rotate) {
+		inline void SetRotate(const uint32_t& handle, const std::string& name, const Vector3& rotate) {
 
 			for (const auto& [key, levelData] : levelDatas_) {
 				if (levelData->handle == handle) {
 
 					//該当するLevelDataのobjectDatasを検索
 					for (auto& objectData : levelData->objectDatas) {
+						objectData.name;
+
 						//一致したら回転の変更
 						if (objectData.name == name) {
+
 							objectData.objectForLeveEditor->SetRotate(rotate);
 							//無駄なループを防ぐ
 							break;
@@ -474,7 +478,7 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="handle"></param>
 		/// <param name="name"></param>
-		inline void SetPosition(const uint32_t& handle,const std::string& name,const Vector3& translate) {
+		inline void SetTranslate(const uint32_t& handle, const std::string& name, const Vector3& translate) {
 
 			for (const auto& [key, levelData] : levelDatas_) {
 				if (levelData->handle == handle) {
@@ -487,7 +491,7 @@ namespace Ellysia {
 							//無駄なループを防ぐ
 							break;
 						}
-						
+
 					}
 
 					//無駄なループを防ぐ
@@ -527,7 +531,7 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="handle"></param>
 		/// <param name="name"></param>
-		/// <param name="color"></param>
+		/// <param name="transparency"></param>
 		inline void SetTransparency(const uint32_t& handle, const std::string& name, const float& transparency) {
 			for (const auto& [key, levelData] : levelDatas_) {
 				if (levelData->handle == handle) {
@@ -546,6 +550,91 @@ namespace Ellysia {
 				}
 			}
 		}
+
+
+		/// <summary>
+		/// 初期スケールを取得
+		/// </summary>
+		/// <param name="handle">ハンドル</param>
+		/// <param name="name">名前</param>
+		/// <returns>スケール</returns>
+		inline Vector3 GetInitiaScale(const uint32_t& handle, const std::string& name) {
+			Vector3 result = {};
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
+
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+						//一致したら座標の変更
+						if (objectData.name == name) {
+							result = objectData.initialTransform.scale;
+							//無駄なループを防ぐ
+							break;
+						}
+					}
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// 初期回転を取得
+		/// </summary>
+		/// <param name="handle">ハンドル</param>
+		/// <param name="name">名前</param>
+		/// <returns>回転</returns>
+		inline Vector3 GetInitialRotate(const uint32_t& handle, const std::string& name) {
+			Vector3 result = {};
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
+
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+						//一致したら座標の変更
+						if (objectData.name == name) {
+							result = objectData.initialTransform.rotate;
+							//無駄なループを防ぐ
+							break;
+						}
+					}
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// 初期座標を取得
+		/// </summary>
+		/// <param name="handle">ハンドル</param>
+		/// <param name="name">名前</param>
+		/// <returns>座標</returns>
+		inline Vector3 GetInitialTranslate(const uint32_t& handle, const std::string& name) {
+			Vector3 result = {};
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
+
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+						//一致したら座標の変更
+						if (objectData.name == name) {
+							result = objectData.initialTransform.translate;
+							//無駄なループを防ぐ
+							break;
+						}
+					}
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+			return result;
+		}
+
+
+
 
 	private:
 
@@ -577,7 +666,7 @@ namespace Ellysia {
 	private:
 		//Resourceにあるレベルデータの場所
 		const std::string LEVEL_DATA_PATH_ = "Resources/LevelData/";
-		
+
 	private:
 
 		//ここにデータを入れていく
@@ -586,7 +675,7 @@ namespace Ellysia {
 		//ハンドル
 		uint32_t handle_ = 0u;
 
-		
+
 
 	};
 

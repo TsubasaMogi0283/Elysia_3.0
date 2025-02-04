@@ -165,7 +165,6 @@ private:
 	//最大の半径
 	const float MAX_LIGHT_RADIUS_ = 11.8f;
 	
-
 private:
 	//カメラ
 	Camera camera_ = {};
@@ -175,8 +174,6 @@ private:
 	float cameraMoveTime_ = 0.0f;
 
 
-	//マテリアル
-	Material material_ = {};
 	//点光源
 	PointLight pointLight_ = {};
 	//半径の線形補間
@@ -208,8 +205,15 @@ private:
 	//タイトル
 	bool isReturnTitle = false;
 	float returnToTitleDissolveThresholdT_ = 0.0f;
-
-
+	
+	//選択中
+	//タイトル
+	bool isSelectingTitle_ = false;
+	//ゲーム
+	bool isSelectingGame_ = true;
+	
+	//矢印の回転
+	float arrowRotate_ = 0.0f;
 
 	//点滅
 	bool isFlash_ = false;
@@ -219,14 +223,12 @@ private:
 
 	//高速点滅
 	bool isFastFlash_ = false;
-	
 	//時間
 	uint32_t fastFlashTime_ = 0u;
 
 	
 	//ライトアップが終わったかどうか
 	bool isFinishLightUp_ = false;
-	
 	//ゲームに戻るかどうか
 	bool isReturnToGame_ = false;
 

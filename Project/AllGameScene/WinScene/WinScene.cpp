@@ -199,7 +199,7 @@ void WinScene::Update(Ellysia::GameManager* gameManager){
 	const std::string ESCAPE_SUCCEEDED_TEXT = "EscapeSucceededObject";
 	//基準となる座標
 	const float BASED_POSITION_Y = 6.0f;
-	levelDataManager_->SetPosition(levelDataHandle_, ESCAPE_SUCCEEDED_TEXT, {.x=0.0f,.y=std::sinf(objectFloatingTheta_) +BASED_POSITION_Y,.z=30.0f });
+	levelDataManager_->SetTranslate(levelDataHandle_, ESCAPE_SUCCEEDED_TEXT, {.x=0.0f,.y=std::sinf(objectFloatingTheta_) +BASED_POSITION_Y,.z=30.0f });
 
 
 	//レベルデータの更新
