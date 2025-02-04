@@ -134,6 +134,22 @@ public:
 		this->worldTransform_.translate = position;
 	}
 
+	/// <summary>
+	/// 色の設定
+	/// </summary>
+	/// <param name="color"></param>
+	void SetColor(const Vector4& color) {
+		this->material_.color_ = color;
+	}
+
+	/// <summary>
+	/// 透明度の設定
+	/// </summary>
+	/// <param name="transparency"></param>
+	void SetTransparency(const float& transparency) {
+		this->material_.color_.w = transparency;
+	}
+
 
 protected:
 	//モデル

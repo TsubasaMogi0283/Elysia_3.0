@@ -136,7 +136,6 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 
 
 		//ゲームかタイトルか選択する
-
 		//コントローラー接続時
 		if (input_->IsConnetGamePad() == true) {
 
@@ -302,12 +301,10 @@ void LoseScene::DrawObject3D(){
 
 void LoseScene::PreDrawPostEffectFirst(){
 	dissolveEffect_->PreDraw();
-	//backTexture_->PreDraw();
 }
 
 void LoseScene::DrawPostEffect(){
 	dissolveEffect_->Draw(dissolve_);
-	//backTexture_->DrawModel();
 }
 
 void LoseScene::DrawSprite(){

@@ -1,8 +1,9 @@
 #include "Key.h"
+
 #include "ModelManager.h"
-#include "Easing.h"
 #include "VectorCalculation.h"
 #include "TextureManager.h"
+#include "Easing.h"
 
 void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 	//モデルの生成
@@ -86,6 +87,8 @@ void Key::Update(){
 	//マテリアルの更新
 	debugMaterial_.Update();
 #endif // _DEBUG
+
+
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 	
