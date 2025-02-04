@@ -319,7 +319,7 @@ void Sphere::Release() {
 
 ////描画
 ////左上、右上、左下、右下
-//void Sphere::Draw(SphereStruct sphereCondtion, Transform transform, Matrix4x4 viewMatrix, Matrix4x4 projectionMatrix, Vector4 color) {
+//void Sphere::DrawModel(SphereStruct sphereCondtion, Transform transform, Matrix4x4 viewMatrix, Matrix4x4 projectionMatrix, Vector4 color) {
 //
 //	//書き込み用のアドレスを取得
 //	vertexResourceSphere_->Map(0, nullptr, reinterpret_cast<void**>(&vertexDataSphere_));

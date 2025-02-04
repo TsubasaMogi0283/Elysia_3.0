@@ -235,19 +235,22 @@ void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& ca
 }
 
 void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const SpotLight& spotLight) {
-	//資料にはなかったけどUnMapはあった方がいいらしい
-	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
-	//プログラムが安定するらしいとのこと
+	
+	//スケール0の時は見えないので早期リターンさせたい
+	if (worldTransform.scale.x == 0.0f && 
+		worldTransform.scale.y == 0.0f && 
+		worldTransform.scale.z == 0.0f) {
+		return;
+	}
 
 
 	//頂点バッファ
-	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
 	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
 	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
 	vertexResource_->Unmap(0u, nullptr);
 
-
+	//インデックス
 	uint32_t* index = nullptr;
 	indexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&index));
 	std::memcpy(index, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());

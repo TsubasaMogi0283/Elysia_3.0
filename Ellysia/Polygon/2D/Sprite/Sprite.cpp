@@ -61,9 +61,12 @@ void Ellysia::Sprite::Initialize(const uint32_t& textureHandle, const Vector2& p
 
 	//UVトランスフォームの初期化
 	uvTransform_ = {
-		{1.0f,1.0f,1.0f},
-		{0.0f,0.0f,0.0f},
-		{0.0f,0.0f,0.0f} 
+		//S
+		{.x = 1.0f,. y= 1.0f,.z= 1.0f},
+		//R
+		{.x = 0.0f,.y = 0.0f,.z = 0.0f},
+		//T
+		{.x = 0.0f,.y = 0.0f,.z = 0.0f} 
 	};
 
 
@@ -79,13 +82,12 @@ Ellysia::Sprite* Ellysia::Sprite::Create(const uint32_t& textureHandle, const Ve
 	//初期化
 	sprite->Initialize(textureHandle,position);
 
-	
+	//返す
 	return sprite;
 
 }
 //描画
 void Ellysia::Sprite::Draw() {
-
 
 	//非表示にするかどうか
 	if (isInvisible_ == true) {

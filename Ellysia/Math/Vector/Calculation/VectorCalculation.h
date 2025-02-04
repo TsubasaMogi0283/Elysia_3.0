@@ -89,6 +89,14 @@ namespace VectorCalculation {
 	/// <returns></returns>
 	Vector3 Normalize(const Vector3& v);
 
+	/// <summary>
+	/// 線形補間(Vector2)
+	/// </summary>
+	/// <param name="v1"></param>
+	/// <param name="v2"></param>
+	/// <param name="t"></param>
+	/// <returns></returns>
+	Vector2 Lerp(const Vector2& v1, const Vector2& v2, const float& t);
 
 	/// <summary>
 	/// 線形補間(Vector3)

@@ -217,7 +217,7 @@ private:
 	uint32_t fastFlashTime_ = 0u;
 
 	
-
+	//ライトアップが終わったかどうか
 	bool isFinishLightUp_ = false;
 	
 	//ゲームに戻るかどうか

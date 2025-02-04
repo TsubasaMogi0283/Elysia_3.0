@@ -73,8 +73,6 @@ void LoseScene::Initialize(){
 	dissolve_.threshold = 0.0f;
 	//カメラの初期化
 	camera_.Initialize();
-
-	
 	camera_.translate = { .x = 0.0f,.y = 2.8f,.z = -23.0f };
 	//マテリアル
 	material_.Initialize();
@@ -314,7 +312,7 @@ void LoseScene::PreDrawPostEffectFirst(){
 
 void LoseScene::DrawPostEffect(){
 	dissolveEffect_->Draw(dissolve_);
-	//backTexture_->Draw();
+	//backTexture_->DrawModel();
 }
 
 void LoseScene::DrawSprite(){
