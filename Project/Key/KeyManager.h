@@ -163,8 +163,6 @@ public:
 	/// </summary>
 	void StopAudio();
 
-
-
 private:
 	//オーディオ
 	Ellysia::Audio* audio_ = nullptr;

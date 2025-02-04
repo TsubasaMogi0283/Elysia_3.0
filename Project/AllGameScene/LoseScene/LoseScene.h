@@ -108,6 +108,12 @@ public:
 
 private:
 	/// <summary>
+	/// 選択
+	/// </summary>
+	void Select();
+
+
+	/// <summary>
 	/// /ImGUiの表示
 	/// </summary>
 	void DisplayImGui();
@@ -153,7 +159,8 @@ private:
 	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
 	//タイトルに変わる時間
 	const uint32_t CHANGE_TO_TITLE_TIME_ = 60 * 1;
-
+	//増える時間の値
+	const uint32_t INCREASE_VALUE_ = 1u;
 
 	//最大の半径
 	const float MAX_LIGHT_RADIUS_ = 11.8f;

@@ -79,6 +79,8 @@ namespace Ellysia {
 		std::string  preSceneName_ = "";
 		std::string  currentSceneName_ = "";
 
+		//現在のシーンの数
+		uint32_t currentSceneNumber_ = 0;
 	};
 
 }

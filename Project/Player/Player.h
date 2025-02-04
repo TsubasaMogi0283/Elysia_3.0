@@ -250,29 +250,6 @@ public:
 
 public:
 
-	///// <summary>
-	///// 通常の敵の当たり判定
-	///// </summary>
-	///// <returns></returns>
-	//inline PlayerCollisionToNormalEnemyAttack* GetCollisionToNormalEnemy()const {
-	//	return colliderToNormalEnemy_.get();
-	//}
-	//
-	///// <summary>
-	///// 強敵の当たり判定
-	///// </summary>
-	///// <returns></returns>
-	//inline PlayerCollisionToStrongEnemy* GetCollisionToStrongEnemy()const {
-	//	return collisionToStrongEnemy_.get();
-	//}
-	//
-	///// <summary>
-	///// オーディオオブジェクトに対しての当たり判定
-	///// </summary>
-	///// <returns></returns>
-	//inline PlayerCollisionToAudioObject* GetCollisionToAudioObject()const {
-	//	return collosionToAudioObject_.get();
-	//}
 
 	/// <summary>
 	/// プレイヤー用のコライダーを取得
@@ -358,13 +335,6 @@ private:
 private:
 	//当たり判定のリスト
 	std::list<std::unique_ptr<BasePlayerCollision>> colliders_ = {};
-	////当たり判定(通常の敵)
-	//std::unique_ptr<PlayerCollisionToNormalEnemyAttack>colliderToNormalEnemy_ = nullptr;
-	////当たり判定(一発アウトの敵用)
-	//std::unique_ptr<PlayerCollisionToStrongEnemy>collisionToStrongEnemy_ = nullptr;
-	////オーディオオブジェクト用
-	//std::unique_ptr<PlayerCollisionToAudioObject>collosionToAudioObject_ = nullptr;
-
 	//懐中電灯
 	std::unique_ptr<FlashLight>flashLight_ = nullptr;
 

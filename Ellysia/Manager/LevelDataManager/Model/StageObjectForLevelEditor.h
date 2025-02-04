@@ -6,7 +6,7 @@
  * @author 茂木翼
  */
 
-#include "IObjectForLevelEditor.h"
+#include "BaseObjectForLevelEditor.h"
 #include "StageObjectForLevelEditorCollider.h"
 
 /// <summary>

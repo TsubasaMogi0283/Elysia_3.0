@@ -1,6 +1,9 @@
 #include "GameManager.h"
 #include <cassert>
+#include <imgui.h>
+
 #include "GameSceneFactory.h"
+#include <vector>
 
 
 void Ellysia::GameManager::Initialize() {
@@ -13,8 +16,7 @@ void Ellysia::GameManager::Initialize() {
 
 #ifdef _DEBUG
 	//デバッグ時はこっちに入れてね
-	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
-
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Lose");
 #endif // _DEBUG
 
 	//初期化
@@ -44,6 +46,34 @@ void Ellysia::GameManager::ChangeScene(const std::string& sceneName){
 void Ellysia::GameManager::Update() {
 	//更新
 	currentGamaScene_->Update(this);
+
+#ifdef _DEBUG
+	ImGui::Begin("ゲームシーンの管理");
+	const char* SCENE_NAME[] = {"Title","Game","Win","Lose"};
+	if (ImGui::BeginCombo("シーン", SCENE_NAME[currentSceneNumber_])) {
+		for (uint32_t i = 0u; i < IM_ARRAYSIZE(SCENE_NAME); ++i) {
+			bool isSelected = (currentSceneNumber_ == i);
+
+			if (ImGui::Selectable(SCENE_NAME[i], isSelected)){
+				// 選択されたアイテムのインデックスを更新する
+				currentSceneNumber_ = i; 
+				ChangeScene(SCENE_NAME[i]);
+			}
+
+			// 現在選択されているアイテムにフォーカスを設定する
+			if (isSelected == true) {
+				ImGui::SetItemDefaultFocus();
+			}
+
+		}
+
+		ImGui::EndCombo();
+	}
+
+	ImGui::End();
+#endif // _DEBUG
+
+
 }
 
 void Ellysia::GameManager::DrawObject3D() {

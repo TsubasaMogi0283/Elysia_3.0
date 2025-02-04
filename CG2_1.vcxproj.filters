@@ -687,7 +687,7 @@
     <ClCompile Include="Project\Stage\Gate\Gate.cpp">
       <Filter>Project\Gate</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditor.cpp">
+    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\BaseObjectForLevelEditor.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1051,7 +1051,7 @@
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.h">
       <Filter>Ellysia\Header File\Manager\LevelEditor\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditor.h">
+    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\BaseObjectForLevelEditor.h">
       <Filter>Ellysia\Header File\Manager\LevelEditor\Object</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditor.h">

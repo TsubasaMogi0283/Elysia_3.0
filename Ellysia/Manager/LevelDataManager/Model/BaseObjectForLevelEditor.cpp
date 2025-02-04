@@ -1,4 +1,4 @@
-#include "IObjectForLevelEditor.h"
+#include "BaseObjectForLevelEditor.h"
 
 void BaseObjectForLevelEditor::Draw(const Camera& camera, const DirectionalLight& directionalLight){
 	//平行光源に設定

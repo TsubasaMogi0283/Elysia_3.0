@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file Ellysia.h
+ * @file Framework.h
  * @brief Framework(メインフレーム)のクラス
  * @author 茂木翼
  */
@@ -17,7 +17,7 @@
 //「Ellysia Engine」というように、後ろにEngine加えても自然な語感だと思う
 
 //崩〇3〇dじゃないよ。
-//Elysiaでもないよ。誤字ではないよ。
+//Elysiaでもないし誤字でもないよ。
 
 
 /// <summary>

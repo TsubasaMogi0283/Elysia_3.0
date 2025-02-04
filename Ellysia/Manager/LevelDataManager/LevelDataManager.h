@@ -18,7 +18,7 @@
 #include "WorldTransform.h"
 #include "Collider.h"
 #include "Transform.h"
-#include "Model/IObjectForLevelEditor.h"
+#include "Model/BaseObjectForLevelEditor.h"
 #include "Model/AudioObjectForLevelEditor.h"
 #include "Listener.h"
 
@@ -28,11 +28,6 @@
 /// カメラ
 /// </summary>
 struct Camera;
-
-/// <summary>
-/// マテリアル
-/// </summary>
-struct Material;
 
 /// <summary>
 /// 平行光源
@@ -124,7 +119,6 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="levelDataHandle">ハンドル</param>
 		/// <param name="camera">カメラ</param>
-		/// <param name="material">マテリアル</param>
 		/// <param name="directionalLight">平行光源</param>
 		void Draw(const uint32_t& levelDataHandle, const Camera& camera, const DirectionalLight& directionalLight);
 
@@ -133,7 +127,6 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="levelDataHandle">ハンドル</param>
 		/// <param name="camera">カメラ</param>
-		/// <param name="material">マテリアル</param>
 		/// <param name="pointLight">点光源</param>
 		void Draw(const uint32_t& levelDataHandle, const Camera& camera,const PointLight& pointLight);
 
@@ -142,7 +135,6 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="levelDataHandle">ハンドル</param>
 		/// <param name="camera">カメラ</param>
-		/// <param name="material">マテリアル</param>
 		/// <param name="spotLight">スポットライト</param>
 		void Draw(const uint32_t& levelDataHandle, const Camera& camera,const SpotLight& spotLight);
 
@@ -413,6 +405,8 @@ namespace Ellysia {
 				//一致したら設定
 				if (levelData->handle == handle) {
 					levelData->listener = listener;
+					//無駄なループを防ぐ
+					break;
 				}
 			}
 		}
@@ -433,6 +427,8 @@ namespace Ellysia {
 						//名前が一致したらスケールの変更
 						if (objectData.name == name) {
 							objectData.objectForLeveEditor->SetScale(scale);
+							//無駄なループを防ぐ
+							break;
 						}
 						
 
@@ -461,6 +457,8 @@ namespace Ellysia {
 						//一致したら回転の変更
 						if (objectData.name == name) {
 							objectData.objectForLeveEditor->SetRotate(rotate);
+							//無駄なループを防ぐ
+							break;
 						}
 					}
 
@@ -486,7 +484,10 @@ namespace Ellysia {
 						//一致したら座標の変更
 						if (objectData.name == name) {
 							objectData.objectForLeveEditor->SetPositione(translate);
+							//無駄なループを防ぐ
+							break;
 						}
+						
 					}
 
 					//無駄なループを防ぐ
@@ -496,8 +497,57 @@ namespace Ellysia {
 
 		}
 
-	private:
+		/// <summary>
+		/// 色の設定
+		/// </summary>
+		/// <param name="handle"></param>
+		/// <param name="name"></param>
+		/// <param name="color"></param>
+		inline void SetColor(const uint32_t& handle, const std::string& name, const Vector4& color) {
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
 
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+						//一致したら座標の変更
+						if (objectData.name == name) {
+							objectData.objectForLeveEditor->SetColor(color);
+							//無駄なループを防ぐ
+							break;
+						}
+					}
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+		}
+
+		/// <summary>
+		/// 透明度の設定
+		/// </summary>
+		/// <param name="handle"></param>
+		/// <param name="name"></param>
+		/// <param name="color"></param>
+		inline void SetTransparency(const uint32_t& handle, const std::string& name, const float& transparency) {
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
+
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+						//一致したら座標の変更
+						if (objectData.name == name) {
+							objectData.objectForLeveEditor->SetTransparency(transparency);
+							//無駄なループを防ぐ
+							break;
+						}
+					}
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+		}
+
+	private:
 
 		/// <summary>
 		/// 配置
@@ -524,6 +574,9 @@ namespace Ellysia {
 		//オーディオ
 		Ellysia::Audio* audio_ = nullptr;
 
+	private:
+		//Resourceにあるレベルデータの場所
+		const std::string LEVEL_DATA_PATH_ = "Resources/LevelData/";
 		
 	private:
 
@@ -533,8 +586,7 @@ namespace Ellysia {
 		//ハンドル
 		uint32_t handle_ = 0u;
 
-		//Resourceにあるレベルデータの場所
-		const std::string LEVEL_DATA_PATH_ = "Resources/LevelData/";
+		
 
 	};
 

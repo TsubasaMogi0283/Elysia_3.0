@@ -7,15 +7,13 @@
 #include "SingleCalculation.h"
 #include "VectorCalculation.h"
 
-
 #include "AnimationManager.h"
 #include "TextureManager.h"
 #include "GameManager.h"
 #include "ModelManager.h"
-
+#include "LevelDataManager.h"
 
 GameScene::GameScene(){
-
 	//インスタンスの取得
 	//入力
 	input_ = Ellysia::Input::GetInstance();
@@ -238,12 +236,6 @@ void GameScene::Initialize() {
 	vignette_->SetPow(vignettePow_);
 
 
-	//レベルエディタ内でやるかクラスに分けようね。
-	//マテリアルの初期化
-	material_.Initialize();
-	//ライティングの種類を設定
-	material_.lightingKinds_ = SpotLighting;
-	
 
 
 	//シーンのどこから始めるかを設定する
@@ -870,13 +862,8 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	
 	//カメラの更新
 	camera_.Update();
-
-	//更新
-	material_.Update();
-
 	//プレイヤーの更新
 	player_->Update();
-	
 	//門
 	gate_->Update();
 

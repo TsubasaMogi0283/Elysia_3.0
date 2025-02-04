@@ -99,9 +99,6 @@ void LoseScene::Initialize(){
 
 void LoseScene::Update(Ellysia::GameManager* gameManager){
 
-	//増える時間の値
-	const uint32_t INCREASE_VALUE = 1u;
-	
 	//始め
 	//ライトアップをする
 	if (isFinishLightUp_ == false) {
@@ -118,7 +115,7 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 	}
 	else {
 		//通常の点滅
-		flashTime_ += INCREASE_VALUE;
+		flashTime_ += INCREASE_VALUE_;
 		if (flashTime_ > FLASH_TIME_LIMIT_ * 0 &&
 			flashTime_ <= FLASH_TIME_LIMIT_) {
 			text_->SetInvisible(false);
@@ -134,42 +131,10 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 			flashTime_ = RESTART_TIME;
 		}
 
-
-		//ゲームかタイトルか選択する
-		//コントローラー接続時
-		if (input_->IsConnetGamePad() == true) {
-
-			//Bボタンを押したとき
-			if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-				bTriggerTime_ += INCREASE_VALUE;
-
-			}
-			if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-				//Bトリガーの反応しない時間
-				const uint32_t NO_REACT_TIME = 0u;
-				bTriggerTime_ = NO_REACT_TIME;
-			}
-
-			//Bトリガーの反応する時間
-			const uint32_t REACT_TIME = 1u;
-			if (bTriggerTime_ == REACT_TIME) {
-
-				isReturnTitle = true;
-			}
-		}
-		//次のシーンへ
-		if (input_->IsTriggerKey(DIK_SPACE) == true) {
-			//ゲームへ
-			isReturnToGame_ = true;
-
-		}
-		else if (input_->IsTriggerKey(DIK_T) == true) {
-			//ゲームへ
-			isReturnTitle = true;
-
-		}
 		
 
+		//ゲームかタイトルか選択する
+		Select();
 
 		//カウントが増える時間
 		const uint32_t INCREASE_COUNT_TIME = 0u;
@@ -182,7 +147,7 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 		if (isReturnTitle == true) {
 
 			//高速点滅
-			fastFlashTime_ += INCREASE_VALUE;
+			fastFlashTime_ += INCREASE_VALUE_;
 			if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
 				++textDisplayCount_;
 			}
@@ -210,7 +175,7 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 
 			const float MAX_TRANSPARENCY = 1.0f;
 			if (transparency_ > MAX_TRANSPARENCY) {
-				blackOutTime_ += INCREASE_VALUE;
+				blackOutTime_ += INCREASE_VALUE_;
 			}
 
 
@@ -220,7 +185,7 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 		//ゲームは墓から遠ざかる
 		if (isReturnToGame_ == true) {
 			//点滅
-			fastFlashTime_ += INCREASE_VALUE;
+			fastFlashTime_ += INCREASE_VALUE_;
 
 			//表示
 			if (textDisplayCount_ % FLASH_INTERVAL == DISPLAY) {
@@ -287,6 +252,11 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 	//ImGui
 	DisplayImGui();
 	
+	//再読み込み
+	if (input_->IsTriggerKey(DIK_L) == true) {
+		levelDataManager_->Reload(levelDataHandle_);
+	}
+
 #endif // _DEBUG
 	
 	
@@ -312,6 +282,41 @@ void LoseScene::DrawSprite(){
 	text_->Draw();
 	//フェードイン
 	black_->Draw();
+}
+
+void LoseScene::Select(){
+	//コントローラー接続時
+	if (input_->IsConnetGamePad() == true) {
+
+		//Bボタンを押したとき
+		if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+			bTriggerTime_ += INCREASE_VALUE_;
+
+		}
+		if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+			//Bトリガーの反応しない時間
+			const uint32_t NO_REACT_TIME = 0u;
+			bTriggerTime_ = NO_REACT_TIME;
+		}
+
+		//Bトリガーの反応する時間
+		const uint32_t REACT_TIME = 1u;
+		if (bTriggerTime_ == REACT_TIME) {
+
+			isReturnTitle = true;
+		}
+	}
+	//次のシーンへ
+	if (input_->IsTriggerKey(DIK_SPACE) == true) {
+		//ゲームへ
+		isReturnToGame_ = true;
+
+	}
+	else if (input_->IsTriggerKey(DIK_T) == true) {
+		//ゲームへ
+		isReturnTitle = true;
+
+	}
 }
 
 void LoseScene::DisplayImGui(){

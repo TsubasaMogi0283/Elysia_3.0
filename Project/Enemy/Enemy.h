@@ -5,12 +5,12 @@
  * @author 茂木翼
  */
 
+#include <memory>
+
 #include "Vector3.h"
 #include "WorldTransform.h"
 #include "Model.h"
 #include "Material.h"
-#include <memory>
-#include "Stage/Ground/StageRect.h"
 #include "EnemyAttackCollision.h"
 #include "AABB.h"
 #include "EnemyCondition.h"

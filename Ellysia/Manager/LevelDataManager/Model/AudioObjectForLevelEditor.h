@@ -11,7 +11,7 @@
 #include <memory>
 #include <cstdint>
 
-#include "IObjectForLevelEditor.h"
+#include "BaseObjectForLevelEditor.h"
 #include "AudioObjectForLevelEditorCollider.h"
 #include "Audio.h"
 

@@ -6,36 +6,23 @@
  * @author 茂木翼
  */
 
-
 #include <memory>
 
 #include "IGameScene.h"
 #include "Sprite.h"
-#include "Model.h"
-#include "AnimationModel.h"
 #include "Camera.h"
-#include "Audio.h"
-#include "SkinCluster.h"
-#include "Material.h"
 #include "SpotLight.h"
 #include "DirectionalLight.h"
 
-
 #include "Player/Player.h"
-#include "Enemy/Enemy.h"
 #include "CollisionManager.h"
-#include "Key/Key.h"
 #include "Key/KeyManager.h"
-#include "Light/FlashLight/FlashLight.h"
 #include "Enemy/EnemyManager.h"
 #include "Stage/Gate/Gate.h"
-#include "Fan.h"
 #include "CollisionCalculation.h"
 
-#include "Input.h"
 #include "Vignette.h"
-#include "BackTexture.h"
-#include "LevelDataManager.h"
+
 
 
 /// <summary>
@@ -212,8 +199,6 @@ private:
 	bool isRotateXKey_ = false;
 
 	
-	//マテリアル
-	Material material_ = {};
 
 	//ポストエフェクト
 	//ビネット
