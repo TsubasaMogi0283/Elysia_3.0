@@ -76,17 +76,22 @@ void Key::Update(){
 		SpriteMove();
 	}
 
+#ifdef _DEBUG
 	//デバッグ用
 	debugWorldTransform_.translate = GetWorldPosition();
 	debugWorldTransform_.scale = { .x = 0.1f,.y = 0.1f,.z = 0.1f };
 	debugMaterial_.color_.w = 0.3f;
-
 	//ワールドトランスフォームの更新
-	worldTransform_.Update();
 	debugWorldTransform_.Update();
 	//マテリアルの更新
-	material_.Update();
 	debugMaterial_.Update();
+#endif // _DEBUG
+	//ワールドトランスフォームの更新
+	worldTransform_.Update();
+	
+	//マテリアルの更新
+	material_.Update();
+	
 
 }
 

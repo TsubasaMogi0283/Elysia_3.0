@@ -306,6 +306,16 @@ void Enemy::Dead() {
 	//消えていくよ
 	const float DELETE_INTERVAL = 0.01f;
 	mainMaterial_.color_.w -= DELETE_INTERVAL;
+	worldTransform_.scale.x -= 0.1f;
+	worldTransform_.scale.y -= 0.1f;
+	worldTransform_.scale.z -= 0.1f;
+
+	if (worldTransform_.scale.z < 0.0f) {
+		worldTransform_.scale.x = 0.0f;
+		worldTransform_.scale.y = 0.0f;
+		worldTransform_.scale.z = 0.0f;
+
+	}
 
 	//生成
 	if (particle_ == nullptr) {
