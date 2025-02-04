@@ -167,7 +167,7 @@ void Key::SpriteMove(){
 
 
 		//始点
-		const Vector2 SPRITE_STRAT_POSITION_ = { .x = 680,.y = 500.0f };
+		const Vector2 SPRITE_STRAT_POSITION_ = { .x = 680,.y = 600.0f };
 		//終点
 		const Vector2 SPRITE_END_POSITION_ = { .x = 64.0f * 2.0f,.y = 20.0f };
 

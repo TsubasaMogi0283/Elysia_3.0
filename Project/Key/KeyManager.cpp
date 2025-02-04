@@ -225,7 +225,6 @@ void KeyManager::Delete() {
 	keies_.remove_if([=](const std::unique_ptr<Key>& key) {
 		//拾われたら消す
 		if (key->GetIsDelete() == true) {
-			audio_->Play(pickUpSEHandle, false);
 			++keyQuantity_;
 			return true;
 		}
@@ -263,6 +262,8 @@ void KeyManager::PickUp() {
 					player_->AddHaveKeyQuantity();
 					//鍵が取得される
 					key->PickedUp();
+					//取得の音が鳴る
+					audio_->Play(pickUpSEHandle, false);
 				}
 
 				//Bボタンを押したとき
@@ -282,6 +283,8 @@ void KeyManager::PickUp() {
 						player_->AddHaveKeyQuantity();
 						//鍵が取得される
 						key->PickedUp();
+						//取得の音が鳴る
+						audio_->Play(pickUpSEHandle, false);
 					}
 				}
 
