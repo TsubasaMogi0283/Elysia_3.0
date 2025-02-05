@@ -112,6 +112,10 @@ private:
 	/// </summary>
 	void Select();
 
+	/// <summary>
+	/// 次のシーンへ変わる
+	/// </summary>
+	void ChangeNextScene();
 
 	/// <summary>
 	/// /ImGUiの表示
@@ -161,9 +165,19 @@ private:
 	const uint32_t CHANGE_TO_TITLE_TIME_ = 60 * 1;
 	//増える時間の値
 	const uint32_t INCREASE_VALUE_ = 1u;
-
+	//線形補間で使う変数の最大値
+	const float MAX_T_VALUE_ = 1.0f;
 	//最大の半径
 	const float MAX_LIGHT_RADIUS_ = 11.8f;
+
+
+	//テキストの名前
+	//矢印
+	const std::string SELECT_ARROW = "SelectArrow";
+	//ゲーム
+	const std::string TO_GAME = "ToGame";
+	//タイトル
+	const std::string TO_TITLE = "ToTitle";
 	
 private:
 	//カメラ
@@ -172,7 +186,6 @@ private:
 	Vector3 cameraVelocity_ = {};
 	//移動時間
 	float cameraMoveTime_ = 0.0f;
-
 
 	//点光源
 	PointLight pointLight_ = {};
@@ -184,17 +197,11 @@ private:
 	//ディゾルブ
 	std::unique_ptr<Ellysia::DissolvePostEffect> dissolveEffect_ = nullptr;
 	Dissolve dissolve_ = {};
-
-	//テキスト
-	std::unique_ptr<Ellysia::Sprite> text_ = nullptr;
 	//黒背景
 	std::unique_ptr<Ellysia::Sprite> black_ = nullptr;
 	//透明度
 	float transparency_ = 0.0f;
 	
-	//見せる番号
-	uint32_t textDisplayCount_ = 0u;
-
 	//暗転している時間
 	uint32_t blackOutTime_ = 0u;
 
@@ -203,7 +210,7 @@ private:
 	//フラグ
 	bool isBTrigger_ = false;
 	//タイトル
-	bool isReturnTitle = false;
+	bool isChangeNextScene_ = false;
 	float returnToTitleDissolveThresholdT_ = 0.0f;
 	
 	//選択中
@@ -212,14 +219,18 @@ private:
 	//ゲーム
 	bool isSelectingGame_ = true;
 	
+	//選択時のスケール
+	float selectedScale_ = 1.5f;
+
+	//テキストの透明度
+	float textTransparency_ = 0.0f;
+	float transparencyT_ = 0.0f;
+	bool displayText_ = false;
+	
 	//矢印の回転
 	float arrowRotate_ = 0.0f;
-
-	//点滅
-	bool isFlash_ = false;
-	//時間
-	uint32_t flashTime_ = 0u;
-	
+	//決定したときの線形補間
+	float arrowDropT_ = 0.0f;
 
 	//高速点滅
 	bool isFastFlash_ = false;

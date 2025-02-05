@@ -455,15 +455,14 @@ namespace Ellysia {
 
 					//該当するLevelDataのobjectDatasを検索
 					for (auto& objectData : levelData->objectDatas) {
-						objectData.name;
-
-						//一致したら回転の変更
+						//名前が一致したらスケールの変更
 						if (objectData.name == name) {
-
 							objectData.objectForLeveEditor->SetRotate(rotate);
 							//無駄なループを防ぐ
 							break;
 						}
+
+
 					}
 
 					//無駄なループを防ぐ
@@ -633,7 +632,29 @@ namespace Ellysia {
 			return result;
 		}
 
-
+		/// <summary>
+		/// 非表示設定
+		/// </summary>
+		/// <param name="handle">ハンドル</param>
+		/// <param name="name">名前</param>
+		/// <param name="isInvisible">非表示にするかどうか</param>
+		inline void SetInvisible(const uint32_t& handle, const std::string& name, const bool& isInvisible) {
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+						//一致したら非表示設定
+						if (objectData.name == name) {
+							objectData.isInvisible = isInvisible;
+							//無駄なループを防ぐ
+							break;
+						}
+					}
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+		}
 
 
 	private:

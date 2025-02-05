@@ -35,7 +35,6 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="modelHandle"></param>
 	virtual void Initialize()=0;
 
 	/// <summary>
