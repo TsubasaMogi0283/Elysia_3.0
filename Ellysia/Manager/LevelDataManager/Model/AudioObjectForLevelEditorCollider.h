@@ -12,7 +12,7 @@
 /// <summary>
 /// オーディオオブジェクト用の当たり判定
 /// </summary>
-class AudioObjectForLevelEditorCollider :public IObjectForLevelEditorCollider {
+class AudioObjectForLevelEditorCollider :public BaseObjectForLevelEditorCollider {
 public:
 	/// <summary>
 	/// コンストラクタ

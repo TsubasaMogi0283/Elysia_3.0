@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file IObjectForLevelEditorCollider.h
+ * @file BaseObjectForLevelEditorCollider.h
  * @brief レベルエディタ用のオブジェクトの当たり判定クラス
  * @author 茂木翼
  */
@@ -12,7 +12,7 @@
 /// <summary>
 /// レベルエディタ用のオブジェクトの当たり判定
 /// </summary>
-class IObjectForLevelEditorCollider:public Collider {
+class BaseObjectForLevelEditorCollider:public Collider {
 public:
 	/// <summary>
 	/// 初期化
@@ -61,7 +61,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	virtual ~IObjectForLevelEditorCollider() = default;
+	virtual ~BaseObjectForLevelEditorCollider() = default;
 
 
 protected:

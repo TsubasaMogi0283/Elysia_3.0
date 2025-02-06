@@ -152,8 +152,8 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="handle">ハンドル</param>
 		/// <returns>持っている分のコライダー</returns>
-		inline std::vector<IObjectForLevelEditorCollider*> GetCollider(const uint32_t& handle) {
-			std::vector<IObjectForLevelEditorCollider*> colliders = {};
+		inline std::vector<BaseObjectForLevelEditorCollider*> GetCollider(const uint32_t& handle) {
+			std::vector<BaseObjectForLevelEditorCollider*> colliders = {};
 
 			for (const auto& [key, levelData] : levelDatas_) {
 				if (levelData->handle == handle) {
@@ -180,8 +180,8 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="handle">ハンドル</param>
 		/// <returns> オーディオコライダー</returns>
-		inline std::vector<IObjectForLevelEditorCollider*>GetAudioCollider(const uint32_t& handle) {
-			std::vector<IObjectForLevelEditorCollider*> colliders = {};
+		inline std::vector<BaseObjectForLevelEditorCollider*>GetAudioCollider(const uint32_t& handle) {
+			std::vector<BaseObjectForLevelEditorCollider*> colliders = {};
 
 			for (const auto& [key, levelData] : levelDatas_) {
 				if (levelData->handle == handle) {
@@ -345,7 +345,7 @@ namespace Ellysia {
 			BaseObjectForLevelEditor* objectForLeveEditor;
 
 			//コライダー
-			IObjectForLevelEditorCollider* levelDataObjectCollider;
+			BaseObjectForLevelEditorCollider* levelDataObjectCollider;
 
 
 		};

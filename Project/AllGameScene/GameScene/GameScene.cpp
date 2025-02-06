@@ -974,8 +974,8 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	
 
 
-	std::vector<IObjectForLevelEditorCollider*> audioColliders = levelDataManager_->GetAudioCollider(levelHandle_);
-	for (std::vector<IObjectForLevelEditorCollider*>::iterator it = audioColliders.begin(); it != audioColliders.end(); ++it) {
+	std::vector<BaseObjectForLevelEditorCollider*> audioColliders = levelDataManager_->GetAudioCollider(levelHandle_);
+	for (std::vector<BaseObjectForLevelEditorCollider*>::iterator it = audioColliders.begin(); it != audioColliders.end(); ++it) {
 		collisionManager_->RegisterList(*it);
 
 	}

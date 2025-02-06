@@ -35,8 +35,8 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="modelhandle"></param>
-	/// <param name="position"></param>
+	/// <param name="modelhandle">ハンドル</param>
+	/// <param name="position">座標</param>
 	void Initialize(const uint32_t& modelhandle,const Vector3& position);
 
 	/// <summary>
@@ -47,8 +47,8 @@ public:
 	/// <summary>
 	/// 描画(モデル)
 	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="spotLight"></param>
+	/// <param name="camera">カメラ</param>
+	/// <param name="spotLight">スポットライト</param>
 	void DrawModel(const Camera& camera,const SpotLight& spotLight);
 
 	/// <summary>

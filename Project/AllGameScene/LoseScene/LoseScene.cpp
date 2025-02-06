@@ -90,24 +90,29 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 	//始め
 	//ライトアップをする
 	if (isFinishLightUp_ == false) {
-		//増える間隔
-		const float INTERVAL = 0.008f;
+		
 
 		//ライトアップ終了する
 		if (lightRadiusT_ > MAX_T_VALUE_) {
-			//不透明にいしていく
+			//増える間隔
+			const float INTERVAL = 0.025f;
+			//不透明にしていく
 			transparencyT_ += INTERVAL;
 			textTransparency_ = Easing::EaseInQuart(transparencyT_);
 			levelDataManager_->SetTransparency(levelDataHandle_, TO_GAME, textTransparency_);
 			levelDataManager_->SetTransparency(levelDataHandle_, TO_TITLE, textTransparency_);
 
-			if (transparencyT_ >= MAX_T_VALUE_) {
+			//少しだけ待ってから選択できるようにする
+			const float ADD_T_VALUE = 1.0f;
+			if (transparencyT_ >= MAX_T_VALUE_+ ADD_T_VALUE) {
 				displayText_ = true;
 				isFinishLightUp_ = true;
 			}
 
 		}
 		else {
+			//増える間隔
+			const float INTERVAL = 0.008f;
 			lightRadiusT_ += INTERVAL;
 			//点光源の半径を設定
 			pointLight_.radius_ = Easing::EaseOutSine(lightRadiusT_) * MAX_LIGHT_RADIUS_;
@@ -115,7 +120,7 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 			levelDataManager_->SetTransparency(levelDataHandle_, TO_GAME, 0.0f);
 			levelDataManager_->SetTransparency(levelDataHandle_, TO_TITLE, 0.0f);
 			//矢印も非表示にしておく
-			//levelDataManager_->
+			levelDataManager_->SetInvisible(levelDataHandle_, SELECT_ARROW, true);
 
 		}
 	}
@@ -201,6 +206,8 @@ void LoseScene::DrawSprite(){
 void LoseScene::Select() {
 
 	
+	//矢印を表示させる
+	levelDataManager_->SetInvisible(levelDataHandle_, SELECT_ARROW, false);
 
 	//矢印の回転
 	const float ROTATE_VALUE = 0.1f;

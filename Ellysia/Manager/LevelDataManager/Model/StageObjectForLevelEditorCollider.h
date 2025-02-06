@@ -10,7 +10,7 @@
 /// <summary>
 /// ステージオブジェクト用のクラス
 /// </summary>
-class StageObjectForLevelEditorCollider :public IObjectForLevelEditorCollider {
+class StageObjectForLevelEditorCollider :public BaseObjectForLevelEditorCollider {
 public:
 
 	/// <summary>
@@ -48,9 +48,6 @@ public:
 	inline void SetWorldPosition(const Vector3& position) {
 		this->objectPosition_ = position;
 	}
-
-
-private:
 
 
 };
