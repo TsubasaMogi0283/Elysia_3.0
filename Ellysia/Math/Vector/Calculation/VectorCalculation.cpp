@@ -4,7 +4,9 @@
 #include <cassert>
 #include <numbers>
 #include <cmath>
-#include <SingleCalculation.h>
+#include <algorithm>
+
+#include "SingleCalculation.h"
 
 
 
@@ -14,7 +16,6 @@ Vector2 VectorCalculation::Add(const Vector2& v1, const Vector2& v2){
 		.y = v1.x + v2.y
 	};
 
-	
 	return result;
 }
 
@@ -26,6 +27,7 @@ Vector3 VectorCalculation::Add(const Vector3& v1, const Vector3& v2) {
 	};
 	return result;
 }
+
 
 Vector2 VectorCalculation::Subtract(const Vector2& v1, const Vector2& v2){
 	Vector2 result = {
@@ -98,7 +100,7 @@ Vector2 VectorCalculation::Normalize(const Vector2& v){
 }
 
 Vector3 VectorCalculation::Normalize(const Vector3& v){
-	Vector3 result = {};
+	
 	
 	//長さを求める
 	float length = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
@@ -115,9 +117,12 @@ Vector3 VectorCalculation::Normalize(const Vector3& v){
 
 	}
 
-	result.x = newX;
-	result.y = newY;
-	result.z = newZ;
+	Vector3 result = {
+		.x = newX,
+		.y = newY,
+		.z = newZ,
+	};
+	
 
 
 	return result;
@@ -145,7 +150,7 @@ Vector3 VectorCalculation::Lerp(const Vector3& v1, const Vector3& v2, const floa
 }
 
 Vector3 VectorCalculation::Slerp(const Vector3& v1, const Vector3& v2, const float& t){
-	float newT = SingleCalculation::Clamp(t, 0.0f, 1.0f);
+	float newT = std::clamp(t, 0.0f, 1.0f);
 
 	//正規化
 	Vector3 normalizeV1 = Normalize(v1);
@@ -232,27 +237,31 @@ Vector3 VectorCalculation::TransformCalculation(const Vector3& v, const Matrix4x
 
 Vector3 VectorCalculation::CatmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, const float& t){
 
-	Vector3 result = {};
-
+	
+	//半分
 	const float half = 1.0f / 2.0f;
 
-	result.x = half * (
+	//計算
+	Vector3 result = {
+		.x = half * (
 		(-1.0f * p0.x + 3.0f * p1.x - 3.0f * p2.x + p3.x) * (t * t * t) +
 		(2.0f * p0.x - 5.0f * p1.x + 4.0f * p2.x - p3.x) * (t * t) +
 		(-1.0f * p0.x + p2.x) * t +
-		2.0f * p1.x);
+		2.0f * p1.x),
 
-	result.y = half * (
+		.y = half * (
 		(-1.0f * p0.y + 3.0f * p1.y - 3.0f * p2.y + p3.y) * (t * t * t) +
 		(2.0f * p0.y - 5.0f * p1.y + 4.0f * p2.y - p3.y) * (t * t) +
 		(-1.0f * p0.y + p2.y) * t +
-		2.0f * p1.y);
+		2.0f * p1.y),
 
-	result.z = half * (
+		.z = half * (
 		(-1.0f * p0.z + 3.0f * p1.z - 3.0f * p2.z + p3.z) * (t * t * t) +
 		(2.0f * p0.z - 5.0f * p1.z + 4.0f * p2.z - p3.z) * (t * t) +
 		(-1.0f * p0.z + p2.z) * t +
-		2.0f * p1.z);
+		2.0f * p1.z),
+	};
+	
 
 
 	return result;

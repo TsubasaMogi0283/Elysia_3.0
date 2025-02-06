@@ -11,8 +11,7 @@
 
 #include <cmath>
 #include <numbers>
-
-#include "SingleCalculation.h"
+#include <algorithm>
 
 /// <summary>
 /// イージング
@@ -29,7 +28,7 @@ namespace Easing{
 		//計算
 		float result = 1.0f - std::cosf((value * std::numbers::pi_v<float>) / 2.0f);
 		//0.0fから1.0fに変換する
-		return SingleCalculation::Clamp(0.0f, 1.0f, result);
+		return std::clamp(result, 0.0f, 1.0f);
 	};
 
 	/// <summary>
@@ -41,7 +40,7 @@ namespace Easing{
 		//計算
 		float result = std::sinf((value * std::numbers::pi_v<float>) / 2.0f);
 		//0.0fから1.0fに変換する
-		return SingleCalculation::Clamp(0.0f, 1.0f, result);
+		return std::clamp(result, 0.0f, 1.0f);
 	};
 
 	/// <summary>
@@ -53,7 +52,7 @@ namespace Easing{
 		//計算
 		float result = -(std::cosf(std::numbers::pi_v<float> *value) - 1.0f) / 2.0f;
 		//0.0fから1.0fに変換する
-		return SingleCalculation::Clamp(0.0f, 1.0f, result);
+		return std::clamp(result, 0.0f, 1.0f);
 	};
 
 	#pragma endregion
@@ -68,7 +67,7 @@ namespace Easing{
 		//計算
 		float result = value * value;
 		//0.0fから1.0fに変換する
-		return SingleCalculation::Clamp(0.0f, 1.0f, result);
+		return std::clamp(result, 0.0f, 1.0f);
 	};
 
 	/// <summary>
@@ -80,7 +79,7 @@ namespace Easing{
 		//計算
 		float result = 1.0f - (1.0f - value) * (1.0f - value);
 		//0.0fから1.0fに変換する
-		return SingleCalculation::Clamp(0.0f, 1.0f, result);
+		return std::clamp(result, 0.0f, 1.0f);
 	};
 
 	/// <summary>
@@ -99,7 +98,7 @@ namespace Easing{
 		}
 
 		//0.0fから1.0fに変換する
-		return SingleCalculation::Clamp(0.0f, 1.0f, result);
+		return std::clamp(result, 0.0f, 1.0f);
 	}
 
 	#pragma endregion
@@ -114,7 +113,7 @@ namespace Easing{
 		//計算
 		float result = value * value*value;
 		//0.0fから1.0fに変換する
-		return SingleCalculation::Clamp(0.0f, 1.0f, result);
+		return std::clamp(result, 0.0f, 1.0f);
 	};
 
 	/// <summary>
@@ -126,7 +125,7 @@ namespace Easing{
 		//計算
 		float result = 1.0f - std::powf(1.0f - value, 3.0f);
 		//0.0fから1.0fに変換する
-		return SingleCalculation::Clamp(0.0f, 1.0f, result);
+		return std::clamp(result, 0.0f, 1.0f);
 	};
 
 	/// <summary>
@@ -145,7 +144,7 @@ namespace Easing{
 		}
 
 		//0.0fから1.0fに変換する
-		return SingleCalculation::Clamp(0.0f, 1.0f, result);
+		return std::clamp(result, 0.0f, 1.0f);
 	}
 	#pragma endregion
 
@@ -160,7 +159,7 @@ namespace Easing{
 		//計算
 		float result = value * value * value * value;
 		//0.0fから1.0fに変換する
-		return SingleCalculation::Clamp(0.0f, 1.0f, result);
+		return std::clamp(result, 0.0f, 1.0f);
 	};
 
 	/// <summary>
@@ -172,7 +171,7 @@ namespace Easing{
 		//計算
 		float result = 1.0f - std::powf(1.0f - value, 4.0f);
 		//0.0fから1.0fに変換する
-		return SingleCalculation::Clamp(0.0f, 1.0f, result);
+		return std::clamp(result, 0.0f, 1.0f);
 	};
 
 	/// <summary>
@@ -191,7 +190,7 @@ namespace Easing{
 		}
 
 		//0.0fから1.0fに変換する
-		return SingleCalculation::Clamp(0.0f, 1.0f, result);
+		return std::clamp(result, 0.0f, 1.0f);
 	}
 	#pragma endregion
 

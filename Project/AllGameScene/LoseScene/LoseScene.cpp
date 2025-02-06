@@ -93,7 +93,7 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 		
 
 		//ライトアップ終了する
-		if (lightRadiusT_ > MAX_T_VALUE_) {
+		if (startLightUpT_ > MAX_T_VALUE_) {
 			//増える間隔
 			const float INTERVAL = 0.025f;
 			//不透明にしていく
@@ -113,9 +113,9 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 		else {
 			//増える間隔
 			const float INTERVAL = 0.008f;
-			lightRadiusT_ += INTERVAL;
+			startLightUpT_ += INTERVAL;
 			//点光源の半径を設定
-			pointLight_.radius_ = Easing::EaseOutSine(lightRadiusT_) * MAX_LIGHT_RADIUS_;
+			pointLight_.radius_ = Easing::EaseOutSine(startLightUpT_) * MAX_LIGHT_RADIUS_;
 			//テキストは非表示にする
 			levelDataManager_->SetTransparency(levelDataHandle_, TO_GAME, 0.0f);
 			levelDataManager_->SetTransparency(levelDataHandle_, TO_TITLE, 0.0f);
@@ -128,18 +128,17 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 
 		if (displayText_ == true) {
 			//ゲームかタイトルか選択する
-			Select();
-
+			if (isChangeNextScene_ == false) {
+				Select();
+			}
 			//次のシーンへ変わる
-			if (isChangeNextScene_ == true) {
+			else {
 				ChangeNextScene();
 			}
+			
 
-
-
-			const float MOVE_FINISH_TIME = 3.0f;
 			//ゲームへ
-			if (cameraMoveTime_ > MOVE_FINISH_TIME) {
+			if (pointLight_.radius_ <= 0.0f) {
 				gameManager->ChangeScene("Game");
 				return;
 			}
@@ -209,8 +208,7 @@ void LoseScene::Select() {
 	levelDataManager_->SetInvisible(levelDataHandle_, SELECT_ARROW, false);
 
 	//矢印の回転
-	const float ROTATE_VALUE = 0.1f;
-	arrowRotate_ += ROTATE_VALUE;
+	arrowRotate_ += ROTATE_VALUE_;
 	levelDataManager_->SetRotate(levelDataHandle_, SELECT_ARROW, { .x = 0.0f,.y = arrowRotate_ ,.z = 0.0f });
 
 	//矢印の初期座標を取得
@@ -289,6 +287,10 @@ void LoseScene::Select() {
 }
 
 void LoseScene::ChangeNextScene(){
+
+	//高速点滅どのくらい
+	const uint32_t FINISH_WAIT_TIME = 60u;
+
 	//タイトルへ戻る
 	if (isSelectingGame_ == false && isSelectingTitle_ == true) {
 
@@ -305,7 +307,7 @@ void LoseScene::ChangeNextScene(){
 		levelDataManager_->SetScale(levelDataHandle_, SELECT_ARROW, { .x = newT* selectedScale_,.y = newT* selectedScale_ ,.z = newT* selectedScale_ });
 
 		//指定した時間を超えたらタイトルへ遷移
-		if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
+		if (waitForCameraMoveTime_ > FINISH_WAIT_TIME) {
 			returnToTitleDissolveThresholdT_ += 0.01f;
 			//ディゾルブの値を増やす
 			dissolve_.threshold = Easing::EaseInSine(returnToTitleDissolveThresholdT_);
@@ -323,27 +325,42 @@ void LoseScene::ChangeNextScene(){
 		//矢印の初期座標を取得
 		Vector3 arrowInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, SELECT_ARROW);
 
-		//決定されたら跳ねるような動きをし、回転が止まる
+		//決定されたら跳ねるような動きをする
 		const float INTERVAL = 0.1f;
 		decideArrowMoveTheta_ += INTERVAL;
 		float newTheta = std::clamp(decideArrowMoveTheta_, 0.0f, std::numbers::pi_v<float>);
+		if (decideArrowMoveTheta_ < std::numbers::pi_v<float>) {
+			//高速回転
+			const float FAST_ROTATE_VALUE = 0.5f;
+			arrowRotate_ += FAST_ROTATE_VALUE;
+			//新しい回転を設定
+			levelDataManager_->SetRotate(levelDataHandle_, SELECT_ARROW, { .x = 0.0f,.y = arrowRotate_ ,.z = 0.0f });
+		}
+		else {
+			//回転を止める
+			levelDataManager_->SetRotate(levelDataHandle_, SELECT_ARROW, { .x = 0.0f,.y = std::numbers::pi_v <float>/2.0f ,.z = 0.0f });
+		}
+		
 		
 		//高さ
 		const float HEIGHT = 1.0f;
 		float newArrowPositionY = arrowInitialPosition.y + std::sinf(newTheta) * HEIGHT;
-
+		//新しい座標を設定
 		levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = arrowInitialPosition.x,.y = newArrowPositionY ,.z = arrowInitialPosition.z });
 
 		//点滅
-		fastFlashTime_ += INCREASE_VALUE_;
+		waitForCameraMoveTime_ += INCREASE_VALUE_;
 
 		//指定した時間を超えたらタイトルへ遷移
-		if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
+		if (waitForCameraMoveTime_ > FINISH_WAIT_TIME) {
+			//ライトの半径を小さくしていく
+			const float NARROW_VALUE = 0.002f;
+			endLightUpT_ += NARROW_VALUE;
+			pointLight_.radius_ = std::clamp((1.0f - Easing::EaseOutSine(endLightUpT_)),0.0f,1.0f) * MAX_LIGHT_RADIUS_;
+
 			//加速
 			Vector3 cameraAccelation_ = { .x = 0.0f,.y = 0.001f,.z = -0.01f };
 			cameraVelocity_ = VectorCalculation::Add(cameraVelocity_, cameraAccelation_);
-			//時間
-			cameraMoveTime_ += DELTA_TIME;
 		}
 	}
 
@@ -354,7 +371,7 @@ void LoseScene::DisplayImGui(){
 	ImGui::Begin("脱出失敗シーン");
 
 	if (ImGui::TreeNode("点光源")) {
-		ImGui::InputFloat("T", &lightRadiusT_);
+		ImGui::InputFloat("T", &startLightUpT_);
 		ImGui::SliderFloat3("座標", &pointLight_.position_.x, -40.0f, 40.0f);
 		ImGui::SliderFloat("Decay", &pointLight_.decay_, 0.0f, 20.0f);
 		ImGui::SliderFloat("半径", &pointLight_.radius_, 0.0f, 20.0f);

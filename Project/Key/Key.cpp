@@ -4,6 +4,7 @@
 #include "VectorCalculation.h"
 #include "TextureManager.h"
 #include "Easing.h"
+#include "SingleCalculation.h"
 
 void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 	//モデルの生成

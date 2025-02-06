@@ -157,8 +157,7 @@ private:
 	//点滅どのくらい
 	const uint32_t FLASH_TIME_LIMIT_ = 30u;
 
-	//高速点滅どのくらい
-	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60u;
+	
 	//高速点滅間隔
 	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
 	//タイトルに変わる時間
@@ -169,7 +168,8 @@ private:
 	const float MAX_T_VALUE_ = 1.0f;
 	//最大の半径
 	const float MAX_LIGHT_RADIUS_ = 11.8f;
-
+	//矢印の回転
+	const float ROTATE_VALUE_ = 0.1f;
 
 	//テキストの名前
 	//矢印
@@ -184,13 +184,12 @@ private:
 	Camera camera_ = {};
 	//速度
 	Vector3 cameraVelocity_ = {};
-	//移動時間
-	float cameraMoveTime_ = 0.0f;
 
 	//点光源
 	PointLight pointLight_ = {};
 	//半径の線形補間
-	float lightRadiusT_ = 0.0f;
+	float startLightUpT_ = 0.0f;
+	float endLightUpT_ = 0.0f;
 
 	//背景(ポストエフェクト)
 	std::unique_ptr<Ellysia::BackTexture>backTexture_ = nullptr;
@@ -238,7 +237,7 @@ private:
 	//高速点滅
 	bool isFastFlash_ = false;
 	//時間
-	uint32_t fastFlashTime_ = 0u;
+	uint32_t waitForCameraMoveTime_ = 0u;
 
 	
 	//ライトアップが終わったかどうか

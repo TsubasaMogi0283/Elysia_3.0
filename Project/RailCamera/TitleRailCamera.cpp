@@ -1,6 +1,7 @@
 #include "TitleRailCamera.h"
 
 #include <cmath>
+#include <algorithm>
 
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
@@ -157,7 +158,7 @@ Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& poin
 	//区間内の始点を0.0f、終点を1.0としたときの現在位置
 	float t_2 = std::fmod(t, areaLength) * division;
 	//下限(0.0f)と上限(1.0f)の範囲に収める
-	t_2 = SingleCalculation::Clamp(0.0f, 1.0f, t_2);
+	t_2 = std::clamp(t_2, 0.0f, 1.0f);
 
 	int index = static_cast<int>(t / areaLength);
 	int index0 = index - 1;

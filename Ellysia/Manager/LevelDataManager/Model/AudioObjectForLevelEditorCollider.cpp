@@ -7,8 +7,6 @@ void AudioObjectForLevelEditorCollider::Initialize(){
 	//今の所これだけで充分
 	collisionType_ = ColliderType::PlaneType;
 
-
-
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_AUDIO_OBJECT);
 	//相手
