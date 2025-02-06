@@ -232,6 +232,9 @@ private:
 	//決定したときの線形補間
 	float arrowDropT_ = 0.0f;
 
+	//決定時の動きに使うθ
+	float decideArrowMoveTheta_ = 0.0f;
+
 	//高速点滅
 	bool isFastFlash_ = false;
 	//時間
@@ -240,9 +243,6 @@ private:
 	
 	//ライトアップが終わったかどうか
 	bool isFinishLightUp_ = false;
-	//ゲームに戻るかどうか
-	bool isReturnToGame_ = false;
-
 
 
 };

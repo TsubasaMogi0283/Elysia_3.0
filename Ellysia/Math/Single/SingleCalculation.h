@@ -20,8 +20,6 @@ struct Vector3;
 
 #pragma endregion
 
-//単体、例えばint,floatなどの値を返す計算する
-
 /// <summary>
 /// 単体の計算
 /// </summary>
@@ -30,58 +28,48 @@ namespace SingleCalculation{
 	/// <summary>
 	/// コタンジェント
 	/// </summary>
-	/// <param name="theta"></param>
-	/// <returns></returns>
+	/// <param name="theta">θ</param>
+	/// <returns>値</returns>
 	float Cot(const float& theta);
-
-	/// <summary>
-	/// クランプ
-	/// </summary>
-	/// <param name="min"></param>
-	/// <param name="max"></param>
-	/// <param name="t"></param>
-	/// <returns></returns>
-	float Clamp(const float& min, const float& max, const float& t);
 
 	/// <summary>
 	/// 線形補間(float)
 	/// </summary>
-	/// <param name="start"></param>
-	/// <param name="end"></param>
-	/// <param name="t"></param>
-	/// <returns></returns>
+	/// <param name="start">始点</param>
+	/// <param name="end">終点</param>
+	/// <param name="t">値</param>
+	/// <returns>始点から終点までの値</returns>
 	float Lerp(const float& start, const float& end, const float& t);
-
 
 	/// <summary>
 	/// 長さを求める(Vector2)
 	/// </summary>
-	/// <param name="v"></param>
-	/// <returns></returns>
+	/// <param name="v">ベクトル</param>
+	/// <returns>長さ</returns>
 	float Length(const Vector2& v);
 
 	/// <summary>
 	/// 長さを求める(Vector3)
 	/// </summary>
-	/// <param name="v"></param>
-	/// <returns></returns>
+	/// <param name="v">ベクトル</param>
+	/// <returns>長さ</returns>
 	float Length(const Vector3& v);
 
 	/// <summary>
 	/// 内積(Vector2)
 	/// </summary>
-	/// <param name="v1"></param>
-	/// <param name="v2"></param>
-	/// <returns></returns>
+	/// <param name="v1">ベクトル1</param>
+	/// <param name="v2">ベクトル2</param>
+	/// <returns>結果</returns>
 	float Dot(const Vector2& v1, const Vector2& v2);
 
 
 	/// <summary>
 	/// 内積(Vector3)
 	/// </summary>
-	/// <param name="v1"></param>
-	/// <param name="v2"></param>
-	/// <returns></returns>
+	/// <param name="v1">ベクトル1</param>
+	/// <param name="v2">べクトル2</param>
+	/// <returns>内積の計算結果</returns>
 	float Dot(const Vector3& v1, const Vector3& v2);
 
 	

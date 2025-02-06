@@ -205,7 +205,6 @@ void LoseScene::DrawSprite(){
 
 void LoseScene::Select() {
 
-	
 	//矢印を表示させる
 	levelDataManager_->SetInvisible(levelDataHandle_, SELECT_ARROW, false);
 
@@ -293,7 +292,6 @@ void LoseScene::ChangeNextScene(){
 	//タイトルへ戻る
 	if (isSelectingGame_ == false && isSelectingTitle_ == true) {
 
-		
 		//矢印の回転
 		const float ROTATE_VALUE = 0.1f;
 		arrowRotate_ += ROTATE_VALUE;
@@ -305,7 +303,6 @@ void LoseScene::ChangeNextScene(){
 
 
 		levelDataManager_->SetScale(levelDataHandle_, SELECT_ARROW, { .x = newT* selectedScale_,.y = newT* selectedScale_ ,.z = newT* selectedScale_ });
-
 
 		//指定した時間を超えたらタイトルへ遷移
 		if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
@@ -322,6 +319,21 @@ void LoseScene::ChangeNextScene(){
 	}
 	//もう一度挑戦
 	else if (isSelectingGame_ == true && isSelectingTitle_ == false) {
+
+		//矢印の初期座標を取得
+		Vector3 arrowInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, SELECT_ARROW);
+
+		//決定されたら跳ねるような動きをし、回転が止まる
+		const float INTERVAL = 0.1f;
+		decideArrowMoveTheta_ += INTERVAL;
+		float newTheta = std::clamp(decideArrowMoveTheta_, 0.0f, std::numbers::pi_v<float>);
+		
+		//高さ
+		const float HEIGHT = 1.0f;
+		float newArrowPositionY = arrowInitialPosition.y + std::sinf(newTheta) * HEIGHT;
+
+		levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = arrowInitialPosition.x,.y = newArrowPositionY ,.z = arrowInitialPosition.z });
+
 		//点滅
 		fastFlashTime_ += INCREASE_VALUE_;
 

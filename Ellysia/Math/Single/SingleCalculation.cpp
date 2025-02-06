@@ -11,18 +11,6 @@ float SingleCalculation::Cot(const float& theta){
 	return (1.0f / std::tanf(theta));
 }
 
-float SingleCalculation::Clamp(const float& min, const float& max, const float& t){
-	if (t < min) {
-		return min;
-	}
-	else if (t > max) {
-		return max;
-	}
-
-	return t;
-
-	
-}
 
 float SingleCalculation::Lerp(const float& start, const float& end, const float& t){
 	return (1.0f - t) * start + t * end;
