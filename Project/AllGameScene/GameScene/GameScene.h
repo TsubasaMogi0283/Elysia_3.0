@@ -12,7 +12,6 @@
 #include "Sprite.h"
 #include "Camera.h"
 #include "SpotLight.h"
-#include "DirectionalLight.h"
 
 #include "Player/Player.h"
 #include "CollisionManager.h"
@@ -105,10 +104,7 @@ public:
 	/// </summary>
 	~GameScene()=default;
 
-
-
 private:
-
 
 	/// <summary>
 	/// ステージオブジェクトとの当たり判定
@@ -124,6 +120,16 @@ private:
 	/// 逃げ状態
 	/// </summary>
 	void EscapeCondition();
+
+	/// <summary>
+	/// コリジョン管理クラスに登録
+	/// </summary>
+	void RegisterToCollisionManager();
+
+	/// <summary>
+	/// ImGuiの表示
+	/// </summary>
+	void DisplayImGui();
 
 private:
 	/// <summary>

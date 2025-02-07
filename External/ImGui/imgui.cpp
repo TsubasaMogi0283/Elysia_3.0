@@ -1034,8 +1034,8 @@ CODE
 #endif
 
 // Debug options
-#define IMGUI_DEBUG_NAV_SCORING     0   // Display navigation scoring preview when hovering items. Display last moving direction matches when holding CTRL
-#define IMGUI_DEBUG_NAV_RECTS       0   // Display the reference navigation rectangle for each window
+#define IMGUI_DEBUG_NAV_SCORING     0   // DisplayImGui navigation scoring preview when hovering items. DisplayImGui last moving direction matches when holding CTRL
+#define IMGUI_DEBUG_NAV_RECTS       0   // DisplayImGui the reference navigation rectangle for each window
 
 // When using CTRL+TAB (or Gamepad Square+L/R) we delay the visual a little in order to reduce visual noise doing a fast switch.
 static const float NAV_WINDOWING_HIGHLIGHT_DELAY            = 0.20f;    // Time before the highlight and screen dimming starts fading in
@@ -2996,7 +2996,7 @@ static bool ImGuiListClipper_StepInternal(ImGuiListClipper* clipper)
         ImGuiListClipper_SortAndFuseRanges(data->Ranges, data->StepNo);
     }
 
-    // Step 0+ (if item height is given in advance) or 1+: Display the next range in line.
+    // Step 0+ (if item height is given in advance) or 1+: DisplayImGui the next range in line.
     while (data->StepNo < data->Ranges.Size)
     {
         clipper->DisplayStart = ImMax(data->Ranges[data->StepNo].Min, already_submitted);
@@ -14397,7 +14397,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
         TreePop();
     }
 
-    // Overlay: Display windows Rectangles and Begin Order
+    // Overlay: DisplayImGui windows Rectangles and Begin Order
     if (cfg->ShowWindowsRects || cfg->ShowWindowsBeginOrder)
     {
         for (ImGuiWindow* window : g.Windows)
@@ -14421,7 +14421,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
         }
     }
 
-    // Overlay: Display Tables Rectangles
+    // Overlay: DisplayImGui Tables Rectangles
     if (cfg->ShowTablesRects)
     {
         for (int table_n = 0; table_n < g.Tables.GetMapSize(); table_n++)
@@ -14449,7 +14449,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
     }
 
 #ifdef IMGUI_HAS_DOCK
-    // Overlay: Display Docking info
+    // Overlay: DisplayImGui Docking info
     if (show_docking_nodes && g.IO.KeyCtrl)
     {
     }
@@ -14458,7 +14458,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
     End();
 }
 
-// [DEBUG] Display contents of Columns
+// [DEBUG] DisplayImGui contents of Columns
 void ImGui::DebugNodeColumns(ImGuiOldColumns* columns)
 {
     if (!TreeNode((void*)(uintptr_t)columns->ID, "Columns Id: 0x%08X, Count: %d, Flags: 0x%04X", columns->ID, columns->Count, columns->Flags))
@@ -14469,7 +14469,7 @@ void ImGui::DebugNodeColumns(ImGuiOldColumns* columns)
     TreePop();
 }
 
-// [DEBUG] Display contents of ImDrawList
+// [DEBUG] DisplayImGui contents of ImDrawList
 void ImGui::DebugNodeDrawList(ImGuiWindow* window, ImGuiViewportP* viewport, const ImDrawList* draw_list, const char* label)
 {
     ImGuiContext& g = *GImGui;
@@ -14528,13 +14528,13 @@ void ImGui::DebugNodeDrawList(ImGuiWindow* window, ImGuiViewportP* viewport, con
             total_area += ImTriangleArea(triangle[0], triangle[1], triangle[2]);
         }
 
-        // Display vertex information summary. Hover to get all triangles drawn in wire-frame
+        // DisplayImGui vertex information summary. Hover to get all triangles drawn in wire-frame
         ImFormatString(buf, IM_ARRAYSIZE(buf), "Mesh: ElemCount: %d, VtxOffset: +%d, IdxOffset: +%d, Area: ~%0.f px", pcmd->ElemCount, pcmd->VtxOffset, pcmd->IdxOffset, total_area);
         Selectable(buf);
         if (IsItemHovered() && fg_draw_list)
             DebugNodeDrawCmdShowMeshAndBoundingBox(fg_draw_list, draw_list, pcmd, true, false);
 
-        // Display individual triangles/vertices. Hover on to get the corresponding triangle highlighted.
+        // DisplayImGui individual triangles/vertices. Hover on to get the corresponding triangle highlighted.
         ImGuiListClipper clipper;
         clipper.Begin(pcmd->ElemCount / 3); // Manually coarse clip our print out of individual vertices to save CPU, only items that may be visible.
         while (clipper.Step())
@@ -14564,7 +14564,7 @@ void ImGui::DebugNodeDrawList(ImGuiWindow* window, ImGuiViewportP* viewport, con
     TreePop();
 }
 
-// [DEBUG] Display mesh/aabb of a ImDrawCmd
+// [DEBUG] DisplayImGui mesh/aabb of a ImDrawCmd
 void ImGui::DebugNodeDrawCmdShowMeshAndBoundingBox(ImDrawList* out_draw_list, const ImDrawList* draw_list, const ImDrawCmd* draw_cmd, bool show_mesh, bool show_aabb)
 {
     IM_ASSERT(show_mesh || show_aabb);
@@ -14594,7 +14594,7 @@ void ImGui::DebugNodeDrawCmdShowMeshAndBoundingBox(ImDrawList* out_draw_list, co
     out_draw_list->Flags = backup_flags;
 }
 
-// [DEBUG] Display details for a single font, called by ShowStyleEditor().
+// [DEBUG] DisplayImGui details for a single font, called by ShowStyleEditor().
 void ImGui::DebugNodeFont(ImFont* font)
 {
     bool opened = TreeNode(font, "Font: \"%s\"\n%.2f px, %d glyphs, %d file(s)",
@@ -14605,12 +14605,12 @@ void ImGui::DebugNodeFont(ImFont* font)
     if (!opened)
         return;
 
-    // Display preview text
+    // DisplayImGui preview text
     PushFont(font);
     Text("The quick brown fox jumps over the lazy dog");
     PopFont();
 
-    // Display details
+    // DisplayImGui details
     SetNextItemWidth(GetFontSize() * 8);
     DragFloat("Font scale", &font->Scale, 0.005f, 0.3f, 2.0f, "%.1f");
     SameLine(); MetricsHelpMarker(
@@ -14631,7 +14631,7 @@ void ImGui::DebugNodeFont(ImFont* font)
                 BulletText("Input %d: \'%s\', Oversample: (%d,%d), PixelSnapH: %d, Offset: (%.1f,%.1f)",
                     config_i, cfg->Name, cfg->OversampleH, cfg->OversampleV, cfg->PixelSnapH, cfg->GlyphOffset.x, cfg->GlyphOffset.y);
 
-    // Display all glyphs of the fonts in separate pages of 256 characters
+    // DisplayImGui all glyphs of the fonts in separate pages of 256 characters
     if (TreeNode("Glyphs", "Glyphs (%d)", font->Glyphs.Size))
     {
         ImDrawList* draw_list = GetWindowDrawList();
@@ -14695,7 +14695,7 @@ void ImGui::DebugNodeFontGlyph(ImFont*, const ImFontGlyph* glyph)
     Text("UV: (%.3f,%.3f)->(%.3f,%.3f)", glyph->U0, glyph->V0, glyph->U1, glyph->V1);
 }
 
-// [DEBUG] Display contents of ImGuiStorage
+// [DEBUG] DisplayImGui contents of ImGuiStorage
 void ImGui::DebugNodeStorage(ImGuiStorage* storage, const char* label)
 {
     if (!TreeNode(label, "%s: %d entries, %d bytes", label, storage->Data.Size, storage->Data.size_in_bytes()))
@@ -14705,7 +14705,7 @@ void ImGui::DebugNodeStorage(ImGuiStorage* storage, const char* label)
     TreePop();
 }
 
-// [DEBUG] Display contents of ImGuiTabBar
+// [DEBUG] DisplayImGui contents of ImGuiTabBar
 void ImGui::DebugNodeTabBar(ImGuiTabBar* tab_bar, const char* label)
 {
     // Standalone tab bars (not associated to docking/windows functionality) currently hold no discernible strings.
@@ -14808,7 +14808,7 @@ void ImGui::DebugNodeWindow(ImGuiWindow* window, const char* label)
     }
     const ImVec2* pr = window->NavPreferredScoringPosRel;
     for (int layer = 0; layer < ImGuiNavLayer_COUNT; layer++)
-        BulletText("NavPreferredScoringPosRel[%d] = {%.1f,%.1f)", layer, (pr[layer].x == FLT_MAX ? -99999.0f : pr[layer].x), (pr[layer].y == FLT_MAX ? -99999.0f : pr[layer].y)); // Display as 99999.0f so it looks neater.
+        BulletText("NavPreferredScoringPosRel[%d] = {%.1f,%.1f)", layer, (pr[layer].x == FLT_MAX ? -99999.0f : pr[layer].x), (pr[layer].y == FLT_MAX ? -99999.0f : pr[layer].y)); // DisplayImGui as 99999.0f so it looks neater.
     BulletText("NavLayersActiveMask: %X, NavLastChildNavWindow: %s", window->DC.NavLayersActiveMask, window->NavLastChildNavWindow ? window->NavLastChildNavWindow->Name : "NULL");
     if (window->RootWindow != window)       { DebugNodeWindow(window->RootWindow, "RootWindow"); }
     if (window->ParentWindow != NULL)       { DebugNodeWindow(window->ParentWindow, "ParentWindow"); }
@@ -15158,7 +15158,7 @@ static int StackToolFormatLevelInfo(ImGuiIDStackTool* tool, int n, bool format_f
     return ImFormatString(buf, buf_size, "???");
 }
 
-// ID Stack Tool: Display UI
+// ID Stack Tool: DisplayImGui UI
 void ImGui::ShowIDStackToolWindow(bool* p_open)
 {
     ImGuiContext& g = *GImGui;
@@ -15170,7 +15170,7 @@ void ImGui::ShowIDStackToolWindow(bool* p_open)
         return;
     }
 
-    // Display hovered/active status
+    // DisplayImGui hovered/active status
     ImGuiIDStackTool* tool = &g.DebugIDStackTool;
     const ImGuiID hovered_id = g.HoveredIdPreviousFrame;
     const ImGuiID active_id = g.ActiveId;
@@ -15208,7 +15208,7 @@ void ImGui::ShowIDStackToolWindow(bool* p_open)
         SetClipboardText(g.TempBuffer.Data);
     }
 
-    // Display decorated stack
+    // DisplayImGui decorated stack
     tool->LastActiveFrame = g.FrameCount;
     if (tool->Results.Size > 0 && BeginTable("##table", 3, ImGuiTableFlags_Borders))
     {

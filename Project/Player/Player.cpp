@@ -91,8 +91,7 @@ void Player::Update(){
 	aabb_.max.y = worldPosition.y + SIDE_SIZE;
 	aabb_.max.z = worldPosition.z + SIDE_SIZE;
 
-	//PMで綺麗にまとめられるかも
-	//通常の敵用の当たり判定の更新
+	//コリジョンの更新
 	for (std::unique_ptr<BasePlayerCollision> &collision : colliders_) {
 		//プレイヤーの座標を設定
 		collision->SetPlayerPosition(worldPosition);
@@ -107,10 +106,12 @@ void Player::Update(){
 	//マテリアルの更新
 	material_.Update();
 
+	
+	#ifdef _DEBUG
+
 	//ImGui表示
-#ifdef _DEBUG
 	DisplayImGui();
-#endif
+	#endif
 }
 
 void Player::Draw(const Camera& camera, const SpotLight& spotLight){

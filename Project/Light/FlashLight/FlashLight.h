@@ -42,7 +42,7 @@ public:
 	/// <summary>
 	/// 描画(デバッグ用)
 	/// </summary>
-	/// <param name="camera"></param>
+	/// <param name="camera">カメラ</param>
 	void Draw(const Camera& camera);
 
 	/// <summary>
@@ -50,12 +50,17 @@ public:
 	/// </summary>
 	~FlashLight() = default;
 
+private:
+	/// <summary>
+	/// IMGuiの表示
+	/// </summary>
+	void Display();
 
 public:
 	/// <summary>
 	/// スポットライトの取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>スポットライト</returns>
 	inline SpotLight GetSpotLight() const{
 		return spotLight_;
 	}
@@ -64,16 +69,24 @@ public:
 	/// <summary>
 	/// プレイヤーの座標を取得
 	/// </summary>
-	/// <param name="position"></param>
+	/// <param name="position">座標</param>
 	inline void SetPlayerPosition(const Vector3& position) {
 		this->playerPosition_ = position;
 	}
 
-	inline void SetTheta(float theta) {
+	/// <summary>
+	/// θの設定
+	/// </summary>
+	/// <param name="theta">θ</param>
+	inline void SetTheta(const float& theta) {
 		this->theta_ = theta;
 	}
 
-	inline void SetPhi(float phi) {
+	/// <summary>
+	/// φの設定
+	/// </summary>
+	/// <param name="phi">φ</param>
+	inline void SetPhi(const float& phi) {
 		this->phi_ = phi;
 	}
 
@@ -85,7 +98,6 @@ public:
 		return lightDirection_;
 	}
 
-
 	/// <summary>
 	/// 扇の取得(3次元)
 	/// </summary>
@@ -93,7 +105,6 @@ public:
 	inline Fan3D GetFan3D() {
 		return fan3D_;
 	}
-
 
 	/// <summary>
 	/// 当たり判定の取得
@@ -124,13 +135,16 @@ private:
 	//扇
 	Fan3D fan3D_ = {};
 
-	//デバッグ用のモデル
+
+	//当たり判定
+	std::unique_ptr<FlashLightCollision> flashLightCollision_ = nullptr;
+
+#ifdef _DEBUG
 	//左右
-	enum Side {
-		Right,
-		Left,
-	};
-	static const uint32_t SIDE_QUANTITY_ = 2;
+	const uint32_t Right = 0u;
+	const uint32_t Left = 1u;
+
+	static const uint32_t SIDE_QUANTITY_ = 2u;
 	std::unique_ptr<Ellysia::Model>model_[SIDE_QUANTITY_] = { nullptr };
 	WorldTransform worldTransform_[SIDE_QUANTITY_] = {};
 	Material material_ = {};
@@ -140,8 +154,8 @@ private:
 	WorldTransform lightCenterWorldTransform_ = {};
 	Material lightCenterMaterial_ = {};
 
-	//当たり判定
-	std::unique_ptr<FlashLightCollision> flashLightCollision_ = nullptr;
+#endif // _DEBUG
+	
 
 };
 

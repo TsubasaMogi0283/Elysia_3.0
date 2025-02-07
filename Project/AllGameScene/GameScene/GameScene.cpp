@@ -377,6 +377,80 @@ void GameScene::EscapeCondition(){
 
 }
 
+void GameScene::RegisterToCollisionManager(){
+
+	//エネミーをコリジョンマネージャーに追加
+	//通常の敵のリストの取得
+	std::vector<Enemy*> enemyes = enemyManager_->GetEnemies();
+	for (const Enemy* enemy : enemyes) {
+		//懐中電灯に対して
+		collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+		//攻撃
+		if (enemy->GetIsAttack() == true) {
+			player_->SetIsAcceptDamegeFromNoemalEnemy(true);
+		}
+		else {
+			player_->SetIsAcceptDamegeFromNoemalEnemy(false);
+		}
+		//敵の攻撃
+		collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
+	}
+
+
+	//プレイヤーのコライダー
+	std::vector<BasePlayerCollision*> playerColliders = player_->GetColliders();
+	for (const auto& collider : playerColliders) {
+		collisionManager_->RegisterList(collider);
+	}
+
+
+	//懐中電灯に対してのコライダーを登録
+	collisionManager_->RegisterList(player_->GetFlashLightCollision());
+
+	std::vector<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemies();
+	for (const StrongEnemy* strongEnemy : strongEnemyes) {
+		bool isTouch = strongEnemy->GetStrongEnemyCollisionToPlayer()->GetIsTouchPlayer();
+		collisionManager_->RegisterList(strongEnemy->GetStrongEnemyCollisionToPlayer());
+		//接触
+		if (isTouch == true) {
+			isTouchStrongEnemy_ = true;
+		}
+	}
+
+	std::vector<BaseObjectForLevelEditorCollider*> audioColliders = levelDataManager_->GetAudioCollider(levelHandle_);
+	for (std::vector<BaseObjectForLevelEditorCollider*>::iterator it = audioColliders.begin(); it != audioColliders.end(); ++it) {
+		collisionManager_->RegisterList(*it);
+
+	}
+}
+
+void GameScene::DisplayImGui(){
+	ImGui::Begin("ゲームシーン");
+
+	if (ImGui::TreeNode("カメラ")) {
+		ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
+		ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
+		ImGui::InputFloat("Theta", &theta_);
+		ImGui::InputFloat("Phi", &originPhi_);
+		ImGui::TreePop();
+
+	}
+	if (ImGui::TreeNode("ビネット")) {
+		ImGui::InputFloat("POW", &vignettePow_);
+		ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("フェード")) {
+		ImGui::InputFloat("白", &whiteFadeTransparency_);
+		ImGui::InputFloat("黒", &blackFadeTransparency_);
+		ImGui::TreePop();
+	}
+
+
+	ImGui::End();
+
+}
+
 void GameScene::PlayerMove(){
 
 	//何も押していない時つまり動いていないので
@@ -745,19 +819,6 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 		//位置の計算
 		camera_.translate = VectorCalculation::Add(player_->GetWorldPosition(), cameraPositionOffset_);
 
-
-		#pragma region 鍵の取得処理
-		//keyQuantity_ = keyManager_->GetKeyQuantity();
-		////鍵が0より多ければ通る
-		//if (keyQuantity_ > 0u) {
-		//	KeyCollision();
-		//}
-		//else {
-		//	isAbleToPickUpKey_ = false;
-		//}
-
-		#pragma endregion
-
 		//脱出の仕組み
 		EscapeCondition();
 		
@@ -869,121 +930,60 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 
 	
-#pragma region ポストエフェクト
-	//HPが1でピンチの場合
-	const uint32_t DANGEROUS_HP = 1u;
-	//プレイヤーがダメージを受けた場合ビネット
-	if (player_->GetIsDamaged() == true) {
-		//時間の加算
-		vignetteChangeTime_ += DELTA_TIME_;
+	#pragma region ポストエフェクト
+		//HPが1でピンチの場合
+		const uint32_t DANGEROUS_HP = 1u;
+		//プレイヤーがダメージを受けた場合ビネット
+		if (player_->GetIsDamaged() == true) {
+			//時間の加算
+			vignetteChangeTime_ += DELTA_TIME_;
 		
-		//線形補間で滑らかに変化
-		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
-	}
-	
-	else if (player_->GetHP() == DANGEROUS_HP) {
-		warningTime_ += DELTA_TIME_;
-		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
-
-		//最大時間
-		const float MAX_WARNING_TIME = 1.0f;
-		//最小時間
-		const float MIN_WARNING_TIME = 1.0f;
-
-		if (warningTime_ > MAX_WARNING_TIME) {
-			warningTime_ = MIN_WARNING_TIME;
+			//線形補間で滑らかに変化
+			vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
 		}
-	}
-	//通常時の場合
-	else {
-		vignettePow_ = 0.0f;
-		vignetteChangeTime_ = 0.0f;
-	}
-	vignette_->SetPow(vignettePow_);
+		//ピンチ演出
+		else if (player_->GetHP() == DANGEROUS_HP) {
+			warningTime_ += DELTA_TIME_;
+			vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
 
-#pragma endregion
+			//最大時間
+			const float MAX_WARNING_TIME = 1.0f;
+			//最小時間
+			const float MIN_WARNING_TIME = 1.0f;
 
-#ifdef _DEBUG
+			if (warningTime_ > MAX_WARNING_TIME) {
+				warningTime_ = MIN_WARNING_TIME;
+			}
+		}
+		//通常時の場合
+		else {
+			vignettePow_ = 0.0f;
+			vignetteChangeTime_ = 0.0f;
+		}
+		vignette_->SetPow(vignettePow_);
+
+	#pragma endregion
+
+	#ifdef _DEBUG 
 	
 	//再読み込み
 	if (input_->IsTriggerKey(DIK_R) == true) {
 		levelDataManager_->Reload(levelHandle_);
 	}
+	//ImGuiの表示
+	DisplayImGui();
 
-	ImGui::Begin("カメラ");
-	ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
-	ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
-	ImGui::InputFloat("Theta", &theta_);
-	ImGui::InputFloat("Phi", &originPhi_);
-	ImGui::End();
-	
-	ImGui::Begin("ビネットの確認");
-	ImGui::InputFloat("POW", &vignettePow_);
-	ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
-	ImGui::End();
-
-	ImGui::Begin("フェード");
-	ImGui::InputFloat("白", &whiteFadeTransparency_);
-	ImGui::InputFloat("黒", &blackFadeTransparency_);
-	ImGui::End();
+	#endif // _DEBUG
 
 
 
-#endif // _DEBUG
-
-
-
-	//エネミーをコリジョンマネージャーに追加
-	//通常の敵のリストの取得
-	std::vector<Enemy*> enemyes = enemyManager_->GetEnemies();
-	for (const Enemy* enemy : enemyes) {
-		//懐中電灯に対して
-		collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
-		//攻撃
-		if (enemy->GetIsAttack() == true) {
-			player_->SetIsAcceptDamegeFromNoemalEnemy(true);
-		}
-		else {
-			player_->SetIsAcceptDamegeFromNoemalEnemy(false);
-		}
-		//敵の攻撃
-		collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
-	}
-
-	
-	//プレイヤーのコライダー
-	std::vector<BasePlayerCollision*> playerColliders = player_->GetColliders();
-	for (const auto& collider : playerColliders) {
-		collisionManager_->RegisterList(collider);
-	}
-
-
-	//懐中電灯に対してのコライダーを登録
-	collisionManager_->RegisterList(player_->GetFlashLightCollision());
-	
-	std::vector<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemies();
-	for (const StrongEnemy* strongEnemy : strongEnemyes) {
-		bool isTouch = strongEnemy->GetStrongEnemyCollisionToPlayer()->GetIsTouchPlayer();
-		collisionManager_->RegisterList(strongEnemy->GetStrongEnemyCollisionToPlayer());
-		//接触
-		if (isTouch == true) {
-			isTouchStrongEnemy_ = true;
-		}
-	}
-
-	
-
-
-	std::vector<BaseObjectForLevelEditorCollider*> audioColliders = levelDataManager_->GetAudioCollider(levelHandle_);
-	for (std::vector<BaseObjectForLevelEditorCollider*>::iterator it = audioColliders.begin(); it != audioColliders.end(); ++it) {
-		collisionManager_->RegisterList(*it);
-
-	}
+	//コリジョン管理クラスに登録
+	RegisterToCollisionManager();
 
 	//当たり判定チェック
 	collisionManager_->CheckAllCollision();
 
-
+	
 
 }
 

@@ -12,11 +12,11 @@ void Ellysia::GameManager::Initialize() {
 	abstractSceneFactory_ = std::make_unique<GameSceneFactory>();
 	
 	//シーンごとに動作確認したいときはここを変えてね
-	currentGamaScene_ = abstractSceneFactory_->CreateScene("Game");
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
 
 #ifdef _DEBUG
 	//デバッグ時はこっちに入れてね
-	currentGamaScene_ = abstractSceneFactory_->CreateScene("Lose");
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Game");
 #endif // _DEBUG
 
 	//初期化
