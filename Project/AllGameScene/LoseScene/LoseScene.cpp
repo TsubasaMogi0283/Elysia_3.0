@@ -294,17 +294,36 @@ void LoseScene::ChangeNextScene(){
 	//タイトルへ戻る
 	if (isSelectingGame_ == false && isSelectingTitle_ == true) {
 
-		//矢印の回転
-		const float ROTATE_VALUE = 0.1f;
-		arrowRotate_ += ROTATE_VALUE;
-		levelDataManager_->SetRotate(levelDataHandle_, SELECT_ARROW, { .x = 0.0f,.y = arrowRotate_ ,.z = 0.0f });
+		//矢印の初期座標を取得
+		Vector3 arrowInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, SELECT_ARROW);
+		//「タイトルへ」の座標を取得
+		Vector3 toTitleInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, TO_TITLE);
 
-		arrowDropT_ += 0.05f;
-		const float TROTATE_AMOUNT = 0.5f;
-		float newT = (1.0f - Easing::EaseOutQuart(arrowDropT_))* TROTATE_AMOUNT;
+		//決定されたら跳ねるような動きをする
+		const float INTERVAL = 0.1f;
+		decideArrowMoveTheta_ += INTERVAL;
+		float newTheta = std::clamp(decideArrowMoveTheta_, 0.0f, std::numbers::pi_v<float>);
+		if (decideArrowMoveTheta_ < std::numbers::pi_v<float>) {
+			//高速回転
+			const float FAST_ROTATE_VALUE = 0.5f;
+			arrowRotate_ += FAST_ROTATE_VALUE;
+			//新しい回転を設定
+			levelDataManager_->SetRotate(levelDataHandle_, SELECT_ARROW, { .x = 0.0f,.y = arrowRotate_ ,.z = 0.0f });
+		}
+		else {
+			//回転を止める
+			levelDataManager_->SetRotate(levelDataHandle_, SELECT_ARROW, { .x = 0.0f,.y = std::numbers::pi_v <float> / 2.0f ,.z = 0.0f });
+		}
 
 
-		levelDataManager_->SetScale(levelDataHandle_, SELECT_ARROW, { .x = newT* selectedScale_,.y = newT* selectedScale_ ,.z = newT* selectedScale_ });
+		//高さ
+		const float HEIGHT = 1.0f;
+		float newArrowPositionY = arrowInitialPosition.y + std::sinf(newTheta) * HEIGHT;
+		//新しい座標を設定
+		levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = toTitleInitialPosition.x,.y = newArrowPositionY ,.z = arrowInitialPosition.z });
+
+		//カメラの動きを待つ時間
+		waitForCameraMoveTime_ += INCREASE_VALUE_;
 
 		//指定した時間を超えたらタイトルへ遷移
 		if (waitForCameraMoveTime_ > FINISH_WAIT_TIME) {
@@ -348,7 +367,7 @@ void LoseScene::ChangeNextScene(){
 		//新しい座標を設定
 		levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = arrowInitialPosition.x,.y = newArrowPositionY ,.z = arrowInitialPosition.z });
 
-		//点滅
+		//カメラの動きを待つ時間
 		waitForCameraMoveTime_ += INCREASE_VALUE_;
 
 		//指定した時間を超えたらタイトルへ遷移

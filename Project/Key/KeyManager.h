@@ -176,7 +176,7 @@ private:
 
 private:
 	//最大数
-	const uint32_t MAX_KEY_QUANTITY_ = 3u;
+	static const uint32_t MAX_KEY_QUANTITY_ = 3u;
 	//数
 	static const uint32_t NUMBER_QUANTITY_ = 10u;
 	//鍵の音が聞こえる最大距離
@@ -195,9 +195,15 @@ private:
 
 	//UI
 	std::unique_ptr<Ellysia::Sprite> keySprite_ = nullptr;
-	
+
+	//空の鍵
+	std::array<std::unique_ptr<Ellysia::Sprite>, MAX_KEY_QUANTITY_> avoidKeySprites_ = { nullptr };
+
+
 	//スプライト
-	std::unique_ptr<Ellysia::Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
+	//std::unique_ptr<Ellysia::Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
+
+
 	//鍵取得するかどうか
 	std::unique_ptr<Ellysia::Sprite> pickUpKey_ = nullptr;
 
