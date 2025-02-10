@@ -267,6 +267,62 @@ namespace Ellysia {
 		}
 
 		/// <summary>
+		/// プレイヤーの座標を取得
+		/// </summary>
+		/// <param name="handle"></param>
+		/// <returns></returns>
+		inline std::vector<Vector3> GetPlayerPosition(const uint32_t& handle) {
+			std::vector<Vector3> positions = {};
+
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
+
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+
+						//指定したオブジェクトタイプだったら追加
+						if (objectData.type == "Player") {
+							positions.push_back(objectData.center);
+						}
+
+
+					}
+
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+
+			return positions;
+		}
+
+
+		inline std::vector<Vector3> GetNormalEnemyPosition(const uint32_t& handle) {
+			std::vector<Vector3> positions = {};
+
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
+
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+
+						//指定したオブジェクトタイプだったら追加
+						if (objectData.type == "NormalEnemy") {
+							positions.push_back(objectData.center);
+						}
+
+
+					}
+
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+
+			return positions;
+		}
+
+		/// <summary>
 		/// ステージオブジェクトのAABBを取得
 		/// </summary>
 		/// <param name="handle">ハンドル</param>

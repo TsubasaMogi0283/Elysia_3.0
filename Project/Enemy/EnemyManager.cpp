@@ -31,82 +31,13 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	strongEnemyModelHandle_ = strongEnemyModel;
 
 
+	csvPath;
 
-	//CSVManagerクラスとか作ってまとめた方が賢いかも
-	//まとめたいね
-	std::ifstream file;
-	file.open(csvPath);
-	//開かなかったら止まる
-	assert(file.is_open());
-
-	//ファイルの内容を文字列ストリームにコピー
-	enemyPositionsFromCSV_ << file.rdbuf();
-	//ファイルを閉じる
-	file.close();
-
-	//1行分の文字列を入れる変数
-	std::string line;
-
-
-	//コマンド実行ループ
-	while (std::getline(enemyPositionsFromCSV_, line)) {
-
-		//1行分の文字列をストリームに変換して解析しやすくする
-		std::istringstream lineStream(line);
-
-		std::string word;
-		//,区切りで行の先頭文字列を取得
-		std::getline(lineStream, word, ',');
-
-		//「//」があった行の場合コメントなので飛ばす
-		if (word.find("//") == 0) {
-			//コメントは飛ばす
-			continue;
-		}
-
-
-		//通常の敵の場合
-		if (word.find("NormalEnemy") == 0) {
-			Vector3 position = {};
-			//X座標
-			std::getline(lineStream, word, ',');
-			position.x = static_cast<float>(std::atof(word.c_str()));
-
-			//Y座標
-			std::getline(lineStream, word, ',');
-			position.y = static_cast<float>(std::atof(word.c_str()));
-
-			//Z座標
-			std::getline(lineStream, word, ',');
-			position.z = static_cast<float>(std::atof(word.c_str()));
-
-			//生成
-			GenerateNormalEnemy(position);
-
-		}
-		//強敵の場合
-		else if (word.find("StrongEnemy") == 0) {
-			Vector3 position = {};
-			//X座標
-			std::getline(lineStream, word, ',');
-			position.x = static_cast<float>(std::atof(word.c_str()));
-
-			//Y座標
-			std::getline(lineStream, word, ',');
-			position.y = static_cast<float>(std::atof(word.c_str()));
-
-			//Z座標
-			std::getline(lineStream, word, ',');
-			position.z = static_cast<float>(std::atof(word.c_str()));
-
-			//生成
-			//GenerateStrongEnemy(position);
-
-		}
-
-
+	
+	std::vector normalEnemyPosition= levelDataManager_->GetNormalEnemyPosition(levelDataHandle_);
+	for (uint32_t i = 0u; i < normalEnemyPosition.size(); ++i) {
+		GenerateNormalEnemy(normalEnemyPosition[i]);
 	}
-
 
 
 

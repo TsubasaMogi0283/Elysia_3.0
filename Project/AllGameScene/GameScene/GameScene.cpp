@@ -91,28 +91,16 @@ void GameScene::Initialize() {
 
 
 
-	//鍵のモデルの読み込み
-	uint32_t keyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/key","Key.obj");
-	//生成
-	keyManager_ = std::make_unique<KeyManager>();
-	//プレイヤーの設定
-	keyManager_->SetPlayer(player_.get());
-	//初期化
-	const std::string keyPositionCSV = "Resources/CSV/KeyPosition.csv";
-	keyManager_->Initialize(keyModelHandle, keyPositionCSV);
-	
-	
 	//ハンドルの取得
-	levelHandle_=levelDataManager_->Load("GameStage/GameStageGateCheck.json");
-
+	levelHandle_ = levelDataManager_->Load("GameStage/GameStageGateCheck.json");
 
 
 #pragma region プレイヤー
 	//生成
 	player_ = std::make_unique<Player>();
-	//初期化(1つしかないので)
-	Vector3 initialPlayerPosition = levelDataManager_->GetObjectPosition(levelHandle_, "Player")[0];
-	player_->Initialize(initialPlayerPosition);
+	//初期化(1つしかないので0を入れる)
+	auto  initialPlayerPosition = levelDataManager_->GetPlayerPosition(levelHandle_);
+	player_->Initialize(initialPlayerPosition[0]);
 	//最初はコントロールは出来ない用にする
 	player_->SetIsAbleToControll(false);
 
@@ -125,6 +113,21 @@ void GameScene::Initialize() {
 	//Bトリガーの初期化
 	isBTrigger_ = false;
 #pragma endregion
+
+
+	//鍵のモデルの読み込み
+	uint32_t keyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/key", "Key.obj");
+	//生成
+	keyManager_ = std::make_unique<KeyManager>();
+	//プレイヤーの設定
+	keyManager_->SetPlayer(player_.get());
+	//初期化
+	const std::string keyPositionCSV = "Resources/CSV/KeyPosition.csv";
+	keyManager_->Initialize(keyModelHandle, keyPositionCSV);
+
+
+	
+
 
 	#pragma region 敵
 	//敵モデルの読み込み

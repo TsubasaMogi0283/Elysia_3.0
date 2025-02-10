@@ -34,7 +34,7 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 
 
 	//鍵のスプライト
-	uint32_t textureHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Item/Key/Key.png");
+	uint32_t textureHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Item/Key/Key.png");
 	sprite_.reset(Ellysia::Sprite::Create(textureHandle, {.x=0.0f,.y=0.0f}));
 	//アンカーポイントを設定する
 	const Vector2 ANCHOR_POINT = { .x = 0.5f,.y = 0.5f };

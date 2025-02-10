@@ -77,9 +77,6 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 
 	}
 
-
-
-
 	//座標
 	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 10.0f };
 	//読み込み

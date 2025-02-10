@@ -213,7 +213,9 @@ void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelD
 					}
 				}
 			}
+			else if (objectData.type == "Player") {
 
+			}
 		}
 	}
 
@@ -304,6 +306,12 @@ void Ellysia::LevelDataManager::Ganarate(LevelData& levelData) {
 				objectData.levelDataObjectCollider = collider;
 
 			}
+		}
+		else if (objectData.type == "Player") {
+
+		}
+		else if (objectData.type == "NormalEnemy") {
+
 		}
 	}
 }
