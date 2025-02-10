@@ -18,7 +18,7 @@ Player::Player(){
 	modelManager_ = Ellysia::ModelManager::GetInstance();
 }
 
-void Player::Initialize(){
+void Player::Initialize(const Vector3& position){
 
 	//モデルの生成 	
 	uint32_t modelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
@@ -38,8 +38,7 @@ void Player::Initialize(){
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
-	const Vector3 INITIAL_POSITION = { .x=0.0f,.y=0.0f,.z=-15.0f };
-	worldTransform_.translate = INITIAL_POSITION;
+	worldTransform_.translate = position;
 
 	//PlayerCllsion基底クラスを作ろう
 	//通常の敵

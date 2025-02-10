@@ -236,6 +236,37 @@ namespace Ellysia {
 		}
 
 		/// <summary>
+		/// オブジェクトの座標を取得
+		/// </summary>
+		/// <param name="handle">ハンドル</param>
+		/// <param name="objectType">タイプ</param>
+		/// <returns>座標</returns>
+		inline std::vector<Vector3> GetObjectPosition(const uint32_t& handle, const std::string& objectType) {
+			std::vector<Vector3> positions = {};
+
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
+
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+
+						//指定したオブジェクトタイプだったら追加
+						if (objectData.type == objectType) {
+							positions.push_back(objectData.objectForLeveEditor->GetWorldPosition());
+						}
+
+
+					}
+
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+
+			return positions;
+		}
+
+		/// <summary>
 		/// ステージオブジェクトのAABBを取得
 		/// </summary>
 		/// <param name="handle">ハンドル</param>

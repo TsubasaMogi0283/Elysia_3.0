@@ -45,6 +45,52 @@
         },
         {
             "type": "MESH",
+            "name": "Sphere",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    179.99998474121094
+                ],
+                "translation": [
+                    -2.2428700923919678,
+                    9.533952713012695,
+                    0.0
+                ]
+            },
+            "file_name": "Sphere",
+            "object_type": "NormalEnemy"
+        },
+        {
+            "type": "MESH",
+            "name": "Cube",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    179.99998474121094
+                ],
+                "translation": [
+                    4.486810207366943,
+                    9.640460014343262,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Player"
+        },
+        {
+            "type": "MESH",
             "name": "Gate_Plane.001",
             "transform": {
                 "scaling": [

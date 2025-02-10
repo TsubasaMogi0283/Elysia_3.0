@@ -67,8 +67,6 @@ void GameScene::Initialize() {
 
 #pragma endregion
 
-
-	
 #pragma region オブジェクト
 
 	
@@ -91,23 +89,7 @@ void GameScene::Initialize() {
 
 #pragma endregion
 
-#pragma region プレイヤー
-	//生成
-	player_ = std::make_unique<Player>();
-	//初期化
-	player_->Initialize();
-	//最初はコントロールは出来ない用にする
-	player_->SetIsAbleToControll(false);
 
-	//向きの初期化
-	playerMoveDirection_ = {.x = 0.0f,.y = 0.0f,.z = 0.0f };
-	//気ボードは何も押していない
-	isPlayerMoveKey_ = false;
-	//Bトリガーの時間を初期化
-	bTriggerTime_ = 0;
-	//Bトリガーの初期化
-	isBTrigger_ = false;
-#pragma endregion
 
 	//鍵のモデルの読み込み
 	uint32_t keyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/key","Key.obj");
@@ -121,9 +103,28 @@ void GameScene::Initialize() {
 	
 	
 	//ハンドルの取得
-	levelHandle_=levelDataManager_->Load("GameStage/GameStage.json");
+	levelHandle_=levelDataManager_->Load("GameStage/GameStageGateCheck.json");
 
 
+
+#pragma region プレイヤー
+	//生成
+	player_ = std::make_unique<Player>();
+	//初期化(1つしかないので)
+	Vector3 initialPlayerPosition = levelDataManager_->GetObjectPosition(levelHandle_, "Player")[0];
+	player_->Initialize(initialPlayerPosition);
+	//最初はコントロールは出来ない用にする
+	player_->SetIsAbleToControll(false);
+
+	//向きの初期化
+	playerMoveDirection_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+	//気ボードは何も押していない
+	isPlayerMoveKey_ = false;
+	//Bトリガーの時間を初期化
+	bTriggerTime_ = 0;
+	//Bトリガーの初期化
+	isBTrigger_ = false;
+#pragma endregion
 
 	#pragma region 敵
 	//敵モデルの読み込み

@@ -80,7 +80,8 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	/// <param name="position">座標</param>
+	void Initialize(const Vector3& position);
 
 	/// <summary>
 	/// 更新
