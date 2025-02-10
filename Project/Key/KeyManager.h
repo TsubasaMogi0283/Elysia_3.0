@@ -190,18 +190,14 @@ private:
 	//コントローラーの押していない時の値
 	const int32_t NO_PUSH_VALUE_ = 0u;
 private:
-	//鍵のリスト
+	//鍵
 	std::list<std::unique_ptr<Key>>keies_ = {};
 
 	//UI
-	std::unique_ptr<Ellysia::Sprite> keySprite_ = nullptr;
+	std::unique_ptr<Ellysia::Sprite> keyListSprite_ = nullptr;
 
-	//空の鍵
-	std::array<std::unique_ptr<Ellysia::Sprite>, MAX_KEY_QUANTITY_> avoidKeySprites_ = { nullptr };
-
-
-	//スプライト
-	//std::unique_ptr<Ellysia::Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
+	//鍵
+	std::array<std::unique_ptr<Ellysia::Sprite>, MAX_KEY_QUANTITY_> keySprites_ = { nullptr };
 
 
 	//鍵取得するかどうか

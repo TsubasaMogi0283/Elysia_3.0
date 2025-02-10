@@ -78,30 +78,24 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 	}
 
 
-	//読み込み
-	uint32_t keySpriteHandle = textureManager_->LoadTexture("Resources/Item/KeyList.png");
-	//座標
-	const Vector2 INITIAL_POSITION = {.x= 20.0f,.y=10.0f };
-	//鍵の画像の位置
-	Vector2 keySpritePosition = { .x= INITIAL_POSITION.x,.y= INITIAL_POSITION.y };
-	//生成
-	keySprite_.reset(Ellysia::Sprite::Create(keySpriteHandle, keySpritePosition));
 
-	//数字
-	uint32_t keyNumberQuantity[NUMBER_QUANTITY_] = {};
-	for (uint32_t i = 0u; i < NUMBER_QUANTITY_; ++i) {
-		//数を文字列に変換した方が賢いよね！
-		//数をstd::stringに変換
-		const std::string number = std::to_string(i);
-		//変換した番号を組み込む
-		const std::string filePath = "Resources/Sprite/Number/" + number + ".png";
-		//テクスチャの読み込み
-		keyNumberQuantity[i] = textureManager_->LoadTexture(filePath);
-		//座標を決める
-		const Vector2 NUMBER_POSITION = {.x= 64.0f * 2.0f+ INITIAL_POSITION.x,.y= INITIAL_POSITION.y};
-		//生成
-		//keyNumber[i].reset(Ellysia::Sprite::Create(keyNumberQuantity[i], NUMBER_POSITION));
+
+	//座標
+	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 10.0f };
+	//読み込み
+	//リスト
+	uint32_t keyListSpriteHandle = textureManager_->LoadTexture("Resources/Sprite/Item/KeyList.png");
+	//生成
+	keyListSprite_.reset(Ellysia::Sprite::Create(keyListSpriteHandle, INITIAL_POSITION));
+
+	uint32_t textureHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Item/Key/Key.png");
+	//鍵
+	for (uint32_t i = 0u; i < MAX_KEY_QUANTITY_; ++i) {
+		keySprites_[i].reset(Ellysia::Sprite::Create(textureHandle, INITIAL_POSITION));
 	}
+
+
+
 
 	//知らせる音の読み込み
 	notificationSEHandle_ = audio_->Load("Resources/External/Audio/Key/Shake.mp3");
@@ -176,6 +170,11 @@ void KeyManager::Update(){
 		audio_->Stop(notificationSEHandle_);
 	}
 
+	//始点
+	const Vector2 SPRITE_STRAT_POSITION_ = { .x = 680,.y = 600.0f };
+	//終点
+	const Vector2 SPRITE_END_POSITION_ = { .x = 64.0f * 2.0f,.y = 20.0f };
+
 	//取得処理
 	PickUp();
 
@@ -192,9 +191,7 @@ void KeyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight){
 
 void KeyManager::DrawSprite(){
 	//鍵の画像の描画
-	keySprite_->Draw();
-	//数の描画
-	//keyNumber[keyQuantity_]->Draw();
+	keyListSprite_->Draw();
 
 	//鍵(個別)のスプライト
 	for (const std::unique_ptr<Key>& key : keies_) {
