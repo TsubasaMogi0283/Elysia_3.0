@@ -77,21 +77,25 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 
 	}
 
-
-
-
-	//座標
-	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 10.0f };
+	
 	//読み込み
 	//リスト
 	uint32_t keyListSpriteHandle = textureManager_->LoadTexture("Resources/Sprite/Item/KeyList.png");
 	//生成
-	keyListSprite_.reset(Ellysia::Sprite::Create(keyListSpriteHandle, INITIAL_POSITION));
+	keyListSprite_.reset(Ellysia::Sprite::Create(keyListSpriteHandle, INITIAL_POSITION_));
 
 	uint32_t textureHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Item/Key/Key.png");
+	//サイズを取得
+	keySpriteWidth_ = textureManager_->GetTextureWidth(textureHandle);
+
 	//鍵
 	for (uint32_t i = 0u; i < MAX_KEY_QUANTITY_; ++i) {
-		keySprites_[i].reset(Ellysia::Sprite::Create(textureHandle, INITIAL_POSITION));
+		Vector2 position = {
+			.x = INITIAL_POSITION_.x + keySpriteWidth_ * static_cast<float>(i),
+			.y = INITIAL_POSITION_.y
+		};
+		keySprites_[i].reset(Ellysia::Sprite::Create(textureHandle, position));
+		keySprites_[i]->SetInvisible(true);
 	}
 
 
@@ -128,7 +132,12 @@ void KeyManager::Update(){
 	for (const std::unique_ptr<Key>& key : keies_) {
 		//更新
 		key->Update();
-
+		//終点座標
+		Vector2 endPosition = {
+			.x= INITIAL_POSITION_.x + keySpriteWidth_ *static_cast<float>(keyQuantity_),
+			.y= INITIAL_POSITION_.y
+		};
+		key->SetEndPosition(endPosition);
 		//プレイヤーと鍵の差分
 		Vector3 playerAndKeydifference = VectorCalculation::Subtract(player_->GetWorldPosition(), key->GetWorldPosition());
 		//距離
@@ -156,12 +165,7 @@ void KeyManager::Update(){
 	audio_->ChangeVolume(notificationSEHandle_, volume);
 
 
-#ifdef _DEBUG
-	ImGui::Begin("鍵管理クラス"); 
-	ImGui::InputFloat("音量", &volume);
-	ImGui::InputFloat("近い距離", &closestDistance);
-	ImGui::End();
-#endif // _DEBUG
+
 
 
 	//現在の鍵の数
@@ -170,16 +174,22 @@ void KeyManager::Update(){
 		audio_->Stop(notificationSEHandle_);
 	}
 
-	//始点
-	const Vector2 SPRITE_STRAT_POSITION_ = { .x = 680,.y = 600.0f };
-	//終点
-	const Vector2 SPRITE_END_POSITION_ = { .x = 64.0f * 2.0f,.y = 20.0f };
-
 	//取得処理
 	PickUp();
 
 	//消去処理
 	Delete();
+
+#ifdef _DEBUG
+	ImGui::Begin("鍵管理クラス");
+	ImGui::InputFloat("音量", &volume);
+	ImGui::InputFloat("近い距離", &closestDistance);
+
+	int newQuantity = static_cast<int>(keyQuantity_);
+	ImGui::InputInt("鍵の数", &newQuantity);
+	ImGui::End();
+#endif // _DEBUG
+
 }
 
 void KeyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight){
@@ -198,10 +208,17 @@ void KeyManager::DrawSprite(){
 		key->DrawSprite();
 	}
 
-	//鍵の取得
+	//鍵を取得するかどうか
 	if (isAbleToPickUpKey_ == true) {
 		pickUpKey_->Draw();
 	}
+
+
+	//鍵
+	for (uint32_t i = 0u; i < MAX_KEY_QUANTITY_; ++i) {
+		keySprites_[i]->Draw();
+	}
+	
 
 }
 
@@ -222,7 +239,14 @@ void KeyManager::Delete() {
 	keies_.remove_if([=](const std::unique_ptr<Key>& key) {
 		//拾われたら消す
 		if (key->GetIsDelete() == true) {
+			//表示させる
+			if (keySprites_[keyQuantity_]->GetIsInvisible() == true) {
+				keySprites_[keyQuantity_]->SetInvisible(false);
+			}
 			++keyQuantity_;
+			
+				
+			
 			return true;
 		}
 		return false;

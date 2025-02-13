@@ -34,7 +34,7 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 
 
 	//鍵のスプライト
-	uint32_t textureHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Item/Key/Key.png");
+	uint32_t textureHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Item/Key/Key.png");
 	sprite_.reset(Ellysia::Sprite::Create(textureHandle, {.x=0.0f,.y=0.0f}));
 	//アンカーポイントを設定する
 	const Vector2 ANCHOR_POINT = { .x = 0.5f,.y = 0.5f };
@@ -177,12 +177,11 @@ void Key::SpriteMove(){
 
 		//始点
 		const Vector2 SPRITE_STRAT_POSITION_ = { .x = 680,.y = 600.0f };
-		//終点
-		const Vector2 SPRITE_END_POSITION_ = { .x = 64.0f * 2.0f,.y = 20.0f };
+		
 
 
 		//座標の設定
-		Vector2 position = VectorCalculation::Lerp(SPRITE_STRAT_POSITION_, SPRITE_END_POSITION_, scaleT_);
+		Vector2 position = VectorCalculation::Lerp(SPRITE_STRAT_POSITION_, spriteEndPosition_, scaleT_);
 		sprite_->SetPosition(position);
 
 		//消える

@@ -189,26 +189,30 @@ private:
 	const uint32_t B_NO_REACT_TIME_ = 0u;
 	//コントローラーの押していない時の値
 	const int32_t NO_PUSH_VALUE_ = 0u;
+
+	//初期座標
+	const Vector2 INITIAL_POSITION_ = { .x = 20.0f,.y = 10.0f };
 private:
 	//鍵
 	std::list<std::unique_ptr<Key>>keies_ = {};
-
-	//UI
-	std::unique_ptr<Ellysia::Sprite> keyListSprite_ = nullptr;
-
-	//鍵
-	std::array<std::unique_ptr<Ellysia::Sprite>, MAX_KEY_QUANTITY_> keySprites_ = { nullptr };
-
-
-	//鍵取得するかどうか
-	std::unique_ptr<Ellysia::Sprite> pickUpKey_ = nullptr;
-
-	//プレイヤーと全ての鍵の距離
-	std::list<float>keyAndPlayerDistances_ = {};
-	
 	//モデルハンドル
 	uint32_t modelHandle_ = 0u;
 
+	//UI
+	std::unique_ptr<Ellysia::Sprite> keyListSprite_ = nullptr;
+	//鍵
+	std::array<std::unique_ptr<Ellysia::Sprite>, MAX_KEY_QUANTITY_> keySprites_ = { nullptr };
+	//サイズ
+	uint64_t keySpriteWidth_ = 0u;
+
+
+	//終点座標
+	std::array<Vector2, MAX_KEY_QUANTITY_> endPositions_ = {};
+	//鍵取得するかどうか
+	std::unique_ptr<Ellysia::Sprite> pickUpKey_ = nullptr;
+	//プレイヤーと全ての鍵の距離
+	std::list<float>keyAndPlayerDistances_ = {};
+	
 	//生成の文字列を入れる
 	std::stringstream keyPositionsFromCSV_ = {};
 
@@ -227,5 +231,8 @@ private:
 	//Bボタンのトリガー
 	uint32_t bTriggerTime_ = 0u;
 	bool isBTrigger_ = false;
+
+
+
 };
 

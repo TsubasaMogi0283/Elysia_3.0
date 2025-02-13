@@ -1,14 +1,10 @@
 #include "TextureManager.h"
 #include "SrvManager.h"
 
-#include "d3dx12.h"
 #include <vector>
-
-uint32_t Ellysia::TextureManager::index_ = 0u;
 
 
 Ellysia::TextureManager* Ellysia::TextureManager::GetInstance() {
-
 	static Ellysia::TextureManager instance;
 	return &instance;
 }
@@ -22,11 +18,35 @@ const D3D12_RESOURCE_DESC Ellysia::TextureManager::GetResourceDesc(const uint32_
 	auto it = handleToFilePathMap_.find(textureHandle);
 	if (it != handleToFilePathMap_.end()) {
 		const std::string& filePath = it->second;
-		return textureInformation_[filePath].resource_->GetDesc();
+		return textureInformation_[filePath].resource->GetDesc();
 	}
 
-	// エラーハンドリング: 見つからなかった場合の空のリソース記述子を返す
+	//見つからなかった場合
 	return D3D12_RESOURCE_DESC{};
+}
+
+uint64_t Ellysia::TextureManager::GetTextureWidth(const uint32_t& textureHandle){
+	//テクスチャの情報を取得
+	//handleからfilePathを取得
+	auto it = handleToFilePathMap_.find(textureHandle);
+	if (it != handleToFilePathMap_.end()) {
+		const std::string& filePath = it->second;
+		return textureInformation_[filePath].resource->GetDesc().Width;		
+	}
+	//見つからなかった場合は0uを返す
+	return 0u;
+}
+
+uint64_t Ellysia::TextureManager::GetTextureHeight(const uint32_t& textureHandle){
+	//テクスチャの情報を取得
+	//handleからfilePathを取得
+	auto it = handleToFilePathMap_.find(textureHandle);
+	if (it != handleToFilePathMap_.end()) {
+		const std::string& filePath = it->second;
+		return textureInformation_[filePath].resource->GetDesc().Height;
+	}
+	//見つからなかった場合は0uを返す
+	return 0u;
 }
 
 
@@ -41,53 +61,38 @@ uint32_t Ellysia::TextureManager::LoadTexture(const std::string& filePath) {
 	//新規は勿論読み込みをする
 	auto it = TextureManager::GetInstance()->textureInformation_.find(filePath);
 	if (it != TextureManager::GetInstance()->textureInformation_.end()) {
-		return it->second.handle_;
+		return it->second.handle;
 	}
 
-
-
 	//読み込むたびにインデックスを増やし重複を防ごう
-	index_ = Ellysia::SrvManager::GetInstance()->Allocate();
-
-
+	textureManager->index_ = Ellysia::SrvManager::GetInstance()->Allocate();
 
 	//読み込んだデータを保存
 	TextureInformation textureInfo;
-	textureInfo.handle_ = index_;
-	textureInfo.name_ = filePath;
+	textureInfo.handle = textureManager->index_;
+	textureInfo.name = filePath;
+	textureInfo.mipImages = LoadTextureData(filePath);
 
-	//テクスチャハンドル
-	textureInfo.handle_ = index_;
-
-	//テクスチャの名前
-	textureInfo.name_ = filePath;
-
-
-	//Textureを読んで転送する
-	textureInfo.mipImages_ = LoadTextureData(filePath);
-
-	const DirectX::TexMetadata& metadata = textureInfo.mipImages_.GetMetadata();
-
-	textureInfo.resource_ = CreateTextureResource(metadata);
-	textureInfo.internegiateResource_ = TransferTextureData(
-		textureInfo.resource_.Get(), textureInfo.mipImages_).Get();
-
-
-
+	//メタデータの取得
+	const DirectX::TexMetadata& metadata = textureInfo.mipImages.GetMetadata();
+	//リソースの設定
+	textureInfo.resource = CreateTextureResource(metadata);
+	textureInfo.internegiateResource = TransferTextureData(
+		textureInfo.resource.Get(), textureInfo.mipImages).Get();
 
 	//SRVの生成
 	Ellysia::SrvManager::GetInstance()->CreateSRVForTexture2D(
-		textureInfo.handle_,
-		textureInfo.resource_.Get(),
+		textureInfo.handle,
+		textureInfo.resource.Get(),
 		metadata.format, UINT(metadata.mipLevels), metadata.IsCubemap());
 
 
 	// 読み込んだデータをmapに保存
 	textureManager->GetTextureInformation()[filePath] = std::move(textureInfo);
 
-	TextureManager::GetInstance()->handleToFilePathMap_[index_] = filePath; 
+	TextureManager::GetInstance()->handleToFilePathMap_[textureManager->index_] = filePath;
 
-	return textureInfo.handle_;
+	return textureInfo.handle;
 }
 
 
@@ -153,7 +158,7 @@ DirectX::ScratchImage Ellysia::TextureManager::LoadTextureData(const std::string
 	}
 
 
-	//ミップマップ月のデータを返す
+	//ミップマップ付きのデータを返す
 	return mipImages;
 }
 
@@ -175,7 +180,7 @@ ComPtr<ID3D12Resource> Ellysia::TextureManager::CreateTextureResource(const Dire
 	//TextureのFormat
 	resourceDesc.Format = metadata.format;
 	//サンプリングカウント
-	resourceDesc.SampleDesc.Count = 1;
+	resourceDesc.SampleDesc.Count = 1u;
 	//Textureの次元数。普段使っているのは2次元
 	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);
 
@@ -190,10 +195,7 @@ ComPtr<ID3D12Resource> Ellysia::TextureManager::CreateTextureResource(const Dire
 	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 
 
-
-
 	//3.Resourceを生成する
-
 	HRESULT hResult = Ellysia::DirectXSetup::GetInstance()->GetDevice()->CreateCommittedResource(
 		&heapProperties,					//Heapの設定
 		D3D12_HEAP_FLAG_NONE,				//Heapの特殊な設定

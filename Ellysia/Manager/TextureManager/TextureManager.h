@@ -15,6 +15,7 @@
 
 #include "DirectXSetup.h"
 #include "ConvertLog.h"
+#include "Vector2.h"
 
 namespace Ellysia {
 
@@ -70,9 +71,7 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="rootParameter"></param>
 		/// <param name="textureHandle"></param>
-		static void GraphicsCommand(const uint32_t& rootParameter, const uint32_t& textureHandle);
-
-
+		void GraphicsCommand(const uint32_t& rootParameter, const uint32_t& textureHandle);
 
 		/// <summary>
 		/// DESCの取得
@@ -80,6 +79,21 @@ namespace Ellysia {
 		/// <param name="textureHandle"></param>
 		/// <returns></returns>
 		const D3D12_RESOURCE_DESC GetResourceDesc(const uint32_t& textureHandle);
+
+		/// <summary>
+		/// テクスチャの横幅を取得
+		/// </summary>
+		/// <param name="textureHandle">ハンドル</param>
+		/// <returns>横幅</returns>
+		uint64_t GetTextureWidth(const uint32_t& textureHandle);
+
+		/// <summary>
+		/// テクスチャの縦幅を取得
+		/// </summary>
+		/// <param name="textureHandle">ハンドル</param>
+		/// <returns>縦幅</returns>
+		uint64_t GetTextureHeight(const uint32_t& textureHandle);
+
 
 	private:
 
@@ -95,7 +109,6 @@ namespace Ellysia {
 		/// <param name="filePath"></param>
 		/// <returns></returns>
 		static DirectX::ScratchImage LoadTextureData(const std::string& filePath);
-
 
 
 		/// <summary>
@@ -125,18 +138,18 @@ namespace Ellysia {
 		struct TextureInformation {
 
 			//リソース
-			ComPtr<ID3D12Resource> resource_ = nullptr;
-			ComPtr<ID3D12Resource> internegiateResource_ = nullptr;
+			ComPtr<ID3D12Resource> resource = nullptr;
+			ComPtr<ID3D12Resource> internegiateResource = nullptr;
 
-			DirectX::ScratchImage mipImages_ = {};
-			D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc_ = {};
-
+			//ミップイメージ
+			DirectX::ScratchImage mipImages = {};
+			D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 
 			//読み込んだテクスチャの名前
-			std::string name_ = {};
+			std::string name;
 
 			//テクスチャハンドル
-			uint32_t handle_ = 0;
+			uint32_t handle;
 		};
 
 
@@ -150,13 +163,13 @@ namespace Ellysia {
 
 	private:
 		//インデックス
-		static uint32_t index_;
+		uint32_t index_;
 
 		//テクスチャ情報
-		std::map<std::string, TextureInformation> textureInformation_{};
+		std::map<std::string, TextureInformation> textureInformation_={};
 
 		// handleからfilePathへのマッピングを保持する
-		std::map<uint32_t, std::string> handleToFilePathMap_{};
+		std::map<uint32_t, std::string> handleToFilePathMap_={};
 
 	};
 }

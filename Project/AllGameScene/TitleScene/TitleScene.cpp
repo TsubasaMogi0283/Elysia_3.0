@@ -29,10 +29,10 @@ TitleScene::TitleScene(){
 void TitleScene::Initialize(){
 
 	//
-	uint32_t textTextureHandle = textureManager_->LoadTexture("Resources/Title/StartText.png");
+	uint32_t textTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Title/StartText.png");
 	//タイトルテクスチャ
-	uint32_t logoTextureHandle = textureManager_->LoadTexture("Resources/Title/TitleNormal.png");
-	changedLogoTextureHandle_ = textureManager_->LoadTexture("Resources/Title/TitleChanged.png");
+	uint32_t logoTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Title/TitleNormal.png");
+	changedLogoTextureHandle_ = textureManager_->LoadTexture("Resources/Sprite/Title/TitleChanged.png");
 	logoTextureHandle_ = logoTextureHandle;
 	//黒フェード
 	uint32_t blackTexureHandle= textureManager_->LoadTexture("Resources/Sprite/Back/Black.png");

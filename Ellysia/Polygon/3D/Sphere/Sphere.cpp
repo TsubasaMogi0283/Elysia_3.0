@@ -505,7 +505,7 @@ void Sphere::Release() {
 //
 //	//画像読み込み
 //	textureResource_->Finalize();
-//	resource_->Finalize();
+//	resource->Finalize();
 //
 //	intermediateResource_->Finalize();
 //

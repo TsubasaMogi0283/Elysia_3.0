@@ -111,7 +111,7 @@ void Ellysia::BackTexture::Draw(){
 		directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, vignetteResource_->GetGPUVirtualAddress());
 	}
 	//Texture
-	TextureManager::GraphicsCommand(2u,srvHandle_);
+	TextureManager::GetInstance()->GraphicsCommand(2u, srvHandle_);
 	//GaussianFilter
 	if (effectType_ == GaussianFilter3x3a ||
 		effectType_ == GaussianFilter5x5a) {

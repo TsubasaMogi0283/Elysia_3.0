@@ -139,6 +139,14 @@ namespace Ellysia {
 		}
 
 		/// <summary>
+		/// 現在非表示かどうかを取得
+		/// </summary>
+		/// <returns></returns>
+		bool GetIsInvisible()const {
+			return isInvisible_;
+		}
+
+		/// <summary>
 		/// 後ろにするかどうか
 		/// </summary>
 		/// <param name="isBack">後ろか</param>

@@ -123,6 +123,15 @@ public:
 	}
 
 	/// <summary>
+	/// 終点の座標を設定
+	/// </summary>
+	/// <param name="position">座標</param>
+	inline void SetEndPosition(const Vector2& position) {
+		this->spriteEndPosition_ = position;
+	}
+
+
+	/// <summary>
 	/// 取得可能かどうか
 	/// </summary>
 	/// <returns>取得可能</returns>
@@ -176,6 +185,9 @@ private:
 	//回転終わり
 	bool isFinishRise_ = false;
 	float upT_ = 0.0f;
+	//終点
+	Vector2 spriteEndPosition_ = { };
+
 
 	//スプライトが動くかどうか
 	bool isSpriteMove_ = false;
