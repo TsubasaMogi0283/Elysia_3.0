@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include <numbers>
 #include <ModelManager.h>
+#include <SingleCalculation.h>
 
 void FlashLight::Initialize(){
 
@@ -11,16 +12,13 @@ void FlashLight::Initialize(){
 	spotLight_.position_ = position_;
 	spotLight_.distance_ = LIGHT_DISTANCE;
 	spotLight_.decay_ = 0.6f;
-	spotLight_.cosFallowoffStart_ = 6.1f;
+	spotLight_.cosFallowoffStart_ = 1.8f;
 	spotLight_.intensity_ = 200.0f;
 	spotLight_.aroundOffset_ = 0.1f;
 
 	//ライトの片方の角度
 	//15度=π/12
 	lightSideTheta_ = (std::numbers::pi_v<float>/12.0f);
-	theta_ = 0.0f;
-	phi_ = 0.0f;
-
 
 	//扇
 	fan3D_.length = LIGHT_DISTANCE;
@@ -28,8 +26,6 @@ void FlashLight::Initialize(){
 	//同じサイズにする
 	fan3D_.sideThetaAngle = lightSideTheta_;
 	fan3D_.sidePhiAngleSize = lightSideTheta_;
-
-	
 
 	//当たり判定の初期化
 	flashLightCollision_ = std::make_unique<FlashLightCollision>();
@@ -92,11 +88,19 @@ void FlashLight::Update() {
 	//計算したものをSpotLightの方に入れる
 	spotLight_.position_ = position_;
 	spotLight_.direction_ = direction_;
-
 	//片方の角度
 	spotLight_.cosAngle_ = std::cosf(lightSideTheta_);
 	spotLight_.aroundOffset_ = 0.05f;
 	
+	//幅から強さを計算する
+	maxIntencity_ = 400.0f;
+	//ライトの最小の強さ
+	minIntencity_ = 50.0f;
+
+	//割合を求める
+	ratio = SingleCalculation::InverseLerp(minRange_, maxRange_, lightSideTheta_);
+	spotLight_.intensity_ = SingleCalculation::Lerp(minIntencity_, maxIntencity_, (1.0f-ratio));
+
 	//扇
 	fan3D_.centerRadian = theta_;
 	fan3D_.direction = direction_;
@@ -120,30 +124,24 @@ void FlashLight::Update() {
 	};
 
 
-
-
-	//端をデバッグ用として表示させる
-	const float DISTANCE = 20.0f;
-	Vector2 fanLeft = { 
-		.x = std::cosf(theta_ + lightSideTheta_) * DISTANCE,
-		.y = std::sinf(theta_ + lightSideTheta_) * DISTANCE 
-	};
-
-	Vector2 fanRight = { 
-		.x = std::cosf(theta_ - lightSideTheta_) * DISTANCE,
-		.y = std::sinf(theta_ - lightSideTheta_) * DISTANCE 
-	};
-
-
 	//当たり判定用へ扇を入力
 	flashLightCollision_->SetFan3D(fan3D_);
 	//スポットライトの更新
 	spotLight_.Update();
-	
+
 
 #ifdef _DEBUG
-
-
+	//端をデバッグ用として表示させる
+	//左
+	Vector2 fanLeft = { 
+		.x = std::cosf(theta_ + lightSideTheta_) * spotLight_.distance_,
+		.y = std::sinf(theta_ + lightSideTheta_) * spotLight_.distance_ 
+	};
+	//右
+	Vector2 fanRight = { 
+		.x = std::cosf(theta_ - lightSideTheta_) * spotLight_.distance_,
+		.y = std::sinf(theta_ - lightSideTheta_) * spotLight_.distance_ 
+	};
 
 	//端の位置を計算
 	worldTransform_[Left].translate = VectorCalculation::Add(playerPosition_,{ fanLeft.x ,0.0f,fanLeft.y });
@@ -151,8 +149,6 @@ void FlashLight::Update() {
 
 	//中心
 	lightCenterWorldTransform_.translate = position_;
-
-	
 
 	//更新
 	//ワールドトランスフォーム
@@ -199,5 +195,6 @@ void FlashLight::ImGuiDisplay(){
 	ImGui::SliderFloat("強さ", &spotLight_.intensity_, 0.0f, 400.0f);
 	ImGui::InputFloat("シータ", &theta_);
 	ImGui::InputFloat("ファイ", &phi_);
+	ImGui::InputFloat("割合", &ratio);
 	ImGui::End();
 }

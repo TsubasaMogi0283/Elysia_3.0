@@ -102,7 +102,7 @@ void GameScene::Initialize() {
 
 	//最大最小の幅を設定
 	player_->GetFlashLight()->SetMaxRange(LIGHT_MAX_RANGE_);
-	player_->GetFlashLight()->SetMaxRange(LIGHT_MIN_RANGE_);
+	player_->GetFlashLight()->SetMinRange(LIGHT_MIN_RANGE_);
 
 	
 	//向きの初期化

@@ -141,6 +141,12 @@ public:
 
 
 private:
+	//ライトの最大の強さ
+	float maxIntencity_ = 400.0f;
+	//ライトの最小の強さ
+	float minIntencity_ = 100.0f;
+
+private:
 	//ここに値を入れてゲームシーンで他のオブジェクトに適用させる
 	SpotLight spotLight_ = {};
 
@@ -159,6 +165,7 @@ private:
 	//ライトの幅
 	float maxRange_ = 0.0f;
 	float minRange_ = 0.0f;
+	float ratio = 0.0f;
 
 	//角度
 	float theta_ = 0.0f;
