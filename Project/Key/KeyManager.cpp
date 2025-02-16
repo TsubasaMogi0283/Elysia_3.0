@@ -245,8 +245,6 @@ void KeyManager::Delete() {
 			}
 			++keyQuantity_;
 			
-				
-			
 			return true;
 		}
 		return false;

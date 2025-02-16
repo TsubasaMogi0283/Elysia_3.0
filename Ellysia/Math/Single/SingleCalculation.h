@@ -42,6 +42,17 @@ namespace SingleCalculation{
 	float Lerp(const float& start, const float& end, const float& t);
 
 	/// <summary>
+	/// 割合を求める(線形補間の逆)
+	/// </summary>
+	/// <param name="start">始点</param>
+	/// <param name="end">終点</param>
+	/// <param name="value">値</param>
+	/// <returns></returns>
+	float InverseLerp(const float& start, const float& end,const float& value);
+
+
+
+	/// <summary>
 	/// 長さを求める(Vector2)
 	/// </summary>
 	/// <param name="v">ベクトル</param>

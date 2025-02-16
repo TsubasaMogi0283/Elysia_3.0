@@ -8,18 +8,14 @@
 
 #include <memory>
 #include <list>
-
-
 #include "WorldTransform.h"
 #include "Model.h"
 
-#include "Stage/Ground/StageRect.h"
 #include "AABB.h"
 #include "PlayerCollisionToStrongEnemy.h"
 #include "PlayerCollisionToNormalEnemyAttack.h"
-#include "Light/FlashLight/FlashLight.h"
-#include "SpotLight.h"
 #include "PlayerCollisionToAudioObject.h"
+#include "Light/FlashLight/FlashLight.h"
 
 #pragma region 前方宣言
 
@@ -47,12 +43,13 @@ namespace Ellysia {
 	/// </summary>
 	class Input;
 
+	/// <summary>
+	/// モデル管理クラス
+	/// </summary>
+	class ModelManager;
 };
 
-/// <summary>
-/// モデル管理クラス
-/// </summary>
-class ModelManager;
+
 
 #pragma endregion
 

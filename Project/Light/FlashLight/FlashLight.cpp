@@ -8,7 +8,7 @@ void FlashLight::Initialize(){
 
 	//スポットライトの初期化
 	spotLight_.Initialize();
-	spotLight_.position_ = lightPosition;
+	spotLight_.position_ = position_;
 	spotLight_.distance_ = LIGHT_DISTANCE;
 	spotLight_.decay_ = 0.6f;
 	spotLight_.cosFallowoffStart_ = 6.1f;
@@ -17,17 +17,17 @@ void FlashLight::Initialize(){
 
 	//ライトの片方の角度
 	//15度=π/12
-	lightSideTheta = (std::numbers::pi_v<float>/12.0f);
+	lightSideTheta_ = (std::numbers::pi_v<float>/12.0f);
 	theta_ = 0.0f;
 	phi_ = 0.0f;
 
 
 	//扇
 	fan3D_.length = LIGHT_DISTANCE;
-	fan3D_.position = lightPosition;
+	fan3D_.position = position_;
 	//同じサイズにする
-	fan3D_.sideThetaAngle = lightSideTheta;
-	fan3D_.sidePhiAngleSize = lightSideTheta;
+	fan3D_.sideThetaAngle = lightSideTheta_;
+	fan3D_.sidePhiAngleSize = lightSideTheta_;
 
 	
 
@@ -76,7 +76,7 @@ void FlashLight::Update() {
 
 	//上のdirectionから長さを求めてからtanfでyを出す
 	float lengthXZ = sqrtf(std::powf(direction.x, 2.0f) + std::powf(direction.z, 2.0f));
-	lightDirection_ = {
+	direction_ = {
 		.x = direction.x,
 		.y = lengthXZ * std::tanf(phi_),
 		.z = direction.z,
@@ -85,38 +85,38 @@ void FlashLight::Update() {
 
 	//プレイヤーの座標と微調整分
 	//ライトを持つときの高さは地面と同じだと変だよね
-	const float LIGHT_HEIGHT = 2.0f;
+	const float LIGHT_HEIGHT = 1.0f;
 	const Vector3 OFFSET = {.x = 0.0f, .y = LIGHT_HEIGHT,.z =  0.0f };
-	lightPosition = VectorCalculation::Add(playerPosition_, OFFSET);
+	position_ = VectorCalculation::Add(playerPosition_, OFFSET);
 
 	//計算したものをSpotLightの方に入れる
-	spotLight_.position_ = lightPosition;
-	spotLight_.direction_ = lightDirection_;
+	spotLight_.position_ = position_;
+	spotLight_.direction_ = direction_;
 
 	//片方の角度
-	spotLight_.cosAngle_ = std::cosf(lightSideTheta);
+	spotLight_.cosAngle_ = std::cosf(lightSideTheta_);
 	spotLight_.aroundOffset_ = 0.05f;
 	
 	//扇
 	fan3D_.centerRadian = theta_;
-	fan3D_.direction = lightDirection_;
-	fan3D_.sidePhiAngleSize = lightSideTheta;
+	fan3D_.direction = direction_;
+	fan3D_.sidePhiAngleSize = lightSideTheta_;
 	fan3D_.centerPhi = phi_;
 	fan3D_.length = spotLight_.distance_;
-	fan3D_.position = lightPosition;
+	fan3D_.position = position_;
 
 	//高さは同じ
 	//左
 	fan3D_.leftVector = { 
-		.x = std::cosf(theta_ + lightSideTheta),
+		.x = std::cosf(theta_ + lightSideTheta_),
 		.y = std::sinf(phi_), 
-		.z = std::sinf(theta_ + lightSideTheta) 
+		.z = std::sinf(theta_ + lightSideTheta_) 
 	};
 	//右
 	fan3D_.rightVector = { 
-		.x = std::cosf(theta_ - lightSideTheta),
+		.x = std::cosf(theta_ - lightSideTheta_),
 		.y = std::sinf(phi_), 
-		.z = std::sinf(theta_ - lightSideTheta) 
+		.z = std::sinf(theta_ - lightSideTheta_) 
 	};
 
 
@@ -125,13 +125,13 @@ void FlashLight::Update() {
 	//端をデバッグ用として表示させる
 	const float DISTANCE = 20.0f;
 	Vector2 fanLeft = { 
-		.x = std::cosf(theta_ + lightSideTheta) * DISTANCE,
-		.y = std::sinf(theta_ + lightSideTheta) * DISTANCE 
+		.x = std::cosf(theta_ + lightSideTheta_) * DISTANCE,
+		.y = std::sinf(theta_ + lightSideTheta_) * DISTANCE 
 	};
 
 	Vector2 fanRight = { 
-		.x = std::cosf(theta_ - lightSideTheta) * DISTANCE,
-		.y = std::sinf(theta_ - lightSideTheta) * DISTANCE 
+		.x = std::cosf(theta_ - lightSideTheta_) * DISTANCE,
+		.y = std::sinf(theta_ - lightSideTheta_) * DISTANCE 
 	};
 
 
@@ -150,7 +150,7 @@ void FlashLight::Update() {
 	worldTransform_[Right].translate = VectorCalculation::Add(playerPosition_,{ fanRight.x ,0.0f,fanRight.y });
 
 	//中心
-	lightCenterWorldTransform_.translate = lightPosition;
+	lightCenterWorldTransform_.translate = position_;
 
 	
 
@@ -166,7 +166,7 @@ void FlashLight::Update() {
 
 	lightCenterMaterial_.Update();
 	//ImGuiの表示
-	Display();
+	ImGuiDisplay();
 #endif // _EBUG
 
 }
@@ -187,17 +187,17 @@ void FlashLight::Draw(const Camera& camera){
 	
 }
 
-void FlashLight::Display(){
-	ImGui::Begin("Light");
-	ImGui::SliderFloat("Degree", &lightSideTheta, 0.0f, 3.0f);
-	ImGui::InputFloat3("Position", &spotLight_.position_.x);
-	ImGui::InputFloat3("Direction", &spotLight_.direction_.x);
-	ImGui::SliderFloat("Distance", &spotLight_.distance_, 0.0f, 100.0f);
+void FlashLight::ImGuiDisplay(){
+	ImGui::Begin("懐中電灯");
+	ImGui::SliderFloat("角度", &lightSideTheta_, 0.0f, 3.0f);
+	ImGui::InputFloat3("座標", &spotLight_.position_.x);
+	ImGui::InputFloat3("方向", &spotLight_.direction_.x);
+	ImGui::SliderFloat("距離", &spotLight_.distance_, 0.0f, 100.0f);
 	ImGui::SliderFloat("Decay", &spotLight_.decay_, 0.0f, 20.0f);
-	ImGui::SliderFloat("FallOff", &spotLight_.cosFallowoffStart_, 0.0f, 20.0f);
+	ImGui::SliderFloat("FallOff", &spotLight_.cosFallowoffStart_, 0.0f, 3.0f);
 	ImGui::SliderFloat("CosAngle", &spotLight_.cosAngle_, 0.0f, 3.0f);
-	ImGui::SliderFloat("intencity_", &spotLight_.intensity_, 0.0f, 400.0f);
-	ImGui::InputFloat("Theta", &theta_);
-	ImGui::InputFloat("Phi", &phi_);
+	ImGui::SliderFloat("強さ", &spotLight_.intensity_, 0.0f, 400.0f);
+	ImGui::InputFloat("シータ", &theta_);
+	ImGui::InputFloat("ファイ", &phi_);
 	ImGui::End();
 }

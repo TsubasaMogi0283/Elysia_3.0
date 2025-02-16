@@ -16,6 +16,15 @@ float SingleCalculation::Lerp(const float& start, const float& end, const float&
 	return (1.0f - t) * start + t * end;
 }
 
+float SingleCalculation::InverseLerp(const float& start, const float& end, const float& value){
+	//始点と終点が同じだったら計算をしない
+	if (start == end) {
+		return 0.0f; 
+	}
+	return (value - start) / (end - start);
+	
+}
+
 float SingleCalculation::Length(const Vector2& v){
 	return sqrtf(v.x * v.x + v.y * v.y);
 }

@@ -99,6 +99,12 @@ void GameScene::Initialize() {
 	//最初はコントロールは出来ない用にする
 	player_->SetIsAbleToControll(false);
 
+
+	//最大最小の幅を設定
+	player_->GetFlashLight()->SetMaxRange(LIGHT_MAX_RANGE_);
+	player_->GetFlashLight()->SetMaxRange(LIGHT_MIN_RANGE_);
+
+	
 	//向きの初期化
 	playerMoveDirection_ = {.x = 0.0f,.y = 0.0f,.z = 0.0f };
 	//気ボードは何も押していない
@@ -253,8 +259,6 @@ void GameScene::Initialize() {
 
 }
 
-
-
 void GameScene::ObjectCollision(){
 	
 
@@ -405,8 +409,12 @@ void GameScene::RegisterToCollisionManager(){
 
 
 	//懐中電灯に対してのコライダーを登録
-	collisionManager_->RegisterList(player_->GetFlashLightCollision());
+	const float MIN_THETA = 0.15f;
+	if (lightSideTheta_ < MIN_THETA) {
+		collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
+	}
+	
 	std::vector<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemies();
 	for (const StrongEnemy* strongEnemy : strongEnemyes) {
 		bool isTouch = strongEnemy->GetStrongEnemyCollisionToPlayer()->GetIsTouchPlayer();
@@ -631,15 +639,132 @@ void GameScene::PlayerMove(){
 
 }
 
+void GameScene::PlayerRotate(){
+
+#pragma region Y軸に旋回
+
+	//+が左回り
+
+	//左を向く
+	if (input_->IsPushKey(DIK_LEFT) == true) {
+		theta_ += ROTATE_INTERVAL;
+		isRotateYKey_ = true;
+	}
+	//右を向く
+	if (input_->IsPushKey(DIK_RIGHT) == true) {
+		theta_ -= ROTATE_INTERVAL;
+		isRotateYKey_ = true;
+	}
+
+
+
+	//2πより大きくなったら0にまた戻す
+	if (theta_ > 2.0f * std::numbers::pi_v<float>) {
+		theta_ = 0.0f;
+	}
+	//-2πより大きくなったら0にまた戻す
+	if (theta_ < -2.0f * std::numbers::pi_v<float>) {
+		theta_ = 0.0f;
+	}
+
+#pragma endregion
+
+#pragma region X軸に旋回
+
+	//上を向く
+	if (input_->IsPushKey(DIK_UP) == true) {
+		originPhi_ -= ROTATE_INTERVAL;
+		isRotateXKey_ = true;
+	}
+	//下を向く
+	if (input_->IsPushKey(DIK_DOWN) == true) {
+		originPhi_ += ROTATE_INTERVAL;
+		isRotateXKey_ = true;
+	}
+
+	//±π/6くらいに制限を掛けておきたい
+	//それ以下以上だと首が大変なことになっているように見えるからね
+	if (originPhi_ > std::numbers::pi_v<float> / 6.0f) {
+		originPhi_ = std::numbers::pi_v<float> / 6.0f;
+	}
+	if (originPhi_ < -std::numbers::pi_v<float> / 6.0f) {
+		originPhi_ = -std::numbers::pi_v<float> / 6.0f;
+	}
+
+#pragma endregion
+
+#pragma region コントローラーの回転
+
+	isRotateXKey_ = false;
+	isRotateYKey_ = false;
+
+	//コントローラーがある場合
+	if (input_->IsConnetGamePad() == true) {
+		const float MOVE_LIMITATION = 0.02f;
+
+		//キーボード入力していない時
+		if (isRotateYKey_ == false && isRotateXKey_ == false) {
+
+			//入力
+			float rotateMoveX = (float)input_->GetState().Gamepad.sThumbRY / SHRT_MAX * ROTATE_INTERVAL;
+			float rotateMoveY = (float)input_->GetState().Gamepad.sThumbRX / SHRT_MAX * ROTATE_INTERVAL;
+
+			//勝手に動くので制限を掛ける
+			if (rotateMoveY < MOVE_LIMITATION && rotateMoveY > -MOVE_LIMITATION) {
+				rotateMoveY = 0.0f;
+			}
+			if (rotateMoveX < MOVE_LIMITATION && rotateMoveX > -MOVE_LIMITATION) {
+				rotateMoveX = 0.0f;
+			}
+
+			//補正後の値を代入する
+			theta_ -= rotateMoveY;
+			originPhi_ -= rotateMoveX;
+		}
+
+
+
+	}
+
+
+#pragma endregion
+
+}
+
+void GameScene::MoveLightSide(){
+	//0.08
+	//0.3
+
+	
+
+	const float LIGHT_MOVE_INTERVAL = 0.001f;
+	if (input_->IsPushKey(DIK_X) == true) {
+		lightSideTheta_ += LIGHT_MOVE_INTERVAL;
+
+	}
+	if (input_->IsPushKey(DIK_Z) == true) {
+		lightSideTheta_ -= LIGHT_MOVE_INTERVAL;
+	}
+
+	//最大値固定
+	if (lightSideTheta_ > LIGHT_MAX_RANGE_) {
+		lightSideTheta_ = LIGHT_MAX_RANGE_;
+	}
+	//最低値固定
+	else if (lightSideTheta_ < LIGHT_MIN_RANGE_) {
+		lightSideTheta_ = LIGHT_MIN_RANGE_;
+	}
+	
+	//幅を設定
+	player_->GetFlashLight()->SetLightSideTheta(lightSideTheta_);
+}
+
 
 void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 	//フレーム初めに
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
-
-
-	
 
 	//フェードイン
 	if (isWhiteFadeIn==true) {
@@ -655,7 +780,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 			howToPlayTextureNumber_ = 1u;
 		}
 	}
-
+	
 	//ゲーム
 	if (isWhiteFadeIn == false && isWhiteFadeOut_ == false) {
 		whiteFadeTransparency_ = PERFECT_TRANSPARENT_;
@@ -705,104 +830,16 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 			enemyManager_->DeleteEnemy();
 		}
 		
-		#pragma region 回転
-
-		#pragma region Y軸に旋回
-
-		//+が左回り
-		
-		//左を向く
-		if (input_->IsPushKey(DIK_LEFT) == true) {
-			theta_ += ROTATE_INTERVAL;
-			isRotateYKey_ = true;
-		}
-		//右を向く
-		if (input_->IsPushKey(DIK_RIGHT) == true) {
-			theta_ -= ROTATE_INTERVAL;
-			isRotateYKey_ = true;
-		}
-
-		
-
-		//2πより大きくなったら0にまた戻す
-		if (theta_ > 2.0f * std::numbers::pi_v<float>) {
-			theta_ = 0.0f;
-		}
-		//-2πより大きくなったら0にまた戻す
-		if (theta_ < -2.0f * std::numbers::pi_v<float>) {
-			theta_ = 0.0f;
-		}
-
-		#pragma endregion
-
-		#pragma region X軸に旋回
-
-		
-		//上を向く
-		if (input_->IsPushKey(DIK_UP) == true) {
-			originPhi_ -= ROTATE_INTERVAL;
-			isRotateXKey_ = true;
-		}
-		//下を向く
-		if (input_->IsPushKey(DIK_DOWN) == true) {
-			originPhi_ += ROTATE_INTERVAL;
-			isRotateXKey_ = true;
-		}
-
-
-		
-
-		//±π/6くらいに制限を掛けておきたい
-		//それ以下以上だと首が大変なことになっているように見えるからね
-		if (originPhi_ > std::numbers::pi_v<float> / 6.0f) {
-			originPhi_ = std::numbers::pi_v<float> / 6.0f;
-		}
-		if (originPhi_ < -std::numbers::pi_v<float> / 6.0f) {
-			originPhi_ = -std::numbers::pi_v<float> / 6.0f;
-		}
-
-		#pragma endregion
-
-		#pragma region コントローラーの回転
-
-		isRotateXKey_ = false;
-		isRotateYKey_ = false;
-
-		//コントローラーがある場合
-		if (input_->IsConnetGamePad() == true) {
-			const float MOVE_LIMITATION = 0.02f;
-
-			//キーボード入力していない時
-			if (isRotateYKey_ == false && isRotateXKey_ == false) {
-
-				//入力
-				float rotateMoveX = (float)input_->GetState().Gamepad.sThumbRY / SHRT_MAX * ROTATE_INTERVAL;
-				float rotateMoveY = (float)input_->GetState().Gamepad.sThumbRX / SHRT_MAX * ROTATE_INTERVAL;
-				
-				//勝手に動くので制限を掛ける
-				if (rotateMoveY < MOVE_LIMITATION && rotateMoveY > -MOVE_LIMITATION) {
-					rotateMoveY = 0.0f;
-				}
-				if (rotateMoveX < MOVE_LIMITATION && rotateMoveX > -MOVE_LIMITATION) {
-					rotateMoveX = 0.0f;
-				}
-
-				//補正後の値を代入する
-				theta_ -= rotateMoveY;
-				originPhi_ -= rotateMoveX;
-			}
-
-
-
-		}
-
-
-		#pragma endregion
-
-		#pragma endregion
 
 		//プレイヤーの移動
 		PlayerMove();
+		//回転
+		PlayerRotate();
+		//ライトの動き
+		MoveLightSide();
+
+		//DIK_COMMA          
+		//DIK_PERIOD
 
 		//プレイヤーにそれぞれの角度を設定する
 		player_->GetFlashLight()->SetTheta(theta_);
@@ -879,8 +916,9 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 		gateRotateTheta_ += 0.01f;
 		std::string right = "GateDoorRight";
 		std::string left = "GateDoorLeft";
-
+		//門の回転
 		levelDataManager_->SetRotate(levelHandle_, right, { .x = 0.0f,.y = gateRotateTheta_,.z = 0.0f });
+		//左の回転が変だった
 		levelDataManager_->SetRotate(levelHandle_, left, { .x = 0.0f,.y = -gateRotateTheta_,.z = 0.0f });
 
 
@@ -1001,15 +1039,12 @@ void GameScene::DrawObject3D() {
 
 	//レベルエディタ  
 	levelDataManager_->Draw(levelHandle_, camera_, spotLight);
-
 	//敵
 	enemyManager_->Draw(camera_, spotLight);
-
 	//プレイヤー
 	player_->Draw(camera_, spotLight);
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
-
 }
 
 
@@ -1021,7 +1056,6 @@ void GameScene::DrawPostEffect(){
 
 void GameScene::DrawSprite(){
 	
-	
 	//最大数
 	const uint32_t MAX_TEXTURE_QUANTITY = 2u;
 	//説明
@@ -1032,22 +1066,16 @@ void GameScene::DrawSprite(){
 		}
 	}
 
-
-	
 	//UIを表示するかどうか
 	if (isDisplayUI_ == true) {
 		//操作説明
 		operation_->Draw();
-
 		//鍵
 		keyManager_->DrawSprite();
-
 		//脱出
 		escapeText_->Draw();
-
 		//プレイヤーの体力の枠
 		playerHPBackFrame_->Draw();
-
 		//プレイヤーの体力(アイコン型)
 		for (uint32_t i = 0u; i < currentDisplayHP_; ++i) {
 			playerHP_[i]->Draw();
@@ -1055,9 +1083,6 @@ void GameScene::DrawSprite(){
 		if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
 			toEscape_->Draw();
 		}
-
-		
-
 	}
 
 	//フェード

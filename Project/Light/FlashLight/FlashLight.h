@@ -54,7 +54,7 @@ private:
 	/// <summary>
 	/// IMGuiの表示
 	/// </summary>
-	void Display();
+	void ImGuiDisplay();
 
 public:
 	/// <summary>
@@ -91,11 +91,36 @@ public:
 	}
 
 	/// <summary>
+	/// ライトの幅を設定
+	/// </summary>
+	/// <param name="lightSideTheta"></param>
+	inline void SetLightSideTheta(const float& lightSideTheta) {
+		this ->lightSideTheta_ = lightSideTheta;
+	}
+
+	/// <summary>
 	/// 方向を取得
 	/// </summary>
 	/// <returns></returns>
 	inline Vector3 GetDirection()const {
-		return lightDirection_;
+		return direction_;
+	}
+
+	/// <summary>
+	/// 最大の幅
+	/// </summary>
+	/// <param name="range"></param>
+	inline void SetMaxRange(const float& range) {
+		this->maxRange_ = range;
+	}
+
+
+	/// <summary>
+	/// 最小の幅
+	/// </summary>
+	/// <param name="range"></param>
+	inline void SetMinRange(const float& range) {
+		this->minRange_ = range;
 	}
 
 	/// <summary>
@@ -124,9 +149,16 @@ private:
 
 	//光の届く距離
 	const float LIGHT_DISTANCE = 22.0f;
-	Vector3 lightPosition = {};
-	Vector3 lightDirection_ = {};
-	float lightSideTheta = 0.0f;
+	//座標
+	Vector3 position_ = {};
+	//方向
+	Vector3 direction_ = {};
+	//幅
+	float lightSideTheta_ = 0.0f;
+
+	//ライトの幅
+	float maxRange_ = 0.0f;
+	float minRange_ = 0.0f;
 
 	//角度
 	float theta_ = 0.0f;
@@ -140,6 +172,8 @@ private:
 	std::unique_ptr<FlashLightCollision> flashLightCollision_ = nullptr;
 
 #ifdef _DEBUG
+	
+	//デバッグ用
 	//左右
 	const uint32_t Right = 0u;
 	const uint32_t Left = 1u;

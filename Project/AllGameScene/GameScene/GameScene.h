@@ -117,6 +117,16 @@ private:
 	void PlayerMove();
 
 	/// <summary>
+	/// プレイヤーの回転
+	/// </summary>
+	void PlayerRotate();
+
+	/// <summary>
+	/// ライトの幅の設定
+	/// </summary>
+	void MoveLightSide();
+
+	/// <summary>
 	/// 逃げ状態
 	/// </summary>
 	void EscapeCondition();
@@ -187,6 +197,12 @@ private:
 	//完全に透明になる値
 	const float PERFECT_TRANSPARENT_ = 0.0f;
 
+	//ライトの幅
+	//最大
+	const float LIGHT_MAX_RANGE_ = 0.35f;
+	//最小
+	const float LIGHT_MIN_RANGE_ = 0.08f;
+
 private:
 
 
@@ -225,7 +241,8 @@ private:
 	bool isPlayerMove_ = false;
 	//ダッシュしているかどうか
 	bool isPlayerDash_ = false;
-
+	//ライトの幅
+	float lightSideTheta_ = 0.1f;
 	
 
 	//Bボタンのトリガー

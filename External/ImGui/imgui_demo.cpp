@@ -7707,7 +7707,7 @@ static void ShowExampleAppConstrainedResize(bool* p_open)
     // Options
     static bool auto_resize = false;
     static bool window_padding = true;
-    static int type = 6; // Aspect Ratio
+    static int type = 6; // Aspect InverseLerp
     static int display_lines = 10;
 
     // Submit constraint

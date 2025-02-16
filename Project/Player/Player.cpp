@@ -1,18 +1,17 @@
 #include "Player.h"
-#include <numbers>
 
+#include <numbers>
 
 #include "Input.h"
 #include "VectorCalculation.h"
-#include "Material.h"
-#include "SpotLight.h"
-#include "GameScene/GameScene.h"
 #include "SingleCalculation.h"
-#include "CollisionConfig.h"
 #include "ModelManager.h"
+#include "SpotLight.h"
 
 Player::Player(){
-	//入力クラスの取得
+
+	//インスタンスの取得
+	//入力クラス
 	input_ = Ellysia::Input::GetInstance();
 	//モデル管理クラス
 	modelManager_ = Ellysia::ModelManager::GetInstance();
