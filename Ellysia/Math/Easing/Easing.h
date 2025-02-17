@@ -148,7 +148,6 @@ namespace Easing{
 	}
 	#pragma endregion
 
-
 	#pragma region Quart
 	/// <summary>
 	/// QuartのIn
@@ -189,6 +188,66 @@ namespace Easing{
 			result = 1.0f - std::powf(-2.0f * value + 2.0f, 4.0f) / 2.0f;
 		}
 
+		//0.0fから1.0fに変換する
+		return std::clamp(result, 0.0f, 1.0f);
+	}
+	#pragma endregion
+
+
+	#pragma region Back
+	/// <summary>
+	/// BackのIn
+	/// </summary>
+	/// <param name="value">値(t)</param>
+	/// <returns></returns>
+	inline float EaseInBack(const float& value) {
+		//指定された定数1
+		const float value1 = 1.70158f;
+		//指定された定数2
+		const float value2 = value1 + 1.0f;
+
+		//計算
+		float result = value2 * value * value * value - value1 * value * value;
+		//0.0fから1.0fに変換する
+		return std::clamp(result, 0.0f, 1.0f);
+	};
+
+	/// <summary>
+	/// BackのOut
+	/// </summary>
+	/// <param name="value">値(t)</param>
+	/// <returns></returns>
+	inline float EaseOutBack(const float& value) {
+		//指定された定数1
+		const float value1 = 1.70158f;
+		//指定された定数2
+		const float value2 = value1 + 1.0f;
+
+		//計算
+		float result = 1.0f + value2 * std::powf(value - 1.0f, 3.0f) + value1 * std::powf(value - 1.0f, 2.0f);
+		//0.0fから1.0fに変換する
+		return std::clamp(result, 0.0f, 1.0f);
+	};
+
+	/// <summary>
+	/// BackのInとOut
+	/// </summary>
+	/// <param name="value"></param>
+	/// <returns></returns>
+	inline float EaseInOutBack(const float& value) {
+		//指定された定数1
+		const float value1 = 1.70158f;
+		//指定された定数2
+		const float value2 = value1 * 1.525f;
+
+		//計算
+		float result = 0.0f;
+		if (value < 0.5f) {
+			result = (std::powf(2.0f * value, 2.0f) * ((value2 + 1.0f) * 2.0f * value - value2)) / 2.0f;
+		}
+		else {
+			result = (std::powf(2.0f * value - 2.0f, 2.0f) * ((value2 + 1.0f) * (value * 2.0f - 2.0f) + value2) + 2.0f) / 2.0f;
+		}
 		//0.0fから1.0fに変換する
 		return std::clamp(result, 0.0f, 1.0f);
 	}
