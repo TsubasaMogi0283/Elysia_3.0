@@ -8,7 +8,7 @@
 #include "VectorCalculation.h"
 #include "Player/Player.h"
 #include "SingleCalculation.h"
-
+#include "Easing.h"
 
 KeyManager::KeyManager(){
 	//インスタンスの取得
@@ -82,20 +82,28 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 	//リスト
 	uint32_t keyListSpriteHandle = textureManager_->LoadTexture("Resources/Sprite/Item/KeyList.png");
 	//生成
-	keyListSprite_.reset(Ellysia::Sprite::Create(keyListSpriteHandle, INITIAL_POSITION_));
+	keyListSprite_.reset(Ellysia::Sprite::Create(keyListSpriteHandle, initialPosition_));
 
 	uint32_t textureHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Item/Key/Key.png");
 	//サイズを取得
 	keySpriteWidth_ = textureManager_->GetTextureWidth(textureHandle);
+	keySpriteHeight_ = textureManager_->GetTextureHeight(textureHandle);
+
 
 	//鍵
+	const Vector2 INITIAL_SCALE = { .x = 0.0f,.y = 0.0f };
+	const Vector2 ANCHOR_POINT = { .x = 0.5f,.y = 0.5f };
+	initialPositionAddAnchorPoint = { .x = 20.0f+ keySpriteWidth_/2.0f,.y = 10.0f+ keySpriteHeight_/2.0f };
 	for (uint32_t i = 0u; i < MAX_KEY_QUANTITY_; ++i) {
 		Vector2 position = {
-			.x = INITIAL_POSITION_.x + keySpriteWidth_ * static_cast<float>(i),
-			.y = INITIAL_POSITION_.y
+			.x = initialPositionAddAnchorPoint.x + keySpriteWidth_ * static_cast<float>(i),
+			.y = initialPositionAddAnchorPoint.y
 		};
 		keySprites_[i].reset(Ellysia::Sprite::Create(textureHandle, position));
-		keySprites_[i]->SetInvisible(true);
+		//アンカーポイントの設定
+		keySprites_[i]->SetAnchorPoint(ANCHOR_POINT);
+		//初期スケール
+		keySprites_[i]->SetScale(INITIAL_SCALE);
 	}
 
 
@@ -134,8 +142,8 @@ void KeyManager::Update(){
 		key->Update();
 		//終点座標
 		Vector2 endPosition = {
-			.x= INITIAL_POSITION_.x + keySpriteWidth_ *static_cast<float>(keyQuantity_),
-			.y= INITIAL_POSITION_.y
+			.x= initialPosition_.x + keySpriteWidth_ *static_cast<float>(keyQuantity_),
+			.y= initialPosition_.y
 		};
 		key->SetEndPosition(endPosition);
 		//プレイヤーと鍵の差分
@@ -187,6 +195,11 @@ void KeyManager::Update(){
 
 	int newQuantity = static_cast<int>(keyQuantity_);
 	ImGui::InputInt("鍵の数", &newQuantity);
+	ImGui::InputFloat("ST1", &spriteTs_[0]);
+	ImGui::InputFloat("ST2", &spriteTs_[1]);
+	ImGui::InputFloat("ST3", &spriteTs_[2]);
+
+
 	ImGui::End();
 #endif // _DEBUG
 
@@ -239,13 +252,22 @@ void KeyManager::Delete() {
 	keies_.remove_if([=](const std::unique_ptr<Key>& key) {
 		//拾われたら消す
 		if (key->GetIsDelete() == true) {
-			//表示させる
-			if (keySprites_[keyQuantity_]->GetIsInvisible() == true) {
-				keySprites_[keyQuantity_]->SetInvisible(false);
-			}
-			++keyQuantity_;
 			
-			return true;
+			spriteTs_[keyQuantity_] += 0.005f;
+			//スケール
+			float newT = Easing::EaseOutBack(spriteTs_[keyQuantity_]);
+			keySprites_[keyQuantity_]->SetScale({ .x = newT ,.y = newT });
+
+			//回転
+			float newTForRotate= Easing::EaseOutCubic(spriteTs_[keyQuantity_]);
+			float rotate = SingleCalculation::Lerp(0.0f, -std::numbers::pi_v<float>*6.0f, newTForRotate);
+			keySprites_[keyQuantity_]->SetRotate(rotate);
+			if (spriteTs_[keyQuantity_] >= 1.0f) {
+				++keyQuantity_;
+				return true;
+			}
+			
+			
 		}
 		return false;
 	});

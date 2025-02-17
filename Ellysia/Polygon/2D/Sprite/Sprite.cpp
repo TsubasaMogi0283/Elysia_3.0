@@ -223,16 +223,17 @@ void Ellysia::Sprite::Draw() {
 	//マテリアルにデータを書き込む
 	//書き込むためのアドレスを取得
 	//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	materialResource_->Map(0u, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = color_;
 	//ライティングしない
-	materialData_->lightingKinds = 0u;
+	materialData_->lightingKinds = NoneLighting;
 	materialData_->shininess = 0.0f;
 
 	Matrix4x4 uvTransformMatrix = Matrix4x4Calculation::MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix = Matrix4x4Calculation::Multiply(uvTransformMatrix, Matrix4x4Calculation::MakeRotateZMatrix(uvTransform_.rotate.z));
 	uvTransformMatrix = Matrix4x4Calculation::Multiply(uvTransformMatrix, Matrix4x4Calculation::MakeTranslateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix;
+	materialResource_->Unmap(0u, nullptr);
 
 
 	//コマンドを積む
@@ -400,17 +401,17 @@ void Ellysia::Sprite::Draw(const uint32_t& texturehandle){
 	//マテリアルにデータを書き込む
 	//書き込むためのアドレスを取得
 	//reinterpret_cast...char* から int* へ、One_class* から Unrelated_class* へなどの変換に使用
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	materialResource_->Map(0u, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = color_;
 	//ライティングしない
-	materialData_->lightingKinds = 0;
+	materialData_->lightingKinds = NoneLighting;
 	materialData_->shininess = 0.0f;
 
 	Matrix4x4 uvTransformMatrix = Matrix4x4Calculation::MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix = Matrix4x4Calculation::Multiply(uvTransformMatrix, Matrix4x4Calculation::MakeRotateZMatrix(uvTransform_.rotate.z));
 	uvTransformMatrix = Matrix4x4Calculation::Multiply(uvTransformMatrix, Matrix4x4Calculation::MakeTranslateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix;
-
+	materialResource_->Unmap(0u, nullptr);
 
 	//コマンドを積む
 	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetSpriteRootSignature().Get());

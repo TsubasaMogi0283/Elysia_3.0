@@ -190,8 +190,7 @@ private:
 	//コントローラーの押していない時の値
 	const int32_t NO_PUSH_VALUE_ = 0u;
 
-	//初期座標
-	const Vector2 INITIAL_POSITION_ = { .x = 20.0f,.y = 10.0f };
+	
 private:
 	//鍵
 	std::list<std::unique_ptr<Key>>keies_ = {};
@@ -204,7 +203,14 @@ private:
 	std::array<std::unique_ptr<Ellysia::Sprite>, MAX_KEY_QUANTITY_> keySprites_ = { nullptr };
 	//サイズ
 	uint64_t keySpriteWidth_ = 0u;
+	uint64_t keySpriteHeight_ = 0u;
 
+	//スケール
+	std::array<float, MAX_KEY_QUANTITY_> spriteTs_ = {};
+
+	//初期座標
+	Vector2 initialPosition_ = { .x = 20.0f,.y = 10.0f };
+	Vector2 initialPositionAddAnchorPoint = {};
 
 	//終点座標
 	std::array<Vector2, MAX_KEY_QUANTITY_> endPositions_ = {};

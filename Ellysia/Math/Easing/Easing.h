@@ -193,7 +193,6 @@ namespace Easing{
 	}
 	#pragma endregion
 
-
 	#pragma region Back
 	/// <summary>
 	/// BackのIn

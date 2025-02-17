@@ -167,31 +167,26 @@ void Key::SpriteMove(){
 
 		scaleT_ += 0.01f;
 		//サイズの設定
-		float scaleSize = std::sinf(scaleT_ *std::numbers::pi_v<float>);
+		float scaleSize = std::sinf(scaleT_ * std::numbers::pi_v<float>);
 		sprite_->SetScale({ .x = scaleSize ,.y = scaleSize });
 
 		//回転の設定
 		spriteRotate_ -= 0.5f;
 		sprite_->SetRotate(spriteRotate_);
 
-
 		//始点
 		const Vector2 SPRITE_STRAT_POSITION_ = { .x = 680,.y = 600.0f };
 		
-
-
 		//座標の設定
 		Vector2 position = VectorCalculation::Lerp(SPRITE_STRAT_POSITION_, spriteEndPosition_, scaleT_);
 		sprite_->SetPosition(position);
 
 		//消える
 		if (scaleT_ >= 1.0f) {
+			sprite_->SetInvisible(true);
 			isDelete_ = true;
 			isSpriteMove_ = false;
 		}
-
-
-
 	}
 }
 
