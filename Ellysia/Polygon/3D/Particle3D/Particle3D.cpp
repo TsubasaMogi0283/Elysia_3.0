@@ -8,36 +8,34 @@
 #include "TextureManager.h"
 #include "PipelineManager.h"
 #include "ModelManager.h"
+#include "SrvManager.h"
 
 #include "Material.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "VectorCalculation.h"
-#include "SrvManager.h"
 
 
-Particle3D::Particle3D() {
-	//モデル管理クラスの取得
+
+Ellysia::Particle3D::Particle3D() {
+	//インスタンスの取得
+	//モデル管理
 	modelManager_ = Ellysia::ModelManager::GetInstance();
-
-	//テクスチャ管理クラスの取得
+	//テクスチャ管理クラス
 	textureManager_ = Ellysia::TextureManager::GetInstance();
-
-	//DirectXクラスの取得
+	//DirectXクラス
 	directXSetup_ = Ellysia::DirectXSetup::GetInstance();
-
-	//SRV管理クラスの取得
+	//SRV管理クラス
 	srvManager_ = Ellysia::SrvManager::GetInstance();
-
-	//パイプライン管理クラスの取得
+	//パイプライン管理クラス
 	pipelineManager_ = Ellysia::PipelineManager::GetInstance();
 
 }
 
-Particle3D* Particle3D::Create(const uint32_t& moveType){
+std::unique_ptr<Ellysia::Particle3D> Ellysia::Particle3D::Create(const uint32_t& moveType){
 	//生成
-	Particle3D* particle3D = new Particle3D();
+	std::unique_ptr<Ellysia::Particle3D> particle3D = std::make_unique<Ellysia::Particle3D>();
 
 #pragma region デフォルトの設定 
 	particle3D->emitter_.count = 10;
@@ -67,8 +65,6 @@ Particle3D* Particle3D::Create(const uint32_t& moveType){
 	particle3D->vertices_ = particle3D->modelManager_->GetModelData(modelHandle).vertices;
 	particle3D->vertexResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(VertexData) * particle3D->vertices_.size());
 
-
-	//VBVとか関数でまとめたい
 
 	//リソースの先頭のアドレスから使う
 	particle3D->vertexBufferView_.BufferLocation = particle3D->vertexResource_->GetGPUVirtualAddress();
@@ -103,8 +99,9 @@ Particle3D* Particle3D::Create(const uint32_t& moveType){
 
 }
 
-Particle3D* Particle3D::Create(const uint32_t& modelHandle,const uint32_t& moveType) {
-	Particle3D* particle3D = new Particle3D();
+std::unique_ptr<Ellysia::Particle3D> Ellysia::Particle3D::Create(const uint32_t& modelHandle,const uint32_t& moveType) {
+	//生成
+	std::unique_ptr<Ellysia::Particle3D> particle3D = std::make_unique<Ellysia::Particle3D>();
 
 #pragma region デフォルトの設定 
 	particle3D->emitter_.count = 3;
@@ -168,12 +165,12 @@ Particle3D* Particle3D::Create(const uint32_t& modelHandle,const uint32_t& moveT
 
 }
 
-Particle Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
+ParticleInformation Ellysia::Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
 
 	//ランダムの値で位置を決める
 	//SRは固定
 	std::uniform_real_distribution<float> distribute(-2.0f, 2.0f);
-	Particle particle;
+	ParticleInformation particle;
 	particle.transform.scale = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
 	particle.transform.rotate = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
 	Vector3 randomTranslate = {.x= distribute(randomEngine),.y= distribute(randomEngine)+1.0f,.z= distribute(randomEngine) };
@@ -203,8 +200,8 @@ Particle Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
 
 }
 
-std::list<Particle> Particle3D::Emission(const Emitter& emmitter, std::mt19937& randomEngine) {
-	std::list<Particle> particles;
+std::list<ParticleInformation> Ellysia::Particle3D::Emission(const Emitter& emmitter, std::mt19937& randomEngine) {
+	std::list<ParticleInformation> particles;
 
 	for (uint32_t count = 0; count < emmitter.count; ++count) {
 		//emmitterで設定したカウントまで増やしていくよ
@@ -214,7 +211,7 @@ std::list<Particle> Particle3D::Emission(const Emitter& emmitter, std::mt19937& 
 	return particles;
 }
 
-void Particle3D::Update(const Camera& camera) {
+void Ellysia::Particle3D::Update(const Camera& camera) {
 
 
 	//C++でいうsrandみたいなやつ
@@ -245,7 +242,7 @@ void Particle3D::Update(const Camera& camera) {
 	
 	//座標の計算など
 	numInstance_ = 0;
-	for (std::list<Particle>::iterator particleIterator = particles_.begin();
+	for (std::list<ParticleInformation>::iterator particleIterator = particles_.begin();
 		particleIterator != particles_.end(); ++particleIterator) {
 
 		//行列の初期化
@@ -438,27 +435,18 @@ void Particle3D::Update(const Camera& camera) {
 		
 	}
 
-
 	//全て見えなくなったらisAllInvisible_がtrueになる
 	if (isReeasedOnce_ == true) {
 		
 		//all_ofは中にある全ての要素が満たす時にtrueを返す
 		//今回の場合はparticles_にあるisInvisibleが全てtrueに鳴ったらtrueを返すという仕組みになっている
-		isAllInvisible_ = std::all_of(particles_.begin(), particles_.end(), [](const Particle& particle) {
+		isAllInvisible_ = std::all_of(particles_.begin(), particles_.end(), [](const ParticleInformation& particle) {
 			return particle.isInvisible == true;
 		});
-		
-
-
-#ifdef _DEBUG
-		ImGui::Begin("パーティクル");
-		ImGui::Checkbox("全て消えたか", &isAllInvisible_);
-		ImGui::End();
-#endif // _DEBUG
 	}
 }
 
-void Particle3D::Draw(const Camera& camera,const Material& material){
+void Ellysia::Particle3D::Draw(const Camera& camera,const Material& material){
 
 	assert(material.lightingKinds_ == NoneLighting);
 
@@ -508,7 +496,7 @@ void Particle3D::Draw(const Camera& camera,const Material& material){
 
 }
 
-void Particle3D::Draw(const Camera& camera,const  Material& material,const DirectionalLight& directionalLight) {
+void Ellysia::Particle3D::Draw(const Camera& camera,const  Material& material,const DirectionalLight& directionalLight) {
 
 	//Directionalではなかったらassert
 	if (material.lightingKinds_ != DirectionalLighting) {
@@ -562,7 +550,7 @@ void Particle3D::Draw(const Camera& camera,const  Material& material,const Direc
 
 }
 
-void Particle3D::Draw(const Camera& camera, const Material& material, const PointLight& pointLight){
+void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, const PointLight& pointLight){
 	//Pointではなかったらassert
 	if (material.lightingKinds_ != PointLighting) {
 		assert(0);
@@ -614,7 +602,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Poin
 
 }
 
-void Particle3D::Draw(const Camera& camera, const Material& material, const SpotLight& spotLight){
+void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, const SpotLight& spotLight){
 	//Spotではなかったらassert
 	if (material.lightingKinds_ != SpotLighting) {
 		assert(0);

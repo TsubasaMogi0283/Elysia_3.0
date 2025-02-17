@@ -271,7 +271,7 @@ private:
 	//モデル
 	std::unique_ptr<Ellysia::Model> model_ = nullptr;
 	//パーティクル
-	std::unique_ptr<Particle3D> particle_ = {};
+	std::unique_ptr<Ellysia::Particle3D> particle_ = {};
 	//マテリアル
 	Material mainMaterial_ = {};
 	Material particleMaterial_ = {};

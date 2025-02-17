@@ -326,7 +326,7 @@ void Enemy::Dead() {
 	//生成
 	if (particle_ == nullptr) {
 		//生成
-		particle_.reset(Particle3D::Create(Rise));
+		particle_=std::move(Ellysia::Particle3D::Create(Rise));
 		//パーティクルの細かい設定
 		particle_->SetTranslate(GetWorldPosition());
 		const float SCALE_SIZE = 20.0f;

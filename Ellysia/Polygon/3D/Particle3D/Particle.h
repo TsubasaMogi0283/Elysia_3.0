@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file Particle.h
+ * @file ParticleInformation.h
  * @brief パーティクル
  * @author 茂木翼
  */
@@ -14,7 +14,7 @@
 /// <summary>
 /// パーティクルの情報
 /// </summary>
-struct Particle {
+struct ParticleInformation {
 	Transform transform;
 	Vector3  velocity;
 	Vector4 color;

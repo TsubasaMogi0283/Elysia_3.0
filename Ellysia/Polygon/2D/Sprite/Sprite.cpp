@@ -19,21 +19,18 @@ Ellysia::Sprite::Sprite() {
 void Ellysia::Sprite::Initialize(const uint32_t& textureHandle, const Vector2& position) {
 	this->textureHandle_ = textureHandle;
 	this->position_ = position;
-	color_ = { 1.0f,1.0f,1.0f,1.0f };
+	color_ = {.x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
 	
 	//テクスチャの情報を取得
-	resourceDesc_ = Ellysia::TextureManager::GetInstance()->GetResourceDesc(textureHandle_);
-	size_ = { float(resourceDesc_.Width),float(resourceDesc_.Height) };
+	D3D12_RESOURCE_DESC resourceDesc_ = {}; resourceDesc_ = Ellysia::TextureManager::GetInstance()->GetResourceDesc(textureHandle_);
+	size_ = {.x = static_cast<float>(resourceDesc_.Width),.y = static_cast<float>(resourceDesc_.Height) };
 
-
-	
 
 	//頂点リソースを作る
-	vertexResource_ = directXSetup_->CreateBufferResource(sizeof(VertexData) * 6).Get();
+	vertexResource_ = directXSetup_->CreateBufferResource(sizeof(VertexData) * 6);
 	//index用のリソースを作る
-	indexResource_ = directXSetup_->CreateBufferResource(sizeof(uint32_t) * 6).Get();
+	indexResource_ = directXSetup_->CreateBufferResource(sizeof(uint32_t) * 6);
 	
-
 	//頂点バッファビューを作成する
 	//リソースの先頭のアドレスから使う
 	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
@@ -56,7 +53,7 @@ void Ellysia::Sprite::Initialize(const uint32_t& textureHandle, const Vector2& p
 	//マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
 	materialResource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
 	//TransformationMatrix用のリソースを作る。
-	transformationMatrixResource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(TransformationMatrix)).Get();
+	transformationMatrixResource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(TransformationMatrix));
 
 
 	//UVトランスフォームの初期化
@@ -139,10 +136,10 @@ void Ellysia::Sprite::Draw() {
 	//UVをいじりたいとき設定するもの
 	if (isUVSetting_ == true) {
 		//uv
-		texLeft = textureLeftTop_.x / resourceDesc_.Width;
-		texRight = (textureLeftTop_.x+textureSize_.x) / resourceDesc_.Width;
-		texTop= textureLeftTop_.y / resourceDesc_.Height;
-		texBottom= (textureLeftTop_.y +textureSize_.y)/ resourceDesc_.Height;
+		texLeft = textureLeftTop_.x / size_.x;
+		texRight = (textureLeftTop_.x+textureSize_.x) / size_.x;
+		texTop= textureLeftTop_.y / size_.y;
+		texBottom= (textureLeftTop_.y +textureSize_.y)/ size_.y;
 	}
 	
 
@@ -159,28 +156,21 @@ void Ellysia::Sprite::Draw() {
 		bottom = -bottom;
 	}
 
-
-	//1枚目の三角形
 	//左下
 	vertexData_[LeftBottom].position = {left,bottom,0.0f,1.0f};
 	vertexData_[LeftBottom].texCoord = { texLeft,texBottom };
-
 	//左上
 	vertexData_[LeftTop].position = {left,top,0.0f,1.0f};
 	vertexData_[LeftTop].texCoord = { texLeft,texTop };
-	
 	//右下
 	vertexData_[RightBottom].position = {right,bottom,0.0f,1.0f} ;
 	vertexData_[RightBottom].texCoord = { texRight,texBottom };
-
-
 	//右上
 	vertexData_[RightTop].position = { right,top,0.0f,1.0f };
 	vertexData_[RightTop].texCoord = { texRight,texTop };
-
+	vertexResource_->Unmap(0u, nullptr);
 
 	//IndexResourceにデータを書き込む
-	//インデックスデータにデータを書き込む
 	indexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&indexData_));
 	indexData_[0] = 0u;
 	indexData_[1] = 1u;
@@ -188,7 +178,7 @@ void Ellysia::Sprite::Draw() {
 	indexData_[3] = 1u;
 	indexData_[4] = 3u;
 	indexData_[5] = 2u;
-
+	indexResource_->Unmap(0u, nullptr);
 
 
 	//トランスフォームデータに書き込み
@@ -213,7 +203,6 @@ void Ellysia::Sprite::Draw() {
 	
 	//WVP行列を作成
 	Matrix4x4 worldViewProjectionMatrixSprite = Matrix4x4Calculation::Multiply(affineMatrix, Matrix4x4Calculation::Multiply(viewMatrix, projectionMatrix));
-
 	transformationMatrixData_->WVP = worldViewProjectionMatrixSprite;
 	transformationMatrixData_->World = Matrix4x4Calculation::MakeIdentity4x4();
 
@@ -317,10 +306,10 @@ void Ellysia::Sprite::Draw(const uint32_t& texturehandle){
 	//UVをいじりたいとき設定するもの
 	if (isUVSetting_ == true) {
 		//uv
-		texLeft = textureLeftTop_.x / resourceDesc_.Width;
-		texRight = (textureLeftTop_.x + textureSize_.x) / resourceDesc_.Width;
-		texTop = textureLeftTop_.y / resourceDesc_.Height;
-		texBottom = (textureLeftTop_.y + textureSize_.y) / resourceDesc_.Height;
+		texLeft = textureLeftTop_.x / size_.x;
+		texRight = (textureLeftTop_.x + textureSize_.x) / size_.x;
+		texTop = textureLeftTop_.y / size_.y;
+		texBottom = (textureLeftTop_.y + textureSize_.y) / size_.y;
 	}
 
 
@@ -338,23 +327,19 @@ void Ellysia::Sprite::Draw(const uint32_t& texturehandle){
 	}
 
 
-	//1枚目の三角形
 	//左下
 	vertexData_[LeftBottom].position = { left,bottom,0.0f,1.0f };
 	vertexData_[LeftBottom].texCoord = { texLeft,texBottom };
-
 	//左上
 	vertexData_[LeftTop].position = { left,top,0.0f,1.0f };
 	vertexData_[LeftTop].texCoord = { texLeft,texTop };
-
 	//右下
 	vertexData_[RightBottom].position = { right,bottom,0.0f,1.0f };
 	vertexData_[RightBottom].texCoord = { texRight,texBottom };
-
-
 	//右上
 	vertexData_[RightTop].position = { right,top,0.0f,1.0f };
 	vertexData_[RightTop].texCoord = { texRight,texTop };
+	vertexResource_->Unmap(0u, nullptr);
 
 
 	//IndexResourceにデータを書き込む
@@ -366,6 +351,7 @@ void Ellysia::Sprite::Draw(const uint32_t& texturehandle){
 	indexData_[3] = 1u;
 	indexData_[4] = 3u;
 	indexData_[5] = 2u;
+	indexResource_->Unmap(0u, nullptr);
 
 
 

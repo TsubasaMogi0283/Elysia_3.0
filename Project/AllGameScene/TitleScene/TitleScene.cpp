@@ -28,7 +28,7 @@ TitleScene::TitleScene(){
 
 void TitleScene::Initialize(){
 
-	//
+	//テクスチャハンドルの取得
 	uint32_t textTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Title/StartText.png");
 	//タイトルテクスチャ
 	uint32_t logoTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Title/TitleNormal.png");

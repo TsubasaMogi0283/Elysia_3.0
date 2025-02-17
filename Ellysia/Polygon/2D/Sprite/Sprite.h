@@ -195,26 +195,25 @@ namespace Ellysia {
 
 	private:
 
-		//頂点リソース
+		//頂点
+		//リソース
 		ComPtr<ID3D12Resource> vertexResource_ = nullptr;
-		//頂点データ
+		//データ
 		VertexData* vertexData_ = nullptr;
 		//バッファビュー
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
 
-
 		//マテリアル
+		//リソース
 		ComPtr<ID3D12Resource> materialResource_ = nullptr;
 		//データ
 		MaterialData* materialData_ = nullptr;
 
-
-
-		//TransformationMatrix用リソース
+		//TransformationMatrix
+		//リソース
 		ComPtr<ID3D12Resource> transformationMatrixResource_ = nullptr;
 		//データ
 		TransformationMatrix* transformationMatrixData_ = nullptr;
-
 
 		//Index用
 		ComPtr<ID3D12Resource> indexResource_ = nullptr;
@@ -222,11 +221,6 @@ namespace Ellysia {
 		D3D12_INDEX_BUFFER_VIEW indexBufferView_ = {};
 		//インデックスデータ
 		uint32_t* indexData_ = nullptr;
-
-
-		//テクスチャの情報
-		D3D12_RESOURCE_DESC resourceDesc_ = {};
-
 
 	private:
 

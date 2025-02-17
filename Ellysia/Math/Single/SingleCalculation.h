@@ -47,7 +47,7 @@ namespace SingleCalculation{
 	/// <param name="start">始点</param>
 	/// <param name="end">終点</param>
 	/// <param name="value">値</param>
-	/// <returns></returns>
+	/// <returns>割合</returns>
 	float InverseLerp(const float& start, const float& end,const float& value);
 
 

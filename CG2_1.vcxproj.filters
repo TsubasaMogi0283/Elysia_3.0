@@ -415,6 +415,9 @@
     <Filter Include="Project\Gate">
       <UniqueIdentifier>{04fdbc6f-7a4a-4b0a-ad10-68fef5f36d90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\Polygone\Particle">
+      <UniqueIdentifier>{19010f1c-f15c-41d5-b706-7d1bb3af087d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -688,6 +691,9 @@
       <Filter>Project\Gate</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\BaseObjectForLevelEditor.cpp">
+      <Filter>Ellysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Polygon\2D\Particle\Particle2D.cpp">
       <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1179,6 +1185,15 @@
     </ClInclude>
     <ClInclude Include="Ellysia\EffectData\Dissolve\Dissolve.h">
       <Filter>Ellysia\Header File\EffectData</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\2D\Particle\Particle2D.h">
+      <Filter>Ellysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\Particle\ParticleMoveType.h">
+      <Filter>Ellysia\Header File\Polygone\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\Particle\Emitter.h">
+      <Filter>Ellysia\Header File\Polygone\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
