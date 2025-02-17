@@ -67,6 +67,11 @@ private:
 	/// </summary>
 	void ImGuiDisplay();
 
+	/// <summary>
+	/// 調整
+	/// </summary>
+	void Adjustment();
+
 public:
 	/// <summary>
 	/// スポットライトの取得
@@ -160,12 +165,23 @@ private:
 	//光の強さ
 	const std::string FLASH_LIGHT_INTENSITY_STRING_ = "FlashLightIntensity";
 
+	//最大
+	const std::string MAX_STRING_ = "Max";
+	//最小
+	const std::string MIN_STRING_ = "Min";
+
 	//ライトの最大の強さ
-	const std::string MAX_INTENSITY_STRING_ = "Max";
 	float maxIntensity_ = 400.0f;
 	//ライトの最小の強さ
-	const std::string MIN_INTENSITY_STRING_ = "Min";
 	float minIntensity_ = 50.0f;
+
+	//cosFallowoffStart
+	const std::string FLASH_LIGHT_COS_FALLOWOFF_START_STRING_ = "FlashLightCosFallowOffStart";
+	//最大
+	float maxStart_ = 2.4f;
+	//最小
+	float minStart_ = 1.5f;
+	
 private:
 	//ここに値を入れてゲームシーンで他のオブジェクトに適用させる
 	SpotLight spotLight_ = {};

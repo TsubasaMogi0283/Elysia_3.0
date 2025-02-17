@@ -22,7 +22,7 @@ void FlashLight::Initialize(){
 	spotLight_.decay = 0.6f;
 	spotLight_.cosFallowoffStart = 1.8f;
 	spotLight_.intensity = 200.0f;
-	spotLight_.aroundOffset = 0.1f;
+	spotLight_.aroundOffset = 0.05f;
 
 	//ライトの片方の角度
 	//15度=π/12
@@ -41,9 +41,14 @@ void FlashLight::Initialize(){
 
 
 	//調整項目として扱う
+	//光の強さ
 	globalVariables_->CreateGroup(FLASH_LIGHT_INTENSITY_STRING_);
-	globalVariables_->AddItem(FLASH_LIGHT_INTENSITY_STRING_, MAX_INTENSITY_STRING_, maxIntensity_);
-	globalVariables_->AddItem(FLASH_LIGHT_INTENSITY_STRING_, MIN_INTENSITY_STRING_, minIntensity_);
+	globalVariables_->AddItem(FLASH_LIGHT_INTENSITY_STRING_, MAX_STRING_, maxIntensity_);
+	globalVariables_->AddItem(FLASH_LIGHT_INTENSITY_STRING_, MIN_STRING_, minIntensity_);
+	//FallowOff
+	globalVariables_->CreateGroup(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_);
+	globalVariables_->AddItem(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_, maxStart_);
+	globalVariables_->AddItem(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MIN_STRING_, minStart_);
 
 
 #ifdef _DEBUG
@@ -105,22 +110,23 @@ void FlashLight::Update() {
 	spotLight_.direction = direction_;
 	//片方の角度
 	spotLight_.cosAngle = std::cosf(lightSideTheta_);
-	spotLight_.aroundOffset = 0.05f;
 	
-	
-	//400,50
-	//幅から強さを計算する
-	maxIntensity_ = globalVariables_->GetFloatValue(FLASH_LIGHT_INTENSITY_STRING_, MAX_INTENSITY_STRING_);
-	//ライトの最小の強さ
-	minIntensity_ = globalVariables_->GetFloatValue(FLASH_LIGHT_INTENSITY_STRING_, MIN_INTENSITY_STRING_);
-	
-
-	//1.5~2.4
-
 	//割合を求める
 	ratio = SingleCalculation::InverseLerp(minRange_, maxRange_, lightSideTheta_);
+
+	//幅から強さを計算する
+	//最大の強さ
+	maxIntensity_ = globalVariables_->GetFloatValue(FLASH_LIGHT_INTENSITY_STRING_, MAX_STRING_);
+	//最小の強さ
+	minIntensity_ = globalVariables_->GetFloatValue(FLASH_LIGHT_INTENSITY_STRING_, MIN_STRING_);
 	spotLight_.intensity = SingleCalculation::Lerp(minIntensity_, maxIntensity_, (1.0f-ratio));
-	spotLight_.cosFallowoffStart= SingleCalculation::Lerp(minIntensity_, maxIntensity_, (1.0f - ratio));
+
+	//cosFallowoffStart
+	//最大
+	maxStart_ = globalVariables_->GetFloatValue(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_);
+	//最小
+	minStart_ = globalVariables_->GetFloatValue(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_);
+	spotLight_.cosFallowoffStart= SingleCalculation::Lerp(minStart_, maxStart_, ratio);
 
 	//扇
 	fan3D_.centerRadian = theta_;
@@ -181,11 +187,12 @@ void FlashLight::Update() {
 	material_.Update();
 	lightCenterMaterial_.Update();
 
-	//保存
-	globalVariables_->SaveFile(FLASH_LIGHT_INTENSITY_STRING_);
-
+	
 	//ImGuiの表示
 	ImGuiDisplay();
+
+	//調整
+	Adjustment();
 #endif // _EBUG
 
 }
@@ -219,4 +226,11 @@ void FlashLight::ImGuiDisplay(){
 	ImGui::InputFloat("ファイ", &phi_);
 	ImGui::InputFloat("割合", &ratio);
 	ImGui::End();
+}
+
+void FlashLight::Adjustment(){
+	//保存
+	globalVariables_->SaveFile(FLASH_LIGHT_INTENSITY_STRING_);
+	globalVariables_->SaveFile(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_);
+
 }
