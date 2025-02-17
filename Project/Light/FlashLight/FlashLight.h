@@ -14,6 +14,17 @@
 #include "Material.h"
 #include "FlashLightCollision.h"
 
+
+ /// <summary>
+ /// EllysiaEngine(前方宣言)
+ /// </summary>
+namespace Ellysia {
+	/// <summary>
+	/// グローバル変数
+	/// </summary>
+	class GlobalVariables;
+}
+
 /// <summary>
 /// カメラ
 /// </summary>
@@ -27,7 +38,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	FlashLight() = default;
+	FlashLight();
 
 	/// <summary>
 	/// 初期化
@@ -48,7 +59,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~FlashLight() = default;
+	~FlashLight()=default;
 
 private:
 	/// <summary>
@@ -141,11 +152,20 @@ public:
 
 
 private:
-	//ライトの最大の強さ
-	float maxIntencity_ = 400.0f;
-	//ライトの最小の強さ
-	float minIntencity_ = 100.0f;
+	//グローバル変数クラス
+	Ellysia::GlobalVariables* globalVariables_ = nullptr;
 
+private:
+	//調整項目
+	//光の強さ
+	const std::string FLASH_LIGHT_INTENSITY_STRING_ = "FlashLightIntensity";
+
+	//ライトの最大の強さ
+	const std::string MAX_INTENSITY_STRING_ = "Max";
+	float maxIntensity_ = 400.0f;
+	//ライトの最小の強さ
+	const std::string MIN_INTENSITY_STRING_ = "Min";
+	float minIntensity_ = 50.0f;
 private:
 	//ここに値を入れてゲームシーンで他のオブジェクトに適用させる
 	SpotLight spotLight_ = {};

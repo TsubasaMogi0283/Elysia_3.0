@@ -217,7 +217,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//SpotLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.resource->GetGPUVirtualAddress());
 	//環境マッピングの設定
 	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
 		srvManager_->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);

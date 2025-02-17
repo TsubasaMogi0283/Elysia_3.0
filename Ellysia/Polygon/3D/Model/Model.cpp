@@ -301,7 +301,7 @@ void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& ca
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 
 	//SpotLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.resource->GetGPUVirtualAddress());
 
 	//環境マッピングの設定
 	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {

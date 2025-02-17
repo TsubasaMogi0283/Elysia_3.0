@@ -9,36 +9,6 @@
 #include "Vector3.h"
 #include "DirectXSetup.h"
 
-/// <summary>
-/// スポットライトのデータ
-/// </summary>
-struct SpotLightData {
-	//ライトの色
-	Vector4 color;
-	//ライトの位置
-	Vector3 position;
-	//輝度
-	float intensity;
-
-	//スポットライトの方向
-	Vector3 direction;
-	//ライトの届く最大距離
-	float distance;
-	//減衰率
-	float decay;
-	//Fallowoffを制御する
-	float cosFallowoffStart;
-	//スポットライトの余弦
-	float cosAngle;
-	
-	//当たっていない所をこれで明るくする
-	float aroundOffset;
-
-	float padding[2];
-	
-	
-
-};
 
 /// <summary>
 /// スポットライト
@@ -56,31 +26,62 @@ public:
 	void Update();
 
 
+private:
+	/// <summary>
+	/// スポットライトのデータ
+	/// </summary>
+	struct SpotLightData {
+		//ライトの色
+		Vector4 color;
+		//ライトの位置
+		Vector3 position;
+		//輝度
+		float intensity;
+
+		//スポットライトの方向
+		Vector3 direction;
+		//ライトの届く最大距離
+		float distance;
+		//減衰率
+		float decay;
+		//Fallowoffを制御する
+		float cosFallowoffStart;
+		//スポットライトの余弦
+		float cosAngle;
+
+		//当たっていない所をこれで明るくする
+		float aroundOffset;
+
+		float padding[2];
+
+	};
+
+
 public:
 	//ライトの色
-	Vector4 color_;
+	Vector4 color;
 	//ライトの位置
-	Vector3 position_;
+	Vector3 position;
 	//輝度
-	float intensity_;
+	float intensity;
 
-	//スポットライトの方向
-	Vector3 direction_;
-	//ライトの届く最大距離
-	float distance_;
+	//方向
+	Vector3 direction;
+	//届く最大距離
+	float distance;
 	//減衰率
-	float decay_;
+	float decay;
 	//Fallowoffを制御する
-	float cosFallowoffStart_;
+	float cosFallowoffStart;
 	//スポットライトの余弦
-	float cosAngle_;
+	float cosAngle;
 	//当たっていない所をこれで明るくする
-	float aroundOffset_;
+	float aroundOffset;
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> bufferResource_=nullptr;
+	ComPtr<ID3D12Resource> resource=nullptr;
 	//書き込みデータ
-	SpotLightData* spotLightData_ = nullptr;
+	SpotLightData* data_ = nullptr;
 
 
 };

@@ -3,52 +3,52 @@
 
 void SpotLight::Initialize(){
 	//Resource作成
-	bufferResource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SpotLightData)).Get();
+	resource = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(SpotLightData)).Get();
 
 	//初期値
 	//色
-	color_ = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
+	color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
 	//座標
-	position_ = {.x= 2.0f,.y= 1.25f,.z= 0.0f };
+	position = {.x= 2.0f,.y= 1.25f,.z= 0.0f };
 	//輝度
-	intensity_ = 4.0f;
+	intensity = 4.0f;
 	//方向
-	direction_={.x= -1.0f,.y= 1.0f,.z= 0.0f };
+	direction={.x= -1.0f,.y= 1.0f,.z= 0.0f };
 	//届く最大距離
-	distance_ = 7.0f;
+	distance = 7.0f;
 	//減衰率
-	decay_ = 2.0f;
+	decay = 2.0f;
 	//Fallowoffを制御する
-	cosFallowoffStart_ = 0.3f;
+	cosFallowoffStart = 0.3f;
 	//余弦
-	cosAngle_ = std::cos(std::numbers::pi_v<float> / 3.0f);
+	cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
 	//ライトに当たっていないところの明るさ
-	aroundOffset_ = 0.0f;
+	aroundOffset = 0.0f;
 
 }
 
 void SpotLight::Update(){
 	//書き込み
-	bufferResource_->Map(0u, nullptr, reinterpret_cast<void**>(&spotLightData_));
+	resource->Map(0u, nullptr, reinterpret_cast<void**>(&data_));
 	//色
-	spotLightData_->color = color_;
+	data_->color = color;
 	//座標
-	spotLightData_->position = position_;
+	data_->position = position;
 	//輝度
-	spotLightData_->intensity = intensity_;
+	data_->intensity = intensity;
 	//方向
-	spotLightData_->direction = direction_;
+	data_->direction = direction;
 	//届く最大距離
-	spotLightData_->distance = distance_;
+	data_->distance = distance;
 	//減衰率
-	spotLightData_->decay = decay_;
+	data_->decay = decay;
 	//Fallowoffを制御する
-	spotLightData_->cosFallowoffStart = cosFallowoffStart_;
+	data_->cosFallowoffStart = cosFallowoffStart;
 	//余弦
-	spotLightData_->cosAngle = cosAngle_;
+	data_->cosAngle = cosAngle;
 	//ライトに当たっていないところの明るさ
-	spotLightData_->aroundOffset = aroundOffset_;
+	data_->aroundOffset = aroundOffset;
 	//書き込み終了
-	bufferResource_->Unmap(0u, nullptr);
+	resource->Unmap(0u, nullptr);
 
 }

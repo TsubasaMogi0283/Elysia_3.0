@@ -272,6 +272,9 @@ Enemy::~Enemy(){
 
 void Enemy::Damaged() {
 
+	//ライトの強さによってダメージ量を調整したい
+
+
 	//懐中電灯用の当たり判定に当たっていたら色が赤に変わっていくよ
 	if (enemyFlashLightCollision_->GetIsTouched() == true) {
 		const float COLOR_CHANGE_INTERVAL = 0.005f;

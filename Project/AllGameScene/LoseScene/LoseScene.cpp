@@ -71,14 +71,14 @@ void LoseScene::Initialize(){
 
 	//点光源
 	//調整項目として記録
-	globalVariables_->CreateGroup(POINT_LIGHT_NAME);
-	globalVariables_->AddItem(POINT_LIGHT_NAME, "Translate", pointLight_.position_);
-	globalVariables_->AddItem(POINT_LIGHT_NAME, "Decay", pointLight_.decay_);
+	globalVariables_->CreateGroup(POINT_LIGHT_NAME_);
+	globalVariables_->AddItem(POINT_LIGHT_NAME_, "Translate", pointLight_.position_);
+	globalVariables_->AddItem(POINT_LIGHT_NAME_, "Decay", pointLight_.decay_);
 
 	//初期化
 	pointLight_.Initialize();
-	pointLight_.position_ = globalVariables_->GetVector3Value(POINT_LIGHT_NAME, "Translate");
-	pointLight_.decay_ = globalVariables_->GetFloatValue(POINT_LIGHT_NAME,"Decay");
+	pointLight_.position_ = globalVariables_->GetVector3Value(POINT_LIGHT_NAME_, "Translate");
+	pointLight_.decay_ = globalVariables_->GetFloatValue(POINT_LIGHT_NAME_,"Decay");
 	pointLight_.radius_ = 0.0f;
 
 	//タイトルに戻る
@@ -159,8 +159,8 @@ void LoseScene::Update(Ellysia::GameManager* gameManager){
 	camera_.translate = VectorCalculation::Add(camera_.translate, cameraVelocity_);
 	camera_.Update();
 	//点光源の更新
-	pointLight_.position_ = globalVariables_->GetVector3Value(POINT_LIGHT_NAME, "Translate");
-	pointLight_.decay_ = globalVariables_->GetFloatValue(POINT_LIGHT_NAME, "Decay");
+	pointLight_.position_ = globalVariables_->GetVector3Value(POINT_LIGHT_NAME_, "Translate");
+	pointLight_.decay_ = globalVariables_->GetFloatValue(POINT_LIGHT_NAME_, "Decay");
 	pointLight_.Update();
 	//ディゾルブの更新
 	dissolve_.edgeThinkness = globalVariables_->GetFloatValue(DISSOLVE_NAME_, "Thinkness");
@@ -419,7 +419,7 @@ void LoseScene::DisplayImGui(){
 
 void LoseScene::Adjustment(){
 	globalVariables_->SaveFile(DISSOLVE_NAME_);
-	globalVariables_->SaveFile(POINT_LIGHT_NAME);
+	globalVariables_->SaveFile(POINT_LIGHT_NAME_);
 
 }
 

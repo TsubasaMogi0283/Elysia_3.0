@@ -230,7 +230,7 @@ void Ellysia::GlobalVariables::SaveFile(const std::string& groupName){
         //書き込み用のファイルを開けるのに失敗したよ
         std::string message = "Failed open data file for write.";
         //WindowsAPIのメッセージボックスをここで使う
-        MessageBoxA(nullptr, message.c_str(), "AdjustmentItems", 0);
+        MessageBoxA(nullptr, message.c_str(), "AdjustmentItems", 0u);
         assert(0);
         return;
     }
@@ -300,7 +300,7 @@ void Ellysia::GlobalVariables::LoadFile(const std::string& groupName){
         //読み込み用のファイルを開けるのに失敗したよ
         std::string message = "Failed open data file for read.";
         //WindowsAPIのメッセージボックスをここで使う
-        MessageBoxA(nullptr, message.c_str(), "AdjustmentItems", 0);
+        MessageBoxA(nullptr, message.c_str(), "AdjustmentItems", 0u);
         assert(0);
         return;
     }
@@ -343,10 +343,7 @@ void Ellysia::GlobalVariables::LoadFile(const std::string& groupName){
             Vector3 value = { itItem->at(0).get<float>(),itItem->at(1).get<float>(),itItem->at(2).get<float>() };
             SetValue(groupName, itemName, value);
         }
-
-    
     }
-
 }
 
 void Ellysia::GlobalVariables::Update(){
@@ -393,7 +390,7 @@ void Ellysia::GlobalVariables::Update(){
             Item& item = itItem->second;
 
             //alternative...代替
-            //「std::holds_alternative」で方の判別が出来るよ
+            //「std::holds_alternative」で型の判別が出来るよ
 
             //int32_t型を持っている場合
             if (std::holds_alternative<int32_t>(item.value)) {
@@ -401,20 +398,21 @@ void Ellysia::GlobalVariables::Update(){
                 //「get」で値を取得
                 //「get_if」でポインタを取得
                 int32_t* ptr = std::get_if<int32_t>(&item.value);
-                ImGui::SliderInt(itItemName.c_str(), ptr, 0, 100);
+                ImGui::InputInt(itItemName.c_str(), ptr, 0, 100);
             }
             //float型を持っている場合
             else if (std::holds_alternative<float>(item.value)) {
                 //ポインタの取得
                 float* ptr = std::get_if<float>(&item.value);
-                ImGui::SliderFloat(itItemName.c_str(), ptr,0.0f, 100.0f);
+                ImGui::InputFloat(itItemName.c_str(), ptr);
+
             }
             //Vector3型を持っている場合
             else if (std::holds_alternative<Vector3>(item.value)) {
                 //ポインタの取得
                 Vector3* ptr = std::get_if<Vector3>(&item.value);
                 //ここではVector3をfloatの配列ということにする
-                ImGui::SliderFloat3(itItemName.c_str(), reinterpret_cast<float*>(ptr), 0.0f, 100.0f);
+                ImGui::InputFloat(itItemName.c_str(), reinterpret_cast<float*>(ptr));
             }
 
 

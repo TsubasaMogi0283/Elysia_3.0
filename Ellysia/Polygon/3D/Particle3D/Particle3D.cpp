@@ -660,7 +660,7 @@ void Particle3D::Draw(const Camera& camera, const Material& material, const Spot
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	
 	//SpotLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.resource->GetGPUVirtualAddress());
 
 
 	//DrawCall

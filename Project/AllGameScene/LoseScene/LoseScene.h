@@ -145,7 +145,7 @@ private:
 private:
 	//調整項目
 	//点光源
-	const std::string POINT_LIGHT_NAME = "LoseScenePointLight";
+	const std::string POINT_LIGHT_NAME_ = "LoseScenePointLight";
 	//ディゾルブ
 	const std::string DISSOLVE_NAME_ = "LoseSceneDissolve";
 

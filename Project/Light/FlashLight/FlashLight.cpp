@@ -1,20 +1,28 @@
 #include "FlashLight.h"
-#include <VectorCalculation.h>
-#include "Camera.h"
+
 #include <numbers>
-#include <ModelManager.h>
-#include <SingleCalculation.h>
+
+#include "Camera.h"
+#include "ModelManager.h"
+#include "GlobalVariables.h"
+#include "VectorCalculation.h"
+#include "SingleCalculation.h"
+
+FlashLight::FlashLight(){
+	//グローバル変数クラス
+	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
+}
 
 void FlashLight::Initialize(){
 
 	//スポットライトの初期化
 	spotLight_.Initialize();
-	spotLight_.position_ = position_;
-	spotLight_.distance_ = LIGHT_DISTANCE;
-	spotLight_.decay_ = 0.6f;
-	spotLight_.cosFallowoffStart_ = 1.8f;
-	spotLight_.intensity_ = 200.0f;
-	spotLight_.aroundOffset_ = 0.1f;
+	spotLight_.position = position_;
+	spotLight_.distance = LIGHT_DISTANCE;
+	spotLight_.decay = 0.6f;
+	spotLight_.cosFallowoffStart = 1.8f;
+	spotLight_.intensity = 200.0f;
+	spotLight_.aroundOffset = 0.1f;
 
 	//ライトの片方の角度
 	//15度=π/12
@@ -30,6 +38,13 @@ void FlashLight::Initialize(){
 	//当たり判定の初期化
 	flashLightCollision_ = std::make_unique<FlashLightCollision>();
 	flashLightCollision_->Initialize();
+
+
+	//調整項目として扱う
+	globalVariables_->CreateGroup(FLASH_LIGHT_INTENSITY_STRING_);
+	globalVariables_->AddItem(FLASH_LIGHT_INTENSITY_STRING_, MAX_INTENSITY_STRING_, maxIntensity_);
+	globalVariables_->AddItem(FLASH_LIGHT_INTENSITY_STRING_, MIN_INTENSITY_STRING_, minIntensity_);
+
 
 #ifdef _DEBUG
 
@@ -86,27 +101,33 @@ void FlashLight::Update() {
 	position_ = VectorCalculation::Add(playerPosition_, OFFSET);
 
 	//計算したものをSpotLightの方に入れる
-	spotLight_.position_ = position_;
-	spotLight_.direction_ = direction_;
+	spotLight_.position = position_;
+	spotLight_.direction = direction_;
 	//片方の角度
-	spotLight_.cosAngle_ = std::cosf(lightSideTheta_);
-	spotLight_.aroundOffset_ = 0.05f;
+	spotLight_.cosAngle = std::cosf(lightSideTheta_);
+	spotLight_.aroundOffset = 0.05f;
 	
+	
+	//400,50
 	//幅から強さを計算する
-	maxIntencity_ = 400.0f;
+	maxIntensity_ = globalVariables_->GetFloatValue(FLASH_LIGHT_INTENSITY_STRING_, MAX_INTENSITY_STRING_);
 	//ライトの最小の強さ
-	minIntencity_ = 50.0f;
+	minIntensity_ = globalVariables_->GetFloatValue(FLASH_LIGHT_INTENSITY_STRING_, MIN_INTENSITY_STRING_);
+	
+
+	//1.5~2.4
 
 	//割合を求める
 	ratio = SingleCalculation::InverseLerp(minRange_, maxRange_, lightSideTheta_);
-	spotLight_.intensity_ = SingleCalculation::Lerp(minIntencity_, maxIntencity_, (1.0f-ratio));
+	spotLight_.intensity = SingleCalculation::Lerp(minIntensity_, maxIntensity_, (1.0f-ratio));
+	spotLight_.cosFallowoffStart= SingleCalculation::Lerp(minIntensity_, maxIntensity_, (1.0f - ratio));
 
 	//扇
 	fan3D_.centerRadian = theta_;
 	fan3D_.direction = direction_;
 	fan3D_.sidePhiAngleSize = lightSideTheta_;
 	fan3D_.centerPhi = phi_;
-	fan3D_.length = spotLight_.distance_;
+	fan3D_.length = spotLight_.distance;
 	fan3D_.position = position_;
 
 	//高さは同じ
@@ -129,18 +150,17 @@ void FlashLight::Update() {
 	//スポットライトの更新
 	spotLight_.Update();
 
-
 #ifdef _DEBUG
 	//端をデバッグ用として表示させる
 	//左
 	Vector2 fanLeft = { 
-		.x = std::cosf(theta_ + lightSideTheta_) * spotLight_.distance_,
-		.y = std::sinf(theta_ + lightSideTheta_) * spotLight_.distance_ 
+		.x = std::cosf(theta_ + lightSideTheta_) * spotLight_.distance,
+		.y = std::sinf(theta_ + lightSideTheta_) * spotLight_.distance 
 	};
 	//右
 	Vector2 fanRight = { 
-		.x = std::cosf(theta_ - lightSideTheta_) * spotLight_.distance_,
-		.y = std::sinf(theta_ - lightSideTheta_) * spotLight_.distance_ 
+		.x = std::cosf(theta_ - lightSideTheta_) * spotLight_.distance,
+		.y = std::sinf(theta_ - lightSideTheta_) * spotLight_.distance 
 	};
 
 	//端の位置を計算
@@ -157,10 +177,13 @@ void FlashLight::Update() {
 	}
 	lightCenterWorldTransform_.Update();
 
-	//マテリアル
+	//マテリアルの更新
 	material_.Update();
-
 	lightCenterMaterial_.Update();
+
+	//保存
+	globalVariables_->SaveFile(FLASH_LIGHT_INTENSITY_STRING_);
+
 	//ImGuiの表示
 	ImGuiDisplay();
 #endif // _EBUG
@@ -169,7 +192,6 @@ void FlashLight::Update() {
 
 void FlashLight::Draw(const Camera& camera){
 #ifdef _DEBUG
-
 
 	//端
 	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
@@ -186,13 +208,13 @@ void FlashLight::Draw(const Camera& camera){
 void FlashLight::ImGuiDisplay(){
 	ImGui::Begin("懐中電灯");
 	ImGui::SliderFloat("角度", &lightSideTheta_, 0.0f, 3.0f);
-	ImGui::InputFloat3("座標", &spotLight_.position_.x);
-	ImGui::InputFloat3("方向", &spotLight_.direction_.x);
-	ImGui::SliderFloat("距離", &spotLight_.distance_, 0.0f, 100.0f);
-	ImGui::SliderFloat("Decay", &spotLight_.decay_, 0.0f, 20.0f);
-	ImGui::SliderFloat("FallOff", &spotLight_.cosFallowoffStart_, 0.0f, 3.0f);
-	ImGui::SliderFloat("CosAngle", &spotLight_.cosAngle_, 0.0f, 3.0f);
-	ImGui::SliderFloat("強さ", &spotLight_.intensity_, 0.0f, 400.0f);
+	ImGui::InputFloat3("座標", &spotLight_.position.x);
+	ImGui::InputFloat3("方向", &spotLight_.direction.x);
+	ImGui::SliderFloat("距離", &spotLight_.distance, 0.0f, 100.0f);
+	ImGui::SliderFloat("Decay", &spotLight_.decay, 0.0f, 20.0f);
+	ImGui::SliderFloat("FallOff", &spotLight_.cosFallowoffStart, 0.0f, 3.0f);
+	ImGui::SliderFloat("CosAngle", &spotLight_.cosAngle, 0.0f, 3.0f);
+	ImGui::SliderFloat("強さ", &spotLight_.intensity, 0.0f, 400.0f);
 	ImGui::InputFloat("シータ", &theta_);
 	ImGui::InputFloat("ファイ", &phi_);
 	ImGui::InputFloat("割合", &ratio);

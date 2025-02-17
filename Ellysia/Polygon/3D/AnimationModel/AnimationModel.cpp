@@ -275,7 +275,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//SpotLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.resource->GetGPUVirtualAddress());
 	//paletteSrvHandle
 	directXSetup_->GetCommandList()->SetGraphicsRootDescriptorTable(8u, skinCluster.paletteSrvHandle.second);
 	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
