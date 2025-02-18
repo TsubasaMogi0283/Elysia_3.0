@@ -2456,7 +2456,7 @@
         },
         {
             "type": "MESH",
-            "name": "Cube.002",
+            "name": "House",
             "transform": {
                 "scaling": [
                     1.0,
@@ -2475,6 +2475,29 @@
                 ]
             },
             "file_name": "House",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "HouseFloor",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    56.030174255371094,
+                    -5.677628517150879,
+                    0.014928195625543594
+                ]
+            },
+            "file_name": "HouseFloor",
             "object_type": "Stage"
         }
     ]

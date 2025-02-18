@@ -1,7 +1,6 @@
 #include "PipelineManager.h"
 
 #include <vector>
-
 #include "BlendMode.h"
 
 Ellysia::PipelineManager* Ellysia::PipelineManager::GetInstance() {
@@ -113,7 +112,6 @@ void Ellysia::PipelineManager::Initialize(){
 
 	//RandomEffect用のPSOを生成
 	GenarateRandomEffectPSO();
-
 
 	//SkyBoxのPSOの生成
 	GenarateSkyBoxPSO();
