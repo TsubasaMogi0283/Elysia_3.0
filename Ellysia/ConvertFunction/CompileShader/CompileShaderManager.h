@@ -7,17 +7,13 @@
 
 #include <string>
 #include <cassert>
-
 #include <dxgidebug.h>
+#include <wrl.h> 
+using Microsoft::WRL::ComPtr;
 #include "ConvertLog.h"
-
-
-
 
 #include <dxcapi.h>
 #pragma comment(lib,"dxcompiler.lib")
-
-
 
 /// <summary>
 /// シェーダーコンパイルクラス
@@ -28,14 +24,12 @@ private:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	CompileShaderManager();
+	CompileShaderManager() = default;
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~CompileShaderManager();
-
-
+	~CompileShaderManager()= default;
 
 public:
 	
@@ -70,31 +64,15 @@ public:
 	/// <summary>
 	/// CompilerShader関数
 	/// </summary>
-	/// <param name="filePath"></param>
-	/// <param name="profile"></param>
+	/// <param name="filePath">CompilerするShaderファイルへのパス</param>
+	/// <param name="profile">Compilerに使用するProfile</param>
 	/// <returns></returns>
-	IDxcBlob* CompileShader(
-		//CompilerするShaderファイルへのパス
-		const std::wstring& filePath,
-		//Compilerに使用するProfile
-		const wchar_t* profile
-		//初期化で生成したものを３つ
-		//全部消した
-		);
-
-
-	/// <summary>
-	/// 解放
-	/// </summary>
-	void Release();
-
-
-
+	IDxcBlob* CompileShader(const std::wstring& filePath,const wchar_t* profile);
 
 private:
 	//DXC
-	IDxcUtils* dxcUtils_ = nullptr;
-	IDxcCompiler3* dxcCompiler_ = nullptr;
-	IDxcIncludeHandler* includeHandler_ = nullptr;
+	ComPtr<IDxcUtils> dxcUtils_ = nullptr;
+	ComPtr<IDxcCompiler3> dxcCompiler_ = nullptr;
+	ComPtr<IDxcIncludeHandler> includeHandler_ = nullptr;
 	
 };

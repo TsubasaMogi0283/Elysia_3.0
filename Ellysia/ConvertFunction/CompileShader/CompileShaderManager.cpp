@@ -1,14 +1,10 @@
 #include "CompileShaderManager.h"
 
 #include "DirectXSetup.h"
-//コンストラクタ
-CompileShaderManager::CompileShaderManager() {
 
-}
 
 CompileShaderManager* CompileShaderManager::GetInstance() {
 	static CompileShaderManager instance_;
-
 	return &instance_;
 }
 
@@ -17,29 +13,20 @@ CompileShaderManager* CompileShaderManager::GetInstance() {
 void CompileShaderManager::InitializeDXC() {
 	////DXCの初期化
 	//dxcCompilerを初期化
-	
-	HRESULT hr{};
-	
-
-	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
+	HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
 	assert(SUCCEEDED(hr));
 
 	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
 	assert(SUCCEEDED(hr));
 
 	//現時点でincludeはしないが、includeに対応
-	
-
 	hr = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
 	assert(SUCCEEDED(hr));
 	
-
 }
 
-////CompileShader関数
-IDxcBlob* CompileShaderManager::CompileShader(
-	const std::wstring& filePath,
-	const wchar_t* profile) {
+
+IDxcBlob* CompileShaderManager::CompileShader(const std::wstring& filePath,const wchar_t* profile) {
 
 	////DXCの初期化
 	InitializeDXC();
@@ -70,7 +57,7 @@ IDxcBlob* CompileShaderManager::CompileShader(
 
 	//実際にShaderをコンパイルする
 	IDxcResult* shaderResult = nullptr;
-	hr = dxcCompiler_->Compile(&shaderSourceBuffer, arguments, _countof(arguments), includeHandler_, IID_PPV_ARGS(&shaderResult));
+	hr = dxcCompiler_->Compile(&shaderSourceBuffer, arguments, _countof(arguments), includeHandler_.Get(), IID_PPV_ARGS(&shaderResult));
 	//コンパイルエラーではなくdxcが起動出来ないなど致命的な状況
 	assert(SUCCEEDED(hr));
 
@@ -98,18 +85,5 @@ IDxcBlob* CompileShaderManager::CompileShader(
 	//実行用のバイナリを返却
 	return shaderBlob;
 
-
-}
-
-//解放
-void CompileShaderManager::Release() {
-	dxcUtils_->Release();
-	dxcCompiler_->Release();
-	includeHandler_->Release();
-}
-
-
-//デストラクタ
-CompileShaderManager::~CompileShaderManager() {
 
 }

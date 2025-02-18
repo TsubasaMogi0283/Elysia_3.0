@@ -790,13 +790,6 @@ void Ellysia::PipelineManager::GenerateModelPSO() {
 	assert(SUCCEEDED(hrResult));
 
 
-
-
-
-
-
-
-	////InputLayout
 	//InputLayout・・VertexShaderへ渡す頂点データがどのようなものかを指定するオブジェクト
 	std::vector <D3D12_INPUT_ELEMENT_DESC> inputElementDescs = {};
 	inputElementDescs.push_back({});
@@ -817,18 +810,10 @@ void Ellysia::PipelineManager::GenerateModelPSO() {
 	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
-
-
-
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
-	inputLayoutDesc.pInputElementDescs = inputElementDescs.data();
-	inputLayoutDesc.NumElements = static_cast<UINT>(inputElementDescs.size());
-
-
-
-
-
-
+	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc={
+		.pInputElementDescs= inputElementDescs.data(),
+		.NumElements= static_cast<UINT>(inputElementDescs.size()),
+	};
 
 	////BlendStateの設定を行う
 	//BlendStateの設定
@@ -859,9 +844,6 @@ void Ellysia::PipelineManager::GenerateModelPSO() {
 		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 
-
-
-
 		break;
 
 
@@ -871,11 +853,6 @@ void Ellysia::PipelineManager::GenerateModelPSO() {
 		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
 		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
-
-
-
-
-
 
 		break;
 
@@ -920,17 +897,12 @@ void Ellysia::PipelineManager::GenerateModelPSO() {
 	//三角形の中を塗りつぶす
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
-
-
 	//ShaderをCompileする
 	PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_ != nullptr);
 
-
-
 	PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ != nullptr);
-
 
 	//PSOの生成
 	GenaratePSO(PipelineManager::GetInstance()->modelPSO_, inputLayoutDesc, blendDesc, rasterizerDesc);
