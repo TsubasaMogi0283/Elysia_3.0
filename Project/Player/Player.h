@@ -8,10 +8,11 @@
 
 #include <memory>
 #include <list>
+
 #include "WorldTransform.h"
 #include "Model.h"
-
 #include "AABB.h"
+
 #include "PlayerCollisionToStrongEnemy.h"
 #include "PlayerCollisionToNormalEnemyAttack.h"
 #include "PlayerCollisionToAudioObject.h"
@@ -118,7 +119,7 @@ public:
 	/// <summary>
 	/// 半径の取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>半径</returns>
 	inline float GetSideSize()const {
 		return SIDE_SIZE;
 	}
@@ -126,16 +127,16 @@ public:
 	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>ワールド座標</returns>
 	inline Vector3 GetWorldPosition()const {
 		return worldTransform_.GetWorldPosition();
 	}
 
 
 	/// <summary>
-	/// 方向
+	/// 方向を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>方向</returns>
 	inline Vector3 GetDirection() const{
 		return moveDirection_;
 	}
@@ -143,6 +144,7 @@ public:
 	/// <summary>
 	/// AABBの取得
 	/// </summary>
+	/// <returns>AABB</returns>
 	inline AABB GetAABB() const{
 		return aabb_;
 	}
@@ -151,7 +153,7 @@ public:
 	/// <summary>
 	/// 体力を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>体力</returns>
 	uint32_t GetHP()const {
 		return hp_;
 	}
@@ -167,7 +169,7 @@ public:
 	/// <summary>
 	/// 懐中電灯を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>懐中電灯</returns>
 	inline FlashLight* GetFlashLight()const {
 		return flashLight_.get();
 	}
@@ -269,6 +271,20 @@ public:
 		return flashLight_->GetFanCollision();
 	}
 
+
+
+private:
+	//幅のサイズ
+	const float SIDE_SIZE = 1.0f;
+	//時間変化
+	const float DELTA_TIME = 1.0f / 60.0f;
+
+private:
+	//入力クラス
+	Ellysia::Input* input_ = nullptr;
+	//モデル管理クラス
+	Ellysia::ModelManager* modelManager_ = nullptr;
+
 private:
 
 	//モデル
@@ -284,10 +300,8 @@ private:
 
 	//動く方向
 	Vector3 moveDirection_ = {};
-
 	//AABB
 	AABB aabb_ = {};
-
 
 
 	//体力
@@ -304,31 +318,16 @@ private:
 	//ダッシュ
 	bool isDash_ = false;
 
-
-
-
 	//攻撃されたか
 	bool isDameged_ = false;
 	int32_t damagedTime_ = 0;
 	bool isAcceptDamegeFromNoemalEnemy_ = false;
-
 
 	//振動の強さ
 	float vibeStrength_ = 0.0f;
 	//時間
 	float vibeTime_ = 0u;
 
-private:
-	//幅のサイズ
-	const float SIDE_SIZE = 1.0f;
-	//時間変化
-	const float DELTA_TIME = 1.0f / 60.0f;
-
-private:
-	//入力クラス
-	Ellysia::Input* input_ = nullptr;
-	//モデル管理クラス
-	Ellysia:: ModelManager* modelManager_ = nullptr;
 private:
 	//当たり判定のリスト
 	std::list<std::unique_ptr<BasePlayerCollision>> colliders_ = {};

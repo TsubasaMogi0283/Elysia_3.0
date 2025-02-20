@@ -130,9 +130,6 @@ namespace Ellysia {
 		/// <param name="value">値</param>
 		void AddItem(const std::string& groupName, const std::string& key, const Vector3& value);
 
-
-
-
 #pragma endregion
 
 

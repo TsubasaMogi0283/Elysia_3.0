@@ -12,6 +12,8 @@
 #include "GameManager.h"
 #include "ModelManager.h"
 #include "LevelDataManager.h"
+#include "GlobalVariables.h"
+
 
 GameScene::GameScene(){
 	//インスタンスの取得
@@ -23,6 +25,8 @@ GameScene::GameScene(){
 	modelManager_ = Ellysia::ModelManager::GetInstance();
 	//レベルエディタ管理クラス
 	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	//グローバル変数クラス
+	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
 }
 
 void GameScene::Initialize() {
@@ -163,11 +167,12 @@ void GameScene::Initialize() {
 	camera_.rotate.y = std::numbers::pi_v<float> / 2.0f;
 	//座標
 	camera_.translate = { .x = 0.0f,.y = 1.0f ,.z = -15.0f };
-	
-
 	//カメラ座標のオフセットの初期化
 	cameraPositionOffset_ = { .x = 0.0f,.y = 2.0f,.z = 0.0f };
-	
+	//カメラの調整項目
+	globalVariables_->CreateGroup(GAME_SCENE_CAMERA_NAME_);
+	globalVariables_->AddItem(GAME_SCENE_CAMERA_NAME_, HEIGHT_OFFSET_, cameraPositionOffset_);
+
 	#pragma endregion
 	
 	#pragma region 説明
@@ -838,9 +843,6 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 		//ライトの動き
 		MoveLightSide();
 
-		//DIK_COMMA          
-		//DIK_PERIOD
-
 		//プレイヤーにそれぞれの角度を設定する
 		player_->GetFlashLight()->SetTheta(theta_);
 		player_->GetFlashLight()->SetPhi(-originPhi_);		
@@ -854,6 +856,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 		camera_.rotate.z = 0.0f;
 
 		//位置の計算
+		cameraPositionOffset_ = globalVariables_->GetVector3Value(GAME_SCENE_CAMERA_NAME_, HEIGHT_OFFSET_);
 		camera_.translate = VectorCalculation::Add(player_->GetWorldPosition(), cameraPositionOffset_);
 
 		//脱出の仕組み
@@ -867,15 +870,8 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 
 
-		//プレイヤーがダメージを受けた時のカメラシェイク
-		if (player_->GetIsDamaged() == true) {
-			//camera_.rotate.x -= 0.01f;
-		}
-
-
 		//体力が0になったら負け
 		//または一発アウトの敵に接触した場合
-		//負け専用のクラスを作りたい
 		const uint32_t MIN_HP = 0u;
 		if (player_->GetHP() <= MIN_HP || isTouchStrongEnemy_==true) {
 			//コントロールを失う
@@ -902,8 +898,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 			
 		}
 
-		//現在のプレイヤーの体力を取得
-		currentDisplayHP_ = player_->GetHP();
+		
 		
 
 	}
@@ -1011,9 +1006,8 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	//ImGuiの表示
 	DisplayImGui();
 
+
 	#endif // _DEBUG
-
-
 
 	//コリジョン管理クラスに登録
 	RegisterToCollisionManager();
@@ -1021,16 +1015,12 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	//当たり判定チェック
 	collisionManager_->CheckAllCollision();
 
-	
-
 }
-
 
 void GameScene::PreDrawPostEffectFirst(){
 	//ビネット描画処理前
 	vignette_->PreDraw();
 }
-
 
 void GameScene::DrawObject3D() {
 	
@@ -1046,8 +1036,6 @@ void GameScene::DrawObject3D() {
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
 }
-
-
 
 void GameScene::DrawPostEffect(){
 	//ビネット描画
@@ -1077,6 +1065,8 @@ void GameScene::DrawSprite(){
 		//プレイヤーの体力の枠
 		playerHPBackFrame_->Draw();
 		//プレイヤーの体力(アイコン型)
+		//現在のプレイヤーの体力を取得
+		currentDisplayHP_ = player_->GetHP();
 		for (uint32_t i = 0u; i < currentDisplayHP_; ++i) {
 			playerHP_[i]->Draw();
 		}
@@ -1096,5 +1086,3 @@ void GameScene::DrawSprite(){
 
 
 }
-
-

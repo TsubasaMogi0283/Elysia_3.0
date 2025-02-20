@@ -361,13 +361,11 @@ void Ellysia::GlobalVariables::Update(){
         return;
     }
     
-
     for (std::map<std::string, Group>::iterator itGroup = datas_.begin(); itGroup != datas_.end(); ++itGroup) {
 
         //イテレータはペア一組分を指すポインタのようなもの
         //first...キー
         //second...値
-
 
         //グループ名を取得
         const std::string& groupName = itGroup->first;
@@ -379,8 +377,6 @@ void Ellysia::GlobalVariables::Update(){
             continue;
         }
 
-
-        //Group(map)の中にさらにItem(map)があるので二重for文だね
         //各項目について
         for (std::map<std::string, Item>::iterator itItem = group.items.begin(); 
             itItem != group.items.end(); ++itItem) {
@@ -414,12 +410,7 @@ void Ellysia::GlobalVariables::Update(){
                 //ここではVector3をfloatの配列ということにする
                 ImGui::InputFloat(itItemName.c_str(), reinterpret_cast<float*>(ptr));
             }
-
-
-
         }
-
-
 
         //セーブボタン
         ImGui::Text("\n");
@@ -429,10 +420,7 @@ void Ellysia::GlobalVariables::Update(){
             MessageBoxA(nullptr, message.c_str(), "AdjustmentItems", 0);
         }
 
-
-
         ImGui::EndMenu();
-
     }
 
 

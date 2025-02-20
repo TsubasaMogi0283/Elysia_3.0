@@ -550,7 +550,6 @@ namespace Ellysia {
 			}
 		}
 
-
 		/// <summary>
 		/// 初期スケールを取得
 		/// </summary>
@@ -689,10 +688,8 @@ namespace Ellysia {
 		const std::string LEVEL_DATA_PATH_ = "Resources/LevelData/";
 
 	private:
-
 		//ここにデータを入れていく
 		std::map<std::string, std::unique_ptr<LevelData>> levelDatas_;
-
 		//ハンドル
 		uint32_t handle_ = 0u;
 

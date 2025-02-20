@@ -53,7 +53,10 @@ namespace Ellysia {
 	/// </summary>
 	class Input;
 
-
+	/// <summary>
+	/// 調整項目クラス
+	/// </summary>
+	class GlobalVariables;
 }
 
 
@@ -141,27 +144,6 @@ private:
 	/// </summary>
 	void DisplayImGui();
 
-private:
-	/// <summary>
-	/// ゲームシーンの場面
-	/// </summary>
-	enum GameCondition {
-		//フェードイン
-		GameFadeIn,
-		
-		//説明
-		Explanation,
-		
-		//ゲームプレイ
-		GamePlay,
-
-		//フェードアウト
-		GameFadeOut,
-	};
-
-	//初期はフェードイン
-	GameCondition gameCondition_ = GameCondition::GameFadeIn;
-
 
 private:
 	//インプット
@@ -174,6 +156,14 @@ private:
 	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelHandle_ = 0u;
+	//グローバル変数クラス
+	Ellysia::GlobalVariables* globalVariables_ = nullptr;
+
+private:
+	//カメラ
+	const std::string GAME_SCENE_CAMERA_NAME_ = "GameSceneCamera";
+	//ディゾルブ
+	const std::string HEIGHT_OFFSET_ = "HeightOffset";
 
 
 private:

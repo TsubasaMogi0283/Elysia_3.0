@@ -239,7 +239,7 @@ PixelShaderOutput main(VertexShaderOutput input){
         float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
 		
 		//Cameraへの方向を算出
-        float3 toEye = normalize(gCamera.worldPosition - normalize(input.worldPosition));
+        float3 toEye = normalize(normalize(gCamera.worldPosition) - normalize(input.worldPosition));
 		//入射光の反射ベクトルを求める
         float3 reflectLight = reflect(gSpotLight.position, normalize(input.normal));
 		
