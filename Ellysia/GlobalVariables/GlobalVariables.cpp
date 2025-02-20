@@ -256,8 +256,6 @@ void Ellysia::GlobalVariables::LoadAllFile(){
         return;
     }
 
-
-
     //各ファイルの処理
     std::filesystem::directory_iterator dirIt(DIRECTORY_PATH_);
     //directory_iterator...ディレクトリないのファイルを1つずつ指すためのポインタのようなもの
@@ -350,20 +348,14 @@ void Ellysia::GlobalVariables::Update(){
 #ifdef _DEBUG
 
     //メニューバーを使用可能なフラグを付けてウィンドウを開く
-    if (!ImGui::Begin("Global Variables",nullptr,ImGuiWindowFlags_MenuBar)) {
+    if (!ImGui::Begin("調整項目")) {
         ImGui::End();
         return;
     }
 
-    //このように条件を逆にしてからreturn ,continueを使うことを「早期リターン」と呼ぶ。
-    //ネストが深くなるのを防げてコードが読みやすくなるよ。
-    if (!ImGui::BeginMenuBar()) {
-        return;
-    }
-    
     for (std::map<std::string, Group>::iterator itGroup = datas_.begin(); itGroup != datas_.end(); ++itGroup) {
 
-        //イテレータはペア一組分を指すポインタのようなもの
+        //イテレータはペア1組分を指すポインタのようなもの
         //first...キー
         //second...値
 
@@ -373,7 +365,9 @@ void Ellysia::GlobalVariables::Update(){
         Group& group = itGroup->second;
 
         //グループメニューを追加する処理
-        if (ImGui::BeginMenu(groupName.c_str())==false) {
+        //このように条件を逆にしてからreturn ,continueを使うことを「早期リターン」と呼ぶ。
+        //ネストが深くなるのを防げてコードが読みやすくなるよ。
+        if (!ImGui::TreeNode(groupName.c_str())) {
             continue;
         }
 
@@ -417,14 +411,13 @@ void Ellysia::GlobalVariables::Update(){
         if (ImGui::Button("Save")) {
             SaveFile(groupName);
             std::string message = std::format("{}, json saved.", groupName);
-            MessageBoxA(nullptr, message.c_str(), "AdjustmentItems", 0);
+            MessageBoxA(nullptr, message.c_str(), "AdjustmentItems", 0u);
         }
 
-        ImGui::EndMenu();
+        ImGui::TreePop();
+
     }
 
-
-    ImGui::EndMenuBar();
     ImGui::End();
 
 #endif 
