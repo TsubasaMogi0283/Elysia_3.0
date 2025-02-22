@@ -24,9 +24,9 @@
 
 
 
-/// <summary>
-/// EllysiaEngine(前方宣言)
-/// </summary>
+ /// <summary>
+ /// EllysiaEngine(前方宣言)
+ /// </summary>
 namespace Ellysia {
 	/// <summary>
 	/// レベルエディタ
@@ -105,7 +105,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~GameScene()=default;
+	~GameScene() = default;
 
 private:
 
@@ -147,7 +147,7 @@ private:
 
 private:
 	//インプット
-	Ellysia::Input* input_=nullptr;
+	Ellysia::Input* input_ = nullptr;
 	//テクスチャ管理クラス
 	Ellysia::TextureManager* texturemanager_ = nullptr;
 	//モデル管理クラス
@@ -210,7 +210,7 @@ private:
 	bool isRotateYKey_ = false;
 	bool isRotateXKey_ = false;
 
-	
+
 
 	//ポストエフェクト
 	//ビネット
@@ -233,7 +233,7 @@ private:
 	bool isPlayerDash_ = false;
 	//ライトの幅
 	float lightSideTheta_ = 0.1f;
-	
+
 
 	//Bボタンのトリガー
 	uint32_t bTriggerTime_ = 0u;
@@ -243,10 +243,10 @@ private:
 	std::unique_ptr<Gate> gate_ = nullptr;
 	bool isEscape_ = false;
 
-	
+
 	//敵管理
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
-	
+
 
 	//角度
 	float theta_ = 0.0f;
@@ -257,7 +257,7 @@ private:
 
 	//強い敵と接触したかどうか
 	bool isTouchStrongEnemy_ = false;
-	
+
 #pragma region ゲーム中のUI
 	//UIを表示するかどうか
 	bool isDisplayUI_ = false;
@@ -282,7 +282,7 @@ private:
 
 	//鍵管理クラス
 	std::unique_ptr<KeyManager> keyManager_ = {};
-	
+
 
 
 	//脱出のスプライト
@@ -314,7 +314,7 @@ private:
 	//負けシーンに遷移するときの値
 	const float CHANGE_TO_LOSE_SCENE_VALUE_ = 2.0f;
 
-	
+
 #pragma endregion
 
 	//場面

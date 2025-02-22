@@ -53,7 +53,6 @@ void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelD
 				objectData.name = object["name"];
 			}
 
-
 			//ここでのファイルネームはオブジェクトの名前
 			if (object.contains("file_name")) {
 				//ファイル名
@@ -221,12 +220,12 @@ void Ellysia::LevelDataManager::Place(nlohmann::json& objects, LevelData& levelD
 
 void Ellysia::LevelDataManager::Ganarate(LevelData& levelData) {
 
-
 	//ディレクトリパス
 	std::string levelEditorDirectoryPath = LEVEL_DATA_PATH_ + levelData.folderName;
 
 	for (ObjectData& objectData : levelData.objectDatas) {
 
+		//ステージ
 		if (objectData.type == "Stage") {
 
 			//オブジェクトの生成
@@ -239,7 +238,7 @@ void Ellysia::LevelDataManager::Ganarate(LevelData& levelData) {
 			stageObject->SetSize(objectData.size);
 			stageObject->Initialize(modelHandle, objectData.transform);
 			objectData.objectForLeveEditor = stageObject;
-
+			objectData.isModelGenerate = true;
 
 			//コライダーがある場合
 			if (objectData.isHavingCollider == true) {
@@ -252,6 +251,7 @@ void Ellysia::LevelDataManager::Ganarate(LevelData& levelData) {
 				objectData.levelDataObjectCollider = collider;
 			}
 		}
+		//オーディオ
 		else if (objectData.type == "Audio") {
 
 			//Audioフォルダの中で読み込み
@@ -263,19 +263,14 @@ void Ellysia::LevelDataManager::Ganarate(LevelData& levelData) {
 			AudioDataForLevelEditor audioDataForLevelEditor = {
 				//ファイル名を記録
 				.fileName = objectData.levelAudioData.fileName,
-
 				//種類を記録
 				.type = objectData.levelAudioData.type,
-
 				//ハンドルは後で入力する
 				.handle = audio_->Load(fullPath),
-
 				//エリア上かどうか
 				.isOnArea = objectData.levelAudioData.isOnArea,
-
 				//ループをするかどうか
 				.isLoop = objectData.levelAudioData.isLoop,
-
 			};
 
 
@@ -290,7 +285,7 @@ void Ellysia::LevelDataManager::Ganarate(LevelData& levelData) {
 			audioObject->Initialize(modelHandle, objectData.transform);
 			//オブジェクトの生成
 			objectData.objectForLeveEditor = audioObject;
-
+			objectData.isModelGenerate = true;
 
 			//コライダーがある場合
 			if (objectData.isHavingCollider == true) {
@@ -304,6 +299,10 @@ void Ellysia::LevelDataManager::Ganarate(LevelData& levelData) {
 				objectData.levelDataObjectCollider = collider;
 
 			}
+		}
+		//モデルは生成しない
+		else {
+			objectData.isModelGenerate = false;
 		}
 	}
 }
@@ -455,7 +454,7 @@ void Ellysia::LevelDataManager::Update(const uint32_t& levelDataHandle) {
 
 	//この書き方はC++17からの構造化束縛というものらしい
 	//イテレータではなくこっちでやった方が良いかな
-	//ファイル名で指定したい時はkeyを使ったら楽だね。今回はハンドルだけどね。
+	//ファイル名とかで指定したい時はkeyを使ったら楽だね。今回はハンドルだけどね。
 	for (auto& [key, levelData] : levelDatas_) {
 		if (levelData->handle == levelDataHandle) {
 
@@ -472,26 +471,23 @@ void Ellysia::LevelDataManager::Update(const uint32_t& levelDataHandle) {
 				isListenerMove = true;
 			}
 
-
-
 			for (const auto& object : levelData->objectDatas) {
+				//モデルを生成した時
+				if (object.isModelGenerate == true) {
+					//更新
+					object.objectForLeveEditor->SetIsListenerMove(isListenerMove);
+					object.objectForLeveEditor->Update();
+					Vector3 objectWorldPosition = object.objectForLeveEditor->GetWorldPosition();
 
-				//更新
-				object.objectForLeveEditor->SetIsListenerMove(isListenerMove);
-				object.objectForLeveEditor->Update();
-				Vector3 objectWorldPosition = object.objectForLeveEditor->GetWorldPosition();
-
-				//衝突判定の設定
-				if (object.isHavingCollider == true) {
-					bool isTouch = object.levelDataObjectCollider->GetIsTouch();
-					object.objectForLeveEditor->SetIsTouch(isTouch);
-					object.levelDataObjectCollider->SetObjectPosition(objectWorldPosition);
-					object.levelDataObjectCollider->SetCenterPosition(object.center);
-					object.levelDataObjectCollider->Update();
+					//衝突判定の設定
+					if (object.isHavingCollider == true) {
+						bool isTouch = object.levelDataObjectCollider->GetIsTouch();
+						object.objectForLeveEditor->SetIsTouch(isTouch);
+						object.levelDataObjectCollider->SetObjectPosition(objectWorldPosition);
+						object.levelDataObjectCollider->SetCenterPosition(object.center);
+						object.levelDataObjectCollider->Update();
+					}
 				}
-
-
-
 			}
 			break;
 		}
@@ -537,7 +533,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 
 			//描画
 			for (const auto& object : levelData->objectDatas) {
-				if (object.isInvisible == false) {
+				if (object.isInvisible == false && object.isModelGenerate == true) {
 					object.objectForLeveEditor->Draw(camera, directionalLight);
 				}
 			}
@@ -557,7 +553,7 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 
 			//描画
 			for (const auto& object : levelData->objectDatas) {
-				if (object.isInvisible == false) {
+				if (object.isInvisible == false && object.isModelGenerate == true) {
 					object.objectForLeveEditor->Draw(camera, pointLight);
 				}
 			}
@@ -579,19 +575,14 @@ void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Came
 			//描画
 			for (const auto& object : levelData->objectDatas) {
 				//描画
-				if (object.isInvisible == false) {
+				if (object.isInvisible == false && object.isModelGenerate == true) {
 					object.objectForLeveEditor->Draw(camera, spotLight);
 				}
-
-
 			}
 			//無駄なループ処理を防ぐよ
 			break;
-
 		}
-
 	}
-
 }
 
 #pragma endregion

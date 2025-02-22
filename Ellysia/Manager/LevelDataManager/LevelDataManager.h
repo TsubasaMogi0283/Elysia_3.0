@@ -236,6 +236,38 @@ namespace Ellysia {
 		}
 
 		/// <summary>
+		/// 鍵の座標を取得
+		/// </summary>
+		/// <param name="handle"></param>
+		/// <returns></returns>
+		inline std::vector<Vector3> GetKeyPositions(const uint32_t& handle) {
+			std::vector<Vector3> positions = {};
+
+			for (const auto& [key, levelData] : levelDatas_) {
+				if (levelData->handle == handle) {
+
+
+					//該当するLevelDataのobjectDatasを検索
+					for (auto& objectData : levelData->objectDatas) {
+
+						//Keyだったら追加
+						if (objectData.type == "Key") {
+							positions.push_back(objectData.initialTransform.translate);
+						}
+
+
+					}
+
+					//無駄なループを防ぐ
+					break;
+				}
+			}
+
+			return positions;
+		}
+
+
+		/// <summary>
 		/// ステージオブジェクトのAABBを取得
 		/// </summary>
 		/// <param name="handle">ハンドル</param>
@@ -296,7 +328,6 @@ namespace Ellysia {
 
 	private:
 
-
 		/// <summary>
 		/// オブジェクトデータ
 		/// </summary>
@@ -311,7 +342,7 @@ namespace Ellysia {
 			//ファイル名
 			std::string modelFileName;
 
-			//Transform
+			//トランスフォーム
 			Transform transform;
 			//初期トランスフォーム
 			Transform initialTransform;
@@ -321,9 +352,6 @@ namespace Ellysia {
 
 			//Colliderの種類
 			std::string colliderType;
-
-			uint32_t colliderTypeNumber;
-
 
 			//Sphere,Box
 			Vector3 center;
@@ -343,6 +371,9 @@ namespace Ellysia {
 
 			//オブジェクト(ステージかオーディオ)
 			BaseObjectForLevelEditor* objectForLeveEditor;
+
+			//モデルを生成するかどうか
+			bool isModelGenerate = false;
 
 			//コライダー
 			BaseObjectForLevelEditorCollider* levelDataObjectCollider;

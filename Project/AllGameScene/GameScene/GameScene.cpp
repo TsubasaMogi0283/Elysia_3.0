@@ -15,7 +15,7 @@
 #include "GlobalVariables.h"
 
 
-GameScene::GameScene(){
+GameScene::GameScene() {
 	//インスタンスの取得
 	//入力
 	input_ = Ellysia::Input::GetInstance();
@@ -32,7 +32,7 @@ GameScene::GameScene(){
 void GameScene::Initialize() {
 
 #pragma region フェード
-	
+
 	//白フェード
 	//白画像読み込み
 	uint32_t whiteTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Back/White.png");
@@ -40,7 +40,7 @@ void GameScene::Initialize() {
 	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
 	//生成
 	whiteFade_.reset(Ellysia::Sprite::Create(whiteTextureHandle, INITIAL_FADE_POSITION));
-	
+
 	//フェードインから始まる
 	//イン
 	isWhiteFadeIn = true;
@@ -57,10 +57,10 @@ void GameScene::Initialize() {
 	uint32_t blackTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Back/Black.png");
 	//生成
 	blackFade_.reset(Ellysia::Sprite::Create(blackTextureHandle, INITIAL_FADE_POSITION));
-	
+
 	//透明度
 	blackFadeTransparency_ = 0.0f;
-	
+
 
 
 #ifdef _DEBUG
@@ -71,15 +71,13 @@ void GameScene::Initialize() {
 
 #pragma endregion
 
-
-	
 #pragma region オブジェクト
 
-	
-	#pragma region ゲート
+
+#pragma region ゲート
 
 	//ゲートのモデルの読み込み
-	uint32_t gateModelhandle = modelManager_->LoadModelFile("Resources/Model/Sample/Gate","Gate.obj");
+	uint32_t gateModelhandle = modelManager_->LoadModelFile("Resources/Model/Sample/Gate", "Gate.obj");
 	//生成
 	gate_ = std::make_unique<Gate>();
 	//初期化
@@ -91,7 +89,7 @@ void GameScene::Initialize() {
 	escapeText_.reset(Ellysia::Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	//最初は非表示にする
 	escapeText_->SetInvisible(true);
-	#pragma endregion
+#pragma endregion
 
 #pragma endregion
 
@@ -108,9 +106,9 @@ void GameScene::Initialize() {
 	player_->GetFlashLight()->SetMaxRange(LIGHT_MAX_RANGE_);
 	player_->GetFlashLight()->SetMinRange(LIGHT_MIN_RANGE_);
 
-	
+
 	//向きの初期化
-	playerMoveDirection_ = {.x = 0.0f,.y = 0.0f,.z = 0.0f };
+	playerMoveDirection_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
 	//気ボードは何も押していない
 	isPlayerMoveKey_ = false;
 	//Bトリガーの時間を初期化
@@ -119,32 +117,38 @@ void GameScene::Initialize() {
 	isBTrigger_ = false;
 #pragma endregion
 
+
+	//ハンドルの取得
+	levelHandle_ = levelDataManager_->Load("GameStage/GameStage.json");
+
 	//鍵のモデルの読み込み
-	uint32_t keyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/key","Key.obj");
+	uint32_t keyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/key", "Key.obj");
 	//生成
 	keyManager_ = std::make_unique<KeyManager>();
 	//プレイヤーの設定
 	keyManager_->SetPlayer(player_.get());
 	//初期化
 	const std::string keyPositionCSV = "Resources/CSV/KeyPosition.csv";
-	keyManager_->Initialize(keyModelHandle, keyPositionCSV);
-	
-	
-	//ハンドルの取得
-	levelHandle_=levelDataManager_->Load("GameStage/GameStage.json");
+
+	//レベルデータから鍵の情報を取り出す
+	auto keyPositions = levelDataManager_->GetKeyPositions(levelHandle_);
+	keyManager_->Initialize(keyModelHandle, keyPositions);
 
 
 
-	#pragma region 敵
+
+
+
+#pragma region 敵
 	//敵モデルの読み込み
 	//通常
 	uint32_t enemyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
 	//強敵
-	uint32_t strongEnemyModelHandle= modelManager_->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
+	uint32_t strongEnemyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
 
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	enemyModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube", "Cube.obj");
-	#endif // _DEBUG
+#endif // _DEBUG
 
 	//敵管理システム
 	enemyManager_ = std::make_unique<EnemyManager>();
@@ -155,9 +159,9 @@ void GameScene::Initialize() {
 	//初期化
 	std::string initialPositionCSV = "Resources/CSV/EnemyInitialPosition.csv";
 	enemyManager_->Initialize(enemyModelHandle, strongEnemyModelHandle, initialPositionCSV);
-	#pragma endregion
+#pragma endregion
 
-	#pragma region カメラ
+#pragma region カメラ
 
 	//カメラの初期化
 	camera_.Initialize();
@@ -173,9 +177,9 @@ void GameScene::Initialize() {
 	globalVariables_->CreateGroup(GAME_SCENE_CAMERA_NAME_);
 	globalVariables_->AddItem(GAME_SCENE_CAMERA_NAME_, HEIGHT_OFFSET_, cameraPositionOffset_);
 
-	#pragma endregion
-	
-	#pragma region 説明
+#pragma endregion
+
+#pragma region 説明
 
 	//説明画像の読み込み
 	uint32_t explanationTextureHandle[EXPLANATION_QUANTITY_] = {};
@@ -186,7 +190,7 @@ void GameScene::Initialize() {
 	for (uint32_t i = 0u; i < EXPLANATION_QUANTITY_; ++i) {
 		explanation_[i].reset(Ellysia::Sprite::Create(explanationTextureHandle[i], INITIAL_FADE_POSITION));
 	}
-	
+
 	//スペースで次への画像読み込み
 	uint32_t spaceToNextTextureHandle[SPACE_TO_NEXT_QUANTITY_] = {};
 	spaceToNextTextureHandle[0] = texturemanager_->LoadTexture("Resources/Game/Explanation/ExplanationNext1.png");
@@ -203,19 +207,19 @@ void GameScene::Initialize() {
 	//操作
 	uint32_t operationTextureHandle = texturemanager_->LoadTexture("Resources/Game/Operation/Operation.png");
 	//生成
-	operation_.reset(Ellysia::Sprite::Create(operationTextureHandle, {.x=20.0f,.y=0.0f}));
+	operation_.reset(Ellysia::Sprite::Create(operationTextureHandle, { .x = 20.0f,.y = 0.0f }));
 
-	
-	#pragma endregion
 
-	#pragma region UI
+#pragma endregion
+
+#pragma region UI
 	uint32_t playerHPTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHP.png");
 	uint32_t playerHPBackFrameTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHPBack.png");
 	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
 	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
-		playerHP_[i].reset(Ellysia::Sprite::Create(playerHPTextureHandle, {.x=static_cast<float>(i)*64+ INITIAL_POSITION.x,.y= INITIAL_POSITION .y}));
+		playerHP_[i].reset(Ellysia::Sprite::Create(playerHPTextureHandle, { .x = static_cast<float>(i) * 64 + INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
 	}
-	
+
 	playerHPBackFrame_.reset(Ellysia::Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
 	currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
 
@@ -224,19 +228,19 @@ void GameScene::Initialize() {
 	uint32_t toEscapeTextureHandle = texturemanager_->LoadTexture("Resources/Game/Escape/ToGoal.png");
 	toEscape_.reset(Ellysia::Sprite::Create(toEscapeTextureHandle, INITIAL_FADE_POSITION));
 
-	#pragma endregion
+#pragma endregion
 
 
 
 
-	
-	
+
+
 	//コリジョン管理クラスの生成
 	collisionManager_ = std::make_unique<Ellysia::CollisionManager>();
 	//角度の初期化
 	//プレイヤーの向いている向きと合わせていくよ
 	theta_ = std::numbers::pi_v<float> / 2.0f;
-	
+
 	//ポストエフェクトの初期化
 	//ビネット生成
 	vignette_ = std::make_unique<Ellysia::Vignette>();
@@ -264,8 +268,8 @@ void GameScene::Initialize() {
 
 }
 
-void GameScene::ObjectCollision(){
-	
+void GameScene::ObjectCollision() {
+
 
 	//新しくゲームシーンでの描画用のレベルデータクラスを用意して
 	//ついでにこの関数内のめり込みを防ぐ処理を書いた方が良さそう。
@@ -283,8 +287,8 @@ void GameScene::ObjectCollision(){
 	//コライダーを持っているかどうか
 	std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelHandle_);
 	//衝突判定
-	for (size_t i = 0; i < positions.size() && i < aabbs.size()&&i<colliders.size(); ++i) {
-		
+	for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
+
 		//コライダーを持っているときだけ
 		if (colliders[i] == true) {
 			//オブジェクトとの差分ベクトル
@@ -329,15 +333,15 @@ void GameScene::ObjectCollision(){
 			}
 		}
 
-		
+
 
 	}
-	
+
 
 
 }
 
-void GameScene::EscapeCondition(){
+void GameScene::EscapeCondition() {
 	//ゲート
 	if (gate_->isCollision(player_->GetWorldPosition())) {
 
@@ -386,7 +390,7 @@ void GameScene::EscapeCondition(){
 
 }
 
-void GameScene::RegisterToCollisionManager(){
+void GameScene::RegisterToCollisionManager() {
 
 	//エネミーをコリジョンマネージャーに追加
 	//通常の敵のリストの取得
@@ -419,7 +423,7 @@ void GameScene::RegisterToCollisionManager(){
 		collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
 	}
-	
+
 	std::vector<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemies();
 	for (const StrongEnemy* strongEnemy : strongEnemyes) {
 		bool isTouch = strongEnemy->GetStrongEnemyCollisionToPlayer()->GetIsTouchPlayer();
@@ -437,7 +441,7 @@ void GameScene::RegisterToCollisionManager(){
 	}
 }
 
-void GameScene::DisplayImGui(){
+void GameScene::DisplayImGui() {
 	ImGui::Begin("ゲームシーン");
 
 	if (ImGui::TreeNode("カメラ")) {
@@ -464,7 +468,7 @@ void GameScene::DisplayImGui(){
 
 }
 
-void GameScene::PlayerMove(){
+void GameScene::PlayerMove() {
 
 	//何も押していない時つまり動いていないので
 	//通常はfalseと0にしておく
@@ -472,7 +476,7 @@ void GameScene::PlayerMove(){
 	isPlayerMove_ = false;
 	playerMoveDirection_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
 
-	#pragma region キーボード
+#pragma region キーボード
 	//移動
 	//Dキー(右)
 	if (input_->IsPushKey(DIK_D) == true) {
@@ -482,7 +486,7 @@ void GameScene::PlayerMove(){
 			.y = 0.0f,
 			.z = std::sinf(theta_ - std::numbers::pi_v<float> / 2.0f),
 		};
-		
+
 		//キーボード入力をしている
 		isPlayerMoveKey_ = true;
 		//動いている
@@ -511,7 +515,7 @@ void GameScene::PlayerMove(){
 			.y = 0.0f,
 			.z = std::sinf(theta_),
 		};
-		
+
 		//キーボード入力をしている
 		isPlayerMoveKey_ = true;
 		//動いている
@@ -529,14 +533,14 @@ void GameScene::PlayerMove(){
 	}
 
 
-	#pragma endregion
+#pragma endregion
 
-	#pragma region コントローラー
+#pragma region コントローラー
 
 	//接続時
 	//キーボード入力していない時かつ移動できる時に受け付ける
 	if (input_->IsConnetGamePad() == true) {
-		
+
 		if (isPlayerMoveKey_ == false) {
 
 
@@ -566,7 +570,7 @@ void GameScene::PlayerMove(){
 			else {
 				isInput = true;
 			}
-		
+
 
 			//入力されていたら計算
 			if (isInput == true) {
@@ -644,7 +648,7 @@ void GameScene::PlayerMove(){
 
 }
 
-void GameScene::PlayerRotate(){
+void GameScene::PlayerRotate() {
 
 #pragma region Y軸に旋回
 
@@ -736,11 +740,11 @@ void GameScene::PlayerRotate(){
 
 }
 
-void GameScene::MoveLightSide(){
+void GameScene::MoveLightSide() {
 	//0.08
 	//0.3
 
-	
+
 
 	const float LIGHT_MOVE_INTERVAL = 0.001f;
 	if (input_->IsPushKey(DIK_X) == true) {
@@ -759,7 +763,7 @@ void GameScene::MoveLightSide(){
 	else if (lightSideTheta_ < LIGHT_MIN_RANGE_) {
 		lightSideTheta_ = LIGHT_MIN_RANGE_;
 	}
-	
+
 	//幅を設定
 	player_->GetFlashLight()->SetLightSideTheta(lightSideTheta_);
 }
@@ -772,10 +776,10 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	collisionManager_->ClearList();
 
 	//フェードイン
-	if (isWhiteFadeIn==true) {
+	if (isWhiteFadeIn == true) {
 		const float FADE_IN_INTERVAL = 0.01f;
 		whiteFadeTransparency_ -= FADE_IN_INTERVAL;
-		
+
 		//完全に透明になったらゲームが始まる
 		if (whiteFadeTransparency_ < PERFECT_TRANSPARENT_) {
 			whiteFadeTransparency_ = PERFECT_TRANSPARENT_;
@@ -785,17 +789,17 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 			howToPlayTextureNumber_ = 1u;
 		}
 	}
-	
+
 	//ゲーム
 	if (isWhiteFadeIn == false && isWhiteFadeOut_ == false) {
 		whiteFadeTransparency_ = PERFECT_TRANSPARENT_;
-		
+
 		//説明
 		if (isExplain_ == true) {
 			if (input_->IsTriggerKey(DIK_SPACE) == true) {
 				++howToPlayTextureNumber_;
 			}
-			
+
 			//コントローラー接続時
 			if (input_->IsConnetGamePad() == true) {
 				//Bボタンを押したとき
@@ -834,7 +838,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 			//敵を消す
 			enemyManager_->DeleteEnemy();
 		}
-		
+
 
 		//プレイヤーの移動
 		PlayerMove();
@@ -845,7 +849,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 		//プレイヤーにそれぞれの角度を設定する
 		player_->GetFlashLight()->SetTheta(theta_);
-		player_->GetFlashLight()->SetPhi(-originPhi_);		
+		player_->GetFlashLight()->SetPhi(-originPhi_);
 
 
 
@@ -861,7 +865,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 		//脱出の仕組み
 		EscapeCondition();
-		
+
 		//オブジェクトの当たり判定
 		ObjectCollision();
 
@@ -873,7 +877,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 		//体力が0になったら負け
 		//または一発アウトの敵に接触した場合
 		const uint32_t MIN_HP = 0u;
-		if (player_->GetHP() <= MIN_HP || isTouchStrongEnemy_==true) {
+		if (player_->GetHP() <= MIN_HP || isTouchStrongEnemy_ == true) {
 			//コントロールを失う
 			player_->SetIsAbleToControll(false);
 			//敵の音を止める
@@ -895,14 +899,14 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 				gameManager->ChangeScene("Lose");
 				return;
 			}
-			
+
 		}
 
-		
-		
+
+
 
 	}
-	
+
 	//ホワイトアウト
 	//StatePatternにしたい
 	if (isWhiteFadeOut_ == true) {
@@ -924,7 +928,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 		escapeText_->SetInvisible(true);
 		//振動しないようにする
 		player_->SetIsAbleToControll(false);
-		
+
 		//加算
 		whiteFadeTransparency_ += FADE_OUT_INTERVAL_;
 		//透明度の設定
@@ -937,7 +941,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 			gameManager->ChangeScene("Win");
 			return;
 		}
-		
+
 	}
 
 
@@ -953,7 +957,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 	//レベルエディタの更新
 	levelDataManager_->Update(levelHandle_);
-	
+
 	//カメラの更新
 	camera_.Update();
 	//プレイヤーの更新
@@ -962,43 +966,43 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	gate_->Update();
 
 
-	
-	#pragma region ポストエフェクト
-		//HPが1でピンチの場合
-		const uint32_t DANGEROUS_HP = 1u;
-		//プレイヤーがダメージを受けた場合ビネット
-		if (player_->GetIsDamaged() == true) {
-			//時間の加算
-			vignetteChangeTime_ += DELTA_TIME_;
-		
-			//線形補間で滑らかに変化
-			vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
+
+#pragma region ポストエフェクト
+	//HPが1でピンチの場合
+	const uint32_t DANGEROUS_HP = 1u;
+	//プレイヤーがダメージを受けた場合ビネット
+	if (player_->GetIsDamaged() == true) {
+		//時間の加算
+		vignetteChangeTime_ += DELTA_TIME_;
+
+		//線形補間で滑らかに変化
+		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
+	}
+	//ピンチ演出
+	else if (player_->GetHP() == DANGEROUS_HP) {
+		warningTime_ += DELTA_TIME_;
+		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
+
+		//最大時間
+		const float MAX_WARNING_TIME = 1.0f;
+		//最小時間
+		const float MIN_WARNING_TIME = 1.0f;
+
+		if (warningTime_ > MAX_WARNING_TIME) {
+			warningTime_ = MIN_WARNING_TIME;
 		}
-		//ピンチ演出
-		else if (player_->GetHP() == DANGEROUS_HP) {
-			warningTime_ += DELTA_TIME_;
-			vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
+	}
+	//通常時の場合
+	else {
+		vignettePow_ = 0.0f;
+		vignetteChangeTime_ = 0.0f;
+	}
+	vignette_->SetPow(vignettePow_);
 
-			//最大時間
-			const float MAX_WARNING_TIME = 1.0f;
-			//最小時間
-			const float MIN_WARNING_TIME = 1.0f;
+#pragma endregion
 
-			if (warningTime_ > MAX_WARNING_TIME) {
-				warningTime_ = MIN_WARNING_TIME;
-			}
-		}
-		//通常時の場合
-		else {
-			vignettePow_ = 0.0f;
-			vignetteChangeTime_ = 0.0f;
-		}
-		vignette_->SetPow(vignettePow_);
+#ifdef _DEBUG 
 
-	#pragma endregion
-
-	#ifdef _DEBUG 
-	
 	//再読み込み
 	if (input_->IsTriggerKey(DIK_R) == true) {
 		levelDataManager_->Reload(levelHandle_);
@@ -1007,7 +1011,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	DisplayImGui();
 
 
-	#endif // _DEBUG
+#endif // _DEBUG
 
 	//コリジョン管理クラスに登録
 	RegisterToCollisionManager();
@@ -1017,13 +1021,13 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 }
 
-void GameScene::PreDrawPostEffectFirst(){
+void GameScene::PreDrawPostEffectFirst() {
 	//ビネット描画処理前
 	vignette_->PreDraw();
 }
 
 void GameScene::DrawObject3D() {
-	
+
 	//懐中電灯を取得
 	SpotLight spotLight = player_->GetFlashLight()->GetSpotLight();
 
@@ -1037,18 +1041,18 @@ void GameScene::DrawObject3D() {
 	keyManager_->DrawObject3D(camera_, spotLight);
 }
 
-void GameScene::DrawPostEffect(){
+void GameScene::DrawPostEffect() {
 	//ビネット描画
 	vignette_->Draw();
 }
 
-void GameScene::DrawSprite(){
-	
+void GameScene::DrawSprite() {
+
 	//最大数
 	const uint32_t MAX_TEXTURE_QUANTITY = 2u;
 	//説明
 	for (uint32_t i = 0u; i < MAX_TEXTURE_QUANTITY; ++i) {
-		if (howToPlayTextureNumber_ == i+1) {
+		if (howToPlayTextureNumber_ == i + 1) {
 			explanation_[i]->Draw();
 			spaceToNext_[i]->Draw();
 		}
@@ -1080,7 +1084,7 @@ void GameScene::DrawSprite(){
 		whiteFade_->Draw();
 	}
 	//黒フェード
-	if (isBlackFadeIn==true|| isBlackFadeOut_==true) {
+	if (isBlackFadeIn == true || isBlackFadeOut_ == true) {
 		blackFade_->Draw();
 	}
 
