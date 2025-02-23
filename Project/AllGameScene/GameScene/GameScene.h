@@ -140,6 +140,11 @@ private:
 	void RegisterToCollisionManager();
 
 	/// <summary>
+	/// ビネットの処理
+	/// </summary>
+	void ProcessVigntte();
+
+	/// <summary>
 	/// ImGuiの表示
 	/// </summary>
 	void DisplayImGui();

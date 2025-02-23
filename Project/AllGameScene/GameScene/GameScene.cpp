@@ -71,9 +71,6 @@ void GameScene::Initialize() {
 
 #pragma endregion
 
-#pragma region オブジェクト
-
-
 #pragma region ゲート
 
 	//ゲートのモデルの読み込み
@@ -89,8 +86,6 @@ void GameScene::Initialize() {
 	escapeText_.reset(Ellysia::Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	//最初は非表示にする
 	escapeText_->SetInvisible(true);
-#pragma endregion
-
 #pragma endregion
 
 #pragma region プレイヤー
@@ -117,7 +112,6 @@ void GameScene::Initialize() {
 	isBTrigger_ = false;
 #pragma endregion
 
-
 	//ハンドルの取得
 	levelHandle_ = levelDataManager_->Load("GameStage/GameStage.json");
 
@@ -133,11 +127,6 @@ void GameScene::Initialize() {
 	//レベルデータから鍵の情報を取り出す
 	auto keyPositions = levelDataManager_->GetKeyPositions(levelHandle_);
 	keyManager_->Initialize(keyModelHandle, keyPositions);
-
-
-
-
-
 
 #pragma region 敵
 	//敵モデルの読み込み
@@ -230,11 +219,6 @@ void GameScene::Initialize() {
 
 #pragma endregion
 
-
-
-
-
-
 	//コリジョン管理クラスの生成
 	collisionManager_ = std::make_unique<Ellysia::CollisionManager>();
 	//角度の初期化
@@ -249,9 +233,6 @@ void GameScene::Initialize() {
 	//値の設定
 	vignettePow_ = 0.0f;
 	vignette_->SetPow(vignettePow_);
-
-
-
 
 	//シーンのどこから始めるかを設定する
 	//StatePatternで分かりやすくしたい
@@ -439,6 +420,40 @@ void GameScene::RegisterToCollisionManager() {
 		collisionManager_->RegisterList(*it);
 
 	}
+}
+
+void GameScene::ProcessVigntte(){
+	//HPが1でピンチの場合
+	const uint32_t DANGEROUS_HP = 1u;
+	//プレイヤーがダメージを受けた場合ビネット
+	if (player_->GetIsDamaged() == true) {
+		//時間の加算
+		vignetteChangeTime_ += DELTA_TIME_;
+
+		//線形補間で滑らかに変化
+		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
+	}
+	//ピンチ演出
+	else if (player_->GetHP() == DANGEROUS_HP) {
+		warningTime_ += DELTA_TIME_;
+		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
+
+		//最大時間
+		const float MAX_WARNING_TIME = 1.0f;
+		//最小時間
+		const float MIN_WARNING_TIME = 1.0f;
+
+		if (warningTime_ > MAX_WARNING_TIME) {
+			warningTime_ = MIN_WARNING_TIME;
+		}
+	}
+	//通常時の場合
+	else {
+		vignettePow_ = 0.0f;
+		vignetteChangeTime_ = 0.0f;
+	}
+	vignette_->SetPow(vignettePow_);
+
 }
 
 void GameScene::DisplayImGui() {
@@ -741,16 +756,15 @@ void GameScene::PlayerRotate() {
 }
 
 void GameScene::MoveLightSide() {
-	//0.08
-	//0.3
 
-
-
+	
 	const float LIGHT_MOVE_INTERVAL = 0.001f;
+	//広がる
 	if (input_->IsPushKey(DIK_X) == true) {
 		lightSideTheta_ += LIGHT_MOVE_INTERVAL;
 
 	}
+	//狭まる
 	if (input_->IsPushKey(DIK_Z) == true) {
 		lightSideTheta_ -= LIGHT_MOVE_INTERVAL;
 	}
@@ -799,19 +813,16 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 			if (input_->IsTriggerKey(DIK_SPACE) == true) {
 				++howToPlayTextureNumber_;
 			}
-
 			//コントローラー接続時
 			if (input_->IsConnetGamePad() == true) {
 				//Bボタンを押したとき
 				if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 					bTriggerTime_ += INCREASE_VALUE;
-
 				}
 				//押していない時
 				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
 					bTriggerTime_ = B_NO_REACT_TIME_;
 				}
-
 				//1の時テクスチャの数字が増える
 				if (bTriggerTime_ == B_REACT_TIME_) {
 					++howToPlayTextureNumber_;
@@ -831,14 +842,11 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 			//操作説明を追加
 			isDisplayUI_ = true;
-
 			//敵
 			enemyManager_->Update();
-
 			//敵を消す
 			enemyManager_->DeleteEnemy();
 		}
-
 
 		//プレイヤーの移動
 		PlayerMove();
@@ -850,8 +858,6 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 		//プレイヤーにそれぞれの角度を設定する
 		player_->GetFlashLight()->SetTheta(theta_);
 		player_->GetFlashLight()->SetPhi(-originPhi_);
-
-
 
 		//もとに戻す
 		//カメラの回転の計算
@@ -899,18 +905,12 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 				gameManager->ChangeScene("Lose");
 				return;
 			}
-
 		}
-
-
-
-
 	}
 
 	//ホワイトアウト
 	//StatePatternにしたい
 	if (isWhiteFadeOut_ == true) {
-
 
 		gateRotateTheta_ += 0.01f;
 		std::string right = "GateDoorRight";
@@ -920,19 +920,14 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 		//左の回転が変だった
 		levelDataManager_->SetRotate(levelHandle_, left, { .x = 0.0f,.y = -gateRotateTheta_,.z = 0.0f });
 
-
 		//音を止める
 		enemyManager_->StopAudio();
-
 		//非表示
 		escapeText_->SetInvisible(true);
 		//振動しないようにする
 		player_->SetIsAbleToControll(false);
-
 		//加算
 		whiteFadeTransparency_ += FADE_OUT_INTERVAL_;
-		//透明度の設定
-		whiteFade_->SetTransparency(whiteFadeTransparency_);
 
 		//最大の透明度
 		//本当は1.0fだけど新しく変数を作るとネストが増えるので一緒にやることにした。
@@ -941,7 +936,6 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 			gameManager->ChangeScene("Win");
 			return;
 		}
-
 	}
 
 
@@ -954,7 +948,6 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 		.move = player_->GetDirection(),
 	};
 	levelDataManager_->SetListener(levelHandle_, listener);
-
 	//レベルエディタの更新
 	levelDataManager_->Update(levelHandle_);
 
@@ -965,41 +958,14 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	//門
 	gate_->Update();
 
+	//ビネットの処理
+	ProcessVigntte();
+	//コリジョン管理クラスに登録
+	RegisterToCollisionManager();
 
+	//当たり判定チェック
+	collisionManager_->CheckAllCollision();
 
-#pragma region ポストエフェクト
-	//HPが1でピンチの場合
-	const uint32_t DANGEROUS_HP = 1u;
-	//プレイヤーがダメージを受けた場合ビネット
-	if (player_->GetIsDamaged() == true) {
-		//時間の加算
-		vignetteChangeTime_ += DELTA_TIME_;
-
-		//線形補間で滑らかに変化
-		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
-	}
-	//ピンチ演出
-	else if (player_->GetHP() == DANGEROUS_HP) {
-		warningTime_ += DELTA_TIME_;
-		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
-
-		//最大時間
-		const float MAX_WARNING_TIME = 1.0f;
-		//最小時間
-		const float MIN_WARNING_TIME = 1.0f;
-
-		if (warningTime_ > MAX_WARNING_TIME) {
-			warningTime_ = MIN_WARNING_TIME;
-		}
-	}
-	//通常時の場合
-	else {
-		vignettePow_ = 0.0f;
-		vignetteChangeTime_ = 0.0f;
-	}
-	vignette_->SetPow(vignettePow_);
-
-#pragma endregion
 
 #ifdef _DEBUG 
 
@@ -1010,15 +976,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	//ImGuiの表示
 	DisplayImGui();
 
-
 #endif // _DEBUG
-
-	//コリジョン管理クラスに登録
-	RegisterToCollisionManager();
-
-	//当たり判定チェック
-	collisionManager_->CheckAllCollision();
-
 }
 
 void GameScene::PreDrawPostEffectFirst() {

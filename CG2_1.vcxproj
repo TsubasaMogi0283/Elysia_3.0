@@ -203,6 +203,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Enemy\NormalEnemy\EnemyAttackCollision.cpp" />
     <ClCompile Include="Project\Enemy\NormalEnemy\EnemyFlashLightCollision.cpp" />
     <ClCompile Include="Project\Enemy\NormalEnemy\NormalEnemy.cpp" />
+    <ClCompile Include="Project\Enemy\StrongEnemy\State\StrongEnemyNoneMove.cpp" />
     <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemy.cpp" />
     <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.cpp" />
     <ClCompile Include="Project\Key\Key.cpp" />
@@ -508,7 +509,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Enemy\NormalEnemy\EnemyAttackCollision.h" />
     <ClInclude Include="Project\Enemy\NormalEnemy\EnemyFlashLightCollision.h" />
     <ClInclude Include="Project\Enemy\NormalEnemy\NormalEnemy.h" />
-    <ClInclude Include="Project\Enemy\StrongEnemy\IStongEnemyState.h" />
+    <ClInclude Include="Project\Enemy\StrongEnemy\State\BaseStongEnemyState.h" />
+    <ClInclude Include="Project\Enemy\StrongEnemy\State\StrongEnemyNoneMove.h" />
     <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemy.h" />
     <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.h" />
     <ClInclude Include="Project\Key\Key.h" />
