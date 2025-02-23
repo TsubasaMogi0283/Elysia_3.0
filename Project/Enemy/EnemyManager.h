@@ -111,8 +111,8 @@ public:
 	/// エネミーを取得(vector型の方が良いらしい)
 	/// </summary>
 	/// <returns></returns>
-	inline std::vector<Enemy*> GetEnemies() const{
-		std::vector<Enemy*> enemies;
+	inline std::vector<NormalEnemy*> GetEnemies() const{
+		std::vector<NormalEnemy*> enemies;
 		for (const auto& enemy : enemies_) {
 			enemies.push_back(enemy.get()); 
 		}
@@ -170,7 +170,7 @@ private:
 private:
 	//エネミーのリスト
 	//通常
-	std::list<std::unique_ptr<Enemy>>enemies_ = {};
+	std::list<std::unique_ptr<NormalEnemy>>enemies_ = {};
 	//強敵
 	std::list<std::unique_ptr<StrongEnemy>>strongEnemies_ = {};
 

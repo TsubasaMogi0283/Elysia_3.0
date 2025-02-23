@@ -394,8 +394,8 @@ void GameScene::RegisterToCollisionManager() {
 
 	//エネミーをコリジョンマネージャーに追加
 	//通常の敵のリストの取得
-	std::vector<Enemy*> enemyes = enemyManager_->GetEnemies();
-	for (const Enemy* enemy : enemyes) {
+	std::vector<NormalEnemy*> enemyes = enemyManager_->GetEnemies();
+	for (const NormalEnemy* enemy : enemyes) {
 		//懐中電灯に対して
 		collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 		//攻撃

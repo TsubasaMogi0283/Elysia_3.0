@@ -121,7 +121,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 
 void EnemyManager::DeleteEnemy(){
 	//敵が生存していなかったら消す
-	enemies_.remove_if([](const std::unique_ptr<Enemy>& enemy) {
+	enemies_.remove_if([](const std::unique_ptr<NormalEnemy>& enemy) {
 		//スマートポインタの場合はこれだけで良いよ
 		//勿論こっちもdeleteが無くなってすっきりだね!
 		return enemy->GetIsDeleted();
@@ -135,7 +135,7 @@ void EnemyManager::StopAudio(){
 
 void EnemyManager::GenerateNormalEnemy(const Vector3& position) {
 	//通常の敵の生成
-	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
+	std::unique_ptr<NormalEnemy> enemy = std::make_unique<NormalEnemy>();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 	std::uniform_real_distribution<float> speedDistribute(-0.001f, 0.001f);
@@ -187,7 +187,7 @@ void EnemyManager::Update(){
 
 
 	//通常の敵
-	for (const std::unique_ptr <Enemy>& enemy : enemies_) {
+	for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 		//プレイヤーの位置を設定
 		enemy->SetPlayerPosition(playerPosition);
 
@@ -280,7 +280,7 @@ void EnemyManager::Update(){
 
 	//敵同士の衝突判定をやる必要が無いからね
 	if (enemyAmount == ONLY_ONE) {
-		for (const std::unique_ptr <Enemy>& enemy : enemies_) {
+		for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 			//状態
 			uint32_t condition = enemy->GetCondition();
 
@@ -682,7 +682,7 @@ void EnemyManager::Update(){
 void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 
 	//描画(通常)
-	for (const std::unique_ptr <Enemy>& enemy : enemies_) {
+	for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 		enemy->Draw(camera,spotLight);
 	}
 
