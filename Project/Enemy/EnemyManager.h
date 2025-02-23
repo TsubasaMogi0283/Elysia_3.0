@@ -11,8 +11,8 @@
 #include <sstream>
 
 #include "BaseEnemy.h"
-#include "NormalEnemy.h"
-#include "StrongEnemy.h"
+#include "NormalEnemy/NormalEnemy.h"
+#include "StrongEnemy/StrongEnemy.h"
 
 
 

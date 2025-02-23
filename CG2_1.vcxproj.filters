@@ -253,9 +253,6 @@
     <Filter Include="Ellysia\Resource File\Line3D">
       <UniqueIdentifier>{10f964f7-878d-4c2f-bd56-002547dadcf5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Enemy\EnemyAttackCollision">
-      <UniqueIdentifier>{20d87d40-77b6-425d-8fb0-6466f81f7d5a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Enemy\StrongEnemy">
       <UniqueIdentifier>{53f59d92-040d-4e5f-a0f1-6da83d07e9ea}</UniqueIdentifier>
     </Filter>
@@ -279,9 +276,6 @@
     </Filter>
     <Filter Include="Ellysia\Source File\Math\Vector">
       <UniqueIdentifier>{929f13fb-1c6e-45a3-bedc-381d7b8cb4a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Enemy\EnemyFlashLightCollision">
-      <UniqueIdentifier>{94a9085e-5e7c-4aca-abdd-af0623868eeb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Player\PlayerCollisionToNormalEnemyAttack">
       <UniqueIdentifier>{a9a15912-dac9-4dd1-ae7b-ae03c83af842}</UniqueIdentifier>
@@ -418,6 +412,12 @@
     <Filter Include="Ellysia\Header File\Polygone\Particle">
       <UniqueIdentifier>{19010f1c-f15c-41d5-b706-7d1bb3af087d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy\EnemyAttackCollision">
+      <UniqueIdentifier>{20d87d40-77b6-425d-8fb0-6466f81f7d5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy\EnemyFlashLightCollision">
+      <UniqueIdentifier>{94a9085e-5e7c-4aca-abdd-af0623868eeb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -546,9 +546,6 @@
     <ClCompile Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.cpp">
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Enemy\BaseEnemy.cpp">
-      <Filter>Project\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Player\Player.cpp">
       <Filter>Project\Player</Filter>
     </ClCompile>
@@ -569,12 +566,6 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp">
       <Filter>Project\Scene\Lose</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp">
-      <Filter>Project\Enemy\EnemyAttackCollision</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Enemy\StrongEnemy.cpp">
-      <Filter>Project\Enemy\StrongEnemy</Filter>
     </ClCompile>
     <ClCompile Include="Project\Player\PlayerCollisionToStrongEnemy.cpp">
       <Filter>Project\Player\PlayerCollisionToStrongEnemy</Filter>
@@ -602,9 +593,6 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\WinScene\WinScene.cpp">
       <Filter>Project\Scene\Win</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Enemy\EnemyFlashLightCollision.cpp">
-      <Filter>Project\Enemy\EnemyFlashLightCollision</Filter>
     </ClCompile>
     <ClCompile Include="Project\Light\FlashLight\FlashLightCollision.cpp">
       <Filter>Project\Light\FlashLight</Filter>
@@ -641,9 +629,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\InstancingModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Enemy\NormalEnemy.cpp">
-      <Filter>Project\Enemy\NormalEnemy</Filter>
     </ClCompile>
     <ClCompile Include="Project\RailCamera\TitleRailCamera.cpp">
       <Filter>Project\Camera\TitleRailCamera</Filter>
@@ -684,9 +669,6 @@
     <ClCompile Include="Ellysia\EffectData\Dissolve\Dissolve.cpp">
       <Filter>Ellysia\Source File\EffectData</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Enemy\StrongEnemyCollisionToPlayer.cpp">
-      <Filter>Project\Enemy\StrongEnemy</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Stage\Gate\Gate.cpp">
       <Filter>Project\Gate</Filter>
     </ClCompile>
@@ -695,6 +677,21 @@
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\2D\Particle\Particle2D.cpp">
       <Filter>Ellysia\Source File\Polygone\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\NormalEnemy\NormalEnemy.cpp">
+      <Filter>Project\Enemy\NormalEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\NormalEnemy\EnemyAttackCollision.cpp">
+      <Filter>Project\Enemy\NormalEnemy\EnemyAttackCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\NormalEnemy\EnemyFlashLightCollision.cpp">
+      <Filter>Project\Enemy\NormalEnemy\EnemyFlashLightCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemy.cpp">
+      <Filter>Project\Enemy\StrongEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.cpp">
+      <Filter>Project\Enemy\StrongEnemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1027,12 +1024,6 @@
     <ClInclude Include="Project\Enemy\EnemyCondition.h">
       <Filter>Project\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Enemy\EnemyAttackCollision.h">
-      <Filter>Project\Enemy\EnemyAttackCollision</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Enemy\StrongEnemy.h">
-      <Filter>Project\Enemy\StrongEnemy</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Player\PlayerCollisionToStrongEnemy.h">
       <Filter>Project\Player\PlayerCollisionToStrongEnemy</Filter>
     </ClInclude>
@@ -1075,9 +1066,6 @@
     <ClInclude Include="Project\AllGameScene\WinScene\WinScene.h">
       <Filter>Project\Scene\Win</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Enemy\EnemyFlashLightCollision.h">
-      <Filter>Project\Enemy\EnemyFlashLightCollision</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Light\FlashLight\FlashLightCollision.h">
       <Filter>Project\Light\FlashLight</Filter>
     </ClInclude>
@@ -1107,9 +1095,6 @@
     </ClInclude>
     <ClInclude Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.h">
       <Filter>Ellysia\Header File\Polygone\3D\InstancingModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Enemy\NormalEnemy.h">
-      <Filter>Project\Enemy\NormalEnemy</Filter>
     </ClInclude>
     <ClInclude Include="Project\RailCamera\TitleRailCamera.h">
       <Filter>Project\Camera\TitleRailCamera</Filter>
@@ -1174,9 +1159,6 @@
     <ClInclude Include="Ellysia\Material\Material.h">
       <Filter>Ellysia\Header File\EffectData</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Enemy\StrongEnemyCollisionToPlayer.h">
-      <Filter>Project\Enemy\StrongEnemy</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Stage\Gate\Gate.h">
       <Filter>Project\Gate</Filter>
     </ClInclude>
@@ -1195,7 +1177,22 @@
     <ClInclude Include="Ellysia\Polygon\Particle\Emitter.h">
       <Filter>Ellysia\Header File\Polygone\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Enemy\IStongEnemyState.h">
+    <ClInclude Include="Project\Enemy\NormalEnemy\NormalEnemy.h">
+      <Filter>Project\Enemy\NormalEnemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\NormalEnemy\EnemyAttackCollision.h">
+      <Filter>Project\Enemy\NormalEnemy\EnemyAttackCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\NormalEnemy\EnemyFlashLightCollision.h">
+      <Filter>Project\Enemy\NormalEnemy\EnemyFlashLightCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\StrongEnemy\IStongEnemyState.h">
+      <Filter>Project\Enemy\StrongEnemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemy.h">
+      <Filter>Project\Enemy\StrongEnemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.h">
       <Filter>Project\Enemy\StrongEnemy</Filter>
     </ClInclude>
   </ItemGroup>

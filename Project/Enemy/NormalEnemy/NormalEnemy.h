@@ -16,10 +16,10 @@
 #include "DirectionalLight.h"
 
 #include "AABB.h"
-#include "EnemyCondition.h"
+#include "Enemy/EnemyCondition.h"
 #include "EnemyAttackCollision.h"
 #include "EnemyFlashLightCollision.h"
-#include "BaseEnemy.h"
+#include "Enemy/BaseEnemy.h"
 
 #pragma region 前方宣言
 

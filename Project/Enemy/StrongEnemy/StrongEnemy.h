@@ -8,7 +8,7 @@
 
 
 
-#include "BaseEnemy.h"
+#include "Enemy/BaseEnemy.h"
 #include "Enemy/EnemyCondition.h"
 #include "StrongEnemyCollisionToPlayer.h"
 #include "IStongEnemyState.h"
@@ -94,7 +94,7 @@ private:
 	//プレイヤーに対してのコリジョン
 	std::unique_ptr<StrongEnemyCollisionToPlayer> collisionToPlayer_ = nullptr;
 	//行動状態
-	std::unique_ptr<IStongEnemyState> state_ = nullptr;
+	//std::unique_ptr<IStongEnemyState> state_ = nullptr;
 
 	
 };
