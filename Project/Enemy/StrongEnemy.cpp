@@ -142,4 +142,8 @@ void StrongEnemy::Draw(const Camera& camera,const SpotLight& spotLight){
 
 }
 
+StrongEnemy::~StrongEnemy()
+{
+}
+
 

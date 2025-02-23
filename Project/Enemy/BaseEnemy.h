@@ -191,14 +191,6 @@ public:
 		return isDeleted_;
 	}
 
-
-private:
-	
-	/// <summary>
-	/// ImGuiの表示
-	/// </summary>
-	virtual void DisplayImGui()=0;
-
 protected:
 	//状態
 	uint32_t preCondition_ = EnemyCondition::NoneMove;

@@ -102,80 +102,7 @@ public:
 		return isAlive_;
 	}
 
-	/// <summary>
-	/// 向きを取得
-	/// </summary>
-	/// <returns></returns>
-	inline Vector3 GetDirection() const {
-		return direction_;
-	}
 
-	/// <summary>
-	/// プレイヤーの座標を設定
-	/// </summary>
-	/// <param name="position"></param>
-	inline void SetPlayerPosition(const Vector3& position) {
-		this->playerPosition_ = position;
-	}
-
-	/// <summary>
-	/// 前の状態の設定
-	/// </summary>
-	/// <param name="condition"></param>
-	inline void SetPreCondition(const uint32_t& preCondition) {
-		this->preCondition_ = preCondition;
-	}
-
-	/// <summary>
-	/// 前の状態を取得
-	/// </summary>
-	/// <returns></returns>
-	inline uint32_t GetPreCondition() const {
-		return preCondition_;
-	}
-
-	/// <summary>
-	/// 状態の設定
-	/// </summary>
-	/// <param name="condition"></param>
-	inline void SetCondition(const uint32_t& condition) {
-		this->condition_ = condition;
-	}
-
-	/// <summary>
-	/// 状態の取得
-	/// </summary>
-	/// <returns></returns>
-	inline uint32_t GetCondition() const {
-		return condition_;
-	}
-
-	/// <summary>
-	/// X軸反転
-	/// </summary>
-	inline void InvertSpeedX() {
-		this->speed_.x *= -1.0f;
-	}
-	/// <summary>
-	/// Z軸反転
-	/// </summary>
-	inline void InvertSpeedZ() {
-		this->speed_.z *= -1.0f;
-	}
-
-	/// <summary>
-	/// 止まる前にスピードを記録する
-	/// </summary>
-	inline void SaveSpeed() {
-		this->preSpeed_ = this->speed_;
-	}
-
-	/// <summary>
-	/// 再度動くとき
-	/// </summary>
-	inline void MoveAgain() {
-		this->speed_ = this->preSpeed_;
-	}
 
 
 	/// <summary>
@@ -232,11 +159,6 @@ private:
 
 
 private:
-	//状態
-	uint32_t preCondition_ = EnemyCondition::NoneMove;
-	uint32_t condition_ = EnemyCondition::Move;
-
-private:
 	//グローバル変数クラス
 	Ellysia::GlobalVariables* globalVariables_ = nullptr;
 	//グループ名
@@ -257,18 +179,8 @@ private:
 	std::unique_ptr<Ellysia::Particle3D> particle_ = {};
 	//マテリアル
 	Material particleMaterial_ = {};
-
+	//デバッグ用のモデルハンドル
 	uint32_t debugModelHandle = 0;
-	//移動速度
-	Vector3 preSpeed_ = {};
-	Vector3 speed_ = {};
-
-	//向き
-	Vector3 direction_ = {};
-
-	//生存
-	bool isAlive_ = true;
-
 
 	//振動のオフセット
 	float shakeOffset_ = 0.05f;

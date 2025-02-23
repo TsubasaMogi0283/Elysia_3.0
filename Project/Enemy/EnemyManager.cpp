@@ -105,7 +105,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 			position.z = static_cast<float>(std::atof(word.c_str()));
 
 			//生成
-			//GenerateStrongEnemy(position);
+			GenerateStrongEnemy(position);
 
 		}
 
@@ -147,21 +147,22 @@ void EnemyManager::GenerateNormalEnemy(const Vector3& position) {
 
 
 void EnemyManager::GenerateStrongEnemy(const Vector3& position){
-	//強敵の生成
+	position;
+	////強敵の生成
 	std::unique_ptr<StrongEnemy> enemy = std::make_unique<StrongEnemy>();
-	std::random_device seedGenerator;
-	std::mt19937 randomEngine(seedGenerator());
-
-	//スピード(方向)を決める
-	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
-	speedDistribute;
-	Vector3 speed = {.x= 0.01f,.y= 0.0f,.z= 0.00f };
-
-	//初期化
-	enemy->Initialize(strongEnemyModelHandle_, position, speed);
-	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
-	//挿入
-	strongEnemies_.push_back(std::move(enemy));
+	//std::random_device seedGenerator;
+	//std::mt19937 randomEngine(seedGenerator());
+	//
+	////スピード(方向)を決める
+	//std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
+	//speedDistribute;
+	//Vector3 speed = {.x= 0.01f,.y= 0.0f,.z= 0.00f };
+	//
+	////初期化
+	//enemy->Initialize(strongEnemyModelHandle_, position, speed);
+	//enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
+	////挿入
+	//strongEnemies_.push_back(std::move(enemy));
 }
 
 void EnemyManager::Update(){
@@ -192,8 +193,6 @@ void EnemyManager::Update(){
 
 		//移動中の時
 		if (enemy->GetCondition() == EnemyCondition::Move) {
-
-
 
 			//レベルエディタから持ってくる
 			//座標
