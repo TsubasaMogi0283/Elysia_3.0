@@ -86,20 +86,13 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 	shakeOffset_ = globalVariables_->GetFloatValue(GROUNP_NAME_, "ShakeOffset");
 }
 
-
-
-
-
-
 void NormalEnemy::Update() {
 
 	//0から始める
 	const uint32_t RESTART_TIME = 0u;
 	//スピードの量
 	const float SPEED_AMOUNT_ = 0.05f;
-	//StatePatternにしたい！！
-	//PreTracking消して単純化したい
-
+	
 	//生存している時だけ行動するよ
 	if (isAlive_ == true) {
 		//状態遷移

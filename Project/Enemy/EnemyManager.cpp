@@ -48,7 +48,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	std::string line;
 
 
-	//コマンド実行ループ
+	//CSV読み込み
 	while (std::getline(enemyPositionsFromCSV_, line)) {
 
 		//1行分の文字列をストリームに変換して解析しやすくする
@@ -107,17 +107,10 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 
 	}
 
-
-
-
 	//接近BGMの設定
 	audio_ = Ellysia::Audio::GetInstance();
 	audioHandle_ = audio_->Load("Resources/Audio/Enemy/TrackingToPlayer.mp3");
 }
-
-
-
-
 
 void EnemyManager::DeleteEnemy(){
 	//敵が生存していなかったら消す
@@ -140,7 +133,6 @@ void EnemyManager::GenerateNormalEnemy(const Vector3& position) {
 	std::mt19937 randomEngine(seedGenerator());
 	std::uniform_real_distribution<float> speedDistribute(-0.001f, 0.001f);
 
-	
 	//スピード決め
 	Vector3 speed = { .x = speedDistribute(randomEngine),.y = 0.0f,.z = speedDistribute(randomEngine) };
 
@@ -156,14 +148,10 @@ void EnemyManager::GenerateStrongEnemy(const Vector3& position){
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 
-
-
 	//スピード(方向)を決める
 	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
 	speedDistribute;
 	Vector3 speed = {.x= 0.01f,.y= 0.0f,.z= 0.00f };
-
-
 
 	//初期化
 	enemy->Initialize(strongEnemyModelHandle_, position, speed);
@@ -201,7 +189,6 @@ void EnemyManager::Update(){
 		//移動中の時
 		if (enemy->GetCondition() == EnemyCondition::Move) {
 
-			#pragma region ステージオブジェクト
 
 
 			//レベルエディタから持ってくる
@@ -211,6 +198,7 @@ void EnemyManager::Update(){
 			std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelDataHandle_);
 			//コライダーを持っているかどうか
 			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_);
+			
 			//衝突判定
 			for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
 
@@ -254,41 +242,24 @@ void EnemyManager::Update(){
 							enemy->InvertSpeedZ();
 						}
 
-
-
-#ifdef _DEBUG
-						ImGui::Begin("DemoObjectEnemy");
-						ImGui::InputFloat("Dot", &dot);
-						ImGui::InputFloat3("defference", &defference.x);
-						ImGui::InputFloat("defferenceValueX", &defferenceValueX);
-						ImGui::InputFloat("defferenceValueZ", &defferenceValueZ);
-						ImGui::End();
-#endif // _DEBUG
-
 					}
 				}
 			}
-			#pragma endregion
 		}
 	}
 	
 	//現在の敵の数
 	uint32_t enemyAmount = static_cast<uint32_t>(enemies_.size());
-
 	//1体だけの時
 	const uint32_t ONLY_ONE = 1u;
 
-	//敵同士の衝突判定をやる必要が無いからね
+	//敵同士の判定をやる必要が無いからね
 	if (enemyAmount == ONLY_ONE) {
 		for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 			//状態
 			uint32_t condition = enemy->GetCondition();
-
-
 			//向き
 			Vector3 enemyDirection = enemy->GetDirection();
-
-
 			//敵
 			AABB enemyAABB = enemy->GetAABB();
 
@@ -304,9 +275,6 @@ void EnemyManager::Update(){
 			Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
 			//内積の計算
 			float dot = SingleCalculation::Dot(normalizedDefference, enemyDirection);
-
-			
-			
 
 			//後頭部に目がついているわけではないからね
 			if (dot > FRONT_DOT) {
@@ -364,10 +332,8 @@ void EnemyManager::Update(){
 
 			//比較する数
 			const uint32_t COMPARE_NUMBER = 2u;
-
 			//元となる敵
 			const uint32_t BASE_ENEMY = 0u;
-
 			//比較する敵
 			const uint32_t COMPARE_ENEMY = 1u;
 
@@ -413,9 +379,6 @@ void EnemyManager::Update(){
 					//次のループで上書きされないようにbreakさせるよ！
 					break;
 				}
-
-
-				
 			}
 
 			//現在の状態
@@ -425,10 +388,6 @@ void EnemyManager::Update(){
 			Vector3 playerEnemyDifference = VectorCalculation::Subtract(playerPosition, (*it1)->GetWorldPosition());
 			//プレイヤーとの距離 
 			float playerEnemyDistance = SingleCalculation::Length(playerEnemyDifference);
-
-			
-
-
 
 			//前方にいた場合
 			if (enemyAndEnemyDot >= FRONT_DOT && condition == EnemyCondition::Move) {
@@ -469,10 +428,7 @@ void EnemyManager::Update(){
 					(*it1)->SetPreCondition(preCondition);
 					//状態の変更
 					(*it1)->SetCondition(newCondition);
-
 				}
-				
-
 			}
 			//前方にいない場合
 			else {
@@ -539,18 +495,13 @@ void EnemyManager::Update(){
 		strongEnemy->SetPlayerPosition(playerPosition);
 
 		//AABBの取得
+		//通常
 		AABB strongEnemyAABB = strongEnemy->GetAABB();
-
-
-		//AABB
+		//強敵
 		AABB enemyAABB = strongEnemy->GetAABB();
 
 		//移動中の時
 		if (strongEnemy->GetCondition() == EnemyCondition::Move) {
-
-#pragma region ステージオブジェクト
-
-
 			//レベルエディタから持ってくる
 			//座標
 			std::vector<Vector3> positions = levelDataManager_->GetStageObjectPositions(levelDataHandle_);
@@ -604,10 +555,6 @@ void EnemyManager::Update(){
 				}
 
 			}
-
-
-
-#pragma endregion
 		}
 
 		//差分を求める
@@ -640,14 +587,6 @@ void EnemyManager::Update(){
 
 
 
-		//Panの処理
-		//方向からPanを振る
-		//基本左右だけなのでX軸成分だけとる
-		//まだ不具合があるので後ほど修正
-		float pan = directionToPlayer.x;
-		pan;
-		//audio_->SetPan(audioHandle_, pan);
-
 #ifdef _DEBUG
 		ImGui::Begin("強敵");
 		ImGui::InputFloat("距離", &volume);
@@ -656,9 +595,6 @@ void EnemyManager::Update(){
 		ImGui::InputFloat("プレイヤーとの距離", &playerStrongEnemyDistance);
 		ImGui::End();
 #endif // _DEBUG
-
-
-
 
 
 		//設定した距離より小さくなると追跡
@@ -672,10 +608,6 @@ void EnemyManager::Update(){
 			uint32_t newCondition = EnemyCondition::Move;
 			strongEnemy->SetCondition(newCondition);
 		}
-
-
-
-
 	}
 }
 

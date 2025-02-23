@@ -1,7 +1,7 @@
 #pragma once
 /**
- * @file Enemy.h
- * @brief 敵のクラス
+ * @file BaseEnemy.h
+ * @brief 敵の基底クラス
  * @author 茂木翼
  */
 
@@ -49,41 +49,36 @@ namespace Ellysia {
 #pragma endregion
 
 /// <summary>
-/// 敵
+/// 敵の基底クラス
 /// </summary>
-class Enemy{
+class BaseEnemy{
 public:
-
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	Enemy();
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="modelHandle"></param>
-	/// <param name="position"></param>
-	/// <param name="speed"></param>
-	void Initialize(const uint32_t& modelHandle,const Vector3& position,const Vector3& speed);
+	/// <param name="modelHandle">モデルハンドル</param>
+	/// <param name="position">座標</param>
+	/// <param name="speed">スピード</param>
+	virtual void Initialize(const uint32_t& modelHandle,const Vector3& position,const Vector3& speed);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	virtual void Update();
 
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="camera"></param>
+	/// <param name="camera">カメラ</param>
 	/// <param name="spotLight"></param>
-	void Draw(const Camera& camera,const SpotLight& spotLight);
+	virtual void Draw(const Camera& camera,const SpotLight& spotLight);
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Enemy();
+	virtual ~BaseEnemy()=default;
 
 
 
@@ -190,14 +185,6 @@ public:
 	}
 
 
-	/// <summary>
-	/// 攻撃しているかどうか
-	/// </summary>
-	/// <returns></returns>
-	inline bool GetIsAttack()const {
-		return isAttack_;
-	}
-
 
 	/// <summary>
 	/// 消すかどうか
@@ -207,35 +194,8 @@ public:
 	}
 
 
-	/// <summary>
-	/// 攻撃用の当たり判定を取得
-	/// </summary>
-	/// <returns></returns>
-	inline EnemyAttackCollision* GetEnemyAttackCollision() const{
-		return attackCollision_.get();
-	}
-
-
-
-	/// <summary>
-	/// 懐中電灯用の当たり判定を取得
-	/// </summary>
-	/// <returns></returns>
-	inline EnemyFlashLightCollision* GetEnemyFlashLightCollision() const{
-		return enemyFlashLightCollision_.get();
-	}
-
 private:
-	/// <summary>
-	/// 攻撃をライトで受ける
-	/// </summary>
-	void Damaged();
-
-	/// <summary>
-	/// 絶命
-	/// </summary>
-	void Dead();
-
+	
 	/// <summary>
 	/// ImGuiの表示
 	/// </summary>
@@ -247,12 +207,6 @@ private:
 	//状態
 	uint32_t preCondition_ = EnemyCondition::NoneMove;
 	uint32_t condition_ = EnemyCondition::Move;
-
-private:
-	//グローバル変数クラス
-	Ellysia::GlobalVariables* globalVariables_ = nullptr;
-	//グループ名
-	const std::string GROUNP_NAME_ = "NormalEnemy";
 
 private:
 	
@@ -306,14 +260,5 @@ private:
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
 
-	//攻撃
-	int32_t attackTime_ = 0;
-	bool isAttack_ = false;
-
-private:
-	//攻撃用の当たり判定
-	std::unique_ptr<EnemyAttackCollision> attackCollision_ = nullptr;
-	//懐中電灯用の当たり判定
-	std::unique_ptr<EnemyFlashLightCollision> enemyFlashLightCollision_ = nullptr;
-
+	
 };

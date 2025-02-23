@@ -219,10 +219,6 @@ private:
 	//プレイヤーと全ての鍵の距離
 	std::list<float>keyAndPlayerDistances_ = {};
 
-	//生成の文字列を入れる
-	std::stringstream keyPositionsFromCSV_ = {};
-
-
 	//拾う音
 	uint32_t pickUpSEHandle = 0u;
 	//鍵の場所を知らせる音

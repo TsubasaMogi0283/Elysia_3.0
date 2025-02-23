@@ -9,13 +9,13 @@
 #include <ModelManager.h>
 #include "GlobalVariables.h"
 
-Enemy::Enemy(){
+BaseEnemy::BaseEnemy(){
 	//インスタンスの取得
 	//グローバル変数クラス
 	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
 }
 
-void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed){
+void BaseEnemy::Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed){
 	
 	//モデルの生成
 	model_.reset(Ellysia::Model::Create(modelHandle));
@@ -90,7 +90,7 @@ void Enemy::Initialize(const uint32_t& modelHandle, const Vector3& position, con
 
 
 
-void Enemy::Update(){
+void BaseEnemy::Update(){
 	
 	//0から始める
 	const uint32_t RESTART_TIME = 0u;
@@ -250,7 +250,7 @@ void Enemy::Update(){
 	DisplayImGui();
 }
 
-void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
+void BaseEnemy::Draw(const Camera& camera,const SpotLight&spotLight){
 #ifdef _DEBUG
 	//攻撃
 	attackCollision_->Draw(camera, spotLight);
@@ -266,11 +266,8 @@ void Enemy::Draw(const Camera& camera,const SpotLight&spotLight){
 	}
 }
 
-Enemy::~Enemy(){
-	globalVariables_->SaveFile(GROUNP_NAME_);
-}
 
-void Enemy::Damaged() {
+void BaseEnemy::Damaged() {
 
 	//ライトの強さによってダメージ量を調整したい
 
@@ -305,7 +302,7 @@ void Enemy::Damaged() {
 	}
 }
 
-void Enemy::Dead() {
+void BaseEnemy::Dead() {
 	//消えていくよ
 	const float DELETE_INTERVAL = 0.01f;
 	mainMaterial_.color_.w -= DELETE_INTERVAL;
@@ -343,7 +340,7 @@ void Enemy::Dead() {
 
 }
 
-void Enemy::DisplayImGui(){
+void BaseEnemy::DisplayImGui(){
 #ifdef _DEBUG
 
 	ImGui::Begin("敵");
