@@ -1,3 +1,6 @@
+#pragma once
+
+
 /**
  * @file NormalEnemy.h
  * @brief 敵のクラス
@@ -6,16 +9,17 @@
 
 #include <memory>
 
-#include "Vector3.h"
 #include "WorldTransform.h"
 #include "Model.h"
 #include "Material.h"
-#include "EnemyAttackCollision.h"
-#include "AABB.h"
-#include "EnemyCondition.h"
-#include "EnemyFlashLightCollision.h"
 #include "Particle3D.h"
 #include "DirectionalLight.h"
+
+#include "AABB.h"
+#include "EnemyCondition.h"
+#include "EnemyAttackCollision.h"
+#include "EnemyFlashLightCollision.h"
+#include "BaseEnemy.h"
 
 #pragma region 前方宣言
 
@@ -50,7 +54,7 @@ namespace Ellysia {
 /// <summary>
 /// 敵
 /// </summary>
-class NormalEnemy {
+class NormalEnemy : public BaseEnemy {
 public:
 
 	/// <summary>
@@ -61,15 +65,15 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="modelHandle"></param>
-	/// <param name="position"></param>
-	/// <param name="speed"></param>
-	void Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed);
+	/// <param name="modelHandle">モデルハンドル</param>
+	/// <param name="position">座標</param>
+	/// <param name="speed">スピード</param>
+	void Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed)override;
 
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Update()override;
 
 
 	/// <summary>
@@ -77,31 +81,16 @@ public:
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="spotLight"></param>
-	void Draw(const Camera& camera, const SpotLight& spotLight);
+	void Draw(const Camera& camera, const SpotLight& spotLight)override;
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~NormalEnemy();
+	~NormalEnemy()override;
 
 
 
 public:
-	/// <summary>
-	/// ワールド座標
-	/// </summary>
-	/// <returns></returns>
-	inline Vector3 GetWorldPosition()const {
-		return worldTransform_.GetWorldPosition();
-	};
-
-	/// <summary>
-	/// AABBの取得
-	/// </summary>
-	/// <returns></returns>
-	inline AABB GetAABB()const {
-		return aabb_;
-	}
 
 
 
@@ -264,15 +253,9 @@ private:
 
 
 private:
-	//ワールドトランスフォーム
-	WorldTransform worldTransform_ = {};
-
-	//モデル
-	std::unique_ptr<Ellysia::Model> model_ = nullptr;
 	//パーティクル
 	std::unique_ptr<Ellysia::Particle3D> particle_ = {};
 	//マテリアル
-	Material mainMaterial_ = {};
 	Material particleMaterial_ = {};
 
 	uint32_t debugModelHandle = 0;
@@ -286,24 +269,10 @@ private:
 	//生存
 	bool isAlive_ = true;
 
-	//AABB
-	AABB aabb_ = {};
 
-	//消滅
-	//時間とフラグ
-	int32_t deleteTime_ = 0;
-	bool isDeleted_ = false;
 	//振動のオフセット
 	float shakeOffset_ = 0.05f;
 	bool isShake_ = false;
-
-	//追跡
-	bool isTracking_ = false;
-	//追跡前の座標
-	Vector3 preTrackingPosition_ = {};
-	Vector3 preTrackingPlayerPosition_ = {};
-	//プレイヤーの座標
-	Vector3 playerPosition_ = {};
 
 	//攻撃
 	int32_t attackTime_ = 0;

@@ -10,11 +10,10 @@
 #include <vector>
 #include <sstream>
 
-#include "Stage/Ground/StageRect.h"
-#include "Enemy.h"
+#include "BaseEnemy.h"
 #include "NormalEnemy.h"
 #include "StrongEnemy.h"
-#include "Audio.h"
+
 
 
 #pragma region 前方宣言
@@ -43,6 +42,10 @@ namespace Ellysia {
 	/// </summary>
 	class LevelDataManager;
 
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
 }
 
 #pragma endregion

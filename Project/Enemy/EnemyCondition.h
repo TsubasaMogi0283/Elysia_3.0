@@ -6,9 +6,6 @@
  * @author 茂木翼
  */
 
-
-//後々StatePatternで分けるつもり
-
 /// <summary>
 /// 敵の状態
 /// </summary>

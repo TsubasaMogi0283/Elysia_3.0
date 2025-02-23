@@ -5,15 +5,20 @@
 #include "Player/Player.h"
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
+
 #include "Input.h"
+#include "Audio.h"
 #include "LevelDataManager.h"
 
 
 
 
 EnemyManager::EnemyManager(){
-	//レベルデータ管理クラスの取得
+	//インスタンスの取得
+	//レベルデータ管理クラス
 	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	//オーディオ
+	audio_ = Ellysia::Audio::GetInstance();
 }
 
 
@@ -108,7 +113,6 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	}
 
 	//接近BGMの設定
-	audio_ = Ellysia::Audio::GetInstance();
 	audioHandle_ = audio_->Load("Resources/Audio/Enemy/TrackingToPlayer.mp3");
 }
 

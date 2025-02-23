@@ -7,16 +7,16 @@
 
 #include <memory>
 
-#include "Vector3.h"
 #include "WorldTransform.h"
 #include "Model.h"
 #include "Material.h"
-#include "EnemyAttackCollision.h"
 #include "AABB.h"
-#include "EnemyCondition.h"
-#include "EnemyFlashLightCollision.h"
 #include "Particle3D.h"
 #include "DirectionalLight.h"
+
+#include "EnemyCondition.h"
+#include "EnemyAttackCollision.h"
+#include "EnemyFlashLightCollision.h"
 
 #pragma region 前方宣言
 
@@ -60,12 +60,12 @@ public:
 	/// <param name="modelHandle">モデルハンドル</param>
 	/// <param name="position">座標</param>
 	/// <param name="speed">スピード</param>
-	virtual void Initialize(const uint32_t& modelHandle,const Vector3& position,const Vector3& speed);
+	virtual void Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed) = 0;
 
 	/// <summary>
 	/// 更新
 	/// </summary>
-	virtual void Update();
+	virtual void Update() = 0;
 
 
 	/// <summary>
@@ -73,7 +73,7 @@ public:
 	/// </summary>
 	/// <param name="camera">カメラ</param>
 	/// <param name="spotLight"></param>
-	virtual void Draw(const Camera& camera,const SpotLight& spotLight);
+	virtual void Draw(const Camera& camera, const SpotLight& spotLight) = 0;
 
 	/// <summary>
 	/// デストラクタ
@@ -184,8 +184,6 @@ public:
 		this->speed_ = this->preSpeed_;
 	}
 
-
-
 	/// <summary>
 	/// 消すかどうか
 	/// </summary>
@@ -199,38 +197,25 @@ private:
 	/// <summary>
 	/// ImGuiの表示
 	/// </summary>
-	void DisplayImGui();
+	virtual void DisplayImGui()=0;
 
-	
-
-private:
+protected:
 	//状態
 	uint32_t preCondition_ = EnemyCondition::NoneMove;
 	uint32_t condition_ = EnemyCondition::Move;
 
-private:
-	
-	//幅
-	const float RADIUS_ = 1.0f;
-	//幅(Vector3)
-	const Vector3 RADIUS_INTERVAL_ = { .x = RADIUS_,.y = RADIUS_,.z = RADIUS_ };
-	//0に戻る時間
-	const int32_t RETURN_ATTCK_TIME_ = 240u;
-
-
-private:
-	//ワールドトランスフォーム
-	WorldTransform worldTransform_ = {};
+protected:
 	
 	//モデル
 	std::unique_ptr<Ellysia::Model> model_ = nullptr;
-	//パーティクル
-	std::unique_ptr<Ellysia::Particle3D> particle_ = {};
-	//マテリアル
-	Material mainMaterial_ = {};
-	Material particleMaterial_ = {};
+	//ワールドトランスフォーム
+	WorldTransform worldTransform_ = {};
+	//AABB
+	AABB aabb_ = {};
 
-	uint32_t debugModelHandle = 0;
+	//マテリアル
+	Material material_ = {};
+
 	//移動速度
 	Vector3 preSpeed_ = {};
 	Vector3 speed_ = {};
@@ -241,17 +226,12 @@ private:
 	//生存
 	bool isAlive_ = true;
 
-	//AABB
-	AABB aabb_ = {};
+	
 	
 	//消滅
 	//時間とフラグ
 	int32_t deleteTime_ = 0;
 	bool isDeleted_ = false;
-	//振動のオフセット
-	float shakeOffset_ = 0.05f;
-	bool isShake_ = false;
-
 	//追跡
 	bool isTracking_ = false;
 	//追跡前の座標

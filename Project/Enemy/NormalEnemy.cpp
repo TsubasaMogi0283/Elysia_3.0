@@ -35,8 +35,8 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 	worldTransform_.translate = position;
 
 	//マテリアルの初期化
-	mainMaterial_.Initialize();
-	mainMaterial_.lightingKinds_ = SpotLighting;
+	material_.Initialize();
+	material_.lightingKinds_ = SpotLighting;
 	//パーティクル
 	particleMaterial_.Initialize();
 	particleMaterial_.lightingKinds_ = NoneLighting;
@@ -205,7 +205,7 @@ void NormalEnemy::Update() {
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
 	//マテリアルの更新
-	mainMaterial_.Update();
+	material_.Update();
 	particleMaterial_.Update();
 
 
@@ -252,7 +252,7 @@ void NormalEnemy::Draw(const Camera& camera, const SpotLight& spotLight) {
 #endif // _DEBUG
 
 	//本体
-	model_->Draw(worldTransform_, camera, mainMaterial_, spotLight);
+	model_->Draw(worldTransform_, camera, material_, spotLight);
 
 
 	if (particle_ != nullptr) {
@@ -272,8 +272,8 @@ void NormalEnemy::Damaged() {
 	//懐中電灯用の当たり判定に当たっていたら色が赤に変わっていくよ
 	if (enemyFlashLightCollision_->GetIsTouched() == true) {
 		const float COLOR_CHANGE_INTERVAL = 0.005f;
-		mainMaterial_.color_.y -= COLOR_CHANGE_INTERVAL;
-		mainMaterial_.color_.z -= COLOR_CHANGE_INTERVAL;
+		material_.color_.y -= COLOR_CHANGE_INTERVAL;
+		material_.color_.z -= COLOR_CHANGE_INTERVAL;
 
 		//生存している時だけ振動
 		if (isAlive_ == true) {
@@ -285,16 +285,16 @@ void NormalEnemy::Damaged() {
 
 
 			//現在の座標に加える
-			worldTransform_.translate.x += distribute(randomEngine) * (1.0f - mainMaterial_.color_.y) * shakeOffset_;
-			worldTransform_.translate.z += distribute(randomEngine) * (1.0f - mainMaterial_.color_.y) * shakeOffset_;
+			worldTransform_.translate.x += distribute(randomEngine) * (1.0f - material_.color_.y) * shakeOffset_;
+			worldTransform_.translate.z += distribute(randomEngine) * (1.0f - material_.color_.y) * shakeOffset_;
 		}
 
 
 	}
 
 	//0になったら絶命
-	if (mainMaterial_.color_.y < 0.0f &&
-		mainMaterial_.color_.z < 0.0f) {
+	if (material_.color_.y < 0.0f &&
+		material_.color_.z < 0.0f) {
 		isAlive_ = false;
 	}
 }
@@ -302,7 +302,7 @@ void NormalEnemy::Damaged() {
 void NormalEnemy::Dead() {
 	//消えていくよ
 	const float DELETE_INTERVAL = 0.01f;
-	mainMaterial_.color_.w -= DELETE_INTERVAL;
+	material_.color_.w -= DELETE_INTERVAL;
 
 	//縮小
 	const float SCALE_DOWN_VALUE = -0.1f;
@@ -355,7 +355,7 @@ void NormalEnemy::DisplayImGui() {
 	}
 
 
-	ImGui::InputFloat4("色", &mainMaterial_.color_.x);
+	ImGui::InputFloat4("色", &material_.color_.x);
 	ImGui::InputFloat3("座標", &worldTransform_.translate.x);
 	ImGui::InputFloat3("追跡前のプレイヤーの座標", &preTrackingPlayerPosition_.x);
 	ImGui::InputFloat3("追跡前の座標", &preTrackingPosition_.x);

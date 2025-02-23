@@ -51,10 +51,8 @@ void StrongEnemy::Update(){
 	switch (condition_) {
 	case EnemyCondition::NoneMove:
 		//何もしない
-
-		speed_ = { 0.0f,0.0f,0.0f };
+		speed_ = {.x = 0.0f,.y = 0.0f,.z = 0.0f };
 		break;
-
 		
 	case EnemyCondition::Move:
 

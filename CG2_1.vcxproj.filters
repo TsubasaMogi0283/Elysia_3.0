@@ -546,7 +546,7 @@
     <ClCompile Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.cpp">
       <Filter>Ellysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Enemy\Enemy.cpp">
+    <ClCompile Include="Project\Enemy\BaseEnemy.cpp">
       <Filter>Project\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -991,7 +991,7 @@
     <ClInclude Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.h">
       <Filter>Ellysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Enemy\Enemy.h">
+    <ClInclude Include="Project\Enemy\BaseEnemy.h">
       <Filter>Project\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Project\Player\Player.h">
