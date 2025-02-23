@@ -1,17 +1,15 @@
-#pragma once
-
 /**
- * @file Enemy.h
+ * @file NormalEnemy.h
  * @brief 敵のクラス
  * @author 茂木翼
  */
+
+#include <memory>
 
 #include "Vector3.h"
 #include "WorldTransform.h"
 #include "Model.h"
 #include "Material.h"
-#include <memory>
-#include "Stage/Ground/StageRect.h"
 #include "EnemyAttackCollision.h"
 #include "AABB.h"
 #include "EnemyCondition.h"
@@ -36,20 +34,29 @@ struct SpotLight;
 /// </summary>
 class Player;
 
+/// <summary>
+/// EllysiaEngine(前方宣言)
+/// </summary>
+namespace Ellysia {
+	/// <summary>
+	/// グローバル変数
+	/// </summary>
+	class GlobalVariables;
+}
+
 
 #pragma endregion
 
-
 /// <summary>
-/// 通常の敵
+/// 敵
 /// </summary>
-class NormalEnemy{
+class NormalEnemy {
 public:
 
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	NormalEnemy() = default;
+	NormalEnemy();
 
 	/// <summary>
 	/// 初期化
@@ -75,8 +82,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~NormalEnemy() = default;
-
+	~NormalEnemy();
 
 
 
@@ -224,6 +230,16 @@ private:
 	/// </summary>
 	void Damaged();
 
+	/// <summary>
+	/// 絶命
+	/// </summary>
+	void Dead();
+
+	/// <summary>
+	/// ImGuiの表示
+	/// </summary>
+	void DisplayImGui();
+
 
 
 private:
@@ -231,19 +247,18 @@ private:
 	uint32_t preCondition_ = EnemyCondition::NoneMove;
 	uint32_t condition_ = EnemyCondition::Move;
 
+private:
+	//グローバル変数クラス
+	Ellysia::GlobalVariables* globalVariables_ = nullptr;
+	//グループ名
+	const std::string GROUNP_NAME_ = "NormalEnemy";
 
 private:
-	//スケールサイズ
-	const float SCALE_SIZE = 10.0f;
-
-	//スピードの量
-	const float SPEED_AMOUNT_ = 0.05f;
 
 	//幅
 	const float RADIUS_ = 1.0f;
 	//幅(Vector3)
 	const Vector3 RADIUS_INTERVAL_ = { .x = RADIUS_,.y = RADIUS_,.z = RADIUS_ };
-
 	//0に戻る時間
 	const int32_t RETURN_ATTCK_TIME_ = 240u;
 
@@ -254,10 +269,13 @@ private:
 
 	//モデル
 	std::unique_ptr<Ellysia::Model> model_ = nullptr;
-
+	//パーティクル
+	std::unique_ptr<Ellysia::Particle3D> particle_ = {};
 	//マテリアル
-	Material material_ = {};
+	Material mainMaterial_ = {};
+	Material particleMaterial_ = {};
 
+	uint32_t debugModelHandle = 0;
 	//移動速度
 	Vector3 preSpeed_ = {};
 	Vector3 speed_ = {};
@@ -275,31 +293,26 @@ private:
 	//時間とフラグ
 	int32_t deleteTime_ = 0;
 	bool isDeleted_ = false;
-
+	//振動のオフセット
+	float shakeOffset_ = 0.05f;
+	bool isShake_ = false;
 
 	//追跡
 	bool isTracking_ = false;
 	//追跡前の座標
 	Vector3 preTrackingPosition_ = {};
 	Vector3 preTrackingPlayerPosition_ = {};
-
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
-
 
 	//攻撃
 	int32_t attackTime_ = 0;
 	bool isAttack_ = false;
 
-
 private:
-
 	//攻撃用の当たり判定
 	std::unique_ptr<EnemyAttackCollision> attackCollision_ = nullptr;
 	//懐中電灯用の当たり判定
 	std::unique_ptr<EnemyFlashLightCollision> enemyFlashLightCollision_ = nullptr;
 
-
-
 };
-

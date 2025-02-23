@@ -4761,6 +4761,75 @@
             },
             "file_name": "Grass",
             "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    179.99998474121094
+                ],
+                "translation": [
+                    -12.063931465148926,
+                    24.393383026123047,
+                    0.0
+                ]
+            },
+            "file_name": "Key",
+            "object_type": "Key"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体.001",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    179.99998474121094
+                ],
+                "translation": [
+                    15.379456520080566,
+                    -8.899778366088867,
+                    0.0
+                ]
+            },
+            "file_name": "Key",
+            "object_type": "Key"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体.002",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    179.99998474121094
+                ],
+                "translation": [
+                    -26.80099105834961,
+                    -28.931365966796875,
+                    0.0
+                ]
+            },
+            "file_name": "Key",
+            "object_type": "Key"
         }
     ]
 }

@@ -32,7 +32,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 		//生成
 		const float OFFSET_Y = 0.5f;
 		Vector3 newPosition = { .x = positions[i].x,.y = OFFSET_Y ,.z = positions[i].z };
-		Genarate(positions[i]);
+		Genarate(newPosition);
 	}
 
 	//読み込み

@@ -691,10 +691,10 @@
       <Filter>Project\Gate</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\BaseObjectForLevelEditor.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Ellysia\Source File\Manager\LevelData\Object</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\2D\Particle\Particle2D.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Ellysia\Source File\Polygone\2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

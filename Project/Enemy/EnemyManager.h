@@ -12,6 +12,7 @@
 
 #include "Stage/Ground/StageRect.h"
 #include "Enemy.h"
+#include "NormalEnemy.h"
 #include "StrongEnemy.h"
 #include "Audio.h"
 
