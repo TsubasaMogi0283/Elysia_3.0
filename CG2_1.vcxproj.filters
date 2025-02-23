@@ -1195,6 +1195,9 @@
     <ClInclude Include="Ellysia\Polygon\Particle\Emitter.h">
       <Filter>Ellysia\Header File\Polygone\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="Project\Enemy\IStongEnemyState.h">
+      <Filter>Project\Enemy\StrongEnemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">

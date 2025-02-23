@@ -11,7 +11,7 @@
 #include "BaseEnemy.h"
 #include "Enemy/EnemyCondition.h"
 #include "StrongEnemyCollisionToPlayer.h"
-
+#include "IStongEnemyState.h"
 
 #pragma region 前方宣言
 
@@ -91,10 +91,10 @@ private:
 
 	//追跡開始距離
 	float trackingStartDistance_ = 0.0f;
-
-private:
 	//プレイヤーに対してのコリジョン
 	std::unique_ptr<StrongEnemyCollisionToPlayer> collisionToPlayer_ = nullptr;
+	//行動状態
+	std::unique_ptr<IStongEnemyState> state_ = nullptr;
 
 	
 };

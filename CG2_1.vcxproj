@@ -508,6 +508,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Enemy\EnemyCondition.h" />
     <ClInclude Include="Project\Enemy\EnemyFlashLightCollision.h" />
     <ClInclude Include="Project\Enemy\EnemyManager.h" />
+    <ClInclude Include="Project\Enemy\IStongEnemyState.h" />
     <ClInclude Include="Project\Enemy\NormalEnemy.h" />
     <ClInclude Include="Project\Enemy\StrongEnemy.h" />
     <ClInclude Include="Project\Enemy\StrongEnemyCollisionToPlayer.h" />
