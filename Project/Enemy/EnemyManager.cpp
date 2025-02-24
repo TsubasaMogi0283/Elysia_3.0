@@ -11,7 +11,9 @@
 #include "LevelDataManager.h"
 
 
-
+#include "StrongEnemy/State/StrongEnemyNoneMove.h"
+#include "StrongEnemy/State/StrongEnemyMove.h"
+#include "StrongEnemy/State/StrongEnemyTracking.h"
 
 EnemyManager::EnemyManager(){
 	//インスタンスの取得
@@ -150,19 +152,19 @@ void EnemyManager::GenerateStrongEnemy(const Vector3& position){
 	position;
 	////強敵の生成
 	std::unique_ptr<StrongEnemy> enemy = std::make_unique<StrongEnemy>();
-	//std::random_device seedGenerator;
-	//std::mt19937 randomEngine(seedGenerator());
-	//
-	////スピード(方向)を決める
-	//std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
-	//speedDistribute;
-	//Vector3 speed = {.x= 0.01f,.y= 0.0f,.z= 0.00f };
-	//
-	////初期化
-	//enemy->Initialize(strongEnemyModelHandle_, position, speed);
-	//enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
-	////挿入
-	//strongEnemies_.push_back(std::move(enemy));
+	std::random_device seedGenerator;
+	std::mt19937 randomEngine(seedGenerator());
+	
+	//スピード(方向)を決める
+	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
+	speedDistribute;
+	Vector3 speed = {.x= 0.01f,.y= 0.0f,.z= 0.00f };
+	
+	//初期化
+	enemy->Initialize(strongEnemyModelHandle_, position, speed);
+	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
+	//挿入
+	strongEnemies_.push_back(std::move(enemy));
 }
 
 void EnemyManager::Update(){
@@ -603,13 +605,13 @@ void EnemyManager::Update(){
 		//設定した距離より小さくなると追跡
 		if (playerStrongEnemyDistance <= STRONG_ENEMY_TRACKING_START_DISTANCE_) {
 			//追跡に移行
-			uint32_t newCondition = EnemyCondition::Tracking;
-			strongEnemy->SetCondition(newCondition);
+			strongEnemy->ChangeState(new StrongEnemyTracking());
+
 		}
 		else {
 			//通常の動きに移行
-			uint32_t newCondition = EnemyCondition::Move;
-			strongEnemy->SetCondition(newCondition);
+			strongEnemy->ChangeState(new StrongEnemyMove());
+
 		}
 	}
 }

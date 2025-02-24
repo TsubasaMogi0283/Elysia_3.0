@@ -8,6 +8,11 @@
 #include "CollisionConfig.h"
 #include "ModelManager.h"
 
+
+#include "State/StrongEnemyNoneMove.h"
+#include "State/StrongEnemyMove.h"
+#include "State/StrongEnemyTracking.h"
+
 void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position,const Vector3& speed){
 
 	//モデル
@@ -37,75 +42,18 @@ void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position
 	collisionToPlayer_->Initialize(collisionDebugModel);
 
 
-
-	
+	//行動パターン
+	currentState_ = new StrongEnemyMove();
+	currentState_->Initialize();
 }
 
 
 void StrongEnemy::Update(){
 
 
-	const float SPEED_AMOUNT = 0.02f;
-	//状態
-	//こっちもStatePatternにしたい！！
-	switch (condition_) {
-	case EnemyCondition::NoneMove:
-		//何もしない
-		speed_ = {.x = 0.0f,.y = 0.0f,.z = 0.0f };
-		break;
-		
-	case EnemyCondition::Move:
 
-		//通常の動き
-		//スピードの正規化
-		if (speed_.x != 0.0f ||
-			speed_.y != 0.0f ||
-			speed_.z != 0.0f) {
-			direction_ = VectorCalculation::Normalize(speed_);
-		}
-
-		//スピードの計算
-		Vector3 moveSpeedVelocity = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
-		//加算
-		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, moveSpeedVelocity);
-
-
-		break;
-
-
-
-	case EnemyCondition::Tracking:
-
-		#pragma region 追跡
-
-		//向きを求める
-		direction_ = VectorCalculation::Subtract(playerPosition_, GetWorldPosition());
-		//正規化
-		direction_ = VectorCalculation::Normalize(direction_);
-
-		//
-		direction_ = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
-		//加算
-		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, direction_);
-
-
-
-#ifdef _DEBUG
-		ImGui::Begin("Tracking");
-		ImGui::InputFloat3("方向", &direction_.x);
-		ImGui::InputFloat3("プレイヤーの座標", &playerPosition_.x);
-
-		ImGui::End();
-#endif // DEBUG
-
-
-
-		#pragma endregion
-
-		break;
-	}
-
-
+	//状態の更新
+	currentState_->Update(this);
 
 
 
@@ -142,8 +90,17 @@ void StrongEnemy::Draw(const Camera& camera,const SpotLight& spotLight){
 
 }
 
-StrongEnemy::~StrongEnemy()
-{
+
+void StrongEnemy::ChangeState(BaseStongEnemyState* newState){
+	//前回と違った場合だけ通す
+	if (currentState_ != newState) {
+		delete currentState_;
+		currentState_ = newState;
+		//引数が次に遷移するシーン
+		currentState_->Initialize();
+
+	}
+	
 }
 
 

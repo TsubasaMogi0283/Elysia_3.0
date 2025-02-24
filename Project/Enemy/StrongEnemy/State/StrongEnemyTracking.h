@@ -2,7 +2,7 @@
 
 /**
  * @file StrongEnemyNoneMove.h
- * @brief 強敵が動かない状態のクラス
+ * @brief 強敵が追跡するクラス
  * @author 茂木翼
  */
 
@@ -10,15 +10,15 @@
 
 
 /// <summary>
-/// 強敵が動かない状態
+/// 強敵が追跡する
 /// </summary>
-class StrongEnemyNoneMove : public BaseStongEnemyState {
+class StrongEnemyTracking : public BaseStongEnemyState {
 public:
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize()override;
-
 
 	/// <summary>
 	/// 更新
@@ -28,6 +28,6 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~StrongEnemyNoneMove()=default;
+	~StrongEnemyTracking()=default;
 };
 

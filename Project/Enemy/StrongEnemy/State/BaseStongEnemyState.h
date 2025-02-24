@@ -22,6 +22,7 @@ class StrongEnemy;
 /// </summary>
 class BaseStongEnemyState {
 public:
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -30,8 +31,12 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	virtual void Update(const std::unique_ptr<StrongEnemy>& strongEnemy) = 0;
+	virtual void Update(StrongEnemy* strongEnemy) = 0;
 
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	virtual ~BaseStongEnemyState() = default;
 
 public:
 

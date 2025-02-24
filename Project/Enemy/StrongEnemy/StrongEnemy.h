@@ -64,12 +64,16 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~StrongEnemy()override;
+	~StrongEnemy()override {};
 
 
 public:
 
-
+	/// <summary>
+	/// 状態変化
+	/// </summary>
+	/// <param name=""></param>
+	void ChangeState(BaseStongEnemyState* newState);
 
 	/// <summary>
 	/// 追跡開始距離
@@ -94,7 +98,7 @@ private:
 	//プレイヤーに対してのコリジョン
 	std::unique_ptr<StrongEnemyCollisionToPlayer> collisionToPlayer_ = nullptr;
 	//行動状態
-	//std::unique_ptr<BaseStongEnemyState> state_ = nullptr;
+	BaseStongEnemyState* currentState_ = nullptr;
 
 	
 };

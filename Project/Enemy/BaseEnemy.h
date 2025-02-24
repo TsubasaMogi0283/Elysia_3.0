@@ -81,51 +81,74 @@ public:
 
 public:
 	/// <summary>
-	/// ワールド座標
+	/// ワールド座標を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>ワールド座標</returns>
 	inline Vector3 GetWorldPosition()const {
 		return worldTransform_.GetWorldPosition();
 	};
 
 	/// <summary>
+	/// 座標の設定
+	/// </summary>
+	/// <param name="translate">座標</param>
+	inline void SetTranslate(const Vector3& translate) {
+		this->worldTransform_.translate = translate;
+	}
+
+
+	/// <summary>
 	/// AABBの取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>AABB</returns>
 	inline AABB GetAABB()const {
 		return aabb_;
 	}
 
-
-
 	/// <summary>
 	/// 生きているかのフラグを取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>フラグ</returns>
 	inline bool GetIsAlive() const{
 		return isAlive_;
 	}
 
 	/// <summary>
-	/// 向きを取得
+	/// 方向を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>方向</returns>
 	inline Vector3 GetDirection() const {
 		return direction_;
 	}
 
 	/// <summary>
+	/// 方向を設定
+	/// </summary>
+	/// <param name="direction">方向</param>
+	inline void SetDirection(const Vector3& direction) {
+		this->direction_ = direction;
+	}
+
+	/// <summary>
 	/// プレイヤーの座標を設定
 	/// </summary>
-	/// <param name="position"></param>
+	/// <param name="position">座標</param>
 	inline void SetPlayerPosition(const Vector3& position) {
 		this->playerPosition_ = position;
+	}
+
+	/// <summary>
+	/// プレイヤーの座標を取得
+	/// </summary>
+	/// <returns>座標</returns>
+	inline Vector3 GetPlayerPosition()const {
+		return playerPosition_;
 	}
 	
 	/// <summary>
 	/// 前の状態の設定
 	/// </summary>
-	/// <param name="condition"></param>
+	/// <param name="condition">状態</param>
 	inline void SetPreCondition(const uint32_t& preCondition) {
 		this->preCondition_ = preCondition;
 	}
@@ -133,7 +156,7 @@ public:
 	/// <summary>
 	/// 前の状態を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>状態</returns>
 	inline uint32_t GetPreCondition() const {
 		return preCondition_;
 	}
@@ -141,7 +164,7 @@ public:
 	/// <summary>
 	/// 状態の設定
 	/// </summary>
-	/// <param name="condition"></param>
+	/// <param name="condition">状態</param>
 	inline void SetCondition(const uint32_t& condition) {
 		this->condition_ = condition;
 	}
@@ -149,7 +172,7 @@ public:
 	/// <summary>
 	/// 状態の取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>状態</returns>
 	inline uint32_t GetCondition() const {
 		return condition_;
 	}
@@ -184,7 +207,7 @@ public:
 	/// <summary>
 	/// スピードの設定
 	/// </summary>
-	/// <param name="speed"></param>
+	/// <param name="speed">スピード</param>
 	inline void SetSpeed(Vector3& speed) {
 		this->speed_ = speed;
 	}

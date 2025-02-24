@@ -8,12 +8,12 @@
 
 #include "BaseStongEnemyState.h"
 
-
 /// <summary>
-/// 強敵が動かない状態
+/// 強敵が動く状態
 /// </summary>
-class StrongEnemyNoneMove : public BaseStongEnemyState {
+class StrongEnemyMove : public BaseStongEnemyState{
 public:
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -28,6 +28,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~StrongEnemyNoneMove()=default;
+	~StrongEnemyMove()=default;
+
 };
 
