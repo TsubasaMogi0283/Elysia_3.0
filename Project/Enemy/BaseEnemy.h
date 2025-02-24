@@ -182,6 +182,14 @@ public:
 	}
 
 	/// <summary>
+	/// スピードの設定
+	/// </summary>
+	/// <param name="speed"></param>
+	inline void SetSpeed(Vector3& speed) {
+		this->speed_ = speed;
+	}
+
+	/// <summary>
 	/// 消すかどうか
 	/// </summary>
 	inline bool GetIsDeleted()const  {

@@ -6,7 +6,15 @@
  * @author 茂木翼
  */
 
+#include <memory>
+
 #include "Vector3.h"
+
+
+/// <summary>
+/// 強敵
+/// </summary>
+class StrongEnemy;
 
 
 /// <summary>
@@ -22,8 +30,29 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	virtual void Update() = 0;
+	virtual void Update(const std::unique_ptr<StrongEnemy>& strongEnemy) = 0;
 
+
+public:
+
+	//変更した後の値も使いたいので参照渡しにしている
+		
+
+	/// <summary>
+	/// 方向の設定
+	/// </summary>
+	/// <param name="direction"></param>
+	inline void SetDirection(Vector3& direction) {
+		this->direction_ = direction;
+	}
+
+	/// <summary>
+	/// スピードの設定
+	/// </summary>
+	/// <param name="speed"></param>
+	inline void SetSpeed(Vector3& speed) {
+		this->speed_ = speed;
+	}
 
 protected:
 	//方向
