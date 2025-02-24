@@ -149,7 +149,6 @@ void EnemyManager::GenerateNormalEnemy(const Vector3& position) {
 
 
 void EnemyManager::GenerateStrongEnemy(const Vector3& position){
-	position;
 	////強敵の生成
 	std::unique_ptr<StrongEnemy> enemy = std::make_unique<StrongEnemy>();
 	std::random_device seedGenerator;
@@ -157,8 +156,7 @@ void EnemyManager::GenerateStrongEnemy(const Vector3& position){
 	
 	//スピード(方向)を決める
 	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
-	speedDistribute;
-	Vector3 speed = {.x= 0.01f,.y= 0.0f,.z= 0.00f };
+	Vector3 speed = {.x= speedDistribute(randomEngine),.y = 0.0f,.z = speedDistribute(randomEngine) };
 	
 	//初期化
 	enemy->Initialize(strongEnemyModelHandle_, position, speed);

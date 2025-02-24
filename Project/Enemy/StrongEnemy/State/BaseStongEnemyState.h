@@ -41,17 +41,6 @@ public:
 
 public:
 
-	//変更した後の値も使いたいので参照渡しにしている
-		
-
-	/// <summary>
-	/// 方向の設定
-	/// </summary>
-	/// <param name="direction"></param>
-	inline void SetDirection(Vector3& direction) {
-		this->direction_ = direction;
-	}
-
 	/// <summary>
 	/// 方向を取得
 	/// </summary>
@@ -60,13 +49,6 @@ public:
 		return direction_;
 	}
 
-	/// <summary>
-	/// スピードの設定
-	/// </summary>
-	/// <param name="speed"></param>
-	inline void SetSpeed(Vector3& speed) {
-		this->speed_ = speed;
-	}
 
 	/// <summary>
 	/// 状態の名前を取得
