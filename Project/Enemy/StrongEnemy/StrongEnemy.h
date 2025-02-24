@@ -70,10 +70,10 @@ public:
 public:
 
 	/// <summary>
-	/// 状態変化
+	/// 状態遷移
 	/// </summary>
-	/// <param name=""></param>
-	void ChangeState(BaseStongEnemyState* newState);
+	/// <param name="newState"></param>
+	void ChangeState(std::unique_ptr<BaseStongEnemyState> newState);
 
 	/// <summary>
 	/// 追跡開始距離
@@ -98,7 +98,7 @@ private:
 	//プレイヤーに対してのコリジョン
 	std::unique_ptr<StrongEnemyCollisionToPlayer> collisionToPlayer_ = nullptr;
 	//行動状態
-	BaseStongEnemyState* currentState_ = nullptr;
+	std::unique_ptr<BaseStongEnemyState> currentState_ = nullptr;
 
 	
 };

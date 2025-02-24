@@ -603,12 +603,12 @@ void EnemyManager::Update(){
 		//設定した距離より小さくなると追跡
 		if (playerStrongEnemyDistance <= STRONG_ENEMY_TRACKING_START_DISTANCE_) {
 			//追跡に移行
-			strongEnemy->ChangeState(new StrongEnemyTracking());
+			strongEnemy->ChangeState(std::make_unique<StrongEnemyTracking>());
 
 		}
 		else {
 			//通常の動きに移行
-			strongEnemy->ChangeState(new StrongEnemyMove());
+			strongEnemy->ChangeState(std::make_unique<StrongEnemyMove>());
 
 		}
 	}

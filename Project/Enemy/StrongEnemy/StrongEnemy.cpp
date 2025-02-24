@@ -44,7 +44,7 @@ void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position
 
 	//行動パターン
 	//最初は通常の動き
-	currentState_ = new StrongEnemyMove();
+	currentState_ = std::make_unique<StrongEnemyMove>();
 	currentState_->Initialize();
 }
 
@@ -95,11 +95,10 @@ void StrongEnemy::Draw(const Camera& camera,const SpotLight& spotLight){
 }
 
 
-void StrongEnemy::ChangeState(BaseStongEnemyState* newState){
+void StrongEnemy::ChangeState(std::unique_ptr<BaseStongEnemyState>newState){
 	//前回と違った場合だけ通す
 	if (currentState_->GetStateName() != newState->GetStateName()) {
-		delete currentState_;
-		currentState_ = newState;
+		currentState_ = std::move(newState);
 		//引数が次に遷移するシーン
 		currentState_->Initialize();
 
