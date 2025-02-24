@@ -412,12 +412,6 @@
     <Filter Include="Ellysia\Header File\Polygone\Particle">
       <UniqueIdentifier>{19010f1c-f15c-41d5-b706-7d1bb3af087d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Enemy\NormalEnemy\EnemyAttackCollision">
-      <UniqueIdentifier>{20d87d40-77b6-425d-8fb0-6466f81f7d5a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Enemy\NormalEnemy\EnemyFlashLightCollision">
-      <UniqueIdentifier>{94a9085e-5e7c-4aca-abdd-af0623868eeb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Enemy\StrongEnemy\State">
       <UniqueIdentifier>{7edab689-453a-4532-93a2-63caf654df74}</UniqueIdentifier>
     </Filter>
@@ -429,6 +423,33 @@
     </Filter>
     <Filter Include="Project\Enemy\StrongEnemy\State\Tracking">
       <UniqueIdentifier>{26e95439-f5ee-4fc7-84de-523d21d32531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Enemy\StrongEnemy\Collision">
+      <UniqueIdentifier>{31499a16-5c7f-4808-9394-c8cca8947cfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy\Collision">
+      <UniqueIdentifier>{a715e006-047c-42fc-acd3-da7f7ac8c453}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy\Collision\EnemyFlashLightCollision">
+      <UniqueIdentifier>{94a9085e-5e7c-4aca-abdd-af0623868eeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy\Collision\EnemyAttackCollision">
+      <UniqueIdentifier>{20d87d40-77b6-425d-8fb0-6466f81f7d5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy\State">
+      <UniqueIdentifier>{8bf51e13-a542-4ce0-a4fb-fd353838ebd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy\State\Move">
+      <UniqueIdentifier>{f3349baa-e050-43de-95d4-89d3e22fa6f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy\State\Tracking">
+      <UniqueIdentifier>{bf114fd8-2f48-4d65-a4cb-51fb2bd0700b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy\State\PreTracking">
+      <UniqueIdentifier>{321cb192-2295-4b30-8c03-fa5026a7c0c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy\State\None">
+      <UniqueIdentifier>{ef55c56a-3765-4ce8-9e81-ef5db8b69654}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -694,25 +715,25 @@
       <Filter>Project\Enemy\NormalEnemy</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\NormalEnemy\EnemyAttackCollision.cpp">
-      <Filter>Project\Enemy\NormalEnemy\EnemyAttackCollision</Filter>
+      <Filter>Project\Enemy\NormalEnemy\Collision\EnemyAttackCollision</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\NormalEnemy\EnemyFlashLightCollision.cpp">
-      <Filter>Project\Enemy\NormalEnemy\EnemyFlashLightCollision</Filter>
+      <Filter>Project\Enemy\NormalEnemy\Collision\EnemyFlashLightCollision</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemy.cpp">
-      <Filter>Project\Enemy\StrongEnemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.cpp">
       <Filter>Project\Enemy\StrongEnemy</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\StrongEnemy\State\StrongEnemyNoneMove.cpp">
       <Filter>Project\Enemy\StrongEnemy\State\NoneMove</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\StrongEnemy\State\StrongEnemyMove.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Project\Enemy\StrongEnemy\State\Move</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\StrongEnemy\State\StrongEnemyTracking.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Project\Enemy\StrongEnemy\State\Tracking</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.cpp">
+      <Filter>Project\Enemy\StrongEnemy\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1202,15 +1223,12 @@
       <Filter>Project\Enemy\NormalEnemy</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\NormalEnemy\EnemyAttackCollision.h">
-      <Filter>Project\Enemy\NormalEnemy\EnemyAttackCollision</Filter>
+      <Filter>Project\Enemy\NormalEnemy\Collision\EnemyAttackCollision</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\NormalEnemy\EnemyFlashLightCollision.h">
-      <Filter>Project\Enemy\NormalEnemy\EnemyFlashLightCollision</Filter>
+      <Filter>Project\Enemy\NormalEnemy\Collision\EnemyFlashLightCollision</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemy.h">
-      <Filter>Project\Enemy\StrongEnemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.h">
       <Filter>Project\Enemy\StrongEnemy</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\StrongEnemy\State\BaseStongEnemyState.h">
@@ -1220,10 +1238,13 @@
       <Filter>Project\Enemy\StrongEnemy\State\NoneMove</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\StrongEnemy\State\StrongEnemyMove.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Project\Enemy\StrongEnemy\State\Move</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\StrongEnemy\State\StrongEnemyTracking.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Project\Enemy\StrongEnemy\State\Tracking</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.h">
+      <Filter>Project\Enemy\StrongEnemy\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
