@@ -15,10 +15,14 @@
 class StrongEnemyNoneMove : public BaseStongEnemyState {
 public:
 	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	StrongEnemyNoneMove();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize()override;
-
 
 	/// <summary>
 	/// 更新

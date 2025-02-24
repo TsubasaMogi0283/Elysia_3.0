@@ -3,28 +3,30 @@
 #include "VectorCalculation.h"
 #include "Enemy/StrongEnemy/StrongEnemy.h"
 
-void StrongEnemyTracking::Initialize()
-{
+void StrongEnemyTracking::Initialize(){
+	stateName_ = "Tracking";
 }
 
 void StrongEnemyTracking::Update(StrongEnemy* strongEnemy){
 
-
-	const float SPEED_AMOUNT = 0.02f;
+	//スピード
+	const float SPEED_AMOUNT = 0.03f;
+	//強敵本体の座標を取得
 	Vector3 worldPosition = strongEnemy->GetWorldPosition();
+	//プレイヤーの座標を取得
 	Vector3 playerPosition = strongEnemy->GetPlayerPosition();
 
 
 	//向きを求める
-	Vector3 direction = VectorCalculation::Subtract(playerPosition, worldPosition);
+	direction_ = VectorCalculation::Subtract(playerPosition, worldPosition);
 	//正規化
-	direction = VectorCalculation::Normalize(direction);
-
-	//
-	direction = VectorCalculation::Multiply(direction, SPEED_AMOUNT);
+	direction_ = VectorCalculation::Normalize(direction_);
+	//スピードをかける
+	direction_ = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
 	//加算
-	strongEnemy->SetTranslate(VectorCalculation::Add(worldPosition, direction));
-	strongEnemy->SetDirection(direction);
+	strongEnemy->SetTranslate(VectorCalculation::Add(worldPosition, direction_));
+	//方向を設定
+	strongEnemy->SetDirection(direction_);
 
 #ifdef _DEBUG
 	ImGui::Begin("強敵追跡");

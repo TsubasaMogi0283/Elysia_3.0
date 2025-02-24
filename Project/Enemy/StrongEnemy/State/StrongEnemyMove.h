@@ -15,6 +15,11 @@ class StrongEnemyMove : public BaseStongEnemyState{
 public:
 
 	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	StrongEnemyMove();
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize()override;
@@ -29,6 +34,7 @@ public:
 	/// デストラクタ
 	/// </summary>
 	~StrongEnemyMove()=default;
+
 
 };
 

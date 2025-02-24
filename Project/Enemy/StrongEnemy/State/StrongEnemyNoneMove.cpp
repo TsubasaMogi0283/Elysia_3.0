@@ -2,13 +2,16 @@
 
 #include "Enemy/StrongEnemy/StrongEnemy.h"
 
-void StrongEnemyNoneMove::Initialize(){
+StrongEnemyNoneMove::StrongEnemyNoneMove(){
+	stateName_ = "NoneMove";
+}
 
+void StrongEnemyNoneMove::Initialize() {
+	//動かない
+	speed_ = { .x = 0.0f, .y = 0.0f, .z = 0.0f };
 }
 
 void StrongEnemyNoneMove::Update(StrongEnemy* strongEnemy){
-	
 	//スピードの設定
-	const Vector3 SPEED = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
 	strongEnemy->SetSpeed(speed_);
 }

@@ -7,6 +7,7 @@
  */
 
 #include <memory>
+#include <string>
 
 #include "Vector3.h"
 
@@ -52,6 +53,14 @@ public:
 	}
 
 	/// <summary>
+	/// 方向を取得
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetDirection()const {
+		return direction_;
+	}
+
+	/// <summary>
 	/// スピードの設定
 	/// </summary>
 	/// <param name="speed"></param>
@@ -59,7 +68,18 @@ public:
 		this->speed_ = speed;
 	}
 
+	/// <summary>
+	/// 状態の名前を取得
+	/// </summary>
+	/// <returns></returns>
+	std::string GetStateName()const {
+		return stateName_;
+	}
+
 protected:
+	//状態の名前
+	std::string stateName_ = "";
+
 	//方向
 	Vector3 direction_ ={};
 	//スピード

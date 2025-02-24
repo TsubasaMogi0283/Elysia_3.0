@@ -43,28 +43,26 @@ void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position
 
 
 	//行動パターン
+	//最初は通常の動き
 	currentState_ = new StrongEnemyMove();
 	currentState_->Initialize();
 }
 
 
 void StrongEnemy::Update(){
-
-
-
 	//状態の更新
 	currentState_->Update(this);
 
-
+	//方向を取得
+	Vector3 direction = currentState_->GetDirection();
+	direction_ = direction;
 
 	//向きを計算しモデルを回転させる
-	float directionToRotateY = std::atan2f(-direction_.z, direction_.x);
+	float directionToRotateY = std::atan2f(-direction.z, direction.x);
 	//修正
 	const float ROTATE_OFFSET = -std::numbers::pi_v<float> / 2.0f;
 	//加算
 	worldTransform_.rotate.y = directionToRotateY + ROTATE_OFFSET;
-
-	
 
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
@@ -77,6 +75,14 @@ void StrongEnemy::Update(){
 	collisionToPlayer_->Update();
 	collisionToPlayer_->SetEnemyPosition(worldTransform_.GetWorldPosition());
 
+
+#ifdef _DEBUG
+	ImGui::Begin("強敵");
+	ImGui::InputFloat3("座標", &worldTransform_.translate.x);
+	ImGui::End();
+#endif // _DEBUG
+
+
 }
 
 void StrongEnemy::Draw(const Camera& camera,const SpotLight& spotLight){
@@ -86,14 +92,12 @@ void StrongEnemy::Draw(const Camera& camera,const SpotLight& spotLight){
 #ifdef _DEBUG
 	collisionToPlayer_->Draw(camera, spotLight);
 #endif // _DEBUG
-
-
 }
 
 
 void StrongEnemy::ChangeState(BaseStongEnemyState* newState){
 	//前回と違った場合だけ通す
-	if (currentState_ != newState) {
+	if (currentState_->GetStateName() != newState->GetStateName()) {
 		delete currentState_;
 		currentState_ = newState;
 		//引数が次に遷移するシーン
