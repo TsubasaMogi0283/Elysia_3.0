@@ -8,6 +8,7 @@ void NormalEnemyAttack::Initialize(){
 }
 
 void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
+	normalEnemy;
 	//0から始める
 	const uint32_t RESTART_TIME = 0u;
 	//増える値

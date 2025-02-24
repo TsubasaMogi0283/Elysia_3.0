@@ -214,10 +214,26 @@ public:
 	}
 
 	/// <summary>
+	/// スピードの取得
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetSpeed()const {
+		return speed_;
+	}
+
+	/// <summary>
 	/// 消すかどうか
 	/// </summary>
 	inline bool GetIsDeleted()const  {
 		return isDeleted_;
+	}
+
+	/// <summary>
+	/// 生きているかのフラグを取得
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsAlive() const {
+		return isAlive_;
 	}
 
 protected:
@@ -256,7 +272,6 @@ protected:
 	bool isTracking_ = false;
 	//追跡前の座標
 	Vector3 preTrackingPosition_ = {};
-	Vector3 preTrackingPlayerPosition_ = {};
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
 

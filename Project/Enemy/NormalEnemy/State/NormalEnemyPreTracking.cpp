@@ -4,10 +4,11 @@
 #include "Enemy/NormalEnemy/NormalEnemy.h"
 
 void NormalEnemyPreTracking::Initialize() {
-	stateName_ = "Tracking";
+	stateName_ = "PreTracking";
 }
 
 void NormalEnemyPreTracking::Update(NormalEnemy* normalEnemy) {
+
 
 	//スピード
 	const float SPEED_AMOUNT = 0.05f;

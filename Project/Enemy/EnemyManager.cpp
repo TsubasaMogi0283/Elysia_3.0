@@ -196,10 +196,9 @@ void EnemyManager::Update(){
 			//コライダーを持っているかどうか
 			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_);
 			
-			//衝突判定
+			//衝突めり込み防止処理
 			for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
 
-				
 				//AABBを取得
 				AABB objectAABB = aabbs[i];
 				//位置を取得
@@ -213,8 +212,6 @@ void EnemyManager::Update(){
 					Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
 					//正規化
 					Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
-
-
 					//敵の向いている方向
 					Vector3 enemyDirection = enemy->GetDirection();
 
@@ -228,8 +225,6 @@ void EnemyManager::Update(){
 						//値が大きい方で反転させる
 						float defferenceValueX = std::abs(defference.x);
 						float defferenceValueZ = std::abs(defference.z);
-
-
 						//X軸反転
 						if (defferenceValueX >= defferenceValueZ) {
 							enemy->InvertSpeedX();

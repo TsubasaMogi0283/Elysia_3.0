@@ -20,6 +20,7 @@
 #include "EnemyAttackCollision.h"
 #include "EnemyFlashLightCollision.h"
 #include "Enemy/BaseEnemy.h"
+#include "State/BaseNormalEnemyState.h"
 
 #pragma region 前方宣言
 
@@ -91,41 +92,25 @@ public:
 
 
 public:
-
-
-
 	/// <summary>
-	/// 生きているかのフラグを取得
+	/// 状態遷移
 	/// </summary>
-	/// <returns></returns>
-	inline bool GetIsAlive() const {
-		return isAlive_;
-	}
-
-
-
+	/// <param name="newState">新しい状態</param>
+	void ChengeState(std::unique_ptr<BaseNormalEnemyState> newState);
 
 	/// <summary>
 	/// 攻撃しているかどうか
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>フラグ</returns>
 	inline bool GetIsAttack()const {
 		return isAttack_;
 	}
 
 
 	/// <summary>
-	/// 消すかどうか
+	/// 攻撃用のコリジョンを取得
 	/// </summary>
-	inline bool GetIsDeleted()const {
-		return isDeleted_;
-	}
-
-
-	/// <summary>
-	/// 攻撃用の当たり判定を取得
-	/// </summary>
-	/// <returns></returns>
+	/// <returns>コリジョン</returns>
 	inline EnemyAttackCollision* GetEnemyAttackCollision() const {
 		return attackCollision_.get();
 	}
@@ -133,9 +118,9 @@ public:
 
 
 	/// <summary>
-	/// 懐中電灯用の当たり判定を取得
+	/// 懐中電灯用のコリジョンを取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>コリジョン</returns>
 	inline EnemyFlashLightCollision* GetEnemyFlashLightCollision() const {
 		return enemyFlashLightCollision_.get();
 	}
@@ -189,11 +174,16 @@ private:
 	//攻撃
 	int32_t attackTime_ = 0;
 	bool isAttack_ = false;
+	//状態の名前
+	std::string currentStateName_ = "";
+	std::string preStateName_ = "";
 
 private:
 	//攻撃用の当たり判定
 	std::unique_ptr<EnemyAttackCollision> attackCollision_ = nullptr;
 	//懐中電灯用の当たり判定
 	std::unique_ptr<EnemyFlashLightCollision> enemyFlashLightCollision_ = nullptr;
-
+	//状態
+	std::unique_ptr<BaseNormalEnemyState> currentState_ = nullptr;
+	std::unique_ptr<BaseNormalEnemyState> preState_ = nullptr;
 };

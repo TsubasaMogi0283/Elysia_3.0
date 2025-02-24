@@ -21,6 +21,7 @@ void NormalEnemyMove::Initialize(){
 }
 
 void NormalEnemyMove::Update(NormalEnemy* normalEnemy){
+	
 
 	const float SPEED_AMOUNT = 0.02f;
 	//本体の座標を取得

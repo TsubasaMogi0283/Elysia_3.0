@@ -751,7 +751,7 @@
       <Filter>Project\Enemy\NormalEnemy\State\PreTracking</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyAttack.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Project\Enemy\NormalEnemy\State\Attack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1280,7 +1280,7 @@
       <Filter>Project\Enemy\NormalEnemy\State\PreTracking</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyAttack.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Project\Enemy\NormalEnemy\State\Attack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
