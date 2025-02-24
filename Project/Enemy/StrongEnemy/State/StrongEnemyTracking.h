@@ -14,6 +14,10 @@
 /// </summary>
 class StrongEnemyTracking : public BaseStongEnemyState {
 public:
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	StrongEnemyTracking();
 
 	/// <summary>
 	/// 初期化

@@ -38,7 +38,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	StrongEnemy() = default;
+	StrongEnemy();
 
 	/// <summary>
 	/// 初期化

@@ -1,24 +1,20 @@
-#include "StrongEnemyTracking.h"
+#include "NormalEnemyTracking.h"
 
 #include "VectorCalculation.h"
-#include "Enemy/StrongEnemy/StrongEnemy.h"
+#include "Enemy/NormalEnemy/NormalEnemy.h"
 
-StrongEnemyTracking::StrongEnemyTracking(){
+void NormalEnemyTracking::Initialize(){
 	stateName_ = "Tracking";
 }
 
-void StrongEnemyTracking::Initialize(){
-	
-}
-
-void StrongEnemyTracking::Update(StrongEnemy* strongEnemy){
+void NormalEnemyTracking::Update(NormalEnemy* normalEnemy){
 
 	//スピード
-	const float SPEED_AMOUNT = 0.03f;
+	const float SPEED_AMOUNT = 0.05f;
 	//強敵本体の座標を取得
-	Vector3 worldPosition = strongEnemy->GetWorldPosition();
+	Vector3 worldPosition = normalEnemy->GetWorldPosition();
 	//プレイヤーの座標を取得
-	Vector3 playerPosition = strongEnemy->GetPlayerPosition();
+	Vector3 playerPosition = normalEnemy->GetPlayerPosition();
 
 
 	//向きを求める
@@ -28,9 +24,9 @@ void StrongEnemyTracking::Update(StrongEnemy* strongEnemy){
 	//スピードをかける
 	direction_ = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
 	//加算
-	strongEnemy->SetTranslate(VectorCalculation::Add(worldPosition, direction_));
+	normalEnemy->SetTranslate(VectorCalculation::Add(worldPosition, direction_));
 	//方向を設定
-	strongEnemy->SetDirection(direction_);
+	normalEnemy->SetDirection(direction_);
 
 #ifdef _DEBUG
 	ImGui::Begin("強敵追跡");

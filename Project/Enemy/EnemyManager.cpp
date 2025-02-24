@@ -107,7 +107,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 			position.z = static_cast<float>(std::atof(word.c_str()));
 
 			//生成
-			GenerateStrongEnemy(position);
+			//GenerateStrongEnemy(position);
 
 		}
 
@@ -131,7 +131,6 @@ void EnemyManager::StopAudio(){
 	audio_->Stop(audioHandle_);
 }
 
-
 void EnemyManager::GenerateNormalEnemy(const Vector3& position) {
 	//通常の敵の生成
 	std::unique_ptr<NormalEnemy> enemy = std::make_unique<NormalEnemy>();
@@ -146,7 +145,6 @@ void EnemyManager::GenerateNormalEnemy(const Vector3& position) {
 	enemy->Initialize(normalEnemyModelHandle_, position,speed );
 	enemies_.push_back(std::move(enemy));
 }
-
 
 void EnemyManager::GenerateStrongEnemy(const Vector3& position){
 	////強敵の生成
@@ -167,7 +165,6 @@ void EnemyManager::GenerateStrongEnemy(const Vector3& position){
 
 void EnemyManager::Update(){
 
-
 	//接近するときの距離
 	const float TRACKING_START_DISTANCE_ = 15.0f;
 	//攻撃するときの距離
@@ -177,13 +174,10 @@ void EnemyManager::Update(){
 	//最小の距離
 	const float MINIMUM_DISTANCE = 2.0f;
 	
-
-
 	//通常の敵
 	for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 		//プレイヤーの位置を設定
 		enemy->SetPlayerPosition(playerPosition);
-
 
 		//更新
 		enemy->Update();
@@ -604,12 +598,10 @@ void EnemyManager::Update(){
 		if (playerStrongEnemyDistance <= STRONG_ENEMY_TRACKING_START_DISTANCE_) {
 			//追跡に移行
 			strongEnemy->ChangeState(std::make_unique<StrongEnemyTracking>());
-
 		}
 		else {
 			//通常の動きに移行
 			strongEnemy->ChangeState(std::make_unique<StrongEnemyMove>());
-
 		}
 	}
 }

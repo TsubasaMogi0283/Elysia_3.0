@@ -13,6 +13,11 @@
 #include "State/StrongEnemyMove.h"
 #include "State/StrongEnemyTracking.h"
 
+StrongEnemy::StrongEnemy() {
+	//強敵
+	typeName_ = "Strong";
+}
+
 void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position,const Vector3& speed){
 
 	//モデル

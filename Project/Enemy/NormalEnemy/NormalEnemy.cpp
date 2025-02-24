@@ -11,6 +11,9 @@
 #include "GlobalVariables.h"
 
 NormalEnemy::NormalEnemy() {
+	//通常
+	typeName_ = "Normal";
+
 	//インスタンスの取得
 	//グローバル変数クラス
 	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
@@ -110,12 +113,6 @@ void NormalEnemy::Update() {
 
 
 		case EnemyCondition::Move:
-			attackTime_ = RESTART_TIME;
-
-			//通常の動き
-			preTrackingPlayerPosition_ = {};
-			preTrackingPosition_ = {};
-
 			//正規化
 			if (speed_.x != 0.0f ||
 				speed_.y != 0.0f ||

@@ -6,6 +6,7 @@
  */
 
 #include <memory>
+#include <string>
 
 #include "WorldTransform.h"
 #include "Model.h"
@@ -225,24 +226,23 @@ protected:
 	uint32_t condition_ = EnemyCondition::Move;
 
 protected:
-	
+	//敵の種類の名前
+	std::string typeName_ = "";
+
 	//モデル
 	std::unique_ptr<Ellysia::Model> model_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 	//AABB
 	AABB aabb_ = {};
-
 	//マテリアル
 	Material material_ = {};
 
 	//移動速度
 	Vector3 preSpeed_ = {};
 	Vector3 speed_ = {};
-
 	//向き
 	Vector3 direction_ = {};
-	
 	//生存
 	bool isAlive_ = true;
 

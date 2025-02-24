@@ -451,6 +451,9 @@
     <Filter Include="Project\Enemy\NormalEnemy\State\None">
       <UniqueIdentifier>{ef55c56a-3765-4ce8-9e81-ef5db8b69654}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Enemy\NormalEnemy\State\Attack">
+      <UniqueIdentifier>{49f16eeb-5e84-491a-980f-6d409f85b8f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -734,6 +737,21 @@
     </ClCompile>
     <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.cpp">
       <Filter>Project\Enemy\StrongEnemy\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyMove.cpp">
+      <Filter>Project\Enemy\NormalEnemy\State\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyNoneMove.cpp">
+      <Filter>Project\Enemy\NormalEnemy\State\None</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyTracking.cpp">
+      <Filter>Project\Enemy\NormalEnemy\State\Tracking</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyPreTracking.cpp">
+      <Filter>Project\Enemy\NormalEnemy\State\PreTracking</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyAttack.cpp">
+      <Filter>Ellysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1245,6 +1263,24 @@
     </ClInclude>
     <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.h">
       <Filter>Project\Enemy\StrongEnemy\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\BaseNormalEnemyState.h">
+      <Filter>Project\Enemy\NormalEnemy\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyMove.h">
+      <Filter>Project\Enemy\NormalEnemy\State\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyNoneMove.h">
+      <Filter>Project\Enemy\NormalEnemy\State\None</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyTracking.h">
+      <Filter>Project\Enemy\NormalEnemy\State\Tracking</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyPreTracking.h">
+      <Filter>Project\Enemy\NormalEnemy\State\PreTracking</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyAttack.h">
+      <Filter>Ellysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

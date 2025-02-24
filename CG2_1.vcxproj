@@ -203,6 +203,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Enemy\NormalEnemy\EnemyAttackCollision.cpp" />
     <ClCompile Include="Project\Enemy\NormalEnemy\EnemyFlashLightCollision.cpp" />
     <ClCompile Include="Project\Enemy\NormalEnemy\NormalEnemy.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyAttack.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyMove.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyNoneMove.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyPreTracking.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyTracking.cpp" />
     <ClCompile Include="Project\Enemy\StrongEnemy\State\StrongEnemyMove.cpp" />
     <ClCompile Include="Project\Enemy\StrongEnemy\State\StrongEnemyNoneMove.cpp" />
     <ClCompile Include="Project\Enemy\StrongEnemy\State\StrongEnemyTracking.cpp" />
@@ -511,6 +516,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Enemy\NormalEnemy\EnemyAttackCollision.h" />
     <ClInclude Include="Project\Enemy\NormalEnemy\EnemyFlashLightCollision.h" />
     <ClInclude Include="Project\Enemy\NormalEnemy\NormalEnemy.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\BaseNormalEnemyState.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyAttack.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyMove.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyNoneMove.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyPreTracking.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyTracking.h" />
     <ClInclude Include="Project\Enemy\StrongEnemy\State\BaseStongEnemyState.h" />
     <ClInclude Include="Project\Enemy\StrongEnemy\State\StrongEnemyMove.h" />
     <ClInclude Include="Project\Enemy\StrongEnemy\State\StrongEnemyNoneMove.h" />
