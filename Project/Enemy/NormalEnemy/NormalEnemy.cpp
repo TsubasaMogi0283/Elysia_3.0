@@ -91,11 +91,7 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 
 void NormalEnemy::Update() {
 
-	//0から始める
-	const uint32_t RESTART_TIME = 0u;
-	//スピードの量
-	const float SPEED_AMOUNT_ = 0.05f;
-	
+
 	//生存している時だけ行動するよ
 	if (isAlive_ == true) {
 		//状態の更新

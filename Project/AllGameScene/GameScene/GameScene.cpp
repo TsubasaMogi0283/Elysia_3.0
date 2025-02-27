@@ -202,8 +202,8 @@ void GameScene::Initialize() {
 #pragma endregion
 
 #pragma region UI
-	uint32_t playerHPTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHP.png");
-	uint32_t playerHPBackFrameTextureHandle = texturemanager_->LoadTexture("Resources/Player/PlayerHPBack.png");
+	uint32_t playerHPTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Player/PlayerHP.png");
+	uint32_t playerHPBackFrameTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Player/PlayerHPBack.png");
 	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
 	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
 		playerHP_[i].reset(Ellysia::Sprite::Create(playerHPTextureHandle, { .x = static_cast<float>(i) * 64 + INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));

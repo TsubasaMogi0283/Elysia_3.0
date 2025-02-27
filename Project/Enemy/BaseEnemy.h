@@ -228,14 +228,6 @@ public:
 		return isDeleted_;
 	}
 
-	/// <summary>
-	/// 生きているかのフラグを取得
-	/// </summary>
-	/// <returns></returns>
-	inline bool GetIsAlive() const {
-		return isAlive_;
-	}
-
 protected:
 	//状態
 	uint32_t preCondition_ = EnemyCondition::NoneMove;
