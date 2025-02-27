@@ -26,8 +26,8 @@
             "audio": {
                 "file_name": "RunOnGrass",
                 "type": "Action",
-                "on_area": true,
-                "loop": true
+                "on_area": false,
+                "loop": false
             },
             "collider": {
                 "type": "Plane",
@@ -4830,6 +4830,52 @@
             },
             "file_name": "Key",
             "object_type": "Key"
+        },
+        {
+            "type": "MESH",
+            "name": "kayu_dalam",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "file_name": "TreasureBoxMain",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Cylinder.001",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    0.0,
+                    0.0,
+                    1.6622352600097656
+                ]
+            },
+            "file_name": "TreasureBoxLid",
+            "object_type": "Stage"
         }
     ]
 }
