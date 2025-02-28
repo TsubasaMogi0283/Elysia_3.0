@@ -340,6 +340,8 @@ private:
 	bool isOpenTreasureBox_ = false;
 	uint32_t openTreasureBoxTime_ = 0u;
 
+	Vector3 rotate_ = {};
+
 	//門の回転
 	float gateRotateTheta_ = 0.0f;
 

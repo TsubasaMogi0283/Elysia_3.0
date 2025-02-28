@@ -370,11 +370,13 @@ void GameScene::ObjectCollision() {
 		//初期回転
 		Vector3 initialRotate= levelDataManager_->GetInitialRotate(levelHandle_, "TreasureBoxLid");
 		//回転
-		Vector3 rotate = { .x = std::numbers::pi_v<float>/3.0f,.y = 0.0f,.z = 0.0f };
+		Vector3 rotate = { .x = -std::numbers::pi_v<float>/3.0f,.y = 0.0f,.z = 0.0f };
 		//再設定
 		levelDataManager_->SetRotate(levelHandle_, "TreasureBoxLid", VectorCalculation::Add(initialRotate,rotate));
 	}
-	//宝箱を開けたかどうかの設定
+	
+
+//宝箱を開けたかどうかの設定
 	keyManager_->SetIsOpenTreasureBox(isOpenTreasureBox_);
 
 }
