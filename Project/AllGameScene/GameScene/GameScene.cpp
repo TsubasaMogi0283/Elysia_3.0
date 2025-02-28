@@ -119,6 +119,8 @@ void GameScene::Initialize() {
 	uint32_t keyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/key", "Key.obj");
 	//生成
 	keyManager_ = std::make_unique<KeyManager>();
+	//レベルデータハンドルの設定
+	keyManager_->SetLevelDataHandle(levelHandle_);
 	//プレイヤーの設定
 	keyManager_->SetPlayer(player_.get());
 	//初期化
@@ -235,7 +237,6 @@ void GameScene::Initialize() {
 	vignette_->SetPow(vignettePow_);
 
 	//シーンのどこから始めるかを設定する
-	//StatePatternで分かりやすくしたい
 	isGamePlay_ = false;
 	isExplain_ = false;
 
@@ -319,6 +320,62 @@ void GameScene::ObjectCollision() {
 	}
 
 
+	//宝箱
+	if (isOpenTreasureBox_==false) {
+		const float RADIUS = 5.0f;
+		Vector3 treasurePosition = levelDataManager_->GetInitialTranslate(levelHandle_, "TreasureBoxMain");
+
+		if (player_->GetWorldPosition().x >= treasurePosition.x - RADIUS &&
+			player_->GetWorldPosition().x <= treasurePosition.x + RADIUS &&
+			player_->GetWorldPosition().z >= treasurePosition.z - RADIUS &&
+			player_->GetWorldPosition().z <= treasurePosition.z + RADIUS) {
+
+
+#ifdef _DEBUG
+			ImGui::Begin("宝箱");
+			ImGui::End();
+#endif // _DEBUG
+
+
+			//コントローラーのBボタンを押したら脱出のフラグがたつ
+			if (input_->IsConnetGamePad() == true) {
+
+				//Bボタンを押したとき
+				if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+					++openTreasureBoxTime_;
+
+				}
+				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
+					openTreasureBoxTime_ = B_NO_REACT_TIME_;
+				}
+
+				if (openTreasureBoxTime_ == B_REACT_TIME_) {
+					//脱出
+					isOpenTreasureBox_ = true;
+				}
+
+			}
+
+
+			//SPACEキーを押したら脱出のフラグがたつ
+			if (input_->IsPushKey(DIK_SPACE) == true) {
+				//脱出
+				isOpenTreasureBox_ = true;
+			}
+		}
+	}
+
+	//開いた動作
+	if (isOpenTreasureBox_==true) {
+		//初期回転
+		Vector3 initialRotate= levelDataManager_->GetInitialRotate(levelHandle_, "TreasureBoxLid");
+		//回転
+		Vector3 rotate = { .x = std::numbers::pi_v<float>/3.0f,.y = 0.0f,.z = 0.0f };
+		//再設定
+		levelDataManager_->SetRotate(levelHandle_, "TreasureBoxLid", VectorCalculation::Add(initialRotate,rotate));
+	}
+	//宝箱を開けたかどうかの設定
+	keyManager_->SetIsOpenTreasureBox(isOpenTreasureBox_);
 
 }
 

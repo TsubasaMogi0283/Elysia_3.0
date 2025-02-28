@@ -105,13 +105,28 @@ public:
 	float GetRadius()const {
 		return radius_;
 	}
-
 	/// <summary>
 	/// 取得したかどうか
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsPickUp()const {
 		return isPickUp_;
+	}
+
+	/// <summary>
+	/// 取得可能かどうか
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsAbleToPickUp()const {
+		return isAbleToPickUp_;
+	}
+
+	/// <summary>
+	/// 取得可能かどうかの設定
+	/// </summary>
+	/// <param name="isAbleToPickUp"></param>
+	void SetisAbleToPickUp(const bool& isAbleToPickUp) {
+		this->isAbleToPickUp_ = isAbleToPickUp;
 	}
 
 	/// <summary>
@@ -129,7 +144,6 @@ public:
 	inline void SetEndPosition(const Vector2& position) {
 		this->spriteEndPosition_ = position;
 	}
-
 
 	/// <summary>
 	/// 取得可能かどうか
@@ -164,7 +178,8 @@ private:
 	//マテリアル
 	Material material_ = {};
 	
-
+	//取得できるかどうか
+	bool isAbleToPickUp_ = true;
 	//取得する前
 	bool isPrePickUp_ = false;
 	//取得されたか

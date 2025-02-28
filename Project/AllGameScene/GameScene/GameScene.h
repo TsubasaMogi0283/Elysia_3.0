@@ -199,23 +199,14 @@ private:
 	const float LIGHT_MIN_RANGE_ = 0.08f;
 
 private:
-
-
-	//操作は全部ゲームシーンで統一させたい
-	//コマンドパターンですっきりさせても良さそう
-
 	//カメラ
 	Camera camera_ = {};
 	//座標のオフセット
 	Vector3 cameraPositionOffset_ = {};
 
-
-
 	//回転キーXY
 	bool isRotateYKey_ = false;
 	bool isRotateXKey_ = false;
-
-
 
 	//ポストエフェクト
 	//ビネット
@@ -345,6 +336,9 @@ private:
 	uint32_t howToPlayTextureNumber_ = 0u;
 
 #pragma endregion
+	//宝箱が開いているかどうか
+	bool isOpenTreasureBox_ = false;
+	uint32_t openTreasureBoxTime_ = 0u;
 
 	//門の回転
 	float gateRotateTheta_ = 0.0f;

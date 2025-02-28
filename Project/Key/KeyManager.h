@@ -51,6 +51,10 @@ namespace Ellysia {
 	/// </summary>
 	class Input;
 
+	/// <summary>
+	/// レベルデータ管理クラス
+	/// </summary>
+	class LevelDataManager;
 }
 
 
@@ -102,8 +106,9 @@ private:
 	/// <summary>
 	/// 生成
 	/// </summary>
-	/// <param name="position"></param>
-	void Genarate(const Vector3& position);
+	/// <param name="position">座標</param>
+	/// <param name="isAbleToPickUp">取得可能か</param>
+	void Genarate(const Vector3& position,const bool& isAbleToPickUp);
 
 	/// <summary>
 	/// 消去
@@ -118,6 +123,22 @@ private:
 
 
 public:
+	/// <summary>
+	/// レベルデータハンドルの設定
+	/// </summary>
+	/// <param name="handle"></param>
+	inline void SetLevelDataHandle(const uint32_t& handle) {
+		this->levelDataHandle_ = handle;
+	}
+
+	/// <summary>
+	/// 宝箱を開けたかどうか
+	/// </summary>
+	/// <param name="isOpen"></param>
+	inline void SetIsOpenTreasureBox(const bool& isOpen) {
+		this->isOpenTreasureBox_ = isOpen;
+	}
+
 	/// <summary>
 	/// 鍵のリストを取得
 	/// </summary>
@@ -170,6 +191,10 @@ private:
 	Ellysia::TextureManager* textureManager_ = nullptr;
 	//入力
 	Ellysia::Input* input_ = nullptr;
+	//レベルデータ管理クラス
+	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	//ハンドル
+	uint32_t levelDataHandle_ = 0u;
 	//プレイヤー
 	Player* player_ = nullptr;
 
@@ -228,6 +253,9 @@ private:
 	//鍵の数
 	uint32_t keyQuantity_ = 0u;
 
+	//宝箱に入っている鍵用
+	//宝箱を開けたかどうか
+	bool isOpenTreasureBox_ = false;
 
 
 	//Bボタンのトリガー

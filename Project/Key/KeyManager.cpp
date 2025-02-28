@@ -5,6 +5,8 @@
 
 #include "TextureManager.h"
 #include "Input.h"
+#include "LevelDataManager.h"
+
 #include "VectorCalculation.h"
 #include "Player/Player.h"
 #include "SingleCalculation.h"
@@ -18,6 +20,8 @@ KeyManager::KeyManager() {
 	textureManager_ = Ellysia::TextureManager::GetInstance();
 	//入力
 	input_ = Ellysia::Input::GetInstance();
+	//レベルデータ管理クラス
+	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 }
 
 void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vector3>& positions) {
@@ -28,11 +32,20 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 	modelHandle_ = modelHandle;
 
 
-	for (auto i = 0; i < positions.size(); ++i) {
+	Vector3 keyInHousePosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "KeyInHouse");
+
+	for (int i = 0; i < positions.size(); ++i) {
 		//生成
 		const float OFFSET_Y = 0.5f;
+		bool isAbleToPickUp = true;
+		Vector3 initialPosition = positions[i];
+		if (initialPosition.x == keyInHousePosition.x&&
+			initialPosition.y == keyInHousePosition.y&&
+			initialPosition.z == keyInHousePosition.z) {
+			isAbleToPickUp = false;
+		}
 		Vector3 newPosition = { .x = positions[i].x,.y = OFFSET_Y ,.z = positions[i].z };
-		Genarate(newPosition);
+		Genarate(newPosition, isAbleToPickUp);
 	}
 
 	//読み込み
@@ -91,9 +104,17 @@ void KeyManager::Update() {
 
 	//全ての要素を消す
 	keyAndPlayerDistances_.clear();
-
+	Vector3 keyInHousePosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "KeyInHouse");
 	//鍵
 	for (const std::unique_ptr<Key>& key : keies_) {
+
+		//小屋の中の鍵
+		if (key->GetWorldPosition().x == keyInHousePosition.x &&
+			key->GetWorldPosition().z == keyInHousePosition.z) {
+			key->SetisAbleToPickUp(isOpenTreasureBox_);
+
+		}
+		
 		//更新
 		key->Update();
 		//終点座標
@@ -193,11 +214,13 @@ void KeyManager::DrawSprite() {
 
 
 
-void KeyManager::Genarate(const Vector3& position) {
+void KeyManager::Genarate(const Vector3& position, const bool& isAbleToPickUp) {
 	//生成
 	std::unique_ptr<Key> key = std::make_unique<Key>();
 	//初期化
 	key->Initialize(modelHandle_, position);
+	//取得可能かどうかの設定
+	key->SetisAbleToPickUp(isAbleToPickUp);
 	//リストに入れる
 	keies_.push_back(std::move(key));
 }
@@ -233,8 +256,8 @@ void KeyManager::PickUp() {
 	//鍵
 	for (const std::unique_ptr<Key>& key : keies_) {
 
-		//勿論取得されていない時だけ受け付ける
-		if (key->GetIsPickUp() == false) {
+		//勿論取得されていない時と取得可能な時だけ受け付ける
+		if (key->GetIsPickUp() == false &&key->GetIsAbleToPickUp()==true) {
 			//判定は円で
 			Vector3 distance = {
 				.x = std::powf((player_->GetWorldPosition().x - key->GetWorldPosition().x), 2.0f),
