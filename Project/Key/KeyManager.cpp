@@ -169,6 +169,7 @@ void KeyManager::Update() {
 	ImGui::Begin("鍵管理クラス");
 	ImGui::InputFloat("音量", &volume);
 	ImGui::InputFloat("近い距離", &closestDistance);
+	ImGui::Checkbox("墓場用", &isPickUpKeyInCemetery_);
 
 	int newQuantity = static_cast<int>(keyQuantity_);
 	ImGui::InputInt("鍵の数", &newQuantity);
@@ -231,6 +232,13 @@ void KeyManager::Delete() {
 	keies_.remove_if([=](const std::unique_ptr<Key>& key) {
 		//拾われたら消す
 		if (key->GetIsDelete() == true) {
+
+			//墓場用
+			Vector3 keyInCementeryPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "KeyInCemetery");
+			if (key->GetWorldPosition().x == keyInCementeryPosition.x &&
+				key->GetWorldPosition().z == keyInCementeryPosition.z) {
+				isPickUpKeyInCemetery_ = true;
+			}
 
 			spriteTs_[keyQuantity_] += 0.005f;
 			//スケール

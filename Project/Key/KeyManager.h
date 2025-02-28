@@ -134,7 +134,7 @@ public:
 	/// <summary>
 	/// 宝箱を開けたかどうか
 	/// </summary>
-	/// <param name="isOpen"></param>
+	/// <param name="isOpen">開けたかどうかのフラグ</param>
 	inline void SetIsOpenTreasureBox(const bool& isOpen) {
 		this->isOpenTreasureBox_ = isOpen;
 	}
@@ -142,7 +142,7 @@ public:
 	/// <summary>
 	/// 鍵のリストを取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>リスト</returns>
 	inline std::list<Key*> GetKeyes() const {
 		std::list <Key*> keys = {};
 		for (const std::unique_ptr<Key>& key : keies_) {
@@ -155,17 +155,25 @@ public:
 	/// <summary>
 	/// 今ステージ上にある鍵の数を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>鍵の数</returns>
 	inline uint32_t GetKeyQuantity() const {
 		return static_cast<uint32_t>(keies_.size());
 	}
 
 	/// <summary>
-	/// 最大で取得できる数数
+	/// 最大で取得できる数
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>最大数</returns>
 	inline uint32_t GetMaxKeyQuantity()const {
 		return MAX_KEY_QUANTITY_;
+	}
+
+	/// <summary>
+	/// 墓場の鍵を取得したかどうか
+	/// </summary>
+	/// <returns>取得のフラグ</returns>
+	inline bool GetIsPickUpKeyInCemetery()const {
+		return isPickUpKeyInCemetery_;
 	}
 
 
@@ -173,8 +181,7 @@ public:
 	/// <summary>
 	/// プレイヤー
 	/// </summary>
-	/// <param name="player"></param>
-	/// <returns></returns>
+	/// <param name="player">プレイヤー</param>
 	inline void SetPlayer(Player* player) {
 		this->player_ = player;
 	};
@@ -257,6 +264,8 @@ private:
 	//宝箱を開けたかどうか
 	bool isOpenTreasureBox_ = false;
 
+	//墓場の鍵を取ったかどうか
+	bool isPickUpKeyInCemetery_ = false;
 
 	//Bボタンのトリガー
 	uint32_t bTriggerTime_ = 0u;

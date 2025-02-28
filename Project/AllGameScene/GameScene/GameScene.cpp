@@ -376,8 +376,30 @@ void GameScene::ObjectCollision() {
 	}
 	
 
-//宝箱を開けたかどうかの設定
+	//宝箱を開けたかどうかの設定
 	keyManager_->SetIsOpenTreasureBox(isOpenTreasureBox_);
+
+
+	//墓場の鍵を取ったら柵が消える
+	if (keyManager_ ->GetIsPickUpKeyInCemetery() == true) {
+		levelDataManager_->SetTranslate(levelHandle_, "CloseFence", { .x = 0.0f,.y = 100.0f,.z = 0.0f });
+	}
+	//取っていないかつ墓場にいたら柵が下がり
+	else {
+		if (player_->GetWorldPosition().z <= -25.0f &&
+			player_->GetWorldPosition().z >= -50.0f) {
+
+			levelDataManager_->SetTranslate(levelHandle_, "CloseFence", { .x = 0.0f,.y = 0.0f,.z = 0.0f });
+
+#ifdef _DEBUG
+			ImGui::Begin("墓場");
+			ImGui::End();
+#endif // _DEBUG
+
+		}
+	}
+	
+	
 
 }
 
