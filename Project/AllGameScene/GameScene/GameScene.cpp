@@ -163,7 +163,7 @@ void GameScene::Initialize() {
 	//座標
 	camera_.translate = { .x = 0.0f,.y = 1.0f ,.z = -15.0f };
 	//カメラ座標のオフセットの初期化
-	cameraPositionOffset_ = { .x = 0.0f,.y = 2.0f,.z = 0.0f };
+	cameraPositionOffset_ = { .x = 0.0f,.y = 3.0f,.z = 0.0f };
 	//カメラの調整項目
 	globalVariables_->CreateGroup(GAME_SCENE_CAMERA_NAME_);
 	globalVariables_->AddItem(GAME_SCENE_CAMERA_NAME_, HEIGHT_OFFSET_, cameraPositionOffset_);
@@ -380,24 +380,31 @@ void GameScene::ObjectCollision() {
 	keyManager_->SetIsOpenTreasureBox(isOpenTreasureBox_);
 
 
+
+	Vector3 initialPosition = levelDataManager_->GetInitialTranslate(levelHandle_, "CloseFence");
+	//CloseFenceInCemetery
 	//墓場の鍵を取ったら柵が消える
 	if (keyManager_ ->GetIsPickUpKeyInCemetery() == true) {
-		levelDataManager_->SetTranslate(levelHandle_, "CloseFence", { .x = 0.0f,.y = 100.0f,.z = 0.0f });
+		//levelDataManager_->SetTranslate(levelHandle_, "CloseFenceInCemetery", initialPosition);
 	}
-	//取っていないかつ墓場にいたら柵が下がり
+	//取っていないかつ墓場にいたら柵が下がり閉じ込められる
 	else {
-		if (player_->GetWorldPosition().z <= -25.0f &&
+		if (player_->GetWorldPosition().z <= -26.0f &&
 			player_->GetWorldPosition().z >= -50.0f) {
 
-			levelDataManager_->SetTranslate(levelHandle_, "CloseFence", { .x = 0.0f,.y = 0.0f,.z = 0.0f });
 
+			//levelDataManager_->SetTranslate(levelHandle_, "CloseFenceInCemetery", translate_);
+
+			
 #ifdef _DEBUG
 			ImGui::Begin("墓場");
+			ImGui::SliderFloat3("座標", &translate_.x, 0.0f, 100.0f);
 			ImGui::End();
 #endif // _DEBUG
 
 		}
 	}
+	
 	
 	
 
@@ -947,7 +954,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 		camera_.rotate.z = 0.0f;
 
 		//位置の計算
-		cameraPositionOffset_ = globalVariables_->GetVector3Value(GAME_SCENE_CAMERA_NAME_, HEIGHT_OFFSET_);
+		//cameraPositionOffset_ = globalVariables_->GetVector3Value(GAME_SCENE_CAMERA_NAME_, HEIGHT_OFFSET_);
 		camera_.translate = VectorCalculation::Add(player_->GetWorldPosition(), cameraPositionOffset_);
 
 		//脱出の仕組み
