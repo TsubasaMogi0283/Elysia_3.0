@@ -275,7 +275,7 @@ public:
 
 private:
 	//幅のサイズ
-	const float SIDE_SIZE = 1.0f;
+	const float SIDE_SIZE = 0.5f;
 	//時間変化
 	const float DELTA_TIME = 1.0f / 60.0f;
 

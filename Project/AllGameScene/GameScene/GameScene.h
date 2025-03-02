@@ -336,9 +336,15 @@ private:
 	uint32_t howToPlayTextureNumber_ = 0u;
 
 #pragma endregion
+
+
+
 	//宝箱が開いているかどうか
 	bool isOpenTreasureBox_ = false;
 	uint32_t openTreasureBoxTime_ = 0u;
+	std::unique_ptr<Ellysia::Sprite>openTreasureBoxSprite_ = nullptr;
+
+
 
 	Vector3 rotate_ = {};
 	Vector3 translate_ = {};

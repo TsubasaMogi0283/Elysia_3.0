@@ -37,9 +37,9 @@ void GameScene::Initialize() {
 	//白画像読み込み
 	uint32_t whiteTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Back/White.png");
 	//フェードの初期座標
-	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
+	const Vector2 INITIAL_SPRITE_POSITION = { .x = 0.0f,.y = 0.0f };
 	//生成
-	whiteFade_.reset(Ellysia::Sprite::Create(whiteTextureHandle, INITIAL_FADE_POSITION));
+	whiteFade_.reset(Ellysia::Sprite::Create(whiteTextureHandle, INITIAL_SPRITE_POSITION));
 
 	//フェードインから始まる
 	//イン
@@ -56,7 +56,7 @@ void GameScene::Initialize() {
 	//黒画像読み込み
 	uint32_t blackTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Back/Black.png");
 	//生成
-	blackFade_.reset(Ellysia::Sprite::Create(blackTextureHandle, INITIAL_FADE_POSITION));
+	blackFade_.reset(Ellysia::Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION));
 
 	//透明度
 	blackFadeTransparency_ = 0.0f;
@@ -179,7 +179,7 @@ void GameScene::Initialize() {
 
 	//生成
 	for (uint32_t i = 0u; i < EXPLANATION_QUANTITY_; ++i) {
-		explanation_[i].reset(Ellysia::Sprite::Create(explanationTextureHandle[i], INITIAL_FADE_POSITION));
+		explanation_[i].reset(Ellysia::Sprite::Create(explanationTextureHandle[i], INITIAL_SPRITE_POSITION));
 	}
 
 	//スペースで次への画像読み込み
@@ -188,7 +188,7 @@ void GameScene::Initialize() {
 	spaceToNextTextureHandle[1] = texturemanager_->LoadTexture("Resources/Game/Explanation/ExplanationNext2.png");
 
 	for (uint32_t i = 0; i < SPACE_TO_NEXT_QUANTITY_; ++i) {
-		spaceToNext_[i].reset(Ellysia::Sprite::Create(spaceToNextTextureHandle[i], INITIAL_FADE_POSITION));
+		spaceToNext_[i].reset(Ellysia::Sprite::Create(spaceToNextTextureHandle[i], INITIAL_SPRITE_POSITION));
 	}
 
 	//最初は0番目
@@ -217,7 +217,12 @@ void GameScene::Initialize() {
 
 	//ゴールに向かえのテキスト
 	uint32_t toEscapeTextureHandle = texturemanager_->LoadTexture("Resources/Game/Escape/ToGoal.png");
-	toEscape_.reset(Ellysia::Sprite::Create(toEscapeTextureHandle, INITIAL_FADE_POSITION));
+	toEscape_.reset(Ellysia::Sprite::Create(toEscapeTextureHandle, INITIAL_SPRITE_POSITION));
+
+	//宝箱
+	uint32_t openTreasureBoxSpriteHandle = texturemanager_->LoadTexture("Resources/Sprite/TreasureBox/OpenTreasureBox.png");
+	openTreasureBoxSprite_.reset(Ellysia::Sprite::Create(openTreasureBoxSpriteHandle, INITIAL_SPRITE_POSITION));
+
 
 #pragma endregion
 
@@ -253,9 +258,6 @@ void GameScene::Initialize() {
 void GameScene::ObjectCollision() {
 
 
-	//新しくゲームシーンでの描画用のレベルデータクラスを用意して
-	//ついでにこの関数内のめり込みを防ぐ処理を書いた方が良さそう。
-
 	//ただ衝突判定を設定するだけだと出来なかったので
 	//内積の計算も入れて可能にする
 
@@ -275,23 +277,16 @@ void GameScene::ObjectCollision() {
 		if (colliders[i] == true) {
 			//オブジェクトとの差分ベクトル
 			Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(positions[i], player_->GetWorldPosition());
-
 			//オブジェクトとプレイヤーの距離
 			Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
+			//デバッグ用
+			Vector3 centerPosition = positions[i];
 
 			//内積
 			//進行方向上にオブジェクトがあるかないかを計算したい
 			float dot = SingleCalculation::Dot(playerMoveDirection_, normalizedDemoAndPlayer);
 			const float DOT_OFFSET = 0.5f;
 
-#ifdef _DEBUG
-			ImGui::Begin("StageObjectCollision");
-			ImGui::InputFloat("Dot", &dot);
-			ImGui::InputFloat3("PlayerAABBMax", &playerAABB.max.x);
-			ImGui::InputFloat3("PlayerAABBMin", &playerAABB.min.x);
-
-			ImGui::End();
-#endif // _DEBUG
 
 			//衝突判定
 			//Y成分はいらない
@@ -299,7 +294,7 @@ void GameScene::ObjectCollision() {
 				(playerAABB.min.z <= aabbs[i].max.z && playerAABB.max.z >= aabbs[i].min.z) &&
 				(dot > DOT_OFFSET)) {
 
-
+				centerPosition;
 
 				uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
 				player_->SetMoveCondition(newCondition);
@@ -320,6 +315,10 @@ void GameScene::ObjectCollision() {
 	}
 
 
+	//非表示
+	openTreasureBoxSprite_->SetInvisible(true);
+
+
 	//宝箱
 	if (isOpenTreasureBox_==false) {
 		const float RADIUS = 5.0f;
@@ -330,6 +329,8 @@ void GameScene::ObjectCollision() {
 			player_->GetWorldPosition().z >= treasurePosition.z - RADIUS &&
 			player_->GetWorldPosition().z <= treasurePosition.z + RADIUS) {
 
+			//表示
+			openTreasureBoxSprite_->SetInvisible(false);
 
 #ifdef _DEBUG
 			ImGui::Begin("宝箱");
@@ -381,32 +382,32 @@ void GameScene::ObjectCollision() {
 
 
 
-	Vector3 initialPosition = levelDataManager_->GetInitialTranslate(levelHandle_, "CloseFence");
-	//CloseFenceInCemetery
+	Vector3 initialPosition = levelDataManager_->GetInitialTranslate(levelHandle_, "CloseFenceInCemetery");
+
 	//墓場の鍵を取ったら柵が消える
 	if (keyManager_ ->GetIsPickUpKeyInCemetery() == true) {
-		//levelDataManager_->SetTranslate(levelHandle_, "CloseFenceInCemetery", initialPosition);
+		translate_ = initialPosition;
 	}
 	//取っていないかつ墓場にいたら柵が下がり閉じ込められる
 	else {
 		if (player_->GetWorldPosition().z <= -26.0f &&
 			player_->GetWorldPosition().z >= -50.0f) {
-
-
-			//levelDataManager_->SetTranslate(levelHandle_, "CloseFenceInCemetery", translate_);
-
+			translate_ = initialPosition;
+			translate_.y = 0.0f;
 			
-#ifdef _DEBUG
-			ImGui::Begin("墓場");
-			ImGui::SliderFloat3("座標", &translate_.x, 0.0f, 100.0f);
-			ImGui::End();
-#endif // _DEBUG
-
+		}
+		else {
+			translate_ = initialPosition;
 		}
 	}
-	
-	
-	
+	//座標の再設定
+	levelDataManager_->SetTranslate(levelHandle_, "CloseFenceInCemetery", translate_);
+
+#ifdef _DEBUG
+	ImGui::Begin("墓場");
+	ImGui::SliderFloat3("座標", &translate_.x, 0.0f, 100.0f);
+	ImGui::End();
+#endif // _DEBUG
 
 }
 
@@ -870,7 +871,6 @@ void GameScene::MoveLightSide() {
 	player_->GetFlashLight()->SetLightSideTheta(lightSideTheta_);
 }
 
-
 void GameScene::Update(Ellysia::GameManager* gameManager) {
 
 	//フレーム初めに
@@ -1110,6 +1110,8 @@ void GameScene::DrawSprite() {
 		operation_->Draw();
 		//鍵
 		keyManager_->DrawSprite();
+		//宝箱
+		openTreasureBoxSprite_->Draw();
 		//脱出
 		escapeText_->Draw();
 		//プレイヤーの体力の枠

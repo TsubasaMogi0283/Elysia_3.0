@@ -173,7 +173,8 @@ public:
 	/// </summary>
 	/// <returns>取得のフラグ</returns>
 	inline bool GetIsPickUpKeyInCemetery()const {
-		return isPickUpKeyInCemetery_;
+		return isPickUpKeyInCemetery_
+			;
 	}
 
 
@@ -263,6 +264,12 @@ private:
 	//宝箱に入っている鍵用
 	//宝箱を開けたかどうか
 	bool isOpenTreasureBox_ = false;
+	//取得したかどうか
+	bool isPickUpKeyInHouse_ = false;
+	//皿が落ちる音
+	uint32_t dropPlateTime_ = 0u;
+	uint32_t dropPlateSEHandle_ = 0u;
+
 
 	//墓場の鍵を取ったかどうか
 	bool isPickUpKeyInCemetery_ = false;

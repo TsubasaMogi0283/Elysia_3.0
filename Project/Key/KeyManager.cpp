@@ -39,11 +39,11 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 		const float OFFSET_Y = 0.5f;
 		bool isAbleToPickUp = true;
 		Vector3 initialPosition = positions[i];
-		if (initialPosition.x == keyInHousePosition.x&&
-			initialPosition.y == keyInHousePosition.y&&
-			initialPosition.z == keyInHousePosition.z) {
-			isAbleToPickUp = false;
-		}
+		//if (initialPosition.x == keyInHousePosition.x&&
+		//	initialPosition.y == keyInHousePosition.y&&
+		//	initialPosition.z == keyInHousePosition.z) {
+		//	isAbleToPickUp = false;
+		//}
 		Vector3 newPosition = { .x = positions[i].x,.y = OFFSET_Y ,.z = positions[i].z };
 		Genarate(newPosition, isAbleToPickUp);
 	}
@@ -83,10 +83,11 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 	notificationSEHandle_ = audio_->Load("Resources/External/Audio/Key/Shake.mp3");
 	//拾う音の読み込み
 	pickUpSEHandle = audio_->Load("Resources/External/Audio/Key/PickUp.mp3");
-
+	//皿の落ちる音の読み込み
+	dropPlateSEHandle_ = audio_->Load("Resources/External/Audio/Plate/DropPlateSE.wav");
 
 	//拾う画像の読み込み
-	uint32_t pickUpTextureManager = textureManager_->LoadTexture("Resources/Game/Key/PickUpKey.png");
+	uint32_t pickUpTextureManager = textureManager_->LoadTexture("Resources/Sprite/Key/PickUpKey.png");
 	//生成
 	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
 	pickUpKey_.reset(Ellysia::Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));
@@ -109,11 +110,11 @@ void KeyManager::Update() {
 	for (const std::unique_ptr<Key>& key : keies_) {
 
 		//小屋の中の鍵
-		if (key->GetWorldPosition().x == keyInHousePosition.x &&
-			key->GetWorldPosition().z == keyInHousePosition.z) {
-			key->SetisAbleToPickUp(isOpenTreasureBox_);
-
-		}
+		//if (key->GetWorldPosition().x == keyInHousePosition.x &&
+		//	key->GetWorldPosition().z == keyInHousePosition.z) {
+		//	key->SetisAbleToPickUp(isOpenTreasureBox_);
+		//
+		//}
 		
 		//更新
 		key->Update();
@@ -240,6 +241,15 @@ void KeyManager::Delete() {
 				isPickUpKeyInCemetery_ = true;
 			}
 
+			//小屋用
+			Vector3 keyInHousePosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "KeyInHouse");
+			if (key->GetWorldPosition().x == keyInHousePosition.x &&
+				key->GetWorldPosition().z == keyInHousePosition.z) {
+				isPickUpKeyInHouse_ = true;
+			}
+			
+			
+
 			spriteTs_[keyQuantity_] += 0.005f;
 			//スケール
 			float newT = Easing::EaseOutBack(spriteTs_[keyQuantity_]);
@@ -257,7 +267,21 @@ void KeyManager::Delete() {
 
 		}
 		return false;
-		});
+	});
+
+	//皿が落ちる音
+	if (isPickUpKeyInHouse_ == true) {
+		++dropPlateTime_;
+
+		const uint32_t SE_PLAY_TIME = 60 * 2;
+		if (dropPlateTime_ == SE_PLAY_TIME) {
+			audio_->Play(dropPlateSEHandle_, false);
+		}
+
+	}
+		
+
+
 }
 
 void KeyManager::PickUp() {
