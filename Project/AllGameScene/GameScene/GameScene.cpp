@@ -1111,7 +1111,7 @@ void GameScene::DrawSprite() {
 		//鍵
 		keyManager_->DrawSprite();
 		//宝箱
-		openTreasureBoxSprite_->Draw();
+		//openTreasureBoxSprite_->Draw();
 		//脱出
 		escapeText_->Draw();
 		//プレイヤーの体力の枠
