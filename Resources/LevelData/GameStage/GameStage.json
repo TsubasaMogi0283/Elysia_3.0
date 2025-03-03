@@ -2315,30 +2315,6 @@
         },
         {
             "type": "MESH",
-            "name": "TreasureBoxForDebug",
-            "transform": {
-                "scaling": [
-                    0.5800000429153442,
-                    1.2599999904632568,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    61.51231002807617,
-                    5.965271472930908,
-                    0.0
-                ]
-            },
-            "file_name": "Cube",
-            "object_type": "Stage",
-            "is_invisible": true
-        },
-        {
-            "type": "MESH",
             "name": "Shelf",
             "transform": {
                 "scaling": [
@@ -2405,6 +2381,376 @@
                 ],
                 "size": [
                     6.940000057220459,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.002",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    55.31623458862305,
+                    7.187615394592285,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    30.360000610351562,
+                    0.2200000286102295,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.003",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    71.1015853881836,
+                    -0.8472567796707153,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.089998245239258,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.004",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    55.31623458862305,
+                    -7.748391151428223,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    30.360000610351562,
+                    0.2200000286102295,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.005",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    71.1015853881836,
+                    -2.7967488765716553,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.089998245239258,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.006",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    71.1015853881836,
+                    -4.805818557739258,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.089998245239258,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.012",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    71.1015853881836,
+                    -6.678420066833496,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.089998245239258,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.013",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    71.1015853881836,
+                    1.1444292068481445,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.089998245239258,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.014",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    71.1015853881836,
+                    3.153498888015747,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.089998245239258,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.015",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    71.1015853881836,
+                    5.102991104125977,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.089998245239258,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.016",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    71.1015853881836,
+                    7.189908981323242,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.089998245239258,
                     1.0,
                     1.0
                 ]
@@ -3239,7 +3585,7 @@
                     90.00000762939453
                 ],
                 "translation": [
-                    -36.33507537841797,
+                    -36.06953430175781,
                     -41.89701843261719,
                     0.0
                 ]
@@ -3255,7 +3601,7 @@
                     0.0
                 ],
                 "size": [
-                    32.959999084472656,
+                    34.05999755859375,
                     1.0,
                     1.0
                 ]
