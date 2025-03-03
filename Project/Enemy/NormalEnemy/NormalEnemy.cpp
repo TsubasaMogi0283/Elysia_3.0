@@ -95,10 +95,104 @@ void NormalEnemy::Update() {
 	//生存している時だけ行動するよ
 	if (isAlive_ == true) {
 		//状態の更新
-		currentState_->Update(this);
+		//currentState_->Update(this);
+
+		const float SPEED_AMOUNT_ = 0.02f;
+		const uint32_t RESTART_TIME = 0u;
+		//状態遷移
+		switch (condition_) {
+		case EnemyCondition::NoneMove:
+			//何もしない
+
+			//ここの全ての値が0
+			attackTime_ = RESTART_TIME;
+			preTrackingPosition_ = {};
+			speed_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+
+			break;
+
+
+		case EnemyCondition::Move:
+			attackTime_ = RESTART_TIME;
+
+			//通常の動き
+			preTrackingPosition_ = {};
+
+			//正規化
+			if (speed_.x != 0.0f ||
+				speed_.y != 0.0f ||
+				speed_.z != 0.0f) {
+				direction_ = VectorCalculation::Normalize(speed_);
+			}
+
+			//加算
+			worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, speed_);
+
+
+			break;
+
+		case EnemyCondition::PreTracking:
+
+
+			//取得したら追跡
+			//preTrackingPlayerPosition_ = playerPosition_;
+			preTrackingPosition_ = GetWorldPosition();
+
+
+
+			//強制的に追跡に移行
+			preCondition_ = EnemyCondition::PreTracking;
+			condition_ = EnemyCondition::Tracking;
+
+			break;
+
+		case EnemyCondition::Tracking:
+			//追跡処理
+			//向きを求める
+			direction_ = VectorCalculation::Subtract(playerPosition_, GetWorldPosition());
+			//正規化
+			direction_ = VectorCalculation::Normalize(direction_);
+
+
+			//スピードの計算
+			Vector3 speed = VectorCalculation::Multiply(direction_, SPEED_AMOUNT_);
+			//加算
+			worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, speed);
+
+
+			break;
+
+			//攻撃
+		case EnemyCondition::Attack:
+			//増える値
+			const uint32_t TIME_INCREASE_VALUE = 1;
+			//時間が増えていく
+			attackTime_ += TIME_INCREASE_VALUE;
+
+			//1秒の時に攻撃
+			const uint32_t JUST_ATTACK_TIME = 60;
+			if (attackTime_ == JUST_ATTACK_TIME) {
+				//ここで攻撃
+				//コライダーが当たっている時だけ通す
+				isAttack_ = true;
+
+			}
+			else {
+				//攻撃しない
+				isAttack_ = false;
+			}
+
+			//攻撃するときの時間×3の時にまた最初からに戻る
+			if (attackTime_ > JUST_ATTACK_TIME * 3) {
+				attackTime_ = RESTART_TIME;
+			}
+
+			break;
+
+		}
 	}
 
-	direction_ = currentState_->GetDirection();
+	//direction_ = currentState_->GetDirection();
 
 	//向きを計算しモデルを回転させる
 	float directionToRotateY = std::atan2f(-direction_.z, direction_.x);
