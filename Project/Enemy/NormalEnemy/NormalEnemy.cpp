@@ -153,7 +153,6 @@ void NormalEnemy::Update() {
 			//正規化
 			direction_ = VectorCalculation::Normalize(direction_);
 
-
 			//スピードの計算
 			Vector3 speed = VectorCalculation::Multiply(direction_, SPEED_AMOUNT_);
 			//加算
