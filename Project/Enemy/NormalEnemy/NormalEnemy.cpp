@@ -60,8 +60,6 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 	preCondition_ = EnemyCondition::NoneMove;
 	condition_ = EnemyCondition::Move;
 
-	//攻撃
-	attackTime_ = 0;
 
 	//デバッグ用のモデル
 	debugModelHandle = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
@@ -303,7 +301,6 @@ void NormalEnemy::DisplayImGui() {
 	ImGui::InputFloat3("方向", &direction_.x);
 	ImGui::Checkbox("攻撃", &isAttack_);
 	ImGui::Checkbox("生存", &isAlive_);
-	ImGui::InputInt("攻撃時間", &attackTime_);
 
 	if (ImGui::TreeNode("状態")) {
 		int newCondition = static_cast<int>(condition_);

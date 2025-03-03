@@ -17,6 +17,7 @@
 
 #include "NormalEnemy/State/NormalEnemyMove.h"
 #include "NormalEnemy/State/NormalEnemyPreTracking.h"
+#include "NormalEnemy/State/NormalEnemyAttack.h"
 
 EnemyManager::EnemyManager(){
 	//インスタンスの取得
@@ -274,20 +275,18 @@ void EnemyManager::Update(){
 
 				//追跡開始距離以内になったら追跡準備に移行
 				if ((defferenceDistance < TRACKING_START_DISTANCE_ && 
-					defferenceDistance>ATTACK_START_DISTANCE_)
-					&& currentState=="Move") {
-					enemy->ChengeState(std::move(std::make_unique<NormalEnemyPreTracking>()));
+					defferenceDistance>ATTACK_START_DISTANCE_)&&
+					currentState=="Move") {
+					enemy->ChengeState(std::make_unique<NormalEnemyPreTracking>());
 				}
 
 				//追跡している時
 				//追跡開始距離より短い時
-				if (defferenceDistance <= ATTACK_START_DISTANCE_ && condition == EnemyCondition::Tracking) {
-					//前の状態を保存
-					enemy->SetPreCondition(condition);
+				if (defferenceDistance <= ATTACK_START_DISTANCE_ && 
+					currentState == "Tracking") {
 
-					//現在の状態を保存
-					uint32_t newCondition = EnemyCondition::Attack;
-					enemy->SetCondition(newCondition);
+					enemy->ChengeState(std::make_unique<NormalEnemyAttack>());
+
 				}
 				//攻撃中にプレイヤーが離れた時
 				if (defferenceDistance > ATTACK_START_DISTANCE_ && condition == EnemyCondition::Attack) {

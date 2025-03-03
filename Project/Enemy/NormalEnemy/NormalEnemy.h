@@ -122,6 +122,14 @@ public:
 	}
 
 	/// <summary>
+	/// 攻撃したかどうかのおフラグを設定
+	/// </summary>
+	/// <param name="isAttack">攻撃しているかどうか</param>
+	inline void SetIsAttack(const bool& isAttack) {
+		this->isAttack_ = isAttack;
+	}
+
+	/// <summary>
 	/// 攻撃用のコリジョンを取得
 	/// </summary>
 	/// <returns>コリジョン</returns>
@@ -183,8 +191,8 @@ private:
 	float shakeOffset_ = 0.05f;
 	bool isShake_ = false;
 
-	//攻撃
-	int32_t attackTime_ = 0;
+	
+	//攻撃状態
 	bool isAttack_ = false;
 	//状態の名前
 	//前回

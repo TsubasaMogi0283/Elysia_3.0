@@ -21,12 +21,12 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 	if (attackTime_ == JUST_ATTACK_TIME) {
 		//ここで攻撃
 		//コライダーが当たっている時だけ通す
-		isAttack_ = true;
+		normalEnemy->SetIsAttack(true);
 
 	}
 	else {
 		//攻撃しない
-		isAttack_ = false;
+		normalEnemy->SetIsAttack(false);
 	}
 
 	//また最初に戻る
@@ -35,4 +35,17 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 	}
 
 
+
+#ifdef _DEBUG
+	ImGui::Begin("通常の敵の攻撃");
+	ImGui::InputInt("攻撃時間", &attackTime_);
+	ImGui::End();
+#endif // _DEBUG
+
+
+}
+
+NormalEnemyAttack::~NormalEnemyAttack(){
+	//0で設定し攻撃していないようにする
+	attackTime_ = 0;
 }

@@ -29,7 +29,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~NormalEnemyAttack() = default;
+	~NormalEnemyAttack();
 	
 private:
 	//攻撃の時間

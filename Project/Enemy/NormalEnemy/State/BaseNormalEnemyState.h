@@ -62,7 +62,6 @@ protected:
 	//スピード
 	Vector3 speed_ = {};
 
-	//攻撃状態
-	bool isAttack_ = false;
+	
 
 };

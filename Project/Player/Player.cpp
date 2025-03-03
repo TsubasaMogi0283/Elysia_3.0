@@ -133,25 +133,35 @@ Player::~Player() {
 }
 
 void Player::Damaged() {
+
+	if (isAcceptDamegeFromNoemalEnemy_ == true) {
+		++count;
+	}
+
 	//通常の敵に当たった場合
-	//ダメージを受ける
 	if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
-		//一時的にコントロールを失う
-		isControll_ = false;
-		//ダメージを受ける
-		isDameged_ = true;
 		//体力を減らす
 		--hp_;
+		//ダメージを受ける	
+		isDameged_ = true;
+	}
+
+
+	if (isDameged_ == true) {
+
+		//一時的にコントロールを失う
+		isControll_ = false;
 		//線形補間で振動処理をする
 		vibeTime_ += DELTA_TIME;
-
 		//最大の振動の強さ
 		const float MAX_VIBE_ = 1.0f;
 		//最小の振動の強さ
 		const float MIN_VIBE_ = 0.0f;
 
 		//線形補間を使い振動を減衰させる
-		vibeStrength_ = SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
+		//振動の強さ
+		float vibeStrength_ =  SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
+		//振動の設定
 		input_->SetVibration(vibeStrength_, vibeStrength_);
 
 		//振動を止める
@@ -169,7 +179,17 @@ void Player::Damaged() {
 			//コントロールを戻す
 			isControll_ = true;
 		}
+
+#ifdef _DEBUG
+		ImGui::Begin("振動");
+		ImGui::InputFloat("T", &vibeStrength_);
+		ImGui::End();
+#endif // _DEBUG
 	}
+
+
+
+
 
 }
 
@@ -216,6 +236,7 @@ void Player::DisplayImGui() {
 	}
 
 	ImGui::Checkbox("敵からの攻撃を受け入れるか", &isAcceptDamegeFromNoemalEnemy_);
+	ImGui::InputInt("数", &count);
 	ImGui::InputInt("downTime", &downTime_);
 	ImGui::InputFloat3("Transrate", &worldTransform_.translate.x);
 	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);

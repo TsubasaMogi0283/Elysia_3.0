@@ -303,6 +303,8 @@ private:
 	//AABB
 	AABB aabb_ = {};
 
+	int count = 0u;
+
 
 	//体力
 	int32_t hp_ = 0;
@@ -323,8 +325,7 @@ private:
 	int32_t damagedTime_ = 0;
 	bool isAcceptDamegeFromNoemalEnemy_ = false;
 
-	//振動の強さ
-	float vibeStrength_ = 0.0f;
+	
 	//時間
 	float vibeTime_ = 0u;
 
