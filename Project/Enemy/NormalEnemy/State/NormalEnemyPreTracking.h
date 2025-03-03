@@ -18,12 +18,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	NormalEnemyPreTracking() = default;
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize()override;
+	NormalEnemyPreTracking();
 
 	/// <summary>
 	/// 更新

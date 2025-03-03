@@ -17,12 +17,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	NormalEnemyTracking()=default;
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize()override;
+	NormalEnemyTracking();
 
 	/// <summary>
 	/// 更新

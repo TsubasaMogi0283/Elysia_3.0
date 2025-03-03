@@ -2,40 +2,33 @@
 
 #include "VectorCalculation.h"
 #include "Enemy/NormalEnemy/NormalEnemy.h"
+#include "NormalEnemyTracking.h"
 
-void NormalEnemyPreTracking::Initialize() {
+NormalEnemyPreTracking::NormalEnemyPreTracking(){
 	stateName_ = "PreTracking";
 }
 
 void NormalEnemyPreTracking::Update(NormalEnemy* normalEnemy) {
 
-
-	//スピード
-	const float SPEED_AMOUNT = 0.05f;
-	//強敵本体の座標を取得
-	Vector3 worldPosition = normalEnemy->GetWorldPosition();
-	//プレイヤーの座標を取得
-	Vector3 playerPosition = normalEnemy->GetPlayerPosition();
-
-
-	//向きを求める
-	direction_ = VectorCalculation::Subtract(playerPosition, worldPosition);
-	//正規化
-	direction_ = VectorCalculation::Normalize(direction_);
-	//スピードをかける
-	direction_ = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
+	////強敵本体の座標を取得
+	//Vector3 worldPosition = normalEnemy->GetWorldPosition();
+	////プレイヤーの座標を取得
+	//Vector3 playerPosition = normalEnemy->GetPlayerPosition();
+	//
+	//
+	////向きを求める
+	//direction_ = VectorCalculation::Subtract(playerPosition, worldPosition);
+	////正規化
+	//direction_ = VectorCalculation::Normalize(direction_);
+	//
+	////スピードの値をかける
+	//const float SPEED_AMOUNT = 0.05f;
+	//Vector3 speed = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
 	//加算
-	normalEnemy->SetTranslate(VectorCalculation::Add(worldPosition, direction_));
-	//方向を設定
-	normalEnemy->SetDirection(direction_);
+	//normalEnemy->SetTranslate(VectorCalculation::Add(worldPosition, speed));
+	//追跡へ移動
+	normalEnemy->ChengeState(std::make_unique<NormalEnemyTracking>());
 
-#ifdef _DEBUG
-	ImGui::Begin("強敵追跡準備");
-	ImGui::InputFloat3("方向", &direction_.x);
-	ImGui::InputFloat3("プレイヤーの座標", &playerPosition.x);
-
-	ImGui::End();
-#endif // DEBUG
 
 
 }

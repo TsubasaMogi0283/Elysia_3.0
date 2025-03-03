@@ -19,11 +19,6 @@ public:
 	/// </summary>
 	NormalEnemyMove();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize()override;
-
 
 	/// <summary>
 	/// 更新

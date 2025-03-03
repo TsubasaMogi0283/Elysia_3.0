@@ -3,7 +3,7 @@
 #include "VectorCalculation.h"
 #include "Enemy/NormalEnemy/NormalEnemy.h"
 
-void NormalEnemyAttack::Initialize(){
+NormalEnemyAttack::NormalEnemyAttack(){
 	stateName_ = "Attack";
 }
 
@@ -29,7 +29,7 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 		isAttack_ = false;
 	}
 
-	//攻撃するときの時間×3の時にまた最初からに戻る
+	//また最初に戻る
 	if (attackTime_ > JUST_ATTACK_TIME * 3) {
 		attackTime_ = RESTART_TIME;
 	}

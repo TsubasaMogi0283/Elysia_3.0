@@ -18,12 +18,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	NormalEnemyAttack() = default;
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize()override;
+	NormalEnemyAttack();
 
 	/// <summary>
 	/// 更新

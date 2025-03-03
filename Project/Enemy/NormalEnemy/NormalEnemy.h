@@ -89,14 +89,29 @@ public:
 	/// </summary>
 	~NormalEnemy()override;
 
-
-
 public:
 	/// <summary>
 	/// 状態遷移
 	/// </summary>
 	/// <param name="newState">新しい状態</param>
 	void ChengeState(std::unique_ptr<BaseNormalEnemyState> newState);
+
+	/// <summary>
+	/// 現在の状態を取得
+	/// </summary>
+	/// <returns>状態名</returns>
+	std::string GetCurrentStateName()const {
+		return currentStateName_;
+	}
+
+	/// <summary>
+	/// 前回の状態を取得
+	/// </summary>
+	/// <returns>状態名</returns>
+	std::string GetPreStateName()const {
+		return preStateName_;
+	};
+
 
 	/// <summary>
 	/// 攻撃しているかどうか
@@ -106,7 +121,6 @@ public:
 		return isAttack_;
 	}
 
-
 	/// <summary>
 	/// 攻撃用のコリジョンを取得
 	/// </summary>
@@ -114,8 +128,6 @@ public:
 	inline EnemyAttackCollision* GetEnemyAttackCollision() const {
 		return attackCollision_.get();
 	}
-
-
 
 	/// <summary>
 	/// 懐中電灯用のコリジョンを取得
@@ -175,9 +187,11 @@ private:
 	int32_t attackTime_ = 0;
 	bool isAttack_ = false;
 	//状態の名前
-	std::string currentStateName_ = "";
+	//前回
 	std::string preStateName_ = "";
-
+	//現在
+	std::string currentStateName_ = "";
+	
 private:
 	//攻撃用の当たり判定
 	std::unique_ptr<EnemyAttackCollision> attackCollision_ = nullptr;
@@ -185,5 +199,4 @@ private:
 	std::unique_ptr<EnemyFlashLightCollision> enemyFlashLightCollision_ = nullptr;
 	//状態
 	std::unique_ptr<BaseNormalEnemyState> currentState_ = nullptr;
-	std::unique_ptr<BaseNormalEnemyState> preState_ = nullptr;
 };

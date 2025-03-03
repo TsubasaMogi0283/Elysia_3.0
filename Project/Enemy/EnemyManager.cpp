@@ -15,6 +15,9 @@
 #include "StrongEnemy/State/StrongEnemyMove.h"
 #include "StrongEnemy/State/StrongEnemyTracking.h"
 
+#include "NormalEnemy/State/NormalEnemyMove.h"
+#include "NormalEnemy/State/NormalEnemyPreTracking.h"
+
 EnemyManager::EnemyManager(){
 	//インスタンスの取得
 	//レベルデータ管理クラス
@@ -178,10 +181,8 @@ void EnemyManager::Update(){
 	for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 		//プレイヤーの位置を設定
 		enemy->SetPlayerPosition(playerPosition);
-
 		//更新
 		enemy->Update();
-
 		//AABB
 		AABB enemyAABB = enemy->GetAABB();
 
@@ -250,11 +251,11 @@ void EnemyManager::Update(){
 		for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 			//状態
 			uint32_t condition = enemy->GetCondition();
+			std::string currentState = enemy->GetCurrentStateName();
 			//向き
 			Vector3 enemyDirection = enemy->GetDirection();
 			//敵
 			AABB enemyAABB = enemy->GetAABB();
-
 
 			//プレイヤーと敵の差分ベクトル
 			//対象にするものがプレイヤーなのでプレイヤーから引いてね
@@ -272,16 +273,10 @@ void EnemyManager::Update(){
 			if (dot > FRONT_DOT) {
 
 				//追跡開始距離以内になったら追跡準備に移行
-				if ((defferenceDistance < TRACKING_START_DISTANCE_ && defferenceDistance>ATTACK_START_DISTANCE_)
-					&& condition == EnemyCondition::Move) {
-
-					//前の状態を保存
-					enemy->SetPreCondition(condition);
-
-					//現在の状態を保存
-					uint32_t newCondition = EnemyCondition::PreTracking;
-					enemy->SetPlayerPosition(playerPosition);
-					enemy->SetCondition(newCondition);
+				if ((defferenceDistance < TRACKING_START_DISTANCE_ && 
+					defferenceDistance>ATTACK_START_DISTANCE_)
+					&& currentState=="Move") {
+					enemy->ChengeState(std::move(std::make_unique<NormalEnemyPreTracking>()));
 				}
 
 				//追跡している時
@@ -308,11 +303,13 @@ void EnemyManager::Update(){
 			}
 			//前方にいなければ強制的にMove
 			else {
-				//前の状態を保存
-				enemy->SetPreCondition(condition);
-				//現在の状態を保存
-				uint32_t newCondition = EnemyCondition::Move;
-				enemy->SetCondition(newCondition);
+				////前の状態を保存
+				//enemy->SetPreCondition(condition);
+				////現在の状態を保存
+				//uint32_t newCondition = EnemyCondition::Move;
+				//enemy->SetCondition(newCondition);
+				//enemy->ChengeState(std::move(std::make_unique<NormalEnemyMove>()));
+
 			}
 
 		}
