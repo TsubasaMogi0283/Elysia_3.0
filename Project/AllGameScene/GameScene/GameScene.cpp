@@ -163,7 +163,7 @@ void GameScene::Initialize() {
 	//座標
 	camera_.translate = { .x = 0.0f,.y = 1.0f ,.z = -15.0f };
 	//カメラ座標のオフセットの初期化
-	cameraPositionOffset_ = { .x = 0.0f,.y = 3.0f,.z = 0.0f };
+	cameraPositionOffset_ = { .x = 0.0f,.y = 2.0f,.z = 0.0f };
 	//カメラの調整項目
 	globalVariables_->CreateGroup(GAME_SCENE_CAMERA_NAME_);
 	globalVariables_->AddItem(GAME_SCENE_CAMERA_NAME_, HEIGHT_OFFSET_, cameraPositionOffset_);
@@ -269,7 +269,7 @@ void GameScene::ObjectCollision() {
 	//AABB
 	std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelHandle_);
 	//コライダーを持っているかどうか
-	std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelHandle_);
+	std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelHandle_,"Stage");
 	//衝突判定
 	for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
 
@@ -504,7 +504,7 @@ void GameScene::RegisterToCollisionManager() {
 		}
 	}
 
-	std::vector<BaseObjectForLevelEditorCollider*> audioColliders = levelDataManager_->GetAudioCollider(levelHandle_);
+	std::vector<BaseObjectForLevelEditorCollider*> audioColliders = levelDataManager_->GetCollider(levelHandle_,"Audio");
 	for (std::vector<BaseObjectForLevelEditorCollider*>::iterator it = audioColliders.begin(); it != audioColliders.end(); ++it) {
 		collisionManager_->RegisterList(*it);
 

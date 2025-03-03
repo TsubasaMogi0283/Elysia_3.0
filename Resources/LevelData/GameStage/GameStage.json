@@ -16,7 +16,7 @@
                     0.0
                 ],
                 "translation": [
-                    -40.0,
+                    -4.992040634155273,
                     0.0,
                     0.0
                 ]
@@ -37,7 +37,7 @@
                     0.0
                 ],
                 "size": [
-                    160.0,
+                    89.3499984741211,
                     160.0,
                     0.2199999988079071
                 ]
@@ -2217,9 +2217,9 @@
                     0.0
                 ],
                 "translation": [
-                    56.41518783569336,
-                    -1.128641128540039,
-                    0.07000000029802322
+                    55.90925598144531,
+                    -1.4301680326461792,
+                    0.20000000298023224
                 ]
             },
             "file_name": "HouseFloor",
@@ -2227,8 +2227,8 @@
             "audio": {
                 "file_name": "WalkInHouse",
                 "type": "Action",
-                "on_area": false,
-                "loop": false
+                "on_area": true,
+                "loop": true
             },
             "collider": {
                 "type": "Plane",
@@ -2240,7 +2240,7 @@
                 "size": [
                     31.76999855041504,
                     14.489999771118164,
-                    0.2199999988079071
+                    0.10000000149011612
                 ]
             }
         },
@@ -2553,42 +2553,6 @@
         },
         {
             "type": "MESH",
-            "name": "Grave.030",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    12.889518737792969,
-                    -56.3143424987793,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
             "name": "Grave.031",
             "transform": {
                 "scaling": [
@@ -2602,7 +2566,7 @@
                     90.00000762939453
                 ],
                 "translation": [
-                    20.42562484741211,
+                    17.024784088134766,
                     -56.3143424987793,
                     0.0
                 ]
@@ -2674,43 +2638,7 @@
                     90.00000762939453
                 ],
                 "translation": [
-                    20.42562484741211,
-                    -47.16944885253906,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.034",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    12.889518737792969,
+                    17.024784088134766,
                     -47.16944885253906,
                     0.0
                 ]
@@ -2805,78 +2733,6 @@
         },
         {
             "type": "MESH",
-            "name": "Grave.037",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -0.1177520751953125,
-                    -47.16944885253906,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.038",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -0.1177520751953125,
-                    -38.353111267089844,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
             "name": "Grave.039",
             "transform": {
                 "scaling": [
@@ -2949,42 +2805,6 @@
         },
         {
             "type": "MESH",
-            "name": "Grave.041",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    12.889518737792969,
-                    -38.353111267089844,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
             "name": "Grave.042",
             "transform": {
                 "scaling": [
@@ -2998,7 +2818,7 @@
                     90.00000762939453
                 ],
                 "translation": [
-                    20.42562484741211,
+                    17.024784088134766,
                     -38.353111267089844,
                     0.0
                 ]
@@ -3035,78 +2855,6 @@
                 ],
                 "translation": [
                     27.192739486694336,
-                    -38.353111267089844,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.001",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -11.351455688476562,
-                    -38.353111267089844,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.002",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -22.88631248474121,
                     -38.353111267089844,
                     0.0
                 ]
@@ -3180,150 +2928,6 @@
                 "translation": [
                     -17.284015655517578,
                     -47.16944885253906,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.005",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -22.88631248474121,
-                    -47.16944885253906,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.007",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -11.351455688476562,
-                    -47.16944885253906,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.008",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -11.351455688476562,
-                    -56.3143424987793,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.009",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -22.88631248474121,
-                    -56.3143424987793,
                     0.0
                 ]
             },
@@ -3726,42 +3330,6 @@
                 ],
                 "size": [
                     32.959999084472656,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.006",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -0.1177520751953125,
-                    -56.3143424987793,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
                     1.0,
                     1.0
                 ]
@@ -4708,29 +4276,6 @@
                 ]
             },
             "file_name": "FenceForGrave",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
-            "name": "Ground.002",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    2.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    80.0,
-                    0.0,
-                    0.0
-                ]
-            },
-            "file_name": "Grass",
             "object_type": "Stage"
         },
         {

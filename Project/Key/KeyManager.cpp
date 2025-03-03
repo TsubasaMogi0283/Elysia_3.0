@@ -273,7 +273,7 @@ void KeyManager::Delete() {
 	if (isPickUpKeyInHouse_ == true) {
 		++dropPlateTime_;
 
-		const uint32_t SE_PLAY_TIME = 60 * 2;
+		const uint32_t SE_PLAY_TIME = 60 * 1;
 		if (dropPlateTime_ == SE_PLAY_TIME) {
 			audio_->Play(dropPlateSEHandle_, false);
 		}

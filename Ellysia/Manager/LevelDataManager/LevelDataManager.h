@@ -148,11 +148,12 @@ namespace Ellysia {
 	public:
 
 		/// <summary>
-		/// データにある分だけColliderを取得する
+		/// 指定したオブジェクトタイプのコライダーを取得する
 		/// </summary>
 		/// <param name="handle">ハンドル</param>
-		/// <returns>持っている分のコライダー</returns>
-		inline std::vector<BaseObjectForLevelEditorCollider*> GetCollider(const uint32_t& handle) {
+		/// <param name="objectType">オブジェクトの型</param>
+		/// <returns>コライダー</returns>
+		inline std::vector<BaseObjectForLevelEditorCollider*> GetCollider(const uint32_t& handle,const std::string& objectType) {
 			std::vector<BaseObjectForLevelEditorCollider*> colliders = {};
 
 			for (const auto& [key, levelData] : levelDatas_) {
@@ -162,35 +163,7 @@ namespace Ellysia {
 					for (auto& objectData : levelData->objectDatas) {
 
 						//コライダーを持っている場合、リストに追加
-						if (objectData.levelDataObjectCollider != nullptr) {
-							colliders.push_back(objectData.levelDataObjectCollider);
-						}
-					}
-
-					//無駄なループを防ぐ
-					break;
-				}
-			}
-
-			return colliders;
-		}
-
-		/// <summary>
-		/// オーディオの方のコライダーを取得
-		/// </summary>
-		/// <param name="handle">ハンドル</param>
-		/// <returns> オーディオコライダー</returns>
-		inline std::vector<BaseObjectForLevelEditorCollider*>GetAudioCollider(const uint32_t& handle) {
-			std::vector<BaseObjectForLevelEditorCollider*> colliders = {};
-
-			for (const auto& [key, levelData] : levelDatas_) {
-				if (levelData->handle == handle) {
-
-					//該当するLevelDataのobjectDatasを検索
-					for (auto& objectData : levelData->objectDatas) {
-
-						//コライダーを持っている場合、リストに追加
-						if (objectData.levelDataObjectCollider != nullptr && objectData.type == "Audio") {
+						if (objectData.levelDataObjectCollider != nullptr&& objectData.type == objectType) {
 							colliders.push_back(objectData.levelDataObjectCollider);
 						}
 					}
@@ -302,20 +275,20 @@ namespace Ellysia {
 		/// コライダーを持っているかどうかの取得
 		/// </summary>
 		/// <param name="handle">ハンドル</param>
-		/// <returns>コライダーを持っているかどうかのフラグ</returns>
-		inline std::vector<bool> GetIsHavingColliders(const uint32_t& handle) {
+		/// <param name="objectType">オブジェクトの型</param>
+		/// <returns>持っているかどうかのフラグ</returns>
+		inline std::vector<bool> GetIsHavingColliders(const uint32_t& handle,const std::string& objectType) {
 			std::vector<bool> colliders = {};
 
 			for (const auto& [key, levelData] : levelDatas_) {
 				if (levelData->handle == handle) {
 
-
 					//該当するLevelDataのobjectDatasを検索
 					for (auto& objectData : levelData->objectDatas) {
-
 						//コライダーを持っているかどうかのフラグを挿入
-						colliders.push_back(objectData.isHavingCollider);
-
+						if (objectData.type == objectType) {
+							colliders.push_back(objectData.isHavingCollider);
+						}
 					}
 
 					//無駄なループを防ぐ
@@ -406,24 +379,6 @@ namespace Ellysia {
 
 		};
 
-		/// <summary>
-		/// 指定したオブジェクトの取得
-		/// </summary>
-		/// <param name="handle">ハンドル</param>
-		/// <returns>オブジェクトのリスト</returns>
-		inline std::list<ObjectData> GetObject(const uint32_t& handle) {
-
-			for (const auto& [key, levelData] : levelDatas_) {
-
-				//一致したら返す
-				if (levelData->handle == handle) {
-					return levelData->objectDatas;
-				}
-			}
-
-			//見つからない
-			return {};
-		}
 
 	public:
 		/// <summary>

@@ -194,7 +194,7 @@ void EnemyManager::Update(){
 			//AABB
 			std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelDataHandle_);
 			//コライダーを持っているかどうか
-			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_);
+			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_,"Stage");
 			
 			//衝突めり込み防止処理
 			for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
@@ -500,7 +500,7 @@ void EnemyManager::Update(){
 			//AABB
 			std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelDataHandle_);
 			//コライダーを持っているかどうか
-			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_);
+			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_, "Stage");
 			//衝突判定
 			for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
 
