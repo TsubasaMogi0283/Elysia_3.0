@@ -96,6 +96,7 @@ void NormalEnemy::Update() {
 
 	}
 
+	//方向を取得
 	direction_ = currentState_->GetDirection();
 
 	//向きを計算しモデルを回転させる

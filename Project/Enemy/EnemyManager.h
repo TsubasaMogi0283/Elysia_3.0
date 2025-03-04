@@ -166,7 +166,7 @@ private:
 
 private:
 	//前方にいるかどうかの内積
-	const float FRONT_DOT = 0.7f;
+	const float FRONT_DOT_ = 0.7f;
 	//追跡開始の距離
 	const float STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
 
