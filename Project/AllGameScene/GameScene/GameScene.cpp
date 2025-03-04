@@ -491,7 +491,7 @@ void GameScene::RegisterToCollisionManager() {
 	//懐中電灯に対してのコライダーを登録
 	const float MIN_THETA = 0.15f;
 	if (lightSideTheta_ < MIN_THETA) {
-		//collisionManager_->RegisterList(player_->GetFlashLightCollision());
+		collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
 	}
 
