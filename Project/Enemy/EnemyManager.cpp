@@ -408,9 +408,9 @@ void EnemyManager::Update(){
 			else {
 				
 				//差分の正規化
-				Vector3 normalizedDefference = VectorCalculation::Normalize(playerEnemyDifference);
+				//Vector3 normalizedDefference = VectorCalculation::Normalize(playerEnemyDifference);
 				//内積の計算
-				float dot = SingleCalculation::Dot(normalizedDefference, direction);
+				//float dot = SingleCalculation::Dot(normalizedDefference, direction);
 
 
 				//設定した値より短くなったら接近開始

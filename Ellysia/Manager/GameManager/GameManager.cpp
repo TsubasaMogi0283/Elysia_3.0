@@ -16,7 +16,7 @@ void Ellysia::GameManager::Initialize() {
 
 #ifdef _DEBUG
 	//デバッグ時はこっちに入れてね
-	currentGamaScene_ = abstractSceneFactory_->CreateScene("Game");
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("TestScene");
 #endif // _DEBUG
 
 	//初期化

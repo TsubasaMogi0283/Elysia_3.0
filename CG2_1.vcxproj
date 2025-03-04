@@ -194,6 +194,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp" />
     <ClCompile Include="Project\AllGameScene\GameScene\GameScene.cpp" />
     <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp" />
+    <ClCompile Include="Project\AllGameScene\TestScene\TestScene.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\NightBackTexture.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\SunsetBackTexture.cpp" />
@@ -504,6 +505,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\AllGameScene\GameSceneFactory.h" />
     <ClInclude Include="Project\AllGameScene\GameScene\GameScene.h" />
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h" />
+    <ClInclude Include="Project\AllGameScene\TestScene\TestScene.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\NightBackTexture.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\SunsetBackTexture.h" />

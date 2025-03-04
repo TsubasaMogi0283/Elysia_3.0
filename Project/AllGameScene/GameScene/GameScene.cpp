@@ -81,7 +81,7 @@ void GameScene::Initialize() {
 	gate_->Initialize(gateModelhandle);
 
 	//「脱出せよ」の画像読み込み
-	uint32_t escapeTextureHandle = texturemanager_->LoadTexture("Resources/Game/Escape/EscapeText.png");
+	uint32_t escapeTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Escape/EscapeText.png");
 	//生成
 	escapeText_.reset(Ellysia::Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	//最初は非表示にする
@@ -123,11 +123,9 @@ void GameScene::Initialize() {
 	keyManager_->SetLevelDataHandle(levelHandle_);
 	//プレイヤーの設定
 	keyManager_->SetPlayer(player_.get());
-	//初期化
-	const std::string keyPositionCSV = "Resources/CSV/KeyPosition.csv";
 
 	//レベルデータから鍵の情報を取り出す
-	auto keyPositions = levelDataManager_->GetKeyPositions(levelHandle_);
+	std::vector<Vector3> keyPositions = levelDataManager_->GetKeyPositions(levelHandle_);
 	keyManager_->Initialize(keyModelHandle, keyPositions);
 
 #pragma region 敵
@@ -174,8 +172,8 @@ void GameScene::Initialize() {
 
 	//説明画像の読み込み
 	uint32_t explanationTextureHandle[EXPLANATION_QUANTITY_] = {};
-	explanationTextureHandle[0] = texturemanager_->LoadTexture("Resources/Game/Explanation/Explanation1.png");
-	explanationTextureHandle[1] = texturemanager_->LoadTexture("Resources/Game/Explanation/Explanation2.png");
+	explanationTextureHandle[0] = texturemanager_->LoadTexture("Resources/Sprite/Explanation/Explanation1.png");
+	explanationTextureHandle[1] = texturemanager_->LoadTexture("Resources/Sprite/Explanation/Explanation2.png");
 
 	//生成
 	for (uint32_t i = 0u; i < EXPLANATION_QUANTITY_; ++i) {
@@ -184,8 +182,8 @@ void GameScene::Initialize() {
 
 	//スペースで次への画像読み込み
 	uint32_t spaceToNextTextureHandle[SPACE_TO_NEXT_QUANTITY_] = {};
-	spaceToNextTextureHandle[0] = texturemanager_->LoadTexture("Resources/Game/Explanation/ExplanationNext1.png");
-	spaceToNextTextureHandle[1] = texturemanager_->LoadTexture("Resources/Game/Explanation/ExplanationNext2.png");
+	spaceToNextTextureHandle[0] = texturemanager_->LoadTexture("Resources/Sprite/Explanation/ExplanationNext1.png");
+	spaceToNextTextureHandle[1] = texturemanager_->LoadTexture("Resources/Sprite/Explanation/ExplanationNext2.png");
 
 	for (uint32_t i = 0; i < SPACE_TO_NEXT_QUANTITY_; ++i) {
 		spaceToNext_[i].reset(Ellysia::Sprite::Create(spaceToNextTextureHandle[i], INITIAL_SPRITE_POSITION));
@@ -196,7 +194,7 @@ void GameScene::Initialize() {
 
 	//常時表示
 	//操作
-	uint32_t operationTextureHandle = texturemanager_->LoadTexture("Resources/Game/Operation/Operation.png");
+	uint32_t operationTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Operation/Operation.png");
 	//生成
 	operation_.reset(Ellysia::Sprite::Create(operationTextureHandle, { .x = 20.0f,.y = 0.0f }));
 
@@ -216,7 +214,7 @@ void GameScene::Initialize() {
 
 
 	//ゴールに向かえのテキスト
-	uint32_t toEscapeTextureHandle = texturemanager_->LoadTexture("Resources/Game/Escape/ToGoal.png");
+	uint32_t toEscapeTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Escape/ToGoal.png");
 	toEscape_.reset(Ellysia::Sprite::Create(toEscapeTextureHandle, INITIAL_SPRITE_POSITION));
 
 	//宝箱
