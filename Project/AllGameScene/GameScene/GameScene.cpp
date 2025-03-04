@@ -470,13 +470,14 @@ void GameScene::RegisterToCollisionManager() {
 		collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 		//攻撃
 		if (enemy->GetIsAttack() == true) {
+			//敵の攻撃
+			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 			player_->SetIsAcceptDamegeFromNoemalEnemy(true);
 		}
 		else {
 			player_->SetIsAcceptDamegeFromNoemalEnemy(false);
 		}
-		//敵の攻撃
-		collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
+		
 	}
 
 

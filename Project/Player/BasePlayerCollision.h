@@ -45,9 +45,9 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="material"></param>
-	/// <param name="spotLight"></param>
+	/// <param name="camera">カメラ</param>
+	/// <param name="material">マテリアル</param>
+	/// <param name="spotLight">スポットライト</param>
 	virtual void Draw(const Camera& camera, const Material& material, const SpotLight& spotLight)=0;
 
 	/// <summary>
@@ -71,7 +71,7 @@ public:
 	/// <summary>
 	/// ワールド座標の取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>ワールド座標</returns>
 	inline Vector3 GetWorldPosition()override {
 		return playerPosition_;
 	};
@@ -80,25 +80,22 @@ public:
 	/// <summary>
 	/// プレイヤーの座標の設定
 	/// </summary>
-	/// <param name="position"></param>
+	/// <param name="position">座標</param>
 	virtual inline void SetPlayerPosition(const Vector3& position) {
 		this->playerPosition_ = position;
 	}
 
 	/// <summary>
-	/// 衝突
+	/// 衝突下かどうかのフラグ
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>フラグ</returns>
 	virtual inline bool GetIsTouch()const {
 		return isTouch_;
 	}
 
-
-
 protected:
 	//位置
 	Vector3 playerPosition_ = {};
-
 	//衝突
 	bool isTouch_ = false;
 

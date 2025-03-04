@@ -251,15 +251,11 @@ void EnemyManager::Update(){
 	if (enemyAmount == ONLY_ONE) {
 		for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 			//状態
-			uint32_t condition = enemy->GetCondition();
 			std::string currentState = enemy->GetCurrentStateName();
 			//向き
 			Vector3 enemyDirection = enemy->GetDirection();
-			//敵
-			AABB enemyAABB = enemy->GetAABB();
 
 			//プレイヤーと敵の差分ベクトル
-			//対象にするものがプレイヤーなのでプレイヤーから引いてね
 			Vector3 defference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
 			//距離
 			float defferenceDistance = SingleCalculation::Length(defference);
@@ -270,46 +266,31 @@ void EnemyManager::Update(){
 			//内積の計算
 			float dot = SingleCalculation::Dot(normalizedDefference, enemyDirection);
 
-			//後頭部に目がついているわけではないからね
+			//前方にいたら行動
 			if (dot > FRONT_DOT) {
 
-				//追跡開始距離以内になったら追跡準備に移行
+				//追跡準備へ
 				if ((defferenceDistance < TRACKING_START_DISTANCE_ && 
 					defferenceDistance>ATTACK_START_DISTANCE_)&&
 					currentState=="Move") {
 					enemy->ChengeState(std::make_unique<NormalEnemyPreTracking>());
 				}
-
-				//追跡している時
-				//追跡開始距離より短い時
-				if (defferenceDistance <= ATTACK_START_DISTANCE_ && 
+				//攻撃
+				else if (defferenceDistance <= ATTACK_START_DISTANCE_ && 
 					currentState == "Tracking") {
-
 					enemy->ChengeState(std::make_unique<NormalEnemyAttack>());
-
 				}
 				//攻撃中にプレイヤーが離れた時
-				if (defferenceDistance > ATTACK_START_DISTANCE_ && condition == EnemyCondition::Attack) {
-					//前の状態を保存
-					enemy->SetPreCondition(condition);
-
-					//現在の状態を保存
-					uint32_t newCondition = EnemyCondition::Move;
-					enemy->SetCondition(newCondition);
+				else if (defferenceDistance > ATTACK_START_DISTANCE_ &&
+					currentState == "Attack") {
+					enemy->ChengeState(std::make_unique<NormalEnemyMove>());
 				}
-				
-
 			}
-			//前方にいなければ強制的にMove
 			else {
-				////前の状態を保存
-				//enemy->SetPreCondition(condition);
-				////現在の状態を保存
-				//uint32_t newCondition = EnemyCondition::Move;
-				//enemy->SetCondition(newCondition);
-				//enemy->ChengeState(std::move(std::make_unique<NormalEnemyMove>()));
-
+				enemy->ChengeState(std::make_unique<NormalEnemyMove>());
 			}
+			
+
 
 		}
 	}

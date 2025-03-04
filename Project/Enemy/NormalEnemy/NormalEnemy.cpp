@@ -93,52 +93,6 @@ void NormalEnemy::Update() {
 		//状態の更新
 		currentState_->Update(this);
 
-		//const float SPEED_AMOUNT_ = 0.02f;
-		
-		//case EnemyCondition::Tracking:
-		//	//追跡処理
-		//	//向きを求める
-		//	direction_ = VectorCalculation::Subtract(playerPosition_, GetWorldPosition());
-		//	//正規化
-		//	direction_ = VectorCalculation::Normalize(direction_);
-		//
-		//	//スピードの計算
-		//	Vector3 speed = VectorCalculation::Multiply(direction_, SPEED_AMOUNT_);
-		//	//加算
-		//	worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, speed);
-		//
-		//
-		//	break;
-		
-
-		//	//攻撃
-		//case EnemyCondition::Attack:
-		//	//増える値
-		//	const uint32_t TIME_INCREASE_VALUE = 1;
-		//	//時間が増えていく
-		//	attackTime_ += TIME_INCREASE_VALUE;
-		//
-		//	//1秒の時に攻撃
-		//	const uint32_t JUST_ATTACK_TIME = 60;
-		//	if (attackTime_ == JUST_ATTACK_TIME) {
-		//		//ここで攻撃
-		//		//コライダーが当たっている時だけ通す
-		//		isAttack_ = true;
-		//
-		//	}
-		//	else {
-		//		//攻撃しない
-		//		isAttack_ = false;
-		//	}
-		//
-		//	//攻撃するときの時間×3の時にまた最初からに戻る
-		//	if (attackTime_ > JUST_ATTACK_TIME * 3) {
-		//		attackTime_ = RESTART_TIME;
-		//	}
-		//
-		//	break;
-		//
-		//}
 	}
 
 	direction_ = currentState_->GetDirection();
