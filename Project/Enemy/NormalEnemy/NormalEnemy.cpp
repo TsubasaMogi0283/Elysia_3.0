@@ -81,6 +81,7 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 
 	//状態
 	currentState_ = std::make_unique<NormalEnemyMove>();
+	currentState_->Initialize();
 	currentStateName_ = currentState_->GetStateName();
 
 
@@ -172,7 +173,8 @@ void NormalEnemy::ChengeState(std::unique_ptr<BaseNormalEnemyState> newState){
 		currentStateName_ = newState->GetStateName();
 		//それぞれに新しく入れる
 		currentState_ = std::move(newState);
-
+		//初期化
+		currentState_->Initialize();
 	}
 }
 

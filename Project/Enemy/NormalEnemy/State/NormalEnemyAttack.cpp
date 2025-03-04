@@ -7,6 +7,10 @@ NormalEnemyAttack::NormalEnemyAttack(){
 	stateName_ = "Attack";
 }
 
+void NormalEnemyAttack::Initialize()
+{
+}
+
 void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 	normalEnemy;
 	//0から始める

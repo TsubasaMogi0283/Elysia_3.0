@@ -21,6 +21,11 @@ public:
 	NormalEnemyAttack();
 
 	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize()override;
+
+	/// <summary>
 	/// 更新
 	/// </summary>
 	/// <param name="normalEnemy">通常の敵</param>

@@ -6,12 +6,12 @@
 
 NormalEnemyMove::NormalEnemyMove(){
 	stateName_ = "Move";
+}
 
+void NormalEnemyMove::Initialize(){
 	//方向をランダムで決める
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
-
-	//スピード(方向)を決める
 	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
 	direction_ = { .x = speedDistribute(randomEngine) ,.y = 0.0f,.z = speedDistribute(randomEngine) };
 }

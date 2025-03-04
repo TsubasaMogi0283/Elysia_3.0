@@ -263,33 +263,35 @@ void EnemyManager::Update(){
 			Vector3 projectDifference = VectorCalculation::Project(defference, enemyDirection);
 			//差分の正規化
 			Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
-			//内積の計算
-			float dot = SingleCalculation::Dot(normalizedDefference, enemyDirection);
-
-			//前方にいたら行動
-			if (dot > FRONT_DOT) {
-
-				//追跡準備へ
-				if ((defferenceDistance < TRACKING_START_DISTANCE_ && 
-					defferenceDistance>ATTACK_START_DISTANCE_)&&
-					currentState=="Move") {
+			
+			
+			//通常の動き
+			if (currentState == "Move") {
+				//前方にいたら行動
+				//内積の計算
+				float dot = SingleCalculation::Dot(normalizedDefference, enemyDirection);
+				if (defferenceDistance < TRACKING_START_DISTANCE_ &&
+					dot > FRONT_DOT) {
+					//追跡準備へ
 					enemy->ChengeState(std::make_unique<NormalEnemyPreTracking>());
 				}
-				//攻撃
-				else if (defferenceDistance <= ATTACK_START_DISTANCE_ && 
-					currentState == "Tracking") {
+			}
+			//追跡
+			else if (currentState == "Tracking") {
+				if (defferenceDistance <= ATTACK_START_DISTANCE_) {
+					//攻撃
 					enemy->ChengeState(std::make_unique<NormalEnemyAttack>());
 				}
+
+			}
+			//攻撃
+			else if (currentState == "Attack") {
 				//攻撃中にプレイヤーが離れた時
-				else if (defferenceDistance > ATTACK_START_DISTANCE_ &&
-					currentState == "Attack") {
+				if (defferenceDistance > ATTACK_START_DISTANCE_) {
+					//通常の動き
 					enemy->ChengeState(std::make_unique<NormalEnemyMove>());
 				}
 			}
-			else {
-				enemy->ChengeState(std::make_unique<NormalEnemyMove>());
-			}
-			
 
 
 		}

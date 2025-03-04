@@ -20,6 +20,11 @@ public:
 	NormalEnemyNoneMove();
 
 	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize()override;
+
+	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update(NormalEnemy* normalEnemy)override;

@@ -7,6 +7,10 @@ NormalEnemyTracking::NormalEnemyTracking(){
 	stateName_ = "Tracking";
 }
 
+void NormalEnemyTracking::Initialize(){
+
+}
+
 void NormalEnemyTracking::Update(NormalEnemy* normalEnemy){
 	//強敵本体の座標を取得
 	Vector3 worldPosition = normalEnemy->GetWorldPosition();
