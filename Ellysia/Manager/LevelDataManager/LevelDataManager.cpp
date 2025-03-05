@@ -525,6 +525,27 @@ void Ellysia::LevelDataManager::Delete(const uint32_t& levelDataHandle) {
 
 #pragma region 描画
 
+void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera) {
+	//指定したハンドルのデータだけを描画
+	for (auto& [key, levelData] : levelDatas_) {
+		if (levelData->handle == levelDataHandle) {
+
+			//描画
+			for (const auto& object : levelData->objectDatas) {
+				if (object.isInvisible == false && object.isModelGenerate == true) {
+					object.objectForLeveEditor->Draw(camera);
+				}
+			}
+
+			//無駄なループ処理を防ぐよ
+			break;
+
+		}
+
+	}
+}
+
+
 void Ellysia::LevelDataManager::Draw(const uint32_t& levelDataHandle, const Camera& camera, const DirectionalLight& directionalLight) {
 
 	//指定したハンドルのデータだけを描画

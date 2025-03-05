@@ -115,6 +115,13 @@ namespace Ellysia {
 		void Delete(const uint32_t& levelDataHandle);
 
 		/// <summary>
+		/// 描画
+		/// </summary>
+		/// <param name="levelDataHandle"></param>
+		/// <param name="camera"></param>
+		void Draw(const uint32_t& levelDataHandle, const Camera& camera);
+
+		/// <summary>
 		/// 描画(平行光源)
 		/// </summary>
 		/// <param name="levelDataHandle">ハンドル</param>

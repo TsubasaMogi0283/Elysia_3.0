@@ -43,7 +43,13 @@ public:
 	virtual void Update() = 0;
 
 	/// <summary>
-	/// 平行光源
+	/// 描画
+	/// </summary>
+	/// <param name="camera"></param>
+	virtual void Draw(const Camera& camera);
+
+	/// <summary>
+	/// 描画(平行光源)
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="material"></param>

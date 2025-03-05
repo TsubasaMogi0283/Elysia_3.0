@@ -1,8 +1,17 @@
 #include "BaseObjectForLevelEditor.h"
 
+void BaseObjectForLevelEditor::Draw(const Camera& camera){
+	//ライティング無しに設定
+	material_.lightingKinds_ = LightingType::NoneLighting;
+	//変更したのでここで更新させる
+	material_.Update();
+	//モデルの描画
+	model_->Draw(worldTransform_, camera, material_);
+}
+
 void BaseObjectForLevelEditor::Draw(const Camera& camera, const DirectionalLight& directionalLight){
 	//平行光源に設定
-	material_.lightingKinds_ = DirectionalLighting;
+	material_.lightingKinds_ = LightingType::DirectionalLighting;
 	//変更したのでここで更新させる
 	material_.Update();
 	//モデルの描画
@@ -11,7 +20,7 @@ void BaseObjectForLevelEditor::Draw(const Camera& camera, const DirectionalLight
 
 void BaseObjectForLevelEditor::Draw(const Camera& camera, const PointLight& pointLight){
 	//点光源に設定
-	material_.lightingKinds_ = PointLighting;
+	material_.lightingKinds_ = LightingType::PointLighting;
 	//変更したのでここで更新させる
 	material_.Update();
 	//モデルの描画
@@ -20,7 +29,7 @@ void BaseObjectForLevelEditor::Draw(const Camera& camera, const PointLight& poin
 
 void BaseObjectForLevelEditor::Draw(const Camera& camera, const SpotLight& spotLight){
 	//スポットライトに設定
-	material_.lightingKinds_ = SpotLighting;
+	material_.lightingKinds_ = LightingType::SpotLighting;
 	//変更したのでここで更新させる
 	material_.Update();
 	//モデルの描画

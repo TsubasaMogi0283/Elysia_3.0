@@ -30,12 +30,12 @@ void TestScene::Initialize(){
 	//カメラ
 	camera_.Initialize();
 	camera_.rotate.x = std::numbers::pi_v<float>/2.0f;
-
 	camera_.translate.z = 0.0f;
 	camera_.translate.y = 50.0f;
-
+	//マテリアルの初期化
 	playerMaterial_.Initialize();
 	playerMaterial_.lightingKinds_ = LightingType::DirectionalLighting;
+	//平行光源の初期化
 	directionalLight_.Initialize();
 
 	//背景
@@ -53,6 +53,20 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 
 	//レベルエディタの更新
 	levelDataManager_->Update(levelHandle_);
+
+
+
+	std::vector<AABB> objects = levelDataManager_->GetStageObjectAABBs(levelHandle_);
+
+
+
+	for (auto i = 0; i < objects.size(); ++i) {
+		//片側のサイズ
+		Vector3 sideSize = VectorCalculation::Subtract(objects[i].max, objects[i].min);
+		sideSize;
+
+
+	}
 
 
 	const float SPEED = 0.05f;
@@ -77,6 +91,9 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 
 
 
+
+
+
 #ifdef _DEBUG
 	ImGui::Begin("テストシーンカメラ");
 	ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
@@ -96,9 +113,9 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 
 void TestScene::DrawObject3D(){
 	//レベルエディタ  
-	levelDataManager_->Draw(levelHandle_, camera_, directionalLight_);
+	levelDataManager_->Draw(levelHandle_, camera_);
 	//仮プレイヤー
-	playerModel_->Draw(playerWorldTransform_,camera_, playerMaterial_,directionalLight_);
+	playerModel_->Draw(playerWorldTransform_,camera_, playerMaterial_);
 
 }
 
