@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <array>
 
 #include "IGameScene.h"
 #include "BackTexture.h"
