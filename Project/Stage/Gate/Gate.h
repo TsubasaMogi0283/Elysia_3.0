@@ -6,9 +6,20 @@
 #include "WorldTransform.h"
 #include "Material.h"
 
+/// <summary>
+/// カメラ
+/// </summary>
 struct Camera;
+
+/// <summary>
+/// スポットライト
+/// </summary>
 struct SpotLight;
 
+
+/// <summary>
+/// ゲート
+/// </summary>
 class Gate{
 public:
 	/// <summary>
@@ -42,10 +53,12 @@ public:
 
 public:
 	/// <summary>
-	/// ワールドポジションを取得
+	/// ワールド座標を取得
 	/// </summary>
-	/// <returns></returns>
-	Vector3 GetWorldPosition()const;
+	/// <returns>ワールド座標</returns>
+	Vector3 GetWorldPosition()const {
+		return worldTransform_.GetWorldPosition();
+	};
 
 	/// <summary>
 	/// ゲートの付近にいたらtrue
