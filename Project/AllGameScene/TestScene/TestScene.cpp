@@ -27,6 +27,19 @@ void TestScene::Initialize(){
 	playerModel_.reset(Ellysia::Model::Create(playerModelHandle));
 	playerWorldTransform_.Initialize();
 
+
+
+	//球モデル
+	uint32_t sphereModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	//四隅
+	for (uint32_t i = 0; i < COUNER_QUANTITY_; ++i) {
+		playerCounerModel_[i].reset(Ellysia::Model::Create(sphereModelHandle));
+		playerCounerWorldTransform_[i].Initialize();
+
+	}
+	
+
+
 	//カメラ
 	camera_.Initialize();
 	camera_.rotate.x = std::numbers::pi_v<float>/2.0f;
@@ -34,7 +47,7 @@ void TestScene::Initialize(){
 	camera_.translate.y = 50.0f;
 	//マテリアルの初期化
 	playerMaterial_.Initialize();
-	playerMaterial_.lightingKinds_ = LightingType::DirectionalLighting;
+	playerMaterial_.lightingKinds_ = LightingType::NoneLighting;
 	//平行光源の初期化
 	directionalLight_.Initialize();
 
@@ -60,16 +73,9 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 
 
 
-	for (auto i = 0; i < objects.size(); ++i) {
-		//片側のサイズ
-		Vector3 sideSize = VectorCalculation::Subtract(objects[i].max, objects[i].min);
-		sideSize;
+	
 
-
-	}
-
-
-	const float SPEED = 0.05f;
+	const float SPEED = 0.1f;
 	//方向
 	Vector3 direction = {};
 
@@ -87,14 +93,44 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 		direction.x = -SPEED;
 	}
 
+	//座標の加算
 	playerWorldTransform_.translate = VectorCalculation::Add(playerWorldTransform_.translate, direction);
 
 
 
+	for (uint32_t i = 0; i < COUNER_QUANTITY_; ++i) {
+		playerCounerWorldTransform_[i].Update();
+
+	}
+
+	const float SIZE = 1.0f;
+	const Vector3 CUBE_SIZE = { .x = SIZE ,.y = SIZE ,.z = SIZE };
+	playerAABB_.max = VectorCalculation::Add(playerWorldTransform_.GetWorldPosition(), CUBE_SIZE);
+	playerAABB_.min = VectorCalculation::Subtract(playerWorldTransform_.GetWorldPosition(), CUBE_SIZE);
+
+
+	for (auto i = 0; i < objects.size(); ++i) {
+		//片側のサイズ
+		Vector3 sideSize = VectorCalculation::Subtract(objects[i].max, objects[i].min);
+		sideSize;
+
+
+		if (playerWorldTransform_.translate.x > objects[i].min.x&& playerWorldTransform_.translate.x > objects[i].min.x) {
+
+		}
+
+
+	}
 
 
 
 #ifdef _DEBUG
+
+	ImGui::Begin("仮プレイヤー");
+	ImGui::InputFloat3("座標", &playerWorldTransform_.translate.x);
+	ImGui::End();
+
+
 	ImGui::Begin("テストシーンカメラ");
 	ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
 	ImGui::SliderFloat3("座標", &camera_.translate.x, -30.0f, 30.0f);

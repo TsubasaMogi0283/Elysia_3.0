@@ -6,6 +6,7 @@
 #include "BackTexture.h"
 #include "Model.h"
 #include "WorldTransform.h"
+#include "AABB.h"
 #include "Camera.h"
 #include "Material.h"
 #include "DirectionalLight.h"
@@ -108,7 +109,12 @@ private:
 	//仮プレイヤー
 	std::unique_ptr<Ellysia::Model>playerModel_ = nullptr;
 	WorldTransform playerWorldTransform_ = {};
-	
+	AABB playerAABB_ = {};
+
+	//四隅
+	static const uint32_t COUNER_QUANTITY_ = 4u;
+	std::array<std::unique_ptr<Ellysia::Model>, COUNER_QUANTITY_>playerCounerModel_ = {};
+	std::array<WorldTransform, COUNER_QUANTITY_>playerCounerWorldTransform_ = {};
 
 	//カメラ
 	Camera camera_ = {};
