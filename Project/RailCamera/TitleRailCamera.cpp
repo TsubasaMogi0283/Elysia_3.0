@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <algorithm>
+#include <fstream>
 
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
@@ -9,82 +10,63 @@
 #include "Quaternion.h"
 #include "Calculation/QuaternionCalculation.h"
 
-void TitleRailCamera::Initialize(){
+void TitleRailCamera::Initialize(const std::string& csvPath){
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	//カメラの初期化
 	camera_.Initialize();
 
-	//LevelEditorに入れたいね
-	//一旦CSVにしてみる
-	//制御点
-	points_ = {
-		{0.0f,3.0f,-75.0f},
-		{10.0f,3.0f,-75.0f},
-		{20.0f,3.0f,-75.0f},
-		{30.0f,3.0f,-75.0f},
-		{40.0f,3.0f,-75.0f},
-		{50.0f,3.0f,-75.0f},
-		{60.0f,3.0f,-70.0f},
-		{70.0f,3.0f,-65.0f},
-		{75.0f,3.0f,-60.0f},
-		{75.0f,3.0f,-45.0f},
-		{75.0f,3.0f,-30.0f},
-		{75.0f,3.0f,-20.0f},
-		{75.0f,3.0f,-10.0f},
-		{75.0f,3.0f,-5.0f},
-		{75.0f,3.0f,0.0f},
-		{75.0f,3.0f,5.0f},
-		{75.0f,3.0f,10.0f},
-		{75.0f,3.0f,20.0f},
-		{75.0f,3.0f,25.0f},
-		{75.0f,3.0f,30.0f},
-		{75.0f,3.0f,40.0f},
-		{75.0f,3.0f,50.0f},
-		{70.0f,3.0f,60.0f},
-		{65.0f,3.0f,70.0f},
-		{60.0f,3.0f,75.0f},
-		{50.0f,3.0f,75.0f},
-		{40.0f,3.0f,75.0f},
-		{30.0f,3.0f,75.0f},
-		{20.0f,3.0f,75.0f},
-		{10.0f,3.0f,75.0f},
-		{0.0f,3.0f,75.0f},
-		{-10.0f,3.0f,75.0f},
-		{-20.0f,3.0f,75.0f},
-		{-30.0f,3.0f,75.0f},
-		{-40.0f,3.0f,75.0f},
-		{-50.0f,3.0f,75.0f},
-		{-60.0f,3.0f,75.0f},
-		{-70.0f,3.0f,70.0f},
-		{-75.0f,3.0f,65.0f},
+	//ファイルを開ける
+	std::ifstream file;
+	file.open(csvPath);
+	//開かなかったら止まる
+	assert(file.is_open());
+
+	//ファイルの内容を文字列ストリームにコピー
+	positionsFromCSV_ << file.rdbuf();
+	//ファイルを閉じる
+	file.close();
+
+	//1行分の文字列を入れる変数
+	std::string line;
 
 
+	//制御点読み込み
+	while (std::getline(positionsFromCSV_, line)) {
 
-		{-75.0f,3.0f,60.0f},
-		{-75.0f,3.0f,50.0f},
-		{-75.0f,3.0f,40.0f},
-		{-75.0f,3.0f,30.0f},
-		{-75.0f,3.0f,20.0f},
-		{-75.0f,3.0f,10.0f},
-		{-75.0f,3.0f,0.0f},
-		{-75.0f,3.0f,-10.0f},
-		{-75.0f,3.0f,-20.0f},
-		{-75.0f,3.0f,-30.0f},
-		{-75.0f,3.0f,-40.0f},
-		{-75.0f,3.0f,-50.0f},
-		{-70.0f,3.0f,-60.0f},
-		{-60.0f,3.0f,-70.0f},
+		//1行分の文字列をストリームに変換して解析しやすくする
+		std::istringstream lineStream(line);
+
+		std::string word;
+		//,区切りで行の先頭文字列を取得
+		std::getline(lineStream, word, ',');
+
+		//「//」があった行の場合コメントなので飛ばす
+		if (word.find("//") == 0) {
+			//コメントは飛ばす
+			continue;
+		}
 
 
-		{-50.0f,3.0f,-75.0f},
-		{-40.0f,3.0f,-75.0f},
-		{-30.0f,3.0f,-75.0f},
-		{-20.0f,3.0f,-75.0f},
-		{-10.0f,3.0f,-75.0f},
-		{0.0f,3.0f,-75.0f},
-	};
+		Vector3 position = {};
+		//X座標
+		std::getline(lineStream, word, ',');
+		position.x = static_cast<float>(std::atof(word.c_str()));
+
+		//Y座標
+		std::getline(lineStream, word, ',');
+		position.y = static_cast<float>(std::atof(word.c_str()));
+
+		//Z座標
+		std::getline(lineStream, word, ',');
+		position.z = static_cast<float>(std::atof(word.c_str()));
+
+		//挿入
+		points_.push_back(position);
+
+
+	}
 
 }
 

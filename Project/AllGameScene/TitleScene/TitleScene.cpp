@@ -73,7 +73,7 @@ void TitleScene::Initialize(){
 	//レールカメラ
 	titleRailCamera_ = std::make_unique<TitleRailCamera>();
 	//初期化
-	titleRailCamera_->Initialize();
+	titleRailCamera_->Initialize("Resources/CSV/TitleRailCameraPoint.csv");
 	
 
 	//背景
