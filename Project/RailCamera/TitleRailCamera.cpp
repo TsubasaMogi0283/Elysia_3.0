@@ -73,13 +73,15 @@ void TitleRailCamera::Initialize(const std::string& csvPath){
 void TitleRailCamera::Update(){
 
 	//線形補間
-	cameraT_ += 0.0001f;
+	cameraT_ += increaseTValue_;
 	
 	//少し先のTの値を見て次の位置の計算をする
-	float nextT = cameraT_ + 0.001f;
+	const float NEXT_VALUE = 0.001f;
+	float nextT = cameraT_ + NEXT_VALUE;
 	//ループ時の補正
-	if (nextT > 1.0f) {
-		nextT -= 1.0f;
+	const float MAX_T_VALUE = 1.0f;
+	if (nextT > MAX_T_VALUE) {
+		nextT -= MAX_T_VALUE;
 	};
 
 	//座標
@@ -138,9 +140,9 @@ Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& poin
 	float areaLength = 1.0f / division;
 
 	//区間内の始点を0.0f、終点を1.0としたときの現在位置
-	float t_2 = std::fmod(t, areaLength) * division;
+	float t2 = std::fmod(t, areaLength) * division;
 	//下限(0.0f)と上限(1.0f)の範囲に収める
-	t_2 = std::clamp(t_2, 0.0f, 1.0f);
+	t2 = std::clamp(t2, 0.0f, 1.0f);
 
 	int index = static_cast<int>(t / areaLength);
 	int index0 = index - 1;
@@ -173,13 +175,13 @@ Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& poin
 	}
 
 	//4点の座標
-	const Vector3& p0 = points[index0];
-	const Vector3& p1 = points[index1];
-	const Vector3& p2 = points[index2];
-	const Vector3& p3 = points[index3];
+	const Vector3& P0 = points[index0];
+	const Vector3& P1 = points[index1];
+	const Vector3& P2 = points[index2];
+	const Vector3& P3 = points[index3];
 
 
 	//結果
-	Vector3 result = VectorCalculation::CatmullRom(p0, p1, p2, p3, t_2);
+	Vector3 result = VectorCalculation::CatmullRom(P0, P1, P2, P3, t2);
 	return  result;
 }
