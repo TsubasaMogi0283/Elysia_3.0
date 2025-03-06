@@ -28,9 +28,6 @@ void Ellysia::CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Co
 
 
 
-
-#pragma region Sphereの当たり判定を計算
-
 	//AとBの差分ベクトルを求める
 	Vector3 difference = VectorCalculation::Subtract(colliderPositionA, colliderPositionB);
 
@@ -49,7 +46,6 @@ void Ellysia::CollisionManager::CheckSphereCollisionPair(Collider* colliderA, Co
 		colliderB->OffCollision();
 	}
 
-#pragma endregion
 
 }
 
@@ -68,9 +64,7 @@ void Ellysia::CollisionManager::CheckAABBCollisionPair(Collider* colliderA, Coll
 	AABB aabb2 = colliderB->GetAABB();
 
 	//衝突判定
-	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
-		(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
-		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z)) {
+	if (CollisionCalculation::IsCollisionAABBPair(aabb1,aabb2)) {
 		colliderA->OnCollision();
 		colliderB->OnCollision();
 	}
@@ -116,10 +110,6 @@ void Ellysia::CollisionManager::CheckFanAndPoint(Collider* colliderA, Collider* 
 			colliderB->OffCollision();
 		}
 	}
-
-
-
-
 }
 
 void Ellysia::CollisionManager::CheckPlaneAndPoint(Collider* colliderA, Collider* colliderB) {
@@ -159,11 +149,8 @@ void Ellysia::CollisionManager::CheckPlaneAndPoint(Collider* colliderA, Collider
 
 
 void Ellysia::CollisionManager::CheckAllCollision() {
-
-
 	//総当たりの判定
-	std::list<Collider*>::iterator itrA = colliders_.begin();
-	for (; itrA != colliders_.end(); ++itrA) {
+	for (std::list<Collider*>::iterator itrA = colliders_.begin(); itrA != colliders_.end(); ++itrA) {
 
 		//itrAの*は「参照」
 		//itrAを全通りcolliderAに登録しているよ
@@ -171,8 +158,7 @@ void Ellysia::CollisionManager::CheckAllCollision() {
 
 		//イテレータBはイテレータAの次の要素から回す(重複判定を回避)
 		std::list<Collider*>::iterator itrB = itrA;
-		itrB++;
-
+		++itrB;
 		for (; itrB != colliders_.end(); ++itrB) {
 			Collider* colliderB = *itrB;
 

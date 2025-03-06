@@ -6,6 +6,7 @@
 #include "ModelManager.h"
 #include "LevelDataManager.h"
 #include "VectorCalculation.h"
+#include "CollisionCalculation.h"
 
 TestScene::TestScene(){
 	//インスタンスの取得	
@@ -26,7 +27,8 @@ void TestScene::Initialize(){
 	uint32_t playerModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube", "cube.obj");
 	playerModel_.reset(Ellysia::Model::Create(playerModelHandle));
 	playerWorldTransform_.Initialize();
-
+	playerCenterPosition_ = { .x = 0.0f,.y = 0.0f,.z = -5.0f };
+	playerWorldTransform_.translate = playerCenterPosition_;
 
 
 	//球モデル
@@ -66,14 +68,7 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 
 	//レベルエディタの更新
 	levelDataManager_->Update(levelHandle_);
-
-
-
 	std::vector<AABB> objects = levelDataManager_->GetStageObjectAABBs(levelHandle_);
-
-
-
-	
 
 	const float SPEED = 0.1f;
 	//方向
@@ -94,42 +89,44 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 	}
 
 	//座標の加算
-	playerWorldTransform_.translate = VectorCalculation::Add(playerWorldTransform_.translate, direction);
+	playerCenterPosition_= VectorCalculation::Add(playerCenterPosition_, direction);
+
+	//プレイヤーのAABBを計算
+	const float SIZE = 1.0f;
+	const Vector3 CUBE_SIZE = { .x = SIZE ,.y = SIZE ,.z = SIZE };
+	playerAABB_.max = VectorCalculation::Add(playerCenterPosition_, CUBE_SIZE);
+	playerAABB_.min = VectorCalculation::Subtract(playerCenterPosition_, CUBE_SIZE);
+	
+	for (int i = 0; i < objects.size(); ++i) {
+		FixPosition(playerAABB_, objects[i]);
+	}
 
 
-
+	//四隅の球の更新
 	for (uint32_t i = 0; i < COUNER_QUANTITY_; ++i) {
 		playerCounerWorldTransform_[i].Update();
 
 	}
 
-	const float SIZE = 1.0f;
-	const Vector3 CUBE_SIZE = { .x = SIZE ,.y = SIZE ,.z = SIZE };
-	playerAABB_.max = VectorCalculation::Add(playerWorldTransform_.GetWorldPosition(), CUBE_SIZE);
-	playerAABB_.min = VectorCalculation::Subtract(playerWorldTransform_.GetWorldPosition(), CUBE_SIZE);
+	//プレイヤー更新
+	playerWorldTransform_.translate = playerCenterPosition_;
+	playerWorldTransform_.Update();
+	camera_.Update();
+	directionalLight_.Update();
+	playerMaterial_.Update();
 
-
-	for (auto i = 0; i < objects.size(); ++i) {
-		//片側のサイズ
-		Vector3 sideSize = VectorCalculation::Subtract(objects[i].max, objects[i].min);
-		sideSize;
-
-
-		if (playerWorldTransform_.translate.x > objects[i].min.x&& playerWorldTransform_.translate.x > objects[i].min.x) {
-
-		}
-
-
-	}
-
-
+	gameManager;
 
 #ifdef _DEBUG
 
 	ImGui::Begin("仮プレイヤー");
-	ImGui::InputFloat3("座標", &playerWorldTransform_.translate.x);
+	ImGui::InputFloat3("中心座標", &playerCenterPosition_.x);
 	ImGui::End();
 
+
+	ImGui::Begin("衝突");
+	ImGui::Checkbox("当たったかどうか", &isCollision_);
+	ImGui::End();
 
 	ImGui::Begin("テストシーンカメラ");
 	ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
@@ -138,13 +135,6 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 #endif // _DEBUG
 
 
-	//プレイヤー更新
-	playerWorldTransform_.Update();
-	camera_.Update();
-	directionalLight_.Update();
-	playerMaterial_.Update();
-
-	gameManager;
 }
 
 void TestScene::DrawObject3D(){
@@ -152,6 +142,11 @@ void TestScene::DrawObject3D(){
 	levelDataManager_->Draw(levelHandle_, camera_);
 	//仮プレイヤー
 	playerModel_->Draw(playerWorldTransform_,camera_, playerMaterial_);
+
+	//四隅の球の更新
+	for (uint32_t i = 0; i < COUNER_QUANTITY_; ++i) {
+		playerCounerModel_[i]->Draw(playerCounerWorldTransform_[i], camera_, playerMaterial_);
+	}
 
 }
 
@@ -167,4 +162,48 @@ void TestScene::DrawPostEffect(){
 
 void TestScene::DrawSprite()
 {
+}
+
+
+Vector3 TestScene::PushBackProcess(const AABB& aabb1, const AABB& aabb2){
+	float dx1 = aabb2.max.x - aabb1.min.x; // Aを左に押す距離
+	float dx2 = aabb1.max.x - aabb2.min.x; // Aを右に押す距離
+	float dy1 = aabb2.max.y - aabb1.min.y; // Aを下に押す距離
+	float dy2 = aabb1.max.y - aabb2.min.y; // Aを上に押す距離
+	float dz1 = aabb2.max.z - aabb1.min.z; // Aを手前に押す距離
+	float dz2 = aabb1.max.z - aabb2.min.z; // Aを奥に押す距離
+
+	// 最小の押し戻し量を求める
+	float minPushX = (dx1 < dx2) ? dx1 : -dx2;
+	float minPushY = (dy1 < dy2) ? dy1 : -dy2;
+	float minPushZ = (dz1 < dz2) ? dz1 : -dz2;
+
+	// 一番押し戻し量が少ない軸で処理する
+	if (std::abs(minPushX) <= std::abs(minPushY) && std::abs(minPushX) <= std::abs(minPushZ)) {
+		return { minPushX, 0.0f, 0.0f };
+	}
+	else if (std::abs(minPushY) <= std::abs(minPushX) && std::abs(minPushY) <= std::abs(minPushZ)) {
+		return { 0.0f, minPushY, 0.0f };
+	}
+	else {
+		return { 0.0f, 0.0f, minPushZ };
+	}
+}
+
+void TestScene::FixPosition(AABB& mainAABB, const AABB& targetAABB){
+	if (CollisionCalculation::IsCollisionAABBPair(mainAABB,targetAABB)) {
+		isCollision_ = true;
+
+
+		Vector3 pushBack = PushBackProcess(mainAABB, targetAABB);
+		mainAABB.min.x += pushBack.x;
+		mainAABB.max.x += pushBack.x;
+		mainAABB.min.y += pushBack.y;
+		mainAABB.max.y += pushBack.y;
+		mainAABB.min.z += pushBack.z;
+		mainAABB.max.z += pushBack.z;
+	}
+	else {
+		isCollision_ = false;
+	}
 }

@@ -94,6 +94,22 @@ public:
 
 
 private:
+	/// <summary>
+	/// 押し戻し処理
+	/// </summary>
+	/// <param name="aabb1"></param>
+	/// <param name="aabb2"></param>
+	/// <returns></returns>
+	Vector3 PushBackProcess(const AABB& aabb1, const AABB& aabb2);
+
+	/// <summary>
+	/// 押し戻し処理
+	/// </summary>
+	/// <param name="mainAABB">プレイヤーなどのメイン用AABB</param>
+	/// <param name="targetAABB">オブジェクトなどのAABB</param>
+	void FixPosition(AABB& mainAABB,const AABB& targetAABB);
+
+private:
 	//入力
 	Ellysia::Input* input_ = nullptr;
 	//モデル管理クラス
@@ -111,6 +127,9 @@ private:
 	std::unique_ptr<Ellysia::Model>playerModel_ = nullptr;
 	WorldTransform playerWorldTransform_ = {};
 	AABB playerAABB_ = {};
+	Vector3 playerCenterPosition_ = {};
+
+	bool isCollision_ = false;
 
 	//四隅
 	static const uint32_t COUNER_QUANTITY_ = 4u;
