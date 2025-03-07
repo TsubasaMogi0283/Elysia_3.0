@@ -92,8 +92,7 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 	playerCenterPosition_= VectorCalculation::Add(playerCenterPosition_, direction);
 
 	//プレイヤーのAABBを計算
-	const float SIZE = 1.0f;
-	const Vector3 CUBE_SIZE = { .x = SIZE ,.y = SIZE ,.z = SIZE };
+	
 	playerAABB_.max = VectorCalculation::Add(playerCenterPosition_, CUBE_SIZE);
 	playerAABB_.min = VectorCalculation::Subtract(playerCenterPosition_, CUBE_SIZE);
 	
@@ -196,12 +195,14 @@ void TestScene::FixPosition(AABB& mainAABB, const AABB& targetAABB){
 
 
 		Vector3 pushBack = PushBackProcess(mainAABB, targetAABB);
-		mainAABB.min.x += pushBack.x;
-		mainAABB.max.x += pushBack.x;
-		mainAABB.min.y += pushBack.y;
-		mainAABB.max.y += pushBack.y;
-		mainAABB.min.z += pushBack.z;
-		mainAABB.max.z += pushBack.z;
+
+		// プレイヤーの中心座標も更新
+		playerCenterPosition_.x += pushBack.x;
+		playerCenterPosition_.y += pushBack.y;
+		playerCenterPosition_.z += pushBack.z;
+
+		mainAABB.max = VectorCalculation::Add(playerCenterPosition_, { SIZE, SIZE, SIZE });
+		mainAABB.min = VectorCalculation::Subtract(playerCenterPosition_, { SIZE, SIZE, SIZE });
 	}
 	else {
 		isCollision_ = false;
