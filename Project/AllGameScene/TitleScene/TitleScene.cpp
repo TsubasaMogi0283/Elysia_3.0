@@ -18,11 +18,12 @@
 
 
 TitleScene::TitleScene(){
-	//テクスチャ管理クラスの取得
+	//インスタンスの取得
+	//テクスチャ管理クラス
 	textureManager_ = Ellysia::TextureManager::GetInstance();
-	//入力クラスの取得
+	//入力クラス
 	input_ = Ellysia::Input::GetInstance();
-	//レベルエディタ管理クラスの取得
+	//レベルエディタ管理クラス
 	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 }
 
@@ -60,7 +61,7 @@ void TitleScene::Initialize(){
 
 	//スポットライトの初期化
 	spotLight.Initialize();
-
+	//平行光源
 	directionalLight_.Initialize();
 	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
 	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };

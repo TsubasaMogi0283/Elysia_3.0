@@ -111,7 +111,6 @@ struct PixelShaderOutput{
 PixelShaderOutput main(VertexShaderOutput input){
     PixelShaderOutput output;
 	
-    float3 camera = gCamera.worldPosition;
 	
 	//Materialを拡張する
     float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
@@ -121,7 +120,7 @@ PixelShaderOutput main(VertexShaderOutput input){
         discard;
     }
 	
-	//DirectionalLightingする場合
+	//DirectionalLight
     if (gMaterial.enableLighting == 1){
 	
 		//このままdotだと[-1,1]になる。
@@ -263,35 +262,28 @@ PixelShaderOutput main(VertexShaderOutput input){
         float3 diffuseSpotLight = gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * cos * gSpotLight.intensity;
         float3 specularSpotLight = gSpotLight.color.rgb * gSpotLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
         float3 offset = { gSpotLight.aroundOffset, gSpotLight.aroundOffset, gSpotLight.aroundOffset };
-        //float3 offset = { 0.004f, 0.004f, 0.004f };
+
         //通常はこっち
-        if (gMaterial.isEnviromentMap == false)
-        {
+        if (gMaterial.isEnviromentMap == false){
             
             output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor + offset;
             output.color.a = gMaterial.color.a * textureColor.a;
 
         }
 		//環境マップ
-        if (gMaterial.isEnviromentMap == true)
-        {
+        if (gMaterial.isEnviromentMap == true){
             float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
             float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
             float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
 
             output.color.rgb = (enviromentColor.rgb) * ((diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor+offset);
             output.color.a = gMaterial.color.a * textureColor.a;
-		
         }
-        
     }
-    else
-    {
+    else{
 		//Lightingしない場合
         output.color = gMaterial.color * textureColor;
     }
-
-	
-	
+    
     return output;
 }

@@ -92,23 +92,6 @@ public:
 	/// </summary>
 	~TestScene() = default;
 
-
-private:
-	/// <summary>
-	/// 押し戻し処理
-	/// </summary>
-	/// <param name="aabb1"></param>
-	/// <param name="aabb2"></param>
-	/// <returns></returns>
-	Vector3 PushBackProcess(const AABB& aabb1, const AABB& aabb2);
-
-	/// <summary>
-	/// 押し戻し処理
-	/// </summary>
-	/// <param name="mainAABB">プレイヤーなどのメイン用AABB</param>
-	/// <param name="targetAABB">オブジェクトなどのAABB</param>
-	void FixPosition(AABB& mainAABB,const AABB& targetAABB);
-
 private:
 	//入力
 	Ellysia::Input* input_ = nullptr;

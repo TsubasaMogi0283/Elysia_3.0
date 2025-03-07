@@ -7,6 +7,7 @@
 #include "LevelDataManager.h"
 #include "VectorCalculation.h"
 #include "CollisionCalculation.h"
+#include "PushBackCalculation.h"
 
 TestScene::TestScene(){
 	//インスタンスの取得	
@@ -27,6 +28,7 @@ void TestScene::Initialize(){
 	uint32_t playerModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube", "cube.obj");
 	playerModel_.reset(Ellysia::Model::Create(playerModelHandle));
 	playerWorldTransform_.Initialize();
+	playerWorldTransform_.scale = { .x = 0.5f,.y = 1.0f,.z=2.0f };
 	playerCenterPosition_ = { .x = 0.0f,.y = 0.0f,.z = -5.0f };
 	playerWorldTransform_.translate = playerCenterPosition_;
 
@@ -44,12 +46,11 @@ void TestScene::Initialize(){
 
 	//カメラ
 	camera_.Initialize();
-	camera_.rotate.x = std::numbers::pi_v<float>/2.0f;
-	camera_.translate.z = 0.0f;
-	camera_.translate.y = 50.0f;
+	camera_.rotate.x = std::numbers::pi_v<float>/6.0f;
+	camera_.translate = { .x = 0.0f,.y = 21.0f,.z = -30.0f };
 	//マテリアルの初期化
 	playerMaterial_.Initialize();
-	playerMaterial_.lightingKinds_ = LightingType::NoneLighting;
+	playerMaterial_.lightingKinds_ = LightingType::DirectionalLighting;
 	//平行光源の初期化
 	directionalLight_.Initialize();
 
@@ -93,11 +94,12 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 
 	//プレイヤーのAABBを計算
 	
-	playerAABB_.max = VectorCalculation::Add(playerCenterPosition_, CUBE_SIZE);
-	playerAABB_.min = VectorCalculation::Subtract(playerCenterPosition_, CUBE_SIZE);
+	playerAABB_.max = VectorCalculation::Add(playerCenterPosition_, playerWorldTransform_.scale);
+	playerAABB_.min = VectorCalculation::Subtract(playerCenterPosition_, playerWorldTransform_.scale);
 	
+
 	for (int i = 0; i < objects.size(); ++i) {
-		FixPosition(playerAABB_, objects[i]);
+		PushBackCalculation::FixPosition(playerCenterPosition_,playerAABB_, objects[i]);
 	}
 
 
@@ -120,6 +122,7 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 
 	ImGui::Begin("仮プレイヤー");
 	ImGui::InputFloat3("中心座標", &playerCenterPosition_.x);
+	ImGui::SliderFloat3("スケール", &playerWorldTransform_.scale.x, 0.0f, 2.0f);
 	ImGui::End();
 
 
@@ -138,9 +141,9 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 
 void TestScene::DrawObject3D(){
 	//レベルエディタ  
-	levelDataManager_->Draw(levelHandle_, camera_);
+	levelDataManager_->Draw(levelHandle_, camera_, directionalLight_);
 	//仮プレイヤー
-	playerModel_->Draw(playerWorldTransform_,camera_, playerMaterial_);
+	playerModel_->Draw(playerWorldTransform_,camera_, playerMaterial_, directionalLight_);
 
 	//四隅の球の更新
 	for (uint32_t i = 0; i < COUNER_QUANTITY_; ++i) {
@@ -159,52 +162,8 @@ void TestScene::DrawPostEffect(){
 	backTexture_->Draw();
 }
 
-void TestScene::DrawSprite()
-{
+void TestScene::DrawSprite(){
+
 }
 
 
-Vector3 TestScene::PushBackProcess(const AABB& aabb1, const AABB& aabb2){
-	float dx1 = aabb2.max.x - aabb1.min.x; // Aを左に押す距離
-	float dx2 = aabb1.max.x - aabb2.min.x; // Aを右に押す距離
-	float dy1 = aabb2.max.y - aabb1.min.y; // Aを下に押す距離
-	float dy2 = aabb1.max.y - aabb2.min.y; // Aを上に押す距離
-	float dz1 = aabb2.max.z - aabb1.min.z; // Aを手前に押す距離
-	float dz2 = aabb1.max.z - aabb2.min.z; // Aを奥に押す距離
-
-	// 最小の押し戻し量を求める
-	float minPushX = (dx1 < dx2) ? dx1 : -dx2;
-	float minPushY = (dy1 < dy2) ? dy1 : -dy2;
-	float minPushZ = (dz1 < dz2) ? dz1 : -dz2;
-
-	// 一番押し戻し量が少ない軸で処理する
-	if (std::abs(minPushX) <= std::abs(minPushY) && std::abs(minPushX) <= std::abs(minPushZ)) {
-		return { minPushX, 0.0f, 0.0f };
-	}
-	else if (std::abs(minPushY) <= std::abs(minPushX) && std::abs(minPushY) <= std::abs(minPushZ)) {
-		return { 0.0f, minPushY, 0.0f };
-	}
-	else {
-		return { 0.0f, 0.0f, minPushZ };
-	}
-}
-
-void TestScene::FixPosition(AABB& mainAABB, const AABB& targetAABB){
-	if (CollisionCalculation::IsCollisionAABBPair(mainAABB,targetAABB)) {
-		isCollision_ = true;
-
-
-		Vector3 pushBack = PushBackProcess(mainAABB, targetAABB);
-
-		// プレイヤーの中心座標も更新
-		playerCenterPosition_.x += pushBack.x;
-		playerCenterPosition_.y += pushBack.y;
-		playerCenterPosition_.z += pushBack.z;
-
-		mainAABB.max = VectorCalculation::Add(playerCenterPosition_, { SIZE, SIZE, SIZE });
-		mainAABB.min = VectorCalculation::Subtract(playerCenterPosition_, { SIZE, SIZE, SIZE });
-	}
-	else {
-		isCollision_ = false;
-	}
-}

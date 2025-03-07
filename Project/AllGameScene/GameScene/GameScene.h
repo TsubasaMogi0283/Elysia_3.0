@@ -109,6 +109,8 @@ public:
 
 private:
 
+
+
 	/// <summary>
 	/// ステージオブジェクトとの当たり判定
 	/// </summary>

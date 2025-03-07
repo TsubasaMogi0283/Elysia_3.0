@@ -454,6 +454,24 @@
     <Filter Include="Project\Player\Collision\PlayerCollisionToStrongEnemy">
       <UniqueIdentifier>{7432f915-4798-42a9-a5f0-8b71bd080803}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ellysia\Header File\Math\PushBack">
+      <UniqueIdentifier>{f5481b3d-5817-45a6-b74e-d34eba3975d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Math\PushBack">
+      <UniqueIdentifier>{04055117-7ca4-4797-a0fc-328dafba0b8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Math\Collision">
+      <UniqueIdentifier>{2e661ccc-3046-46cb-8874-39667ae0c5dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Source File\Math\WorldTransform">
+      <UniqueIdentifier>{bab1f20c-3a95-4885-947b-ad51efb36044}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Math\BPM">
+      <UniqueIdentifier>{5a0ed71b-f565-407d-85d8-02129c6d4a7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ellysia\Header File\Math\Collision">
+      <UniqueIdentifier>{26a5a200-764b-4b6c-bdf4-5d8637bd6a42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -497,9 +515,6 @@
     </ClCompile>
     <ClCompile Include="Ellysia\main.cpp">
       <Filter>Ellysia\Source File</Filter>
-    </ClCompile>
-    <ClCompile Include="Ellysia\Math\WorldTransform\WorldTransform.cpp">
-      <Filter>Ellysia\Source File\Math</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp">
       <Filter>Ellysia\Source File\Polygone\3D\SkyBox</Filter>
@@ -669,9 +684,6 @@
     <ClCompile Include="Project\RailCamera\TitleRailCamera.cpp">
       <Filter>Project\Camera\TitleRailCamera</Filter>
     </ClCompile>
-    <ClCompile Include="Ellysia\Math\Collision\CollisionCalculation.cpp">
-      <Filter>Ellysia\Source File\Math</Filter>
-    </ClCompile>
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.cpp">
       <Filter>Project\Scene\Title\BackTexture\Base</Filter>
     </ClCompile>
@@ -754,7 +766,16 @@
       <Filter>Project\Enemy\NormalEnemy\State\Attack</Filter>
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\TestScene\TestScene.cpp">
-      <Filter>Ellysia\Source File</Filter>
+      <Filter>Project\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Math\Collision\CollisionCalculation.cpp">
+      <Filter>Ellysia\Source File\Math\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Math\WorldTransform\WorldTransform.cpp">
+      <Filter>Ellysia\Source File\Math\WorldTransform</Filter>
+    </ClCompile>
+    <ClCompile Include="Ellysia\Math\PushBackCalculation\PushBackCalculation.cpp">
+      <Filter>Ellysia\Source File\Math\PushBack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -894,9 +915,6 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\GameManager\IGameScene.h">
       <Filter>Project\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Ellysia\Math\BPMCalculation\BPMSetting.h">
-      <Filter>Ellysia\Header File\Math</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Common\Windows\WindowsSetup.h">
       <Filter>Ellysia\Header File\Common</Filter>
@@ -1162,9 +1180,6 @@
     <ClInclude Include="Project\RailCamera\TitleRailCamera.h">
       <Filter>Project\Camera\TitleRailCamera</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Math\Collision\CollisionCalculation.h">
-      <Filter>Ellysia\Header File\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Project\CollisionConfig\CollisionConfig.h">
       <Filter>Project</Filter>
     </ClInclude>
@@ -1231,9 +1246,6 @@
     <ClInclude Include="Ellysia\EffectData\Dissolve\Dissolve.h">
       <Filter>Ellysia\Header File\EffectData</Filter>
     </ClInclude>
-    <ClInclude Include="Ellysia\Polygon\2D\Particle\Particle2D.h">
-      <Filter>Ellysia\Header File</Filter>
-    </ClInclude>
     <ClInclude Include="Ellysia\Polygon\Particle\ParticleMoveType.h">
       <Filter>Ellysia\Header File\Polygone\Particle</Filter>
     </ClInclude>
@@ -1286,7 +1298,19 @@
       <Filter>Project\Enemy\NormalEnemy\State\Attack</Filter>
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\TestScene\TestScene.h">
-      <Filter>Ellysia\Header File</Filter>
+      <Filter>Project\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\BPMCalculation\BPMSetting.h">
+      <Filter>Ellysia\Header File\Math\BPM</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\Collision\CollisionCalculation.h">
+      <Filter>Ellysia\Header File\Math\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Polygon\2D\Particle\Particle2D.h">
+      <Filter>Ellysia\Header File\Polygone\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellysia\Math\PushBackCalculation\PushBackCalculation.h">
+      <Filter>Ellysia\Header File\Math\PushBack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
