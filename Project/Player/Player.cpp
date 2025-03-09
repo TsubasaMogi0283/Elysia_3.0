@@ -7,6 +7,8 @@
 #include "SingleCalculation.h"
 #include "ModelManager.h"
 #include "SpotLight.h"
+#include "LevelDataManager.h"
+#include "PushBackCalculation.h"
 
 Player::Player(){
 
@@ -15,6 +17,8 @@ Player::Player(){
 	input_ = Ellysia::Input::GetInstance();
 	//モデル管理クラス
 	modelManager_ = Ellysia::ModelManager::GetInstance();
+	//レベルエディタ管理クラス
+	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
 }
 
 void Player::Initialize(){
@@ -40,7 +44,6 @@ void Player::Initialize(){
 	const Vector3 INITIAL_POSITION = { .x=0.0f,.y=0.0f,.z=-15.0f };
 	worldTransform_.translate = INITIAL_POSITION;
 
-	//PlayerCllsion基底クラスを作ろう
 	//通常の敵
 	std::unique_ptr<PlayerCollisionToNormalEnemyAttack> colliderToNormalEnemy = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
 	colliderToNormalEnemy->Initialize();
@@ -76,19 +79,15 @@ void Player::Update(){
 	Damaged();
 
 	//ワールドトランスフォームの更新
+	worldTransform_.translate = playerCenterPosition_;
 	worldTransform_.Update();
 
 	//ワールド座標
 	Vector3 worldPosition = worldTransform_.GetWorldPosition();
 
 	//AABBの計算
-	aabb_.min.x = worldPosition.x - SIDE_SIZE;
-	aabb_.min.y = worldPosition.y - SIDE_SIZE;
-	aabb_.min.z = worldPosition.z - SIDE_SIZE;
-
-	aabb_.max.x = worldPosition.x + SIDE_SIZE;
-	aabb_.max.y = worldPosition.y + SIDE_SIZE;
-	aabb_.max.z = worldPosition.z + SIDE_SIZE;
+	aabb_.min = VectorCalculation::Subtract(worldPosition, { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
+	aabb_.max = VectorCalculation::Add(worldPosition, { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
 
 	//コリジョンの更新
 	for (std::unique_ptr<BasePlayerCollision> &collision : colliders_) {
@@ -212,7 +211,25 @@ void Player::Move() {
 			moveSpeed = NORMAL_MOVE_SPEED;
 		}
 		//加算
-		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, VectorCalculation::Multiply(moveDirection_, moveSpeed));
+		playerCenterPosition_ = VectorCalculation::Add(playerCenterPosition_, VectorCalculation::Multiply(moveDirection_, moveSpeed));
+
+		//プレイヤーの当たり判定AABB
+
+		//AABB
+		std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelHandle_);
+		//コライダーを持っているかどうか
+		std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelHandle_, "Stage");
+		//衝突判定
+		for (size_t i = 0; i < aabbs.size(); ++i) {
+
+			//コライダーを持っているときだけ
+			if (colliders[i] == true) {
+				PushBackCalculation::FixPosition(playerCenterPosition_, aabb_, aabbs[i]);
+			}
+
+
+
+		}
 
 	}
 }

@@ -48,6 +48,11 @@ namespace Ellysia {
 	/// モデル管理クラス
 	/// </summary>
 	class ModelManager;
+
+	/// <summary>
+	/// レベルデータ管理クラス
+	/// </summary>
+	class LevelDataManager;
 };
 
 
@@ -180,13 +185,13 @@ public:
 	/// 持っている鍵の数を増やす
 	/// </summary>
 	inline void AddHaveKeyQuantity() {
-		haveKeyQuantity_++;
+		++haveKeyQuantity_;
 	}
 
 	/// <summary>
 	/// 今鍵を何個持っているか
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>鍵の数</returns>
 	inline uint32_t GetHavingKey() {
 		return haveKeyQuantity_;
 	}
@@ -194,7 +199,7 @@ public:
 	/// <summary>
 	/// 動く方向の設定
 	/// </summary>
-	/// <param name="move"></param>
+	/// <param name="move">方向</param>
 	inline void SetMoveDirection(const Vector3& moveDirection) {
 		this->moveDirection_ = moveDirection;
 	}
@@ -202,7 +207,7 @@ public:
 	/// <summary>
 	/// 動きの状態を設定
 	/// </summary>
-	/// <param name="condition"></param>
+	/// <param name="condition">状態</param>
 	inline void SetMoveCondition(const uint32_t& condition) {
 		this->moveCondition_ = condition;
 	}
@@ -210,6 +215,7 @@ public:
 	/// <summary>
 	/// 走るかどうか
 	/// </summary>
+	/// <param name="isDash"></param>
 	inline void SetIsDash(const bool& isDash) {
 		this->isDash_ = isDash;
 	}
@@ -218,7 +224,7 @@ public:
 	/// <summary>
 	/// 操作を受け付けるか受け付けないかの設定
 	/// </summary>
-	/// <param name="isControll"></param>
+	/// <param name="isControll">操作できるかどうか</param>
 	inline void SetIsAbleToControll(const bool& isControll) {
 		this->isControll_ = isControll;
 	}
@@ -226,7 +232,7 @@ public:
 	/// <summary>
 	/// 通常の敵からの攻撃を受け入れるかどうか
 	/// </summary>
-	/// <param name="isAccept"></param>
+	/// <param name="isAccept">受け入れるかどうか</param>
 	inline void SetIsAcceptDamegeFromNoemalEnemy(const bool& isAccept) {
 		this->isAcceptDamegeFromNoemalEnemy_ = isAccept;
 	}
@@ -234,7 +240,7 @@ public:
 	/// <summary>
 	/// 通常の敵の攻撃の受け入れを取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>受け入れ状態</returns>
 	bool GetIsAcceptDamegeFromNormalEnemy()const {
 		return isAcceptDamegeFromNoemalEnemy_;
 	}
@@ -242,10 +248,19 @@ public:
 	/// <summary>
 	/// 座標の設定
 	/// </summary>
-	/// <param name="position"></param>
-	inline void SetPosition(const Vector3& position) {
+	/// <param name="position">座標</param>
+	inline void SetPosition(Vector3& position) {
 		this->worldTransform_.translate = position;
 	}
+
+	/// <summary>
+	/// レベルデータハンドルの設定
+	/// </summary>
+	/// <param name="levelHandle"></param>
+	inline void SetLevelHandle(const uint32_t& levelHandle) {
+		this->levelHandle_ = levelHandle;
+	}
+
 
 public:
 
@@ -253,7 +268,7 @@ public:
 	/// <summary>
 	/// プレイヤー用のコライダーを取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>コライダー</returns>
 	inline std::vector<BasePlayerCollision*> GetColliders()const{
 		std::vector<BasePlayerCollision*> colliders;
 		for (const auto& collider : colliders_) {
@@ -284,13 +299,17 @@ private:
 	Ellysia::Input* input_ = nullptr;
 	//モデル管理クラス
 	Ellysia::ModelManager* modelManager_ = nullptr;
-
+	//レベルエディタ
+	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	//ハンドル
+	uint32_t levelHandle_ = 0u;
 private:
 
 	//モデル
 	std::unique_ptr<Ellysia::Model> model_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_={};
+	Vector3 playerCenterPosition_ = {};
 	//マテリアル
 	Material material_ = {};
 
@@ -325,7 +344,6 @@ private:
 	int32_t damagedTime_ = 0;
 	bool isAcceptDamegeFromNoemalEnemy_ = false;
 
-	
 	//時間
 	float vibeTime_ = 0u;
 

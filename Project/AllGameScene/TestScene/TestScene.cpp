@@ -125,11 +125,6 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 	ImGui::SliderFloat3("スケール", &playerWorldTransform_.scale.x, 0.0f, 2.0f);
 	ImGui::End();
 
-
-	ImGui::Begin("衝突");
-	ImGui::Checkbox("当たったかどうか", &isCollision_);
-	ImGui::End();
-
 	ImGui::Begin("テストシーンカメラ");
 	ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
 	ImGui::SliderFloat3("座標", &camera_.translate.x, -30.0f, 30.0f);

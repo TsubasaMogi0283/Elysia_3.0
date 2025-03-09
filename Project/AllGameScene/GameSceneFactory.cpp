@@ -28,7 +28,7 @@ std::unique_ptr<Ellysia::IGameScene> GameSceneFactory::CreateScene(const std::st
         newScene = std::make_unique<LoseScene>();
     }
     //テスト用
-    else if (sceneName == "TestScene") {
+    else if (sceneName == "Test") {
         newScene = std::make_unique<TestScene>();
     }
 

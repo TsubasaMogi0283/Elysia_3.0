@@ -6,7 +6,7 @@
 #include "Input.h"
 #include "SingleCalculation.h"
 #include "VectorCalculation.h"
-
+#include "PushBackCalculation.h"
 #include "AnimationManager.h"
 #include "TextureManager.h"
 #include "GameManager.h"
@@ -88,11 +88,19 @@ void GameScene::Initialize() {
 	escapeText_->SetInvisible(true);
 #pragma endregion
 
+
+
+	//ハンドルの取得
+	levelHandle_ = levelDataManager_->Load("GameStage/GameStage.json");
+
+
 #pragma region プレイヤー
 	//生成
 	player_ = std::make_unique<Player>();
 	//初期化
 	player_->Initialize();
+	//ハンドルの設定
+	player_->SetLevelHandle(levelHandle_);
 	//最初はコントロールは出来ない用にする
 	player_->SetIsAbleToControll(false);
 
@@ -111,9 +119,6 @@ void GameScene::Initialize() {
 	//Bトリガーの初期化
 	isBTrigger_ = false;
 #pragma endregion
-
-	//ハンドルの取得
-	levelHandle_ = levelDataManager_->Load("GameStage/GameStage.json");
 
 	//鍵のモデルの読み込み
 	uint32_t keyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/key", "Key.obj");
@@ -262,6 +267,8 @@ void GameScene::ObjectCollision() {
 
 	//プレイヤーの当たり判定AABB
 	AABB playerAABB = player_->GetAABB();
+	Vector3 position = {};
+
 
 	//座標
 	std::vector<Vector3> positions = levelDataManager_->GetStageObjectPositions(levelHandle_);
@@ -270,43 +277,15 @@ void GameScene::ObjectCollision() {
 	//コライダーを持っているかどうか
 	std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelHandle_,"Stage");
 	//衝突判定
-	for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
+	for (size_t i = 0;  i < aabbs.size() && i < colliders.size(); ++i) {
 
 		//コライダーを持っているときだけ
 		if (colliders[i] == true) {
-			//オブジェクトとの差分ベクトル
-			Vector3 objectAndPlayerDifference = VectorCalculation::Subtract(positions[i], player_->GetWorldPosition());
-			//オブジェクトとプレイヤーの距離
-			Vector3 normalizedDemoAndPlayer = VectorCalculation::Normalize(objectAndPlayerDifference);
-			//デバッグ用
-			Vector3 centerPosition = positions[i];
+			//Vector3 playerPosition = player_->GetWorldPosition();
+			//position = player_->GetWorldPosition();
+			//PushBackCalculation::FixPosition(position, playerAABB, aabbs[i]);
+			//player_->SetPosition(position);
 
-			//内積
-			//進行方向上にオブジェクトがあるかないかを計算したい
-			float dot = SingleCalculation::Dot(playerMoveDirection_, normalizedDemoAndPlayer);
-			const float DOT_OFFSET = 0.5f;
-
-
-			//衝突判定
-			//Y成分はいらない
-			if ((playerAABB.min.x <= aabbs[i].max.x && playerAABB.max.x >= aabbs[i].min.x) &&
-				(playerAABB.min.z <= aabbs[i].max.z && playerAABB.max.z >= aabbs[i].min.z) &&
-				(dot > DOT_OFFSET)) {
-
-				centerPosition;
-
-				uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
-				player_->SetMoveCondition(newCondition);
-
-				//当たったらループを抜ける
-				break;
-			}
-			else {
-				//当たっていない
-				uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
-				player_->SetMoveCondition(newCondition);
-
-			}
 		}
 
 

@@ -122,6 +122,78 @@
                     2.0
                 ]
             }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.001",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    7.092320442199707,
+                    0.0,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.002",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    3.8272390365600586,
+                    5.849783897399902,
+                    0.2750062942504883
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            }
         }
     ]
 }

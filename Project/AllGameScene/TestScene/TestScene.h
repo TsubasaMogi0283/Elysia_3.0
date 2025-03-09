@@ -114,7 +114,6 @@ private:
 	AABB playerAABB_ = {};
 	Vector3 playerCenterPosition_ = {};
 
-	bool isCollision_ = false;
 
 	//四隅
 	static const uint32_t COUNER_QUANTITY_ = 4u;
