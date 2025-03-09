@@ -270,28 +270,6 @@ void GameScene::ObjectCollision() {
 	Vector3 position = {};
 
 
-	//座標
-	std::vector<Vector3> positions = levelDataManager_->GetStageObjectPositions(levelHandle_);
-	//AABB
-	std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelHandle_);
-	//コライダーを持っているかどうか
-	std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelHandle_,"Stage");
-	//衝突判定
-	for (size_t i = 0;  i < aabbs.size() && i < colliders.size(); ++i) {
-
-		//コライダーを持っているときだけ
-		if (colliders[i] == true) {
-			//Vector3 playerPosition = player_->GetWorldPosition();
-			//position = player_->GetWorldPosition();
-			//PushBackCalculation::FixPosition(position, playerAABB, aabbs[i]);
-			//player_->SetPosition(position);
-
-		}
-
-
-
-	}
-
 
 	//非表示
 	openTreasureBoxSprite_->SetInvisible(true);
@@ -546,7 +524,13 @@ void GameScene::DisplayImGui() {
 		ImGui::TreePop();
 	}
 
+	if (ImGui::TreeNode("プレイヤー")) {
+		ImGui::InputFloat3("Direction", &playerMoveDirection_.x);
+		ImGui::Checkbox("IsPlayerMove", &isPlayerMove_);
+		ImGui::TreePop();
 
+	}
+	
 	ImGui::End();
 
 }
@@ -715,13 +699,6 @@ void GameScene::PlayerMove() {
 		player_->SetMoveCondition(newCondition);
 	}
 
-#ifdef _DEBUG
-	ImGui::Begin("Player");
-	ImGui::InputFloat3("Direction", &playerMoveDirection_.x);
-	ImGui::Checkbox("IsPlayerMove", &isPlayerMove_);
-	ImGui::End();
-
-#endif // _DEBUG
 
 	//プレイヤーの動く方向を入れる
 	player_->SetMoveDirection(playerMoveDirection_);

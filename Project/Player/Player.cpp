@@ -213,8 +213,6 @@ void Player::Move() {
 		//加算
 		playerCenterPosition_ = VectorCalculation::Add(playerCenterPosition_, VectorCalculation::Multiply(moveDirection_, moveSpeed));
 
-		//プレイヤーの当たり判定AABB
-
 		//AABB
 		std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelHandle_);
 		//コライダーを持っているかどうか
@@ -224,11 +222,9 @@ void Player::Move() {
 
 			//コライダーを持っているときだけ
 			if (colliders[i] == true) {
+				//押し戻し処理
 				PushBackCalculation::FixPosition(playerCenterPosition_, aabb_, aabbs[i]);
 			}
-
-
-
 		}
 
 	}
