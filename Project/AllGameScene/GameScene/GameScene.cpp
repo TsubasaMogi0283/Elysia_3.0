@@ -110,10 +110,6 @@ void GameScene::Initialize() {
 	player_->GetFlashLight()->SetMinRange(LIGHT_MIN_RANGE_);
 
 
-	//向きの初期化
-	playerMoveDirection_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
-	//気ボードは何も押していない
-	isPlayerMoveKey_ = false;
 	//Bトリガーの時間を初期化
 	bTriggerTime_ = 0;
 	//Bトリガーの初期化
@@ -260,14 +256,6 @@ void GameScene::Initialize() {
 
 
 void GameScene::ObjectCollision() {
-
-
-	//ただ衝突判定を設定するだけだと出来なかったので
-	//内積の計算も入れて可能にする
-
-	//プレイヤーの当たり判定AABB
-	AABB playerAABB = player_->GetAABB();
-	Vector3 position = {};
 
 
 
@@ -524,13 +512,6 @@ void GameScene::DisplayImGui() {
 		ImGui::TreePop();
 	}
 
-	if (ImGui::TreeNode("プレイヤー")) {
-		ImGui::InputFloat3("Direction", &playerMoveDirection_.x);
-		ImGui::Checkbox("IsPlayerMove", &isPlayerMove_);
-		ImGui::TreePop();
-
-	}
-	
 	ImGui::End();
 
 }
@@ -539,64 +520,67 @@ void GameScene::PlayerMove() {
 
 	//何も押していない時つまり動いていないので
 	//通常はfalseと0にしておく
-	isPlayerMoveKey_ = false;
-	isPlayerMove_ = false;
-	playerMoveDirection_ = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+	//キーボードで動かしているかどうか
+	bool isPlayerMoveKey = false;
+	//動いているかどうか
+	bool isPlayerMove = false;
+	//向き
+	Vector3 playerMoveDirection = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
 
 #pragma region キーボード
 	//移動
 	//Dキー(右)
 	if (input_->IsPushKey(DIK_D) == true) {
 		//動く方向
-		playerMoveDirection_ = {
+		playerMoveDirection = {
 			.x = std::cosf(theta_ - std::numbers::pi_v<float> / 2.0f),
 			.y = 0.0f,
 			.z = std::sinf(theta_ - std::numbers::pi_v<float> / 2.0f),
 		};
 
 		//キーボード入力をしている
-		isPlayerMoveKey_ = true;
+		isPlayerMoveKey = true;
 		//動いている
-		isPlayerMove_ = true;
+		isPlayerMove = true;
 
 	}
 	//Aキー(左)
 	if (input_->IsPushKey(DIK_A) == true) {
 		//動く方向
-		playerMoveDirection_ = {
+		playerMoveDirection = {
 			.x = std::cosf(theta_ + std::numbers::pi_v<float> / 2.0f),
 			.y = 0.0f,
 			.z = std::sinf(theta_ + std::numbers::pi_v<float> / 2.0f),
 		};
 
 		//キーボード入力をしている
-		isPlayerMoveKey_ = true;
+		isPlayerMoveKey = true;
 		//動いている
-		isPlayerMove_ = true;
+		isPlayerMove = true;
 	}
 	//Wキー(前)
 	if (input_->IsPushKey(DIK_W) == true) {
 		//動く方向
-		playerMoveDirection_ = {
+		playerMoveDirection = {
 			.x = std::cosf(theta_),
 			.y = 0.0f,
 			.z = std::sinf(theta_),
 		};
 
 		//キーボード入力をしている
-		isPlayerMoveKey_ = true;
+		isPlayerMoveKey = true;
 		//動いている
-		isPlayerMove_ = true;
+		isPlayerMove = true;
 	}
 	//Sキー(後ろ)
 	if (input_->IsPushKey(DIK_S) == true) {
-		playerMoveDirection_.x = std::cosf(theta_ + std::numbers::pi_v<float>);
-		playerMoveDirection_.z = std::sinf(theta_ + std::numbers::pi_v<float>);
+		playerMoveDirection.x = std::cosf(theta_ + std::numbers::pi_v<float>);
+		playerMoveDirection.z = std::sinf(theta_ + std::numbers::pi_v<float>);
 
 		//キーボード入力をしている
-		isPlayerMoveKey_ = true;
+		isPlayerMoveKey = true;
 		//動いている
-		isPlayerMove_ = true;
+		isPlayerMove = true;
 	}
 
 
@@ -608,7 +592,7 @@ void GameScene::PlayerMove() {
 	//キーボード入力していない時かつ移動できる時に受け付ける
 	if (input_->IsConnetGamePad() == true) {
 
-		if (isPlayerMoveKey_ == false) {
+		if (isPlayerMoveKey == false) {
 
 
 			//コントローラーの入力
@@ -642,7 +626,7 @@ void GameScene::PlayerMove() {
 			//入力されていたら計算
 			if (isInput == true) {
 				//動いている
-				isPlayerMove_ = true;
+				isPlayerMove = true;
 
 				//角度を求める
 				float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
@@ -655,8 +639,8 @@ void GameScene::PlayerMove() {
 
 
 				//向きを代入
-				playerMoveDirection_.x = std::cosf(resultTheta);
-				playerMoveDirection_.z = std::sinf(resultTheta);
+				playerMoveDirection.x = std::cosf(resultTheta);
+				playerMoveDirection.z = std::sinf(resultTheta);
 			}
 
 
@@ -666,50 +650,52 @@ void GameScene::PlayerMove() {
 
 #pragma endregion
 
-	//プレイヤーが動いている時
-	if (isPlayerMove_ == true) {
-		//状態の設定
-		uint32_t newCondition = PlayerMoveCondition::OnPlayerMove;
-		player_->SetMoveCondition(newCondition);
+#pragma region
 
+	//プレイヤーが動いている時
+	if (isPlayerMove == true) {
 		//ダッシュ
-		if (isPlayerMoveKey_ == true) {
+		//ダッシュしているかどうか
+		bool isPlayerDash = false;
+		if (isPlayerMoveKey == true) {
 			if (input_->IsPushKey(DIK_RSHIFT) == true) {
-				isPlayerDash_ = true;
+				isPlayerDash = true;
 			}
 			else {
-				isPlayerDash_ = false;
+				isPlayerDash = false;
 			}
 		}
 		//コントローラー接続時
 		else {
 			if (input_->IsConnetGamePad() == true) {
 				if (input_->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER) == true) {
-					isPlayerDash_ = true;
+					isPlayerDash = true;
 				}
 				else {
-					isPlayerDash_ = false;
+					isPlayerDash = false;
 				}
 			}
 		}
-	}
-	//動いていない時
-	else {
-		uint32_t newCondition = PlayerMoveCondition::NonePlayerMove;
-		player_->SetMoveCondition(newCondition);
+		//ダッシュをしているかどうかの設定
+		player_->SetIsDash(isPlayerDash);
+
 	}
 
 
 	//プレイヤーの動く方向を入れる
-	player_->SetMoveDirection(playerMoveDirection_);
+	player_->SetMoveDirection(playerMoveDirection);
 
-	//ダッシュをしているかどうかの設定
-	player_->SetIsDash(isPlayerDash_);
+	
 
 }
 
 void GameScene::PlayerRotate() {
 
+	//回転キーXY
+	bool isRotateYKey = false;
+	bool isRotateXKey = false;
+	//回転の大きさ
+	const float ROTATE_INTERVAL = 0.025f;
 #pragma region Y軸に旋回
 
 	//+が左回り
@@ -717,12 +703,12 @@ void GameScene::PlayerRotate() {
 	//左を向く
 	if (input_->IsPushKey(DIK_LEFT) == true) {
 		theta_ += ROTATE_INTERVAL;
-		isRotateYKey_ = true;
+		isRotateYKey = true;
 	}
 	//右を向く
 	if (input_->IsPushKey(DIK_RIGHT) == true) {
 		theta_ -= ROTATE_INTERVAL;
-		isRotateYKey_ = true;
+		isRotateYKey = true;
 	}
 
 
@@ -743,12 +729,12 @@ void GameScene::PlayerRotate() {
 	//上を向く
 	if (input_->IsPushKey(DIK_UP) == true) {
 		originPhi_ -= ROTATE_INTERVAL;
-		isRotateXKey_ = true;
+		isRotateXKey = true;
 	}
 	//下を向く
 	if (input_->IsPushKey(DIK_DOWN) == true) {
 		originPhi_ += ROTATE_INTERVAL;
-		isRotateXKey_ = true;
+		isRotateXKey = true;
 	}
 
 	//±π/6くらいに制限を掛けておきたい
@@ -763,16 +749,14 @@ void GameScene::PlayerRotate() {
 #pragma endregion
 
 #pragma region コントローラーの回転
-
-	isRotateXKey_ = false;
-	isRotateYKey_ = false;
+	
 
 	//コントローラーがある場合
 	if (input_->IsConnetGamePad() == true) {
 		const float MOVE_LIMITATION = 0.02f;
 
 		//キーボード入力していない時
-		if (isRotateYKey_ == false && isRotateXKey_ == false) {
+		if (isRotateYKey == false && isRotateXKey == false) {
 
 			//入力
 			float rotateMoveX = (float)input_->GetState().Gamepad.sThumbRY / SHRT_MAX * ROTATE_INTERVAL;

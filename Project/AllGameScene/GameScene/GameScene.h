@@ -183,8 +183,7 @@ private:
 	const uint32_t INCREASE_VALUE = 1u;
 	//フェードアウトの具合
 	const float FADE_OUT_INTERVAL_ = 0.01f;
-	//回転の大きさ
-	const float ROTATE_INTERVAL = 0.025f;
+	
 	//反応する
 	const uint32_t B_REACT_TIME_ = 1u;
 	//反応しない
@@ -206,10 +205,7 @@ private:
 	//座標のオフセット
 	Vector3 cameraPositionOffset_ = {};
 
-	//回転キーXY
-	bool isRotateYKey_ = false;
-	bool isRotateXKey_ = false;
-
+	
 	//ポストエフェクト
 	//ビネット
 	std::unique_ptr<Ellysia::Vignette> vignette_ = nullptr;
@@ -220,15 +216,8 @@ private:
 
 	//プレイヤー
 	std::unique_ptr<Player> player_ = nullptr;
-
-	//向き
-	Vector3 playerMoveDirection_ = {};
-	//キーボードで動かしているかどうか
-	bool isPlayerMoveKey_ = false;
-	//動いているかどうか
-	bool isPlayerMove_ = false;
-	//ダッシュしているかどうか
-	bool isPlayerDash_ = false;
+	
+	
 	//ライトの幅
 	float lightSideTheta_ = 0.1f;
 
@@ -237,13 +226,12 @@ private:
 	uint32_t bTriggerTime_ = 0u;
 	bool isBTrigger_ = false;
 
-	//ゲート
-	std::unique_ptr<Gate> gate_ = nullptr;
-	bool isEscape_ = false;
-
+	
 
 	//敵管理
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
+	//強い敵と接触したかどうか
+	bool isTouchStrongEnemy_ = false;
 
 
 	//角度
@@ -253,9 +241,7 @@ private:
 	//コリジョン管理
 	std::unique_ptr<Ellysia::CollisionManager> collisionManager_ = nullptr;
 
-	//強い敵と接触したかどうか
-	bool isTouchStrongEnemy_ = false;
-
+	
 #pragma region ゲーム中のUI
 	//UIを表示するかどうか
 	bool isDisplayUI_ = false;
@@ -339,6 +325,9 @@ private:
 
 #pragma endregion
 
+	//ゲート
+	std::unique_ptr<Gate> gate_ = nullptr;
+	bool isEscape_ = false;
 
 
 	//宝箱が開いているかどうか

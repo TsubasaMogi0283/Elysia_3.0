@@ -205,14 +205,6 @@ public:
 	}
 
 	/// <summary>
-	/// 動きの状態を設定
-	/// </summary>
-	/// <param name="condition">状態</param>
-	inline void SetMoveCondition(const uint32_t& condition) {
-		this->moveCondition_ = condition;
-	}
-
-	/// <summary>
 	/// 走るかどうか
 	/// </summary>
 	/// <param name="isDash"></param>
@@ -316,13 +308,10 @@ private:
 	//持っている鍵の数
 	//可算なのでQuantity
 	uint32_t haveKeyQuantity_ = 0u;
-
 	//動く方向
 	Vector3 moveDirection_ = {};
 	//AABB
 	AABB aabb_ = {};
-
-	int count = 0u;
 
 
 	//体力
@@ -331,17 +320,13 @@ private:
 	int32_t downTime_ = 0;
 	//敵の攻撃に当たったかどうか
 	bool isDamage_ = false;
-
 	//操作可能かどうか
 	bool isControll_ = false;
-	//移動状態
-	uint32_t moveCondition_ = 0u;
 	//ダッシュ
 	bool isDash_ = false;
 
 	//攻撃されたか
 	bool isDameged_ = false;
-	int32_t damagedTime_ = 0;
 	bool isAcceptDamegeFromNoemalEnemy_ = false;
 
 	//時間

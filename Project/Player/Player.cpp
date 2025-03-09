@@ -133,10 +133,6 @@ Player::~Player() {
 
 void Player::Damaged() {
 
-	if (isAcceptDamegeFromNoemalEnemy_ == true) {
-		++count;
-	}
-
 	//通常の敵に当たった場合
 	if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
 		//体力を減らす
@@ -194,7 +190,7 @@ void Player::Damaged() {
 
 void Player::Move() {
 	//動けるときだけ加算
-	if (isControll_ == true && moveCondition_ == PlayerMoveCondition::OnPlayerMove) {
+	if (isControll_ == true ) {
 
 		//歩くスピード
 		const float NORMAL_MOVE_SPEED = 0.1f;
@@ -234,13 +230,11 @@ void Player::DisplayImGui() {
 
 	//それぞれintに変換
 	int32_t keyQuantity = static_cast<int32_t>(haveKeyQuantity_);
-	int32_t condition = static_cast<int32_t>(moveCondition_);
 
 	ImGui::Begin("プレイヤー");
 	if (ImGui::TreeNode("状態")) {
 		ImGui::InputInt("鍵の数", &keyQuantity);
 		ImGui::InputInt("体力", &hp_);
-		ImGui::InputInt("ダメージ時間", &damagedTime_);
 
 		ImGui::Checkbox("isDamage_", &isDamage_);
 		ImGui::Checkbox("振動", &isDameged_);
@@ -249,11 +243,9 @@ void Player::DisplayImGui() {
 	}
 
 	ImGui::Checkbox("敵からの攻撃を受け入れるか", &isAcceptDamegeFromNoemalEnemy_);
-	ImGui::InputInt("数", &count);
 	ImGui::InputInt("downTime", &downTime_);
 	ImGui::InputFloat3("Transrate", &worldTransform_.translate.x);
 	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
-	ImGui::InputInt("moveCondition_", &condition);
 	ImGui::End();
 
 }

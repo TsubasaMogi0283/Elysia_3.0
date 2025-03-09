@@ -7,24 +7,16 @@
 #include "VectorCalculation.h"
 
 Vector3 PushBackCalculation::AABBPushBack(const AABB& aabb1, const AABB& aabb2){
-	//左に押す距離
-	float dx1 = aabb2.max.x - aabb1.min.x;
-	//右に押す距離
-	float dx2 = aabb1.max.x - aabb2.min.x;
-	//下に押す距離
-	float dy1 = aabb2.max.y - aabb1.min.y;
-	//上に押す距離
-	float dy2 = aabb1.max.y - aabb2.min.y;
-	//手前に押す距離
-	float dz1 = aabb2.max.z - aabb1.min.z;
-	//奥に押す距離
-	float dz2 = aabb1.max.z - aabb2.min.z;
+	//手前側(左・下・前)
+	Vector3 defferenceFront = VectorCalculation::Subtract(aabb2.max, aabb1.min);
+	//奥側(右・上・奥)
+	Vector3 defferenceBack = VectorCalculation::Subtract(aabb1.max, aabb2.min);
 
 	//最小の押し戻し量を求める
 	Vector3 minPush = {
-		.x = (dx1 < dx2) ? dx1 : -dx2,
-		.y = (dy1 < dy2) ? dy1 : -dy2,
-		.z = (dz1 < dz2) ? dz1 : -dz2
+		.x = (defferenceFront.x < defferenceBack.x) ? defferenceFront.x : -defferenceBack.x,
+		.y = (defferenceFront.y < defferenceBack.y) ? defferenceFront.y : -defferenceBack.y,
+		.z = (defferenceFront.z < defferenceBack.z) ? defferenceFront.z : -defferenceBack.z
 	};
 
 	Vector3 result = {};
@@ -56,11 +48,10 @@ void PushBackCalculation::FixPosition(Vector3& centerPosition, AABB& mainAABB, c
 
 		//縦横高さそれぞれの幅を計算
 		Vector3 mainAABBSize= VectorCalculation::Subtract(mainAABB.max,targetAABB.min);
-		Vector3 newSideSize = { .x = mainAABBSize.x / 2.0f,.y = mainAABBSize.y / 2.0f,.z = mainAABBSize.z / 2.0f };
-
+		mainAABBSize = { .x = mainAABBSize.x / 2.0f,.y = mainAABBSize.y / 2.0f,.z = mainAABBSize.z };
 		//AABBを更新
-		mainAABB.max = VectorCalculation::Add(centerPosition, newSideSize);
-		mainAABB.min = VectorCalculation::Subtract(centerPosition, newSideSize);
+		mainAABB.max = VectorCalculation::Add(centerPosition, mainAABBSize);
+		mainAABB.min = VectorCalculation::Subtract(centerPosition, mainAABBSize);
 	}
 
 }
