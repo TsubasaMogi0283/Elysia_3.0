@@ -160,7 +160,7 @@ void GameScene::Initialize() {
 	camera_.rotate.y = std::numbers::pi_v<float> / 2.0f;
 	
 	//カメラ座標のオフセットの初期化
-	cameraPositionOffset_ = { .x = 0.0f,.y = 1.3f,.z = 0.0f };
+	cameraPositionOffset_ = { .x = 0.0f,.y = 1.2f,.z = 0.0f };
 	//カメラの調整項目
 	globalVariables_->CreateGroup(GAME_SCENE_CAMERA_NAME_);
 	globalVariables_->AddItem(GAME_SCENE_CAMERA_NAME_, HEIGHT_OFFSET_, cameraPositionOffset_);

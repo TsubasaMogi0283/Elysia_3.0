@@ -50,7 +50,7 @@ void TestScene::Initialize(){
 	camera_.translate = { .x = 0.0f,.y = 21.0f,.z = -30.0f };
 	//マテリアルの初期化
 	playerMaterial_.Initialize();
-	playerMaterial_.lightingKinds_ = LightingType::DirectionalLighting;
+	playerMaterial_.lightingKinds = LightingType::DirectionalLighting;
 	//平行光源の初期化
 	directionalLight_.Initialize();
 

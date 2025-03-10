@@ -669,11 +669,9 @@ void Ellysia::DirectXSetup::StartDraw() {
 	//ビューポートの生成
 	GenarateViewport(width, height);
 	
-
 	//シザーを生成
 	GenarateScissor(width, height);
 	
-
 }
 
 
@@ -689,13 +687,9 @@ void Ellysia::DirectXSetup::EndDraw() {
 	SetResourceBarrierForSwapChain(D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 
 
-
 	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
-	HRESULT hr = {};
-	hr = DirectXSetup::GetInstance()->GetCommandList()->Close();
+	HRESULT hr = DirectXSetup::GetInstance()->GetCommandList()->Close();
 	assert(SUCCEEDED(hr));
-
-
 
 	//コマンドをキックする
 	//GPUにコマンドリストの実行を行わせる
@@ -703,9 +697,7 @@ void Ellysia::DirectXSetup::EndDraw() {
 	DirectXSetup::GetInstance()->m_commandQueue_->ExecuteCommandLists(1, commandLists);
 	//GPUとOSに画面の交換を行うよう通知する
 
-
-
-	DirectXSetup::GetInstance()->swapChain.m_pSwapChain->Present(1, 0);
+	DirectXSetup::GetInstance()->swapChain.m_pSwapChain->Present(1u, 0u);
 
 	////GPUにSignalを送る
 	//GPUの実行完了が目的

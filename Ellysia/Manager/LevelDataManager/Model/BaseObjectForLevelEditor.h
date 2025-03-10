@@ -145,7 +145,7 @@ public:
 	/// </summary>
 	/// <param name="color"></param>
 	void SetColor(const Vector4& color) {
-		this->material_.color_ = color;
+		this->material_.color = color;
 	}
 
 	/// <summary>
@@ -153,7 +153,7 @@ public:
 	/// </summary>
 	/// <param name="transparency"></param>
 	void SetTransparency(const float& transparency) {
-		this->material_.color_.w = transparency;
+		this->material_.color.w = transparency;
 	}
 
 

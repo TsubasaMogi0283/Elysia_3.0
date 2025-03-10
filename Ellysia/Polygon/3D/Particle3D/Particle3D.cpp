@@ -448,8 +448,7 @@ void Ellysia::Particle3D::Update(const Camera& camera) {
 
 void Ellysia::Particle3D::Draw(const Camera& camera,const Material& material){
 
-	assert(material.lightingKinds_ == NoneLighting);
-
+	assert(material.lightingKinds == NoneLighting);
 	//更新
 	Update(camera);
 
@@ -473,7 +472,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const Material& material){
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
@@ -484,7 +483,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const Material& material){
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.resource->GetGPUVirtualAddress());
 
 
 	//PS用のカメラ
@@ -499,7 +498,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const Material& material){
 void Ellysia::Particle3D::Draw(const Camera& camera,const  Material& material,const DirectionalLight& directionalLight) {
 
 	//Directionalではなかったらassert
-	if (material.lightingKinds_ != DirectionalLighting) {
+	if (material.lightingKinds != DirectionalLighting) {
 		assert(0);
 	}
 
@@ -526,7 +525,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const  Material& material,co
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
@@ -537,7 +536,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const  Material& material,co
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.resource->GetGPUVirtualAddress());
 
 	//平行光源
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, directionalLight.resource->GetGPUVirtualAddress());
@@ -552,7 +551,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const  Material& material,co
 
 void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, const PointLight& pointLight){
 	//Pointではなかったらassert
-	if (material.lightingKinds_ != PointLighting) {
+	if (material.lightingKinds != PointLighting) {
 		assert(0);
 	}
 
@@ -578,7 +577,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, c
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
@@ -589,13 +588,13 @@ void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, c
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.resource->GetGPUVirtualAddress());
 
 	//PS用のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 
 	//点光源
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6u, pointLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6u, pointLight.resource->GetGPUVirtualAddress());
 
 	//DrawCall
 	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0u, 0u);
@@ -604,7 +603,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, c
 
 void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, const SpotLight& spotLight){
 	//Spotではなかったらassert
-	if (material.lightingKinds_ != SpotLighting) {
+	if (material.lightingKinds != SpotLighting) {
 		assert(0);
 	}
 
@@ -631,7 +630,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, c
 
 	//CBVを設定する
 	//マテリアル
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
@@ -642,7 +641,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, c
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.resource->GetGPUVirtualAddress());
 
 	//PS用のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());

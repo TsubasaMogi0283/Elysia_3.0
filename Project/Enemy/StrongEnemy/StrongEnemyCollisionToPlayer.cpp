@@ -11,7 +11,7 @@ void StrongEnemyCollisionToPlayer::Initialize(const uint32_t& modelHandle){
 	worldTransform_.Initialize();
 	//マテリアルの初期化
 	material_.Initialize();
-	material_.lightingKinds_ = SpotLighting;
+	material_.lightingKinds = SpotLighting;
 
 	//名前
 	name_ = "ToPlayer";

@@ -15,9 +15,9 @@
 #include "DirectXSetup.h"
 #include "LightingType.h"
 
-/// <summary>
-/// データ
-/// </summary>
+ /// <summary>
+	 /// データ
+	 /// </summary>
 struct MaterialData {
 	//色
 	Vector4 color;
@@ -28,6 +28,8 @@ struct MaterialData {
 	Matrix4x4 uvTransform;
 	//輝度
 	float_t shininess;
+	//環境光の強さ
+	float_t ambientIntensity;
 	//環境マッピングするかどうか
 	bool isEnviromentMap;
 
@@ -51,20 +53,27 @@ public:
 public:
 
 	//色
-	Vector4 color_ = {.x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f};
+	Vector4 color = {.x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f};
 	//Lightingの種類
-	int32_t lightingKinds_=DirectionalLighting;
+	int32_t lightingKinds=DirectionalLighting;
 	//UV行列
-	Matrix4x4 uvTransform_ = {};
+	Matrix4x4 uvTransform = {};
 	//輝度
-	float_t shininess_=100.0f;
+	float_t shininess=100.0f;
+	//環境光の強さ
+	float_t ambientIntensity=0.0f;
 	//環境マップ
-	bool isEnviromentMap_ = false;
+	bool isEnviromentMap = false;
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> resource_ = nullptr;
+	ComPtr<ID3D12Resource> resource = nullptr;
+
+
+
 
 private:
+
+	
 
 	//書き込みのデータ
 	MaterialData* materialData_ = nullptr;

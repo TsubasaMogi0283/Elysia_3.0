@@ -61,7 +61,7 @@ public:
 	/// 半径を取得
 	/// </summary>
 	/// <returns></returns>
-	float GetRadius() const{
+	float_t GetRadius() const{
 		return radius_;
 	}
 
@@ -137,7 +137,7 @@ protected:
 	uint32_t collisionType_ = ColliderType::SphereType;
 
 	//衝突半径
-	float radius_ = 1.0f;
+	float_t radius_ = 1.0f;
 
 	//AABB
 	AABB aabb_ = {};

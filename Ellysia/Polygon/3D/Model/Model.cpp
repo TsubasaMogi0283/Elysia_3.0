@@ -102,7 +102,7 @@ void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
@@ -111,7 +111,7 @@ void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& ca
 		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.resource->GetGPUVirtualAddress());
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//DrawCall
@@ -154,7 +154,7 @@ void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
@@ -165,11 +165,11 @@ void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//DirectionalLight
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLight.resource->GetGPUVirtualAddress());
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.resource->GetGPUVirtualAddress());
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//環境マップ用のテクスチャ
-	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
+	if (material.isEnviromentMap == true && eviromentTextureHandle_ != 0u) {
 		srvManager_->SetGraphicsRootDescriptorTable(8u, eviromentTextureHandle_);
 	}
 	//DrawCall
@@ -179,7 +179,7 @@ void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& ca
 
 void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const PointLight& pointLight) {
 	//点光源だけ
-	assert(material.lightingKinds_ == PointLighting);
+	assert(material.lightingKinds == PointLighting);
 
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
@@ -209,7 +209,7 @@ void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
@@ -218,14 +218,14 @@ void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& ca
 		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.resource->GetGPUVirtualAddress());
 
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//PointLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6u, pointLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6u, pointLight.resource->GetGPUVirtualAddress());
 
-	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
+	if (material.isEnviromentMap == true && eviromentTextureHandle_ != 0u) {
 		srvManager_->SetGraphicsRootDescriptorTable(8u, eviromentTextureHandle_);
 	}
 
@@ -281,7 +281,7 @@ void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& ca
 
 
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 
 
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
@@ -295,7 +295,7 @@ void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& ca
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.resource->GetGPUVirtualAddress());
 
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
@@ -304,7 +304,7 @@ void Ellysia::Model::Draw(const WorldTransform& worldTransform, const Camera& ca
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.resource->GetGPUVirtualAddress());
 
 	//環境マッピングの設定
-	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
+	if (material.isEnviromentMap == true && eviromentTextureHandle_ != 0u) {
 		srvManager_->SetGraphicsRootDescriptorTable(8u, eviromentTextureHandle_);
 	}
 

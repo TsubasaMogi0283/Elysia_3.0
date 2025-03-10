@@ -87,7 +87,7 @@ void Ellysia::Line::Draw(const Vector3& start, const Vector3& end, const Camera&
 	//今回はRootParameter[1]に対してCBVの設定を行っている
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, wvpResource_->GetGPUVirtualAddress());
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, camera.resource->GetGPUVirtualAddress());
 	//マテリア
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(2u, materialResource_->GetGPUVirtualAddress());
 

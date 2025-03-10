@@ -39,10 +39,10 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 
 	//マテリアルの初期化
 	material_.Initialize();
-	material_.lightingKinds_ = SpotLighting;
+	material_.lightingKinds = SpotLighting;
 	//パーティクル
 	particleMaterial_.Initialize();
-	particleMaterial_.lightingKinds_ = NoneLighting;
+	particleMaterial_.lightingKinds = NoneLighting;
 
 
 	//生存か死亡
@@ -189,8 +189,8 @@ void NormalEnemy::Damaged() {
 		//material_.color_.y -= COLOR_CHANGE_INTERVAL;
 		//material_.color_.z -= COLOR_CHANGE_INTERVAL;
 
-		material_.color_.y = 0.0f;
-		material_.color_.z = 0.0f;
+		material_.color.y = 0.0f;
+		material_.color.z = 0.0f;
 
 		//生存している時だけ振動
 		if (isAlive_ == true) {
@@ -202,16 +202,16 @@ void NormalEnemy::Damaged() {
 
 
 			//現在の座標に加える
-			worldTransform_.translate.x += distribute(randomEngine) * (1.0f - material_.color_.y) * shakeOffset_;
-			worldTransform_.translate.z += distribute(randomEngine) * (1.0f - material_.color_.y) * shakeOffset_;
+			worldTransform_.translate.x += distribute(randomEngine) * (1.0f - material_.color.y) * shakeOffset_;
+			worldTransform_.translate.z += distribute(randomEngine) * (1.0f - material_.color.y) * shakeOffset_;
 		}
 
 
 	}
 
 	//0になったら絶命
-	if (material_.color_.y <= 0.0f &&
-		material_.color_.z <= 0.0f) {
+	if (material_.color.y <= 0.0f &&
+		material_.color.z <= 0.0f) {
 		isAlive_ = false;
 	}
 }
@@ -219,7 +219,7 @@ void NormalEnemy::Damaged() {
 void NormalEnemy::Dead() {
 	//消えていくよ
 	const float DELETE_INTERVAL = 0.01f;
-	material_.color_.w -= DELETE_INTERVAL;
+	material_.color.w -= DELETE_INTERVAL;
 
 	//縮小
 	const float SCALE_DOWN_VALUE = -0.1f;
@@ -271,7 +271,7 @@ void NormalEnemy::DisplayImGui() {
 	}
 
 
-	ImGui::InputFloat4("色", &material_.color_.x);
+	ImGui::InputFloat4("色", &material_.color.x);
 	ImGui::InputFloat3("座標", &worldTransform_.translate.x);
 	ImGui::InputFloat3("追跡前の座標", &preTrackingPosition_.x);
 	ImGui::InputInt("AliveTive", &deleteTime_);

@@ -74,7 +74,7 @@ AnimationModel* AnimationModel::Create(const uint32_t& modelHandle){
 
 void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const DirectionalLight& directionalLight){
 	//Materialのライティングの設定が平行光源ではない場合止める
-	assert(material.lightingKinds_ == DirectionalLighting);
+	assert(material.lightingKinds == DirectionalLighting);
 
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
@@ -117,7 +117,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 	//ワールドトランスフォーム
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
@@ -127,13 +127,13 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//DirectionalLight
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLight.resource->GetGPUVirtualAddress());
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.resource->GetGPUVirtualAddress());
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//paletteSrvHandle
 	directXSetup_->GetCommandList()->SetGraphicsRootDescriptorTable(8u, skinCluster.paletteSrvHandle.second);
 	//環境マップを使う場合
-	if (material.isEnviromentMap_==true && eviromentTextureHandle_ != 0u) {
+	if (material.isEnviromentMap==true && eviromentTextureHandle_ != 0u) {
 		srvManager_->SetGraphicsRootDescriptorTable(9u, eviromentTextureHandle_);
 	}
 	//DrawCall
@@ -144,7 +144,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const PointLight& pointLight){
 	
 	//Materialのライティングの設定が点光源ではない場合止める
-	assert(material.lightingKinds_ == PointLighting);
+	assert(material.lightingKinds == PointLighting);
 
 	//資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
@@ -188,7 +188,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
@@ -198,15 +198,15 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	}
 
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.resource->GetGPUVirtualAddress());
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//PointLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6u, pointLight.bufferResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6u, pointLight.resource->GetGPUVirtualAddress());
 	//paletteSrvHandle
 	directXSetup_->GetCommandList()->SetGraphicsRootDescriptorTable(8u, skinCluster.paletteSrvHandle.second);
 	//環境マップを使う場合
-	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
+	if (material.isEnviromentMap == true && eviromentTextureHandle_ != 0u) {
 		srvManager_->SetGraphicsRootDescriptorTable(9u, eviromentTextureHandle_);
 	}
 
@@ -217,7 +217,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const SpotLight& spotLight){
 	
 	//Materialのライティングの設定がスポットライトではない場合止める
-	assert(material.lightingKinds_ == SpotLighting);
+	assert(material.lightingKinds == SpotLighting);
 	
 	// 資料にはなかったけどUnMapはあった方がいいらしい
 	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
@@ -262,7 +262,7 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 	//資料見返してみたがhlsl(GPU)に計算を任せているわけだった
 	//コマンド送ってGPUで計算
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
@@ -271,14 +271,14 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.resource->GetGPUVirtualAddress());
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//SpotLight
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.resource->GetGPUVirtualAddress());
 	//paletteSrvHandle
 	directXSetup_->GetCommandList()->SetGraphicsRootDescriptorTable(8u, skinCluster.paletteSrvHandle.second);
-	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
+	if (material.isEnviromentMap == true && eviromentTextureHandle_ != 0u) {
 		srvManager_->SetGraphicsRootDescriptorTable(9u, eviromentTextureHandle_);
 	}
 

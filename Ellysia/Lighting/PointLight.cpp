@@ -2,7 +2,7 @@
 
 void PointLight::Initialize(){
 	//Resource作成
-	bufferResource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(PointLightData)).Get();
+	resource = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(PointLightData)).Get();
 
 	//初期値
 	//色
@@ -20,7 +20,7 @@ void PointLight::Initialize(){
 
 void PointLight::Update(){
 	//書き込み
-	bufferResource_->Map(0u, nullptr, reinterpret_cast<void**>(&pointLightdata_));
+	resource->Map(0u, nullptr, reinterpret_cast<void**>(&pointLightdata_));
 	//色
 	pointLightdata_->color = color_;
 	//座標
@@ -32,5 +32,5 @@ void PointLight::Update(){
 	//減衰率
 	pointLightdata_->decay = decay_;
 	//書き込み終了
-	bufferResource_->Unmap(0u, nullptr);
+	resource->Unmap(0u, nullptr);
 }

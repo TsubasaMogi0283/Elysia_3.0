@@ -38,7 +38,7 @@ void WinScene::Initialize() {
 
 	//マテリアルの初期化
 	material_.Initialize();
-	material_.lightingKinds_ = DirectionalLighting;
+	material_.lightingKinds = DirectionalLighting;
 
 	//平行光源の初期化
 	directionalLight_.Initialize();

@@ -60,7 +60,7 @@ public:
 	float_t decay_=5.0f;
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> bufferResource_=nullptr;
+	ComPtr<ID3D12Resource> resource=nullptr;
 	//書き込みデータ
 	PointLightData* pointLightdata_ = nullptr;
 

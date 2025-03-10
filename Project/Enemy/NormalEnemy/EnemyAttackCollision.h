@@ -105,7 +105,7 @@ public:
 
 
 	inline void SetColor(const Vector4& color) {
-		material_.color_ = color;
+		material_.color = color;
 	}
 
 

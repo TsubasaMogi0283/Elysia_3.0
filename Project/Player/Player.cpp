@@ -52,8 +52,8 @@ void Player::Initialize(){
 	
 	//マテリアル
 	material_.Initialize();
-	material_.lightingKinds_ = SpotLighting;
-	material_.color_ = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 0.5f };
+	material_.lightingKinds = SpotLighting;
+	material_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 0.5f };
 }
 
 void Player::Update(){

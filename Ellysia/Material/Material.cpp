@@ -1,37 +1,41 @@
 #include "Material.h"
-#include <Matrix4x4Calculation.h>
+#include "Matrix4x4Calculation.h"
 
 void Material::Initialize(){
 	//色
-	color_ = {.x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f};
+	color = {.x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f};
 	//ライティングの種類
-	lightingKinds_ = DirectionalLighting;
+	lightingKinds = DirectionalLighting;
 	//UV行列
-	uvTransform_= Matrix4x4Calculation::MakeIdentity4x4();
+	uvTransform= Matrix4x4Calculation::MakeIdentity4x4();
 	//輝度
-	//かなり大きくしないと変になる。
-	shininess_=1000.0f;
+	shininess=1000.0f;
+	//環境光
+	ambientIntensity = 0.1f;
 	//環境マップ
-	isEnviromentMap_ = false;
+	isEnviromentMap = false;
 	//リソースを生成
-	resource_ = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
+	resource = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(MaterialData));
 
 }
 
 void Material::Update(){
 
 	//書き込み
-	resource_->Map(0u, nullptr, reinterpret_cast<void**>(&materialData_));
+	resource->Map(0u, nullptr, reinterpret_cast<void**>(&materialData_));
 	//色
-	materialData_->color = color_;
+	materialData_->color = color;
 	//ライティングの種類
-	materialData_->lightingKinds = lightingKinds_;
+	materialData_->lightingKinds = lightingKinds;
 	//UVトランスフォーム
-	materialData_->uvTransform = uvTransform_;
+	materialData_->uvTransform = uvTransform;
 	//輝度
-	materialData_->shininess = shininess_;
+	materialData_->shininess = shininess;
+	//環境光
+	materialData_->ambientIntensity = ambientIntensity;
+
 	//環境マップ
-	materialData_->isEnviromentMap = isEnviromentMap_;
+	materialData_->isEnviromentMap = isEnviromentMap;
 	//書き込み終了
-	resource_->Unmap(0u, nullptr);
+	resource->Unmap(0u, nullptr);
 }

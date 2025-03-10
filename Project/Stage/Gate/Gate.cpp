@@ -6,7 +6,7 @@ void Gate::Initialize(const uint32_t& modelHandle){
 
 	//マテリアルの初期化
 	material_.Initialize();
-	material_.lightingKinds_ = SpotLighting;
+	material_.lightingKinds = SpotLighting;
 
 	//ワールドトランスフォーム
 	worldTransform_.Initialize();

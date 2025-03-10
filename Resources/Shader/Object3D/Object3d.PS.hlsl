@@ -18,11 +18,17 @@
 
 //Material...色など三角形の表面の材質を決定するもの
 struct Material{
+    //色
     float4 color;
+    //ライティングの設定
     int enableLighting;
+    //UVトランスフォーム
     float4x4 uvTransform;
     //光沢度
     float shininess;
+    //環境光の強さ
+    float ambientIntensity;
+    //環境マップ
     bool isEnviromentMap;
 };
 
@@ -258,6 +264,8 @@ PixelShaderOutput main(VertexShaderOutput input){
         float cosAngle = dot(spotLightDirectionOnSurface, gSpotLight.direction);
         float falloffFactor = saturate((cosAngle - gSpotLight.cosAngle) / (gSpotLight.cosFallowoffStart - gSpotLight.cosAngle));
 		
+        // 環境光
+        float3 ambientLight = gMaterial.color.rgb * textureColor.xyz * 0.07f;
 		
         float3 diffuseSpotLight = gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * cos * gSpotLight.intensity;
         float3 specularSpotLight = gSpotLight.color.rgb * gSpotLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
@@ -265,8 +273,7 @@ PixelShaderOutput main(VertexShaderOutput input){
 
         //通常はこっち
         if (gMaterial.isEnviromentMap == false){
-            
-            output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor + offset;
+            output.color.rgb = ambientLight + (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor + offset;
             output.color.a = gMaterial.color.a * textureColor.a;
 
         }

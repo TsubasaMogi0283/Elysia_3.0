@@ -28,9 +28,9 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 	//マテリアルの初期化
 	material_.Initialize();
 	//ライティングの種類
-	material_.lightingKinds_ = SpotLighting;
+	material_.lightingKinds = SpotLighting;
 	//色
-	material_.color_ = {.x = 1.0f,.y = 1.0f,. z = 0.0f,. w = 1.0f };
+	material_.color = {.x = 1.0f,.y = 1.0f,. z = 0.0f,. w = 1.0f };
 
 
 	//鍵のスプライト
@@ -52,7 +52,7 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 	debugWorldTransform_.Initialize();
 	//マテリアルの初期化
 	debugMaterial_.Initialize();
-	debugMaterial_.lightingKinds_ = SpotLighting;
+	debugMaterial_.lightingKinds = SpotLighting;
 #endif // _DEBUG
 
 
@@ -82,7 +82,7 @@ void Key::Update(){
 	//デバッグ用
 	debugWorldTransform_.translate = GetWorldPosition();
 	debugWorldTransform_.scale = { .x = 0.1f,.y = 0.1f,.z = 0.1f };
-	debugMaterial_.color_.w = 0.3f;
+	debugMaterial_.color.w = 0.3f;
 	//ワールドトランスフォームの更新
 	debugWorldTransform_.Update();
 	//マテリアルの更新

@@ -69,7 +69,7 @@ public:
 	
 public:
 	//リソース
-	ComPtr<ID3D12Resource> bufferResource;
+	ComPtr<ID3D12Resource> resource;
 
 	//角度
 	float_t fov_ = 0.45f;

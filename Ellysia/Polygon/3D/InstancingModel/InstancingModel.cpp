@@ -101,7 +101,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 	//ワールドトランスフォーム
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 	//テクスチャ
@@ -111,11 +111,11 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 	//DirectionalLight
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLight.resource->GetGPUVirtualAddress());
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.resource->GetGPUVirtualAddress());
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//環境マップ
-	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
+	if (material.isEnviromentMap == true && eviromentTextureHandle_ != 0u) {
 		srvManager_->SetGraphicsRootDescriptorTable(8u, eviromentTextureHandle_);
 	}
 	//DrawCall
@@ -153,7 +153,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 	//ワールドトランスフォーム
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 	//テクスチャ
@@ -161,12 +161,12 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.resource->GetGPUVirtualAddress());
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//PointLight
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6u, pointLight.bufferResource_->GetGPUVirtualAddress());
-	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6u, pointLight.resource->GetGPUVirtualAddress());
+	if (material.isEnviromentMap == true && eviromentTextureHandle_ != 0u) {
 		srvManager_->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
 	}
 	//DrawCall
@@ -205,7 +205,7 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Material
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
 	//ワールドトランスフォーム
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, worldTransform.resource->GetGPUVirtualAddress());
 	//テクスチャ
@@ -213,13 +213,13 @@ void InstancingModel::Draw(const WorldTransform& worldTransform, const Camera& c
 		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, camera.resource->GetGPUVirtualAddress());
 	//PixelShaderに送る方のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 	//SpotLight
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.resource->GetGPUVirtualAddress());
 	//環境マッピングの設定
-	if (material.isEnviromentMap_ == true && eviromentTextureHandle_ != 0u) {
+	if (material.isEnviromentMap == true && eviromentTextureHandle_ != 0u) {
 		srvManager_->SetGraphicsRootDescriptorTable(8, eviromentTextureHandle_);
 	}
 	//DrawCall

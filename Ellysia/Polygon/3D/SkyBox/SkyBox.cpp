@@ -112,7 +112,7 @@ void Ellysia::SkyBox::Draw(const uint32_t& texturehandle, const WorldTransform& 
 	//ワールドトランスフォーム
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, worldTransform.resource->GetGPUVirtualAddress());
 	//カメラ
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, camera.bufferResource->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, camera.resource->GetGPUVirtualAddress());
 	//テクスチャ
 	if (texturehandle != 0u) {
 		TextureManager::GetInstance()->GraphicsCommand(2u, texturehandle);

@@ -7,7 +7,7 @@
 //初期化
 void Camera::Initialize() {
 	//Resource作成
-	bufferResource = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraMatrixData)).Get();
+	resource = Ellysia::DirectXSetup::GetInstance()->CreateBufferResource(sizeof(CameraMatrixData)).Get();
 
 	//アスペクト比
 	aspectRatio = float(Ellysia::WindowsSetup::GetInstance()->GetClientWidth()) / float(Ellysia::WindowsSetup::GetInstance()->GetClientHeight());
@@ -49,9 +49,9 @@ void Camera::Update() {
 
 void Camera::Transfer() {
 	//それぞれにデータの書き込み
-	bufferResource->Map(0, nullptr, reinterpret_cast<void**>(&cameraMatrixData));
+	resource->Map(0, nullptr, reinterpret_cast<void**>(&cameraMatrixData));
 	cameraMatrixData->viewMatrix_ = viewMatrix;
 	cameraMatrixData->projectionMatrix_ = projectionMatrix;
 	cameraMatrixData->orthographicMatrix_ = orthographicMatrix;
-	bufferResource->Unmap(0, nullptr);
+	resource->Unmap(0, nullptr);
 }

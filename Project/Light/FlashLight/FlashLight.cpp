@@ -59,8 +59,8 @@ void FlashLight::Initialize() {
 
 	//マテリアルの初期化
 	material_.Initialize();
-	material_.lightingKinds_ = NoneLighting;
-	material_.color_ = { .x = 0.5f,.y = 1.0f,.z = 0.5f,.w = 1.0f };
+	material_.lightingKinds = NoneLighting;
+	material_.color = { .x = 0.5f,.y = 1.0f,.z = 0.5f,.w = 1.0f };
 
 	//デバッグ用のモデルを生成する
 	uint32_t debugModelHandle = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
@@ -79,7 +79,7 @@ void FlashLight::Initialize() {
 	lightCenterWorldTransform_.Initialize();
 	lightCenterWorldTransform_.scale = { .x = SCALE,.y = SCALE ,.z = SCALE };
 	lightCenterMaterial_.Initialize();
-	lightCenterMaterial_.lightingKinds_ = NoneLighting;
+	lightCenterMaterial_.lightingKinds = NoneLighting;
 
 
 #endif // _DEBUG	
@@ -105,7 +105,7 @@ void FlashLight::Update() {
 
 	//プレイヤーの座標と微調整分
 	//ライトを持つときの高さは地面と同じだと変だよね
-	const float LIGHT_HEIGHT = 0.7f;
+	const float LIGHT_HEIGHT = 0.9f;
 	const Vector3 OFFSET = { .x = 0.0f, .y = LIGHT_HEIGHT,.z = 0.0f };
 	position_ = VectorCalculation::Add(playerPosition_, OFFSET);
 
