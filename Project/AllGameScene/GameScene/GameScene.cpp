@@ -88,11 +88,12 @@ void GameScene::Initialize() {
 	escapeText_->SetInvisible(true);
 #pragma endregion
 
-
-
 	//ハンドルの取得
 	levelHandle_ = levelDataManager_->Load("GameStage/GameStage.json");
 
+
+	//門の初期回転
+	leftGateRotateTheta_ = -std::numbers::pi_v<float_t>;
 
 #pragma region プレイヤー
 	//生成
@@ -491,6 +492,7 @@ void GameScene::ProcessVigntte(){
 void GameScene::DisplayImGui() {
 	ImGui::Begin("ゲームシーン");
 	ImGui::Checkbox("状態", &isReleaseAttack_);
+
 	if (ImGui::TreeNode("カメラ")==true) {
 		ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
 		ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
@@ -693,7 +695,7 @@ void GameScene::PlayerMove() {
 	//チャージ状態を設定
 	player_->GetFlashLight()->SetIsCharge(isCharge);
 
-
+	//離した瞬間に攻撃する
 	if (input_->IsReleaseKey(DIK_RETURN) == true) {
 		isReleaseAttack_ = true;
 	}
@@ -944,16 +946,18 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 	}
 
 	//ホワイトアウト
-	//StatePatternにしたい
 	if (isWhiteFadeOut_ == true) {
 
-		gateRotateTheta_ += 0.01f;
+		//回転の値を加算
+		const float_t ROTATE_VALUE = 0.01f;
+		rightGateRotateTheta_ += ROTATE_VALUE;
+		leftGateRotateTheta_ += ROTATE_VALUE;
+
 		std::string right = "GateDoorRight";
 		std::string left = "GateDoorLeft";
 		//門の回転
-		levelDataManager_->SetRotate(levelHandle_, right, { .x = 0.0f,.y = gateRotateTheta_,.z = 0.0f });
-		//左の回転が変だった
-		levelDataManager_->SetRotate(levelHandle_, left, { .x = 0.0f,.y = -gateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelHandle_, right, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelHandle_, left, { .x = 0.0f,.y = leftGateRotateTheta_,.z = 0.0f });
 
 		//音を止める
 		enemyManager_->StopAudio();
@@ -972,8 +976,6 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 			return;
 		}
 	}
-
-
 	//フェードの透明度の設定
 	whiteFade_->SetTransparency(whiteFadeTransparency_);
 

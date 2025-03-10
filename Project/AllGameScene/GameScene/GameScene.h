@@ -330,6 +330,7 @@ private:
 
 	Vector3 translate_ = {};
 	//門の回転
-	float_t gateRotateTheta_ = 0.0f;
+	float_t rightGateRotateTheta_ = 0.0f;
+	float_t leftGateRotateTheta_ = 0.0f;
 
 };

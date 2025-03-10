@@ -238,12 +238,6 @@
     <Filter Include="Project\Item\Key\KeyManager">
       <UniqueIdentifier>{f292f7df-b6ad-4cbe-93cb-c6b80da6c1c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Light">
-      <UniqueIdentifier>{49355256-8b6e-46a4-a9ea-39d8676cbf2e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Light\FlashLight">
-      <UniqueIdentifier>{d8dbaa74-8099-4ee9-a61b-20473f2f96ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Enemy\EnemyManager">
       <UniqueIdentifier>{e2a6260b-6ea8-4c91-83ff-a92709617455}</UniqueIdentifier>
     </Filter>
@@ -472,6 +466,12 @@
     <Filter Include="Ellysia\Header File\Math\Collision">
       <UniqueIdentifier>{26a5a200-764b-4b6c-bdf4-5d8637bd6a42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Player\Light">
+      <UniqueIdentifier>{49355256-8b6e-46a4-a9ea-39d8676cbf2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Player\Light\FlashLight">
+      <UniqueIdentifier>{d8dbaa74-8099-4ee9-a61b-20473f2f96ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp">
@@ -607,7 +607,7 @@
       <Filter>Project\Item\Key\KeyManager</Filter>
     </ClCompile>
     <ClCompile Include="Project\Light\FlashLight\FlashLight.cpp">
-      <Filter>Project\Light\FlashLight</Filter>
+      <Filter>Project\Player\Light\FlashLight</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\EnemyManager.cpp">
       <Filter>Project\Enemy\EnemyManager</Filter>
@@ -646,7 +646,7 @@
       <Filter>Project\Scene\Win</Filter>
     </ClCompile>
     <ClCompile Include="Project\Light\FlashLight\FlashLightCollision.cpp">
-      <Filter>Project\Light\FlashLight</Filter>
+      <Filter>Project\Player\Light\FlashLight</Filter>
     </ClCompile>
     <ClCompile Include="Ellysia\GlobalVariables\GlobalVariables.cpp">
       <Filter>Ellysia\Source File\GlobalVariables</Filter>
@@ -1082,7 +1082,7 @@
       <Filter>Project\Item\Key\KeyManager</Filter>
     </ClInclude>
     <ClInclude Include="Project\Light\FlashLight\FlashLight.h">
-      <Filter>Project\Light\FlashLight</Filter>
+      <Filter>Project\Player\Light\FlashLight</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\Math\Shape\Fan.h">
       <Filter>Ellysia\Header File\Math\Shape</Filter>
@@ -1148,7 +1148,7 @@
       <Filter>Project\Scene\Win</Filter>
     </ClInclude>
     <ClInclude Include="Project\Light\FlashLight\FlashLightCollision.h">
-      <Filter>Project\Light\FlashLight</Filter>
+      <Filter>Project\Player\Light\FlashLight</Filter>
     </ClInclude>
     <ClInclude Include="Ellysia\GlobalVariables\GlobalVariables.h">
       <Filter>Ellysia\Header File\GlobalVariables</Filter>
