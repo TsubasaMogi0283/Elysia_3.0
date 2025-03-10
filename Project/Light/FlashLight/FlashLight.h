@@ -59,7 +59,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~FlashLight()=default;
+	~FlashLight() = default;
 
 private:
 
@@ -83,7 +83,7 @@ public:
 	/// スポットライトの取得
 	/// </summary>
 	/// <returns>スポットライト</returns>
-	inline SpotLight GetSpotLight() const{
+	inline SpotLight GetSpotLight() const {
 		return spotLight_;
 	}
 
@@ -117,7 +117,7 @@ public:
 	/// </summary>
 	/// <param name="lightSideTheta">幅の角度</param>
 	inline void SetLightSideTheta(const float_t& lightSideTheta) {
-		this ->lightSideTheta_ = lightSideTheta;
+		this->lightSideTheta_ = lightSideTheta;
 	}
 
 	/// <summary>
@@ -153,6 +153,14 @@ public:
 		this->isCharge_ = isCharge;
 	}
 
+	/// <summary>
+	/// 攻撃可能かどうかを取得
+	/// </summary>
+	/// <returns>攻撃可能フラグ</returns>
+	inline bool GetIsAbleToAttack() const {
+		return isAbleToAttack_;
+	}
+
 
 	/// <summary>
 	/// 扇の取得(3次元)
@@ -179,33 +187,31 @@ private:
 	//調整項目
 	//光の強さ
 	const std::string FLASH_LIGHT_INTENSITY_STRING_ = "FlashLightIntensity";
-
-	//最大
-	const std::string MAX_STRING_ = "Max";
-	//最小
-	const std::string MIN_STRING_ = "Min";
-
-	//ライトの最大の強さ
-	float_t maxIntensity_ = 400.0f;
-	//ライトの最小の強さ
-	float_t minIntensity_ = 50.0f;
-
 	//cosFallowoffStart
 	const std::string FLASH_LIGHT_COS_FALLOWOFF_START_STRING_ = "FlashLightCosFallowOffStart";
 	//最大
+	const std::string MAX_STRING_ = "Max";
+	float_t maxIntensity_ = 400.0f;
 	float_t maxStart_ = 2.4f;
 	//最小
+	const std::string MIN_STRING_ = "Min";
+	float_t minIntensity_ = 50.0f;
 	float_t minStart_ = 1.5f;
-	
 
-	//チャージの増える値
-	std::string FLASH_LIGHT_CHARGE_VALUE_ = "FlashLightChargeValue";
-	const std::string CHARGE_STRING_ = "Charge";
+	//チャージ
+	std::string FLASH_LIGHT_CHARGE_VALUE_ = "FlashLightCharge";
+	//増える値
+	const std::string CHARGE_STRING_ = "IncreaseChargeValue";
 	float_t chargeIncreaseValue_ = 0.1f;
+	//攻撃可能になる値
+	const std::string IS_ABLE_TO_CHARGE_VALUE_STRING = "IsAbleToChargeValue";
+	float_t isAbleToAttackValue_ = 5.0f;
 
 private:
 	//チャージスピード
-	const float_t CHARGE__INTERVAL_VALUE_ = 0.1f;
+	const float_t CHARGE_INTERVAL_VALUE_ = 0.1f;
+	//光の届く距離
+	const float_t LIGHT_DISTANCE = 22.0f;
 
 private:
 	//ここに値を入れてゲームシーンで他のオブジェクトに適用させる
@@ -214,8 +220,7 @@ private:
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
 
-	//光の届く距離
-	const float_t LIGHT_DISTANCE = 22.0f;
+
 	//座標
 	Vector3 position_ = {};
 	//方向
@@ -239,7 +244,9 @@ private:
 	//チャージしているかどうか
 	bool isCharge_ = false;
 	//チャージの値
-	float chargeValue_ = 0.0f;
+	float_t chargeValue_ = 0.0f;
+	//攻撃できるかどうか
+	bool isAbleToAttack_ = false;
 
 private:
 	//当たり判定
@@ -248,11 +255,11 @@ private:
 private:
 
 #ifdef _DEBUG
-	
+
 	//デバッグ用
 	//左右
-	const uint32_t Right = 0u;
-	const uint32_t Left = 1u;
+	const uint32_t RIGHT_ = 0u;
+	const uint32_t LEFT_ = 1u;
 
 	static const uint32_t SIDE_QUANTITY_ = 2u;
 	std::unique_ptr<Ellysia::Model>model_[SIDE_QUANTITY_] = { nullptr };
@@ -265,7 +272,7 @@ private:
 	Material lightCenterMaterial_ = {};
 
 #endif // _DEBUG
-	
+
 
 };
 

@@ -8,12 +8,12 @@
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
 
-FlashLight::FlashLight(){
+FlashLight::FlashLight() {
 	//グローバル変数クラス
 	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
 }
 
-void FlashLight::Initialize(){
+void FlashLight::Initialize() {
 
 	//スポットライトの初期化
 	spotLight_.Initialize();
@@ -26,7 +26,7 @@ void FlashLight::Initialize(){
 
 	//ライトの片方の角度
 	//15度=π/12
-	lightSideTheta_ = (std::numbers::pi_v<float>/12.0f);
+	lightSideTheta_ = (std::numbers::pi_v<float> / 12.0f);
 
 	//扇
 	fan3D_.length = LIGHT_DISTANCE;
@@ -106,7 +106,7 @@ void FlashLight::Update() {
 	//プレイヤーの座標と微調整分
 	//ライトを持つときの高さは地面と同じだと変だよね
 	const float LIGHT_HEIGHT = 2.0f;
-	const Vector3 OFFSET = {.x = 0.0f, .y = LIGHT_HEIGHT,.z =  0.0f };
+	const Vector3 OFFSET = { .x = 0.0f, .y = LIGHT_HEIGHT,.z = 0.0f };
 	position_ = VectorCalculation::Add(playerPosition_, OFFSET);
 
 	//計算したものをSpotLightの方に入れる
@@ -114,7 +114,7 @@ void FlashLight::Update() {
 	spotLight_.direction = direction_;
 	//片方の角度
 	spotLight_.cosAngle = std::cosf(lightSideTheta_);
-	
+
 	//割合を求める
 	ratio = SingleCalculation::InverseLerp(minRange_, maxRange_, lightSideTheta_);
 
@@ -123,14 +123,14 @@ void FlashLight::Update() {
 	maxIntensity_ = globalVariables_->GetFloatValue(FLASH_LIGHT_INTENSITY_STRING_, MAX_STRING_);
 	//最小の強さ
 	minIntensity_ = globalVariables_->GetFloatValue(FLASH_LIGHT_INTENSITY_STRING_, MIN_STRING_);
-	spotLight_.intensity = SingleCalculation::Lerp(minIntensity_, maxIntensity_, (1.0f-ratio));
+	spotLight_.intensity = SingleCalculation::Lerp(minIntensity_, maxIntensity_, (1.0f - ratio));
 
 	//cosFallowoffStart
 	//最大
 	maxStart_ = globalVariables_->GetFloatValue(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_);
 	//最小
 	minStart_ = globalVariables_->GetFloatValue(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_);
-	spotLight_.cosFallowoffStart= SingleCalculation::Lerp(minStart_, maxStart_, ratio);
+	spotLight_.cosFallowoffStart = SingleCalculation::Lerp(minStart_, maxStart_, ratio);
 
 	//扇
 	fan3D_.centerRadian = theta_;
@@ -142,16 +142,16 @@ void FlashLight::Update() {
 
 	//高さは同じ
 	//左
-	fan3D_.leftVector = { 
+	fan3D_.leftVector = {
 		.x = std::cosf(theta_ + lightSideTheta_),
-		.y = std::sinf(phi_), 
-		.z = std::sinf(theta_ + lightSideTheta_) 
+		.y = std::sinf(phi_),
+		.z = std::sinf(theta_ + lightSideTheta_)
 	};
 	//右
-	fan3D_.rightVector = { 
+	fan3D_.rightVector = {
 		.x = std::cosf(theta_ - lightSideTheta_),
-		.y = std::sinf(phi_), 
-		.z = std::sinf(theta_ - lightSideTheta_) 
+		.y = std::sinf(phi_),
+		.z = std::sinf(theta_ - lightSideTheta_)
 	};
 
 
@@ -166,19 +166,19 @@ void FlashLight::Update() {
 #ifdef _DEBUG
 	//端をデバッグ用として表示させる
 	//左
-	Vector2 fanLeft = { 
+	Vector2 fanLeft = {
 		.x = std::cosf(theta_ + lightSideTheta_) * spotLight_.distance,
-		.y = std::sinf(theta_ + lightSideTheta_) * spotLight_.distance 
+		.y = std::sinf(theta_ + lightSideTheta_) * spotLight_.distance
 	};
 	//右
-	Vector2 fanRight = { 
+	Vector2 fanRight = {
 		.x = std::cosf(theta_ - lightSideTheta_) * spotLight_.distance,
-		.y = std::sinf(theta_ - lightSideTheta_) * spotLight_.distance 
+		.y = std::sinf(theta_ - lightSideTheta_) * spotLight_.distance
 	};
 
 	//端の位置を計算
-	worldTransform_[Left].translate = VectorCalculation::Add(playerPosition_,{ fanLeft.x ,0.0f,fanLeft.y });
-	worldTransform_[Right].translate = VectorCalculation::Add(playerPosition_,{ fanRight.x ,0.0f,fanRight.y });
+	worldTransform_[LEFT_].translate = VectorCalculation::Add(playerPosition_, { fanLeft.x ,0.0f,fanLeft.y });
+	worldTransform_[RIGHT_].translate = VectorCalculation::Add(playerPosition_, { fanRight.x ,0.0f,fanRight.y });
 
 	//中心
 	lightCenterWorldTransform_.translate = position_;
@@ -194,7 +194,7 @@ void FlashLight::Update() {
 	material_.Update();
 	lightCenterMaterial_.Update();
 
-	
+
 	//ImGuiの表示
 	ImGuiDisplay();
 
@@ -204,7 +204,7 @@ void FlashLight::Update() {
 
 }
 
-void FlashLight::Draw(const Camera& camera){
+void FlashLight::Draw(const Camera& camera) {
 #ifdef _DEBUG
 
 	//端
@@ -216,15 +216,15 @@ void FlashLight::Draw(const Camera& camera){
 
 #endif // _DEBUG
 
-	
+
 }
 
-void FlashLight::Charge(){
+void FlashLight::Charge() {
 
 	//増える値
 	chargeIncreaseValue_ = globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_STRING_);
 
-	
+
 	//チャージ中の時
 	if (isCharge_ == true) {
 		chargeValue_ += chargeIncreaseValue_;
@@ -234,13 +234,23 @@ void FlashLight::Charge(){
 		chargeValue_ = 0.0f;
 	}
 
+
+
+	//攻撃できるかどうか
+	if (chargeValue_ > isAbleToAttackValue_) {
+		isAbleToAttack_ = true;
+	}
+	else {
+		isAbleToAttack_ = false;
+	}
+
+
 }
 
-void FlashLight::ImGuiDisplay(){
+void FlashLight::ImGuiDisplay() {
 
 	ImGui::Begin("懐中電灯");
-
-	if (ImGui::TreeNode("ライト")==true) {
+	if (ImGui::TreeNode("ライト") == true) {
 		ImGui::SliderFloat("角度", &lightSideTheta_, 0.0f, 3.0f);
 		ImGui::InputFloat3("座標", &spotLight_.position.x);
 		ImGui::InputFloat3("方向", &spotLight_.direction.x);
@@ -257,14 +267,15 @@ void FlashLight::ImGuiDisplay(){
 
 	if (ImGui::TreeNode("チャージ") == true) {
 		ImGui::InputFloat("値", &chargeValue_);
+		ImGui::Checkbox("攻撃できるかどうか", &isAbleToAttack_);
 		ImGui::TreePop();
 	}
 
-	
+
 	ImGui::End();
 }
 
-void FlashLight::Adjustment(){
+void FlashLight::Adjustment() {
 	//保存
 	globalVariables_->SaveFile(FLASH_LIGHT_INTENSITY_STRING_);
 	globalVariables_->SaveFile(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_);

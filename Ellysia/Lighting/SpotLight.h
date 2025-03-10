@@ -10,9 +10,9 @@
 #include "DirectXSetup.h"
 
 
-/// <summary>
-/// スポットライト
-/// </summary>
+ /// <summary>
+ /// スポットライト
+ /// </summary>
 struct SpotLight {
 public:
 	/// <summary>
@@ -36,23 +36,22 @@ private:
 		//ライトの位置
 		Vector3 position;
 		//輝度
-		float intensity;
-
+		float_t intensity;
 		//スポットライトの方向
 		Vector3 direction;
 		//ライトの届く最大距離
-		float distance;
+		float_t distance;
 		//減衰率
-		float decay;
+		float_t decay;
 		//Fallowoffを制御する
-		float cosFallowoffStart;
+		float_t cosFallowoffStart;
 		//スポットライトの余弦
-		float cosAngle;
-
+		float_t cosAngle;
 		//当たっていない所をこれで明るくする
-		float aroundOffset;
+		float_t aroundOffset;
 
-		float padding[2];
+		//埋め合わせ
+		float_t padding[2];
 
 	};
 
@@ -63,23 +62,22 @@ public:
 	//ライトの位置
 	Vector3 position;
 	//輝度
-	float intensity;
-
+	float_t intensity;
 	//方向
 	Vector3 direction;
 	//届く最大距離
-	float distance;
+	float_t distance;
 	//減衰率
-	float decay;
+	float_t decay;
 	//Fallowoffを制御する
-	float cosFallowoffStart;
+	float_t cosFallowoffStart;
 	//スポットライトの余弦
-	float cosAngle;
+	float_t cosAngle;
 	//当たっていない所をこれで明るくする
-	float aroundOffset;
+	float_t aroundOffset;
 
 	//定数バッファ
-	ComPtr<ID3D12Resource> resource=nullptr;
+	ComPtr<ID3D12Resource> resource = nullptr;
 	//書き込みデータ
 	SpotLightData* data_ = nullptr;
 
