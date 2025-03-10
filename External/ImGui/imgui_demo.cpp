@@ -5181,7 +5181,7 @@ static void ShowDemoWindowTables()
                     ImGui::TableSetColumnIndex(1);
                     ImGui::PushItemWidth(-ImGui::GetContentRegionAvail().x * 0.5f);
                     ImGui::TableSetColumnIndex(2);
-                    ImGui::PushItemWidth(-FLT_MIN); // RIGHT_-aligned
+                    ImGui::PushItemWidth(-FLT_MIN); // Right-aligned
                 }
 
                 // DrawModel our contents
@@ -5315,8 +5315,8 @@ static void ShowDemoWindowTables()
         PopStyleCompact();
 
         // Context Menus: first example
-        // [1.1] RIGHT_-click on the TableHeadersRow() line to open the default table context menu.
-        // [1.2] RIGHT_-click in columns also open the default table context menu (if ImGuiTableFlags_ContextMenuInBody is set)
+        // [1.1] Right-click on the TableHeadersRow() line to open the default table context menu.
+        // [1.2] Right-click in columns also open the default table context menu (if ImGuiTableFlags_ContextMenuInBody is set)
         const int COLUMNS_COUNT = 3;
         if (ImGui::BeginTable("table_context_menu", COLUMNS_COUNT, flags1))
         {
@@ -5324,7 +5324,7 @@ static void ShowDemoWindowTables()
             ImGui::TableSetupColumn("Two");
             ImGui::TableSetupColumn("Three");
 
-            // [1.1]] RIGHT_-click on the TableHeadersRow() line to open the default table context menu.
+            // [1.1]] Right-click on the TableHeadersRow() line to open the default table context menu.
             ImGui::TableHeadersRow();
 
             // Submit dummy contents
@@ -5341,9 +5341,9 @@ static void ShowDemoWindowTables()
         }
 
         // Context Menus: second example
-        // [2.1] RIGHT_-click on the TableHeadersRow() line to open the default table context menu.
-        // [2.2] RIGHT_-click on the ".." to open a custom popup
-        // [2.3] RIGHT_-click in columns to open another custom popup
+        // [2.1] Right-click on the TableHeadersRow() line to open the default table context menu.
+        // [2.2] Right-click on the ".." to open a custom popup
+        // [2.3] Right-click in columns to open another custom popup
         HelpMarker("Demonstrate mixing table context menu (over header), item context button (over button) and custom per-colum context menu (over column body).");
         ImGuiTableFlags flags2 = ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Borders;
         if (ImGui::BeginTable("table_context_menu_2", COLUMNS_COUNT, flags2))
@@ -5352,7 +5352,7 @@ static void ShowDemoWindowTables()
             ImGui::TableSetupColumn("Two");
             ImGui::TableSetupColumn("Three");
 
-            // [2.1] RIGHT_-click on the TableHeadersRow() line to open the default table context menu.
+            // [2.1] Right-click on the TableHeadersRow() line to open the default table context menu.
             ImGui::TableHeadersRow();
             for (int row = 0; row < 4; row++)
             {
@@ -5364,7 +5364,7 @@ static void ShowDemoWindowTables()
                     ImGui::Text("Cell %d,%d", column, row);
                     ImGui::SameLine();
 
-                    // [2.2] RIGHT_-click on the ".." to open a custom popup
+                    // [2.2] Right-click on the ".." to open a custom popup
                     ImGui::PushID(row * COLUMNS_COUNT + column);
                     ImGui::SmallButton("..");
                     if (ImGui::BeginPopupContextItem())
@@ -5378,7 +5378,7 @@ static void ShowDemoWindowTables()
                 }
             }
 
-            // [2.3] RIGHT_-click anywhere in columns to open another custom popup
+            // [2.3] Right-click anywhere in columns to open another custom popup
             // (instead of testing for !IsAnyItemHovered() we could also call OpenPopup() with ImGuiPopupFlags_NoOpenOverExistingPopup
             // to manage popup priority as the popups triggers, here "are we hovering a column" are overlapping)
             int hovered_column = -1;
@@ -7443,7 +7443,7 @@ static void ShowExampleAppLayout(bool* p_open)
             ImGui::EndMenuBar();
         }
 
-        // LEFT_
+        // Left
         static int selected = 0;
         {
             ImGui::BeginChild("left pane", ImVec2(150, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeX);
@@ -7459,7 +7459,7 @@ static void ShowExampleAppLayout(bool* p_open)
         }
         ImGui::SameLine();
 
-        // RIGHT_
+        // Right
         {
             ImGui::BeginGroup();
             ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us

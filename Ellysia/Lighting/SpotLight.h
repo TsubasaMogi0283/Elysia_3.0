@@ -36,22 +36,23 @@ private:
 		//ライトの位置
 		Vector3 position;
 		//輝度
-		float_t intensity;
+		float intensity;
+
 		//スポットライトの方向
 		Vector3 direction;
 		//ライトの届く最大距離
-		float_t distance;
+		float distance;
 		//減衰率
-		float_t decay;
+		float decay;
 		//Fallowoffを制御する
-		float_t cosFallowoffStart;
+		float cosFallowoffStart;
 		//スポットライトの余弦
-		float_t cosAngle;
+		float cosAngle;
+
 		//当たっていない所をこれで明るくする
-		float_t aroundOffset;
-		
-		//埋め合わせ
-		float_t padding[2];
+		float aroundOffset;
+
+		float padding[2];
 
 	};
 
@@ -62,19 +63,20 @@ public:
 	//ライトの位置
 	Vector3 position;
 	//輝度
-	float_t intensity;
+	float intensity;
+
 	//方向
 	Vector3 direction;
 	//届く最大距離
-	float_t distance;
+	float distance;
 	//減衰率
-	float_t decay;
+	float decay;
 	//Fallowoffを制御する
-	float_t cosFallowoffStart;
+	float cosFallowoffStart;
 	//スポットライトの余弦
-	float_t cosAngle;
+	float cosAngle;
 	//当たっていない所をこれで明るくする
-	float_t aroundOffset;
+	float aroundOffset;
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> resource=nullptr;

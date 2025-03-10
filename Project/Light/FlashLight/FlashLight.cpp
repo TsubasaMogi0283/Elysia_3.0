@@ -177,8 +177,8 @@ void FlashLight::Update() {
 	};
 
 	//端の位置を計算
-	worldTransform_[LEFT_].translate = VectorCalculation::Add(playerPosition_,{ fanLeft.x ,0.0f,fanLeft.y });
-	worldTransform_[RIGHT_].translate = VectorCalculation::Add(playerPosition_,{ fanRight.x ,0.0f,fanRight.y });
+	worldTransform_[Left].translate = VectorCalculation::Add(playerPosition_,{ fanLeft.x ,0.0f,fanLeft.y });
+	worldTransform_[Right].translate = VectorCalculation::Add(playerPosition_,{ fanRight.x ,0.0f,fanRight.y });
 
 	//中心
 	lightCenterWorldTransform_.translate = position_;
@@ -234,22 +234,12 @@ void FlashLight::Charge(){
 		chargeValue_ = 0.0f;
 	}
 
-
-
-	//攻撃できるかどうか
-	if (chargeValue_ > isAbleToAttackValue_) {
-		isAbleToAttack_ = true;
-	}
-	else {
-		isAbleToAttack_ = false;
-	}
-
-
 }
 
 void FlashLight::ImGuiDisplay(){
 
 	ImGui::Begin("懐中電灯");
+
 	if (ImGui::TreeNode("ライト")==true) {
 		ImGui::SliderFloat("角度", &lightSideTheta_, 0.0f, 3.0f);
 		ImGui::InputFloat3("座標", &spotLight_.position.x);
@@ -267,7 +257,6 @@ void FlashLight::ImGuiDisplay(){
 
 	if (ImGui::TreeNode("チャージ") == true) {
 		ImGui::InputFloat("値", &chargeValue_);
-		ImGui::Checkbox("攻撃できるかどうか", &isAbleToAttack_);
 		ImGui::TreePop();
 	}
 

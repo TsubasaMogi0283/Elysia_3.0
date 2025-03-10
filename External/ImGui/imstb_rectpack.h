@@ -25,7 +25,7 @@
 // No memory allocations; uses qsort() and assert() from stdlib.
 // Can override those by defining STBRP_SORT and STBRP_ASSERT.
 //
-// This library currently uses the Skyline Bottom-LEFT_ algorithm.
+// This library currently uses the Skyline Bottom-Left algorithm.
 //
 // Please note: better rectangle packers are welcome! Please
 // implement them to the same API, but with a different init

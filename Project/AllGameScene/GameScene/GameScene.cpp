@@ -693,10 +693,6 @@ void GameScene::PlayerMove() {
 	//チャージ状態を設定
 	player_->GetFlashLight()->SetIsCharge(isCharge);
 
-
-
-
-
 }
 
 void GameScene::PlayerRotate() {

@@ -1,5 +1,5 @@
 #include "Audio.h"
-#include "ConvertLog.h"
+#include <ConvertLog.h>
 
 
 uint32_t Ellysia::Audio::index_ = 0u;
@@ -10,9 +10,11 @@ Ellysia::Audio* Ellysia::Audio::GetInstance() {
 	return &instance;
 }
 
-void Ellysia::Audio::CreateSubmixVoice(const uint32_t& channel) {
-	//44100Hz固定
+void Ellysia::Audio::CreateSubmixVoice(uint32_t channel) {
+	
+	//44100Hz固定で良いでしょう
 	uint32_t sampleRate = 44100u;
+
 
 	//サブミックスボイスの作成
 	HRESULT hResult = Ellysia::Audio::GetInstance()->xAudio2_->CreateSubmixVoice(&Ellysia::Audio::GetInstance()->submixVoice_[channel], channel, sampleRate);
@@ -49,13 +51,17 @@ void Ellysia::Audio::Initialize() {
 	}
 
 	//サブミックスボイス(DTMでのバス)をここで作る
-	for (uint32_t i = 1u; i < SUBMIXVOICE_AMOUNT_; ++i) {
+	for (int i = 1; i < SUBMIXVOICE_AMOUNT_; ++i) {
+
 		CreateSubmixVoice(i);
 	}
 
 	//聞き手
 	emitter_.ChannelCount = 1;
 	emitter_.CurveDistanceScaler = emitter_.DopplerScaler = 1.0f;
+
+
+
 }
 
 
@@ -99,9 +105,12 @@ uint32_t Ellysia::Audio::Load(const std::string& fileName){
 //読み込み
 uint32_t Ellysia::Audio::LoadWave(const std::string& fileName) {
 
+
 	//64bitも読み込み出来るようにしたいと思ったがそもそも一般的に使われないらしい
 	//だから32bitが最大で良いかも。
-	//64bitを書き出せるCakewalkすごいね
+	//64bitを書き出せるCakewalkすご
+
+	
 
 	//一度読み込んだものは２度読み込まず返すだけ
 	if (Ellysia::Audio::GetInstance()->audioInformation_.find(fileName) != Ellysia::Audio::GetInstance()->audioInformation_.end()) {
@@ -112,7 +121,7 @@ uint32_t Ellysia::Audio::LoadWave(const std::string& fileName) {
 	//indexを取得
 	uint32_t handle = index_;
 	//加算
-	++index_;
+	index_++;
 
 
 #pragma region １,ファイルオープン
@@ -479,7 +488,7 @@ void Ellysia::Audio::ExitLoop(const uint32_t& audioHandle) {
 }
 
 
-void Ellysia::Audio::AfterLoopPlayWave(const uint32_t& audioHandle, const float_t& second) {
+void Ellysia::Audio::AfterLoopPlayWave(const uint32_t& audioHandle, float second) {
 	//別名サスティンループというらしい
 	//シンセとかにあるサスティンと関係があるのかな
 
@@ -514,7 +523,7 @@ void Ellysia::Audio::AfterLoopPlayWave(const uint32_t& audioHandle, const float_
 }
 
 
-void Ellysia::Audio::BeforeLoopPlayWave(const uint32_t& audioHandle, const float_t& lengthSecond) {
+void Ellysia::Audio::BeforeLoopPlayWave(const uint32_t& audioHandle, float lengthSecond) {
 	//別名サスティンループというらしい
 	//シンセとかにあるサスティンと関係があるのかな
 	//こっちは前半でループ
@@ -550,7 +559,7 @@ void Ellysia::Audio::BeforeLoopPlayWave(const uint32_t& audioHandle, const float
 }
 
 
-void Ellysia::Audio::PartlyLoopPlayWave(const uint32_t& audioHandle, const float_t& start, const float_t& lengthSecond) {
+void Ellysia::Audio::PartlyLoopPlayWave(const uint32_t& audioHandle, float start, float lengthSecond) {
 	//別名サスティンループというらしい
 	//シンセとかにあるサスティンと関係があるのかな
 	//こっちは前半でループ
@@ -594,7 +603,7 @@ void Ellysia::Audio::PartlyLoopPlayWave(const uint32_t& audioHandle, const float
 //一応マイナスにも出来るらしい
 //位相の反転するために使うらしい。使い道は分からない。
 //音量を変える
-void Ellysia::Audio::ChangeVolume(const uint32_t& audioHandle, const float_t& volume) {
+void Ellysia::Audio::ChangeVolume(const uint32_t& audioHandle, float volume) {
 
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
@@ -604,13 +613,14 @@ void Ellysia::Audio::ChangeVolume(const uint32_t& audioHandle, const float_t& vo
 }
 
 //ピッチの変更(滑らか)
-void Ellysia::Audio::ChangeFrequency(const uint32_t& audioHandle, float_t& ratio) {
+void Ellysia::Audio::ChangeFrequency(const uint32_t& audioHandle, float ratio) {
 
 	//2.0fより上がらなかった
 	ratio = max(ratio, 2.0f);
+
 	//0.0fより下がらなかった
 	ratio = min(ratio, 0.0f);
-	
+
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
@@ -622,7 +632,7 @@ void Ellysia::Audio::ChangeFrequency(const uint32_t& audioHandle, float_t& ratio
 
 
 
-void Ellysia::Audio::ChangePitch(const uint32_t& audioHandle,const int32_t& scale) {
+void Ellysia::Audio::ChangePitch(const uint32_t& audioHandle, int32_t scale) {
 
 	
 	float ratio = 1.0f;
@@ -669,7 +679,7 @@ void Ellysia::Audio::ChangePitch(const uint32_t& audioHandle,const int32_t& scal
 }
 
 //Pan振り
-void Ellysia::Audio::SetPan(const uint32_t& audioHandle,const float_t& pan) {
+void Ellysia::Audio::SetPan(const uint32_t& audioHandle, float_t pan) {
 
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
@@ -741,6 +751,8 @@ void Ellysia::Audio::SetPan(const uint32_t& audioHandle,const float_t& pan) {
 
 #pragma endregion
 
+	
+
 
 	//詳細の取得
 	XAUDIO2_VOICE_DETAILS voiceDetails;
@@ -759,7 +771,7 @@ void Ellysia::Audio::SetPan(const uint32_t& audioHandle,const float_t& pan) {
 
 }
 
-void Ellysia::Audio::SetLowPassFilter(const uint32_t& audioHandle, float_t& cutOff) {
+void Ellysia::Audio::SetLowPassFilter(const uint32_t& audioHandle, float cutOff) {
 	//いきなり効果アリにすると違和感あるよね
 	//LowPassは最初「1.0f」にした方が良いかも
 	cutOff = max(cutOff, 1.0f);
@@ -782,7 +794,7 @@ void Ellysia::Audio::SetLowPassFilter(const uint32_t& audioHandle, float_t& cutO
 
 }
 
-void Ellysia::Audio::SetLowPassFilter(const uint32_t& audioHandle, float_t& cutOff, const float_t& oneOverQ) {
+void Ellysia::Audio::SetLowPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ) {
 	//いきなり効果アリにすると違和感あるよね
 	//LowPassは最初「1.0f」にした方が良いかも
 	cutOff = max(cutOff, 1.0f);
@@ -805,7 +817,7 @@ void Ellysia::Audio::SetLowPassFilter(const uint32_t& audioHandle, float_t& cutO
 	assert(SUCCEEDED(hResult));
 }
 
-void Ellysia::Audio::SetHighPassFilter(const uint32_t& audioHandle, float_t& cutOff) {
+void Ellysia::Audio::SetHighPassFilter(const uint32_t& audioHandle, float cutOff) {
 	//いきなり効果アリにすると違和感あるよね
 	//HighPassは最初「0.0f」にした方が良いかも
 
@@ -828,7 +840,7 @@ void Ellysia::Audio::SetHighPassFilter(const uint32_t& audioHandle, float_t& cut
 	assert(SUCCEEDED(hResult));
 }
 
-void Ellysia::Audio::SetHighPassFilter(const uint32_t& audioHandle, float_t& cutOff, const float_t& oneOverQ) {
+void Ellysia::Audio::SetHighPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ) {
 	
 	cutOff = max(cutOff, 1.0f);
 	cutOff = min(cutOff, 0.0f);
@@ -849,7 +861,7 @@ void Ellysia::Audio::SetHighPassFilter(const uint32_t& audioHandle, float_t& cut
 	assert(SUCCEEDED(hResult));
 }
 
-void Ellysia::Audio::SetBandPassFilter(const uint32_t& audioHandle, float_t& cutOff) {
+void Ellysia::Audio::SetBandPassFilter(const uint32_t& audioHandle, float cutOff) {
 	
 
 	cutOff = max(cutOff, 1.0f);
@@ -870,7 +882,7 @@ void Ellysia::Audio::SetBandPassFilter(const uint32_t& audioHandle, float_t& cut
 	assert(SUCCEEDED(hResult));
 }
 
-void Ellysia::Audio::SetBandPassFilter(const uint32_t& audioHandle, float_t& cutOff, const float_t& oneOverQ) {
+void Ellysia::Audio::SetBandPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ) {
 	
 	cutOff = max(cutOff, 1.0f);
 	cutOff = min(cutOff, 0.0f);
@@ -892,7 +904,7 @@ void Ellysia::Audio::SetBandPassFilter(const uint32_t& audioHandle, float_t& cut
 	assert(SUCCEEDED(hResult));
 }
 
-void Ellysia::Audio::SetNotchFilter(const uint32_t& audioHandle, float_t& cutOff) {
+void Ellysia::Audio::SetNotchFilter(const uint32_t& audioHandle, float cutOff) {
 	cutOff = max(cutOff, 1.0f);
 	cutOff = min(cutOff, 0.0f);
 
@@ -910,7 +922,7 @@ void Ellysia::Audio::SetNotchFilter(const uint32_t& audioHandle, float_t& cutOff
 	assert(SUCCEEDED(hResult));
 }
 
-void Ellysia::Audio::SetNotchFilter(const uint32_t& audioHandle, float_t& cutOff,const float_t& oneOverQ) {
+void Ellysia::Audio::SetNotchFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ) {
 
 	cutOff = max(cutOff, 1.0f);
 	cutOff = min(cutOff, 0.0f);
@@ -931,7 +943,7 @@ void Ellysia::Audio::SetNotchFilter(const uint32_t& audioHandle, float_t& cutOff
 
 
 
-void Ellysia::Audio::SendChannels(const uint32_t& audioHandle,const uint32_t& channelNumber) {
+void Ellysia::Audio::SendChannels(const uint32_t& audioHandle, uint32_t channelNumber) {
 	XAUDIO2_SEND_DESCRIPTOR send = { 0, Audio::GetInstance()->submixVoice_[0] };
 	XAUDIO2_VOICE_SENDS sendlist = { channelNumber, &send };
 
@@ -942,7 +954,7 @@ void Ellysia::Audio::SendChannels(const uint32_t& audioHandle,const uint32_t& ch
 	assert(SUCCEEDED(hResult));
 }
 
-void Ellysia::Audio::CreateReverb(const uint32_t& audioHandle,const uint32_t& channel) {
+void Ellysia::Audio::CreateReverb(const uint32_t& audioHandle, uint32_t channel) {
 	audioHandle;
 	channel;
 }
