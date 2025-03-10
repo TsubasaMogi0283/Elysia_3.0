@@ -62,8 +62,14 @@ public:
 	~FlashLight()=default;
 
 private:
+
 	/// <summary>
-	/// IMGuiの表示
+	/// チャージ
+	/// </summary>
+	void Charge();
+
+	/// <summary>
+	/// ImGuiの表示
 	/// </summary>
 	void ImGuiDisplay();
 
@@ -94,7 +100,7 @@ public:
 	/// θの設定
 	/// </summary>
 	/// <param name="theta">θ</param>
-	inline void SetTheta(const float& theta) {
+	inline void SetTheta(const float_t& theta) {
 		this->theta_ = theta;
 	}
 
@@ -102,22 +108,22 @@ public:
 	/// φの設定
 	/// </summary>
 	/// <param name="phi">φ</param>
-	inline void SetPhi(const float& phi) {
+	inline void SetPhi(const float_t& phi) {
 		this->phi_ = phi;
 	}
 
 	/// <summary>
 	/// ライトの幅を設定
 	/// </summary>
-	/// <param name="lightSideTheta"></param>
-	inline void SetLightSideTheta(const float& lightSideTheta) {
+	/// <param name="lightSideTheta">幅の角度</param>
+	inline void SetLightSideTheta(const float_t& lightSideTheta) {
 		this ->lightSideTheta_ = lightSideTheta;
 	}
 
 	/// <summary>
 	/// 方向を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>方向</returns>
 	inline Vector3 GetDirection()const {
 		return direction_;
 	}
@@ -125,8 +131,8 @@ public:
 	/// <summary>
 	/// 最大の幅
 	/// </summary>
-	/// <param name="range"></param>
-	inline void SetMaxRange(const float& range) {
+	/// <param name="range">幅</param>
+	inline void SetMaxRange(const float_t& range) {
 		this->maxRange_ = range;
 	}
 
@@ -134,23 +140,32 @@ public:
 	/// <summary>
 	/// 最小の幅
 	/// </summary>
-	/// <param name="range"></param>
-	inline void SetMinRange(const float& range) {
+	/// <param name="range">幅</param>
+	inline void SetMinRange(const float_t& range) {
 		this->minRange_ = range;
 	}
 
 	/// <summary>
+	/// チャージをしているかどうかの設定
+	/// </summary>
+	/// <param name="isCharge">チャージ中か</param>
+	inline void SetIsCharge(const bool& isCharge) {
+		this->isCharge_ = isCharge;
+	}
+
+
+	/// <summary>
 	/// 扇の取得(3次元)
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>扇</returns>
 	inline Fan3D GetFan3D() {
 		return fan3D_;
 	}
 
 	/// <summary>
-	/// 当たり判定の取得
+	/// コリジョンの取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>コリジョン</returns>
 	inline FlashLightCollision* GetFanCollision()const {
 		return flashLightCollision_.get();
 	}
@@ -171,17 +186,27 @@ private:
 	const std::string MIN_STRING_ = "Min";
 
 	//ライトの最大の強さ
-	float maxIntensity_ = 400.0f;
+	float_t maxIntensity_ = 400.0f;
 	//ライトの最小の強さ
-	float minIntensity_ = 50.0f;
+	float_t minIntensity_ = 50.0f;
 
 	//cosFallowoffStart
 	const std::string FLASH_LIGHT_COS_FALLOWOFF_START_STRING_ = "FlashLightCosFallowOffStart";
 	//最大
-	float maxStart_ = 2.4f;
+	float_t maxStart_ = 2.4f;
 	//最小
-	float minStart_ = 1.5f;
+	float_t minStart_ = 1.5f;
 	
+
+	//チャージの増える値
+	std::string FLASH_LIGHT_CHARGE_VALUE_ = "FlashLightChargeValue";
+	const std::string CHARGE_STRING_ = "Charge";
+	float_t chargeIncreaseValue_ = 0.1f;
+
+private:
+	//チャージスピード
+	const float_t CHARGE__INTERVAL_VALUE_ = 0.1f;
+
 private:
 	//ここに値を入れてゲームシーンで他のオブジェクトに適用させる
 	SpotLight spotLight_ = {};
@@ -190,29 +215,37 @@ private:
 	Vector3 playerPosition_ = {};
 
 	//光の届く距離
-	const float LIGHT_DISTANCE = 22.0f;
+	const float_t LIGHT_DISTANCE = 22.0f;
 	//座標
 	Vector3 position_ = {};
 	//方向
 	Vector3 direction_ = {};
 	//幅
-	float lightSideTheta_ = 0.0f;
+	float_t lightSideTheta_ = 0.0f;
 
 	//ライトの幅
-	float maxRange_ = 0.0f;
-	float minRange_ = 0.0f;
-	float ratio = 0.0f;
+	float_t maxRange_ = 0.0f;
+	float_t minRange_ = 0.0f;
+	float_t ratio = 0.0f;
 
 	//角度
-	float theta_ = 0.0f;
-	float phi_ = 0.0f;
+	float_t theta_ = 0.0f;
+	float_t phi_ = 0.0f;
 
 	//扇
 	Fan3D fan3D_ = {};
 
 
+	//チャージしているかどうか
+	bool isCharge_ = false;
+	//チャージの値
+	float chargeValue_ = 0.0f;
+
+private:
 	//当たり判定
 	std::unique_ptr<FlashLightCollision> flashLightCollision_ = nullptr;
+
+private:
 
 #ifdef _DEBUG
 	

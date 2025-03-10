@@ -91,14 +91,12 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 
 	//座標の加算
 	playerCenterPosition_= VectorCalculation::Add(playerCenterPosition_, direction);
-
 	//プレイヤーのAABBを計算
-	
 	playerAABB_.max = VectorCalculation::Add(playerCenterPosition_, playerWorldTransform_.scale);
 	playerAABB_.min = VectorCalculation::Subtract(playerCenterPosition_, playerWorldTransform_.scale);
 	
 
-	for (int i = 0; i < objects.size(); ++i) {
+	for (size_t i = 0; i < objects.size(); ++i) {
 		PushBackCalculation::FixPosition(playerCenterPosition_,playerAABB_, objects[i]);
 	}
 

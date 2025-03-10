@@ -6,29 +6,34 @@
  * @author 茂木翼
  */
 
-#include <cstdint>
 
 #include "Vector4.h"
 
-
-// 白
-const uint32_t WHITE =0xFFFFFFFF;
+//白
+#define WHITE = 0xFFFFFFFF;
 // 黒
-const uint32_t BLACK =0x000000FF;
+#define BLACK = 0x000000FF;
 // 赤
-const uint32_t RED =0xFF0000FF;
+#define RED = 0xFF0000FF;
 // 緑
-const uint32_t GREEN =0x00FF0FF;
+#define GREEN = 0x00FF00FF;
 // 青
-const uint32_t BLUE = 0x0000FFFF;
+#define BLUE = 0x0000FFFF;
 //黄色
-const uint32_t YELLOW = 0xFFFF00FF;
+#define YELLOW = 0xFFFF00FF;
 // 紫
-const uint32_t PURPLE = 0xFF00FFFF;
+#define PURPLE = 0xFF00FFFF;
+
 
 /// <summary>
-/// 色変換 
+/// 色
 /// </summary>
-/// <param name="color"></param>
-/// <returns></returns>
-Vector4 ColorAdapter(const uint32_t& color);
+namespace Color {
+	/// <summary>
+	/// 色変換 
+	/// </summary>
+	/// <param name="color">色</param>
+	/// <returns>色(Vector4)</returns>
+	Vector4 ColorAdapter(const uint32_t& color);
+
+}

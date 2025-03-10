@@ -6,6 +6,8 @@
  * @author 茂木翼
  */
 
+
+
 #include "Vector2.h"
 #include "Vector3.h"
 
@@ -18,10 +20,10 @@ struct Fan2D {
 	//中心座標
 	Vector2 position;
 	//長さ
-	float length;
+	float_t length;
 
 	//片側の角度
-	float sideAngle;
+	float_t sideAngle;
 
 	//2等分するベクトル
 	Vector2 direction;
@@ -30,11 +32,11 @@ struct Fan2D {
 
 
 	//左側の角度
-	float leftSideRadian;
+	float_t leftSideRadian;
 	//中心の角度
-	float centerRadian;
+	float_t centerRadian;
 	//右側の角度
-	float rightSideRadian;
+	float_t rightSideRadian;
 
 
 };
@@ -46,11 +48,11 @@ struct Fan3D {
 	//中心座標
 	Vector3 position;
 	//長さ
-	float length;
+	float_t length;
 
 	//片側幅の角度
-	float sideThetaAngle;
-	float sidePhiAngleSize;
+	float_t sideThetaAngle;
+	float_t sidePhiAngleSize;
 
 	//2等分するベクトル
 	Vector3 direction;
@@ -59,8 +61,8 @@ struct Fan3D {
 
 
 	//中心の角度
-	float centerRadian;
-	float centerPhi;
+	float_t centerRadian;
+	float_t centerPhi;
 
 
 };

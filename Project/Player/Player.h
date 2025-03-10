@@ -334,10 +334,6 @@ private:
 	//通常の敵からダメージを受けたかどうか
 	bool isAcceptDamegeFromNoemalEnemy_ = false;
 
-	//チャージしているかどうか
-	bool isCharge_ = false;
-
-
 	//時間
 	float_t vibeTime_ = 0u;
 

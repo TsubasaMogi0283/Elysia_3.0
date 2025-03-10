@@ -6,10 +6,12 @@
  * @author 茂木翼
  */
 
+#include <cmath>
+
 /// <summary>
 /// ベクトル(2D)
 /// </summary>
 struct Vector2 {
-	float x;
-	float y;
+	float_t x;
+	float_t y;
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 /**
  * @file Vector4.h
  * @brief ベクトル(4D)
@@ -9,9 +10,9 @@
  /// ベクトル(4D)
  /// </summary>
 struct Vector4 {
-	float x;
-	float y;
-	float z;
-	float w;
+	float_t x;
+	float_t y;
+	float_t z;
+	float_t w;
 
 };

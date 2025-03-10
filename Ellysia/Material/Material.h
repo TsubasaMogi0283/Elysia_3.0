@@ -23,11 +23,11 @@ struct MaterialData {
 	Vector4 color;
 	//ライティングの種類
 	int32_t lightingKinds;
-	float padding[3];
+	float_t padding[3];
 	//UVトランスフォーム
 	Matrix4x4 uvTransform;
 	//輝度
-	float shininess;
+	float_t shininess;
 	//環境マッピングするかどうか
 	bool isEnviromentMap;
 
@@ -57,7 +57,7 @@ public:
 	//UV行列
 	Matrix4x4 uvTransform_ = {};
 	//輝度
-	float shininess_=100.0f;
+	float_t shininess_=100.0f;
 	//環境マップ
 	bool isEnviromentMap_ = false;
 

@@ -88,7 +88,6 @@ void Player::Update(){
 	//AABBの計算
 	aabb_.min = VectorCalculation::Subtract(worldPosition, { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
 	aabb_.max = VectorCalculation::Add(worldPosition, { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
-
 	//コリジョンの更新
 	for (std::unique_ptr<BasePlayerCollision> &collision : colliders_) {
 		//プレイヤーの座標を設定
@@ -227,13 +226,11 @@ void Player::DisplayImGui() {
 	int32_t keyQuantity = static_cast<int32_t>(haveKeyQuantity_);
 
 	ImGui::Begin("プレイヤー");
-	if (ImGui::TreeNode("状態")) {
+	if (ImGui::TreeNode("状態")==true) {
 		ImGui::InputInt("鍵の数", &keyQuantity);
 		ImGui::InputInt("体力", &hp_);
-
 		ImGui::Checkbox("isDamage_", &isDamage_);
 		ImGui::Checkbox("振動", &isDameged_);
-
 		ImGui::TreePop();
 	}
 

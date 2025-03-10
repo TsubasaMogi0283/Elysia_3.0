@@ -6,6 +6,8 @@
  * @author 茂木翼
  */
 
+#include <cmath>
+
 /// <summary>
 /// ベクトル(3D)
 /// </summary>

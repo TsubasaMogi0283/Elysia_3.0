@@ -257,8 +257,6 @@ void GameScene::Initialize() {
 
 void GameScene::ObjectCollision() {
 
-
-
 	//非表示
 	openTreasureBoxSprite_->SetInvisible(true);
 
@@ -493,7 +491,7 @@ void GameScene::ProcessVigntte(){
 void GameScene::DisplayImGui() {
 	ImGui::Begin("ゲームシーン");
 
-	if (ImGui::TreeNode("カメラ")) {
+	if (ImGui::TreeNode("カメラ")==true) {
 		ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
 		ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
 		ImGui::InputFloat("Theta", &theta_);
@@ -501,12 +499,12 @@ void GameScene::DisplayImGui() {
 		ImGui::TreePop();
 
 	}
-	if (ImGui::TreeNode("ビネット")) {
+	if (ImGui::TreeNode("ビネット")==true) {
 		ImGui::InputFloat("POW", &vignettePow_);
 		ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
 		ImGui::TreePop();
 	}
-	if (ImGui::TreeNode("フェード")) {
+	if (ImGui::TreeNode("フェード")==true) {
 		ImGui::InputFloat("白", &whiteFadeTransparency_);
 		ImGui::InputFloat("黒", &blackFadeTransparency_);
 		ImGui::TreePop();
@@ -678,14 +676,22 @@ void GameScene::PlayerMove() {
 		}
 		//ダッシュをしているかどうかの設定
 		player_->SetIsDash(isPlayerDash);
-
 	}
-
-
 	//プレイヤーの動く方向を入れる
 	player_->SetMoveDirection(playerMoveDirection);
-
 	
+
+
+	//チャージ
+	bool isCharge = false;
+	if(input_->IsPushKey(DIK_RETURN)==true){
+		isCharge = true;
+	}
+	else {
+		isCharge = false;
+	}
+	//チャージ状態を設定
+	player_->GetFlashLight()->SetIsCharge(isCharge);
 
 }
 

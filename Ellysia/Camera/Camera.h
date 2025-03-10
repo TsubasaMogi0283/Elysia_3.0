@@ -71,15 +71,14 @@ public:
 	//リソース
 	ComPtr<ID3D12Resource> bufferResource;
 
-
 	//角度
-	float fov_ = 0.45f;
+	float_t fov_ = 0.45f;
 	//アスペクト比
-	float aspectRatio = 0.0f;
+	float_t aspectRatio = 0.0f;
 
 	//奥行の変数
-	float nearClip = 0.1f;
-	float farClip = 1000.0f;
+	float_t nearClip = 0.1f;
+	float_t farClip = 1000.0f;
 
 
 	//回転
@@ -100,8 +99,7 @@ public:
 	CameraMatrixData* cameraMatrixData = nullptr;
 
 private:
-	//スケール。
-	//本当はいらないけどアフィン行列を作るときに一緒に入れて見やすくしている。
+	//スケール
 	Vector3 scale = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
 
 };

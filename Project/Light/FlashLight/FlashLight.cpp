@@ -49,6 +49,10 @@ void FlashLight::Initialize(){
 	globalVariables_->CreateGroup(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_);
 	globalVariables_->AddItem(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_, maxStart_);
 	globalVariables_->AddItem(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MIN_STRING_, minStart_);
+	//チャージ
+	globalVariables_->CreateGroup(FLASH_LIGHT_CHARGE_VALUE_);
+	globalVariables_->AddItem(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_STRING_, chargeIncreaseValue_);
+
 
 
 #ifdef _DEBUG
@@ -151,6 +155,9 @@ void FlashLight::Update() {
 	};
 
 
+	//チャージ
+	Charge();
+
 	//当たり判定用へ扇を入力
 	flashLightCollision_->SetFan3D(fan3D_);
 	//スポットライトの更新
@@ -212,19 +219,48 @@ void FlashLight::Draw(const Camera& camera){
 	
 }
 
+void FlashLight::Charge(){
+
+	//増える値
+	chargeIncreaseValue_ = globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_STRING_);
+
+	
+	//チャージ中の時
+	if (isCharge_ == true) {
+		chargeValue_ += chargeIncreaseValue_;
+	}
+	//そうではない時はずっと0.0fにする
+	else {
+		chargeValue_ = 0.0f;
+	}
+
+}
+
 void FlashLight::ImGuiDisplay(){
+
 	ImGui::Begin("懐中電灯");
-	ImGui::SliderFloat("角度", &lightSideTheta_, 0.0f, 3.0f);
-	ImGui::InputFloat3("座標", &spotLight_.position.x);
-	ImGui::InputFloat3("方向", &spotLight_.direction.x);
-	ImGui::SliderFloat("距離", &spotLight_.distance, 0.0f, 100.0f);
-	ImGui::SliderFloat("Decay", &spotLight_.decay, 0.0f, 20.0f);
-	ImGui::SliderFloat("FallOff", &spotLight_.cosFallowoffStart, 0.0f, 3.0f);
-	ImGui::SliderFloat("CosAngle", &spotLight_.cosAngle, 0.0f, 3.0f);
-	ImGui::SliderFloat("強さ", &spotLight_.intensity, 0.0f, 400.0f);
-	ImGui::InputFloat("シータ", &theta_);
-	ImGui::InputFloat("ファイ", &phi_);
-	ImGui::InputFloat("割合", &ratio);
+
+	if (ImGui::TreeNode("ライト")==true) {
+		ImGui::SliderFloat("角度", &lightSideTheta_, 0.0f, 3.0f);
+		ImGui::InputFloat3("座標", &spotLight_.position.x);
+		ImGui::InputFloat3("方向", &spotLight_.direction.x);
+		ImGui::SliderFloat("距離", &spotLight_.distance, 0.0f, 100.0f);
+		ImGui::SliderFloat("Decay", &spotLight_.decay, 0.0f, 20.0f);
+		ImGui::SliderFloat("FallOff", &spotLight_.cosFallowoffStart, 0.0f, 3.0f);
+		ImGui::SliderFloat("CosAngle", &spotLight_.cosAngle, 0.0f, 3.0f);
+		ImGui::SliderFloat("強さ", &spotLight_.intensity, 0.0f, 400.0f);
+		ImGui::InputFloat("シータ", &theta_);
+		ImGui::InputFloat("ファイ", &phi_);
+		ImGui::InputFloat("割合", &ratio);
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("チャージ") == true) {
+		ImGui::InputFloat("値", &chargeValue_);
+		ImGui::TreePop();
+	}
+
+	
 	ImGui::End();
 }
 
@@ -232,5 +268,6 @@ void FlashLight::Adjustment(){
 	//保存
 	globalVariables_->SaveFile(FLASH_LIGHT_INTENSITY_STRING_);
 	globalVariables_->SaveFile(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_);
+	globalVariables_->SaveFile(FLASH_LIGHT_CHARGE_VALUE_);
 
 }
