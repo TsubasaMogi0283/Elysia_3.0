@@ -105,7 +105,7 @@ void FlashLight::Update() {
 
 	//プレイヤーの座標と微調整分
 	//ライトを持つときの高さは地面と同じだと変だよね
-	const float LIGHT_HEIGHT = 2.0f;
+	const float LIGHT_HEIGHT = 0.7f;
 	const Vector3 OFFSET = { .x = 0.0f, .y = LIGHT_HEIGHT,.z = 0.0f };
 	position_ = VectorCalculation::Add(playerPosition_, OFFSET);
 

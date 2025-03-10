@@ -45,12 +45,49 @@
         },
         {
             "type": "MESH",
-            "name": "Fence1.007",
+            "name": "Cube.020",
             "transform": {
                 "scaling": [
-                    3.0,
+                    1.0,
                     1.0,
                     1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    2.190685510635376,
+                    21.92261505126953,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    5.9300007820129395,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.003",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
                 ],
                 "rotation": [
                     0.0,
@@ -58,8 +95,31 @@
                     90.00000762939453
                 ],
                 "translation": [
-                    -43.928951263427734,
-                    -26.704755783081055,
+                    -43.08563995361328,
+                    16.43604278564453,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.007",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    12.491101264953613,
                     0.0
                 ]
             },
@@ -71,9 +131,9 @@
             "name": "Fence1.008",
             "transform": {
                 "scaling": [
-                    3.0,
+                    2.0,
                     1.0,
-                    1.0
+                    0.5
                 ],
                 "rotation": [
                     0.0,
@@ -81,8 +141,8 @@
                     90.00000762939453
                 ],
                 "translation": [
-                    -43.928951263427734,
-                    -32.70475769042969,
+                    -43.08563995361328,
+                    0.5649662017822266,
                     0.0
                 ]
             },
@@ -94,9 +154,9 @@
             "name": "Fence1.009",
             "transform": {
                 "scaling": [
-                    3.0,
+                    2.0,
                     1.0,
-                    1.0
+                    0.5
                 ],
                 "rotation": [
                     0.0,
@@ -104,8 +164,8 @@
                     90.00000762939453
                 ],
                 "translation": [
-                    -43.928951263427734,
-                    -38.70475769042969,
+                    -43.08563995361328,
+                    4.5099077224731445,
                     0.0
                 ]
             },
@@ -117,9 +177,9 @@
             "name": "Fence1.010",
             "transform": {
                 "scaling": [
-                    3.0,
+                    2.0,
                     1.0,
-                    1.0
+                    0.5
                 ],
                 "rotation": [
                     0.0,
@@ -127,8 +187,146 @@
                     90.00000762939453
                 ],
                 "translation": [
-                    -43.928951263427734,
-                    -44.70475769042969,
+                    -43.08563995361328,
+                    8.522971153259277,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.013",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -15.37292194366455,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.014",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -19.385986328125,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.019",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -23.3309268951416,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.020",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -11.404791831970215,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.021",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -7.459850311279297,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.041",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -3.446786880493164,
                     0.0
                 ]
             },
@@ -140,9 +338,9 @@
             "name": "Fence1.011",
             "transform": {
                 "scaling": [
-                    3.0,
+                    2.0,
                     1.0,
-                    1.0
+                    0.5
                 ],
                 "rotation": [
                     0.0,
@@ -150,8 +348,8 @@
                     90.00000762939453
                 ],
                 "translation": [
-                    -43.928951263427734,
-                    -50.49108123779297,
+                    -43.08563995361328,
+                    -27.317609786987305,
                     0.0
                 ]
             },
@@ -163,9 +361,9 @@
             "name": "Fence1.012",
             "transform": {
                 "scaling": [
-                    3.0,
+                    2.0,
                     1.0,
-                    1.0
+                    0.5
                 ],
                 "rotation": [
                     0.0,
@@ -173,22 +371,528 @@
                     90.00000762939453
                 ],
                 "translation": [
-                    -43.928951263427734,
-                    -56.49108123779297,
+                    -43.08563995361328,
+                    -31.330673217773438,
                     0.0
                 ]
             },
             "file_name": "Fence",
             "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.045",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -35.27561569213867,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.052",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -47.201751708984375,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.056",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -43.25680923461914,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.057",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -39.24374771118164,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.058",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -51.17437744140625,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.059",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -55.18743896484375,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.060",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -43.08563995361328,
+                    -59.132381439208984,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.047",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    35.75666046142578,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.048",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    15.978997230529785,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.049",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    12.00960636138916,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.050",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    8.048466682434082,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.051",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    19.940135955810547,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.061",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    23.864994049072266,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.062",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    27.82613182067871,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.063",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    31.795522689819336,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.064",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    39.70524597167969,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    58.03316879272461,
+                    -0.5266634225845337,
+                    -0.7542972564697266
+                ]
+            }
         },
         {
             "type": "MESH",
             "name": "Fence1.002",
             "transform": {
                 "scaling": [
-                    3.0,
+                    2.0,
                     1.0,
-                    1.0
+                    0.5
                 ],
                 "rotation": [
                     0.0,
@@ -196,31 +900,8 @@
                     90.00000762939453
                 ],
                 "translation": [
-                    -43.928951263427734,
-                    20.861480712890625,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.003",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -43.928951263427734,
-                    14.861480712890625,
+                    -43.08563995361328,
+                    20.449106216430664,
                     0.0
                 ]
             },
@@ -244,180 +925,6 @@
                 "translation": [
                     -40.98665237426758,
                     -59.625213623046875,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    6.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.013",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -43.928951263427734,
-                    -20.829833984375,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.014",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -43.928951263427734,
-                    -14.829833984375,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.019",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -43.928951263427734,
-                    -9.043510437011719,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.020",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -43.928951263427734,
-                    -3.0435104370117188,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.021",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -43.928951263427734,
-                    2.9564895629882812,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.041",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -43.928951263427734,
-                    8.956491470336914,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.052",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    -43.087860107421875,
-                    22.470924377441406,
                     0.0
                 ]
             },
@@ -505,6 +1012,65 @@
             },
             "file_name": "Fence",
             "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.001",
+            "transform": {
+                "scaling": [
+                    3.380000114440918,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    40.01063537597656,
+                    5.995543479919434,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.004",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    -13.397794723510742,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
         },
         {
             "type": "MESH",
@@ -1314,156 +1880,12 @@
         },
         {
             "type": "MESH",
-            "name": "Fence1.043",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    -37.0,
-                    22.470924377441406,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    6.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.042",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    -31.0,
-                    22.470924377441406,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    6.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.044",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    -25.02090072631836,
-                    22.470924377441406,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    6.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.045",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    -19.02090072631836,
-                    22.470924377441406,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    6.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
             "name": "Fence1.046",
             "transform": {
                 "scaling": [
-                    3.0,
+                    2.0,
                     1.0,
-                    1.0
+                    0.5
                 ],
                 "rotation": [
                     0.0,
@@ -1471,7 +1893,7 @@
                     0.0
                 ],
                 "translation": [
-                    -12.973284721374512,
+                    -9.436656951904297,
                     22.470924377441406,
                     0.0
                 ]
@@ -1486,187 +1908,7 @@
                     0.0
                 ],
                 "size": [
-                    6.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.047",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    37.312286376953125,
-                    22.470924377441406,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    6.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.048",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    31.264671325683594,
-                    22.470924377441406,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    6.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.049",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    25.264671325683594,
-                    22.470924377441406,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    6.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.050",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    13.285572052001953,
-                    22.470924377441406,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    6.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.051",
-            "transform": {
-                "scaling": [
-                    3.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    19.285572052001953,
-                    22.470924377441406,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    6.0,
+                    4.0,
                     1.0,
                     1.0
                 ]
@@ -1677,9 +1919,9 @@
             "name": "GateDoorRight",
             "transform": {
                 "scaling": [
-                    1.422791838645935,
                     1.0,
-                    0.5427531003952026
+                    1.0,
+                    0.5427529811859131
                 ],
                 "rotation": [
                     0.0,
@@ -1687,35 +1929,22 @@
                     0.0
                 ],
                 "translation": [
-                    8.47928237915039,
+                    5.0,
                     22.491432189941406,
                     0.0
                 ]
             },
             "file_name": "GateDoor",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    -4.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    8.199999809265137,
-                    1.0,
-                    4.0
-                ]
-            }
+            "object_type": "Stage"
         },
         {
             "type": "MESH",
             "name": "GatePillerRight",
             "transform": {
                 "scaling": [
-                    1.0,
-                    1.0,
-                    0.5427531003952026
+                    0.5,
+                    0.5,
+                    0.30000001192092896
                 ],
                 "rotation": [
                     0.0,
@@ -1723,7 +1952,7 @@
                     0.0
                 ],
                 "translation": [
-                    9.374865531921387,
+                    5.805669784545898,
                     22.31720733642578,
                     0.0
                 ]
@@ -1738,9 +1967,9 @@
                     0.0
                 ],
                 "size": [
-                    2.0,
-                    2.0,
-                    2.0
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             }
         },
@@ -1749,7 +1978,7 @@
             "name": "GateDoorLeft",
             "transform": {
                 "scaling": [
-                    1.4409635066986084,
+                    1.0,
                     1.0,
                     0.5427531003952026
                 ],
@@ -1759,35 +1988,22 @@
                     -179.99998474121094
                 ],
                 "translation": [
-                    -7.967673301696777,
+                    -6.449710369110107,
                     22.491432189941406,
                     0.0
                 ]
             },
             "file_name": "GateDoor",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    -4.139999866485596,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    8.270000457763672,
-                    1.0499999523162842,
-                    4.0
-                ]
-            }
+            "object_type": "Stage"
         },
         {
             "type": "MESH",
             "name": "GatePillerLeft",
             "transform": {
                 "scaling": [
-                    1.0,
-                    1.0,
-                    0.5427531003952026
+                    0.5,
+                    0.4000000059604645,
+                    0.30000001192092896
                 ],
                 "rotation": [
                     0.0,
@@ -1795,7 +2011,7 @@
                     0.0
                 ],
                 "translation": [
-                    -8.946979522705078,
+                    -7.051335334777832,
                     22.31720733642578,
                     0.0
                 ]
@@ -1810,9 +2026,9 @@
                     0.0
                 ],
                 "size": [
-                    2.0,
-                    2.0,
-                    2.0
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             }
         },
@@ -1831,7 +2047,7 @@
                     0.0
                 ],
                 "translation": [
-                    -3.7792582511901855,
+                    -3.7720096111297607,
                     21.92261505126953,
                     0.0
                 ]
@@ -1847,44 +2063,7 @@
                     0.0
                 ],
                 "size": [
-                    11.230000495910645,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Cube",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    4.705353260040283,
-                    21.92261505126953,
-                    0.0
-                ]
-            },
-            "file_name": "Cube",
-            "object_type": "Stage",
-            "is_invisible": true,
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    11.329999923706055,
+                    5.9300007820129395,
                     1.0,
                     1.0
                 ]
@@ -1907,7 +2086,7 @@
                 "translation": [
                     55.90925598144531,
                     -1.4301680326461792,
-                    0.20000000298023224
+                    0.009999999776482582
                 ]
             },
             "file_name": "HouseFloor",
@@ -1953,29 +2132,6 @@
                 ]
             },
             "file_name": "OutSideHouse",
-            "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
-            "name": "InSideHouse",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    57.84640121459961,
-                    -0.2774393558502197,
-                    -0.8096325993537903
-                ]
-            },
-            "file_name": "InSideHouse",
             "object_type": "Stage"
         },
         {
@@ -2037,29 +2193,6 @@
                     1.0
                 ]
             }
-        },
-        {
-            "type": "MESH",
-            "name": "Fence1.001",
-            "transform": {
-                "scaling": [
-                    3.380000114440918,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    40.01063537597656,
-                    5.995543479919434,
-                    0.0
-                ]
-            },
-            "file_name": "Fence",
-            "object_type": "Stage"
         },
         {
             "type": "MESH",
@@ -2473,9 +2606,9 @@
             "name": "Cube.018",
             "transform": {
                 "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
+                    0.17000000178813934,
+                    42.09000015258789,
+                    0.24000000953674316
                 ],
                 "rotation": [
                     0.0,
@@ -2483,7 +2616,7 @@
                     0.0
                 ],
                 "translation": [
-                    -44.74995803833008,
+                    -43.14574432373047,
                     -18.283763885498047,
                     0.0
                 ]
@@ -2499,9 +2632,9 @@
                     0.0
                 ],
                 "size": [
-                    1.0,
+                    0.17000001668930054,
                     83.7699966430664,
-                    1.0
+                    0.5
                 ]
             }
         },
@@ -2537,6 +2670,834 @@
                 ],
                 "size": [
                     58.709999084472656,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.001",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -5.720048427581787,
+                    -47.16939926147461,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.002",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -5.720048427581787,
+                    -56.314300537109375,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.003",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -18.28518295288086,
+                    -38.353111267089844,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.004",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -18.28518295288086,
+                    -56.314300537109375,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.005",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -18.28518295288086,
+                    -47.16939926147461,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.006",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -28.84506607055664,
+                    -47.16939926147461,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.007",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -28.84506607055664,
+                    -56.314300537109375,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.008",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    -28.84506607055664,
+                    -38.353111267089844,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.009",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    5.324469089508057,
+                    -38.353111267089844,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.010",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    5.324469089508057,
+                    -56.314300537109375,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.011",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    5.324469089508057,
+                    -47.16939926147461,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.012",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    16.48098373413086,
+                    -47.16939926147461,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.013",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    16.48098373413086,
+                    -56.314300537109375,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.014",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    16.48098373413086,
+                    -38.353111267089844,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.015",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    27.10914421081543,
+                    -38.353111267089844,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Grave.016",
+            "transform": {
+                "scaling": [
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    90.00000762939453
+                ],
+                "translation": [
+                    27.10914421081543,
+                    -47.16939926147461,
+                    0.0
+                ]
+            },
+            "file_name": "Grave",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    0.25,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.005",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    -17.3671875,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.025",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    -21.328325271606445,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.026",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    -25.253183364868164,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.027",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    -37.14485168457031,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.042",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    -33.183712005615234,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.043",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    -29.21432113647461,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Fence1.044",
+            "transform": {
+                "scaling": [
+                    2.0,
+                    1.0,
+                    0.5
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    -41.12642288208008,
+                    22.470924377441406,
+                    0.0
+                ]
+            },
+            "file_name": "Fence",
+            "object_type": "Stage",
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    4.0,
                     1.0,
                     1.0
                 ]
@@ -2613,264 +3574,12 @@
         },
         {
             "type": "MESH",
-            "name": "Grave.028",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -5.720048427581787,
-                    -56.3143424987793,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.029",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    5.814807415008545,
-                    -56.3143424987793,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.031",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    17.024784088134766,
-                    -56.3143424987793,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.032",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    27.192739486694336,
-                    -47.16944885253906,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.033",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    17.024784088134766,
-                    -47.16944885253906,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.035",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    5.814807415008545,
-                    -47.16944885253906,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.036",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -5.720048427581787,
-                    -47.16944885253906,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
             "name": "Grave.039",
             "transform": {
                 "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
+                    0.30000001192092896,
+                    0.30000001192092896,
+                    0.30000001192092896
                 ],
                 "rotation": [
                     0.0,
@@ -2893,223 +3602,7 @@
                     0.0
                 ],
                 "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.040",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    5.814807415008545,
-                    -38.353111267089844,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.042",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    17.024784088134766,
-                    -38.353111267089844,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.043",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    27.192739486694336,
-                    -38.353111267089844,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.003",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -17.284015655517578,
-                    -38.353111267089844,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.004",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -17.284015655517578,
-                    -47.16944885253906,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.010",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -17.284015655517578,
-                    -56.3143424987793,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
+                    0.25,
                     1.0,
                     1.0
                 ]
@@ -3137,114 +3630,6 @@
             },
             "file_name": "FenceForGrave",
             "object_type": "Stage"
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.011",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -28.893360137939453,
-                    -56.3143424987793,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.012",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -28.893360137939453,
-                    -47.16944885253906,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
-            "name": "Grave.013",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    90.00000762939453
-                ],
-                "translation": [
-                    -28.893360137939453,
-                    -38.353111267089844,
-                    0.0
-                ]
-            },
-            "file_name": "Grave",
-            "object_type": "Stage",
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            }
         },
         {
             "type": "MESH",

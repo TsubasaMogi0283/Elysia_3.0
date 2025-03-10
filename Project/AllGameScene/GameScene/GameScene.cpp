@@ -91,8 +91,8 @@ void GameScene::Initialize() {
 	//ハンドルの取得
 	levelHandle_ = levelDataManager_->Load("GameStage/GameStage.json");
 
-
 	//門の初期回転
+	rightGateRotateTheta_ = 0.0f;
 	leftGateRotateTheta_ = -std::numbers::pi_v<float_t>;
 
 #pragma region プレイヤー
@@ -105,12 +105,10 @@ void GameScene::Initialize() {
 	//最初はコントロールは出来ない用にする
 	player_->SetIsAbleToControll(false);
 
-
 	//最大最小の幅を設定
 	player_->GetFlashLight()->SetMaxRange(LIGHT_MAX_RANGE_);
 	player_->GetFlashLight()->SetMinRange(LIGHT_MIN_RANGE_);
-
-
+	
 	//Bトリガーの時間を初期化
 	bTriggerTime_ = 0;
 	//Bトリガーの初期化
@@ -160,10 +158,9 @@ void GameScene::Initialize() {
 	//回転
 	//+で左回り
 	camera_.rotate.y = std::numbers::pi_v<float> / 2.0f;
-	//座標
-	camera_.translate = { .x = 0.0f,.y = 1.0f ,.z = -15.0f };
+	
 	//カメラ座標のオフセットの初期化
-	cameraPositionOffset_ = { .x = 0.0f,.y = 2.0f,.z = 0.0f };
+	cameraPositionOffset_ = { .x = 0.0f,.y = 1.3f,.z = 0.0f };
 	//カメラの調整項目
 	globalVariables_->CreateGroup(GAME_SCENE_CAMERA_NAME_);
 	globalVariables_->AddItem(GAME_SCENE_CAMERA_NAME_, HEIGHT_OFFSET_, cameraPositionOffset_);
@@ -903,7 +900,6 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 		camera_.rotate.z = 0.0f;
 
 		//位置の計算
-		//cameraPositionOffset_ = globalVariables_->GetVector3Value(GAME_SCENE_CAMERA_NAME_, HEIGHT_OFFSET_);
 		camera_.translate = VectorCalculation::Add(player_->GetWorldPosition(), cameraPositionOffset_);
 
 		//脱出の仕組み

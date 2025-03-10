@@ -27,18 +27,6 @@ void Player::Initialize(){
 	uint32_t modelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
 	model_.reset(Ellysia::Model::Create(modelHandle));
 
-	//初期はコントロールできない
-	isControll_ = false;
-
-	//持っている鍵の数
-	haveKeyQuantity_ = 0u;
-	
-	//体力
-	hp_ = 3u;
-
-	//ダメージについて
-	isDamage_ = false;
-
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	const Vector3 INITIAL_POSITION = { .x=0.0f,.y=0.0f,.z=-15.0f };
@@ -61,13 +49,11 @@ void Player::Initialize(){
 	flashLight_ = std::make_unique<FlashLight>();
 	flashLight_->Initialize();
 
-
-	//ダメージを受けたかどうか
-	isDameged_ = false;
 	
 	//マテリアル
 	material_.Initialize();
 	material_.lightingKinds_ = SpotLighting;
+	material_.color_ = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 0.5f };
 }
 
 void Player::Update(){
