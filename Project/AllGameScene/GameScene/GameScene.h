@@ -178,12 +178,14 @@ private:
 	//説明テクスチャの最大数
 	const uint32_t MAX_EXPLANATION_NUMBER_ = 2u;
 	//時間変化
-	const float DELTA_TIME_ = 1.0f / 60.0f;
+	const float_t DELTA_TIME_ = 1.0f / 60.0f;
 	//トリガーの増える値
 	const uint32_t INCREASE_VALUE = 1u;
 	//フェードアウトの具合
-	const float FADE_OUT_INTERVAL_ = 0.01f;
-	
+	const float_t FADE_OUT_INTERVAL_ = 0.01f;
+	//負けシーンに遷移するときの値
+	const float_t CHANGE_TO_LOSE_SCENE_VALUE_ = 2.0f;
+
 	//反応する
 	const uint32_t B_REACT_TIME_ = 1u;
 	//反応しない
@@ -191,13 +193,13 @@ private:
 	//コントローラーの押していない時の値
 	const int32_t NO_PUSH_VALUE_ = 0u;
 	//完全に透明になる値
-	const float PERFECT_TRANSPARENT_ = 0.0f;
+	const float_t PERFECT_TRANSPARENT_ = 0.0f;
 
 	//ライトの幅
 	//最大
-	const float LIGHT_MAX_RANGE_ = 0.35f;
+	const float_t LIGHT_MAX_RANGE_ = 0.35f;
 	//最小
-	const float LIGHT_MIN_RANGE_ = 0.08f;
+	const float_t LIGHT_MIN_RANGE_ = 0.08f;
 
 private:
 	//カメラ
@@ -209,18 +211,18 @@ private:
 	//ポストエフェクト
 	//ビネット
 	std::unique_ptr<Ellysia::Vignette> vignette_ = nullptr;
-	const float MAX_VIGNETTE_POW_ = 1.6f;
-	float vignettePow_ = 17.0f;
-	float vignetteChangeTime_ = 0.0f;
-	float warningTime_ = 0.0f;
+	const float_t MAX_VIGNETTE_POW_ = 1.6f;
+	float_t vignettePow_ = 17.0f;
+	float_t vignetteChangeTime_ = 0.0f;
+	float_t warningTime_ = 0.0f;
 
 	//プレイヤー
 	std::unique_ptr<Player> player_ = nullptr;
-	
-	
 	//ライトの幅
-	float lightSideTheta_ = 0.1f;
-
+	float_t lightSideTheta_ = 0.1f;
+	//角度
+	float_t theta_ = 0.0f;
+	float_t originPhi_ = 0.0f;
 
 	//Bボタンのトリガー
 	uint32_t bTriggerTime_ = 0u;
@@ -234,9 +236,7 @@ private:
 	bool isTouchStrongEnemy_ = false;
 
 
-	//角度
-	float theta_ = 0.0f;
-	float originPhi_ = 0.0f;
+	
 
 	//コリジョン管理
 	std::unique_ptr<Ellysia::CollisionManager> collisionManager_ = nullptr;
@@ -278,7 +278,7 @@ private:
 	//白フェードのスプライト
 	std::unique_ptr<Ellysia::Sprite> whiteFade_ = nullptr;
 	//透明度
-	float whiteFadeTransparency_ = 1.0f;
+	float_t whiteFadeTransparency_ = 1.0f;
 	//イン
 	bool isWhiteFadeIn = true;
 	//アウト
@@ -289,15 +289,13 @@ private:
 	//黒フェードのスプライト
 	std::unique_ptr<Ellysia::Sprite> blackFade_ = nullptr;
 	//透明度
-	float blackFadeTransparency_ = 0.0f;
+	float_t blackFadeTransparency_ = 0.0f;
 	//イン
 	bool isBlackFadeIn = false;
 	//アウト
 	bool isBlackFadeOut_ = false;
 
-	//負けシーンに遷移するときの値
-	const float CHANGE_TO_LOSE_SCENE_VALUE_ = 2.0f;
-
+	
 
 #pragma endregion
 
@@ -320,7 +318,7 @@ private:
 	//次へのスプライト
 	std::unique_ptr<Ellysia::Sprite> spaceToNext_[SPACE_TO_NEXT_QUANTITY_] = { nullptr };
 
-	//
+	//テクスチャの番号
 	uint32_t howToPlayTextureNumber_ = 0u;
 
 #pragma endregion
@@ -329,17 +327,13 @@ private:
 	std::unique_ptr<Gate> gate_ = nullptr;
 	bool isEscape_ = false;
 
-
 	//宝箱が開いているかどうか
 	bool isOpenTreasureBox_ = false;
 	uint32_t openTreasureBoxTime_ = 0u;
 	std::unique_ptr<Ellysia::Sprite>openTreasureBoxSprite_ = nullptr;
 
-
-
-	Vector3 rotate_ = {};
 	Vector3 translate_ = {};
 	//門の回転
-	float gateRotateTheta_ = 0.0f;
+	float_t gateRotateTheta_ = 0.0f;
 
 };

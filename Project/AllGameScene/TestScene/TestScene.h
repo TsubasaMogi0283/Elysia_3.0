@@ -109,7 +109,7 @@ private:
 	//仮プレイヤー
 	std::unique_ptr<Ellysia::Model>playerModel_ = nullptr;
 	WorldTransform playerWorldTransform_ = {};
-	const float SIZE = 1.0f;
+	const float_t SIZE = 1.0f;
 	const Vector3 CUBE_SIZE = { .x = SIZE ,.y = SIZE ,.z = SIZE };
 	AABB playerAABB_ = {};
 	Vector3 playerCenterPosition_ = {};

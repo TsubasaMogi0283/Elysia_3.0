@@ -280,11 +280,7 @@ public:
 
 
 
-private:
-	//幅のサイズ
-	const float SIDE_SIZE = 0.5f;
-	//時間変化
-	const float DELTA_TIME = 1.0f / 60.0f;
+
 
 private:
 	//入力クラス
@@ -295,42 +291,55 @@ private:
 	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelHandle_ = 0u;
+
+private:
+	//幅のサイズ
+	const float_t SIDE_SIZE = 0.5f;
+	//時間変化
+	const float_t DELTA_TIME = 1.0f / 60.0f;
+	//チャージの増える値
+	const float_t CHARGE_VALUE_ = 0.1f;
+
+
 private:
 
 	//モデル
 	std::unique_ptr<Ellysia::Model> model_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_={};
+	//動く方向
+	Vector3 moveDirection_ = {};
+	//中心座標
 	Vector3 playerCenterPosition_ = {};
 	//マテリアル
 	Material material_ = {};
-
-	//持っている鍵の数
-	//可算なのでQuantity
-	uint32_t haveKeyQuantity_ = 0u;
-	//動く方向
-	Vector3 moveDirection_ = {};
 	//AABB
 	AABB aabb_ = {};
-
+	//持っている鍵の数
+	uint32_t haveKeyQuantity_ = 0u;
 
 	//体力
 	int32_t hp_ = 0;
 	//敵の攻撃に当たった時のタイマー
 	int32_t downTime_ = 0;
-	//敵の攻撃に当たったかどうか
-	bool isDamage_ = false;
 	//操作可能かどうか
 	bool isControll_ = false;
 	//ダッシュ
 	bool isDash_ = false;
 
+	//敵の攻撃に当たったかどうか
+	bool isDamage_ = false;
 	//攻撃されたか
 	bool isDameged_ = false;
+	//通常の敵からダメージを受けたかどうか
 	bool isAcceptDamegeFromNoemalEnemy_ = false;
 
+	//チャージしているかどうか
+	bool isCharge_ = false;
+
+
 	//時間
-	float vibeTime_ = 0u;
+	float_t vibeTime_ = 0u;
 
 private:
 	//当たり判定のリスト

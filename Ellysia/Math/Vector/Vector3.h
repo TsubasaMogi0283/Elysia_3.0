@@ -10,8 +10,8 @@
 /// ベクトル(3D)
 /// </summary>
 struct Vector3 {
-	float x;
-	float y;
-	float z;
+	float_t x;
+	float_t y;
+	float_t z;
 
 };

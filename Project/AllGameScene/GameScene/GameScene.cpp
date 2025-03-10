@@ -696,10 +696,8 @@ void GameScene::PlayerRotate() {
 	bool isRotateXKey = false;
 	//回転の大きさ
 	const float ROTATE_INTERVAL = 0.025f;
-#pragma region Y軸に旋回
 
 	//+が左回り
-
 	//左を向く
 	if (input_->IsPushKey(DIK_LEFT) == true) {
 		theta_ += ROTATE_INTERVAL;
@@ -710,22 +708,6 @@ void GameScene::PlayerRotate() {
 		theta_ -= ROTATE_INTERVAL;
 		isRotateYKey = true;
 	}
-
-
-
-	//2πより大きくなったら0にまた戻す
-	if (theta_ > 2.0f * std::numbers::pi_v<float>) {
-		theta_ = 0.0f;
-	}
-	//-2πより大きくなったら0にまた戻す
-	if (theta_ < -2.0f * std::numbers::pi_v<float>) {
-		theta_ = 0.0f;
-	}
-
-#pragma endregion
-
-#pragma region X軸に旋回
-
 	//上を向く
 	if (input_->IsPushKey(DIK_UP) == true) {
 		originPhi_ -= ROTATE_INTERVAL;
@@ -737,16 +719,18 @@ void GameScene::PlayerRotate() {
 		isRotateXKey = true;
 	}
 
-	//±π/6くらいに制限を掛けておきたい
-	//それ以下以上だと首が大変なことになっているように見えるからね
-	if (originPhi_ > std::numbers::pi_v<float> / 6.0f) {
-		originPhi_ = std::numbers::pi_v<float> / 6.0f;
+	//2πより大きくなったら0にまた戻す
+	if (theta_ > 2.0f * std::numbers::pi_v<float>) {
+		theta_ = 0.0f;
 	}
-	if (originPhi_ < -std::numbers::pi_v<float> / 6.0f) {
-		originPhi_ = -std::numbers::pi_v<float> / 6.0f;
+	//-2πより大きくなったら0にまた戻す
+	if (theta_ < -2.0f * std::numbers::pi_v<float>) {
+		theta_ = 0.0f;
 	}
 
-#pragma endregion
+	
+
+	
 
 #pragma region コントローラーの回転
 	
@@ -782,6 +766,14 @@ void GameScene::PlayerRotate() {
 
 #pragma endregion
 
+	//±π/6くらいに制限を掛けておきたい
+	//それ以下以上だと首が大変なことになっているように見えるからね
+	if (originPhi_ > std::numbers::pi_v<float> / 6.0f) {
+		originPhi_ = std::numbers::pi_v<float> / 6.0f;
+	}
+	if (originPhi_ < -std::numbers::pi_v<float> / 6.0f) {
+		originPhi_ = -std::numbers::pi_v<float> / 6.0f;
+	}
 }
 
 void GameScene::MoveLightSide() {

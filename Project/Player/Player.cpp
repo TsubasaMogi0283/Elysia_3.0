@@ -181,11 +181,6 @@ void Player::Damaged() {
 		ImGui::End();
 #endif // _DEBUG
 	}
-
-
-
-
-
 }
 
 void Player::Move() {

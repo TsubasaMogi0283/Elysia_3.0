@@ -71,7 +71,7 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 	levelDataManager_->Update(levelHandle_);
 	std::vector<AABB> objects = levelDataManager_->GetStageObjectAABBs(levelHandle_);
 
-	const float SPEED = 0.1f;
+	const float_t SPEED = 0.1f;
 	//方向
 	Vector3 direction = {};
 

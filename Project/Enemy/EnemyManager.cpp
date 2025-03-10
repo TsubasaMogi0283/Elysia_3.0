@@ -297,7 +297,7 @@ void EnemyManager::Update(){
 
 	//1体より多い時
 	if (enemyAmount > ONLY_ONE) {
-		for (auto it1 = enemies_.begin(); it1 != enemies_.end(); ++it1) {
+		for (std::list<std::unique_ptr<NormalEnemy>>::iterator it1 = enemies_.begin(); it1 != enemies_.end(); ++it1) {
 
 			//比較する数
 			const uint32_t COMPARE_NUMBER = 2u;
@@ -318,7 +318,7 @@ void EnemyManager::Update(){
 
 			//敵同士の内積
 			float enemyAndEnemyDot = 0.0f;
-			for (auto it2 = enemies_.begin(); it2 != enemies_.end(); ++it2) {
+			for (std::list<std::unique_ptr<NormalEnemy>>::iterator it2 = enemies_.begin(); it2 != enemies_.end(); ++it2) {
 
 				//it1とit2が一致した場合は計算をせずに次のループへ
 				if (it1 == it2) {
@@ -407,7 +407,6 @@ void EnemyManager::Update(){
 			//前方にいない場合
 			else {
 				
-
 				//設定した値より短くなったら接近開始
 				if (currentState == "Move") {
 					if (playerEnemyDistance <= TRACKING_START_DISTANCE_) {
