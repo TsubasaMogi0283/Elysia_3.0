@@ -5,7 +5,9 @@
 
 #include "PipelineManager.h"
 #include "SrvManager.h"
-#include "../RtvManager/RtvManager.h"
+#include "RtvManager.h"
+#include "Vector4.h"
+
 
 Ellysia::DirectXSetup* Ellysia::DirectXSetup::GetInstance() {
 	//関数内static変数として宣言する
@@ -344,10 +346,10 @@ void Ellysia::DirectXSetup::GenerateSwapChain() {
 		&swapChainDesc, 
 		nullptr, 
 		nullptr, 
-		reinterpret_cast<IDXGISwapChain1**>(&DirectXSetup::GetInstance()->swapChain));
+		reinterpret_cast<IDXGISwapChain1**>(&DirectXSetup::GetInstance()->swapChain_));
 	assert(SUCCEEDED(hr));
 	
-	DirectXSetup::GetInstance()->swapChain.swapChainDesc = swapChainDesc;
+	DirectXSetup::GetInstance()->swapChain_.swapChainDesc = swapChainDesc;
 
 }
 
@@ -379,10 +381,10 @@ void Ellysia::DirectXSetup::GenarateDescriptorHeap() {
 
 void Ellysia::DirectXSetup::PullResourcesFromSwapChain() {
 	 
-	HRESULT hr = DirectXSetup::GetInstance()->swapChain.m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(& DirectXSetup::GetInstance()->swapChain.m_pResource[0]));
+	HRESULT hr = DirectXSetup::GetInstance()->swapChain_.m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(& DirectXSetup::GetInstance()->swapChain_.m_pResource[0]));
 	//上手く取得できなければ起動できない
 	assert(SUCCEEDED(hr));
-	hr = DirectXSetup::GetInstance()->swapChain.m_pSwapChain->GetBuffer(1, IID_PPV_ARGS(& DirectXSetup::GetInstance()->swapChain.m_pResource[1]));
+	hr = DirectXSetup::GetInstance()->swapChain_.m_pSwapChain->GetBuffer(1, IID_PPV_ARGS(& DirectXSetup::GetInstance()->swapChain_.m_pResource[1]));
 	assert(SUCCEEDED(hr));
 
 	
@@ -491,7 +493,7 @@ void Ellysia::DirectXSetup::SetResourceBarrierForSwapChain(const D3D12_RESOURCE_
 	
 	//コマンドを積みこんで確定させる
 	//これから書き込むバックバッファのインデックスを取得
-	DirectXSetup::GetInstance()->backBufferIndex_ = DirectXSetup::GetInstance()->swapChain.m_pSwapChain->GetCurrentBackBufferIndex();
+	DirectXSetup::GetInstance()->backBufferIndex_ = DirectXSetup::GetInstance()->swapChain_.m_pSwapChain->GetCurrentBackBufferIndex();
 	D3D12_RESOURCE_BARRIER barrier = {
 		//タイプを設定
 		.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION,
@@ -499,7 +501,7 @@ void Ellysia::DirectXSetup::SetResourceBarrierForSwapChain(const D3D12_RESOURCE_
 		.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE,
 	};
 	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = DirectXSetup::GetInstance()->swapChain.m_pResource[DirectXSetup::GetInstance()->backBufferIndex_].Get();
+	barrier.Transition.pResource = DirectXSetup::GetInstance()->swapChain_.m_pResource[DirectXSetup::GetInstance()->backBufferIndex_].Get();
 	//遷移前(現在)のResourceState
 	barrier.Transition.StateBefore = beforeState;
 	//遷移後のResourceState
@@ -659,7 +661,7 @@ void Ellysia::DirectXSetup::StartDraw() {
 	//描画先のRTVを設定する
 	DirectXSetup::GetInstance()->GetCommandList()->OMSetRenderTargets(1, &RtvManager::GetInstance()->GetRtvHandle(backBufferIndex_), false, &DirectXSetup::GetInstance()->dsvHandle_);
 	//指定した色で画面全体をクリアする
-	float clearColor[] = { 0.0f,0.0f,0.0f,1.0f };	//青っぽい色
+	float clearColor[] = { 0.0f,0.0f,0.0f,1.0f };
 	DirectXSetup::GetInstance()->GetCommandList()->ClearRenderTargetView(RtvManager::GetInstance()->GetRtvHandle(backBufferIndex_), clearColor, 0, nullptr);
 
 
@@ -697,7 +699,7 @@ void Ellysia::DirectXSetup::EndDraw() {
 	DirectXSetup::GetInstance()->m_commandQueue_->ExecuteCommandLists(1, commandLists);
 	//GPUとOSに画面の交換を行うよう通知する
 
-	DirectXSetup::GetInstance()->swapChain.m_pSwapChain->Present(1u, 0u);
+	DirectXSetup::GetInstance()->swapChain_.m_pSwapChain->Present(1u, 0u);
 
 	////GPUにSignalを送る
 	//GPUの実行完了が目的

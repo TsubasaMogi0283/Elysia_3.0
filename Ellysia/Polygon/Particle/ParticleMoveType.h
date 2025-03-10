@@ -13,5 +13,8 @@ enum ParticleMoveType {
 	FreeFall,
 	//上昇
 	Rise,
+	//吸収
+	Absorb
+
 
 };

@@ -257,7 +257,7 @@ void Ellysia::Particle3D::Update(const Camera& camera) {
 		particleIterator->currentTime += DELTA_TIME;
 
 		switch (moveType_) {
-		case NormalRelease:
+		case ParticleMoveType::NormalRelease:
 			#pragma region 通常の放出
 
 			if (isReleaseOnceMode_ == false) {
@@ -316,7 +316,7 @@ void Ellysia::Particle3D::Update(const Camera& camera) {
 
 #pragma endregion
 
-		case ThrowUp:
+		case ParticleMoveType::ThrowUp:
 			#pragma region 鉛直投げ上げ
 			//強制的にビルボードにするよ
 
@@ -374,7 +374,7 @@ void Ellysia::Particle3D::Update(const Camera& camera) {
 
 			#pragma endregion
 
-		case Rise:
+		case ParticleMoveType::Rise:
 			#pragma region 上昇
 			//強制的にビルボードにするよ
 			particleIterator->transform.translate.x += particleIterator->velocity.x / 15.0f;
@@ -426,6 +426,18 @@ void Ellysia::Particle3D::Update(const Camera& camera) {
 
 			#pragma endregion
 
+		case ParticleMoveType::Absorb:
+			#pragma region 吸収
+			
+
+			//線形補間でやって綺麗に集まるようにする
+			particleIterator->transform.translate = absorbPosition_;
+
+
+
+			#pragma endregion
+
+
 		}
 
 		//見えなくなった
@@ -468,7 +480,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const Material& material){
 	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
+		
 
 	//CBVを設定する
 	//マテリアル

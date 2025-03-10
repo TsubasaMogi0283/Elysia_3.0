@@ -159,20 +159,16 @@ namespace Ellysia {
 		/// <param name="spotLight"></param>
 		void Draw(const Camera& camera, const Material& material, const SpotLight& spotLight);
 
-
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
 		~Particle3D() = default;
 
-
-
-
 	public:
 		/// <summary>
 		///	一度だけ出すかどうか
 		/// </summary>
-		/// <param name="isReleaseOnce"></param>
+		/// <param name="isReleaseOnce">一度にするかどうかの設定</param>
 		inline void SetIsReleaseOnceMode(const bool& isReleaseOnce) {
 			this->isReleaseOnceMode_ = isReleaseOnce;
 		}
@@ -181,7 +177,7 @@ namespace Ellysia {
 		/// <summary>
 		/// 透明になっていくようにするかどうか
 		/// </summary>
-		/// <param name="isToTransparent"></param>
+		/// <param name="isToTransparent">透明にしていくか</param>
 		inline void SetIsToTransparent(const bool& isToTransparent) {
 			this->isToTransparent_ = isToTransparent;
 		}
@@ -201,6 +197,15 @@ namespace Ellysia {
 		inline void SetGroundOffset(const float_t& offset) {
 			this->groundOffset_ = offset;
 		}
+
+		/// <summary>
+		/// 吸収し集まる座標をせっていする
+		/// </summary>
+		/// <param name="position">座標</param>
+		inline void SetAbsorbPosition(const Vector3& position) {
+			this->absorbPosition_ = position;
+		}
+
 
 #pragma region エミッタの中の設定
 
@@ -319,7 +324,7 @@ namespace Ellysia {
 		//テクスチャハンドル
 		uint32_t textureHandle_ = 0;
 		//動きの種類
-		uint32_t moveType_ = NormalRelease;
+		uint32_t moveType_ = ParticleMoveType::NormalRelease;
 
 		//透明になっていくか
 		bool isToTransparent_ = true;
@@ -335,6 +340,10 @@ namespace Ellysia {
 		float velocityY_ = 1.2f;
 		//地面の高さ設定
 		float groundOffset_ = 0.0f;
+
+		//吸収し集まる場所
+		Vector3 absorbPosition_ = {};
+
 
 
 		//カメラ

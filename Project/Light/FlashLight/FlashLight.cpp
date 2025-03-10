@@ -220,10 +220,8 @@ void FlashLight::Draw(const Camera& camera) {
 }
 
 void FlashLight::Charge() {
-
 	//増える値
 	chargeIncreaseValue_ = globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_STRING_);
-
 
 	//チャージ中の時
 	if (isCharge_ == true) {
@@ -234,8 +232,6 @@ void FlashLight::Charge() {
 		chargeValue_ = 0.0f;
 	}
 
-
-
 	//攻撃できるかどうか
 	if (chargeValue_ > isAbleToAttackValue_) {
 		isAbleToAttack_ = true;
@@ -243,8 +239,6 @@ void FlashLight::Charge() {
 	else {
 		isAbleToAttack_ = false;
 	}
-
-
 }
 
 void FlashLight::ImGuiDisplay() {

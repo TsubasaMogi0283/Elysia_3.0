@@ -22,16 +22,8 @@
 using Microsoft::WRL::ComPtr;
 
 
-
-
-
 #include "ConvertLog.h"
 #include "WindowsSetup.h"
-#include "Vector4.h"
-
-
-
-
 
 
 /// <summary>
@@ -108,8 +100,8 @@ namespace Ellysia{
 
 	private:
 		//DepthStencilTexture...奥行の根幹をなすものであり、非常に大量の読み書きを高速に行う必要がある
-		//						Textureの中でも特に例外的な扱いが必要となっている
-		//						とのこと。Depthと名前の通り奥行きの情報を持っているものだね
+		//						Textureの中でも特に例外的な扱いが必要となっているとのこと。
+		//						Depthと名前の通り奥行きの情報を持っているものだね
 
 		/// <summary>
 		/// DepthのResourceを生成する
@@ -235,13 +227,9 @@ namespace Ellysia{
 		/// <summary>
 		/// Resource作成の関数化
 		/// </summary>
-		/// <param name="sizeInBytes"></param>
+		/// <param name="sizeInBytes">サイズ</param>
 		/// <returns>リソース</returns>
 		ComPtr<ID3D12Resource> CreateBufferResource(const size_t& sizeInBytes);
-
-		
-		
-
 
 		/// <summary>
 		/// 描画開始
@@ -252,8 +240,6 @@ namespace Ellysia{
 		/// 描画衆力
 		/// </summary>
 		void EndDraw();
-
-
 
 		/// <summary>
 		/// 解放
@@ -304,7 +290,7 @@ namespace Ellysia{
 		/// </summary>
 		/// <returns></returns>
 		inline SwapChain GetSwapChain() const {
-			return DirectXSetup::GetInstance()->swapChain;
+			return swapChain_;
 		}
 
 		/// <summary>
@@ -348,11 +334,10 @@ namespace Ellysia{
 		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_ = {};
 
 		//スワップチェイン
-		SwapChain swapChain = {};
+		SwapChain swapChain_ = {};
 		UINT backBufferIndex_ = {};
 		//バリア
 		D3D12_RESOURCE_BARRIER barrier_{};
-
 
 		//スワップチェーン
 		//RTVハンドル
@@ -369,9 +354,6 @@ namespace Ellysia{
 
 		//デバッグコントローラー
 		ComPtr<ID3D12Debug1> debugController_ = nullptr;
-
-
-
 
 		//FPS
 		//記録時間(FPS固定用)
