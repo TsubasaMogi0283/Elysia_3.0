@@ -198,7 +198,7 @@ namespace Ellysia {
 		/// 地面のオフセット
 		/// </summary>
 		/// <param name="offset">オフセット</param>
-		inline void SetGroundOffset(const float& offset) {
+		inline void SetGroundOffset(const float_t& offset) {
 			this->groundOffset_ = offset;
 		}
 
@@ -208,7 +208,7 @@ namespace Ellysia {
 		/// <summary>
 		/// スケールの設定
 		/// </summary>
-		/// <param name="scale">スケールサイズ</param>
+		/// <param name="scale">スケール</param>
 		inline void SetScale(const Vector3& scale) {
 			this->emitter_.transform.scale = scale;
 		}
@@ -223,7 +223,7 @@ namespace Ellysia {
 		/// <summary>
 		/// 回転の取得
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>回転</returns>
 		inline Vector3 GetRotate() const {
 			return emitter_.transform.rotate;
 		}
@@ -238,7 +238,7 @@ namespace Ellysia {
 		/// <summary>
 		/// 座標の取得
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>座標</returns>
 		inline Vector3 GetTranslate() const {
 			return emitter_.transform.translate;
 		}
@@ -247,7 +247,7 @@ namespace Ellysia {
 		/// <summary>
 		/// 発生数
 		/// </summary>
-		/// <param name="count"></param>
+		/// <param name="count">数</param>
 		inline void SetCount(const uint32_t& count) {
 			this->emitter_.count = count;
 		}
@@ -255,16 +255,16 @@ namespace Ellysia {
 		/// <summary>
 		/// 発生頻度
 		/// </summary>
-		/// <param name="frequency"></param>
-		inline void SetFrequency(const float& frequency) {
+		/// <param name="frequency">品同</param>
+		inline void SetFrequency(const float_t& frequency) {
 			this->emitter_.frequency = frequency;
 		}
 
 		/// <summary>
 		/// 発生頻度を設定
 		/// </summary>
-		/// <param name="frequencyTime"></param>
-		inline void SetFrequencyTime(const float& frequencyTime) {
+		/// <param name="frequencyTime">発生頻度</param>
+		inline void SetFrequencyTime(const float_t& frequencyTime) {
 			this->emitter_.frequencyTime = frequencyTime;
 		}
 

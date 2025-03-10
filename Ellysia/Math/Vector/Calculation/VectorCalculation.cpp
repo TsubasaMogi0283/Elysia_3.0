@@ -67,7 +67,7 @@ Vector3 VectorCalculation::Multiply(const Vector3& v1, const Vector3& v2){
 	return result;
 }
 
-Vector3 VectorCalculation::Multiply(const Vector3& v1, const float& value){
+Vector3 VectorCalculation::Multiply(const Vector3& v1, const float_t& value){
 	Vector3 result = {
 		.x = v1.x * value,
 		.y = v1.y * value,
@@ -128,7 +128,7 @@ Vector3 VectorCalculation::Normalize(const Vector3& v){
 	return result;
 }
 
-Vector2 VectorCalculation::Lerp(const Vector2& v1, const Vector2& v2, const float& t){
+Vector2 VectorCalculation::Lerp(const Vector2& v1, const Vector2& v2, const float_t& t){
 	Vector2 result = {
 		.x = (1.0f - t) * v1.x + t * v2.x,
 		.y = (1.0f - t) * v1.y + t * v2.y,
@@ -138,7 +138,7 @@ Vector2 VectorCalculation::Lerp(const Vector2& v1, const Vector2& v2, const floa
 	return result;
 }
 
-Vector3 VectorCalculation::Lerp(const Vector3& v1, const Vector3& v2, const float& t){
+Vector3 VectorCalculation::Lerp(const Vector3& v1, const Vector3& v2, const float_t& t){
 	Vector3 result = {
 		.x = (1.0f - t) * v1.x + t * v2.x,
 		.y = (1.0f - t) * v1.y + t * v2.y,
@@ -149,7 +149,7 @@ Vector3 VectorCalculation::Lerp(const Vector3& v1, const Vector3& v2, const floa
 	return result;
 }
 
-Vector3 VectorCalculation::Slerp(const Vector3& v1, const Vector3& v2, const float& t){
+Vector3 VectorCalculation::Slerp(const Vector3& v1, const Vector3& v2, const float_t& t){
 	float newT = std::clamp(t, 0.0f, 1.0f);
 
 	//正規化
@@ -235,7 +235,7 @@ Vector3 VectorCalculation::TransformCalculation(const Vector3& v, const Matrix4x
 
 }
 
-Vector3 VectorCalculation::CatmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, const float& t){
+Vector3 VectorCalculation::CatmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, const float_t& t){
 
 	
 	//半分

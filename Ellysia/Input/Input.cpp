@@ -81,7 +81,7 @@ void Ellysia::Input::Initialize() {
 
 bool Ellysia::Input::IsPushKey(const uint8_t& keyNumber) const{
 	//指定されていたキーを押していればtrueを返す
-	if (currentKey_[keyNumber]!=0) {
+	if (currentKey_[keyNumber] != 0) {
 		return true;
 	}
 	//押されていなければfalseを返す
@@ -90,7 +90,14 @@ bool Ellysia::Input::IsPushKey(const uint8_t& keyNumber) const{
 }
 
 bool Ellysia::Input::IsTriggerKey(const uint8_t& keyNumber) const{
-	if (currentKey_[keyNumber]!=0 && preKey_[keyNumber]==0) {
+	if (currentKey_[keyNumber] != 0 && preKey_[keyNumber] == 0) {
+		return true;
+	}
+	return false;
+}
+
+bool Ellysia::Input::IsReleaseKey(const uint8_t& keyNumber) const{
+	if (currentKey_[keyNumber] == 0 && preKey_[keyNumber] != 0) {
 		return true;
 	}
 	return false;
@@ -134,11 +141,11 @@ bool Ellysia::Input::IsPushButton(const int32_t& button)const {
 }
 
 
-void Ellysia::Input::SetVibration(const float& leftMotor, const float& rightMotor){
+void Ellysia::Input::SetVibration(const float_t& leftMotor, const float_t& rightMotor){
 	XINPUT_VIBRATION vibration;
 	ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 	//0から65535まで
-	const float MAX_SIZE = 65535.0f;
+	const float_t MAX_SIZE = 65535.0f;
 	vibration = {
 		.wLeftMotorSpeed = WORD(leftMotor * MAX_SIZE),
 		.wRightMotorSpeed = WORD(rightMotor * MAX_SIZE) }

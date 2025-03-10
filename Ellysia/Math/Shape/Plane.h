@@ -14,8 +14,8 @@ struct Plane {
 	//位置
 	Vector3 position;
 	//縦
-	float length;
+	float_t length;
 	//横
-	float width;
+	float_t width;
 
 };

@@ -18,13 +18,14 @@ struct PointLightData {
 	//ライトの位置
 	Vector3 position;
 	//輝度
-	float intensity;
+	float_t intensity;
 
 	//ライトに届く最大距離
-	float radius;
+	float_t radius;
 	//減衰率
-	float decay;
-	float padding[2];
+	float_t decay;
+	//埋め合わせ
+	float_t padding[2];
 
 };
 
@@ -52,11 +53,11 @@ public:
 	//位置
 	Vector3 position_ = {0.0f,0.0f,0.0f};
 	//輝度
-	float intensity_=4.0f;
+	float_t intensity_=4.0f;
 	//ライトに届く最大距離
-	float radius_=5.0f;
+	float_t radius_=5.0f;
 	//減衰率
-	float decay_=5.0f;
+	float_t decay_=5.0f;
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> bufferResource_=nullptr;

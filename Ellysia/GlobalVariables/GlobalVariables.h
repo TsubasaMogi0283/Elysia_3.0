@@ -144,7 +144,7 @@ namespace Ellysia {
 		int32_t GetIntValue(const std::string& groupName, const std::string& key);
 
 		/// <summary>
-		/// floatのあたいヲ取得
+		/// floatの値を取得
 		/// </summary>
 		/// <param name="groupName"></param>
 		/// <param name="key"></param>

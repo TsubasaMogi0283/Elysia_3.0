@@ -103,6 +103,12 @@ namespace Ellysia {
 		/// <returns>状態</returns>
 		bool IsTriggerKey(const uint8_t& keyNumber)const;
 
+		/// <summary>
+		/// Release状態を取得
+		/// </summary>
+		/// <param name="keyNumber">キー番号</param>
+		/// <returns>状態</returns>
+		bool IsReleaseKey(const uint8_t& keyNumber)const;
 
 #pragma endregion
 
@@ -144,7 +150,7 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="leftMotor">左のモーター</param>
 		/// <param name="rightMotor">右のモーター</param>
-		void SetVibration(const float& leftMotor, const float& rightMotor);
+		void SetVibration(const float_t& leftMotor, const float_t& rightMotor);
 
 		/// <summary>
 		/// 振動を止める
@@ -178,7 +184,7 @@ namespace Ellysia {
 
 		//コントローラーのボタン
 		//16の4乗
-		static const uint32_t XINPUT_GAMEPAD_NUMBER_ = 16 * 16 * 16 * 16;
+		static const uint32_t XINPUT_GAMEPAD_NUMBER_ = 16u * 16u * 16u * 16u;
 		BYTE preControllerButtons_[XUSER_MAX_COUNT][XINPUT_GAMEPAD_TRIGGER_THRESHOLD] = {};
 		BYTE currentControllerButtons_[XUSER_MAX_COUNT][XINPUT_GAMEPAD_TRIGGER_THRESHOLD] = {};
 
@@ -189,11 +195,6 @@ namespace Ellysia {
 		//マウスの入力状態を取得
 		DIMOUSESTATE currentMouse_ = {};
 		DIMOUSESTATE preMouse_ = {};
-
-
-
-
-
 
 	};
 

@@ -21,8 +21,6 @@ void Ellysia::GameManager::Initialize() {
 
 	//初期化
 	currentGamaScene_->Initialize();
-
-
 }
 
 

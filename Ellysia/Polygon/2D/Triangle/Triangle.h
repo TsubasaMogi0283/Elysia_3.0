@@ -55,7 +55,7 @@ public:
 	/// </summary>
 	/// <param name="transform"></param>
 	/// <param name="color"></param>
-	void Draw(Transform transform,Vector4 color);
+	void Draw(const Transform& transform,const Vector4& color);
 
 
 	/// <summary>

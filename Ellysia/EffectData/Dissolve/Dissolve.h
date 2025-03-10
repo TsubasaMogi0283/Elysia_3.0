@@ -30,9 +30,9 @@ private:
 		//Edgeの色
 		Vector3 edgeColor;
 		//Edgeの厚さ
-		float edgeThinkness;
+		float_t edgeThinkness;
 		//閾値
-		float threshold;
+		float_t threshold;
 	};
 
 	//データ
@@ -47,9 +47,9 @@ public:
 	//Edgeの色
 	Vector3 edgeColor;
 	//Edgeの厚さ
-	float edgeThinkness;
+	float_t edgeThinkness;
 	//閾値
-	float threshold;
+	float_t threshold;
 	//マスクのテクスチャハンドル
 	uint32_t maskTextureHandle = 0u;
 

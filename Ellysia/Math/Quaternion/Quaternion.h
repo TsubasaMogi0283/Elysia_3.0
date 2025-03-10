@@ -6,14 +6,16 @@
  * @author 茂木翼
  */
 
+#include <cmath>
+
 /// <summary>
 /// クォータニオン
 /// </summary>
 struct Quaternion {
-	float x;
-	float y;
-	float z;
-	float w;
+	float_t x;
+	float_t y;
+	float_t z;
+	float_t w;
 };
 
 

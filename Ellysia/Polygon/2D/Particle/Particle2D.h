@@ -204,7 +204,7 @@ public:
 	/// 発生頻度
 	/// </summary>
 	/// <param name="frequency"></param>
-	inline void SetFrequency(const float& frequency) {
+	inline void SetFrequency(const float_t& frequency) {
 		this->emitter_.frequency = frequency;
 	}
 
@@ -212,7 +212,7 @@ public:
 	/// 発生頻度を設定
 	/// </summary>
 	/// <param name="frequencyTime"></param>
-	inline void SetFrequencyTime(const float& frequencyTime) {
+	inline void SetFrequencyTime(const float_t& frequencyTime) {
 		this->emitter_.frequencyTime = frequencyTime;
 	}
 
@@ -300,13 +300,13 @@ private:
 
 	//エミッタの設定
 	Emitter emitter_ = {};
-	const float DELTA_TIME = 1.0f / 60.0f;
+	const float_t DELTA_TIME = 1.0f / 60.0f;
 
 
 	//鉛直投げ上げ
-	float velocityY_ = 1.2f;
+	float_t velocityY_ = 1.2f;
 	//地面の高さ設定
-	float groundOffset_ = 0.0f;
+	float_t groundOffset_ = 0.0f;
 
 
 };

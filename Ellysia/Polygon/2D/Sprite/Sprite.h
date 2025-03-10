@@ -70,7 +70,7 @@ namespace Ellysia {
 		/// 透明度の設定
 		/// </summary>
 		/// <param name="transparency">透明度</param>
-		inline void SetTransparency(const float& transparency) {
+		inline void SetTransparency(const float_t& transparency) {
 			this->color_.w = transparency;
 		}
 
@@ -94,7 +94,7 @@ namespace Ellysia {
 		/// 回転の設定
 		/// </summary>
 		/// <param name="rotate">回転</param>
-		inline void SetRotate(const float& rotate) {
+		inline void SetRotate(const float_t& rotate) {
 			this->rotate_ = rotate;
 		}
 
@@ -251,7 +251,7 @@ namespace Ellysia {
 		//S
 		Vector2 scale_ = { 1.0f,1.0f };
 		//R
-		float rotate_ = 0.0f;
+		float_t rotate_ = 0.0f;
 		//T
 		Vector2 position_ = {};
 

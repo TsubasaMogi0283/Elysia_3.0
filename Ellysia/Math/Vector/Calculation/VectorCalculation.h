@@ -72,7 +72,7 @@ namespace VectorCalculation {
 	/// <param name="v1"></param>
 	/// <param name="value"></param>
 	/// <returns></returns>
-	Vector3 Multiply(const Vector3& v1, const float& value);
+	Vector3 Multiply(const Vector3& v1, const float_t& value);
 
 
 	/// <summary>
@@ -96,7 +96,7 @@ namespace VectorCalculation {
 	/// <param name="v2"></param>
 	/// <param name="t"></param>
 	/// <returns></returns>
-	Vector2 Lerp(const Vector2& v1, const Vector2& v2, const float& t);
+	Vector2 Lerp(const Vector2& v1, const Vector2& v2, const float_t& t);
 
 	/// <summary>
 	/// 線形補間(Vector3)
@@ -105,7 +105,7 @@ namespace VectorCalculation {
 	/// <param name="v2">ベクトル2</param>
 	/// <param name="t">t</param>
 	/// <returns></returns>
-	Vector3 Lerp(const Vector3& v1, const Vector3& v2, const float& t);
+	Vector3 Lerp(const Vector3& v1, const Vector3& v2, const float_t& t);
 
 	/// <summary>
 	/// 球面線形補間
@@ -114,7 +114,7 @@ namespace VectorCalculation {
 	/// <param name="v2">ベクトル2</param>
 	/// <param name="t">t</param>
 	/// <returns></returns>
-	Vector3 Slerp(const Vector3& v1, const Vector3& v2, const float& t);
+	Vector3 Slerp(const Vector3& v1, const Vector3& v2, const float_t& t);
 
 	/// <summary>
 	/// 外積
@@ -153,7 +153,7 @@ namespace VectorCalculation {
 	/// <param name="p3"></param>
 	/// <param name="t"></param>
 	/// <returns></returns>
-	Vector3 CatmullRom(const Vector3& p0,const Vector3& p1,const Vector3& p2,const Vector3& p3,const float& t);
+	Vector3 CatmullRom(const Vector3& p0,const Vector3& p1,const Vector3& p2,const Vector3& p3,const float_t& t);
 
 
 

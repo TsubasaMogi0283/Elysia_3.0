@@ -83,7 +83,7 @@ Matrix4x4 Matrix4x4Calculation::MakeScaleMatrix(const Vector3& scale){
 	return result;
 }
 
-Matrix4x4 Matrix4x4Calculation::MakeRotateXMatrix(const float& radian){
+Matrix4x4 Matrix4x4Calculation::MakeRotateXMatrix(const float_t& radian){
 	Matrix4x4 result = {
 
 		result.m[0][0] = 1.0f,
@@ -111,7 +111,7 @@ Matrix4x4 Matrix4x4Calculation::MakeRotateXMatrix(const float& radian){
 	
 }
 
-Matrix4x4 Matrix4x4Calculation::MakeRotateYMatrix(const float& radian){
+Matrix4x4 Matrix4x4Calculation::MakeRotateYMatrix(const float_t& radian){
 	Matrix4x4 result = {
 		result.m[0][0] = std::cos(radian),
 		result.m[0][1] = 0.0f,
@@ -139,7 +139,7 @@ Matrix4x4 Matrix4x4Calculation::MakeRotateYMatrix(const float& radian){
 	return result;
 }
 
-Matrix4x4 Matrix4x4Calculation::MakeRotateZMatrix(const float& radian){
+Matrix4x4 Matrix4x4Calculation::MakeRotateZMatrix(const float_t& radian){
 	Matrix4x4 result = {
 		result.m[0][0] = std::cos(radian),
 		result.m[0][1] = std::sin(radian),
@@ -167,7 +167,7 @@ Matrix4x4 Matrix4x4Calculation::MakeRotateZMatrix(const float& radian){
 	return result;
 }
 
-Matrix4x4 Matrix4x4Calculation::MakeRotateXYZMatrix(const float& radianX, const float& radianY, const float& radianZ){
+Matrix4x4 Matrix4x4Calculation::MakeRotateXYZMatrix(const float_t& radianX, const float_t& radianY, const float_t& radianZ){
 	
 	//XYZそれぞれの行列を作る
 	Matrix4x4 rotateMatrixX = MakeRotateXMatrix(radianX);
@@ -400,7 +400,7 @@ Matrix4x4 Matrix4x4Calculation::Inverse(const Matrix4x4& m){
 	return result;
 }
 
-Matrix4x4 Matrix4x4Calculation::MakePerspectiveFovMatrix(const float& fovY, const float& aspectRatio, const float& nearClip, const float& farClip){
+Matrix4x4 Matrix4x4Calculation::MakePerspectiveFovMatrix(const float_t& fovY, const float_t& aspectRatio, const float_t& nearClip, const float_t& farClip){
 	float theta = fovY / 2.0f;
 
 	Matrix4x4 result = {
@@ -428,7 +428,7 @@ Matrix4x4 Matrix4x4Calculation::MakePerspectiveFovMatrix(const float& fovY, cons
 	return result;
 }
 
-Matrix4x4 Matrix4x4Calculation::MakeOrthographicMatrix(const float& left, const float& top, const float& right, const float& bottom, const float& nearClip, const float& farClip){
+Matrix4x4 Matrix4x4Calculation::MakeOrthographicMatrix(const float_t& left, const float_t& top, const float_t& right, const float_t& bottom, const float_t& nearClip, const float_t& farClip){
 	Matrix4x4 result = {
 		result.m[0][0] = 2.0f / (right - left),
 		result.m[0][1] = 0.0f,

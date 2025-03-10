@@ -18,8 +18,8 @@ struct ParticleInformation {
 	Transform transform;
 	Vector3  velocity;
 	Vector4 color;
-	float lifeTime;
-	float currentTime;
+	float_t lifeTime;
+	float_t currentTime;
 	bool isInvisible;
 };
 

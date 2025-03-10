@@ -114,7 +114,7 @@ public:
 	/// エネミーを取得
 	/// </summary>
 	/// <returns></returns>
-	inline std::vector<NormalEnemy*> GetEnemies() const{
+	inline std::vector<NormalEnemy*> GetNormalEnemies() const{
 		std::vector<NormalEnemy*> enemies;
 		for (const auto& enemy : enemies_) {
 			enemies.push_back(enemy.get()); 

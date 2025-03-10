@@ -198,8 +198,5 @@ namespace Ellysia {
 		//モデルハンドル
 		ModelData modelData_ = {};
 
-
-
-
 	};
 }

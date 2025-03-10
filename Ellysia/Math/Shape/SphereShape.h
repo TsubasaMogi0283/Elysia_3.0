@@ -12,5 +12,5 @@
 /// </summary>
 struct SphereShape {
 	Vector3 center;
-	float radius;
+	float_t radius;
 };

@@ -190,7 +190,7 @@ private:
 
 
 	//アニメーションを再生するときに使う時間
-	float animationTime_ = 0.0f;
+	float_t animationTime_ = 0.0f;
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;

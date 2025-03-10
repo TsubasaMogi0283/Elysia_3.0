@@ -35,7 +35,6 @@ public:
 	void Initialize();
 
 
-	//左上、右上、左下、右下
 
 	/// <summary>
 	/// 描画
@@ -47,12 +46,6 @@ public:
 	/// <param name="color"></param>
 	void Draw(SphereShape sphereCondtion, Transform transform,Matrix4x4 viewMatrix,Matrix4x4 projectionMatrix, Vector4 color);
 
-
-	/// <summary>
-	/// 解放
-	/// </summary>
-	void Release();
-
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -60,16 +53,10 @@ public:
 
 
 private:
-
-	
-
 	/// <summary>
 	/// 頂点バッファビューを作成する
 	/// </summary>
 	void GenerateVertexBufferView();
-
-
-
 
 private:
 
@@ -77,6 +64,7 @@ private:
 	Ellysia::DirectXSetup* directXSetup_ = nullptr;
 
 
+private:
 
 	//関数用
 	D3D12_HEAP_PROPERTIES uploadHeapProperties_{};
@@ -91,8 +79,6 @@ private:
 	VertexData* vertexDataSphere_ = nullptr;
 
 
-
-
 	//マテリアル用のリソースを作る
 	ComPtr<ID3D12Resource> materialResourceSphere_ = nullptr;
 	MaterialData* materialData_ = nullptr;
@@ -105,10 +91,6 @@ private:
 	//Lighting用
 	ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
 	DirectionalLightData* directionalLightData_ = nullptr;
-
-
-
-
 
 	//分割数
 	const int32_t SUBDIVISION_ = 16;

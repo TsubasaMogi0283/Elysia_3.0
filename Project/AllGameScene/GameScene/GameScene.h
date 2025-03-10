@@ -218,6 +218,7 @@ private:
 
 	//プレイヤー
 	std::unique_ptr<Player> player_ = nullptr;
+	bool isReleaseAttack_ = false;
 	//ライトの幅
 	float_t lightSideTheta_ = 0.1f;
 	//角度
@@ -228,15 +229,10 @@ private:
 	uint32_t bTriggerTime_ = 0u;
 	bool isBTrigger_ = false;
 
-	
-
 	//敵管理
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
 	//強い敵と接触したかどうか
 	bool isTouchStrongEnemy_ = false;
-
-
-	
 
 	//コリジョン管理
 	std::unique_ptr<Ellysia::CollisionManager> collisionManager_ = nullptr;

@@ -48,21 +48,21 @@ namespace Matrix4x4Calculation {
 	/// </summary>
 	/// <param name="radian"></param>
 	/// <returns></returns>
-	Matrix4x4 MakeRotateXMatrix(const float& radian);
+	Matrix4x4 MakeRotateXMatrix(const float_t& radian);
 
 	/// <summary>
 	/// Y回転
 	/// </summary>
 	/// <param name="radian"></param>
 	/// <returns></returns>
-	Matrix4x4 MakeRotateYMatrix(const float& radian);
+	Matrix4x4 MakeRotateYMatrix(const float_t& radian);
 
 	/// <summary>
 	/// Z回転
 	/// </summary>
 	/// <param name="radian"></param>
 	/// <returns></returns>
-	Matrix4x4 MakeRotateZMatrix(const float& radian);
+	Matrix4x4 MakeRotateZMatrix(const float_t& radian);
 
 #pragma endregion
 
@@ -73,7 +73,7 @@ namespace Matrix4x4Calculation {
 	/// <param name="radianY"></param>
 	/// <param name="radianZ"></param>
 	/// <returns></returns>
-	Matrix4x4 MakeRotateXYZMatrix(const float& radianX, const float& radianY, const float& radianZ);
+	Matrix4x4 MakeRotateXYZMatrix(const float_t& radianX, const float_t& radianY, const float_t& radianZ);
 
 
 	/// <summary>
@@ -110,7 +110,7 @@ namespace Matrix4x4Calculation {
 	/// <param name="nearClip"></param>
 	/// <param name="farClip"></param>
 	/// <returns></returns>
-	Matrix4x4 MakePerspectiveFovMatrix(const float& fovY, const float& aspectRatio, const float& nearClip, const float& farClip);
+	Matrix4x4 MakePerspectiveFovMatrix(const float_t& fovY, const float_t& aspectRatio, const float_t& nearClip, const float_t& farClip);
 	
 	/// <summary>
 	/// 正射影行列
@@ -122,7 +122,7 @@ namespace Matrix4x4Calculation {
 	/// <param name="neaClip"></param>
 	/// <param name="farClip"></param>
 	/// <returns></returns>
-	Matrix4x4 MakeOrthographicMatrix(const float& left, const float& top, const float& right, const float& bottom, const float& neaClip, const float& farClip);
+	Matrix4x4 MakeOrthographicMatrix(const float_t& left, const float_t& top, const float_t& right, const float_t& bottom, const float_t& neaClip, const float_t& farClip);
 
 	/// <summary>
 	/// 転置行列

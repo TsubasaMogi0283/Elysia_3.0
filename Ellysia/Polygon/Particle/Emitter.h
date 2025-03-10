@@ -9,7 +9,7 @@ struct Emitter {
 	//発生数
 	uint32_t count;
 	//発生頻度
-	float frequency;
+	float_t frequency;
 	//頻度用時刻
-	float frequencyTime;
+	float_t frequencyTime;
 };

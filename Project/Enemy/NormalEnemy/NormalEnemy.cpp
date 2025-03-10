@@ -185,9 +185,12 @@ void NormalEnemy::Damaged() {
 
 	//懐中電灯用の当たり判定に当たっていたら色が赤に変わっていくよ
 	if (enemyFlashLightCollision_->GetIsTouched() == true) {
-		const float COLOR_CHANGE_INTERVAL = 0.005f;
-		material_.color_.y -= COLOR_CHANGE_INTERVAL;
-		material_.color_.z -= COLOR_CHANGE_INTERVAL;
+		//const float COLOR_CHANGE_INTERVAL = 0.005f;
+		//material_.color_.y -= COLOR_CHANGE_INTERVAL;
+		//material_.color_.z -= COLOR_CHANGE_INTERVAL;
+
+		material_.color_.y = 0.0f;
+		material_.color_.z = 0.0f;
 
 		//生存している時だけ振動
 		if (isAlive_ == true) {
@@ -207,8 +210,8 @@ void NormalEnemy::Damaged() {
 	}
 
 	//0になったら絶命
-	if (material_.color_.y < 0.0f &&
-		material_.color_.z < 0.0f) {
+	if (material_.color_.y <= 0.0f &&
+		material_.color_.z <= 0.0f) {
 		isAlive_ = false;
 	}
 }

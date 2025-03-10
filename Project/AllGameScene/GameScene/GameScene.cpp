@@ -307,22 +307,19 @@ void GameScene::ObjectCollision() {
 			}
 		}
 	}
-
 	//開いた動作
-	if (isOpenTreasureBox_==true) {
+	else {
 		//初期回転
-		Vector3 initialRotate= levelDataManager_->GetInitialRotate(levelHandle_, "TreasureBoxLid");
+		Vector3 initialRotate = levelDataManager_->GetInitialRotate(levelHandle_, "TreasureBoxLid");
 		//回転
-		Vector3 rotate = { .x = -std::numbers::pi_v<float>/3.0f,.y = 0.0f,.z = 0.0f };
+		Vector3 rotate = { .x = -std::numbers::pi_v<float> / 3.0f,.y = 0.0f,.z = 0.0f };
 		//再設定
-		levelDataManager_->SetRotate(levelHandle_, "TreasureBoxLid", VectorCalculation::Add(initialRotate,rotate));
+		levelDataManager_->SetRotate(levelHandle_, "TreasureBoxLid", VectorCalculation::Add(initialRotate, rotate));
+
 	}
-	
 
 	//宝箱を開けたかどうかの設定
 	keyManager_->SetIsOpenTreasureBox(isOpenTreasureBox_);
-
-
 
 	Vector3 initialPosition = levelDataManager_->GetInitialTranslate(levelHandle_, "CloseFenceInCemetery");
 
@@ -406,10 +403,13 @@ void GameScene::RegisterToCollisionManager() {
 
 	//エネミーをコリジョンマネージャーに追加
 	//通常の敵のリストの取得
-	std::vector<NormalEnemy*> enemyes = enemyManager_->GetEnemies();
+	std::vector<NormalEnemy*> enemyes = enemyManager_->GetNormalEnemies();
 	for (const NormalEnemy* enemy : enemyes) {
 		//懐中電灯に対して
-		collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+		if (isReleaseAttack_==true) {
+			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+		}
+		
 		//攻撃
 		if (enemy->GetIsAttack() == true) {
 			//敵の攻撃
@@ -490,7 +490,7 @@ void GameScene::ProcessVigntte(){
 
 void GameScene::DisplayImGui() {
 	ImGui::Begin("ゲームシーン");
-
+	ImGui::Checkbox("状態", &isReleaseAttack_);
 	if (ImGui::TreeNode("カメラ")==true) {
 		ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
 		ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
@@ -692,6 +692,15 @@ void GameScene::PlayerMove() {
 	}
 	//チャージ状態を設定
 	player_->GetFlashLight()->SetIsCharge(isCharge);
+
+
+	if (input_->IsReleaseKey(DIK_RETURN) == true) {
+		isReleaseAttack_ = true;
+	}
+	else {
+		isReleaseAttack_ = false;
+	}
+
 
 }
 

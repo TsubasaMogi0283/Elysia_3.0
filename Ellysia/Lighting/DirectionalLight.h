@@ -18,7 +18,7 @@ struct DirectionalLightData {
 	//ライトの向き
 	Vector3 direction;
 	//輝度
-	float intensity;
+	float_t intensity;
 };
 
 
@@ -44,7 +44,7 @@ public:
 	//ライトの向き
 	Vector3 direction = {.x = 0.0f,.y = -1.0f,.z = 0.0f};
 	//輝度
-	float intensity=5.0f;
+	float_t intensity=5.0f;
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> resource = nullptr;

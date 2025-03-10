@@ -80,8 +80,8 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="spotLight"></param>
+	/// <param name="camera">カメラ</param>
+	/// <param name="spotLight">スポットライト</param>
 	void Draw(const Camera& camera, const SpotLight& spotLight)override;
 
 	/// <summary>
@@ -172,7 +172,7 @@ private:
 private:
 
 	//幅
-	const float RADIUS_ = 1.0f;
+	const float_t RADIUS_ = 1.0f;
 	//幅(Vector3)
 	const Vector3 RADIUS_INTERVAL_ = { .x = RADIUS_,.y = RADIUS_,.z = RADIUS_ };
 	//0に戻る時間
@@ -188,7 +188,7 @@ private:
 	uint32_t debugModelHandle = 0;
 
 	//振動のオフセット
-	float shakeOffset_ = 0.05f;
+	float_t shakeOffset_ = 0.05f;
 	bool isShake_ = false;
 
 	
