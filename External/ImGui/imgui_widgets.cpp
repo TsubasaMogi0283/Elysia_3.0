@@ -810,7 +810,7 @@ bool ImGui::CloseButton(ImGuiID id, const ImVec2& pos)
     if (area_to_visible_ratio < 1.5f)
         bb_interact.Expand(ImTrunc(bb_interact.GetSize() * -0.25f));
 
-    // Tweak 2: We intentionally allow interaction when clipped so that a mechanical Alt,Right,Activate sequence can always close a window.
+    // Tweak 2: We intentionally allow interaction when clipped so that a mechanical Alt,RIGHT_,Activate sequence can always close a window.
     // (this isn't the common behavior of buttons, but it doesn't affect the user because navigation tends to keep items visible in scrolling layer).
     bool is_clipped = !ItemAdd(bb_interact, id);
 
@@ -1787,7 +1787,7 @@ bool ImGui::BeginComboPopup(ImGuiID popup_id, const ImRect& bb, ImGuiComboFlags 
         {
             // Always override 'AutoPosLastDirection' to not leave a chance for a past value to affect us.
             ImVec2 size_expected = CalcWindowNextAutoFitSize(popup_window);
-            popup_window->AutoPosLastDirection = (flags & ImGuiComboFlags_PopupAlignLeft) ? ImGuiDir_Left : ImGuiDir_Down; // Left = "Below, Toward Left", Down = "Below, Toward Right (default)"
+            popup_window->AutoPosLastDirection = (flags & ImGuiComboFlags_PopupAlignLeft) ? ImGuiDir_Left : ImGuiDir_Down; // LEFT_ = "Below, Toward LEFT_", Down = "Below, Toward RIGHT_ (default)"
             ImRect r_outer = GetPopupAllowedExtentRect(popup_window);
             ImVec2 pos = FindBestWindowPosForPopupEx(bb.GetBL(), size_expected, &popup_window->AutoPosLastDirection, r_outer, bb, ImGuiPopupPositionPolicy_ComboBox);
             SetNextWindowPos(pos);
@@ -4355,7 +4355,7 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
             if ((multiclick_count % 2) == 0)
             {
                 // Double-click: Select word
-                // We always use the "Mac" word advance for double-click select vs CTRL+Right which use the platform dependent variant:
+                // We always use the "Mac" word advance for double-click select vs CTRL+RIGHT_ which use the platform dependent variant:
                 // FIXME: There are likely many ways to improve this behavior, but there's no "right" behavior (depends on use-case, software, OS)
                 const bool is_bol = (state->Stb.cursor == 0) || ImStb::STB_TEXTEDIT_GETCHAR(state, state->Stb.cursor - 1) == '\n';
                 if (STB_TEXT_HAS_SELECTION(&state->Stb) || !is_bol)
@@ -5121,7 +5121,7 @@ static void ColorEditRestoreHS(const float* col, float* H, float* S, float* V)
 
 // Edit colors components (each component in 0.0f..1.0f range).
 // See enum ImGuiColorEditFlags_ for available options. e.g. Only access 3 floats if ImGuiColorEditFlags_NoAlpha flag is set.
-// With typical options: Left-click on color square to open color picker. Right-click to open option menu. CTRL-Click over input fields to edit them and TAB to go to next item.
+// With typical options: LEFT_-click on color square to open color picker. RIGHT_-click to open option menu. CTRL-Click over input fields to edit them and TAB to go to next item.
 bool ImGui::ColorEdit4(const char* label, float col[4], ImGuiColorEditFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
@@ -6401,7 +6401,7 @@ void ImGui::TreePop()
     window->DC.TreeDepth--;
     ImU32 tree_depth_mask = (1 << window->DC.TreeDepth);
 
-    // Handle Left arrow to move to parent tree node (when ImGuiTreeNodeFlags_NavLeftJumpsBackHere is enabled)
+    // Handle LEFT_ arrow to move to parent tree node (when ImGuiTreeNodeFlags_NavLeftJumpsBackHere is enabled)
     if (window->DC.TreeJumpToParentOnPopMask & tree_depth_mask) // Only set during request
     {
         ImGuiNavTreeNodeData* nav_tree_node_data = &g.NavTreeNodeStack.back();
@@ -7528,7 +7528,7 @@ bool ImGui::BeginMenuEx(const char* label, const char* icon, bool enabled)
             want_open = true;
         else if (!menu_is_open && hovered && !moving_toward_child_menu) // Hover to open
             want_open = true;
-        if (g.NavId == id && g.NavMoveDir == ImGuiDir_Right) // Nav-Right to open
+        if (g.NavId == id && g.NavMoveDir == ImGuiDir_Right) // Nav-RIGHT_ to open
         {
             want_open = true;
             NavMoveRequestCancel();

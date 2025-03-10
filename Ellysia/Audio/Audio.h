@@ -192,14 +192,14 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="ハンドル名"></param>
 		/// <param name="始まる位置(秒)"></param>
-		void AfterLoopPlayWave(const uint32_t& audioHandle, float second);
+		void AfterLoopPlayWave(const uint32_t& audioHandle, const float_t& second);
 
 		/// <summary>
 		/// 再生(前半ループ)
 		/// </summary>
 		/// <param name="ハンドル名"></param>
 		/// <param name="ループ間の長さ(秒)"></param>
-		void BeforeLoopPlayWave(const uint32_t& audioHandle, float lengthSecond);
+		void BeforeLoopPlayWave(const uint32_t& audioHandle, const float_t& lengthSecond);
 
 
 		/// <summary>
@@ -208,7 +208,7 @@ namespace Ellysia {
 		/// <param name="ハンドル名"></param>
 		/// <param name="開始位置(秒)"></param>
 		/// <param name="ループの長さ(秒)"></param>
-		void PartlyLoopPlayWave(const uint32_t& audioHandle, float start, float lengthSecond);
+		void PartlyLoopPlayWave(const uint32_t& audioHandle, const float_t& start, const float_t& lengthSecond);
 
 
 #pragma endregion
@@ -218,7 +218,7 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="ハンドル名"></param>
 		/// <param name="音量"></param>
-		void ChangeVolume(const uint32_t& audioHandle, float volume);
+		void ChangeVolume(const uint32_t& audioHandle, const float_t& volume);
 
 #pragma region ピッチ系
 
@@ -227,13 +227,13 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="ハンドル名"></param>
 		/// <param name="値"></param>
-		void ChangeFrequency(const uint32_t& audioHandle, float ratio);
+		void ChangeFrequency(const uint32_t& audioHandle, float_t& ratio);
 
 
 		/// <summary>
 		/// ピッチの設定(段階的)
 		/// </summary>
-		void ChangePitch(const uint32_t& audioHandle, int32_t scale);
+		void ChangePitch(const uint32_t& audioHandle, const int32_t& scale);
 
 
 #pragma endregion
@@ -243,7 +243,7 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="ハンドル名"></param>
 		/// <param name="Panの値"></param>
-		void SetPan(const uint32_t& audioHandle, float_t pan);
+		void SetPan(const uint32_t& audioHandle, const float_t& pan);
 
 
 #pragma region フィルター
@@ -255,7 +255,7 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="ハンドル名"></param>
 		/// <param name="CutOffの値"></param>
-		void SetLowPassFilter(const uint32_t& audioHandle, float cutOff);
+		void SetLowPassFilter(const uint32_t& audioHandle, float_t& cutOff);
 
 		/// <summary>
 		/// ローパスフィルター(Qあり)
@@ -263,7 +263,7 @@ namespace Ellysia {
 		/// <param name="ハンドル名"></param>
 		/// <param name="CutOffの値"></param>
 		/// <param name="oneOverQ"></param>
-		void SetLowPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ);
+		void SetLowPassFilter(const uint32_t& audioHandle, float_t& cutOff, const float_t& oneOverQ);
 
 
 
@@ -272,7 +272,7 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="ハンドル名"></param>
 		/// <param name="CutOffの値"></param>
-		void SetHighPassFilter(const uint32_t& audioHandlee, float cutOff);
+		void SetHighPassFilter(const uint32_t& audioHandlee, float_t& cutOff);
 
 		/// <summary>
 		/// ハイパスフィルター(Qあり)
@@ -280,21 +280,21 @@ namespace Ellysia {
 		/// <param name="ハンドル名"></param>
 		/// <param name="CutOffの値"></param>
 		/// <param name="oneOverQ"></param>
-		void SetHighPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ);
+		void SetHighPassFilter(const uint32_t& audioHandle, float_t& cutOff, const float_t& oneOverQ);
 
 		/// <summary>
 		/// バンドパス
 		/// </summary>
 		/// <param name="ハンドル名"></param>
 		/// <param name="CutOffの値"></param>
-		void SetBandPassFilter(const uint32_t& audioHandle, float cutOff);
+		void SetBandPassFilter(const uint32_t& audioHandle, float_t& cutOff);
 
 		/// <summary>
 		/// バンドパス(Qあり)
 		/// </summary>
 		/// <param name="ハンドル名"></param>
 		/// <param name="CutOffの値"></param>
-		void SetBandPassFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ);
+		void SetBandPassFilter(const uint32_t& audioHandle, float_t& cutOff, const float_t& oneOverQ);
 
 
 		/// <summary>
@@ -302,14 +302,15 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="ハンドル名"></param>
 		/// <param name="CutOffの値"></param>
-		void SetNotchFilter(const uint32_t& audioHandle, float cutOff);
+		void SetNotchFilter(const uint32_t& audioHandle, float_t& cutOff);
 
 		/// <summary>
 		/// ノッチフィルター
 		/// </summary>
-		/// <param name="ハンドル名"></param>
-		/// <param name="CutOffの値"></param>
-		void SetNotchFilter(const uint32_t& audioHandle, float cutOff, float oneOverQ);
+		/// <param name="audioHandle">ハンドル</param>
+		/// <param name="cutOff">カットオフ</param>
+		/// <param name="oneOverQ">Q</param>
+		void SetNotchFilter(const uint32_t& audioHandle, float_t& cutOff, const float_t& oneOverQ);
 
 #pragma endregion
 
@@ -317,18 +318,18 @@ namespace Ellysia {
 		/// サブミックスボイスの作成
 		/// </summary>
 		/// <param name="channel"></param>
-		void CreateSubmixVoice(uint32_t channel);
+		void CreateSubmixVoice(const uint32_t& channel);
 
 		/// <summary>
 		/// 指定したチャンネルに送る
 		/// </summary>
 		/// <param name="audioHandle"></param>
 		/// <param name="channelNumber"></param>
-		void SendChannels(const uint32_t& audioHandle, uint32_t channelNumber);
+		void SendChannels(const uint32_t& audioHandle, const uint32_t& channelNumber);
 
 		//リバーブ
 		//まだ未完成だから使わないでね
-		void CreateReverb(const uint32_t& audioHandle, uint32_t channel);
+		void CreateReverb(const uint32_t& audioHandle, const uint32_t& channel);
 
 		/// <summary>
 		/// エフェクトの効果を無効にする
@@ -355,7 +356,7 @@ namespace Ellysia {
 		/// </summary>
 		/// <param name="handle"></param>
 		/// <returns></returns>
-		inline std::string GetAudioInformationKey(uint32_t handle) {
+		inline std::string GetAudioInformationKey(const uint32_t& handle) {
 			for (const auto& [filePath, modelInfo] : audioInformation_) {
 				if (modelInfo.handle == handle) {
 					return filePath;
@@ -367,48 +368,11 @@ namespace Ellysia {
 		}
 
 	private:
-		//IXAudio2はCOMオブジェクトなのでComPtr管理
-		ComPtr<IXAudio2> xAudio2_ = nullptr;
-		//マスターボイス
-		//最終的にここでまとめるよ(スピーカーみたいな感じだね)
-		IXAudio2MasteringVoice* masterVoice_ = nullptr;
-
-
-		static uint32_t index_;
-
-		//Panに必要な変数
-		DWORD dwChannelMask_ = {};
-		float outputMatrix_[8] = {};
-
-
-
-
-		//Reverb
-		IUnknown* pXAPO_ = nullptr;
-
-
-		//3Dオーディオ
-		X3DAUDIO_HANDLE x3DInstance_ = {};
-		//リスナー
-		X3DAUDIO_LISTENER listener_ = {};
-		//エミッタ
-		X3DAUDIO_EMITTER emitter_ = {};
-
-
-		//オーディオに関するものが入っている
-		std::map<std::string, AudioInformation>audioInformation_{};
-
-		//サブミックスボイス
-		static const int SUBMIXVOICE_AMOUNT_ = 64;
-		std::array<IXAudio2SubmixVoice*, SUBMIXVOICE_AMOUNT_> submixVoice_{};
-
-
-	private:
 
 		//自分のエンジンではA4は442Hz基準にする
 		//もちろん12段階で1オクターブ
-		static const int SCALE_AMOUNT_ = 13;
-		const float SEMITONE_RATIO_[SCALE_AMOUNT_] = {
+		static const int32_t SCALE_AMOUNT_ = 13;
+		const float_t SEMITONE_RATIO_[SCALE_AMOUNT_] = {
 			1.00000f, //C4
 			1.05946f, //C#4
 			1.12246f, //D4
@@ -425,7 +389,7 @@ namespace Ellysia {
 		};
 
 		//低い方
-		const float MINUS_SEMITONE_RATION[SCALE_AMOUNT_] = {
+		const float_t MINUS_SEMITONE_RATION[SCALE_AMOUNT_] = {
 			1.00000f,	//C4
 			0.94387f,	//B3
 			0.89090f,	//A3#
@@ -442,7 +406,40 @@ namespace Ellysia {
 		};
 
 
+
+	private:
+		//IXAudio2はCOMオブジェクトなのでComPtr管理
+		ComPtr<IXAudio2> xAudio2_ = nullptr;
+		//マスターボイス
+		//最終的にここでまとめるよ(スピーカーみたいな感じだね)
+		IXAudio2MasteringVoice* masterVoice_ = nullptr;
+
+
+		static uint32_t index_;
+
+		//Panに必要な変数
+		DWORD dwChannelMask_ = {};
+		float_t outputMatrix_[8] = {};
+
+		//Reverb
+		IUnknown* pXAPO_ = nullptr;
+
+		//3Dオーディオ
+		X3DAUDIO_HANDLE x3DInstance_ = {};
+		//リスナー
+		X3DAUDIO_LISTENER listener_ = {};
+		//エミッタ
+		X3DAUDIO_EMITTER emitter_ = {};
+
+		//オーディオに関するものが入っている
+		std::map<std::string, AudioInformation>audioInformation_{};
+
+		//サブミックスボイス
+		static const uint32_t SUBMIXVOICE_AMOUNT_ = 64u;
+		std::array<IXAudio2SubmixVoice*, SUBMIXVOICE_AMOUNT_> submixVoice_{};
+
 	};
+
 }
 
 
