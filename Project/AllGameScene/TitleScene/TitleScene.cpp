@@ -120,27 +120,11 @@ void TitleScene::Update(Ellysia::GameManager* gameManager){
 	}
 	
 
-	//コントローラーのBを押すと高速点滅
-	//Bトリガーの反応しない時間
-	const uint32_t NO_REACT_TIME = 0u;
-	//Bトリガーの反応する時間
-	const uint32_t REACT_TIME = 1u;
 
-
-	//Bボタンを押したとき
-	if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-		bTriggerTime_ += INCREASE_VALUE;
-	}
-	//押していない
-	if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-		bTriggerTime_ = NO_REACT_TIME;
-	}
-
-	//反応
-	if (bTriggerTime_ == REACT_TIME) {
+	//Bボタンを押したら高速点滅
+	if (input_->IsTriggerButton(XINPUT_GAMEPAD_B)==true) {
 		isFastFlash_ = true;
 	}
-
 	//スペースを押したら高速点滅
 	if (input_->IsPushKey(DIK_SPACE) == true) {
 		//高速点滅

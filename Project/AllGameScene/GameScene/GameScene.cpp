@@ -288,6 +288,9 @@ void GameScene::ObjectCollision() {
 				openTreasureBoxTime_ = B_NO_REACT_TIME_;
 			}
 
+			
+
+
 			if (openTreasureBoxTime_ == B_REACT_TIME_) {
 				//脱出
 				isOpenTreasureBox_ = true;
@@ -479,6 +482,7 @@ void GameScene::ProcessVigntte(){
 }
 
 void GameScene::DisplayImGui() {
+
 	ImGui::Begin("ゲームシーン");
 	ImGui::Checkbox("状態", &isReleaseAttack_);
 

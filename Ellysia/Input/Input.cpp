@@ -167,11 +167,7 @@ void Ellysia::Input::Update() {
 
 	//コントローラー
 	
-	//状態を取得
-	if (XInputGetState(0, &currentState_) != ERROR_SUCCESS) {
-		//コントローラーが接続されていない場合
-		ZeroMemory(&currentState_, sizeof(XINPUT_STATE));
-	}
+	
 
 	//再初期化
 	//接続されたらまたデバイスを作り直す
@@ -194,5 +190,9 @@ void Ellysia::Input::Update() {
 		}
 
 	}
-	
+	//状態を取得
+	if (XInputGetState(0, &currentState_) != ERROR_SUCCESS) {
+		//コントローラーが接続されていない場合
+		ZeroMemory(&currentState_, sizeof(XINPUT_STATE));
+	}
 }
