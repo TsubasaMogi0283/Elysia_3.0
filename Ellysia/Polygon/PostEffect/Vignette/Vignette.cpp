@@ -1,6 +1,7 @@
 #include "Vignette.h"
 #include <imgui.h>
 
+#include "Vector4.h"
 #include "PipelineManager.h"
 #include "TextureManager.h"
 #include "SrvManager.h"

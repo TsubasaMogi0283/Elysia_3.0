@@ -35,14 +35,11 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	assert(player_!=nullptr);
 	assert(levelDataManager_ != nullptr);
 
-
 	//モデルハンドルを代入
 	//通常
 	normalEnemyModelHandle_ = normalEnemyModel;
 	//強敵
 	strongEnemyModelHandle_ = strongEnemyModel;
-
-
 
 	//ファイルを開ける
 	std::ifstream file;

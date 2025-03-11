@@ -1,6 +1,7 @@
 #include "SepiaScale.h"
 #include <imgui.h>
 
+#include "Vector4.h"
 #include "PipelineManager.h"
 #include "SrvManager.h"
 #include "RtvManager.h"
@@ -19,7 +20,7 @@ Ellysia::SepiaScale::SepiaScale(){
 }
 
 void Ellysia::SepiaScale::Initialize() {
-	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 1.0f,0.0f,0.0f,1.0f };
+	const Vector4 RENDER_TARGET_CLEAR_VALUE = {.x = 1.0f,.y = 0.0f,.z = 0.0f,.w = 1.0f };
 	//リソースの生成
 	rtvResource_ = rtvManager_->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
 

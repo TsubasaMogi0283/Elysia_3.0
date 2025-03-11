@@ -9,6 +9,8 @@
 
 #include <random>
 #include <list>
+#include <string>
+#include <map>
 
 #include "Camera.h"
 #include "Particle.h"
@@ -199,7 +201,7 @@ namespace Ellysia {
 		}
 
 		/// <summary>
-		/// 吸収し集まる座標をせっていする
+		/// 吸収し集まる座標を設定する
 		/// </summary>
 		/// <param name="position">座標</param>
 		inline void SetAbsorbPosition(const Vector3& position) {
@@ -289,37 +291,46 @@ namespace Ellysia {
 		//パイプライン管理クラス
 		Ellysia::PipelineManager* pipelineManager_ = nullptr;
 
-	private:
 
+
+	private:
+		//時間変化
+		const float DELTA_TIME = 1.0f / 60.0f;
+	private:
 
 		//頂点リソースを作る
 		ComPtr<ID3D12Resource> vertexResource_ = nullptr;
 		//頂点バッファビューを作成する
-		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_={};
 		//頂点データ
-		std::vector<VertexData> vertices_{};
+		std::vector<VertexData> vertices_={};
 
+		//カメラ
+		//リソース
+		ComPtr<ID3D12Resource>cameraResource_ = nullptr;
+		//カメラデータ
+		Vector3* cameraPositionData_ = {};
+		//座標
+		Vector3 cameraPosition_ = {};
 
 		//インスタンス
 		ComPtr<ID3D12Resource>instancingResource_ = nullptr;
-
 		//最大数
 		const uint32_t MAX_INSTANCE_NUMBER_ = 100u;
 		//描画すべきインスタンス数
 		uint32_t numInstance_ = 0u;
 		//インスタンスのインデックス
 		int instancingIndex_ = 0;
-
-		//一度だけ出すかどうか
-		bool isReleaseOnceMode_ = true;
-		//出し終えたかどうか
-		bool isReeasedOnce_ = false;
-
+		//インスタンシング用のSRV管理変数
+		static std::map<uint32_t, uint32_t> instancingManagiment_;
+		
 		//パーティクル
 		std::list<ParticleInformation>particles_;
 		//パーティクルデータ
 		ParticleForGPU* instancingData_ = nullptr;
 
+		//エミッタの設定
+		Emitter emitter_ = {};
 
 		//テクスチャハンドル
 		uint32_t textureHandle_ = 0;
@@ -330,29 +341,22 @@ namespace Ellysia {
 		bool isToTransparent_ = true;
 		//全て透明になったかどうか
 		bool isAllInvisible_ = false;
-
-		//エミッタの設定
-		Emitter emitter_ = {};
-		const float DELTA_TIME = 1.0f / 60.0f;
-
-
+		
 		//鉛直投げ上げ
 		float velocityY_ = 1.2f;
 		//地面の高さ設定
 		float groundOffset_ = 0.0f;
 
+		//一度だけ出すかどうか
+		bool isReleaseOnceMode_ = true;
+		//出し終えたかどうか
+		bool isReeasedOnce_ = false;
+
+
 		//吸収し集まる場所
 		Vector3 absorbPosition_ = {};
 
-
-
-		//カメラ
-		//リソース
-		ComPtr<ID3D12Resource>cameraResource_ = nullptr;
-		//カメラデータ
-		Vector3* cameraPositionData_ = {};
-		//座標
-		Vector3 cameraPosition_ = {};
+		
 	};
 
 };

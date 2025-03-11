@@ -1,6 +1,7 @@
 #include "RtvManager.h"
-#include "WindowsSetup.h"
 
+#include "WindowsSetup.h"
+#include "Vector4.h"
 
 D3D12_CPU_DESCRIPTOR_HANDLE Ellysia::RtvManager::rtvHandles_[RtvManager::RTV_DESCRIPTOR_SIZE_] = {};
 
@@ -21,13 +22,13 @@ ComPtr<ID3D12Resource> Ellysia::RtvManager::CreateRenderTextureResource(const DX
 	//Textureの高さ
 	resourceDesc.Height = height;
 	//mipmapの数
-	resourceDesc.MipLevels = 1;
+	resourceDesc.MipLevels = 1u;
 	//奥行 or 配列Textureの配列数
-	resourceDesc.DepthOrArraySize = 1;
+	resourceDesc.DepthOrArraySize = 1u;
 	//利用可能なフォーマット
 	resourceDesc.Format = format;
 	//サンプリングカウント。1固定
-	resourceDesc.SampleDesc.Count = 1;
+	resourceDesc.SampleDesc.Count = 1u;
 	//2次元
 	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 	//RenderTargetとして利用可能にする
@@ -40,9 +41,6 @@ ComPtr<ID3D12Resource> Ellysia::RtvManager::CreateRenderTextureResource(const DX
 	D3D12_HEAP_PROPERTIES heapProperties{};
 	//VRAM上に作る
 	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
-
-
-
 
 	//クリア設定
 	D3D12_CLEAR_VALUE clearValue{};

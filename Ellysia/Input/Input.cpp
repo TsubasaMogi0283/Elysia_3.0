@@ -1,32 +1,29 @@
 #include "Input.h"
+#include "WindowsSetup.h"
 
+Ellysia::Input::Input() {
+	//インスタンスの取得
+	//ウィンドウズクラス
+	windowsSetup_ = WindowsSetup::GetInstance();
+}
 
-//シングルインスタンス
 Ellysia::Input* Ellysia::Input::GetInstance() {
 	static Input instance;
 	return &instance;
 }
 
-
-
 void Ellysia::Input::Initialize() {
 	
-
-	
-
 	//DirectInputオブジェクトの生成
-	//これは一つだけで良い
 	HRESULT hr = DirectInput8Create(
-		WindowsSetup::GetInstance()->GetHInstance(),
+		windowsSetup_->GetHInstance(),
 		DIRECTINPUT_VERSION, 
 		IID_IDirectInput8, 
 		(void**)&directInput_, nullptr);
-
 	assert(SUCCEEDED(hr));
 
 
 	//キーボードデバイスの生成
-	//GUID_Joystick,GUID_SysMouseを指定して、コントローラーとマウスも使えるよ
 	hr = directInput_->CreateDevice(GUID_SysKeyboard, &keyboard_, NULL);
 	assert(SUCCEEDED(hr));
 	//マウスデバイスの生成
@@ -40,8 +37,6 @@ void Ellysia::Input::Initialize() {
 		joyStickDevice_ = nullptr;
 	}
 
-
-	
 	//入力データの形式のセット
 	//標準形式
 	hr = keyboard_->SetDataFormat(&c_dfDIKeyboard);
@@ -63,9 +58,9 @@ void Ellysia::Input::Initialize() {
 	//DISCL_NONEXCLUSIVE...デバイスをこのアプリだけで専有しない
 	//DISCL_NOWINKEY...Windowsキーを無効にする
 
-	hr = keyboard_->SetCooperativeLevel(WindowsSetup::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	hr = keyboard_->SetCooperativeLevel(windowsSetup_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(hr));
-	hr = mouseDevice_->SetCooperativeLevel(WindowsSetup::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	hr = mouseDevice_->SetCooperativeLevel(windowsSetup_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	assert(SUCCEEDED(hr));
 	if (SUCCEEDED(joyStickDeviceHR) == true) {
 		joyStickDeviceHR = joyStickDevice_->SetCooperativeLevel(WindowsSetup::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
@@ -73,18 +68,14 @@ void Ellysia::Input::Initialize() {
 
 	}
 
-
-
 }
 
 #pragma region キーボード
 
 bool Ellysia::Input::IsPushKey(const uint8_t& keyNumber) const{
-	//指定されていたキーを押していればtrueを返す
 	if (currentKey_[keyNumber] != 0) {
 		return true;
 	}
-	//押されていなければfalseを返す
 	return false;
 
 }
@@ -120,25 +111,15 @@ bool Ellysia::Input::IsTriggerMouse(const uint32_t& mouseNumber)const {
 	}
 	return false;
 }
+bool Ellysia::Input::IsReleaseMouse(const uint32_t& mouseNumber) const{
+	if (currentMouse_.rgbButtons[mouseNumber] == 0 && preMouse_.rgbButtons[mouseNumber] != 0) {
+		return true;
+	}
+	return false;
+}
 #pragma endregion
 
 #pragma region コントローラー
-
-bool Ellysia::Input::IsConnetGamePad(){
-	//trueだと繋がっているよ
-	DWORD dwResult = XInputGetState(0, &state_);
-	if (dwResult == ERROR_SUCCESS){
-		return true;
-	}
-	return false;
-}
-
-bool Ellysia::Input::IsPushButton(const int32_t& button)const {
-	if (state_.Gamepad.wButtons & button) {
-		return true;
-	}
-	return false;
-}
 
 
 void Ellysia::Input::SetVibration(const float_t& leftMotor, const float_t& rightMotor){
@@ -163,58 +144,55 @@ void Ellysia::Input::StopVibration(){
 	XInputSetState(0, &vibration);
 }
 
-void Ellysia::Input::SetIsDisplayCursor(const bool& isDisplay){
-	//カーソルの表示をするかどうか
-	ShowCursor(isDisplay);
-}
 
 
 #pragma endregion
 
 void Ellysia::Input::Update() {
 
-	// コントローラーの再初期化
+	//キーボード
+	//前回のキー入力を保存
+	memcpy(preKey_, currentKey_, sizeof(currentKey_));
+	//情報の取得開始
+	keyboard_->Acquire();
+	keyboard_->GetDeviceState(sizeof(currentKey_), currentKey_);
+
+
+	//マウス
+	//キーと違ってそのまま代入で大丈夫だよ
+	preMouse_ = currentMouse_;
+	//情報の取得開始
+	mouseDevice_->Acquire();
+	mouseDevice_->GetDeviceState(sizeof(DIMOUSESTATE), &currentMouse_);
+
+	//コントローラー
+	
+	//状態を取得
+	if (XInputGetState(0, &currentState_) != ERROR_SUCCESS) {
+		//コントローラーが接続されていない場合
+		ZeroMemory(&currentState_, sizeof(XINPUT_STATE));
+	}
+
+	//再初期化
 	//接続されたらまたデバイスを作り直す
 	if (joyStickDevice_ == nullptr) {
-		HRESULT hr = {};
-		hr = directInput_->CreateDevice(GUID_Joystick, &joyStickDevice_, NULL);
+		HRESULT hr = directInput_->CreateDevice(GUID_Joystick, &joyStickDevice_, NULL);
 		if (SUCCEEDED(hr)) {
 			hr = joyStickDevice_->SetDataFormat(&c_dfDIJoystick);
 			assert(SUCCEEDED(hr));
-			hr = joyStickDevice_->SetCooperativeLevel(WindowsSetup::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+			hr = joyStickDevice_->SetCooperativeLevel(windowsSetup_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 			assert(SUCCEEDED(hr));
 		}
 	}
+	else {
+		//前回の状態を保存
+		preState_ = currentState_;
 
-	//前回のキー入力を保存
-	memcpy(preKey_, currentKey_, sizeof(currentKey_));
-	memcpy(preControllerButtons_, currentControllerButtons_, sizeof(preControllerButtons_));
-	for (int i = 0; i < XUSER_MAX_COUNT; ++i) {
-		currentControllerButtons_[i][0] = state_.Gamepad.wButtons & 0xFF;
-		currentControllerButtons_[i][1] = (state_.Gamepad.wButtons >> 8) & 0xFF;
-	}
-	//Keyと違ってそのまま代入で大丈夫だよ
-	preMouse_ = currentMouse_;
+		//情報の取得開始
+		if (joyStickDevice_ != nullptr) {
+			joyStickDevice_->Acquire();
+		}
 
-	//キーボード情報の取得開始
-	keyboard_->Acquire();
-	//マウス情報の取得開始
-	mouseDevice_->Acquire();
-	//コントローラー情報の取得開始
-	if (joyStickDevice_ != nullptr) {
-		joyStickDevice_->Acquire();
-	}
-	
-	keyboard_->GetDeviceState(sizeof(currentKey_), currentKey_);
-
-	//0から255番まであるよ
-	//エンターキーを押していると0x80(128)が代入されるよ
-	//押していないとどのキーも0x00(0)が代入されるよ
-
-	mouseDevice_->GetDeviceState(sizeof(DIMOUSESTATE), &currentMouse_);
-	
-	if (joyStickDevice_ != nullptr) {
-		joyStickDevice_->GetDeviceState(sizeof(preControllerButtons_), currentControllerButtons_);
 	}
 	
 }

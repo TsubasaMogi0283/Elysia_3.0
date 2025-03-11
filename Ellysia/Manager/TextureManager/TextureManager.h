@@ -130,7 +130,7 @@ namespace Ellysia {
 #pragma endregion
 
 
-	public:
+	private:
 
 		/// <summary>
 		/// テクスチャ情報
@@ -149,9 +149,10 @@ namespace Ellysia {
 			std::string name;
 
 			//テクスチャハンドル
-			uint32_t handle;
+			uint32_t handle=0u;
 		};
 
+	public:
 
 		/// <summary>
 		/// テクスチャ情報を取得/設定する
@@ -163,7 +164,7 @@ namespace Ellysia {
 
 	private:
 		//インデックス
-		uint32_t index_;
+		uint32_t index_=0u;
 
 		//テクスチャ情報
 		std::map<std::string, TextureInformation> textureInformation_={};

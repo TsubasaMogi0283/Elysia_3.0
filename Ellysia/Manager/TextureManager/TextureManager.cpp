@@ -88,8 +88,7 @@ uint32_t Ellysia::TextureManager::LoadTexture(const std::string& filePath) {
 
 
 	// 読み込んだデータをmapに保存
-	textureManager->GetTextureInformation()[filePath] = std::move(textureInfo);
-
+	textureManager->GetTextureInformation().try_emplace(filePath, std::move(textureInfo));
 	TextureManager::GetInstance()->handleToFilePathMap_[textureManager->index_] = filePath;
 
 	return textureInfo.handle;

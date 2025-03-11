@@ -9,13 +9,14 @@
 //ここでDirectXInputのバージョン設定をする
 #define DIRECTINPUT_VERSION	0x0800
 
+#include <cstdint>
+#include <cmath>
 #include <dinput.h>
 #include <Xinput.h>
 #include <wrl.h>
 using namespace Microsoft::WRL;
 
 
-#include <WindowsSetup.h>
 
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
@@ -27,6 +28,11 @@ using namespace Microsoft::WRL;
 namespace Ellysia {
 
 	/// <summary>
+	/// ウィンドウズクラス
+	/// </summary>
+	class WindowsSetup;
+
+	/// <summary>
 	/// 入力
 	/// </summary>
 	class Input final {
@@ -35,7 +41,7 @@ namespace Ellysia {
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		Input() = default;
+		Input();
 
 		/// <summary>
 		/// デストラクタ
@@ -64,8 +70,6 @@ namespace Ellysia {
 		/// <returns></returns>
 		Input& operator=(const Input& input) = delete;
 
-		
-
 	public:
 
 		/// <summary>
@@ -83,10 +87,8 @@ namespace Ellysia {
 		/// </summary>
 		/// <returns>状態</returns>
 		inline XINPUT_STATE GetState()const {
-			return state_;
+			return currentState_;
 		}
-
-
 
 #pragma region キーボード
 		/// <summary>
@@ -116,34 +118,55 @@ namespace Ellysia {
 
 
 		/// <summary>
-		/// Pushしているかどうか
+		/// 押し続けているか判定する
 		/// </summary>
 		/// <param name="keyNumber">キー番号</param>
 		/// <returns>状態</returns>
 		bool IsPushMouse(const uint32_t& keyNumber)const;
 
 		/// <summary>
-		/// Triggerしているかどうか
+		/// 押した瞬間を判定する
 		/// </summary>
 		/// <param name="keyNumber">キー番号</param>
 		/// <returns>状態</returns>
 		bool IsTriggerMouse(const uint32_t& keyNumber)const;
 
+		/// <summary>
+		/// 離した瞬間を判定
+		/// </summary>
+		/// <param name="mouseNumber">キー番号</param>
+		/// <returns>状態</returns>
+		bool IsReleaseMouse(const uint32_t& mouseNumber)const;
+
 #pragma endregion
 
 #pragma region コントローラー
-		/// <summary>
-		/// コントローラーと繋がっているかどうか
-		/// </summary>
-		/// <returns>状態</returns>
-		bool IsConnetGamePad();
-
 		/// <summary>
 		/// Pushしているかどうか
 		/// </summary>
 		/// <param name="button">ボタン</param>
 		/// <returns>状態</returns>
-		bool IsPushButton(const int32_t& button)const;
+		inline bool IsPushButton(const int32_t& button)const {
+			return currentState_.Gamepad.wButtons & button;
+		};
+
+		/// <summary>
+		/// 押した瞬間を判定する
+		/// </summary>
+		/// <param name="button">ボタン</param>
+		/// <returns>状態</returns>
+		inline bool IsTriggerButton(const int32_t& button) const {
+			return (currentState_.Gamepad.wButtons & button) && !(preState_.Gamepad.wButtons & button);
+		};
+
+		/// <summary>
+		/// 離した瞬間か判定する
+		/// </summary>
+		/// <param name="button">ボタン</param>
+		/// <returns>状態</returns>
+		inline bool IsReleaseButton(const int32_t& button)const {
+			return  !(currentState_.Gamepad.wButtons & button) && (preState_.Gamepad.wButtons & button);
+		};
 
 		/// <summary>
 		/// 振動の設定
@@ -163,14 +186,17 @@ namespace Ellysia {
 		/// カーソルの表示・非表示
 		/// </summary>
 		/// <param name="isDisplay">見せるかどうか</param>
-		void SetIsDisplayCursor(const bool& isDisplay);
+		inline void SetIsDisplayCursor(const bool& isDisplay) {
+			ShowCursor(isDisplay);
+		};
 
 	private:
+		//ウィンドウズクラス
+		WindowsSetup* windowsSetup_ = nullptr;
 
-
+	private:
 		//DirectInputの初期化
 		ComPtr<IDirectInput8> directInput_ = nullptr;
-
 		//キーボードデバイスの生成
 		ComPtr<IDirectInputDevice8> keyboard_ = nullptr;
 		//マウスのデバイスを生成
@@ -182,15 +208,9 @@ namespace Ellysia {
 		BYTE preKey_[256] = {};
 		BYTE currentKey_[256] = {};
 
-		//コントローラーのボタン
-		//16の4乗
-		static const uint32_t XINPUT_GAMEPAD_NUMBER_ = 16u * 16u * 16u * 16u;
-		BYTE preControllerButtons_[XUSER_MAX_COUNT][XINPUT_GAMEPAD_TRIGGER_THRESHOLD] = {};
-		BYTE currentControllerButtons_[XUSER_MAX_COUNT][XINPUT_GAMEPAD_TRIGGER_THRESHOLD] = {};
-
-		//コントローラー
-		XINPUT_STATE state_ = {};
-
+		//コントローラーの入力状態
+		XINPUT_STATE currentState_ = {};
+		XINPUT_STATE preState_ = {};
 
 		//マウスの入力状態を取得
 		DIMOUSESTATE currentMouse_ = {};

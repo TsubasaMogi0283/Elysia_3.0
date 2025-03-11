@@ -104,22 +104,19 @@ void WinScene::Update(Ellysia::GameManager* gameManager){
 
 
 	//コントローラーを繋いでいる時
-	if (input_->IsConnetGamePad() == true) {
+	//Bボタンを押したとき
+	if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+		bTriggerTime_ += INCREASE_VALUE;
 
-		//Bボタンを押したとき
-		if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-			bTriggerTime_ += INCREASE_VALUE;
+	}
+	//押していない時
+	if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+		bTriggerTime_ = NO_REACT_TIME;
+	}
 
-		}
-		//押していない時
-		if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-			bTriggerTime_ = NO_REACT_TIME;
-		}
-
-		//トリガー
-		if (bTriggerTime_ == REACT_TIME) {
-			restart_ = true;
-		}
+	//トリガー
+	if (bTriggerTime_ == REACT_TIME) {
+		restart_ = true;
 	}
 	//次のシーンへ
 	if (input_->IsTriggerKey(DIK_SPACE) == true) {

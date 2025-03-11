@@ -9,7 +9,13 @@
 #include <array>
 #include <string>
 
+
 #include "DirectXSetup.h"
+
+/// <summary>
+/// ベクトル(4次元)
+/// </summary>
+struct Vector4;
 
 /// <summary>
 /// EllysiaEngine

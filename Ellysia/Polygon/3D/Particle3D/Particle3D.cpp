@@ -17,6 +17,9 @@
 #include "VectorCalculation.h"
 
 
+//静的メンバ変数の初期化
+std::map<uint32_t, uint32_t> Ellysia::Particle3D::instancingManagiment_ = {};
+
 
 Ellysia::Particle3D::Particle3D() {
 	//インスタンスの取得
@@ -37,31 +40,17 @@ std::unique_ptr<Ellysia::Particle3D> Ellysia::Particle3D::Create(const uint32_t&
 	//生成
 	std::unique_ptr<Ellysia::Particle3D> particle3D = std::make_unique<Ellysia::Particle3D>();
 
-#pragma region デフォルトの設定 
-	particle3D->emitter_.count = 10;
-	//0.5秒ごとに発生
-	particle3D->emitter_.frequency = 0.0f;
-	//発生頻度用の時刻。0.0で初期化
-	particle3D->emitter_.frequencyTime = 0.0f;
-	//SRT
-	particle3D->emitter_.transform.scale = {.x = 20.0f,.y = 20.0f,.z = 20.0f };
-	particle3D->emitter_.transform.rotate = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
-	particle3D->emitter_.transform.translate = { .x = 0.0f,.y = 0.0f,.z = 4.0f };
-
 	//モデルの読み込み
 	uint32_t modelHandle = particle3D->modelManager_->LoadModelFile("Resources/Model/Particle","ParticlePlane.obj");
 
 	//テクスチャの読み込み
 	particle3D->textureHandle_ = particle3D->textureManager_->LoadTexture("Resources/External/Texture/Circle/circle.png");
 
-#pragma endregion
-
 
 	//動きの種類
 	particle3D->moveType_ = moveType;
 
 	//頂点リソースを作る
-	particle3D->vertices_ = particle3D->modelManager_->GetModelData(modelHandle).vertices;
 	particle3D->vertices_ = particle3D->modelManager_->GetModelData(modelHandle).vertices;
 	particle3D->vertexResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(VertexData) * particle3D->vertices_.size());
 
@@ -80,14 +69,19 @@ std::unique_ptr<Ellysia::Particle3D> Ellysia::Particle3D::Create(const uint32_t&
 	std::memcpy(vertexData, particle3D->vertices_.data(), sizeof(VertexData) * particle3D->vertices_.size());
 	particle3D->vertexResource_->Unmap(0, nullptr);
 
-
-
 	//インスタンシング
 	particle3D->instancingResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(ParticleForGPU) * particle3D->MAX_INSTANCE_NUMBER_);
-
 	//SRVを作る
-	particle3D->instancingIndex_ = particle3D->srvManager_->Allocate();
-	particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
+	//すでに作られているものだったらそこから取り出しSRVの上限突破を防ぐ
+	auto it = instancingManagiment_.find(modelHandle);
+	if (it != instancingManagiment_.end()) {
+		particle3D->instancingIndex_= it->second;
+	}
+	else {
+		particle3D->instancingIndex_ = particle3D->srvManager_->Allocate();
+		particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
+		instancingManagiment_.try_emplace(modelHandle, particle3D->instancingIndex_);
+	}
 	//書き込み
 	particle3D->instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
 
@@ -103,18 +97,6 @@ std::unique_ptr<Ellysia::Particle3D> Ellysia::Particle3D::Create(const uint32_t&
 	//生成
 	std::unique_ptr<Ellysia::Particle3D> particle3D = std::make_unique<Ellysia::Particle3D>();
 
-#pragma region デフォルトの設定 
-	particle3D->emitter_.count = 3;
-	//0.5秒ごとに発生
-	particle3D->emitter_.frequency = 2.0f;
-	//発生頻度用の時刻。0.0で初期化
-	particle3D->emitter_.frequencyTime = 0.0f;
-	//SRT
-	particle3D->emitter_.transform.scale = {.x= 10.0f,.y= 10.0f,.z= 10.0f };
-	particle3D->emitter_.transform.rotate = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
-	particle3D->emitter_.transform.translate = {.x= 0.0f,.y= 0.0f,.z= 4.0f };
-
-#pragma endregion
 
 	//モデルの読み込み
 	ModelData modelData = particle3D->modelManager_->GetModelData(modelHandle);
@@ -149,12 +131,19 @@ std::unique_ptr<Ellysia::Particle3D> Ellysia::Particle3D::Create(const uint32_t&
 
 	//インスタンシング
 	particle3D->instancingResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(ParticleForGPU) * particle3D->MAX_INSTANCE_NUMBER_);
-
 	//SRVを作る
-	particle3D->instancingIndex_ = particle3D->srvManager_->Allocate();
-	particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
+	//すでに作られているものだったらそこから取り出しSRVの上限突破を防ぐ
+	auto it = instancingManagiment_.find(modelHandle);
+	if (it != instancingManagiment_.end()) {
+		particle3D->instancingIndex_ = it->second;
+	}
+	else {
+		particle3D->instancingIndex_ = particle3D->srvManager_->Allocate();
+		particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
+		instancingManagiment_.try_emplace(modelHandle, particle3D->instancingIndex_);
+	}
 	//書き込み
-	particle3D->instancingResource_->Map(0u, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
+	particle3D->instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
 
 
 	//カメラ
@@ -195,6 +184,9 @@ ParticleInformation Ellysia::Particle3D::MakeNewParticle(std::mt19937& randomEng
 	particle.lifeTime = distTime(randomEngine);
 	particle.currentTime = 0;
 
+
+	//線形保管用
+	particle.absorbT = 0.0f;
 
 	return particle;
 
@@ -473,38 +465,25 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const Material& material){
 	//コマンドを積む
 	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetParticle3DRootSignature().Get());
 	directXSetup_->GetCommandList()->SetPipelineState(pipelineManager_->GetParticle3DGraphicsPipelineState().Get());
-
-
-
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		
-
 	//CBVを設定する
 	//マテリアル
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
-
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
-
 	//テクスチャ
 	if (textureHandle_ != 0u) {
 		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
-
 	//カメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.resource->GetGPUVirtualAddress());
-
-
 	//PS用のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
-
 	//DrawCall
 	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0u, 0u);
-
-
 }
 
 void Ellysia::Particle3D::Draw(const Camera& camera,const  Material& material,const DirectionalLight& directionalLight) {
@@ -526,33 +505,23 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const  Material& material,co
 	//コマンドを積む
 	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetParticle3DRootSignature().Get());
 	directXSetup_->GetCommandList()->SetPipelineState(pipelineManager_->GetParticle3DGraphicsPipelineState().Get());
-
-
-
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
 	//CBVを設定する
 	//マテリアル
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
-
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
-
 	//テクスチャ
 	if (textureHandle_ != 0u) {
 		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
-
 	//カメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.resource->GetGPUVirtualAddress());
-
 	//平行光源
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(4u, directionalLight.resource->GetGPUVirtualAddress());
-
 	//PS用のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
 
@@ -574,8 +543,6 @@ void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, c
 	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
 	*cameraPositionData_ = camera.GetWorldPosition();
 	cameraResource_->Unmap(0u, nullptr);
-
-
 	//コマンドを積む
 	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetParticle3DRootSignature().Get());
 	directXSetup_->GetCommandList()->SetPipelineState(pipelineManager_->GetParticle3DGraphicsPipelineState().Get());
@@ -585,15 +552,11 @@ void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, c
 	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
 	//CBVを設定する
 	//マテリアル
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
-
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
-
 	//テクスチャ
 	if (textureHandle_ != 0u) {
 		textureManager_->GraphicsCommand(2u, textureHandle_);
@@ -601,13 +564,10 @@ void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, c
 
 	//カメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.resource->GetGPUVirtualAddress());
-
 	//PS用のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
-
 	//点光源
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(6u, pointLight.resource->GetGPUVirtualAddress());
-
 	//DrawCall
 	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0u, 0u);
 
@@ -631,37 +591,25 @@ void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, c
 	//コマンドを積む
 	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetParticle3DRootSignature().Get());
 	directXSetup_->GetCommandList()->SetPipelineState(pipelineManager_->GetParticle3DGraphicsPipelineState().Get());
-
-
-
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferView_);
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
 	//CBVを設定する
 	//マテリアル
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, material.resource->GetGPUVirtualAddress());
-
 	//インスタンシング
 	srvManager_->SetGraphicsRootDescriptorTable(1u, instancingIndex_);
-
 	//テクスチャ
 	if (textureHandle_ != 0u) {
 		textureManager_->GraphicsCommand(2u, textureHandle_);
 	}
-
 	//カメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, camera.resource->GetGPUVirtualAddress());
-
 	//PS用のカメラ
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(5u, cameraResource_->GetGPUVirtualAddress());
-	
 	//SpotLight
 	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(7u, spotLight.resource->GetGPUVirtualAddress());
-
-
 	//DrawCall
 	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0u, 0u);
 

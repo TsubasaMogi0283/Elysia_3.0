@@ -9,6 +9,11 @@
 #include "Vector3.h"
 
 /// <summary>
+/// ベクトル(4次元)
+/// </summary>
+struct Vector4;
+
+/// <summary>
 /// EllysiaEngine
 /// </summary>
 namespace Ellysia {

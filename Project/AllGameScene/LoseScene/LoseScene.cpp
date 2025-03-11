@@ -261,24 +261,21 @@ void LoseScene::Select() {
 	}
 
 	//コントローラー接続時
-	if (input_->IsConnetGamePad() == true) {
+	//Bボタンを押したとき
+	if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+		bTriggerTime_ += INCREASE_VALUE_;
 
-		//Bボタンを押したとき
-		if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-			bTriggerTime_ += INCREASE_VALUE_;
+	}
+	if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
+		//Bトリガーの反応しない時間
+		const uint32_t NO_REACT_TIME = 0u;
+		bTriggerTime_ = NO_REACT_TIME;
+	}
 
-		}
-		if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-			//Bトリガーの反応しない時間
-			const uint32_t NO_REACT_TIME = 0u;
-			bTriggerTime_ = NO_REACT_TIME;
-		}
-
-		//Bトリガーの反応する時間
-		const uint32_t REACT_TIME = 1u;
-		if (bTriggerTime_ == REACT_TIME) {
-			isChangeNextScene_ = true;
-		}
+	//Bトリガーの反応する時間
+	const uint32_t REACT_TIME = 1u;
+	if (bTriggerTime_ == REACT_TIME) {
+		isChangeNextScene_ = true;
 	}
 	//次のシーンへ
 	if (input_->IsTriggerKey(DIK_SPACE) == true) {

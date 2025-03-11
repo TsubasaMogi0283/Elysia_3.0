@@ -279,22 +279,18 @@ void GameScene::ObjectCollision() {
 
 
 			//コントローラーのBボタンを押したら脱出のフラグがたつ
-			if (input_->IsConnetGamePad() == true) {
+			//Bボタンを押したとき
+			if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+				++openTreasureBoxTime_;
 
-				//Bボタンを押したとき
-				if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-					++openTreasureBoxTime_;
+			}
+			if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
+				openTreasureBoxTime_ = B_NO_REACT_TIME_;
+			}
 
-				}
-				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
-					openTreasureBoxTime_ = B_NO_REACT_TIME_;
-				}
-
-				if (openTreasureBoxTime_ == B_REACT_TIME_) {
-					//脱出
-					isOpenTreasureBox_ = true;
-				}
-
+			if (openTreasureBoxTime_ == B_REACT_TIME_) {
+				//脱出
+				isOpenTreasureBox_ = true;
 			}
 
 
@@ -361,22 +357,18 @@ void GameScene::EscapeCondition() {
 
 
 			//コントローラーのBボタンを押したら脱出のフラグがたつ
-			if (input_->IsConnetGamePad() == true) {
+			//Bボタンを押したとき
+			if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+				bTriggerTime_ += INCREASE_VALUE;
 
-				//Bボタンを押したとき
-				if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-					bTriggerTime_ += INCREASE_VALUE;
+			}
+			if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
+				bTriggerTime_ = B_NO_REACT_TIME_;
+			}
 
-				}
-				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
-					bTriggerTime_ = B_NO_REACT_TIME_;
-				}
-
-				if (bTriggerTime_ == B_REACT_TIME_) {
-					//脱出
-					isEscape_ = true;
-				}
-
+			if (bTriggerTime_ == B_REACT_TIME_) {
+				//脱出
+				isEscape_ = true;
 			}
 			//SPACEキーを押したら脱出のフラグがたつ
 			if (input_->IsPushKey(DIK_SPACE) == true) {
@@ -587,62 +579,59 @@ void GameScene::PlayerMove() {
 
 	//接続時
 	//キーボード入力していない時かつ移動できる時に受け付ける
-	if (input_->IsConnetGamePad() == true) {
-
-		if (isPlayerMoveKey == false) {
+	if (isPlayerMoveKey == false) {
 
 
-			//コントローラーの入力
-			bool isInput = false;
-			//左スティック
-			Vector3 leftStickInput = {
-				.x = (static_cast<float>(input_->GetState().Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
-				.y = 0.0f,
-				.z = (static_cast<float>(input_->GetState().Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
-			};
+		//コントローラーの入力
+		bool isInput = false;
+		//左スティック
+		Vector3 leftStickInput = {
+			.x = (static_cast<float>(input_->GetState().Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
+			.y = 0.0f,
+			.z = (static_cast<float>(input_->GetState().Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
+		};
 
 
-			//デッドゾーンの設定
-			const float DEAD_ZONE = 0.1f;
-			//X軸
-			if (std::abs(leftStickInput.x) < DEAD_ZONE) {
-				leftStickInput.x = 0.0f;
-			}
-			else {
-				isInput = true;
-			}
-			//Z軸
-			if (std::abs(leftStickInput.z) < DEAD_ZONE) {
-				leftStickInput.z = 0.0f;
-			}
-			else {
-				isInput = true;
-			}
-
-
-			//入力されていたら計算
-			if (isInput == true) {
-				//動いている
-				isPlayerMove = true;
-
-				//角度を求める
-				float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
-				//値を0～2πに直してtheta_に揃える
-				if (radian < 0.0f) {
-					radian += 2.0f * std::numbers::pi_v<float>;
-				}
-				const float OFFSET = std::numbers::pi_v<float> / 2.0f;
-				float resultTheta = theta_ + radian - OFFSET;
-
-
-				//向きを代入
-				playerMoveDirection.x = std::cosf(resultTheta);
-				playerMoveDirection.z = std::sinf(resultTheta);
-			}
-
-
-
+		//デッドゾーンの設定
+		const float DEAD_ZONE = 0.1f;
+		//X軸
+		if (std::abs(leftStickInput.x) < DEAD_ZONE) {
+			leftStickInput.x = 0.0f;
 		}
+		else {
+			isInput = true;
+		}
+		//Z軸
+		if (std::abs(leftStickInput.z) < DEAD_ZONE) {
+			leftStickInput.z = 0.0f;
+		}
+		else {
+			isInput = true;
+		}
+
+
+		//入力されていたら計算
+		if (isInput == true) {
+			//動いている
+			isPlayerMove = true;
+
+			//角度を求める
+			float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
+			//値を0～2πに直してtheta_に揃える
+			if (radian < 0.0f) {
+				radian += 2.0f * std::numbers::pi_v<float>;
+			}
+			const float OFFSET = std::numbers::pi_v<float> / 2.0f;
+			float resultTheta = theta_ + radian - OFFSET;
+
+
+			//向きを代入
+			playerMoveDirection.x = std::cosf(resultTheta);
+			playerMoveDirection.z = std::sinf(resultTheta);
+		}
+
+
+
 	}
 
 #pragma endregion
@@ -664,13 +653,11 @@ void GameScene::PlayerMove() {
 		}
 		//コントローラー接続時
 		else {
-			if (input_->IsConnetGamePad() == true) {
-				if (input_->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER) == true) {
-					isPlayerDash = true;
-				}
-				else {
-					isPlayerDash = false;
-				}
+			if (input_->IsPushButton(XINPUT_GAMEPAD_LEFT_SHOULDER) == true) {
+				isPlayerDash = true;
+			}
+			else {
+				isPlayerDash = false;
 			}
 		}
 		//ダッシュをしているかどうかの設定
@@ -689,6 +676,10 @@ void GameScene::PlayerMove() {
 	else {
 		isCharge = false;
 	}
+
+
+
+
 	//チャージ状態を設定
 	player_->GetFlashLight()->SetIsCharge(isCharge);
 
@@ -750,32 +741,31 @@ void GameScene::PlayerRotate() {
 	
 
 	//コントローラーがある場合
-	if (input_->IsConnetGamePad() == true) {
-		const float MOVE_LIMITATION = 0.02f;
+	const float MOVE_LIMITATION = 0.02f;
 
-		//キーボード入力していない時
-		if (isRotateYKey == false && isRotateXKey == false) {
+	//キーボード入力していない時
+	if (isRotateYKey == false && isRotateXKey == false) {
 
-			//入力
-			float rotateMoveX = (float)input_->GetState().Gamepad.sThumbRY / SHRT_MAX * ROTATE_INTERVAL;
-			float rotateMoveY = (float)input_->GetState().Gamepad.sThumbRX / SHRT_MAX * ROTATE_INTERVAL;
+		//入力
+		float rotateMoveX = (float)input_->GetState().Gamepad.sThumbRY / SHRT_MAX * ROTATE_INTERVAL;
+		float rotateMoveY = (float)input_->GetState().Gamepad.sThumbRX / SHRT_MAX * ROTATE_INTERVAL;
 
-			//勝手に動くので制限を掛ける
-			if (rotateMoveY < MOVE_LIMITATION && rotateMoveY > -MOVE_LIMITATION) {
-				rotateMoveY = 0.0f;
-			}
-			if (rotateMoveX < MOVE_LIMITATION && rotateMoveX > -MOVE_LIMITATION) {
-				rotateMoveX = 0.0f;
-			}
-
-			//補正後の値を代入する
-			theta_ -= rotateMoveY;
-			originPhi_ -= rotateMoveX;
+		//勝手に動くので制限を掛ける
+		if (rotateMoveY < MOVE_LIMITATION && rotateMoveY > -MOVE_LIMITATION) {
+			rotateMoveY = 0.0f;
+		}
+		if (rotateMoveX < MOVE_LIMITATION && rotateMoveX > -MOVE_LIMITATION) {
+			rotateMoveX = 0.0f;
 		}
 
-
-
+		//補正後の値を代入する
+		theta_ -= rotateMoveY;
+		originPhi_ -= rotateMoveX;
 	}
+
+
+
+	
 
 
 #pragma endregion
@@ -848,20 +838,19 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 				++howToPlayTextureNumber_;
 			}
 			//コントローラー接続時
-			if (input_->IsConnetGamePad() == true) {
-				//Bボタンを押したとき
-				if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-					bTriggerTime_ += INCREASE_VALUE;
-				}
-				//押していない時
-				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
-					bTriggerTime_ = B_NO_REACT_TIME_;
-				}
-				//1の時テクスチャの数字が増える
-				if (bTriggerTime_ == B_REACT_TIME_) {
-					++howToPlayTextureNumber_;
-				}
+			//Bボタンを押したとき
+			if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+				bTriggerTime_ += INCREASE_VALUE;
 			}
+			//押していない時
+			if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
+				bTriggerTime_ = B_NO_REACT_TIME_;
+			}
+			//1の時テクスチャの数字が増える
+			if (bTriggerTime_ == B_REACT_TIME_) {
+				++howToPlayTextureNumber_;
+			}
+			
 
 			//読み終わったらゲームプレイへ
 			if (howToPlayTextureNumber_ > MAX_EXPLANATION_NUMBER_) {
