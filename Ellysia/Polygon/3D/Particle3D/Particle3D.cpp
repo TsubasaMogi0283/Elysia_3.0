@@ -42,19 +42,14 @@ std::unique_ptr<Ellysia::Particle3D> Ellysia::Particle3D::Create(const uint32_t&
 
 	//モデルの読み込み
 	uint32_t modelHandle = particle3D->modelManager_->LoadModelFile("Resources/Model/Particle","ParticlePlane.obj");
-
 	//テクスチャの読み込み
 	particle3D->textureHandle_ = particle3D->textureManager_->LoadTexture("Resources/External/Texture/Circle/circle.png");
-
-
 	//動きの種類
 	particle3D->moveType_ = moveType;
 
 	//頂点リソースを作る
 	particle3D->vertices_ = particle3D->modelManager_->GetModelData(modelHandle).vertices;
 	particle3D->vertexResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(VertexData) * particle3D->vertices_.size());
-
-
 	//リソースの先頭のアドレスから使う
 	particle3D->vertexBufferView_.BufferLocation = particle3D->vertexResource_->GetGPUVirtualAddress();
 	//使用するリソースは頂点のサイズ
@@ -62,12 +57,11 @@ std::unique_ptr<Ellysia::Particle3D> Ellysia::Particle3D::Create(const uint32_t&
 	//１頂点あたりのサイズ
 	particle3D->vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
-
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
-	particle3D->vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));//
+	particle3D->vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));
 	std::memcpy(vertexData, particle3D->vertices_.data(), sizeof(VertexData) * particle3D->vertices_.size());
-	particle3D->vertexResource_->Unmap(0, nullptr);
+	particle3D->vertexResource_->Unmap(0u, nullptr);
 
 	//インスタンシング
 	particle3D->instancingResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(ParticleForGPU) * particle3D->MAX_INSTANCE_NUMBER_);
@@ -83,7 +77,7 @@ std::unique_ptr<Ellysia::Particle3D> Ellysia::Particle3D::Create(const uint32_t&
 		instancingManagiment_.try_emplace(modelHandle, particle3D->instancingIndex_);
 	}
 	//書き込み
-	particle3D->instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
+	particle3D->instancingResource_->Map(0u, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
 
 	//カメラ
 	particle3D->cameraResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(Vector3));
@@ -143,8 +137,7 @@ std::unique_ptr<Ellysia::Particle3D> Ellysia::Particle3D::Create(const uint32_t&
 		instancingManagiment_.try_emplace(modelHandle, particle3D->instancingIndex_);
 	}
 	//書き込み
-	particle3D->instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
-
+	particle3D->instancingResource_->Map(0u, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
 
 	//カメラ
 	particle3D->cameraResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(Vector3));
@@ -182,7 +175,7 @@ ParticleInformation Ellysia::Particle3D::MakeNewParticle(std::mt19937& randomEng
 	//時間
 	std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
 	particle.lifeTime = distTime(randomEngine);
-	particle.currentTime = 0;
+	particle.currentTime = 0.0f;
 
 
 	//線形保管用
@@ -195,7 +188,7 @@ ParticleInformation Ellysia::Particle3D::MakeNewParticle(std::mt19937& randomEng
 std::list<ParticleInformation> Ellysia::Particle3D::Emission(const Emitter& emmitter, std::mt19937& randomEngine) {
 	std::list<ParticleInformation> particles;
 
-	for (uint32_t count = 0; count < emmitter.count; ++count) {
+	for (uint32_t count = 0u; count < emmitter.count; ++count) {
 		//emmitterで設定したカウントまで増やしていくよ
 		particles.push_back(MakeNewParticle(randomEngine));
 	}

@@ -42,6 +42,8 @@ void TestScene::Initialize(){
 
 	}
 	
+	//吸収パーティクル
+	particle_ = std::move(Ellysia::Particle3D::Create(ParticleMoveType::Absorb));
 
 
 	//カメラ
@@ -142,7 +144,8 @@ void TestScene::DrawObject3D(){
 	for (uint32_t i = 0; i < COUNER_QUANTITY_; ++i) {
 		playerCounerModel_[i]->Draw(playerCounerWorldTransform_[i], camera_, playerMaterial_);
 	}
-
+	//パーティクル
+	particle_->Draw(camera_, playerMaterial_);
 }
 
 void TestScene::PreDrawPostEffectFirst(){

@@ -274,11 +274,7 @@ private:
 	//墓場の鍵を取ったかどうか
 	bool isPickUpKeyInCemetery_ = false;
 
-	//Bボタンのトリガー
-	uint32_t bTriggerTime_ = 0u;
-	bool isBTrigger_ = false;
-
-
+	
 
 };
 

@@ -179,19 +179,11 @@ private:
 	const uint32_t MAX_EXPLANATION_NUMBER_ = 2u;
 	//時間変化
 	const float_t DELTA_TIME_ = 1.0f / 60.0f;
-	//トリガーの増える値
-	const uint32_t INCREASE_VALUE = 1u;
 	//フェードアウトの具合
 	const float_t FADE_OUT_INTERVAL_ = 0.01f;
 	//負けシーンに遷移するときの値
 	const float_t CHANGE_TO_LOSE_SCENE_VALUE_ = 2.0f;
 
-	//反応する
-	const uint32_t B_REACT_TIME_ = 1u;
-	//反応しない
-	const uint32_t B_NO_REACT_TIME_ = 0u;
-	//コントローラーの押していない時の値
-	const int32_t NO_PUSH_VALUE_ = 0u;
 	//完全に透明になる値
 	const float_t PERFECT_TRANSPARENT_ = 0.0f;
 
@@ -224,10 +216,6 @@ private:
 	//角度
 	float_t theta_ = 0.0f;
 	float_t originPhi_ = 0.0f;
-
-	//Bボタンのトリガー
-	uint32_t bTriggerTime_ = 0u;
-	bool isBTrigger_ = false;
 
 	//敵管理
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
@@ -325,7 +313,6 @@ private:
 
 	//宝箱が開いているかどうか
 	bool isOpenTreasureBox_ = false;
-	uint32_t openTreasureBoxTime_ = 0u;
 	std::unique_ptr<Ellysia::Sprite>openTreasureBoxSprite_ = nullptr;
 
 	Vector3 translate_ = {};

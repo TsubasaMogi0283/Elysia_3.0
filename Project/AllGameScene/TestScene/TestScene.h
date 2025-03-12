@@ -6,6 +6,7 @@
 #include "IGameScene.h"
 #include "BackTexture.h"
 #include "Model.h"
+#include "Particle3D.h"
 #include "WorldTransform.h"
 #include "AABB.h"
 #include "Camera.h"
@@ -113,6 +114,9 @@ private:
 	const Vector3 CUBE_SIZE = { .x = SIZE ,.y = SIZE ,.z = SIZE };
 	AABB playerAABB_ = {};
 	Vector3 playerCenterPosition_ = {};
+
+	//パーティクル
+	std::unique_ptr<Ellysia::Particle3D>particle_ = nullptr;
 
 
 	//四隅

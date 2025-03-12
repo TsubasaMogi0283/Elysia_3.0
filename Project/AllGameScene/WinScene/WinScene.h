@@ -134,12 +134,6 @@ private:
 	//暗転している時間
 	uint32_t blackOutTime_ = 0u;
 
-	//Bトリガー
-	//時間
-	uint32_t bTriggerTime_ = 0u;
-	//フラグ
-	bool isBTrigger_ = false;
-
 	//再開
 	bool restart_ = false;
 

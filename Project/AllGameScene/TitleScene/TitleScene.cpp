@@ -140,9 +140,6 @@ void TitleScene::Update(Ellysia::GameManager* gameManager){
 		//時間の加算
 		fastFlashTime_ += INCREASE_VALUE;
 		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
-			//もう一度学び直したが
-			//単純に+1にしたいなら前置インクリメント「++(名前)」がいいらしい
-			//加算される前の値を入れたいなら後置インクリメント「(名前)++」にしよう
 			++textDisplayCount_;
 		}
 

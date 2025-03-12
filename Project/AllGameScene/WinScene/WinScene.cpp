@@ -65,11 +65,6 @@ void WinScene::Update(Ellysia::GameManager* gameManager){
 
 	//増える時間の値
 	const uint32_t INCREASE_VALUE = 1u;
-	//Bトリガーの反応する時間
-	const uint32_t REACT_TIME = 1u;
-	//Bトリガーの反応しない時間
-	const uint32_t NO_REACT_TIME = 0u;
-
 	//再スタート時間
 	const uint32_t RESTART_TIME = 0u;
 
@@ -102,23 +97,12 @@ void WinScene::Update(Ellysia::GameManager* gameManager){
 	//表示
 	const uint32_t DISPLAY = 0u;
 
-
-	//コントローラーを繋いでいる時
+	//次のシーンへ
 	//Bボタンを押したとき
-	if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-		bTriggerTime_ += INCREASE_VALUE;
-
-	}
-	//押していない時
-	if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-		bTriggerTime_ = NO_REACT_TIME;
-	}
-
-	//トリガー
-	if (bTriggerTime_ == REACT_TIME) {
+	if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
 		restart_ = true;
 	}
-	//次のシーンへ
+	//スペースを押したとき
 	if (input_->IsTriggerKey(DIK_SPACE) == true) {
 		restart_ = true;
 	}

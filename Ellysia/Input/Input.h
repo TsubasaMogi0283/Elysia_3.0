@@ -82,31 +82,24 @@ namespace Ellysia {
 		/// </summary>
 		void Update();
 
-		/// <summary>
-		/// Stateの取得
-		/// </summary>
-		/// <returns>状態</returns>
-		inline XINPUT_STATE GetState()const {
-			return currentState_;
-		}
 
 #pragma region キーボード
 		/// <summary>
-		/// Push状態
+		///押しているかどうかを判定
 		/// </summary>
 		/// <param name="keyNumber">キー番号</param>
 		/// <returns>状態</returns>
 		bool IsPushKey(const uint8_t& keyNumber)const;
 
 		/// <summary>
-		/// Trigger状態
+		/// 押した瞬間かどうかを判定
 		/// </summary>
 		/// <param name="keyNumber">キー番号</param>
 		/// <returns>状態</returns>
 		bool IsTriggerKey(const uint8_t& keyNumber)const;
 
 		/// <summary>
-		/// Release状態を取得
+		/// 離した瞬間かどうかを取得
 		/// </summary>
 		/// <param name="keyNumber">キー番号</param>
 		/// <returns>状態</returns>
@@ -118,14 +111,14 @@ namespace Ellysia {
 
 
 		/// <summary>
-		/// 押し続けているか判定する
+		/// 押し続けているか判定
 		/// </summary>
 		/// <param name="keyNumber">キー番号</param>
 		/// <returns>状態</returns>
 		bool IsPushMouse(const uint32_t& keyNumber)const;
 
 		/// <summary>
-		/// 押した瞬間を判定する
+		/// 押した瞬間を判定
 		/// </summary>
 		/// <param name="keyNumber">キー番号</param>
 		/// <returns>状態</returns>
@@ -141,8 +134,17 @@ namespace Ellysia {
 #pragma endregion
 
 #pragma region コントローラー
+
 		/// <summary>
-		/// Pushしているかどうか
+		/// 現在の状態を取得
+		/// </summary>
+		/// <returns>現在の取得</returns>
+		inline XINPUT_STATE GetCurrentState()const {
+			return currentState_;
+		}
+
+		/// <summary>
+		/// 押しているかどうかを判定
 		/// </summary>
 		/// <param name="button">ボタン</param>
 		/// <returns>状態</returns>

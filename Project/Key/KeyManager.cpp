@@ -318,16 +318,7 @@ void KeyManager::PickUp() {
 					audio_->Play(pickUpSEHandle, false);
 				}
 
-				if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-
-					bTriggerTime_ += INCREASE_VALUE;
-
-				}
-				if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
-					bTriggerTime_ = B_NO_REACT_TIME_;
-				}
-
-				if (bTriggerTime_ == B_REACT_TIME_) {
+				if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
 					//プレイヤーの持っているか鍵の数が増える
 					player_->AddHaveKeyQuantity();
 					//鍵が取得される
@@ -335,6 +326,7 @@ void KeyManager::PickUp() {
 					//取得の音が鳴る
 					audio_->Play(pickUpSEHandle, false);
 				}
+
 				
 
 			}

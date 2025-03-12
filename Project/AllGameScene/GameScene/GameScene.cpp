@@ -109,10 +109,6 @@ void GameScene::Initialize() {
 	player_->GetFlashLight()->SetMaxRange(LIGHT_MAX_RANGE_);
 	player_->GetFlashLight()->SetMinRange(LIGHT_MIN_RANGE_);
 	
-	//Bトリガーの時間を初期化
-	bTriggerTime_ = 0;
-	//Bトリガーの初期化
-	isBTrigger_ = false;
 #pragma endregion
 
 	//鍵のモデルの読み込み
@@ -280,22 +276,10 @@ void GameScene::ObjectCollision() {
 
 			//コントローラーのBボタンを押したら脱出のフラグがたつ
 			//Bボタンを押したとき
-			if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-				++openTreasureBoxTime_;
-
-			}
-			if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
-				openTreasureBoxTime_ = B_NO_REACT_TIME_;
-			}
-
-			
-
-
-			if (openTreasureBoxTime_ == B_REACT_TIME_) {
+			if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
 				//脱出
 				isOpenTreasureBox_ = true;
 			}
-
 
 			//SPACEキーを押したら脱出のフラグがたつ
 			if (input_->IsPushKey(DIK_SPACE) == true) {
@@ -361,15 +345,7 @@ void GameScene::EscapeCondition() {
 
 			//コントローラーのBボタンを押したら脱出のフラグがたつ
 			//Bボタンを押したとき
-			if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-				bTriggerTime_ += INCREASE_VALUE;
-
-			}
-			if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
-				bTriggerTime_ = B_NO_REACT_TIME_;
-			}
-
-			if (bTriggerTime_ == B_REACT_TIME_) {
+			if (input_->IsPushButton(XINPUT_GAMEPAD_B) == true) {
 				//脱出
 				isEscape_ = true;
 			}
@@ -585,14 +561,13 @@ void GameScene::PlayerMove() {
 	//キーボード入力していない時かつ移動できる時に受け付ける
 	if (isPlayerMoveKey == false) {
 
-
 		//コントローラーの入力
 		bool isInput = false;
 		//左スティック
 		Vector3 leftStickInput = {
-			.x = (static_cast<float>(input_->GetState().Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
+			.x = (static_cast<float>(input_->GetCurrentState().Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
 			.y = 0.0f,
-			.z = (static_cast<float>(input_->GetState().Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
+			.z = (static_cast<float>(input_->GetCurrentState().Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
 		};
 
 
@@ -751,8 +726,8 @@ void GameScene::PlayerRotate() {
 	if (isRotateYKey == false && isRotateXKey == false) {
 
 		//入力
-		float rotateMoveX = (float)input_->GetState().Gamepad.sThumbRY / SHRT_MAX * ROTATE_INTERVAL;
-		float rotateMoveY = (float)input_->GetState().Gamepad.sThumbRX / SHRT_MAX * ROTATE_INTERVAL;
+		float rotateMoveX = (static_cast<float>(input_->GetCurrentState().Gamepad.sThumbRY) / SHRT_MAX * ROTATE_INTERVAL);
+		float rotateMoveY = (static_cast<float>(input_->GetCurrentState().Gamepad.sThumbRX) / SHRT_MAX * ROTATE_INTERVAL);
 
 		//勝手に動くので制限を掛ける
 		if (rotateMoveY < MOVE_LIMITATION && rotateMoveY > -MOVE_LIMITATION) {
@@ -843,15 +818,7 @@ void GameScene::Update(Ellysia::GameManager* gameManager) {
 			}
 			//コントローラー接続時
 			//Bボタンを押したとき
-			if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-				bTriggerTime_ += INCREASE_VALUE;
-			}
-			//押していない時
-			if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
-				bTriggerTime_ = B_NO_REACT_TIME_;
-			}
-			//1の時テクスチャの数字が増える
-			if (bTriggerTime_ == B_REACT_TIME_) {
+			if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
 				++howToPlayTextureNumber_;
 			}
 			
