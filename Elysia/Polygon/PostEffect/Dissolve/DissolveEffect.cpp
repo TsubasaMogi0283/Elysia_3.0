@@ -4,7 +4,7 @@
 #include "PipelineManager.h"
 #include "SrvManager.h"
 #include "RtvManager.h"
-#include "../Material/Dissolve/Dissolve.h"
+#include "Dissolve.h"
 
 Elysia::DissolvePostEffect::DissolvePostEffect(){
 	//ウィンドウクラスの取得
