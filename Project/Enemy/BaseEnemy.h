@@ -36,7 +36,7 @@ class Player;
 /// <summary>
 /// EllysiaEngine(前方宣言)
 /// </summary>
-namespace Ellysia {
+namespace Elysia {
 	/// <summary>
 	/// グローバル変数
 	/// </summary>
@@ -238,7 +238,7 @@ protected:
 	std::string typeName_ = "";
 
 	//モデル
-	std::unique_ptr<Ellysia::Model> model_ = nullptr;
+	std::unique_ptr<Elysia::Model> model_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 	//AABB

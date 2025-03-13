@@ -27,7 +27,7 @@
  /// <summary>
  /// EllysiaEngine(前方宣言)
  /// </summary>
-namespace Ellysia {
+namespace Elysia {
 	/// <summary>
 	/// レベルエディタ
 	/// </summary>
@@ -63,7 +63,7 @@ namespace Ellysia {
 /// <summary>
 /// ゲームシーン
 /// </summary>
-class GameScene : public Ellysia::IGameScene {
+class GameScene : public Elysia::IGameScene {
 public:
 
 	/// <summary>
@@ -80,7 +80,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gameManager"></param>
-	void Update(Ellysia::GameManager* gameManager)override;
+	void Update(Elysia::GameManager* gameManager)override;
 
 	/// <summary>
 	/// 3Dオブジェクト
@@ -154,17 +154,17 @@ private:
 
 private:
 	//インプット
-	Ellysia::Input* input_ = nullptr;
+	Elysia::Input* input_ = nullptr;
 	//テクスチャ管理クラス
-	Ellysia::TextureManager* texturemanager_ = nullptr;
+	Elysia::TextureManager* texturemanager_ = nullptr;
 	//モデル管理クラス
-	Ellysia::ModelManager* modelManager_ = nullptr;
+	Elysia::ModelManager* modelManager_ = nullptr;
 	//レベルエディタ
-	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelHandle_ = 0u;
 	//グローバル変数クラス
-	Ellysia::GlobalVariables* globalVariables_ = nullptr;
+	Elysia::GlobalVariables* globalVariables_ = nullptr;
 
 private:
 	//カメラ
@@ -202,7 +202,7 @@ private:
 	
 	//ポストエフェクト
 	//ビネット
-	std::unique_ptr<Ellysia::Vignette> vignette_ = nullptr;
+	std::unique_ptr<Elysia::Vignette> vignette_ = nullptr;
 	const float_t MAX_VIGNETTE_POW_ = 1.6f;
 	float_t vignettePow_ = 17.0f;
 	float_t vignetteChangeTime_ = 0.0f;
@@ -223,7 +223,7 @@ private:
 	bool isTouchStrongEnemy_ = false;
 
 	//コリジョン管理
-	std::unique_ptr<Ellysia::CollisionManager> collisionManager_ = nullptr;
+	std::unique_ptr<Elysia::CollisionManager> collisionManager_ = nullptr;
 
 	
 #pragma region ゲーム中のUI
@@ -231,22 +231,22 @@ private:
 	bool isDisplayUI_ = false;
 
 	//脱出テキストのスプライト
-	std::unique_ptr<Ellysia::Sprite> escapeText_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> escapeText_ = nullptr;
 
 	//操作のスプライト
-	std::unique_ptr<Ellysia::Sprite> operation_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> operation_ = nullptr;
 
 	//鍵取得のスプライト
-	std::unique_ptr<Ellysia::Sprite> pickUpKey_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> pickUpKey_ = nullptr;
 
 	//プレイヤーの体力
 	static const uint32_t PLAYER_HP_MAX_QUANTITY_ = 3u;
 	//現在のHP
 	uint32_t currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
 	//プレイヤーHPのスプライト
-	std::unique_ptr<Ellysia::Sprite> playerHP_[PLAYER_HP_MAX_QUANTITY_] = { nullptr };
+	std::unique_ptr<Elysia::Sprite> playerHP_[PLAYER_HP_MAX_QUANTITY_] = { nullptr };
 	//背景フレーム
-	std::unique_ptr<Ellysia::Sprite> playerHPBackFrame_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> playerHPBackFrame_ = nullptr;
 
 	//鍵管理クラス
 	std::unique_ptr<KeyManager> keyManager_ = {};
@@ -254,13 +254,13 @@ private:
 
 
 	//脱出のスプライト
-	std::unique_ptr<Ellysia::Sprite> toEscape_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> toEscape_ = nullptr;
 
 #pragma endregion
 
 #pragma region フェード
 	//白フェードのスプライト
-	std::unique_ptr<Ellysia::Sprite> whiteFade_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> whiteFade_ = nullptr;
 	//透明度
 	float_t whiteFadeTransparency_ = 1.0f;
 	//イン
@@ -271,7 +271,7 @@ private:
 
 
 	//黒フェードのスプライト
-	std::unique_ptr<Ellysia::Sprite> blackFade_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> blackFade_ = nullptr;
 	//透明度
 	float_t blackFadeTransparency_ = 0.0f;
 	//イン
@@ -294,13 +294,13 @@ private:
 	//説明の数
 	static const uint32_t EXPLANATION_QUANTITY_ = 2u;
 	//説明スプライト
-	std::unique_ptr<Ellysia::Sprite> explanation_[EXPLANATION_QUANTITY_] = { nullptr };
+	std::unique_ptr<Elysia::Sprite> explanation_[EXPLANATION_QUANTITY_] = { nullptr };
 
 	//Spaceで次に進むテキスト
 	//数
 	static const uint32_t SPACE_TO_NEXT_QUANTITY_ = 2u;
 	//次へのスプライト
-	std::unique_ptr<Ellysia::Sprite> spaceToNext_[SPACE_TO_NEXT_QUANTITY_] = { nullptr };
+	std::unique_ptr<Elysia::Sprite> spaceToNext_[SPACE_TO_NEXT_QUANTITY_] = { nullptr };
 
 	//テクスチャの番号
 	uint32_t howToPlayTextureNumber_ = 0u;
@@ -313,7 +313,7 @@ private:
 
 	//宝箱が開いているかどうか
 	bool isOpenTreasureBox_ = false;
-	std::unique_ptr<Ellysia::Sprite>openTreasureBoxSprite_ = nullptr;
+	std::unique_ptr<Elysia::Sprite>openTreasureBoxSprite_ = nullptr;
 
 	Vector3 translate_ = {};
 	//門の回転

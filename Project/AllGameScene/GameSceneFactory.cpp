@@ -6,10 +6,10 @@
 #include "LoseScene/LoseScene.h"
 #include "TestScene/TestScene.h"
 
-std::unique_ptr<Ellysia::IGameScene> GameSceneFactory::CreateScene(const std::string& sceneName){
+std::unique_ptr<Elysia::IGameScene> GameSceneFactory::CreateScene(const std::string& sceneName){
 
     //シーンを生成
-    std::unique_ptr<Ellysia::IGameScene> newScene = nullptr;
+    std::unique_ptr<Elysia::IGameScene> newScene = nullptr;
 
     //タイトル
     if (sceneName == "Title") {

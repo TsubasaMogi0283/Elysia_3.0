@@ -21,7 +21,7 @@
 /// <summary>
 /// EllysiaEngine(前方宣言)
 /// </summary>
-namespace Ellysia {
+namespace Elysia {
 	/// <summary>
 	/// 入力
 	/// </summary>
@@ -60,7 +60,7 @@ namespace Ellysia {
 /// <summary>
 /// 負けシーン
 /// </summary>
-class LoseScene : public Ellysia::IGameScene {
+class LoseScene : public Elysia::IGameScene {
 public:
 
 	/// <summary>
@@ -77,7 +77,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gameManager"></param>
-	void Update(Ellysia::GameManager* gameManager)override;
+	void Update(Elysia::GameManager* gameManager)override;
 
 
 	/// <summary>
@@ -129,18 +129,18 @@ private:
 
 private:
 	//入力クラス
-	Ellysia::Input* input_ = nullptr;
+	Elysia::Input* input_ = nullptr;
 	//テクスチャ管理クラス
-	Ellysia::TextureManager* textureManager_ = nullptr;
+	Elysia::TextureManager* textureManager_ = nullptr;
 	//レベルデータ管理クラス
-	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
 
 	//モデル管理クラス
-	Ellysia::ModelManager* modelManager_ = nullptr;
+	Elysia::ModelManager* modelManager_ = nullptr;
 	//グローバル変数クラス
-	Ellysia::GlobalVariables* globalVariables_ = nullptr;
+	Elysia::GlobalVariables* globalVariables_ = nullptr;
 	
 private:
 	//調整項目
@@ -192,12 +192,12 @@ private:
 	float endLightUpT_ = 0.0f;
 
 	//背景(ポストエフェクト)
-	std::unique_ptr<Ellysia::BackTexture>backTexture_ = nullptr;
+	std::unique_ptr<Elysia::BackTexture>backTexture_ = nullptr;
 	//ディゾルブ
-	std::unique_ptr<Ellysia::DissolvePostEffect> dissolveEffect_ = nullptr;
+	std::unique_ptr<Elysia::DissolvePostEffect> dissolveEffect_ = nullptr;
 	Dissolve dissolve_ = {};
 	//黒背景
-	std::unique_ptr<Ellysia::Sprite> black_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> black_ = nullptr;
 	//透明度
 	float transparency_ = 0.0f;
 	

@@ -23,9 +23,9 @@
 EnemyManager::EnemyManager(){
 	//インスタンスの取得
 	//レベルデータ管理クラス
-	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 	//オーディオ
-	audio_ = Ellysia::Audio::GetInstance();
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 

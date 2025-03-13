@@ -39,7 +39,7 @@ public:
 
 protected:
 	//背景
-	std::unique_ptr<Ellysia::BackTexture>backTexture_ = nullptr;
+	std::unique_ptr<Elysia::BackTexture>backTexture_ = nullptr;
 
 
 };

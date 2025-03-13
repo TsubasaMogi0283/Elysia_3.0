@@ -36,7 +36,7 @@ class Player;
 /// <summary>
 /// EllysiaEngine
 /// </summary>
-namespace Ellysia {
+namespace Elysia {
 	/// <summary>
 	/// レベルデータ管理クラス
 	/// </summary>
@@ -147,7 +147,7 @@ public:
 	/// </summary>
 	/// <param name="levelDataManager">レベルデータ管理クラス</param>
 	/// <param name="levelDataHandle">ハンドル</param>
-	inline void SetLevelDataManager(Ellysia::LevelDataManager* levelDataManager,const uint32_t& levelDataHandle) {
+	inline void SetLevelDataManager(Elysia::LevelDataManager* levelDataManager,const uint32_t& levelDataHandle) {
 		this->levelDataManager_ = levelDataManager;
 		this->levelDataHandle_ = levelDataHandle;
 	}
@@ -156,11 +156,11 @@ private:
 	//プレイヤー
 	Player* player_ = nullptr;
 	//接近BGM用
-	Ellysia::Audio* audio_ = nullptr;
+	Elysia::Audio* audio_ = nullptr;
 	//ハンドル
 	uint32_t audioHandle_ = 0u;
 	//レベルデータ管理クラス
-	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//レベルデータのハンドル
 	uint32_t levelDataHandle_ = 0u;
 

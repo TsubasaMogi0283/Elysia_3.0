@@ -8,9 +8,9 @@
 WinScene::WinScene(){
 	//インスタンスの取得
 	//入力
-	input_ = Ellysia::Input::GetInstance();
+	input_ = Elysia::Input::GetInstance();
 	//レベルデータ管理クラス
-	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
 
 void WinScene::Initialize() {
@@ -19,13 +19,13 @@ void WinScene::Initialize() {
 
 
 	//テキスト(タイトルへのやつ)
-	uint32_t textHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Result/Win/WinText.png");
-	text_.reset(Ellysia::Sprite::Create(textHandle, INITIAL_SPRITE_POSITION));
+	uint32_t textHandle = Elysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Result/Win/WinText.png");
+	text_.reset(Elysia::Sprite::Create(textHandle, INITIAL_SPRITE_POSITION));
 
 	//白背景
-	uint32_t whiteTexturehandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Back/White.png");
+	uint32_t whiteTexturehandle = Elysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Back/White.png");
 	//生成
-	whiteFade_.reset(Ellysia::Sprite::Create(whiteTexturehandle, INITIAL_SPRITE_POSITION));
+	whiteFade_.reset(Elysia::Sprite::Create(whiteTexturehandle, INITIAL_SPRITE_POSITION));
 	//透明度の設定
 	transparency_ = 0.0f;
 	whiteFade_->SetTransparency(transparency_);
@@ -49,7 +49,7 @@ void WinScene::Initialize() {
 	camera_.Initialize();
 	camera_.translate = { .x = 0.0f,.y = 2.0f,.z = -6.0f };
 	//ポストエフェクト
-	backTexture_ = std::make_unique<Ellysia::BackTexture>();
+	backTexture_ = std::make_unique<Elysia::BackTexture>();
 	backTexture_->SetClearColour(directionalLight_.color);
 	backTexture_->Initialize();
 
@@ -61,7 +61,7 @@ void WinScene::Initialize() {
 
 }
 
-void WinScene::Update(Ellysia::GameManager* gameManager){
+void WinScene::Update(Elysia::GameManager* gameManager){
 
 	//増える時間の値
 	const uint32_t INCREASE_VALUE = 1u;

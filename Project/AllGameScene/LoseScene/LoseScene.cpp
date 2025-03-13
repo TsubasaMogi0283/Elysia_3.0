@@ -15,15 +15,15 @@ LoseScene::LoseScene(){
 
 	//インスタンスの取得
 	//入力クラス
-	input_ = Ellysia::Input::GetInstance();
+	input_ = Elysia::Input::GetInstance();
 	//テクスチャ管理クラス
-	textureManager_ = Ellysia::TextureManager::GetInstance();
+	textureManager_ = Elysia::TextureManager::GetInstance();
 	//レベルデータ管理クラス
-	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 	//モデル管理クラス
-	modelManager_ = Ellysia::ModelManager::GetInstance();
+	modelManager_ = Elysia::ModelManager::GetInstance();
 	//グローバル変数クラス
-	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
+	globalVariables_ = Elysia::GlobalVariables::GetInstance();
 }
 
 void LoseScene::Initialize(){
@@ -33,7 +33,7 @@ void LoseScene::Initialize(){
 
 	//黒背景
 	uint32_t blackTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Back/Black.png");
-	black_.reset(Ellysia::Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION_));
+	black_.reset(Elysia::Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION_));
 	//透明度の設定
 	transparency_ = 0.0f;
 	black_->SetTransparency(transparency_);
@@ -44,16 +44,16 @@ void LoseScene::Initialize(){
 	
 
 	//背景(ポストエフェクト)
-	backTexture_ = std::make_unique<Ellysia::BackTexture>();
+	backTexture_ = std::make_unique<Elysia::BackTexture>();
 	const Vector4 CLEAR_COLOR = { .x = 0.0f,.y = 0.0f,.z = 0.0f,.w = 1.0f };
 	backTexture_->SetClearColour(CLEAR_COLOR);
 	backTexture_->Initialize();
 
 	//ディゾルブ
-	dissolveEffect_ = std::make_unique<Ellysia::DissolvePostEffect>();
+	dissolveEffect_ = std::make_unique<Elysia::DissolvePostEffect>();
 	dissolveEffect_->Initialize(CLEAR_COLOR);
 	//マスクテクスチャ
-	uint32_t maskTexture = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/External/Texture/Dissolve/noise0.png");
+	uint32_t maskTexture = Elysia::TextureManager::GetInstance()->LoadTexture("Resources/External/Texture/Dissolve/noise0.png");
 
 
 	//調整項目として記録
@@ -85,7 +85,7 @@ void LoseScene::Initialize(){
 	isChangeNextScene_ = false;
 }
 
-void LoseScene::Update(Ellysia::GameManager* gameManager){
+void LoseScene::Update(Elysia::GameManager* gameManager){
 
 	//始め
 	//ライトアップをする

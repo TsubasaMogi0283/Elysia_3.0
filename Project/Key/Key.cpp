@@ -8,7 +8,7 @@
 
 void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 	//モデルの生成
-	model_.reset(Ellysia::Model::Create(modelhandle));
+	model_.reset(Elysia::Model::Create(modelhandle));
 
 	//スケールのサイズ
 	const float SCALE = 0.4f;
@@ -34,8 +34,8 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 
 
 	//鍵のスプライト
-	uint32_t textureHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Item/Key/Key.png");
-	sprite_.reset(Ellysia::Sprite::Create(textureHandle, {.x=0.0f,.y=0.0f}));
+	uint32_t textureHandle = Elysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Item/Key/Key.png");
+	sprite_.reset(Elysia::Sprite::Create(textureHandle, {.x=0.0f,.y=0.0f}));
 	//アンカーポイントを設定する
 	const Vector2 ANCHOR_POINT = { .x = 0.5f,.y = 0.5f };
 	sprite_->SetAnchorPoint(ANCHOR_POINT);
@@ -45,9 +45,9 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 
 
 #ifdef _DEBUG
-	uint32_t debugModelHandle = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube", "cube.obj");
+	uint32_t debugModelHandle = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube", "cube.obj");
 	//モデルの生成
-	debugModel_.reset(Ellysia::Model::Create(debugModelHandle));
+	debugModel_.reset(Elysia::Model::Create(debugModelHandle));
 	//ワールドトランスフォームの初期化
 	debugWorldTransform_.Initialize();
 	//マテリアルの初期化

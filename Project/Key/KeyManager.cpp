@@ -15,13 +15,13 @@
 KeyManager::KeyManager() {
 	//インスタンスの取得
 	//オーディオ
-	audio_ = Ellysia::Audio::GetInstance();
+	audio_ = Elysia::Audio::GetInstance();
 	//テクスチャ管理クラス
-	textureManager_ = Ellysia::TextureManager::GetInstance();
+	textureManager_ = Elysia::TextureManager::GetInstance();
 	//入力
-	input_ = Ellysia::Input::GetInstance();
+	input_ = Elysia::Input::GetInstance();
 	//レベルデータ管理クラス
-	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
 
 void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vector3>& positions) {
@@ -52,9 +52,9 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 	//リスト
 	uint32_t keyListSpriteHandle = textureManager_->LoadTexture("Resources/Sprite/Item/KeyList.png");
 	//生成
-	keyListSprite_.reset(Ellysia::Sprite::Create(keyListSpriteHandle, initialPosition_));
+	keyListSprite_.reset(Elysia::Sprite::Create(keyListSpriteHandle, initialPosition_));
 
-	uint32_t textureHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Item/Key/Key.png");
+	uint32_t textureHandle = Elysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Item/Key/Key.png");
 	//サイズを取得
 	keySpriteWidth_ = textureManager_->GetTextureWidth(textureHandle);
 	keySpriteHeight_ = textureManager_->GetTextureHeight(textureHandle);
@@ -69,7 +69,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 			.x = initialPositionAddAnchorPoint.x + keySpriteWidth_ * static_cast<float>(i),
 			.y = initialPositionAddAnchorPoint.y
 		};
-		keySprites_[i].reset(Ellysia::Sprite::Create(textureHandle, position));
+		keySprites_[i].reset(Elysia::Sprite::Create(textureHandle, position));
 		//アンカーポイントの設定
 		keySprites_[i]->SetAnchorPoint(ANCHOR_POINT);
 		//初期スケール
@@ -90,7 +90,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 	uint32_t pickUpTextureManager = textureManager_->LoadTexture("Resources/Sprite/Key/PickUpKey.png");
 	//生成
 	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
-	pickUpKey_.reset(Ellysia::Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));
+	pickUpKey_.reset(Elysia::Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));
 
 
 	//再生

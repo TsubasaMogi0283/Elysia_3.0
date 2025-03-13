@@ -18,7 +18,7 @@
  /// <summary>
  /// EllysiaEngine(前方宣言)
  /// </summary>
-namespace Ellysia {
+namespace Elysia {
 	/// <summary>
 	/// グローバル変数
 	/// </summary>
@@ -181,7 +181,7 @@ public:
 
 private:
 	//グローバル変数クラス
-	Ellysia::GlobalVariables* globalVariables_ = nullptr;
+	Elysia::GlobalVariables* globalVariables_ = nullptr;
 
 private:
 	//調整項目
@@ -262,12 +262,12 @@ private:
 	const uint32_t LEFT_ = 1u;
 
 	static const uint32_t SIDE_QUANTITY_ = 2u;
-	std::unique_ptr<Ellysia::Model>model_[SIDE_QUANTITY_] = { nullptr };
+	std::unique_ptr<Elysia::Model>model_[SIDE_QUANTITY_] = { nullptr };
 	WorldTransform worldTransform_[SIDE_QUANTITY_] = {};
 	Material material_ = {};
 
 	//中心
-	std::unique_ptr<Ellysia::Model>lightCenterModel_ = nullptr;
+	std::unique_ptr<Elysia::Model>lightCenterModel_ = nullptr;
 	WorldTransform lightCenterWorldTransform_ = {};
 	Material lightCenterMaterial_ = {};
 

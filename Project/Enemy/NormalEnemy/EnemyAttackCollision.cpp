@@ -5,7 +5,7 @@
 
 void EnemyAttackCollision::Initialize(const uint32_t& modelHandle){
 	//モデルの生成
-	model_.reset(Ellysia::Model::Create(modelHandle));
+	model_.reset(Elysia::Model::Create(modelHandle));
 
 
 	//ワールドトランスフォームの初期化

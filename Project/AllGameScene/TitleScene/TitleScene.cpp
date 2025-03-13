@@ -20,11 +20,11 @@
 TitleScene::TitleScene(){
 	//インスタンスの取得
 	//テクスチャ管理クラス
-	textureManager_ = Ellysia::TextureManager::GetInstance();
+	textureManager_ = Elysia::TextureManager::GetInstance();
 	//入力クラス
-	input_ = Ellysia::Input::GetInstance();
+	input_ = Elysia::Input::GetInstance();
 	//レベルエディタ管理クラス
-	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
 
 void TitleScene::Initialize(){
@@ -42,11 +42,11 @@ void TitleScene::Initialize(){
 	const Vector2 INITIAL_POSITION = {.x=0.0f,.y=0.0f};
 	
 	//テキスト
-	text_.reset(Ellysia::Sprite::Create(textTextureHandle, INITIAL_POSITION));
+	text_.reset(Elysia::Sprite::Create(textTextureHandle, INITIAL_POSITION));
 	//ロゴ
-	logo.reset(Ellysia::Sprite::Create(logoTextureHandle_, INITIAL_POSITION));
+	logo.reset(Elysia::Sprite::Create(logoTextureHandle_, INITIAL_POSITION));
 	//黒フェード
-	blackFade_.reset(Ellysia::Sprite::Create(blackTexureHandle, INITIAL_POSITION));
+	blackFade_.reset(Elysia::Sprite::Create(blackTexureHandle, INITIAL_POSITION));
 	//初期の透明度設定
 	const float INITIAL_TRANSPARENCY = 0.0f;
 	blackFade_->SetTransparency(INITIAL_TRANSPARENCY);
@@ -83,13 +83,13 @@ void TitleScene::Initialize(){
 	baseTitleBackTexture_->Initialize();
 
 	//ランダムエフェクトの生成
-	randomEffect_ = std::make_unique<Ellysia::RandomEffect>();
+	randomEffect_ = std::make_unique<Elysia::RandomEffect>();
 	//初期化
 	randomEffect_->Initialize();
 	
 }
 
-void TitleScene::Update(Ellysia::GameManager* gameManager){
+void TitleScene::Update(Elysia::GameManager* gameManager){
 
 #pragma region 未スタート
 

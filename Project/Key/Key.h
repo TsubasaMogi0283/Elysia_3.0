@@ -170,9 +170,9 @@ private:
 	
 private:
 	//モデル
-	std::unique_ptr<Ellysia::Model> model_ = nullptr;
+	std::unique_ptr<Elysia::Model> model_ = nullptr;
 	//取得時回転しUIの所にいく
-	std::unique_ptr<Ellysia::Sprite> sprite_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> sprite_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 	//マテリアル
@@ -220,7 +220,7 @@ private:
 
 #ifdef _DEBUG
 	//デバッグ用
-	std::unique_ptr<Ellysia::Model>debugModel_ = nullptr;
+	std::unique_ptr<Elysia::Model>debugModel_ = nullptr;
 	WorldTransform debugWorldTransform_ = {};
 	Material debugMaterial_ = {};
 #endif // _DEBUG

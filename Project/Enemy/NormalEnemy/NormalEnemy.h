@@ -42,7 +42,7 @@ class Player;
 /// <summary>
 /// EllysiaEngine(前方宣言)
 /// </summary>
-namespace Ellysia {
+namespace Elysia {
 	/// <summary>
 	/// グローバル変数
 	/// </summary>
@@ -165,7 +165,7 @@ private:
 
 private:
 	//グローバル変数クラス
-	Ellysia::GlobalVariables* globalVariables_ = nullptr;
+	Elysia::GlobalVariables* globalVariables_ = nullptr;
 	//グループ名
 	const std::string GROUNP_NAME_ = "NormalEnemy";
 
@@ -181,7 +181,7 @@ private:
 
 private:
 	//パーティクル
-	std::unique_ptr<Ellysia::Particle3D> particle_ = {};
+	std::unique_ptr<Elysia::Particle3D> particle_ = {};
 	//マテリアル
 	Material particleMaterial_ = {};
 	//デバッグ用のモデルハンドル

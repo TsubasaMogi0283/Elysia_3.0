@@ -38,7 +38,7 @@ class GameScene;
 /// <summary>
 /// EllysiaEngine
 /// </summary>
-namespace Ellysia {
+namespace Elysia {
 	/// <summary>
 	/// 入力クラス
 	/// </summary>
@@ -284,11 +284,11 @@ public:
 
 private:
 	//入力クラス
-	Ellysia::Input* input_ = nullptr;
+	Elysia::Input* input_ = nullptr;
 	//モデル管理クラス
-	Ellysia::ModelManager* modelManager_ = nullptr;
+	Elysia::ModelManager* modelManager_ = nullptr;
 	//レベルエディタ
-	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelHandle_ = 0u;
 
@@ -304,7 +304,7 @@ private:
 private:
 
 	//モデル
-	std::unique_ptr<Ellysia::Model> model_ = nullptr;
+	std::unique_ptr<Elysia::Model> model_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_={};
 	//動く方向

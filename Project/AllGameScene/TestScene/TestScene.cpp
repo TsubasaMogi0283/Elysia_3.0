@@ -12,11 +12,11 @@
 TestScene::TestScene(){
 	//インスタンスの取得	
 	//入力
-	input_ = Ellysia::Input::GetInstance();
+	input_ = Elysia::Input::GetInstance();
 	//モデル管理クラス
-	modelManager_ = Ellysia::ModelManager::GetInstance();
+	modelManager_ = Elysia::ModelManager::GetInstance();
 	//レベルエディタ管理クラス
-	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
 
 void TestScene::Initialize(){
@@ -26,7 +26,7 @@ void TestScene::Initialize(){
 
 	//仮プレイヤー
 	uint32_t playerModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube", "cube.obj");
-	playerModel_.reset(Ellysia::Model::Create(playerModelHandle));
+	playerModel_.reset(Elysia::Model::Create(playerModelHandle));
 	playerWorldTransform_.Initialize();
 	playerWorldTransform_.scale = { .x = 0.5f,.y = 1.0f,.z=2.0f };
 	playerCenterPosition_ = { .x = 0.0f,.y = 0.0f,.z = -5.0f };
@@ -37,13 +37,13 @@ void TestScene::Initialize(){
 	uint32_t sphereModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
 	//四隅
 	for (uint32_t i = 0; i < COUNER_QUANTITY_; ++i) {
-		playerCounerModel_[i].reset(Ellysia::Model::Create(sphereModelHandle));
+		playerCounerModel_[i].reset(Elysia::Model::Create(sphereModelHandle));
 		playerCounerWorldTransform_[i].Initialize();
 
 	}
 	
 	//吸収パーティクル
-	particle_ = std::move(Ellysia::Particle3D::Create(ParticleMoveType::Absorb));
+	particle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Absorb));
 	particle_->SetIsReleaseOnceMode(false);
 	particle_->SetIsToTransparent(true);
 	particle_->SetCount(5u);
@@ -59,11 +59,11 @@ void TestScene::Initialize(){
 	directionalLight_.Initialize();
 
 	//背景
-	backTexture_ = std::make_unique<Ellysia::BackTexture>();
+	backTexture_ = std::make_unique<Elysia::BackTexture>();
 	backTexture_->Initialize();
 }
 
-void TestScene::Update(Ellysia::GameManager* gameManager){
+void TestScene::Update(Elysia::GameManager* gameManager){
 
 
 	//再読み込み

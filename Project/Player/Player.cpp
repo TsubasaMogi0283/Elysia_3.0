@@ -14,18 +14,18 @@ Player::Player(){
 
 	//インスタンスの取得
 	//入力クラス
-	input_ = Ellysia::Input::GetInstance();
+	input_ = Elysia::Input::GetInstance();
 	//モデル管理クラス
-	modelManager_ = Ellysia::ModelManager::GetInstance();
+	modelManager_ = Elysia::ModelManager::GetInstance();
 	//レベルエディタ管理クラス
-	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
 
 void Player::Initialize(){
 
 	//モデルの生成 	
 	uint32_t modelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
-	model_.reset(Ellysia::Model::Create(modelHandle));
+	model_.reset(Elysia::Model::Create(modelHandle));
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();

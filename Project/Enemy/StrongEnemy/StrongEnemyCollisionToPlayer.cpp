@@ -5,7 +5,7 @@
 void StrongEnemyCollisionToPlayer::Initialize(const uint32_t& modelHandle){
 
 	//生成
-	model_.reset(Ellysia::Model::Create(modelHandle));
+	model_.reset(Elysia::Model::Create(modelHandle));
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();

@@ -10,7 +10,7 @@
 
 FlashLight::FlashLight() {
 	//グローバル変数クラス
-	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
+	globalVariables_ = Elysia::GlobalVariables::GetInstance();
 }
 
 void FlashLight::Initialize() {
@@ -63,19 +63,19 @@ void FlashLight::Initialize() {
 	material_.color = { .x = 0.5f,.y = 1.0f,.z = 0.5f,.w = 1.0f };
 
 	//デバッグ用のモデルを生成する
-	uint32_t debugModelHandle = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	uint32_t debugModelHandle = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
 
 	const float SCALE = 0.4f;
 	//左右
 	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
-		model_[i].reset(Ellysia::Model::Create(debugModelHandle));
+		model_[i].reset(Elysia::Model::Create(debugModelHandle));
 		worldTransform_[i].Initialize();
 		worldTransform_[i].scale = { .x = SCALE,.y = SCALE ,.z = SCALE };
 
 	}
 
 	//中心
-	lightCenterModel_.reset(Ellysia::Model::Create(debugModelHandle));
+	lightCenterModel_.reset(Elysia::Model::Create(debugModelHandle));
 	lightCenterWorldTransform_.Initialize();
 	lightCenterWorldTransform_.scale = { .x = SCALE,.y = SCALE ,.z = SCALE };
 	lightCenterMaterial_.Initialize();

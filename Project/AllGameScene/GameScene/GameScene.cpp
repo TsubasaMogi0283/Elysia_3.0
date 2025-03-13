@@ -18,15 +18,15 @@
 GameScene::GameScene() {
 	//インスタンスの取得
 	//入力
-	input_ = Ellysia::Input::GetInstance();
+	input_ = Elysia::Input::GetInstance();
 	//テクスチャ管理クラス
-	texturemanager_ = Ellysia::TextureManager::GetInstance();
+	texturemanager_ = Elysia::TextureManager::GetInstance();
 	//モデル管理クラス
-	modelManager_ = Ellysia::ModelManager::GetInstance();
+	modelManager_ = Elysia::ModelManager::GetInstance();
 	//レベルエディタ管理クラス
-	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 	//グローバル変数クラス
-	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
+	globalVariables_ = Elysia::GlobalVariables::GetInstance();
 }
 
 void GameScene::Initialize() {
@@ -39,7 +39,7 @@ void GameScene::Initialize() {
 	//フェードの初期座標
 	const Vector2 INITIAL_SPRITE_POSITION = { .x = 0.0f,.y = 0.0f };
 	//生成
-	whiteFade_.reset(Ellysia::Sprite::Create(whiteTextureHandle, INITIAL_SPRITE_POSITION));
+	whiteFade_.reset(Elysia::Sprite::Create(whiteTextureHandle, INITIAL_SPRITE_POSITION));
 
 	//フェードインから始まる
 	//イン
@@ -56,7 +56,7 @@ void GameScene::Initialize() {
 	//黒画像読み込み
 	uint32_t blackTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Back/Black.png");
 	//生成
-	blackFade_.reset(Ellysia::Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION));
+	blackFade_.reset(Elysia::Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION));
 
 	//透明度
 	blackFadeTransparency_ = 0.0f;
@@ -83,7 +83,7 @@ void GameScene::Initialize() {
 	//「脱出せよ」の画像読み込み
 	uint32_t escapeTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Escape/EscapeText.png");
 	//生成
-	escapeText_.reset(Ellysia::Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
+	escapeText_.reset(Elysia::Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	//最初は非表示にする
 	escapeText_->SetInvisible(true);
 #pragma endregion
@@ -172,7 +172,7 @@ void GameScene::Initialize() {
 
 	//生成
 	for (uint32_t i = 0u; i < EXPLANATION_QUANTITY_; ++i) {
-		explanation_[i].reset(Ellysia::Sprite::Create(explanationTextureHandle[i], INITIAL_SPRITE_POSITION));
+		explanation_[i].reset(Elysia::Sprite::Create(explanationTextureHandle[i], INITIAL_SPRITE_POSITION));
 	}
 
 	//スペースで次への画像読み込み
@@ -181,7 +181,7 @@ void GameScene::Initialize() {
 	spaceToNextTextureHandle[1] = texturemanager_->LoadTexture("Resources/Sprite/Explanation/ExplanationNext2.png");
 
 	for (uint32_t i = 0; i < SPACE_TO_NEXT_QUANTITY_; ++i) {
-		spaceToNext_[i].reset(Ellysia::Sprite::Create(spaceToNextTextureHandle[i], INITIAL_SPRITE_POSITION));
+		spaceToNext_[i].reset(Elysia::Sprite::Create(spaceToNextTextureHandle[i], INITIAL_SPRITE_POSITION));
 	}
 
 	//最初は0番目
@@ -191,7 +191,7 @@ void GameScene::Initialize() {
 	//操作
 	uint32_t operationTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Operation/Operation.png");
 	//生成
-	operation_.reset(Ellysia::Sprite::Create(operationTextureHandle, { .x = 20.0f,.y = 0.0f }));
+	operation_.reset(Elysia::Sprite::Create(operationTextureHandle, { .x = 20.0f,.y = 0.0f }));
 
 
 #pragma endregion
@@ -201,33 +201,33 @@ void GameScene::Initialize() {
 	uint32_t playerHPBackFrameTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Player/PlayerHPBack.png");
 	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
 	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
-		playerHP_[i].reset(Ellysia::Sprite::Create(playerHPTextureHandle, { .x = static_cast<float>(i) * 64 + INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
+		playerHP_[i].reset(Elysia::Sprite::Create(playerHPTextureHandle, { .x = static_cast<float>(i) * 64 + INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
 	}
 
-	playerHPBackFrame_.reset(Ellysia::Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
+	playerHPBackFrame_.reset(Elysia::Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
 	currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
 
 
 	//ゴールに向かえのテキスト
 	uint32_t toEscapeTextureHandle = texturemanager_->LoadTexture("Resources/Sprite/Escape/ToGoal.png");
-	toEscape_.reset(Ellysia::Sprite::Create(toEscapeTextureHandle, INITIAL_SPRITE_POSITION));
+	toEscape_.reset(Elysia::Sprite::Create(toEscapeTextureHandle, INITIAL_SPRITE_POSITION));
 
 	//宝箱
 	uint32_t openTreasureBoxSpriteHandle = texturemanager_->LoadTexture("Resources/Sprite/TreasureBox/OpenTreasureBox.png");
-	openTreasureBoxSprite_.reset(Ellysia::Sprite::Create(openTreasureBoxSpriteHandle, INITIAL_SPRITE_POSITION));
+	openTreasureBoxSprite_.reset(Elysia::Sprite::Create(openTreasureBoxSpriteHandle, INITIAL_SPRITE_POSITION));
 
 
 #pragma endregion
 
 	//コリジョン管理クラスの生成
-	collisionManager_ = std::make_unique<Ellysia::CollisionManager>();
+	collisionManager_ = std::make_unique<Elysia::CollisionManager>();
 	//角度の初期化
 	//プレイヤーの向いている向きと合わせていくよ
 	theta_ = std::numbers::pi_v<float> / 2.0f;
 
 	//ポストエフェクトの初期化
 	//ビネット生成
-	vignette_ = std::make_unique<Ellysia::Vignette>();
+	vignette_ = std::make_unique<Elysia::Vignette>();
 	//初期化
 	vignette_->Initialize();
 	//値の設定
@@ -786,7 +786,7 @@ void GameScene::MoveLightSide() {
 	player_->GetFlashLight()->SetLightSideTheta(lightSideTheta_);
 }
 
-void GameScene::Update(Ellysia::GameManager* gameManager) {
+void GameScene::Update(Elysia::GameManager* gameManager) {
 
 	//フレーム初めに
 	//コリジョンリストのクリア

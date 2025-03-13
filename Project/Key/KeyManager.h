@@ -35,7 +35,7 @@ class Player;
 /// <summary>
 /// EllysiaEngine(前方宣言)
 /// </summary>
-namespace Ellysia {
+namespace Elysia {
 	/// <summary>
 	/// オーディオ
 	/// </summary>
@@ -194,13 +194,13 @@ public:
 
 private:
 	//オーディオ
-	Ellysia::Audio* audio_ = nullptr;
+	Elysia::Audio* audio_ = nullptr;
 	//テクスチャ管理クラス
-	Ellysia::TextureManager* textureManager_ = nullptr;
+	Elysia::TextureManager* textureManager_ = nullptr;
 	//入力
-	Ellysia::Input* input_ = nullptr;
+	Elysia::Input* input_ = nullptr;
 	//レベルデータ管理クラス
-	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
 	//プレイヤー
@@ -231,9 +231,9 @@ private:
 	uint32_t modelHandle_ = 0u;
 
 	//UI
-	std::unique_ptr<Ellysia::Sprite> keyListSprite_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> keyListSprite_ = nullptr;
 	//鍵
-	std::array<std::unique_ptr<Ellysia::Sprite>, MAX_KEY_QUANTITY_> keySprites_ = { nullptr };
+	std::array<std::unique_ptr<Elysia::Sprite>, MAX_KEY_QUANTITY_> keySprites_ = { nullptr };
 	//サイズ
 	uint64_t keySpriteWidth_ = 0u;
 	uint64_t keySpriteHeight_ = 0u;
@@ -248,7 +248,7 @@ private:
 	//終点座標
 	std::array<Vector2, MAX_KEY_QUANTITY_> endPositions_ = {};
 	//鍵取得するかどうか
-	std::unique_ptr<Ellysia::Sprite> pickUpKey_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> pickUpKey_ = nullptr;
 	//プレイヤーと全ての鍵の距離
 	std::list<float>keyAndPlayerDistances_ = {};
 

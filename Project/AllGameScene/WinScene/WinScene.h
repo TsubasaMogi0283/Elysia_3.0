@@ -20,7 +20,7 @@
 /// <summary>
 /// EllysiaEngine(前方宣言)
 /// </summary>
-namespace Ellysia {
+namespace Elysia {
 
 	/// <summary>
 	/// 入力
@@ -46,7 +46,7 @@ namespace Ellysia {
 /// <summary>
 /// 勝利シーン
 /// </summary>
-class WinScene : public Ellysia::IGameScene {
+class WinScene : public Elysia::IGameScene {
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -62,7 +62,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gameManager"></param>
-	void Update(Ellysia::GameManager* gameManager)override;
+	void Update(Elysia::GameManager* gameManager)override;
 
 	/// <summary>
 	/// ポストエフェクト描画処理前
@@ -92,9 +92,9 @@ public:
 
 private:
 	//入力
-	Ellysia::Input* input_ = nullptr;
+	Elysia::Input* input_ = nullptr;
 	//レベルデータ管理クラス
-	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
 
@@ -113,7 +113,7 @@ private:
 
 
 	//ポストエフェクト
-	std::unique_ptr<Ellysia::BackTexture> backTexture_ = nullptr;
+	std::unique_ptr<Elysia::BackTexture> backTexture_ = nullptr;
 
 	//オブジェクトの浮遊感を出す
 	float objectFloatingTheta_ = 0.0f;
@@ -121,9 +121,9 @@ private:
 
 
 	//タイトルへのスプライト
-	std::unique_ptr<Ellysia::Sprite> text_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> text_ = nullptr;
 	//背景のスプライト
-	std::unique_ptr<Ellysia::Sprite> whiteFade_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> whiteFade_ = nullptr;
 	//見せるカウント
 	uint32_t textDisplayCount_ = 0u;
 

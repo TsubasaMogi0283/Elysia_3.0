@@ -21,7 +21,7 @@ StrongEnemy::StrongEnemy() {
 void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position,const Vector3& speed){
 
 	//モデル
-	model_.reset(Ellysia::Model::Create(modelHandle));
+	model_.reset(Elysia::Model::Create(modelHandle));
 
 	//ワールドトランスフォーム
 	worldTransform_.Initialize();
@@ -40,7 +40,7 @@ void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position
 
 
 	//デバッグ用モデル
-	uint32_t collisionDebugModel = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
+	uint32_t collisionDebugModel = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
 
 	//プレイヤーに対してのコリジョン
 	collisionToPlayer_ = std::make_unique<StrongEnemyCollisionToPlayer>();

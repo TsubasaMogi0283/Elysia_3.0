@@ -16,13 +16,13 @@ NormalEnemy::NormalEnemy() {
 
 	//インスタンスの取得
 	//グローバル変数クラス
-	globalVariables_ = Ellysia::GlobalVariables::GetInstance();
+	globalVariables_ = Elysia::GlobalVariables::GetInstance();
 }
 
 void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed) {
 
 	//モデルの生成
-	model_.reset(Ellysia::Model::Create(modelHandle));
+	model_.reset(Elysia::Model::Create(modelHandle));
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -62,7 +62,7 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 
 
 	//デバッグ用のモデル
-	debugModelHandle = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	debugModelHandle = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
 
 	//攻撃の当たり判定
 	attackCollision_ = std::make_unique<EnemyAttackCollision>();
@@ -237,7 +237,7 @@ void NormalEnemy::Dead() {
 	//生成
 	if (particle_ == nullptr) {
 		//生成
-		particle_ = std::move(Ellysia::Particle3D::Create(Rise));
+		particle_ = std::move(Elysia::Particle3D::Create(Rise));
 		//パーティクルの細かい設定
 		particle_->SetTranslate(GetWorldPosition());
 		const float SCALE_SIZE = 20.0f;
