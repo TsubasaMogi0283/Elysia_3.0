@@ -163,7 +163,8 @@ ParticleInformation Ellysia::Particle3D::MakeNewParticle(std::mt19937& randomEng
 		particle.transform.translate = VectorCalculation::Add(emitter_.transform.translate, offset);
 
 	}
-
+	//初期トランスフォームを記録
+	particle.initialTransform = particle.transform;
 	//速度
 	std::uniform_real_distribution<float>distVelocity(-1.0f, 1.0f);
 	particle.velocity = {.x= distVelocity(randomEngine),.y= distVelocity(randomEngine),.z= distVelocity(randomEngine) };
@@ -198,21 +199,19 @@ std::list<ParticleInformation> Ellysia::Particle3D::Emission(const Emitter& emmi
 
 void Ellysia::Particle3D::Update(const Camera& camera) {
 
-
-	//C++でいうsrandみたいなやつ
+	//ランダムエンジン
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 
-
 	//一度だけ出すモード
-	if (isReleaseOnceMode_ == true && isReeasedOnce_ == false) {
+	if (isReleaseOnceMode_ == true ) {
 		//パーティクルを作る
-		particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
-		isReeasedOnce_ = true;
+		if (isReeasedOnce_ == false) {
+			particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
+			isReeasedOnce_ = true;
+		}
 	}
-
-
-	if (isReleaseOnceMode_ == false) {
+	else {
 		//時間経過
 		emitter_.frequencyTime += DELTA_TIME;
 		//頻度より大きいなら
@@ -223,6 +222,8 @@ void Ellysia::Particle3D::Update(const Camera& camera) {
 			emitter_.frequencyTime -= emitter_.frequency;
 		}
 	}
+
+
 	
 	
 	//座標の計算など
@@ -314,7 +315,6 @@ void Ellysia::Particle3D::Update(const Camera& camera) {
 			particleIterator->transform.translate.z += particleIterator->velocity.z / 3.0f;
 
 			//Y軸でπ/2回転
-			//これからはM_PIじゃなくてstd::numbers::pi_vを使おうね
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
@@ -366,7 +366,6 @@ void Ellysia::Particle3D::Update(const Camera& camera) {
 			particleIterator->transform.translate.y += 0.03f;
 			particleIterator->transform.translate.z += particleIterator->velocity.z / 15.0f;
 			//Y軸でπ/2回転
-			//これからはM_PIじゃなくてstd::numbers::pi_vを使おうね
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
@@ -391,12 +390,6 @@ void Ellysia::Particle3D::Update(const Camera& camera) {
 				instancingData_[numInstance_].world = worldMatrix;
 				instancingData_[numInstance_].color = particleIterator->color;
 
-				//ワールド座標
-				Vector3 worldPosition = {
-					.x = worldMatrix.m[3][0],
-					.y = worldMatrix.m[3][1],
-					.z = worldMatrix.m[3][2]
-				};
 				//透明になっていくようにするかどうか
 				if (isToTransparent_ == true) {
 					//アルファはVector4でのwだね
@@ -413,10 +406,49 @@ void Ellysia::Particle3D::Update(const Camera& camera) {
 
 		case ParticleMoveType::Absorb:
 			#pragma region 吸収
+
+			//線形補間
+			particleIterator->absorbT += T_INCREASE_VALUE_;
+			//線形補間でやって綺麗に集まるようにする	
+			Vector3 newPosition = VectorCalculation::Lerp(particleIterator->transform.translate, absorbPosition_, particleIterator->absorbT);
+			
+			//Y軸でπ/2回転
+			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
+
+			//カメラの回転を適用する
+			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix);
+			//平行成分はいらないよ
+			//あくまで回転だけ
+			billBoardMatrix.m[3][0] = 0.0f;
+			billBoardMatrix.m[3][1] = 0.0f;
+			billBoardMatrix.m[3][2] = 0.0f;
+
+			//行列を作っていくよ
+			scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(particleIterator->transform.scale);
+			translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(newPosition);
+
+			//パーティクル個別のRotateは関係ないよ
+			//その代わりにさっき作ったbillBoardMatrixを入れるよ
+			worldMatrix = Matrix4x4Calculation::Multiply(scaleMatrix, Matrix4x4Calculation::Multiply(billBoardMatrix, translateMatrix));
+
 			
 
-			//線形補間でやって綺麗に集まるようにする
-			particleIterator->transform.translate = absorbPosition_;
+			//最大値を超えないようにする
+			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
+				instancingData_[numInstance_].world = worldMatrix;
+				instancingData_[numInstance_].color = particleIterator->color;
+
+				//透明になっていくようにするかどうか
+				if (isToTransparent_ == true) {
+					//線形補間でどんどん透明にしていく
+					float alpha = 1.0f - particleIterator->absorbT;
+					particleIterator->color.w = alpha;
+					instancingData_[numInstance_].color.w = alpha;
+				}
+
+				++numInstance_;
+			}
+			break;
 
 
 
@@ -434,7 +466,6 @@ void Ellysia::Particle3D::Update(const Camera& camera) {
 
 	//全て見えなくなったらisAllInvisible_がtrueになる
 	if (isReeasedOnce_ == true) {
-		
 		//all_ofは中にある全ての要素が満たす時にtrueを返す
 		//今回の場合はparticles_にあるisInvisibleが全てtrueに鳴ったらtrueを返すという仕組みになっている
 		isAllInvisible_ = std::all_of(particles_.begin(), particles_.end(), [](const ParticleInformation& particle) {
@@ -445,7 +476,7 @@ void Ellysia::Particle3D::Update(const Camera& camera) {
 
 void Ellysia::Particle3D::Draw(const Camera& camera,const Material& material){
 
-	assert(material.lightingKinds == NoneLighting);
+	assert(material.lightingKinds == LightingType::NoneLighting);
 	//更新
 	Update(camera);
 
@@ -453,7 +484,6 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const Material& material){
 	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
 	*cameraPositionData_ = camera.GetWorldPosition();
 	cameraResource_->Unmap(0u, nullptr);
-
 
 	//コマンドを積む
 	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetParticle3DRootSignature().Get());
@@ -482,7 +512,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const Material& material){
 void Ellysia::Particle3D::Draw(const Camera& camera,const  Material& material,const DirectionalLight& directionalLight) {
 
 	//Directionalではなかったらassert
-	if (material.lightingKinds != DirectionalLighting) {
+	if (material.lightingKinds != LightingType::DirectionalLighting) {
 		assert(0);
 	}
 
@@ -493,7 +523,6 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const  Material& material,co
 	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraPositionData_));
 	*cameraPositionData_ = camera.GetWorldPosition();
 	cameraResource_->Unmap(0u, nullptr);
-
 
 	//コマンドを積む
 	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelineManager_->GetParticle3DRootSignature().Get());
@@ -525,7 +554,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera,const  Material& material,co
 
 void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, const PointLight& pointLight){
 	//Pointではなかったらassert
-	if (material.lightingKinds != PointLighting) {
+	if (material.lightingKinds != LightingType::PointLighting) {
 		assert(0);
 	}
 
@@ -568,7 +597,7 @@ void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, c
 
 void Ellysia::Particle3D::Draw(const Camera& camera, const Material& material, const SpotLight& spotLight){
 	//Spotではなかったらassert
-	if (material.lightingKinds != SpotLighting) {
+	if (material.lightingKinds != LightingType::SpotLighting) {
 		assert(0);
 	}
 

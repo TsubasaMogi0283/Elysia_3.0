@@ -316,7 +316,7 @@ namespace Ellysia {
 		//インスタンス
 		ComPtr<ID3D12Resource>instancingResource_ = nullptr;
 		//最大数
-		const uint32_t MAX_INSTANCE_NUMBER_ = 100u;
+		const uint32_t MAX_INSTANCE_NUMBER_ = 1000u;
 		//描画すべきインスタンス数
 		uint32_t numInstance_ = 0u;
 		//インスタンスのインデックス
@@ -352,7 +352,8 @@ namespace Ellysia {
 		//出し終えたかどうか
 		bool isReeasedOnce_ = false;
 
-
+		//線形補間で増える値
+		const float T_INCREASE_VALUE_ = 0.01f;
 		//吸収し集まる場所
 		Vector3 absorbPosition_ = {};
 

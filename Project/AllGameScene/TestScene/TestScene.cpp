@@ -44,12 +44,14 @@ void TestScene::Initialize(){
 	
 	//吸収パーティクル
 	particle_ = std::move(Ellysia::Particle3D::Create(ParticleMoveType::Absorb));
-
-
+	particle_->SetIsReleaseOnceMode(false);
+	particle_->SetIsToTransparent(true);
+	particle_->SetCount(5u);
+	particle_->SetFrequency(1.0f);
 	//カメラ
 	camera_.Initialize();
 	camera_.rotate.x = std::numbers::pi_v<float>/6.0f;
-	camera_.translate = { .x = 0.0f,.y = 21.0f,.z = -30.0f };
+	camera_.translate = { .x = 0.0f,.y = 21.0f,.z = -40.0f };
 	//マテリアルの初期化
 	playerMaterial_.Initialize();
 	playerMaterial_.lightingKinds = LightingType::DirectionalLighting;
@@ -116,6 +118,8 @@ void TestScene::Update(Ellysia::GameManager* gameManager){
 	directionalLight_.Update();
 	playerMaterial_.Update();
 
+
+	particle_->SetAbsorbPosition(playerWorldTransform_.GetWorldPosition());
 	gameManager;
 
 #ifdef _DEBUG
@@ -140,12 +144,9 @@ void TestScene::DrawObject3D(){
 	//仮プレイヤー
 	playerModel_->Draw(playerWorldTransform_,camera_, playerMaterial_, directionalLight_);
 
-	//四隅の球の更新
-	for (uint32_t i = 0; i < COUNER_QUANTITY_; ++i) {
-		playerCounerModel_[i]->Draw(playerCounerWorldTransform_[i], camera_, playerMaterial_);
-	}
+	
 	//パーティクル
-	particle_->Draw(camera_, playerMaterial_);
+	particle_->Draw(camera_, playerMaterial_, directionalLight_);
 }
 
 void TestScene::PreDrawPostEffectFirst(){

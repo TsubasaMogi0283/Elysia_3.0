@@ -17,6 +17,8 @@
 struct ParticleInformation {
 	//トランスフォーム
 	Transform transform;
+	//初期トランスフォーム
+	Transform initialTransform;
 	//速度
 	Vector3  velocity;
 	//色
