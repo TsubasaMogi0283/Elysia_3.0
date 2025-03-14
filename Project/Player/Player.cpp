@@ -190,7 +190,7 @@ void Player::Move() {
 		playerCenterPosition_ = VectorCalculation::Add(playerCenterPosition_, VectorCalculation::Multiply(moveDirection_, moveSpeed));
 
 		//AABB
-		std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelHandle_);
+		std::vector<AABB> aabbs = levelDataManager_->GetObjectAABBs(levelHandle_,"Stage");
 		//コライダーを持っているかどうか
 		std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelHandle_, "Stage");
 		//衝突判定

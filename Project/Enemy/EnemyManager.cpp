@@ -19,6 +19,7 @@
 #include "NormalEnemy/State/NormalEnemyMove.h"
 #include "NormalEnemy/State/NormalEnemyPreTracking.h"
 #include "NormalEnemy/State/NormalEnemyAttack.h"
+#include <CollisionCalculation.h>
 
 EnemyManager::EnemyManager(){
 	//インスタンスの取得
@@ -192,9 +193,9 @@ void EnemyManager::Update(){
 
 			//レベルエディタから持ってくる
 			//座標
-			std::vector<Vector3> positions = levelDataManager_->GetStageObjectPositions(levelDataHandle_);
+			std::vector<Vector3> positions = levelDataManager_->GetObjectPositions(levelDataHandle_,"Stage");
 			//AABB
-			std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelDataHandle_);
+			std::vector<AABB> aabbs = levelDataManager_->GetObjectAABBs(levelDataHandle_,"Stage");
 			//コライダーを持っているかどうか
 			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_,"Stage");
 			
@@ -208,19 +209,13 @@ void EnemyManager::Update(){
 
 
 				//お互いのAABBが接触している場合
-				if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
-					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
-					//オブジェクトとの差分ベクトル
-					Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
-					//敵の向いている方向
-					Vector3 enemyDirection = enemy->GetDirection();
+				if (CollisionCalculation::IsCollisionAABBPair(enemyAABB,objectAABB)) {
+					
+					//方向を取得
+					Vector3 direction = enemy->GetDirection();
 
-					//差分ベクトルのXとZの大きさを比べ
-					//値が大きい方で反転させる
-					float defferenceValueX = std::abs(defference.x);
-					float defferenceValueZ = std::abs(defference.z);
 					//X軸反転
-					if (defferenceValueX >= defferenceValueZ) {
+					if (direction.x >= direction.z) {
 						enemy->GetCurrentState()->InverseDirectionX();
 					}
 					//Z軸反転
@@ -437,9 +432,9 @@ void EnemyManager::Update(){
 		if (strongEnemy->GetCondition() == EnemyCondition::Move) {
 			//レベルエディタから持ってくる
 			//座標
-			std::vector<Vector3> positions = levelDataManager_->GetStageObjectPositions(levelDataHandle_);
+			std::vector<Vector3> positions = levelDataManager_->GetObjectPositions(levelDataHandle_,"Stage");
 			//AABB
-			std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelDataHandle_);
+			std::vector<AABB> aabbs = levelDataManager_->GetObjectAABBs(levelDataHandle_,"Stage");
 			//コライダーを持っているかどうか
 			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_, "Stage");
 			//衝突判定

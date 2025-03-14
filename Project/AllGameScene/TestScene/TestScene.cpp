@@ -73,7 +73,7 @@ void TestScene::Update(Elysia::GameManager* gameManager){
 
 	//レベルエディタの更新
 	levelDataManager_->Update(levelHandle_);
-	std::vector<AABB> objects = levelDataManager_->GetStageObjectAABBs(levelHandle_);
+	std::vector<AABB> objects = levelDataManager_->GetObjectAABBs(levelHandle_,"Stage");
 
 	const float_t SPEED = 0.1f;
 	//方向

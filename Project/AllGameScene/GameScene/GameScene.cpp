@@ -121,7 +121,7 @@ void GameScene::Initialize() {
 	keyManager_->SetPlayer(player_.get());
 
 	//レベルデータから鍵の情報を取り出す
-	std::vector<Vector3> keyPositions = levelDataManager_->GetKeyPositions(levelHandle_);
+	std::vector<Vector3> keyPositions = levelDataManager_->GetObjectPositions(levelHandle_,"Key");
 	keyManager_->Initialize(keyModelHandle, keyPositions);
 
 #pragma region 敵

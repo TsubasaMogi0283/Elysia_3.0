@@ -183,58 +183,31 @@ namespace Elysia {
 			return colliders;
 		}
 
-
 		/// <summary>
-		/// ステージオブジェクトの座標を取得
+		/// オブジェクトの座標を取得
 		/// </summary>
 		/// <param name="handle">ハンドル</param>
-		/// <returns>ステージオブジェクトの座標</returns>
-		inline std::vector<Vector3> GetStageObjectPositions(const uint32_t& handle) {
-			std::vector<Vector3> positions = {};
-
-			for (const auto& [key, levelData] : levelDatas_) {
-				if (levelData->handle == handle) {
-
-
-					//該当するLevelDataのobjectDatasを検索
-					for (auto& objectData : levelData->objectDatas) {
-
-						//Stageだったら追加
-						if (objectData.type == "Stage") {
-							positions.push_back(objectData.objectForLeveEditor->GetWorldPosition());
-						}
-
-
-					}
-
-					//無駄なループを防ぐ
-					break;
-				}
-			}
-
-			return positions;
-		}
-
-		/// <summary>
-		/// 鍵の座標を取得
-		/// </summary>
-		/// <param name="handle"></param>
+		/// <param name="objectType">タイプ</param>
 		/// <returns></returns>
-		inline std::vector<Vector3> GetKeyPositions(const uint32_t& handle) {
+		inline std::vector<Vector3> GetObjectPositions(const uint32_t& handle, const std::string& objectType) {
 			std::vector<Vector3> positions = {};
-
 			for (const auto& [key, levelData] : levelDatas_) {
 				if (levelData->handle == handle) {
 
-
 					//該当するLevelDataのobjectDatasを検索
 					for (auto& objectData : levelData->objectDatas) {
-
-						//Keyだったら追加
-						if (objectData.type == "Key") {
-							positions.push_back(objectData.initialTransform.translate);
+						
+						//指定されたオブジェクトだったら追加
+						if (objectData.type == objectType) {
+							if (objectData.isModelGenerate == true) {
+								positions.push_back(objectData.objectForLeveEditor->GetWorldPosition());
+							}
+							else {
+								//モデルを生成しない場合は初期座標を入れる
+								positions.push_back(objectData.initialTransform.translate);
+							}
+							
 						}
-
 
 					}
 
@@ -247,12 +220,14 @@ namespace Elysia {
 		}
 
 
+
 		/// <summary>
-		/// ステージオブジェクトのAABBを取得
+		/// AABBを取得
 		/// </summary>
 		/// <param name="handle">ハンドル</param>
-		/// <returns>ステージオブジェクトのAABB</returns>
-		inline std::vector<AABB> GetStageObjectAABBs(const uint32_t& handle) {
+		/// <param name="objectType">タイプ</param>
+		/// <returns></returns>
+		inline std::vector<AABB>GetObjectAABBs(const uint32_t& handle, const std::string& objectType) {
 			std::vector<AABB> aabbs = {};
 
 			for (const auto& [key, levelData] : levelDatas_) {
@@ -262,8 +237,8 @@ namespace Elysia {
 					//該当するLevelDataのobjectDatasを検索
 					for (auto& objectData : levelData->objectDatas) {
 
-						//Stageだったら追加
-						if (objectData.type == "Stage") {
+						//指定したオブジェクトタイプだったら追加
+						if (objectData.type == objectType) {
 							aabbs.push_back(objectData.objectForLeveEditor->GetAABB());
 						}
 

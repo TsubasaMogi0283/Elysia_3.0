@@ -181,12 +181,10 @@ private:
 private:
 
 	//幅
-	const float_t RADIUS_ = 1.0f;
+	const float_t RADIUS_ = 2.0f;
 	//幅(Vector3)
 	const Vector3 RADIUS_INTERVAL_ = { .x = RADIUS_,.y = RADIUS_,.z = RADIUS_ };
-	//0に戻る時間
-	const int32_t RETURN_ATTCK_TIME_ = 240u;
-
+	
 
 private:
 	//パーティクル
