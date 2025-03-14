@@ -27,7 +27,7 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	//スケールサイズ
-	const float SCALE_SIZE = 10.0f;
+	const float SCALE_SIZE = 7.0f;
 	worldTransform_.scale = { .x = SCALE_SIZE,.y = SCALE_SIZE ,.z = SCALE_SIZE };
 #ifdef _DEBUG
 	float DEBUG_SCALE = 1.0f;

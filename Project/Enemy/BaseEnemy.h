@@ -131,6 +131,20 @@ public:
 	}
 
 	/// <summary>
+	/// X軸方向反転
+	/// </summary>
+	inline void InvertDirectionX() {
+		this->direction_.x *= -1.0f;
+	}
+
+	/// <summary>
+	/// X軸方向反転
+	/// </summary>
+	inline void InvertDirectionZ() {
+		this->direction_.z *= -1.0f;
+	}
+
+	/// <summary>
 	/// プレイヤーの座標を設定
 	/// </summary>
 	/// <param name="position">座標</param>
@@ -178,18 +192,6 @@ public:
 		return condition_;
 	}
 
-	/// <summary>
-	/// X軸反転
-	/// </summary>
-	inline void InvertSpeedX() {
-		this->speed_.x *= -1.0f;
-	}
-	/// <summary>
-	/// Z軸反転
-	/// </summary>
-	inline void InvertSpeedZ() {
-		this->speed_.z *= -1.0f;
-	}
 
 	/// <summary>
 	/// 止まる前にスピードを記録する

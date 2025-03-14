@@ -129,6 +129,15 @@ public:
 		this->isAttack_ = isAttack;
 	}
 
+
+	/// <summary>
+	/// 現在の状態を取得
+	/// </summary>
+	/// <returns></returns>
+	inline BaseNormalEnemyState* GetCurrentState() {
+		return currentState_.get();
+	}
+
 	/// <summary>
 	/// 攻撃用のコリジョンを取得
 	/// </summary>

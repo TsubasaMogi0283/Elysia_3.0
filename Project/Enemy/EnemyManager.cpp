@@ -183,9 +183,12 @@ void EnemyManager::Update(){
 		enemy->Update();
 		//AABB
 		AABB enemyAABB = enemy->GetAABB();
+		//現在の状態
+		std::string currentState = enemy->GetCurrentStateName();
+
 
 		//移動中の時
-		if (enemy->GetCondition() == EnemyCondition::Move) {
+		if (currentState == "Move") {
 
 			//レベルエディタから持ってくる
 			//座標
@@ -209,31 +212,23 @@ void EnemyManager::Update(){
 					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
 					//オブジェクトとの差分ベクトル
 					Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
-					//正規化
-					Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
 					//敵の向いている方向
 					Vector3 enemyDirection = enemy->GetDirection();
 
-					//前にある場合だけ計算
-					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
-
-					//進行方向上にあるときだけ計算する
-					if (dot > FRONT_DOT_) {
-
-						//差分ベクトルのXとZの大きさを比べ
-						//値が大きい方で反転させる
-						float defferenceValueX = std::abs(defference.x);
-						float defferenceValueZ = std::abs(defference.z);
-						//X軸反転
-						if (defferenceValueX >= defferenceValueZ) {
-							enemy->InvertSpeedX();
-						}
-						//Z軸反転
-						else {
-							enemy->InvertSpeedZ();
-						}
-
+					//差分ベクトルのXとZの大きさを比べ
+					//値が大きい方で反転させる
+					float defferenceValueX = std::abs(defference.x);
+					float defferenceValueZ = std::abs(defference.z);
+					//X軸反転
+					if (defferenceValueX >= defferenceValueZ) {
+						enemy->GetCurrentState()->InverseDirectionX();
 					}
+					//Z軸反転
+					else {
+						enemy->GetCurrentState()->InverseDirectionZ();
+					}
+
+					
 				}
 			}
 		}
@@ -268,7 +263,7 @@ void EnemyManager::Update(){
 				if (defferenceDistance < TRACKING_START_DISTANCE_ &&
 					dot > FRONT_DOT_) {
 					//追跡準備へ
-					enemy->ChengeState(std::make_unique<NormalEnemyPreTracking>());
+					//enemy->ChengeState(std::make_unique<NormalEnemyPreTracking>());
 				}
 			}
 			//追跡
@@ -383,7 +378,7 @@ void EnemyManager::Update(){
 				//プレイヤーが
 				if (playerEnemyDistance <= TRACKING_START_DISTANCE_) {
 					//追跡準備へ
-					(*it1)->ChengeState(std::make_unique<NormalEnemyPreTracking>());
+					//(*it1)->ChengeState(std::make_unique<NormalEnemyPreTracking>());
 				}
 
 			}
@@ -404,14 +399,6 @@ void EnemyManager::Update(){
 			//前方にいない場合
 			else {
 				
-				//設定した値より短くなったら接近開始
-				if (currentState == "Move") {
-					if (playerEnemyDistance <= TRACKING_START_DISTANCE_) {
-						//追跡準備へ
-						(*it1)->ChengeState(std::make_unique<NormalEnemyPreTracking>());
-					}
-				}
-
 				//追跡の時に
 				if (currentState == "Tracking") {
 					//Moveへ
@@ -491,11 +478,11 @@ void EnemyManager::Update(){
 
 						//X軸反転
 						if (defferenceValueX >= defferenceValueZ) {
-							strongEnemy->InvertSpeedX();
+							strongEnemy->InvertDirectionX();
 						}
 						//Z軸反転
 						else {
-							strongEnemy->InvertSpeedZ();
+							strongEnemy->InvertDirectionZ();
 						}
 					}
 				}

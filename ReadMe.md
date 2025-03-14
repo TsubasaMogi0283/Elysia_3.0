@@ -40,7 +40,7 @@ https://youtu.be/Biu44fPONeg
 <br>
 <br>
 
-# Ellysia Engine
+# Elysia Engine
 
 このエンジンは私がDirectX12を使い制作したものになります。
 

@@ -301,7 +301,7 @@ void GameScene::ObjectCollision() {
 
 	//宝箱を開けたかどうかの設定
 	keyManager_->SetIsOpenTreasureBox(isOpenTreasureBox_);
-
+	//初期座標を取得
 	Vector3 initialPosition = levelDataManager_->GetInitialTranslate(levelHandle_, "CloseFenceInCemetery");
 
 	//墓場の鍵を取ったら柵が消える
@@ -340,8 +340,6 @@ void GameScene::EscapeCondition() {
 		if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
 			//「脱出せよ」が表示
 			escapeText_->SetInvisible(false);
-
-
 
 			//コントローラーのBボタンを押したら脱出のフラグがたつ
 			//Bボタンを押したとき

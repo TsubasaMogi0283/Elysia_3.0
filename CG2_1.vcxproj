@@ -501,7 +501,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Elysia\Polygon\PostEffect\SepiaScale\SepiaScale.h" />
     <ClInclude Include="Elysia\Polygon\PostEffect\Vignette\Vignette.h" />
     <ClInclude Include="Elysia\StringOption\StringOption.h" />
-    <ClInclude Include="Project\AllGameScene\GameManager\IGameScene.h" />
     <ClInclude Include="Project\AllGameScene\GameSceneFactory.h" />
     <ClInclude Include="Project\AllGameScene\GameScene\GameScene.h" />
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h" />

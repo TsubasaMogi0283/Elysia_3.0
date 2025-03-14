@@ -43,9 +43,6 @@
     <Filter Include="Project\Player\Collision">
       <UniqueIdentifier>{32b25b1e-d1a9-45a3-9a3b-830c6437a4fd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\SceneFactory">
-      <UniqueIdentifier>{46739212-6394-4202-aa19-ce67b783584f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Scene">
       <UniqueIdentifier>{d00a8998-a08f-48ce-850f-96c0eddb4980}</UniqueIdentifier>
     </Filter>
@@ -478,6 +475,12 @@
     <Filter Include="Elysia\Source File\Material">
       <UniqueIdentifier>{cdcccc92-ed66-48ba-bde9-05ee06c64ef5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Scene\Factory">
+      <UniqueIdentifier>{46739212-6394-4202-aa19-ce67b783584f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Test">
+      <UniqueIdentifier>{f673545d-ea78-46ef-9975-fbd92baa5419}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -538,7 +541,7 @@
       <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp">
-      <Filter>Project\SceneFactory</Filter>
+      <Filter>Project\Scene\Factory</Filter>
     </ClCompile>
     <ClCompile Include="Project\Player\BasedPlayerCollision.cpp">
       <Filter>Project\Player\Collision</Filter>
@@ -584,9 +587,6 @@
     </ClCompile>
     <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyAttack.cpp">
       <Filter>Project\Enemy\NormalEnemy\State\Attack</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\TestScene\TestScene.cpp">
-      <Filter>Project\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Elysia\StringOption\StringOption.cpp">
       <Filter>Elysia\Source File\StringOption</Filter>
@@ -780,6 +780,9 @@
     <ClCompile Include="Elysia\Audio\Audio.cpp">
       <Filter>Elysia\Source File\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TestScene\TestScene.cpp">
+      <Filter>Project\Scene\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -886,9 +889,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Project\AllGameScene\GameManager\IGameScene.h">
-      <Filter>Project\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Enemy\BaseEnemy.h">
       <Filter>Project\Enemy</Filter>
     </ClInclude>
@@ -959,7 +959,7 @@
       <Filter>Project\Player\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\GameSceneFactory.h">
-      <Filter>Project\SceneFactory</Filter>
+      <Filter>Project\Scene\Factory</Filter>
     </ClInclude>
     <ClInclude Include="Project\Stage\Gate\Gate.h">
       <Filter>Project\Gate</Filter>
@@ -1008,9 +1008,6 @@
     </ClInclude>
     <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyAttack.h">
       <Filter>Project\Enemy\NormalEnemy\State\Attack</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\TestScene\TestScene.h">
-      <Filter>Project\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\StringOption\StringOption.h">
       <Filter>Elysia\Header File\StringOption</Filter>
@@ -1311,6 +1308,9 @@
     </ClInclude>
     <ClInclude Include="Elysia\Polygon\Particle\ParticleMoveType.h">
       <Filter>Elysia\Header File\Polygone\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TestScene\TestScene.h">
+      <Filter>Project\Scene\Test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
