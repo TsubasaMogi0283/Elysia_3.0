@@ -13,7 +13,7 @@ void NormalEnemyMove::Initialize(){
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
-	direction_ = { .x = speedDistribute(randomEngine) ,.y = 0.0f,.z = speedDistribute(randomEngine) };
+	direction_ = { .x = -1.0f ,.y = 0.0f,.z = -0.9f };
 }
 
 void NormalEnemyMove::Update(NormalEnemy* normalEnemy){

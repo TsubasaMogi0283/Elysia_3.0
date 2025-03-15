@@ -141,7 +141,7 @@ void EnemyManager::GenerateNormalEnemy(const Vector3& position) {
 	std::uniform_real_distribution<float> speedDistribute(-0.001f, 0.001f);
 
 	//スピード決め
-	Vector3 speed = { .x = speedDistribute(randomEngine),.y = 0.0f,.z = speedDistribute(randomEngine) };
+	Vector3 speed = { .x = -0.8f,.y = 0.0f,.z = speedDistribute(randomEngine) };
 
 	//初期化
 	enemy->Initialize(normalEnemyModelHandle_, position,speed );
@@ -178,10 +178,7 @@ void EnemyManager::Update(){
 	
 	//通常の敵
 	for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
-		//プレイヤーの位置を設定
-		enemy->SetPlayerPosition(playerPosition);
-		//更新
-		enemy->Update();
+		
 		//AABB
 		AABB enemyAABB = enemy->GetAABB();
 		//現在の状態
@@ -192,41 +189,43 @@ void EnemyManager::Update(){
 		if (currentState == "Move") {
 
 			//レベルエディタから持ってくる
-			//座標
-			std::vector<Vector3> positions = levelDataManager_->GetObjectPositions(levelDataHandle_,"Stage");
 			//AABB
 			std::vector<AABB> aabbs = levelDataManager_->GetObjectAABBs(levelDataHandle_,"Stage");
 			//コライダーを持っているかどうか
 			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_,"Stage");
 			
 			//衝突めり込み防止処理
-			for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
+			for (size_t i = 0; i <  aabbs.size(); ++i) {
 
 				//AABBを取得
 				AABB objectAABB = aabbs[i];
-				//位置を取得
-				Vector3 objectPosition = positions[i];
 
 
 				//お互いのAABBが接触している場合
-				if (CollisionCalculation::IsCollisionAABBPair(enemyAABB,objectAABB)) {
+				if (CollisionCalculation::IsCollisionAABBPair(enemyAABB,objectAABB)&&
+					colliders[i]==true) {
 					
 					//方向を取得
 					Vector3 direction = enemy->GetDirection();
-
-					//X軸反転
-					if (direction.x >= direction.z) {
+					// 反転処理後、少し押し戻す
+					const float pushBackDistance = 0.2f;
+					if (abs(direction.x) > abs(direction.z)) {
 						enemy->GetCurrentState()->InverseDirectionX();
 					}
-					//Z軸反転
 					else {
 						enemy->GetCurrentState()->InverseDirectionZ();
 					}
-
 					
 				}
 			}
 		}
+
+
+
+		//プレイヤーの位置を設定
+		enemy->SetPlayerPosition(playerPosition);
+		//更新
+		enemy->Update();
 	}
 	
 	//現在の敵の数

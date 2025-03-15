@@ -66,6 +66,9 @@ void Player::Update(){
 
 	//ワールドトランスフォームの更新
 	worldTransform_.translate = playerCenterPosition_;
+	//Yを固定させる
+	const float HEIGHT = 0.0f;
+	worldTransform_.translate.y = HEIGHT;
 	worldTransform_.Update();
 
 	//ワールド座標
@@ -188,7 +191,7 @@ void Player::Move() {
 		}
 		//加算
 		playerCenterPosition_ = VectorCalculation::Add(playerCenterPosition_, VectorCalculation::Multiply(moveDirection_, moveSpeed));
-
+		
 		//AABB
 		std::vector<AABB> aabbs = levelDataManager_->GetObjectAABBs(levelHandle_,"Stage");
 		//コライダーを持っているかどうか

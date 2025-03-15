@@ -97,6 +97,21 @@ public:
 		this->worldTransform_.translate = translate;
 	}
 
+	/// <summary>
+	/// X座標の設定
+	/// </summary>
+	/// <param name="translateX"></param>
+	inline void SetTranslateX(const float& translateX) {
+		this->worldTransform_.translate.x=translateX;
+	}
+
+	/// <summary>
+	/// Z座標の設定
+	/// </summary>
+	/// <param name="translateZ"></param>
+	inline void SetTranslateZ(const float& translateZ) {
+		this->worldTransform_.translate.z = translateZ;
+	}
 
 	/// <summary>
 	/// AABBの取得
