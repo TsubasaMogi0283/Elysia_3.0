@@ -67,7 +67,7 @@ namespace Elysia {
 		/// </summary>
 		/// <param name="filePath"></param>
 		/// <returns></returns>
-		static uint32_t LoadTexture(const std::string& filePath);
+		static uint32_t Load(const std::string& filePath);
 
 		/// <summary>
 		/// コマンドを送る

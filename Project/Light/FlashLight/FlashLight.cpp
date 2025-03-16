@@ -5,15 +5,35 @@
 #include "Camera.h"
 #include "ModelManager.h"
 #include "GlobalVariables.h"
+#include "TextureManager.h"
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
 
+
 FlashLight::FlashLight() {
+	//インスタンスの取得
 	//グローバル変数クラス
 	globalVariables_ = Elysia::GlobalVariables::GetInstance();
+	//テクスチャ管理クラス
+	textureManager_ = Elysia::TextureManager::GetInstance();
 }
 
 void FlashLight::Initialize() {
+
+	//調整項目として扱う
+	//光の強さ
+	globalVariables_->CreateGroup(FLASH_LIGHT_INTENSITY_STRING_);
+	globalVariables_->AddItem(FLASH_LIGHT_INTENSITY_STRING_, MAX_STRING_, maxIntensity_);
+	globalVariables_->AddItem(FLASH_LIGHT_INTENSITY_STRING_, MIN_STRING_, minIntensity_);
+	//FallowOff
+	globalVariables_->CreateGroup(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_);
+	globalVariables_->AddItem(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_, maxStart_);
+	globalVariables_->AddItem(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MIN_STRING_, minStart_);
+	//チャージ
+	globalVariables_->CreateGroup(FLASH_LIGHT_CHARGE_VALUE_);
+	globalVariables_->AddItem(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_STRING_, chargeIncreaseValue_);
+	globalVariables_->AddItem(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_GAUGE_SPRITE_POSITION_STRING_, chargeGaugeSpritePosition_);
+
 
 	//スポットライトの初期化
 	spotLight_.Initialize();
@@ -35,26 +55,23 @@ void FlashLight::Initialize() {
 	fan3D_.sideThetaAngle = lightSideTheta_;
 	fan3D_.sidePhiAngleSize = lightSideTheta_;
 
+	//ゲージのスプライトを生成
+	uint32_t gaugeTextureHandle = textureManager_->Load("Resources/Sprite/Gauge/Gauge.png");
+	chargeGaugeSpritePosition_ = globalVariables_->GetVector2Value(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_GAUGE_SPRITE_POSITION_STRING_);
+	chargeGaugeSprite_.reset(Elysia::Sprite::Create(gaugeTextureHandle, chargeGaugeSpritePosition_));
+	
+	//フレーム
+	uint32_t frameSpriteHandle = textureManager_->Load("Resources/Sprite/Gauge/GaugeFrame.png");
+	frameSprite_.reset(Elysia::Sprite::Create(frameSpriteHandle, chargeGaugeSpritePosition_));
+
 	//当たり判定の初期化
 	flashLightCollision_ = std::make_unique<FlashLightCollision>();
 	flashLightCollision_->Initialize();
 
 
-	//調整項目として扱う
-	//光の強さ
-	globalVariables_->CreateGroup(FLASH_LIGHT_INTENSITY_STRING_);
-	globalVariables_->AddItem(FLASH_LIGHT_INTENSITY_STRING_, MAX_STRING_, maxIntensity_);
-	globalVariables_->AddItem(FLASH_LIGHT_INTENSITY_STRING_, MIN_STRING_, minIntensity_);
-	//FallowOff
-	globalVariables_->CreateGroup(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_);
-	globalVariables_->AddItem(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_, maxStart_);
-	globalVariables_->AddItem(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MIN_STRING_, minStart_);
-	//チャージ
-	globalVariables_->CreateGroup(FLASH_LIGHT_CHARGE_VALUE_);
-	globalVariables_->AddItem(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_STRING_, chargeIncreaseValue_);
+	
 
-
-
+	
 #ifdef _DEBUG
 
 	//マテリアルの初期化
@@ -163,48 +180,14 @@ void FlashLight::Update() {
 	//スポットライトの更新
 	spotLight_.Update();
 
-#ifdef _DEBUG
-	//端をデバッグ用として表示させる
-	//左
-	Vector2 fanLeft = {
-		.x = std::cosf(theta_ + lightSideTheta_) * spotLight_.distance,
-		.y = std::sinf(theta_ + lightSideTheta_) * spotLight_.distance
-	};
-	//右
-	Vector2 fanRight = {
-		.x = std::cosf(theta_ - lightSideTheta_) * spotLight_.distance,
-		.y = std::sinf(theta_ - lightSideTheta_) * spotLight_.distance
-	};
 
-	//端の位置を計算
-	worldTransform_[LEFT_].translate = VectorCalculation::Add(playerPosition_, { fanLeft.x ,0.0f,fanLeft.y });
-	worldTransform_[RIGHT_].translate = VectorCalculation::Add(playerPosition_, { fanRight.x ,0.0f,fanRight.y });
+	//デバッグ用
+	DebugProcess();
 
-	//中心
-	lightCenterWorldTransform_.translate = position_;
-
-	//更新
-	//ワールドトランスフォーム
-	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
-		worldTransform_[i].Update();
-	}
-	lightCenterWorldTransform_.Update();
-
-	//マテリアルの更新
-	material_.Update();
-	lightCenterMaterial_.Update();
-
-
-	//ImGuiの表示
-	ImGuiDisplay();
-
-	//調整
-	Adjustment();
-#endif // _EBUG
 
 }
 
-void FlashLight::Draw(const Camera& camera) {
+void FlashLight::DrawObject3D(const Camera& camera) {
 #ifdef _DEBUG
 
 	//端
@@ -219,13 +202,24 @@ void FlashLight::Draw(const Camera& camera) {
 
 }
 
+void FlashLight::DrawSprite(){
+	//ゲージの描画
+	chargeGaugeSprite_->Draw();
+	//フレーム
+	frameSprite_->Draw();
+}
+
 void FlashLight::Charge() {
 	//増える値
 	chargeIncreaseValue_ = globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_STRING_);
+	//値によって伸びる幅が変わる
+	chargeGaugeSprite_->SetScale({.x= chargeValue_,.y= 1.0f });
 
 	//チャージ中の時
 	if (isCharge_ == true) {
 		chargeValue_ += chargeIncreaseValue_;
+		chargeValue_=std::min<float_t>(MAX_CHARGE_VALUE_, chargeValue_);
+		
 	}
 	//そうではない時はずっと0.0fにする
 	else {
@@ -270,9 +264,53 @@ void FlashLight::ImGuiDisplay() {
 }
 
 void FlashLight::Adjustment() {
+	//チャージ座標
+	chargeGaugeSpritePosition_ = globalVariables_->GetVector2Value(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_GAUGE_SPRITE_POSITION_STRING_);
+	globalVariables_->SetValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_GAUGE_SPRITE_POSITION_STRING_, chargeGaugeSpritePosition_);
 	//保存
 	globalVariables_->SaveFile(FLASH_LIGHT_INTENSITY_STRING_);
 	globalVariables_->SaveFile(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_);
 	globalVariables_->SaveFile(FLASH_LIGHT_CHARGE_VALUE_);
 
+}
+
+void FlashLight::DebugProcess(){
+#ifdef _DEBUG
+	//端をデバッグ用として表示させる
+	//左
+	Vector2 fanLeft = {
+		.x = std::cosf(theta_ + lightSideTheta_) * spotLight_.distance,
+		.y = std::sinf(theta_ + lightSideTheta_) * spotLight_.distance
+	};
+	//右
+	Vector2 fanRight = {
+		.x = std::cosf(theta_ - lightSideTheta_) * spotLight_.distance,
+		.y = std::sinf(theta_ - lightSideTheta_) * spotLight_.distance
+	};
+
+	//端の位置を計算
+	worldTransform_[LEFT_].translate = VectorCalculation::Add(playerPosition_, { fanLeft.x ,0.0f,fanLeft.y });
+	worldTransform_[RIGHT_].translate = VectorCalculation::Add(playerPosition_, { fanRight.x ,0.0f,fanRight.y });
+
+	//中心
+	lightCenterWorldTransform_.translate = position_;
+
+	//更新
+	//ワールドトランスフォーム
+	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
+		worldTransform_[i].Update();
+	}
+	lightCenterWorldTransform_.Update();
+
+	//マテリアルの更新
+	material_.Update();
+	lightCenterMaterial_.Update();
+
+
+	//ImGuiの表示
+	ImGuiDisplay();
+
+	//調整
+	Adjustment();
+#endif // _EBUG
 }

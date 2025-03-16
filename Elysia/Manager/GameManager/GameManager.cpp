@@ -26,10 +26,16 @@ void Elysia::GameManager::Initialize() {
 
 
 void Elysia::GameManager::ChangeScene(const std::string& sceneName){
+
+	if (currentGamaScene_) {
+		currentGamaScene_.reset(); // メモリを解放
+	}
+
 	//新しいシーンに遷移するためにPreの所に入っていたものを入れる
 	preSceneName_ = currentSceneName_;
 	//現在入っているシーン名を更新
 	currentSceneName_ = sceneName;
+
 
 	//シーンの値を取ってくる
 	currentGamaScene_ = abstractSceneFactory_->CreateScene(currentSceneName_);
@@ -48,11 +54,11 @@ void Elysia::GameManager::Update() {
 #ifdef _DEBUG
 	ImGui::Begin("ゲームシーンの管理");
 	const char* SCENE_NAME[] = {"Title","Game","Win","Lose"};
-	if (ImGui::BeginCombo("シーン", SCENE_NAME[currentSceneNumber_])) {
+	if (ImGui::BeginCombo("シーン", SCENE_NAME[currentSceneNumber_])==true) {
 		for (uint32_t i = 0u; i < IM_ARRAYSIZE(SCENE_NAME); ++i) {
 			bool isSelected = (currentSceneNumber_ == i);
 
-			if (ImGui::Selectable(SCENE_NAME[i], isSelected)){
+			if (ImGui::Selectable(SCENE_NAME[i], isSelected)==true){
 				// 選択されたアイテムのインデックスを更新する
 				currentSceneNumber_ = i; 
 				ChangeScene(SCENE_NAME[i]);

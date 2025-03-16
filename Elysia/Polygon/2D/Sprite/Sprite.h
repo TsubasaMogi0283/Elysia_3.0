@@ -22,13 +22,15 @@
 /// </summary>
 namespace Elysia {
 
-	//DirectXクラス
+	/// <summary>
+	/// DirectXクラス
+	/// </summary>
 	class DirectXSetup;
 
-	//パイプライン管理クラス
+	/// <summary>
+	/// パイプライン管理クラス
+	/// </summary>
 	class PipelineManager;
-
-
 
 	/// <summary>
 	/// スプライト
@@ -227,7 +229,7 @@ namespace Elysia {
 		/// <summary>
 		/// 頂点の位置
 		/// </summary>
-		enum VERTEX_POSITION {
+		enum VertexPosition {
 			//左下
 			LeftBottom,
 			//左上
@@ -239,15 +241,13 @@ namespace Elysia {
 
 		};
 
+
+	private:
 		//UVトランスフォーム
 		Transform uvTransform_ = {};
 
-
-
-
 		//サイズ
 		Vector2 size_ = {};
-
 		//S
 		Vector2 scale_ = { 1.0f,1.0f };
 		//R
@@ -264,11 +264,8 @@ namespace Elysia {
 		bool isFlipX_ = false;
 		//上下フリップ
 		bool isFlipY_ = false;
-
-
 		//非表示
 		bool isInvisible_ = false;
-
 
 		//手前にするか後ろにするか
 		//基本手前にする

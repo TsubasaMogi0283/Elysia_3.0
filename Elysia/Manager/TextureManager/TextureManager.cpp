@@ -53,7 +53,7 @@ uint64_t Elysia::TextureManager::GetTextureHeight(const uint32_t& textureHandle)
 
 
 //統合させた関数
-uint32_t Elysia::TextureManager::LoadTexture(const std::string& filePath) {
+uint32_t Elysia::TextureManager::Load(const std::string& filePath) {
 
 	Elysia::TextureManager* textureManager = TextureManager::GetInstance();
 

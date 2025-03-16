@@ -15,7 +15,7 @@
 
 
 #include "Vector3.h"
-
+#include "Vector2.h"
 
 /// <summary>
 /// ElysiaEngine
@@ -88,6 +88,15 @@ namespace Elysia {
 		void SetValue(const std::string& groupName, const std::string& key, const float& value);
 
 		/// <summary>
+		/// 値のセット(Vector2)
+		/// </summary>
+		/// <param name="groupName">グループ名</param>
+		/// <param name="key">キー</param>
+		/// <param name="value">値</param>
+		void SetValue(const std::string& groupName, const std::string& key, const Vector2& value);
+
+
+		/// <summary>
 		/// 値のセット(Vector3)
 		/// </summary>
 		/// <param name="groupName">グループ名</param>
@@ -123,12 +132,23 @@ namespace Elysia {
 
 
 		/// <summary>
+		/// 項目の追加(Vector2)
+		/// </summary>
+		/// <param name="groupName">グループ名</param>
+		/// <param name="key"></param>
+		/// <param name="value">値</param>
+		void AddItem(const std::string& groupName, const std::string& key, const Vector2& value);
+
+
+		/// <summary>
 		/// 項目の追加(Vector3)
 		/// </summary>
 		/// <param name="groupName">グループ名</param>
 		/// <param name="key"></param>
 		/// <param name="value">値</param>
 		void AddItem(const std::string& groupName, const std::string& key, const Vector3& value);
+
+
 
 #pragma endregion
 
@@ -150,6 +170,14 @@ namespace Elysia {
 		/// <param name="key"></param>
 		/// <returns></returns>
 		float GetFloatValue(const std::string& groupName, const std::string& key);
+
+		/// <summary>
+		/// Vector2の値を取得
+		/// </summary>
+		/// <param name="groupName"></param>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		Vector2 GetVector2Value(const std::string& groupName, const std::string& key);
 
 		/// <summary>
 		/// Vector3の値を取得
@@ -195,7 +223,7 @@ namespace Elysia {
 			//項目の値
 			//variantは複数種類の型のデータを入れることが出来る万能なもの
 			//欲しいものを追加していこう！
-			std::variant<int32_t, float, Vector3 >value;
+			std::variant<int32_t, float,Vector2, Vector3 >value;
 		};
 
 		/// <summary>

@@ -100,7 +100,7 @@ void Player::Update(){
 	#endif
 }
 
-void Player::Draw(const Camera& camera, const SpotLight& spotLight){
+void Player::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
 
 #ifdef _DEBUG
 	//本体の描画
@@ -108,10 +108,16 @@ void Player::Draw(const Camera& camera, const SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera,material_,spotLight);
 
 	//懐中電灯
-	flashLight_->Draw(camera);
+	flashLight_->DrawObject3D(camera);
 #endif // _DEBUG
 
 
+}
+
+void Player::DrawSprite(){
+
+	//懐中電灯
+	flashLight_->DrawSprite();
 }
 
 Player::~Player() {

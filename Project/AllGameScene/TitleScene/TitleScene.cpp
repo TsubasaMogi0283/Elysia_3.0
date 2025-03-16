@@ -30,13 +30,13 @@ TitleScene::TitleScene(){
 void TitleScene::Initialize(){
 
 	//テクスチャハンドルの取得
-	uint32_t textTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Title/StartText.png");
+	uint32_t textTextureHandle = textureManager_->Load("Resources/Sprite/Title/StartText.png");
 	//タイトルテクスチャ
-	uint32_t logoTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Title/TitleNormal.png");
-	changedLogoTextureHandle_ = textureManager_->LoadTexture("Resources/Sprite/Title/TitleChanged.png");
+	uint32_t logoTextureHandle = textureManager_->Load("Resources/Sprite/Title/TitleNormal.png");
+	changedLogoTextureHandle_ = textureManager_->Load("Resources/Sprite/Title/TitleChanged.png");
 	logoTextureHandle_ = logoTextureHandle;
 	//黒フェード
-	uint32_t blackTexureHandle= textureManager_->LoadTexture("Resources/Sprite/Back/Black.png");
+	uint32_t blackTexureHandle= textureManager_->Load("Resources/Sprite/Back/Black.png");
 
 	//初期座標
 	const Vector2 INITIAL_POSITION = {.x=0.0f,.y=0.0f};

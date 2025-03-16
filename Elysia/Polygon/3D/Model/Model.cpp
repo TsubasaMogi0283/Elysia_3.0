@@ -35,7 +35,7 @@ Elysia::Model* Elysia::Model::Create(const uint32_t& modelHandle) {
 	Elysia::Model* model = new Elysia::Model();
 
 	//テクスチャの読み込み
-	model->textureHandle_ = model->textureManager_->LoadTexture(model->modelmanager_->GetModelData(modelHandle).textureFilePath);
+	model->textureHandle_ = model->textureManager_->Load(model->modelmanager_->GetModelData(modelHandle).textureFilePath);
 	//モデルデータ
 	model->modelData_ = model->modelmanager_->GetModelData(modelHandle);
 

@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "SpotLight.h"
+#include "Sprite.h"
 #include "Fan.h"
 #include "WorldTransform.h"
 #include "Model.h"
@@ -23,6 +24,11 @@ namespace Elysia {
 	/// グローバル変数
 	/// </summary>
 	class GlobalVariables;
+
+	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
+	class TextureManager;
 }
 
 /// <summary>
@@ -54,7 +60,12 @@ public:
 	/// 描画(デバッグ用)
 	/// </summary>
 	/// <param name="camera">カメラ</param>
-	void Draw(const Camera& camera);
+	void DrawObject3D(const Camera& camera);
+
+	/// <summary>
+	/// スプライトの描画
+	/// </summary>
+	void DrawSprite();
 
 	/// <summary>
 	/// デストラクタ
@@ -77,6 +88,11 @@ private:
 	/// 調整
 	/// </summary>
 	void Adjustment();
+
+	/// <summary>
+	/// デバッグ用処理
+	/// </summary>
+	void DebugProcess();
 
 public:
 	/// <summary>
@@ -182,6 +198,8 @@ public:
 private:
 	//グローバル変数クラス
 	Elysia::GlobalVariables* globalVariables_ = nullptr;
+	//テクスチャ管理クラス
+	Elysia::TextureManager* textureManager_ = nullptr;
 
 private:
 	//調整項目
@@ -206,21 +224,22 @@ private:
 	//攻撃可能になる値
 	const std::string IS_ABLE_TO_CHARGE_VALUE_STRING = "IsAbleToChargeValue";
 	float_t isAbleToAttackValue_ = 5.0f;
+	//ゲージスプライトの座標
+	const std::string CHARGE_GAUGE_SPRITE_POSITION_STRING_ = "GaugePosition";
+	Vector2 chargeGaugeSpritePosition_ = {};
 
 private:
 	//チャージスピード
 	const float_t CHARGE_INTERVAL_VALUE_ = 0.1f;
 	//光の届く距離
 	const float_t LIGHT_DISTANCE = 22.0f;
-
+	//最大チャージの値
+	const float_t MAX_CHARGE_VALUE_ = 10.0f;
 private:
-	//ここに値を入れてゲームシーンで他のオブジェクトに適用させる
+	//スポットライト
 	SpotLight spotLight_ = {};
-
 	//プレイヤーの座標
 	Vector3 playerPosition_ = {};
-
-
 	//座標
 	Vector3 position_ = {};
 	//方向
@@ -241,6 +260,10 @@ private:
 	Fan3D fan3D_ = {};
 
 
+	//チャージのゲージ
+	std::unique_ptr<Elysia::Sprite>chargeGaugeSprite_ = nullptr;
+	//フレーム
+	std::unique_ptr<Elysia::Sprite>frameSprite_ = nullptr;
 	//チャージしているかどうか
 	bool isCharge_ = false;
 	//チャージの値

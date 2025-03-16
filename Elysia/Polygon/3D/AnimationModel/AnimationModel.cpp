@@ -37,7 +37,7 @@ AnimationModel* AnimationModel::Create(const uint32_t& modelHandle){
 	AnimationModel* model = new AnimationModel();
 
 	//テクスチャの読み込み
-	model->textureHandle_ = model->textureManager_->LoadTexture(Elysia::ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
+	model->textureHandle_ = model->textureManager_->Load(Elysia::ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
 	//Drawでも使いたいので取り入れる
 	model->modelHandle_ = modelHandle;
 

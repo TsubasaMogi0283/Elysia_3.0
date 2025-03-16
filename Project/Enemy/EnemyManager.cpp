@@ -208,7 +208,6 @@ void EnemyManager::Update(){
 					//方向を取得
 					Vector3 direction = enemy->GetDirection();
 					// 反転処理後、少し押し戻す
-					const float pushBackDistance = 0.2f;
 					if (abs(direction.x) > abs(direction.z)) {
 						enemy->GetCurrentState()->InverseDirectionX();
 					}

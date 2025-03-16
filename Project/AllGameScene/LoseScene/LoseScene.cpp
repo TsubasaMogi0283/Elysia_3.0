@@ -32,7 +32,7 @@ void LoseScene::Initialize(){
 	const Vector2 INITIAL_SPRITE_POSITION_ = { .x = 0.0f,.y = 0.0f };
 
 	//黒背景
-	uint32_t blackTextureHandle = textureManager_->LoadTexture("Resources/Sprite/Back/Black.png");
+	uint32_t blackTextureHandle = textureManager_->Load("Resources/Sprite/Back/Black.png");
 	black_.reset(Elysia::Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION_));
 	//透明度の設定
 	transparency_ = 0.0f;
@@ -53,7 +53,7 @@ void LoseScene::Initialize(){
 	dissolveEffect_ = std::make_unique<Elysia::DissolvePostEffect>();
 	dissolveEffect_->Initialize(CLEAR_COLOR);
 	//マスクテクスチャ
-	uint32_t maskTexture = Elysia::TextureManager::GetInstance()->LoadTexture("Resources/External/Texture/Dissolve/noise0.png");
+	uint32_t maskTexture = Elysia::TextureManager::GetInstance()->Load("Resources/External/Texture/Dissolve/noise0.png");
 
 
 	//調整項目として記録

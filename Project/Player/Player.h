@@ -96,7 +96,12 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void Draw(const Camera& camera,const SpotLight& spotLight);
+	void DrawObject3D(const Camera& camera,const SpotLight& spotLight);
+
+	/// <summary>
+	/// スプライトの描画
+	/// </summary>
+	void DrawSprite();
 
 	/// <summary>
 	/// デストラクタ

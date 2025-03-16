@@ -42,6 +42,18 @@ void Elysia::GlobalVariables::SetValue(const std::string& groupName, const std::
 
 }
 
+void Elysia::GlobalVariables::SetValue(const std::string& groupName, const std::string& key, const Vector2& value){
+    //グループの参照
+    Group& group = datas_[groupName];
+
+    //新しい項目のデータを設定
+    Item newItem{};
+    newItem.value = value;
+
+    //設定した項目をstd::mapに追加
+    group.items[key] = newItem;
+}
+
 void Elysia::GlobalVariables::SetValue(const std::string& groupName, const std::string& key, const Vector3& value){
     //グループの参照
     Group& group = datas_[groupName];
@@ -90,8 +102,22 @@ void Elysia::GlobalVariables::AddItem(const std::string& groupName, const std::s
     //無かったら追加
     if (itItem == itGroup->second.items.end()) {
         SetValue(groupName, key, value);
+    }
+}
 
+void Elysia::GlobalVariables::AddItem(const std::string& groupName, const std::string& key, const Vector2& value){
+    //グループを検索
+    std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
 
+    //無かったら止める
+    assert(itGroup != datas_.end());
+
+    //まず参照
+    Group& group = itGroup->second;
+    std::map<std::string, Item>::iterator itItem = group.items.find(key);
+    //無かったら追加
+    if (itItem == itGroup->second.items.end()) {
+        SetValue(groupName, key, value);
     }
 }
 
@@ -108,8 +134,6 @@ void Elysia::GlobalVariables::AddItem(const std::string& groupName, const std::s
     //無かったら追加
     if (itItem == itGroup->second.items.end()) {
         SetValue(groupName, key, value);
-
-
     }
 }
 
@@ -146,6 +170,25 @@ float Elysia::GlobalVariables::GetFloatValue(const std::string& groupName, const
     assert(itKey != group.items.end());
     //SaveFileより
     return std::get<float>(itKey->second.value);
+
+}
+
+Vector2 Elysia::GlobalVariables::GetVector2Value(const std::string& groupName, const std::string& key){
+
+    //グループを検索
+    std::map<std::string, Group>::iterator itGroup = datas_.find(groupName);
+
+    //無かったら止める
+    assert(itGroup != datas_.end());
+    //参照
+    Group& group = datas_.at(groupName);
+    //キーを検索
+    std::map<std::string, Item>::const_iterator itKey = group.items.find(key);
+    //無かったら止める
+    assert(itKey != group.items.end());
+    //SaveFileより
+    return std::get<Vector2>(itKey->second.value);
+
 
 }
 
@@ -191,19 +234,23 @@ void Elysia::GlobalVariables::SaveFile(const std::string& groupName){
 
 
         //int32_tの場合
-        if (std::holds_alternative<int32_t>(item.value)) {
+        if (std::holds_alternative<int32_t>(item.value) == true) {
             //int32_t型の値を登録
             root[groupName][itemName] = std::get<int32_t>(item.value);
         }
-
         //floatの場合
-        else if (std::holds_alternative<float>(item.value)) {
+        else if (std::holds_alternative<float>(item.value) == true) {
             //float型の値を登録
             root[groupName][itemName] = std::get<float>(item.value);
         }
-
+        //Vector2の場合
+        else if (std::holds_alternative<Vector2>(item.value) == true) {
+            //float型のjson配列登録
+            Vector2 value = std::get<Vector2>(item.value);
+            root[groupName][itemName] = nlohmann::json::array({ value.x, value.y});
+        }
         //Vector3の場合
-        else if (std::holds_alternative<Vector3>(item.value)) {
+        else if (std::holds_alternative<Vector3>(item.value) == true) {
             //float型のjson配列登録
             Vector3 value = std::get<Vector3>(item.value);
             root[groupName][itemName] = nlohmann::json::array({value.x, value.y, value.z});
@@ -335,6 +382,12 @@ void Elysia::GlobalVariables::LoadFile(const std::string& groupName){
             double value = itItem->get<double>();
             SetValue(groupName, itemName, static_cast<float>(value));
         }
+        //要素数2の配列であれば
+        else if (itItem->is_array() && itItem->size() == 2) {
+            //float型のison配列登録
+            Vector2 value = { itItem->at(0).get<float>(),itItem->at(1).get<float>()};
+            SetValue(groupName, itemName, value);
+        }
         //要素数3の配列であれば
         else if (itItem->is_array() && itItem->size() == 3) {
             //float型のison配列登録
@@ -365,8 +418,6 @@ void Elysia::GlobalVariables::Update(){
         Group& group = itGroup->second;
 
         //グループメニューを追加する処理
-        //このように条件を逆にしてからreturn ,continueを使うことを「早期リターン」と呼ぶ。
-        //ネストが深くなるのを防げてコードが読みやすくなるよ。
         if (!ImGui::TreeNode(groupName.c_str())) {
             continue;
         }
@@ -383,7 +434,7 @@ void Elysia::GlobalVariables::Update(){
             //「std::holds_alternative」で型の判別が出来るよ
 
             //int32_t型を持っている場合
-            if (std::holds_alternative<int32_t>(item.value)) {
+            if (std::holds_alternative<int32_t>(item.value) == true) {
                 //違いに注意！
                 //「get」で値を取得
                 //「get_if」でポインタを取得
@@ -391,24 +442,31 @@ void Elysia::GlobalVariables::Update(){
                 ImGui::InputInt(itItemName.c_str(), ptr, 0, 100);
             }
             //float型を持っている場合
-            else if (std::holds_alternative<float>(item.value)) {
+            else if (std::holds_alternative<float>(item.value) == true) {
                 //ポインタの取得
                 float* ptr = std::get_if<float>(&item.value);
                 ImGui::InputFloat(itItemName.c_str(), ptr);
 
             }
+            //Vector2型を持っている場合
+            else if (std::holds_alternative<Vector2>(item.value)==true) {
+                //ポインタの取得
+                Vector2* ptr = std::get_if<Vector2>(&item.value);
+                //ここではVector3をfloatの配列ということにする
+                ImGui::InputFloat2(itItemName.c_str(), reinterpret_cast<float*>(ptr));
+            }
             //Vector3型を持っている場合
-            else if (std::holds_alternative<Vector3>(item.value)) {
+            else if (std::holds_alternative<Vector3>(item.value)==true) {
                 //ポインタの取得
                 Vector3* ptr = std::get_if<Vector3>(&item.value);
                 //ここではVector3をfloatの配列ということにする
-                ImGui::InputFloat(itItemName.c_str(), reinterpret_cast<float*>(ptr));
+                ImGui::InputFloat3(itItemName.c_str(), reinterpret_cast<float*>(ptr));
             }
         }
 
         //セーブボタン
         ImGui::Text("\n");
-        if (ImGui::Button("Save")) {
+        if (ImGui::Button("Save")==true) {
             SaveFile(groupName);
             std::string message = std::format("{}, json saved.", groupName);
             MessageBoxA(nullptr, message.c_str(), "AdjustmentItems", 0u);
