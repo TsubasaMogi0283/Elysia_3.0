@@ -1312,6 +1312,9 @@
     <ClInclude Include="Project\AllGameScene\TestScene\TestScene.h">
       <Filter>Project\Scene\Test</Filter>
     </ClInclude>
+    <ClInclude Include="Elysia\Material\Color.h">
+      <Filter>Elysia\Header File\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shader\Particle3D\Particle3D.hlsli">

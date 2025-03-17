@@ -262,6 +262,9 @@ private:
 
 	//チャージのゲージ
 	std::unique_ptr<Elysia::Sprite>chargeGaugeSprite_ = nullptr;
+	//通常のチャージの色
+	Vector4 chargeColor_ = {};
+
 	//フレーム
 	std::unique_ptr<Elysia::Sprite>frameSprite_ = nullptr;
 	//チャージしているかどうか

@@ -27,8 +27,9 @@ void Elysia::GameManager::Initialize() {
 
 void Elysia::GameManager::ChangeScene(const std::string& sceneName){
 
+	//強制解放
 	if (currentGamaScene_) {
-		currentGamaScene_.reset(); // メモリを解放
+		currentGamaScene_.reset(); 
 	}
 
 	//新しいシーンに遷移するためにPreの所に入っていたものを入れる

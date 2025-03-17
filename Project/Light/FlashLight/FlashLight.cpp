@@ -59,11 +59,11 @@ void FlashLight::Initialize() {
 	uint32_t gaugeTextureHandle = textureManager_->Load("Resources/Sprite/Gauge/Gauge.png");
 	chargeGaugeSpritePosition_ = globalVariables_->GetVector2Value(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_GAUGE_SPRITE_POSITION_STRING_);
 	chargeGaugeSprite_.reset(Elysia::Sprite::Create(gaugeTextureHandle, chargeGaugeSpritePosition_));
-	
+	//チャージの増える値
+	chargeIncreaseValue_ = globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_STRING_);
 	//フレーム
 	uint32_t frameSpriteHandle = textureManager_->Load("Resources/Sprite/Gauge/GaugeFrame.png");
 	frameSprite_.reset(Elysia::Sprite::Create(frameSpriteHandle, chargeGaugeSpritePosition_));
-
 	//当たり判定の初期化
 	flashLightCollision_ = std::make_unique<FlashLightCollision>();
 	flashLightCollision_->Initialize();
@@ -180,10 +180,8 @@ void FlashLight::Update() {
 	//スポットライトの更新
 	spotLight_.Update();
 
-
 	//デバッグ用
 	DebugProcess();
-
 
 }
 
@@ -210,14 +208,12 @@ void FlashLight::DrawSprite(){
 }
 
 void FlashLight::Charge() {
-	//増える値
-	chargeIncreaseValue_ = globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_STRING_);
-	//値によって伸びる幅が変わる
-	chargeGaugeSprite_->SetScale({.x= chargeValue_,.y= 1.0f });
-
+	
+	
 	//チャージ中の時
 	if (isCharge_ == true) {
 		chargeValue_ += chargeIncreaseValue_;
+		//最大値を制限
 		chargeValue_=std::min<float_t>(MAX_CHARGE_VALUE_, chargeValue_);
 		
 	}
@@ -226,13 +222,33 @@ void FlashLight::Charge() {
 		chargeValue_ = 0.0f;
 	}
 
+	
+
 	//攻撃できるかどうか
 	if (chargeValue_ > isAbleToAttackValue_) {
 		isAbleToAttack_ = true;
+
+		//
+		if (chargeValue_>= MAX_CHARGE_VALUE_){
+			//赤
+			chargeColor_ = { 1.0f,0.0f,0.0f,1.0f };
+
+		}
+		else {
+			//黄色
+			chargeColor_ = { 1.0f,1.0f,0.0f,1.0f };
+		}
 	}
 	else {
+		//色は緑
+		chargeColor_ = { 0.0f,1.0f,0.0f,1.0f };
 		isAbleToAttack_ = false;
 	}
+
+
+	//値によって伸びる幅が変わる
+	chargeGaugeSprite_->SetScale({ .x = chargeValue_,.y = 1.0f });
+	chargeGaugeSprite_->SetColor(chargeColor_);
 }
 
 void FlashLight::ImGuiDisplay() {
@@ -255,6 +271,7 @@ void FlashLight::ImGuiDisplay() {
 
 	if (ImGui::TreeNode("チャージ") == true) {
 		ImGui::InputFloat("値", &chargeValue_);
+		ImGui::SliderFloat2("ゲージの座標", &chargeGaugeSpritePosition_.x, 0.0f, 1000.0f);
 		ImGui::Checkbox("攻撃できるかどうか", &isAbleToAttack_);
 		ImGui::TreePop();
 	}
@@ -266,7 +283,7 @@ void FlashLight::ImGuiDisplay() {
 void FlashLight::Adjustment() {
 	//チャージ座標
 	chargeGaugeSpritePosition_ = globalVariables_->GetVector2Value(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_GAUGE_SPRITE_POSITION_STRING_);
-	globalVariables_->SetValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_GAUGE_SPRITE_POSITION_STRING_, chargeGaugeSpritePosition_);
+	chargeGaugeSprite_->SetPosition(chargeGaugeSpritePosition_);
 	//保存
 	globalVariables_->SaveFile(FLASH_LIGHT_INTENSITY_STRING_);
 	globalVariables_->SaveFile(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_);

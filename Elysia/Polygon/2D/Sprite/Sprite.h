@@ -85,6 +85,15 @@ namespace Elysia {
 		}
 
 		/// <summary>
+		/// 色の設定
+		/// </summary>
+		/// <param name="color"></param>
+		inline void SetColor(const uint32_t& color) {
+			color;
+			//this->color_ = color;
+		}
+
+		/// <summary>
 		/// スケールの設定
 		/// </summary>
 		/// <param name="scale">スケール</param>

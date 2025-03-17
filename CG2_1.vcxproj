@@ -452,6 +452,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Elysia\Manager\RtvManager\RtvManager.h" />
     <ClInclude Include="Elysia\Manager\SrvManager\SrvManager.h" />
     <ClInclude Include="Elysia\Manager\TextureManager\TextureManager.h" />
+    <ClInclude Include="Elysia\Material\Color.h" />
     <ClInclude Include="Elysia\Material\Dissolve\Dissolve.h" />
     <ClInclude Include="Elysia\Material\Material.h" />
     <ClInclude Include="Elysia\Math\BPMCalculation\BPMSetting.h" />

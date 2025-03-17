@@ -357,14 +357,12 @@ void Elysia::GlobalVariables::LoadFile(const std::string& groupName){
     //ファイルを閉じる
     ifs.close();
 
-
     //グループ登録確認
     //グループを検索
     nlohmann::json::iterator itGroup = root.find(groupName);
 
     //未登録チェック
     assert(itGroup != root.end());
-
 
     //確認アイテムについて
     for (nlohmann::json::iterator itItem = itGroup->begin(); itItem != itGroup->end(); ++itItem) {
@@ -385,13 +383,13 @@ void Elysia::GlobalVariables::LoadFile(const std::string& groupName){
         //要素数2の配列であれば
         else if (itItem->is_array() && itItem->size() == 2) {
             //float型のison配列登録
-            Vector2 value = { itItem->at(0).get<float>(),itItem->at(1).get<float>()};
+            Vector2 value = {.x = itItem->at(0).get<float>(),.y = itItem->at(1).get<float>()};
             SetValue(groupName, itemName, value);
         }
         //要素数3の配列であれば
         else if (itItem->is_array() && itItem->size() == 3) {
             //float型のison配列登録
-            Vector3 value = { itItem->at(0).get<float>(),itItem->at(1).get<float>(),itItem->at(2).get<float>() };
+            Vector3 value = {.x = itItem->at(0).get<float>(),.y = itItem->at(1).get<float>(),.z = itItem->at(2).get<float>() };
             SetValue(groupName, itemName, value);
         }
     }
