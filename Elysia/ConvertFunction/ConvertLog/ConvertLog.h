@@ -9,9 +9,6 @@
 #include <cstdint>
 #include <string>
 #include <format>
-
-
-
 #include <dxgidebug.h>
 #include <dxcapi.h>
 
@@ -22,14 +19,22 @@ namespace ConvertString {
 	/// <summary>
 	///	ログの出力
 	/// </summary>
-	/// <param name="message"></param>
-	void Log(const std::string& message);
+	/// <param name="text"></param>
+	void Log(const std::string& text);
 
-	//string->wstring
-	std::wstring ToWString(const std::string& str);
+	/// <summary>
+	/// stringからwstringに変換
+	/// </summary>
+	/// <param name="text">文字列</param>
+	/// <returns></returns>
+	std::wstring ToWString(const std::string& text);
 
-	//wstring->string
-	std::string ToString(const std::wstring& str);
+	/// <summary>
+	/// wstringからstringに変換
+	/// </summary>
+	/// <param name="text">W文字列</param>
+	/// <returns></returns>
+	std::string ToString(const std::wstring& text);
 
 }
 

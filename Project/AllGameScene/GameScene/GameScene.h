@@ -144,7 +144,7 @@ private:
 	/// <summary>
 	/// ビネットの処理
 	/// </summary>
-	void ProcessVigntte();
+	void VigntteProcess();
 
 	/// <summary>
 	/// ImGuiの表示
@@ -294,13 +294,10 @@ private:
 	//説明の数
 	static const uint32_t EXPLANATION_QUANTITY_ = 2u;
 	//説明スプライト
-	std::unique_ptr<Elysia::Sprite> explanation_[EXPLANATION_QUANTITY_] = { nullptr };
+	std::array<std::unique_ptr<Elysia::Sprite>, EXPLANATION_QUANTITY_> explanation_ = { nullptr };
 
 	//Spaceで次に進むテキスト
-	//数
-	static const uint32_t SPACE_TO_NEXT_QUANTITY_ = 2u;
-	//次へのスプライト
-	std::unique_ptr<Elysia::Sprite> spaceToNext_[SPACE_TO_NEXT_QUANTITY_] = { nullptr };
+	std::array<std::unique_ptr<Elysia::Sprite>, EXPLANATION_QUANTITY_> spaceToNext_ = { nullptr };
 
 	//テクスチャの番号
 	uint32_t howToPlayTextureNumber_ = 0u;

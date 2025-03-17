@@ -171,16 +171,16 @@ void GameScene::Initialize() {
 	explanationTextureHandle[1] = texturemanager_->Load("Resources/Sprite/Explanation/Explanation2.png");
 
 	//生成
-	for (uint32_t i = 0u; i < EXPLANATION_QUANTITY_; ++i) {
+	for (uint32_t i = 0u; i < explanation_.size(); ++i) {
 		explanation_[i].reset(Elysia::Sprite::Create(explanationTextureHandle[i], INITIAL_SPRITE_POSITION));
 	}
 
 	//スペースで次への画像読み込み
-	uint32_t spaceToNextTextureHandle[SPACE_TO_NEXT_QUANTITY_] = {};
+	uint32_t spaceToNextTextureHandle[EXPLANATION_QUANTITY_] = {};
 	spaceToNextTextureHandle[0] = texturemanager_->Load("Resources/Sprite/Explanation/ExplanationNext1.png");
 	spaceToNextTextureHandle[1] = texturemanager_->Load("Resources/Sprite/Explanation/ExplanationNext2.png");
-
-	for (uint32_t i = 0; i < SPACE_TO_NEXT_QUANTITY_; ++i) {
+	//生成
+	for (uint32_t i = 0; i < spaceToNext_.size(); ++i) {
 		spaceToNext_[i].reset(Elysia::Sprite::Create(spaceToNextTextureHandle[i], INITIAL_SPRITE_POSITION));
 	}
 
@@ -250,9 +250,6 @@ void GameScene::Initialize() {
 
 
 void GameScene::ObjectCollision() {
-
-	
-
 
 	//宝箱
 	if (isOpenTreasureBox_==false) {
@@ -418,7 +415,7 @@ void GameScene::RegisterToCollisionManager() {
 	}
 }
 
-void GameScene::ProcessVigntte(){
+void GameScene::VigntteProcess(){
 	//HPが1でピンチの場合
 	const uint32_t DANGEROUS_HP = 1u;
 	//プレイヤーがダメージを受けた場合ビネット
@@ -482,8 +479,8 @@ void GameScene::DisplayImGui() {
 
 void GameScene::PlayerMove() {
 
-	//何も押していない時つまり動いていないので
-	//通常はfalseと0にしておく
+	//何も押していない時つまり動いていないので通常はfalseと0にしておく
+	
 	//キーボードで動かしているかどうか
 	bool isPlayerMoveKey = false;
 	//動いているかどうか
@@ -644,28 +641,27 @@ void GameScene::PlayerMove() {
 
 	//チャージ
 	bool isCharge = false;
-	if(input_->IsPushKey(DIK_RETURN)==true){
+	//エンターキーまたはYボタンでチャージ開始
+	if(input_->IsPushKey(DIK_RETURN)==true|| input_->IsPushButton(XINPUT_GAMEPAD_Y) == true){
 		isCharge = true;
 	}
 	else {
 		isCharge = false;
 	}
 
-
-
-
 	//チャージ状態を設定
 	player_->GetFlashLight()->SetIsCharge(isCharge);
 
-	//離した瞬間に攻撃する
-	if (input_->IsReleaseKey(DIK_RETURN) == true) {
+	//エンターキーまたはYボタンを離した瞬間に攻撃する
+	if (input_->IsReleaseKey(DIK_RETURN) == true|| input_->IsReleaseButton(XINPUT_GAMEPAD_Y) == true) {
 		isReleaseAttack_ = true;
+		//クールタイムにする
+		player_->GetFlashLight()->SetIsCoolTime(true);
 	}
 	else {
 		isReleaseAttack_ = false;
 	}
-
-
+	
 }
 
 void GameScene::PlayerRotate() {
@@ -947,7 +943,7 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 	gate_->Update();
 
 	//ビネットの処理
-	ProcessVigntte();
+	VigntteProcess();
 	//コリジョン管理クラスに登録
 	RegisterToCollisionManager();
 
@@ -994,14 +990,11 @@ void GameScene::DrawPostEffect() {
 
 void GameScene::DrawSprite() {
 
-
 	//プレイヤー
 	player_->DrawSprite();
 
-	//最大数
-	const uint32_t MAX_TEXTURE_QUANTITY = 2u;
 	//説明
-	for (uint32_t i = 0u; i < MAX_TEXTURE_QUANTITY; ++i) {
+	for (uint32_t i = 0u; i < explanation_.size(); ++i) {
 		if (howToPlayTextureNumber_ == i + 1) {
 			explanation_[i]->Draw();
 			spaceToNext_[i]->Draw();

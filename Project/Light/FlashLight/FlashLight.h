@@ -170,6 +170,14 @@ public:
 	}
 
 	/// <summary>
+	/// クールタイムの設定
+	/// </summary>
+	/// <param name="isCoolTime"></param>
+	inline void SetIsCoolTime(const bool& isCoolTime) {
+		this->isCoolTime_= isCoolTime;
+	}
+
+	/// <summary>
 	/// 攻撃可能かどうかを取得
 	/// </summary>
 	/// <returns>攻撃可能フラグ</returns>
@@ -219,8 +227,12 @@ private:
 	//チャージ
 	std::string FLASH_LIGHT_CHARGE_VALUE_ = "FlashLightCharge";
 	//増える値
-	const std::string CHARGE_STRING_ = "IncreaseChargeValue";
+	const std::string CHARGE_INCREASE_STRING_ = "IncreaseChargeValue";
 	float_t chargeIncreaseValue_ = 0.1f;
+	//減る値
+	const std::string CHARGE_DECREASE_STRING_ = "DecreaseChargeValue";
+	float_t chargeDecreaseValue_ = 0.2f;
+
 	//攻撃可能になる値
 	const std::string IS_ABLE_TO_CHARGE_VALUE_STRING = "IsAbleToChargeValue";
 	float_t isAbleToAttackValue_ = 5.0f;
@@ -235,6 +247,9 @@ private:
 	const float_t LIGHT_DISTANCE = 22.0f;
 	//最大チャージの値
 	const float_t MAX_CHARGE_VALUE_ = 10.0f;
+	//最小チャージの値
+	const float_t MIN_CHARGE_VALUE_ = 0.0f;
+
 private:
 	//スポットライト
 	SpotLight spotLight_ = {};
@@ -271,8 +286,13 @@ private:
 	bool isCharge_ = false;
 	//チャージの値
 	float_t chargeValue_ = 0.0f;
+
 	//攻撃できるかどうか
 	bool isAbleToAttack_ = false;
+	//クールタイム
+	bool isCoolTime_ = false;
+
+
 
 private:
 	//当たり判定

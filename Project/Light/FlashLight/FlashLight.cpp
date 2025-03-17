@@ -31,7 +31,8 @@ void FlashLight::Initialize() {
 	globalVariables_->AddItem(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MIN_STRING_, minStart_);
 	//チャージ
 	globalVariables_->CreateGroup(FLASH_LIGHT_CHARGE_VALUE_);
-	globalVariables_->AddItem(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_STRING_, chargeIncreaseValue_);
+	globalVariables_->AddItem(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_INCREASE_STRING_, chargeIncreaseValue_);
+	globalVariables_->AddItem(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_DECREASE_STRING_, chargeDecreaseValue_);
 	globalVariables_->AddItem(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_GAUGE_SPRITE_POSITION_STRING_, chargeGaugeSpritePosition_);
 
 
@@ -59,8 +60,10 @@ void FlashLight::Initialize() {
 	uint32_t gaugeTextureHandle = textureManager_->Load("Resources/Sprite/Gauge/Gauge.png");
 	chargeGaugeSpritePosition_ = globalVariables_->GetVector2Value(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_GAUGE_SPRITE_POSITION_STRING_);
 	chargeGaugeSprite_.reset(Elysia::Sprite::Create(gaugeTextureHandle, chargeGaugeSpritePosition_));
-	//チャージの増える値
-	chargeIncreaseValue_ = globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_STRING_);
+	//チャージの増減値
+	chargeIncreaseValue_ = globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_INCREASE_STRING_);
+	chargeDecreaseValue_= globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_DECREASE_STRING_);
+
 	//フレーム
 	uint32_t frameSpriteHandle = textureManager_->Load("Resources/Sprite/Gauge/GaugeFrame.png");
 	frameSprite_.reset(Elysia::Sprite::Create(frameSpriteHandle, chargeGaugeSpritePosition_));
@@ -68,8 +71,6 @@ void FlashLight::Initialize() {
 	flashLightCollision_ = std::make_unique<FlashLightCollision>();
 	flashLightCollision_->Initialize();
 
-
-	
 
 	
 #ifdef _DEBUG
@@ -209,41 +210,50 @@ void FlashLight::DrawSprite(){
 
 void FlashLight::Charge() {
 	
-	
 	//チャージ中の時
 	if (isCharge_ == true) {
 		chargeValue_ += chargeIncreaseValue_;
 		//最大値を制限
 		chargeValue_=std::min<float_t>(MAX_CHARGE_VALUE_, chargeValue_);
 		
-	}
-	//そうではない時はずっと0.0fにする
-	else {
-		chargeValue_ = 0.0f;
-	}
+		//攻撃できるかどうか
+		if (chargeValue_ > isAbleToAttackValue_) {
+			isAbleToAttack_ = true;
 
-	
-
-	//攻撃できるかどうか
-	if (chargeValue_ > isAbleToAttackValue_) {
-		isAbleToAttack_ = true;
-
-		//
-		if (chargeValue_>= MAX_CHARGE_VALUE_){
-			//赤
-			chargeColor_ = { 1.0f,0.0f,0.0f,1.0f };
-
+			//最大値
+			if (chargeValue_ >= MAX_CHARGE_VALUE_) {
+				//赤
+				chargeColor_ = { 1.0f,0.0f,0.0f,1.0f };
+			}
+			else {
+				//黄色
+				chargeColor_ = { 1.0f,1.0f,0.0f,1.0f };
+			}
 		}
 		else {
-			//黄色
-			chargeColor_ = { 1.0f,1.0f,0.0f,1.0f };
+			//色は緑
+			chargeColor_ = { 0.0f,1.0f,0.0f,1.0f };
+			isAbleToAttack_ = false;
 		}
 	}
-	else {
-		//色は緑
-		chargeColor_ = { 0.0f,1.0f,0.0f,1.0f };
-		isAbleToAttack_ = false;
+	
+
+
+	//クールタイム
+	if (isCoolTime_ == true) {
+
+		chargeValue_ -= chargeDecreaseValue_;
+		//最大値を制限
+		chargeValue_ = std::min<float_t>(MIN_CHARGE_VALUE_, chargeValue_);
+		//青
+		chargeColor_ = { 0.0f,0.0f,1.0f,1.0f };
+
+		//ゲージが0になったら解除
+		if (chargeValue_<=0.0f) {
+			isCoolTime_ = false;
+		}
 	}
+	
 
 
 	//値によって伸びる幅が変わる
@@ -270,6 +280,7 @@ void FlashLight::ImGuiDisplay() {
 	}
 
 	if (ImGui::TreeNode("チャージ") == true) {
+		ImGui::Checkbox("可能かどうか", &isCharge_);
 		ImGui::InputFloat("値", &chargeValue_);
 		ImGui::SliderFloat2("ゲージの座標", &chargeGaugeSpritePosition_.x, 0.0f, 1000.0f);
 		ImGui::Checkbox("攻撃できるかどうか", &isAbleToAttack_);
