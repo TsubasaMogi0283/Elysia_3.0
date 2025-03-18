@@ -481,6 +481,9 @@
     <Filter Include="Project\Scene\Test">
       <UniqueIdentifier>{f673545d-ea78-46ef-9975-fbd92baa5419}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Elysia\Header File\Convert">
+      <UniqueIdentifier>{64108dd4-bed4-44e0-b95b-ab68c072b1c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -759,9 +762,6 @@
     <ClCompile Include="Elysia\Framework\Framework.cpp">
       <Filter>Elysia\Source File\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Elysia\ConvertFunction\ConvertColor\ConvertColor.cpp">
-      <Filter>Elysia\Source File\ConvertFunction</Filter>
-    </ClCompile>
     <ClCompile Include="Elysia\ConvertFunction\ConvertLog\ConvertLog.cpp">
       <Filter>Elysia\Source File\ConvertFunction</Filter>
     </ClCompile>
@@ -779,6 +779,9 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\TestScene\TestScene.cpp">
       <Filter>Project\Scene\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Elysia\Convert\Convert.cpp">
+      <Filter>Elysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1129,9 +1132,6 @@
     <ClInclude Include="Elysia\ConvertFunction\ConvertLog\ConvertLog.h">
       <Filter>Elysia\Header File\ConvertFunction</Filter>
     </ClInclude>
-    <ClInclude Include="Elysia\ConvertFunction\ConvertColor\ConvertColor.h">
-      <Filter>Elysia\Header File\ConvertFunction</Filter>
-    </ClInclude>
     <ClInclude Include="Elysia\Material\Dissolve\Dissolve.h">
       <Filter>Elysia\Header File\Material</Filter>
     </ClInclude>
@@ -1308,6 +1308,9 @@
     </ClInclude>
     <ClInclude Include="Elysia\Material\Color.h">
       <Filter>Elysia\Header File\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Elysia\Convert\Convert.h">
+      <Filter>Elysia\Header File\Convert</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

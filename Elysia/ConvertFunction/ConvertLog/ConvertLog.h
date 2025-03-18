@@ -16,11 +16,6 @@
 /// Logに関係する関数
 /// </summary>
 namespace ConvertString {
-	/// <summary>
-	///	ログの出力
-	/// </summary>
-	/// <param name="text"></param>
-	void Log(const std::string& text);
 
 	/// <summary>
 	/// stringからwstringに変換

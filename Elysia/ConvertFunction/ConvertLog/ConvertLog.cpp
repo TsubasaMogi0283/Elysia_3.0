@@ -1,9 +1,6 @@
 #include "ConvertLog.h"
 
 
-void ConvertString::Log(const std::string& text) {
-	OutputDebugStringA(text.c_str());
-}
 
 
 std::wstring ConvertString::ToWString(const std::string& text) {

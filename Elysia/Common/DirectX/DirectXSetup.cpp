@@ -2,7 +2,7 @@
 #include <thread>
 #include <d3dx12.h>
 
-
+#include "Convert.h"
 #include "PipelineManager.h"
 #include "SrvManager.h"
 #include "RtvManager.h"
@@ -170,7 +170,7 @@ void Elysia::DirectXSetup::SelectAdapter() {
 		//ソフトウェアアダプタでなければ採用
 		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
 			//採用したアダプタの情報をログに出力.(wstring)
-			ConvertString::Log(ConvertString::ToString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
+			Convert::Text::Log(ConvertString::ToString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
 			break;
 		}
 		//ソフトウェアアダプタだった場合無視
@@ -210,14 +210,14 @@ void Elysia::DirectXSetup::GenerateD3D12Device() {
 		//指定した機能レベルでデバイスが生成できたか確認
 		if (SUCCEEDED(hr)) {
 			//生成できたのでログ出力を行ってループを抜ける
-			ConvertString::Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
+			Convert::Text::Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
 			break;
 		}
 	}
 
 	//デバイスの生成が上手くいかなかったので起動できない
 	assert(DirectXSetup::GetInstance()->device_ != nullptr);
-	ConvertString::Log("Complete create D3D12Device!!!\n");
+	Convert::Text::Log("Complete create D3D12Device!!!\n");
 
 }
 
@@ -643,7 +643,7 @@ IDxcBlob* Elysia::DirectXSetup::CompileShader(const std::wstring& filePath, cons
 	assert(SUCCEEDED(hr));
 
 	//1.hlslファイルを読む
-	ConvertString::Log(ConvertString::ToString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
+	Convert::Text::Log(ConvertString::ToString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
 	//hlslファイルを読む
 	IDxcBlobEncoding* shaderSource = nullptr;
 	hr = dxcUtils_->LoadFile(filePath.c_str(), nullptr, &shaderSource);
@@ -678,7 +678,7 @@ IDxcBlob* Elysia::DirectXSetup::CompileShader(const std::wstring& filePath, cons
 	IDxcBlobUtf8* shaderError = nullptr;
 	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
-		ConvertString::Log(shaderError->GetStringPointer());
+		Convert::Text::Log(shaderError->GetStringPointer());
 		assert(false);
 	}
 
@@ -689,7 +689,7 @@ IDxcBlob* Elysia::DirectXSetup::CompileShader(const std::wstring& filePath, cons
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
 	assert(SUCCEEDED(hr));
 	//成功したログを出す
-	ConvertString::Log(ConvertString::ToString(std::format(L"Compile Succeeded,path:{},profile:{}\n", filePath, profile)));
+	Convert::Text::Log(ConvertString::ToString(std::format(L"Compile Succeeded,path:{},profile:{}\n", filePath, profile)));
 	//もう使わないリソースを解放
 	shaderSource->Release();
 	shaderResult->Release();
