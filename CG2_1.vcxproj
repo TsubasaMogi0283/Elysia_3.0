@@ -131,7 +131,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Elysia\Camera\Camera.cpp" />
     <ClCompile Include="Elysia\Common\DirectX\DirectXSetup.cpp" />
     <ClCompile Include="Elysia\Common\Windows\WindowsSetup.cpp" />
-    <ClCompile Include="Elysia\ConvertFunction\CompileShader\CompileShaderManager.cpp" />
     <ClCompile Include="Elysia\ConvertFunction\ConvertColor\ConvertColor.cpp" />
     <ClCompile Include="Elysia\ConvertFunction\ConvertLog\ConvertLog.cpp" />
     <ClCompile Include="Elysia\Framework\Framework.cpp" />
@@ -406,7 +405,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Elysia\Camera\Camera.h" />
     <ClInclude Include="Elysia\Common\DirectX\DirectXSetup.h" />
     <ClInclude Include="Elysia\Common\Windows\WindowsSetup.h" />
-    <ClInclude Include="Elysia\ConvertFunction\CompileShader\CompileShaderManager.h" />
     <ClInclude Include="Elysia\ConvertFunction\ConvertColor\ConvertColor.h" />
     <ClInclude Include="Elysia\ConvertFunction\ConvertLog\ConvertLog.h" />
     <ClInclude Include="Elysia\Framework\Framework.h" />

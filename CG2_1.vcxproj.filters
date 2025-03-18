@@ -759,9 +759,6 @@
     <ClCompile Include="Elysia\Framework\Framework.cpp">
       <Filter>Elysia\Source File\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Elysia\ConvertFunction\CompileShader\CompileShaderManager.cpp">
-      <Filter>Elysia\Source File\ConvertFunction</Filter>
-    </ClCompile>
     <ClCompile Include="Elysia\ConvertFunction\ConvertColor\ConvertColor.cpp">
       <Filter>Elysia\Source File\ConvertFunction</Filter>
     </ClCompile>
@@ -1133,9 +1130,6 @@
       <Filter>Elysia\Header File\ConvertFunction</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\ConvertFunction\ConvertColor\ConvertColor.h">
-      <Filter>Elysia\Header File\ConvertFunction</Filter>
-    </ClInclude>
-    <ClInclude Include="Elysia\ConvertFunction\CompileShader\CompileShaderManager.h">
       <Filter>Elysia\Header File\ConvertFunction</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\Material\Dissolve\Dissolve.h">

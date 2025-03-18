@@ -294,8 +294,8 @@ void Elysia::DirectXSetup::GenerateCommand() {
 	assert(SUCCEEDED(hr));
 
 	//ローカルに入れた値をメンバ変数に保存しよう
-	DirectXSetup::GetInstance()->m_commandQueue_ = commandQueue;
-	DirectXSetup::GetInstance()->m_commandAllocator_ = commandAllocator;
+	DirectXSetup::GetInstance()->commandQueue_ = commandQueue;
+	DirectXSetup::GetInstance()->commandAllocator_ = commandAllocator;
 	DirectXSetup::GetInstance()->commandList_ = commandList;
 }
 
@@ -341,7 +341,7 @@ void Elysia::DirectXSetup::GenerateSwapChain() {
 
 	//コマンドキュー、ウィンドウハンドル、設定を渡して生成する
 	HRESULT hr = DirectXSetup::GetInstance()->dxgiFactory_->CreateSwapChainForHwnd(
-		DirectXSetup::GetInstance()->m_commandQueue_.Get(),
+		DirectXSetup::GetInstance()->commandQueue_.Get(),
 		hwnd, 
 		&swapChainDesc, 
 		nullptr, 
@@ -381,10 +381,10 @@ void Elysia::DirectXSetup::GenarateDescriptorHeap() {
 
 void Elysia::DirectXSetup::PullResourcesFromSwapChain() {
 	 
-	HRESULT hr = DirectXSetup::GetInstance()->swapChain_.m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(& DirectXSetup::GetInstance()->swapChain_.m_pResource[0]));
+	HRESULT hr = DirectXSetup::GetInstance()->swapChain_.swapChain->GetBuffer(0, IID_PPV_ARGS(& DirectXSetup::GetInstance()->swapChain_.resource[0]));
 	//上手く取得できなければ起動できない
 	assert(SUCCEEDED(hr));
-	hr = DirectXSetup::GetInstance()->swapChain_.m_pSwapChain->GetBuffer(1, IID_PPV_ARGS(& DirectXSetup::GetInstance()->swapChain_.m_pResource[1]));
+	hr = DirectXSetup::GetInstance()->swapChain_.swapChain->GetBuffer(1, IID_PPV_ARGS(& DirectXSetup::GetInstance()->swapChain_.resource[1]));
 	assert(SUCCEEDED(hr));
 
 	
@@ -493,7 +493,7 @@ void Elysia::DirectXSetup::SetResourceBarrierForSwapChain(const D3D12_RESOURCE_S
 	
 	//コマンドを積みこんで確定させる
 	//これから書き込むバックバッファのインデックスを取得
-	DirectXSetup::GetInstance()->backBufferIndex_ = DirectXSetup::GetInstance()->swapChain_.m_pSwapChain->GetCurrentBackBufferIndex();
+	DirectXSetup::GetInstance()->backBufferIndex_ = DirectXSetup::GetInstance()->swapChain_.swapChain->GetCurrentBackBufferIndex();
 	D3D12_RESOURCE_BARRIER barrier = {
 		//タイプを設定
 		.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION,
@@ -501,7 +501,7 @@ void Elysia::DirectXSetup::SetResourceBarrierForSwapChain(const D3D12_RESOURCE_S
 		.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE,
 	};
 	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = DirectXSetup::GetInstance()->swapChain_.m_pResource[DirectXSetup::GetInstance()->backBufferIndex_].Get();
+	barrier.Transition.pResource = DirectXSetup::GetInstance()->swapChain_.resource[DirectXSetup::GetInstance()->backBufferIndex_].Get();
 	//遷移前(現在)のResourceState
 	barrier.Transition.StateBefore = beforeState;
 	//遷移後のResourceState
@@ -581,9 +581,9 @@ void Elysia::DirectXSetup::SecondInitialize() {
 	DirectXSetup::GetInstance()->rtvHandle_[1] = RtvManager::GetInstance()->Allocate(DirectXSetup::GetInstance()->swapChainName_[1]);
 	
 	//スワップチェーン1枚目
-	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[0].Get(), DirectXSetup::GetInstance()->rtvHandle_[0]);
+	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().resource[0].Get(), DirectXSetup::GetInstance()->rtvHandle_[0]);
 	//スワップチェーン2枚目
-	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().m_pResource[1].Get(), DirectXSetup::GetInstance()->rtvHandle_[1]);
+	RtvManager::GetInstance()->GenarateRenderTargetView(DirectXSetup::GetInstance()->GetSwapChain().resource[1].Get(), DirectXSetup::GetInstance()->rtvHandle_[1]);
 
 
 	//フェンスを生成
@@ -628,6 +628,75 @@ void Elysia::DirectXSetup::UpdateFPS() {
 }
 
 
+
+IDxcBlob* Elysia::DirectXSetup::CompileShader(const std::wstring& filePath, const wchar_t* profile){
+	//DXCの初期化
+	//dxcCompilerを初期化
+	HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
+	assert(SUCCEEDED(hr));
+
+	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
+	assert(SUCCEEDED(hr));
+
+	//現時点でincludeはしないが、includeに対応
+	hr = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
+	assert(SUCCEEDED(hr));
+
+	//1.hlslファイルを読む
+	ConvertString::Log(ConvertString::ToString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
+	//hlslファイルを読む
+	IDxcBlobEncoding* shaderSource = nullptr;
+	hr = dxcUtils_->LoadFile(filePath.c_str(), nullptr, &shaderSource);
+	//読めなかったら止める
+	assert(SUCCEEDED(hr));
+	//読み込んだファイルの内容を設定する
+	DxcBuffer shaderSourceBuffer;
+	shaderSourceBuffer.Ptr = shaderSource->GetBufferPointer();
+	shaderSourceBuffer.Size = shaderSource->GetBufferSize();
+	shaderSourceBuffer.Encoding = DXC_CP_UTF8;
+
+	//2.Compileする
+	LPCWSTR arguments[] = {
+		filePath.c_str(),
+		L"-E",L"main",
+		L"-T",profile,
+		L"-Zi",L"-Qembed_debug",
+		L"-Od",
+		L"-Zpr",
+	};
+
+
+	//実際にShaderをコンパイルする
+	IDxcResult* shaderResult = nullptr;
+	hr = dxcCompiler_->Compile(&shaderSourceBuffer, arguments, _countof(arguments), includeHandler_.Get(), IID_PPV_ARGS(&shaderResult));
+	//コンパイルエラーではなくdxcが起動出来ないなど致命的な状況
+	assert(SUCCEEDED(hr));
+
+
+	//3.警告・エラーが出ていないかを確認する
+	//警告・エラーが出てたらログに出して止める
+	IDxcBlobUtf8* shaderError = nullptr;
+	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
+	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
+		ConvertString::Log(shaderError->GetStringPointer());
+		assert(false);
+	}
+
+
+	//4.Compile結果を受け取って返す
+	//BLOB・・・BinaryLargeOBject
+	IDxcBlob* shaderBlob = nullptr;
+	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
+	assert(SUCCEEDED(hr));
+	//成功したログを出す
+	ConvertString::Log(ConvertString::ToString(std::format(L"Compile Succeeded,path:{},profile:{}\n", filePath, profile)));
+	//もう使わないリソースを解放
+	shaderSource->Release();
+	shaderResult->Release();
+	//実行用のバイナリを返却
+	return shaderBlob;
+
+}
 
 void Elysia::DirectXSetup::StartDraw() {
 
@@ -696,10 +765,10 @@ void Elysia::DirectXSetup::EndDraw() {
 	//コマンドをキックする
 	//GPUにコマンドリストの実行を行わせる
 	ID3D12CommandList* commandLists[] = { DirectXSetup::GetInstance()->GetCommandList().Get()};
-	DirectXSetup::GetInstance()->m_commandQueue_->ExecuteCommandLists(1, commandLists);
+	DirectXSetup::GetInstance()->commandQueue_->ExecuteCommandLists(1, commandLists);
 	//GPUとOSに画面の交換を行うよう通知する
 
-	DirectXSetup::GetInstance()->swapChain_.m_pSwapChain->Present(1u, 0u);
+	DirectXSetup::GetInstance()->swapChain_.swapChain->Present(1u, 0u);
 
 	////GPUにSignalを送る
 	//GPUの実行完了が目的
@@ -711,7 +780,7 @@ void Elysia::DirectXSetup::EndDraw() {
 	//Fenceの値を更新
 	fenceValue_++;
 	//GPUがここまでたどりついた時に、Fenceの値を代入するようSignalを送る
-	DirectXSetup::GetInstance()->m_commandQueue_->Signal(DirectXSetup::GetInstance()->fence_.Get(), fenceValue_);
+	DirectXSetup::GetInstance()->commandQueue_->Signal(DirectXSetup::GetInstance()->fence_.Get(), fenceValue_);
 	
 
 	//Fenceの値が指定したSignal値にたどりついているか確認する
@@ -727,9 +796,9 @@ void Elysia::DirectXSetup::EndDraw() {
 	UpdateFPS();
 
 	//リセット
-	hr = DirectXSetup::GetInstance()->m_commandAllocator_->Reset();
+	hr = DirectXSetup::GetInstance()->commandAllocator_->Reset();
 	assert(SUCCEEDED(hr));
-	hr = DirectXSetup::GetInstance()->commandList_->Reset(DirectXSetup::GetInstance()->m_commandAllocator_.Get(), nullptr);
+	hr = DirectXSetup::GetInstance()->commandList_->Reset(DirectXSetup::GetInstance()->commandAllocator_.Get(), nullptr);
 	assert(SUCCEEDED(hr));
 }
 

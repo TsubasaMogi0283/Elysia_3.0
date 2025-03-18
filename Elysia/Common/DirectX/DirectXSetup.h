@@ -5,11 +5,12 @@
  * @author 茂木翼
  */
 
-
+#include <string>
 #include <cassert>
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <dxgidebug.h>
+#include <dxcapi.h>
 #include <chrono>
 
 
@@ -24,6 +25,11 @@ using Microsoft::WRL::ComPtr;
 
 #include "ConvertLog.h"
 #include "WindowsSetup.h"
+
+
+
+
+
 
 
 /// <summary>
@@ -92,9 +98,7 @@ namespace Elysia{
 		/// <param name="numDescriptors"></param>
 		/// <param name="shaderVisible"></param>
 		/// <returns></returns>
-		static ComPtr<ID3D12DescriptorHeap> GenarateDescriptorHeap(
-			D3D12_DESCRIPTOR_HEAP_TYPE heapType,
-			UINT numDescriptors, bool shaderVisible);
+		static ComPtr<ID3D12DescriptorHeap> GenarateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType,UINT numDescriptors, bool shaderVisible);
 
 
 
@@ -112,16 +116,9 @@ namespace Elysia{
 		static ComPtr<ID3D12Resource> GenerateDepthStencilTextureResource(const uint32_t& width, const uint32_t& height);
 
 
-		//まとめたのが下の「Initialize」
-		//他の所では使わないからprivateにしても良さそう
-		//アロー演算子を使ったとき邪魔になるから
-
-
-#pragma region 初期化について
-
-	/// <summary>
-	/// DXGIFactoryの生成
-	/// </summary>
+		/// <summary>
+		/// DXGIFactoryの生成
+		/// </summary>
 		static void GenerateDXGIFactory();
 
 		/// <summary>
@@ -158,7 +155,6 @@ namespace Elysia{
 		/// スワップチェーンを引っ張ってくる
 		/// </summary>
 		static void PullResourcesFromSwapChain();
-
 
 		/// <summary>
 		/// フェンスの生成
@@ -199,7 +195,6 @@ namespace Elysia{
 		static void SetResourceBarrierForSwapChain(const D3D12_RESOURCE_STATES& beforeState, const D3D12_RESOURCE_STATES& afterState);
 
 
-#pragma endregion
 
 	private:
 		/// <summary>
@@ -232,6 +227,14 @@ namespace Elysia{
 		ComPtr<ID3D12Resource> CreateBufferResource(const size_t& sizeInBytes);
 
 		/// <summary>
+		/// CompilerShader関数
+		/// </summary>
+		/// <param name="filePath">CompilerするShaderファイルへのパス</param>
+		/// <param name="profile">Compilerに使用するProfile</param>
+		/// <returns></returns>
+		IDxcBlob* CompileShader(const std::wstring& filePath, const wchar_t* profile);
+
+		/// <summary>
 		/// 描画開始
 		/// </summary>
 		void StartDraw();
@@ -251,8 +254,8 @@ namespace Elysia{
 		/// スワップチェインで使う変数をまとめた
 		/// </summary>
 		struct SwapChain {
-			ComPtr<IDXGISwapChain4> m_pSwapChain;
-			ComPtr<ID3D12Resource> m_pResource[2];
+			ComPtr<IDXGISwapChain4> swapChain;
+			ComPtr<ID3D12Resource> resource[2];
 			DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 		};
 
@@ -322,9 +325,9 @@ namespace Elysia{
 		//コマンドリスト
 		ComPtr<ID3D12GraphicsCommandList> commandList_ = nullptr;
 		//コマンドキュー
-		ComPtr<ID3D12CommandQueue> m_commandQueue_ = nullptr;
+		ComPtr<ID3D12CommandQueue> commandQueue_ = nullptr;
 		//コマンドアロケータ
-		ComPtr<ID3D12CommandAllocator> m_commandAllocator_ = nullptr;
+		ComPtr<ID3D12CommandAllocator> commandAllocator_ = nullptr;
 
 		//DSV
 		ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap_ = nullptr;
@@ -354,6 +357,11 @@ namespace Elysia{
 
 		//デバッグコントローラー
 		ComPtr<ID3D12Debug1> debugController_ = nullptr;
+
+		//DXC
+		ComPtr<IDxcUtils> dxcUtils_ = nullptr;
+		ComPtr<IDxcCompiler3> dxcCompiler_ = nullptr;
+		ComPtr<IDxcIncludeHandler> includeHandler_ = nullptr;
 
 		//FPS
 		//記録時間(FPS固定用)

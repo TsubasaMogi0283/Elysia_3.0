@@ -267,12 +267,12 @@ void Elysia::PipelineManager::GenaratedLinePSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->linePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Line3D/Line3D.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->linePSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Line3D/Line3D.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->linePSO_.vertexShaderBlob_ != nullptr);
 
 
 	//PS
-	PipelineManager::GetInstance()->linePSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Line3D/Line3D.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->linePSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Line3D/Line3D.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->linePSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -563,12 +563,12 @@ void Elysia::PipelineManager::GenerateSpritePSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->spritePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object2D/Object2d.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->spritePSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Object2D/Object2d.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->spritePSO_.vertexShaderBlob_ != nullptr);
 
 
 
-	PipelineManager::GetInstance()->spritePSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object2D/Object2d.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->spritePSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Object2D/Object2d.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->spritePSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -896,10 +896,10 @@ void Elysia::PipelineManager::GenerateModelPSO() {
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->modelPSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Object3D/Object3d.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->modelPSO_.pixelShaderBlob_ != nullptr);
 
 	//PSOの生成
@@ -1252,12 +1252,12 @@ void Elysia::PipelineManager::GenerateAnimationModelPSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->animationModelPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/AnimationObject3D/AnimationObject3D.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->animationModelPSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/AnimationObject3D/AnimationObject3D.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->animationModelPSO_.vertexShaderBlob_ != nullptr);
 
 
 
-	PipelineManager::GetInstance()->animationModelPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/AnimationObject3D/AnimationObject3D.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->animationModelPSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/AnimationObject3D/AnimationObject3D.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->animationModelPSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -1525,12 +1525,12 @@ void Elysia::PipelineManager::GenerateParticle3DPSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->particle3DPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Particle3D/Particle3d.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->particle3DPSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Particle3D/Particle3d.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->particle3DPSO_.vertexShaderBlob_ != nullptr);
 
 
 
-	PipelineManager::GetInstance()->particle3DPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Particle3D/Particle3d.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->particle3DPSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Particle3D/Particle3d.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->particle3DPSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -1727,10 +1727,10 @@ void Elysia::PipelineManager::GenarateFullScreenPSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->fullScreenPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/FullScreen/FullScreen.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->fullScreenPSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/FullScreen/FullScreen.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->fullScreenPSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/FullScreen/FullScreen.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/FullScreen/FullScreen.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->fullScreenPSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -1853,10 +1853,10 @@ void Elysia::PipelineManager::GenarateGrayScalePSO(){
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->grayScalePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/GrayScale/GrayScale.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->grayScalePSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/GrayScale/GrayScale.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->grayScalePSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->grayScalePSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/GrayScale/GrayScale.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->grayScalePSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/GrayScale/GrayScale.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->grayScalePSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -2022,10 +2022,10 @@ void Elysia::PipelineManager::GenarateSepiaScalePSO(){
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->sepiaScalePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/SepiaScale/SepiaScale.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->sepiaScalePSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/SepiaScale/SepiaScale.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->sepiaScalePSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->sepiaScalePSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/SepiaScale/SepiaScale.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->sepiaScalePSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/SepiaScale/SepiaScale.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->sepiaScalePSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -2200,10 +2200,10 @@ void Elysia::PipelineManager::GenarateVignettePSO(){
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->vignettePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Vignette/Vignette.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->vignettePSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Vignette/Vignette.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->vignettePSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->vignettePSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Vignette/Vignette.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->vignettePSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Vignette/Vignette.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->vignettePSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -2335,10 +2335,10 @@ void Elysia::PipelineManager::GenarateBoxFilterPSO(){
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->boxFilterPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/BoxFilter/BoxFilter.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->boxFilterPSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/BoxFilter/BoxFilter.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->boxFilterPSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->boxFilterPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/BoxFilter/BoxFilter.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->boxFilterPSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/BoxFilter/BoxFilter.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->boxFilterPSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -2517,10 +2517,10 @@ void Elysia::PipelineManager::GenarateGaussianFilterPSO(){
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->gaussianFilterPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/GaussianFilter/GaussianFilter.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->gaussianFilterPSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/GaussianFilter/GaussianFilter.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->gaussianFilterPSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->gaussianFilterPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/GaussianFilter/GaussianFilter.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->gaussianFilterPSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/GaussianFilter/GaussianFilter.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->gaussianFilterPSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -2690,10 +2690,10 @@ void Elysia::PipelineManager::GenarateLuminanceBasedOutlinePSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/LuminanceBasedOutline/LuminanceBasedOutline.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/LuminanceBasedOutline/LuminanceBasedOutline.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/LuminanceBasedOutline/LuminanceBasedOutline.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/LuminanceBasedOutline/LuminanceBasedOutline.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -2916,10 +2916,10 @@ void Elysia::PipelineManager::GenarateDepthBasedOutlinePSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->depthBasedOutlinePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/DepthBasedOutline/DepthBasedOutline.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->depthBasedOutlinePSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/DepthBasedOutline/DepthBasedOutline.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->depthBasedOutlinePSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->depthBasedOutlinePSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/DepthBasedOutline/DepthBasedOutline.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->depthBasedOutlinePSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/DepthBasedOutline/DepthBasedOutline.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->depthBasedOutlinePSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -3091,10 +3091,10 @@ void Elysia::PipelineManager::GenerateRadialBlurPSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->radialBlurPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/RadialBlur/RadialBlur.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->radialBlurPSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/RadialBlur/RadialBlur.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->radialBlurPSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->radialBlurPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/RadialBlur/RadialBlur.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->radialBlurPSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/RadialBlur/RadialBlur.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->radialBlurPSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -3290,10 +3290,10 @@ void Elysia::PipelineManager::GenarateDissolvePSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->dissolvePSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Dissolve/Dissolve.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->dissolvePSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Dissolve/Dissolve.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->dissolvePSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->dissolvePSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/Dissolve/Dissolve.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->dissolvePSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Dissolve/Dissolve.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->dissolvePSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -3471,10 +3471,10 @@ void Elysia::PipelineManager::GenarateRandomEffectPSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->randomEffectPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/RandomEffect/RandomEffect.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->randomEffectPSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/RandomEffect/RandomEffect.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->randomEffectPSO_.vertexShaderBlob_ != nullptr);
 
-	PipelineManager::GetInstance()->randomEffectPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/RandomEffect/RandomEffect.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->randomEffectPSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/RandomEffect/RandomEffect.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->randomEffectPSO_.pixelShaderBlob_ != nullptr);
 
 
@@ -3763,12 +3763,12 @@ void Elysia::PipelineManager::GenarateSkyBoxPSO() {
 
 
 	//ShaderをCompileする
-	PipelineManager::GetInstance()->skyBoxPSO_.vertexShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/SkyBox/SkyBox.VS.hlsl", L"vs_6_0");
+	PipelineManager::GetInstance()->skyBoxPSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/SkyBox/SkyBox.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->skyBoxPSO_.vertexShaderBlob_ != nullptr);
 
 
 
-	PipelineManager::GetInstance()->skyBoxPSO_.pixelShaderBlob_ = CompileShaderManager::GetInstance()->CompileShader(L"Resources/Shader/SkyBox/SkyBox.PS.hlsl", L"ps_6_0");
+	PipelineManager::GetInstance()->skyBoxPSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/SkyBox/SkyBox.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->skyBoxPSO_.pixelShaderBlob_ != nullptr);
 
 
