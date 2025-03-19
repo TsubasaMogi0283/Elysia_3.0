@@ -23,7 +23,6 @@
 using Microsoft::WRL::ComPtr;
 
 
-#include "ConvertLog.h"
 #include "WindowsSetup.h"
 
 

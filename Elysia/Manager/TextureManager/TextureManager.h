@@ -14,7 +14,6 @@
 #include <map>
 
 #include "DirectXSetup.h"
-#include "ConvertLog.h"
 #include "Vector2.h"
 
 /// <summary>

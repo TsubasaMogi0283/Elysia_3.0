@@ -9,7 +9,6 @@
 #include <d3d12.h>
 #include <cassert>
 
-#include "ConvertLog.h"
 #include "DirectXSetup.h"
 
 /// <summary>

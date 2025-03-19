@@ -144,7 +144,7 @@ namespace Elysia {
 		/// クライアントの縦幅
 		/// </summary>
 		/// <returns></returns>
-		uint32_t GetClientHeight() const {
+		inline uint32_t GetClientHeight() const {
 			return clientHeight_;
 		}
 
@@ -152,7 +152,7 @@ namespace Elysia {
 		/// Hwndの取得
 		/// </summary>
 		/// <returns></returns>
-		HWND GetHwnd()const {
+		inline HWND GetHwnd()const {
 			return hwnd_;
 		}
 
@@ -160,7 +160,7 @@ namespace Elysia {
 		/// hInstanceの取得
 		/// </summary>
 		/// <returns></returns>
-		HINSTANCE GetHInstance() const {
+		inline HINSTANCE GetHInstance() const {
 			return windowClass_.hInstance;
 		}
 
@@ -180,8 +180,6 @@ namespace Elysia {
 
 		//ウィンドウクラス
 		WNDCLASS windowClass_{};
-
-
 
 	};
 

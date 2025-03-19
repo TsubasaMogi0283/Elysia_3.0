@@ -170,9 +170,6 @@
     <Filter Include="Elysia\Source File\Math\WorldTransform">
       <UniqueIdentifier>{bab1f20c-3a95-4885-947b-ad51efb36044}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Elysia\Source File\ConvertFunction">
-      <UniqueIdentifier>{5f4a72fc-e562-4946-a2ac-4329dcdc39c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Elysia\Source File\Polygone">
       <UniqueIdentifier>{6a198dbf-5723-494c-be30-e68adffa3015}</UniqueIdentifier>
     </Filter>
@@ -305,9 +302,6 @@
     </Filter>
     <Filter Include="Elysia\Header File\Math\Collision">
       <UniqueIdentifier>{26a5a200-764b-4b6c-bdf4-5d8637bd6a42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Elysia\Header File\ConvertFunction">
-      <UniqueIdentifier>{88525f3c-706e-4397-b214-f9c6099be35f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Elysia\Header File\Polygone">
       <UniqueIdentifier>{7d6b79d6-b619-47a8-8605-e65a4fad754b}</UniqueIdentifier>
@@ -483,6 +477,9 @@
     </Filter>
     <Filter Include="Elysia\Header File\Convert">
       <UniqueIdentifier>{64108dd4-bed4-44e0-b95b-ab68c072b1c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elysia\Source File\Convert">
+      <UniqueIdentifier>{84c2195e-679f-4453-b397-f2d8863e5e29}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -762,9 +759,6 @@
     <ClCompile Include="Elysia\Framework\Framework.cpp">
       <Filter>Elysia\Source File\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Elysia\ConvertFunction\ConvertLog\ConvertLog.cpp">
-      <Filter>Elysia\Source File\ConvertFunction</Filter>
-    </ClCompile>
     <ClCompile Include="Elysia\Common\DirectX\DirectXSetup.cpp">
       <Filter>Elysia\Source File\Common</Filter>
     </ClCompile>
@@ -781,7 +775,7 @@
       <Filter>Project\Scene\Test</Filter>
     </ClCompile>
     <ClCompile Include="Elysia\Convert\Convert.cpp">
-      <Filter>Elysia\Source File</Filter>
+      <Filter>Elysia\Source File\Convert</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1128,9 +1122,6 @@
     </ClInclude>
     <ClInclude Include="Elysia\Common\DirectX\DirectXSetup.h">
       <Filter>Elysia\Header File\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Elysia\ConvertFunction\ConvertLog\ConvertLog.h">
-      <Filter>Elysia\Header File\ConvertFunction</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\Material\Dissolve\Dissolve.h">
       <Filter>Elysia\Header File\Material</Filter>

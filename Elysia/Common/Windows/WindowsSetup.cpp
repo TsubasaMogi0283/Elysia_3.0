@@ -1,11 +1,8 @@
 #include "WindowsSetup.h"
 
-#include "Convert.h"
-#include <ConvertLog.h>
-
 #pragma comment(lib,"winmm.lib")
 
-
+#include "Convert.h"
 
 
 Elysia::WindowsSetup* Elysia::WindowsSetup::GetInstance() {
