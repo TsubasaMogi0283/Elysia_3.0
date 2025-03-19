@@ -1,5 +1,6 @@
 #include "WindowsSetup.h"
 
+#include "Convert.h"
 #include <ConvertLog.h>
 
 #pragma comment(lib,"winmm.lib")
@@ -34,8 +35,8 @@ LRESULT Elysia::WindowsSetup::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPA
 void Elysia::WindowsSetup::OutputText(std::string& stringText){
 
 	//wstringからstringに変換
-	std::wstring newString = ConvertString::ToWString(stringText);
-	
+	//std::wstring newString = ConvertString::ToWString(stringText);
+	std::wstring newString = Convert::Text::ToWString(stringText);
 	//出力
 	OutputDebugStringW(newString.c_str());
 

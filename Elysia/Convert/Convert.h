@@ -24,6 +24,20 @@ namespace Convert {
 			OutputDebugStringA(text.c_str());
 		}
 
+		/// <summary>
+		/// string型からwstring型に変換
+		/// </summary>
+		/// <param name="text"></param>
+		/// <returns></returns>
+		std::wstring ToWString(const std::string& text);
+
+		/// <summary>
+		/// wstring型からstring型に変換
+		/// </summary>
+		/// <param name="text"></param>
+		/// <returns></returns>
+		std::string ToString(const std::wstring& text);
+
 	}
 
 	/// <summary>

@@ -18,18 +18,11 @@
 namespace ConvertString {
 
 	/// <summary>
-	/// stringからwstringに変換
-	/// </summary>
-	/// <param name="text">文字列</param>
-	/// <returns></returns>
-	std::wstring ToWString(const std::string& text);
-
-	/// <summary>
 	/// wstringからstringに変換
 	/// </summary>
 	/// <param name="text">W文字列</param>
 	/// <returns></returns>
-	std::string ToString(const std::wstring& text);
+	//std::string ToString(const std::wstring& text);
 
 }
 

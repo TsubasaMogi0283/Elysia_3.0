@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "Convert.h"
 
 Elysia::TextureManager* Elysia::TextureManager::GetInstance() {
 	static Elysia::TextureManager instance;
@@ -129,7 +130,7 @@ DirectX::ScratchImage Elysia::TextureManager::LoadTextureData(const std::string&
 
 	//テクスチャファイルを読んでプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
-	std::wstring filePathW = ConvertString::ToWString(filePath);
+	std::wstring filePathW = Convert::Text::ToWString(filePath);
 	//dssファイルの場合
 	if (filePathW.ends_with(L".dds")) {
 		hResult = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);

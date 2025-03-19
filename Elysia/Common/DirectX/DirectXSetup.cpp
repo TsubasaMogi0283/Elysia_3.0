@@ -170,7 +170,7 @@ void Elysia::DirectXSetup::SelectAdapter() {
 		//ソフトウェアアダプタでなければ採用
 		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
 			//採用したアダプタの情報をログに出力.(wstring)
-			Convert::Text::Log(ConvertString::ToString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
+			Convert::Text::Log(Convert::Text::ToString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
 			break;
 		}
 		//ソフトウェアアダプタだった場合無視
@@ -643,7 +643,7 @@ IDxcBlob* Elysia::DirectXSetup::CompileShader(const std::wstring& filePath, cons
 	assert(SUCCEEDED(hr));
 
 	//1.hlslファイルを読む
-	Convert::Text::Log(ConvertString::ToString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
+	Convert::Text::Log(Convert::Text::ToString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
 	//hlslファイルを読む
 	IDxcBlobEncoding* shaderSource = nullptr;
 	hr = dxcUtils_->LoadFile(filePath.c_str(), nullptr, &shaderSource);
@@ -689,7 +689,7 @@ IDxcBlob* Elysia::DirectXSetup::CompileShader(const std::wstring& filePath, cons
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
 	assert(SUCCEEDED(hr));
 	//成功したログを出す
-	Convert::Text::Log(ConvertString::ToString(std::format(L"Compile Succeeded,path:{},profile:{}\n", filePath, profile)));
+	Convert::Text::Log(Convert::Text::ToString(std::format(L"Compile Succeeded,path:{},profile:{}\n", filePath, profile)));
 	//もう使わないリソースを解放
 	shaderSource->Release();
 	shaderResult->Release();
