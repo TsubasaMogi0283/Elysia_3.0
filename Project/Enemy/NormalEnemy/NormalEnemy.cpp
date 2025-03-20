@@ -182,14 +182,8 @@ void NormalEnemy::ChengeState(std::unique_ptr<BaseNormalEnemyState> newState){
 
 void NormalEnemy::Damaged() {
 
-	//ライトの強さによってダメージ量を調整したい
-
-	//懐中電灯用の当たり判定に当たっていたら色が赤に変わっていくよ
+	//ダメージを受ける
 	if (enemyFlashLightCollision_->GetIsTouched() == true) {
-		//const float COLOR_CHANGE_INTERVAL = 0.005f;
-		//material_.color_.y -= COLOR_CHANGE_INTERVAL;
-		//material_.color_.z -= COLOR_CHANGE_INTERVAL;
-
 		material_.color.y = 0.0f;
 		material_.color.z = 0.0f;
 

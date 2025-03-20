@@ -6,9 +6,11 @@
  */
 
 #include <memory>
+#include <list>
 
 #include "SpotLight.h"
 #include "Sprite.h"
+#include "Particle3D.h"
 #include "Fan.h"
 #include "WorldTransform.h"
 #include "Model.h"
@@ -73,6 +75,10 @@ public:
 	~FlashLight() = default;
 
 private:
+	/// <summary>
+	/// パーティクル生成
+	/// </summary>
+	void GenerateParticle();
 
 	/// <summary>
 	/// チャージ
@@ -240,6 +246,10 @@ private:
 	const std::string CHARGE_GAUGE_SPRITE_POSITION_STRING_ = "GaugePosition";
 	Vector2 chargeGaugeSpritePosition_ = {};
 
+	//パーティクルの放出時間
+	const std::string CHARGE_PARTICLE_RELEASE_TIME_ = "PartcleReleaseTime";
+	float_t releaseTime_ = 0.0f;
+
 private:
 	//チャージスピード
 	const float_t CHARGE_INTERVAL_VALUE_ = 0.1f;
@@ -249,6 +259,8 @@ private:
 	const float_t MAX_CHARGE_VALUE_ = 10.0f;
 	//最小チャージの値
 	const float_t MIN_CHARGE_VALUE_ = 0.0f;
+	//時間増加
+	const float_t DELTA_TIME_ = 1.0f / 60.0f;
 
 private:
 	//スポットライト
@@ -265,7 +277,7 @@ private:
 	//ライトの幅
 	float_t maxRange_ = 0.0f;
 	float_t minRange_ = 0.0f;
-	float_t ratio = 0.0f;
+	float_t ratio_ = 0.0f;
 
 	//角度
 	float_t theta_ = 0.0f;
@@ -274,6 +286,12 @@ private:
 	//扇
 	Fan3D fan3D_ = {};
 
+
+	//チャージ時のパーティクル
+	std::list<std::unique_ptr<Elysia::Particle3D>>chargeParticle_ = {};
+	//生成時間
+	float_t readyForGenerateParticleTime_ = 0.0f;
+	
 
 	//チャージのゲージ
 	std::unique_ptr<Elysia::Sprite>chargeGaugeSprite_ = nullptr;

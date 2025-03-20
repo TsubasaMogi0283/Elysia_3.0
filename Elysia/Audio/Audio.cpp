@@ -603,17 +603,17 @@ void Elysia::Audio::ChangeVolume(const uint32_t& audioHandle, const float_t& vol
 }
 
 //ピッチの変更(滑らか)
-void Elysia::Audio::ChangeFrequency(const uint32_t& audioHandle, float_t& ratio) {
+void Elysia::Audio::ChangeFrequency(const uint32_t& audioHandle, float_t& ratio_) {
 
 	//2.0fより上がらなかった
-	ratio = max(ratio, 2.0f);
+	ratio_ = max(ratio_, 2.0f);
 	//0.0fより下がらなかった
-	ratio = min(ratio, 0.0f);
+	ratio_ = min(ratio_, 0.0f);
 
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
-	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFrequencyRatio(ratio);
+	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFrequencyRatio(ratio_);
 	assert(SUCCEEDED(hResult));
 }
 
@@ -624,21 +624,21 @@ void Elysia::Audio::ChangeFrequency(const uint32_t& audioHandle, float_t& ratio)
 void Elysia::Audio::ChangePitch(const uint32_t& audioHandle, const int32_t& scale) {
 
 
-	float ratio = 1.0f;
+	float ratio_ = 1.0f;
 
 	//入力された値がプラスだった場合
 	if (scale >= 0) {
 		//プラスのピッチの方を探す
 		for (int32_t i = 0; i < SCALE_AMOUNT_; i++) {
 			if (scale == i) {
-				ratio = SEMITONE_RATIO_[i];
+				ratio_ = SEMITONE_RATIO_[i];
 				break;
 			}
 
 		}
 		//12以上は上がらなかった
 		if (scale > 12) {
-			ratio = SEMITONE_RATIO_[12];
+			ratio_ = SEMITONE_RATIO_[12];
 		}
 
 	}
@@ -647,14 +647,14 @@ void Elysia::Audio::ChangePitch(const uint32_t& audioHandle, const int32_t& scal
 		//マイナスのピッチの方を探す
 		for (int32_t i = 0; i < SCALE_AMOUNT_; i++) {
 			if (scale == -i) {
-				ratio = MINUS_SEMITONE_RATION[i];
+				ratio_ = MINUS_SEMITONE_RATION[i];
 				break;
 			}
 
 		}
 		//-12以上は下がらなかった
 		if (scale < -12) {
-			ratio = MINUS_SEMITONE_RATION[12];
+			ratio_ = MINUS_SEMITONE_RATION[12];
 		}
 	}
 
@@ -663,7 +663,7 @@ void Elysia::Audio::ChangePitch(const uint32_t& audioHandle, const int32_t& scal
 
 
 	//比率の設定
-	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFrequencyRatio(ratio);
+	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFrequencyRatio(ratio_);
 	assert(SUCCEEDED(hResult));
 }
 

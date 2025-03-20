@@ -224,7 +224,7 @@ namespace Elysia {
 		/// </summary>
 		/// <param name="ハンドル名"></param>
 		/// <param name="値"></param>
-		void ChangeFrequency(const uint32_t& audioHandle, float_t& ratio);
+		void ChangeFrequency(const uint32_t& audioHandle, float_t& ratio_);
 
 
 		/// <summary>

@@ -37,7 +37,7 @@ void FlashLight::Initialize() {
 	globalVariables_->AddItem(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_INCREASE_STRING_, chargeIncreaseValue_);
 	globalVariables_->AddItem(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_DECREASE_STRING_, chargeDecreaseValue_);
 	globalVariables_->AddItem(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_GAUGE_SPRITE_POSITION_STRING_, chargeGaugeSpritePosition_);
-
+	globalVariables_->AddItem(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_PARTICLE_RELEASE_TIME_, releaseTime_);
 
 	//スポットライトの初期化
 	spotLight_.Initialize();
@@ -66,6 +66,9 @@ void FlashLight::Initialize() {
 	//チャージの増減値
 	chargeIncreaseValue_ = globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_INCREASE_STRING_);
 	chargeDecreaseValue_= globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_DECREASE_STRING_);
+
+	//パーティクルの放出時間
+	releaseTime_=globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_PARTICLE_RELEASE_TIME_);
 
 	//フレーム
 	uint32_t frameSpriteHandle = textureManager_->Load("Resources/Sprite/Gauge/GaugeFrame.png");
@@ -137,21 +140,21 @@ void FlashLight::Update() {
 	spotLight_.cosAngle = std::cosf(lightSideTheta_);
 
 	//割合を求める
-	ratio = SingleCalculation::InverseLerp(minRange_, maxRange_, lightSideTheta_);
+	ratio_ = SingleCalculation::InverseLerp(minRange_, maxRange_, lightSideTheta_);
 
 	//幅から強さを計算する
 	//最大の強さ
 	maxIntensity_ = globalVariables_->GetFloatValue(FLASH_LIGHT_INTENSITY_STRING_, MAX_STRING_);
 	//最小の強さ
 	minIntensity_ = globalVariables_->GetFloatValue(FLASH_LIGHT_INTENSITY_STRING_, MIN_STRING_);
-	spotLight_.intensity = SingleCalculation::Lerp(minIntensity_, maxIntensity_, (1.0f - ratio));
+	spotLight_.intensity = SingleCalculation::Lerp(minIntensity_, maxIntensity_, (1.0f - ratio_));
 
 	//cosFallowoffStart
 	//最大
 	maxStart_ = globalVariables_->GetFloatValue(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_);
 	//最小
 	minStart_ = globalVariables_->GetFloatValue(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_);
-	spotLight_.cosFallowoffStart = SingleCalculation::Lerp(minStart_, maxStart_, ratio);
+	spotLight_.cosFallowoffStart = SingleCalculation::Lerp(minStart_, maxStart_, ratio_);
 
 	//扇
 	fan3D_.centerRadian = theta_;
@@ -201,7 +204,17 @@ void FlashLight::DrawObject3D(const Camera& camera) {
 
 #endif // _DEBUG
 
+	//ダメージ当たった時の演出
+	//具体的に言うと感電とか少しダメージが入っているというやつ
 
+	//チャージパーティクル
+	for (const std::unique_ptr <Elysia::Particle3D>& particle : chargeParticle_) {
+		if (particle != nullptr) {
+			particle->Draw(camera, material_);
+		}
+
+
+	}
 }
 
 void FlashLight::DrawSprite(){
@@ -209,6 +222,20 @@ void FlashLight::DrawSprite(){
 	chargeGaugeSprite_->Draw();
 	//フレーム
 	frameSprite_->Draw();
+}
+
+void FlashLight::GenerateParticle() {
+	//生成
+	std::unique_ptr<Elysia::Particle3D> particle = Elysia::Particle3D::Create(ParticleMoveType::Absorb);
+
+	//パーティクルの細かい設定
+	const float SCALE_SIZE = 20.0f;
+	particle->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
+	particle->SetCount(5u);
+	particle->SetIsReleaseOnceMode(true);
+	particle->SetIsToTransparent(true);
+	//挿入
+	chargeParticle_.push_back(std::move(particle));
 }
 
 void FlashLight::Charge() {
@@ -219,6 +246,14 @@ void FlashLight::Charge() {
 		//最大値を制限
 		chargeValue_=std::min<float_t>(MAX_CHARGE_VALUE_, chargeValue_);
 		
+		//パーティクルの生成
+		readyForGenerateParticleTime_ += DELTA_TIME_;
+		if (readyForGenerateParticleTime_>releaseTime_) {
+			GenerateParticle();
+			readyForGenerateParticleTime_ = 0.0f;
+		}
+		
+
 		//攻撃できるかどうか
 		if (chargeValue_ > isAbleToAttackValue_) {
 			isAbleToAttack_ = true;
@@ -262,6 +297,16 @@ void FlashLight::Charge() {
 	//値によって伸びる幅が変わる
 	chargeGaugeSprite_->SetScale({ .x = chargeValue_,.y = 1.0f });
 	chargeGaugeSprite_->SetColor(chargeColor_);
+
+	for (const std::unique_ptr <Elysia::Particle3D>& particle : chargeParticle_) {
+		if (particle != nullptr) {
+			//スポットライトの座標に集まってくるようにする
+			particle->SetAbsorbPosition(spotLight_.position);
+		}
+
+
+	}
+
 }
 
 void FlashLight::ImGuiDisplay() {
@@ -278,7 +323,7 @@ void FlashLight::ImGuiDisplay() {
 		ImGui::SliderFloat("強さ", &spotLight_.intensity, 0.0f, 400.0f);
 		ImGui::InputFloat("シータ", &theta_);
 		ImGui::InputFloat("ファイ", &phi_);
-		ImGui::InputFloat("割合", &ratio);
+		ImGui::InputFloat("割合", &ratio_);
 		ImGui::TreePop();
 	}
 
@@ -287,6 +332,12 @@ void FlashLight::ImGuiDisplay() {
 		ImGui::InputFloat("値", &chargeValue_);
 		ImGui::SliderFloat2("ゲージの座標", &chargeGaugeSpritePosition_.x, 0.0f, 1000.0f);
 		ImGui::Checkbox("攻撃できるかどうか", &isAbleToAttack_);
+
+		if (ImGui::TreeNode("パーティクル") == true) {
+			ImGui::InputFloat("準備時間", &readyForGenerateParticleTime_);
+			ImGui::TreePop();
+		}
+
 		ImGui::TreePop();
 	}
 
@@ -298,6 +349,10 @@ void FlashLight::Adjustment() {
 	//チャージ座標
 	chargeGaugeSpritePosition_ = globalVariables_->GetVector2Value(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_GAUGE_SPRITE_POSITION_STRING_);
 	chargeGaugeSprite_->SetPosition(chargeGaugeSpritePosition_);
+
+	//パーティクルの放出時間
+	releaseTime_ = globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_PARTICLE_RELEASE_TIME_);
+
 	//保存
 	globalVariables_->SaveFile(FLASH_LIGHT_INTENSITY_STRING_);
 	globalVariables_->SaveFile(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_);

@@ -5,6 +5,7 @@
             20.0,
             150.0
         ],
-        "IncreaseChargeValue": 0.10000000149011612
+        "IncreaseChargeValue": 0.10000000149011612,
+        "PartcleReleaseTime": 1.0
     }
 }
