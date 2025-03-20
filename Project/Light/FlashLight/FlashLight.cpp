@@ -204,17 +204,6 @@ void FlashLight::DrawObject3D(const Camera& camera) {
 
 #endif // _DEBUG
 
-	//ダメージ当たった時の演出
-	//具体的に言うと感電とか少しダメージが入っているというやつ
-
-	//チャージパーティクル
-	for (const std::unique_ptr <Elysia::Particle3D>& particle : chargeParticle_) {
-		if (particle != nullptr) {
-			particle->Draw(camera, material_);
-		}
-
-
-	}
 }
 
 void FlashLight::DrawSprite(){
@@ -249,7 +238,6 @@ void FlashLight::Charge() {
 		//パーティクルの生成
 		readyForGenerateParticleTime_ += DELTA_TIME_;
 		if (readyForGenerateParticleTime_>releaseTime_) {
-			GenerateParticle();
 			readyForGenerateParticleTime_ = 0.0f;
 		}
 		

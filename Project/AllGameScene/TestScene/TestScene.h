@@ -117,6 +117,7 @@ private:
 
 	//パーティクル
 	std::unique_ptr<Elysia::Particle3D>particle_ = nullptr;
+	std::unique_ptr<Elysia::Particle3D>particle2_ = nullptr;
 
 
 	//四隅

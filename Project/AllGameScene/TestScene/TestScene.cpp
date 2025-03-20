@@ -49,6 +49,16 @@ void TestScene::Initialize(){
 	particle_->SetIsToTransparent(true);
 	particle_->SetCount(5u);
 	particle_->SetFrequency(1.0f);
+
+
+	particle2_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Absorb));
+	particle2_->SetIsReleaseOnceMode(false);
+	particle2_->SetIsToTransparent(true);
+	particle2_->SetCount(10u);
+	particle2_->SetFrequency(0.5f);
+
+	
+
 	//カメラ
 	camera_.Initialize();
 	camera_.rotate.x = std::numbers::pi_v<float>/6.0f;
@@ -121,6 +131,9 @@ void TestScene::Update(Elysia::GameManager* gameManager){
 
 
 	particle_->SetAbsorbPosition(playerWorldTransform_.GetWorldPosition());
+	particle2_->SetAbsorbPosition(playerWorldTransform_.GetWorldPosition());
+
+
 	gameManager;
 
 #ifdef _DEBUG
@@ -147,7 +160,9 @@ void TestScene::DrawObject3D(){
 
 	
 	//パーティクル
-	particle_->Draw(camera_, playerMaterial_, directionalLight_);
+	//particle_->Draw(camera_, playerMaterial_, directionalLight_);
+	particle2_->Draw(camera_, playerMaterial_, directionalLight_);
+
 }
 
 void TestScene::PreDrawPostEffectFirst(){
