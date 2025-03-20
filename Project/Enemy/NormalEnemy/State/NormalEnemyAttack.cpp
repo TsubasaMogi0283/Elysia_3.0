@@ -1,5 +1,7 @@
 #include "NormalEnemyAttack.h"
 
+#include <imgui.h>
+
 #include "VectorCalculation.h"
 #include "Enemy/NormalEnemy/NormalEnemy.h"
 

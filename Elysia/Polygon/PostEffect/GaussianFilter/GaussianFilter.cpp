@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 
+#include "WindowsSetup.h"
 #include "PipelineManager.h"
 #include "TextureManager.h"
 #include "SrvManager.h"

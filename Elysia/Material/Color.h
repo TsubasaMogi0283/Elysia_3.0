@@ -9,19 +9,22 @@
 //色の早見表
 //https://www.colordic.org/
 
+
+#include "cstdint"
+
 //白
-#define WHITE = 0xFFFFFFFF;
+const uint32_t WHITE = 0xFFFFFFFF;
 //黒
-#define BLACK = 0x000000FF;
+const uint32_t BLACK = 0x000000FF;
 //赤
-#define RED = 0xFF0000FF;
+const uint32_t RED = 0xFF0000FF;
 //緑
-#define GREEN = 0x00FF00FF;
+const uint32_t GREEN = 0x00FF00FF;
 //青
-#define BLUE = 0x0000FFFF;
+const uint32_t BLUE = 0x0000FFFF;
 //黄色
-#define YELLOW = 0xFFFF00FF;
+const uint32_t YELLOW = 0xFFFF00FF;
 //紫
-#define PURPLE = 0xFF00FFFF;
+const uint32_t PURPLE = 0xFF00FFFF;
 //オレンジ
-#define ORANGE=0xFFA500FF;
+const uint32_t ORANGE=0xFFA500FF;

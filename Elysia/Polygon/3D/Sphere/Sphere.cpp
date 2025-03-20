@@ -1,37 +1,26 @@
 #include "Sphere.h"
 
-//補助ライブラリ
 #include <d3dx12.h>
-//動的配列
 #include <vector>
 #include <numbers>
+
+#include "WindowsSetup.h"
 #include "VectorCalculation.h"
 
 
 
 
-
-
-
-//頂点バッファビューを作成する
-void Sphere::GenerateVertexBufferView() {
-	
-
-	//vertexResourceがnullらしい
-	//リソースの先頭のアドレスから使う
-	vertexBufferViewSphere_.BufferLocation = vertexResourceSphere_->GetGPUVirtualAddress();
-	//使用するリソースのサイズは頂点３つ分のサイズ
-	vertexBufferViewSphere_.SizeInBytes = sizeof(VertexData) * SUBDIVISION_ * SUBDIVISION_*6;
-	//１頂点あたりのサイズ
-	vertexBufferViewSphere_.StrideInBytes = sizeof(VertexData);
-	
-
+Elysia::Sphere::Sphere(){
+	//インスタンスの取得
+	//ウィンドウクラス
+	windowsSetup_ = Elysia::WindowsSetup::GetInstance();
+	//DirectX
+	directXSetup_ = Elysia::DirectXSetup::GetInstance();
 }
 
-
 //初期化
-void Sphere::Initialize() {
-	this->directXSetup_ = Elysia::DirectXSetup::GetInstance();
+void Elysia::Sphere::Initialize() {
+	
 
 	//ここでBufferResourceを作る
 	//頂点を6に増やす
@@ -53,7 +42,14 @@ void Sphere::Initialize() {
 
 
 	//頂点バッファビューを作成する
-	GenerateVertexBufferView();
+	//リソースの先頭のアドレスから使う
+	vertexBufferViewSphere_.BufferLocation = vertexResourceSphere_->GetGPUVirtualAddress();
+	//使用するリソースのサイズは頂点３つ分のサイズ
+	vertexBufferViewSphere_.SizeInBytes = sizeof(VertexData) * SUBDIVISION_ * SUBDIVISION_ * 6;
+	//１頂点あたりのサイズ
+	vertexBufferViewSphere_.StrideInBytes = sizeof(VertexData);
+
+
 
 
 }
@@ -64,7 +60,7 @@ void Sphere::Initialize() {
 
 //描画
 //左上、右上、左下、右下
-void Sphere::Draw(SphereShape sphereCondtion, Transform transform,Matrix4x4 viewMatrix,Matrix4x4 projectionMatrix ,Vector4 color) {
+void Elysia::Sphere::Draw(SphereShape sphereCondtion, Transform transform,Matrix4x4 viewMatrix,Matrix4x4 projectionMatrix ,Vector4 color) {
 
 	
 	//書き込み用のアドレスを取得
@@ -215,39 +211,34 @@ void Sphere::Draw(SphereShape sphereCondtion, Transform transform,Matrix4x4 view
 	//遠視投影行列
 	Matrix4x4 viewMatrixSphere = Matrix4x4Calculation::MakeIdentity4x4();
 	
-	Matrix4x4 projectionMatrixSphere = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(Elysia::WindowsSetup::GetInstance()->GetClientWidth()), float(Elysia::WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrixSphere = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(windowsSetup_->GetClientWidth()), static_cast<float>(windowsSetup_->GetClientHeight()), 0.0f, 100.0f);
 	
 	//WVP行列を作成
 	Matrix4x4 worldViewProjectionMatrixSphere = Matrix4x4Calculation::Multiply(worldMatrixSphere, Matrix4x4Calculation::Multiply(viewMatrix, projectionMatrix));
-
-
 	transformationMatrixDataSphere_->WVP = worldViewProjectionMatrixSphere;
 	transformationMatrixDataSphere_->World =Matrix4x4Calculation::MakeIdentity4x4();
 
 
-	
-	
-	
 	//コマンドを積む
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えよう
 	directXSetup_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//CBVを設定する
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResourceSphere_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(0u, materialResourceSphere_->GetGPUVirtualAddress());
 
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	directXSetup_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferViewSphere_);
+	directXSetup_->GetCommandList()->IASetVertexBuffers(0u, 1u, &vertexBufferViewSphere_);
 
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResourceSphere_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, transformationMatrixResourceSphere_->GetGPUVirtualAddress());
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である
 	//trueだったらtextureSrvHandleGPU2_
 	//directXSetup_->GetCommandList()->SetGraphicsRootDescriptorTable(2,useMonsterBall_?textureSrvHandleGPU2_:textureSrvHandleGPU_);
 	//Light
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(3u, directionalLightResource_->GetGPUVirtualAddress());
 
 
 	//描画(DrawCall)３頂点で１つのインスタンス。
-	directXSetup_->GetCommandList()->DrawInstanced(SUBDIVISION_*SUBDIVISION_*6, 1, 0, 0);
+	directXSetup_->GetCommandList()->DrawInstanced(SUBDIVISION_*SUBDIVISION_*6, 1u, 0u, 0u);
 
 	
 

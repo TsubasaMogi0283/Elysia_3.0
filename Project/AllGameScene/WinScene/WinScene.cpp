@@ -1,9 +1,11 @@
 #include "WinScene.h"
+#include <imgui.h>
+
 #include "TextureManager.h"
 #include "LevelDataManager.h"
 #include "GameManager.h"
 #include "Input.h"
-#include <VectorCalculation.h>
+#include "VectorCalculation.h"
 
 WinScene::WinScene(){
 	//インスタンスの取得

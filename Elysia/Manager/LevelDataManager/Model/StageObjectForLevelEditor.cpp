@@ -1,5 +1,8 @@
 #include "StageObjectForLevelEditor.h"
-#include <VectorCalculation.h>
+
+#include <imgui.h>
+
+#include "VectorCalculation.h"
 
 void StageObjectForLevelEditor::Initialize(const uint32_t& modelhandle, const Transform& transform) {
 	

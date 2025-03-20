@@ -1,5 +1,7 @@
 #include "LuminanceBasedOutline.h"
-#include <PipelineManager.h>
+
+#include "WindowsSetup.h"
+#include "PipelineManager.h"
 #include "TextureManager.h"
 #include <SrvManager.h>
 #include "RtvManager.h"

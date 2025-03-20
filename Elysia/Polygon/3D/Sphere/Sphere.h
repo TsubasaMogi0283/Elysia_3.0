@@ -18,81 +18,92 @@
 #include "DirectionalLight.h"
 #include "SphereShape.h"
 
+
 /// <summary>
-/// 球
+/// ElysiaEngine
 /// </summary>
-class Sphere {
-public:
-	
+namespace Elysia {
 	/// <summary>
-	/// コンストラクタ
+	/// ウィンドウクラス
 	/// </summary>
-	Sphere()=default;
+	class WindowsSetup;
 
 	/// <summary>
-	/// 初期化
+	/// DirectX
 	/// </summary>
-	void Initialize();
-
-
+	class DirectXSetup;
 
 	/// <summary>
-	/// 描画
+	/// 球
 	/// </summary>
-	/// <param name="sphereCondtion"></param>
-	/// <param name="transform"></param>
-	/// <param name="viewMatrix"></param>
-	/// <param name="projectionMatrix"></param>
-	/// <param name="color"></param>
-	void Draw(SphereShape sphereCondtion, Transform transform,Matrix4x4 viewMatrix,Matrix4x4 projectionMatrix, Vector4 color);
+	class Sphere {
+	public:
 
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~Sphere()=default;
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		Sphere();
 
-
-private:
-	/// <summary>
-	/// 頂点バッファビューを作成する
-	/// </summary>
-	void GenerateVertexBufferView();
-
-private:
-
-	//DirectX内にある情報を取り入れる
-	Elysia::DirectXSetup* directXSetup_ = nullptr;
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize();
 
 
-private:
 
-	//関数用
-	D3D12_HEAP_PROPERTIES uploadHeapProperties_{};
-	D3D12_RESOURCE_DESC vertexResourceDesc_{};
+		/// <summary>
+		/// 描画
+		/// </summary>
+		/// <param name="sphereCondtion"></param>
+		/// <param name="transform"></param>
+		/// <param name="viewMatrix"></param>
+		/// <param name="projectionMatrix"></param>
+		/// <param name="color"></param>
+		void Draw(SphereShape sphereCondtion, Transform transform, Matrix4x4 viewMatrix, Matrix4x4 projectionMatrix, Vector4 color);
 
-	//頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferViewSphere_;
-
-	//初期化
-	//頂点データ
-	ComPtr<ID3D12Resource> vertexResourceSphere_ = nullptr;
-	VertexData* vertexDataSphere_ = nullptr;
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~Sphere() = default;
 
 
-	//マテリアル用のリソースを作る
-	ComPtr<ID3D12Resource> materialResourceSphere_ = nullptr;
-	MaterialData* materialData_ = nullptr;
+	private:
+		//ウィンドウクラス
+		WindowsSetup* windowsSetup_ = nullptr;
+		//DirectX内にある情報を取り入れる
+		DirectXSetup* directXSetup_ = nullptr;
 
-	//球を描画するとき用のTransformationMatrix用のリソースを作る。
-	//Matrix4x4 1つ分サイズを用意する
-	ComPtr<ID3D12Resource> transformationMatrixResourceSphere_ = nullptr;
-	TransformationMatrix* transformationMatrixDataSphere_ = nullptr;
 
-	//Lighting用
-	ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
-	DirectionalLightData* directionalLightData_ = nullptr;
+	private:
 
-	//分割数
-	const int32_t SUBDIVISION_ = 16;
+		//関数用
+		D3D12_HEAP_PROPERTIES uploadHeapProperties_{};
+		D3D12_RESOURCE_DESC vertexResourceDesc_{};
 
-};
+		//頂点バッファビューを作成する
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferViewSphere_;
+
+		//初期化
+		//頂点データ
+		ComPtr<ID3D12Resource> vertexResourceSphere_ = nullptr;
+		VertexData* vertexDataSphere_ = nullptr;
+
+
+		//マテリアル用のリソースを作る
+		ComPtr<ID3D12Resource> materialResourceSphere_ = nullptr;
+		MaterialData* materialData_ = nullptr;
+
+		//球を描画するとき用のTransformationMatrix用のリソースを作る。
+		//Matrix4x4 1つ分サイズを用意する
+		ComPtr<ID3D12Resource> transformationMatrixResourceSphere_ = nullptr;
+		TransformationMatrix* transformationMatrixDataSphere_ = nullptr;
+
+		//Lighting用
+		ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
+		DirectionalLightData* directionalLightData_ = nullptr;
+
+		//分割数
+		const int32_t SUBDIVISION_ = 16;
+
+	};
+}

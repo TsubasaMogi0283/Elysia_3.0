@@ -25,7 +25,7 @@ namespace Elysia {
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		PipelineManager() = default;
+		PipelineManager()=default;
 
 		/// <summary>
 		/// デストラクタ

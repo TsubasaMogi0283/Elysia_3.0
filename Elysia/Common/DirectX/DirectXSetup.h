@@ -23,7 +23,7 @@
 using Microsoft::WRL::ComPtr;
 
 
-#include "WindowsSetup.h"
+
 
 
 
@@ -55,6 +55,11 @@ struct D3DResourceLeakChecker {
 namespace Elysia{
 
 	/// <summary>
+	/// ウィンドウクラス
+	/// </summary>
+	class WindowsSetup;
+
+	/// <summary>
 	/// DirectXの機能をまとめたクラス
 	/// </summary>
 	class DirectXSetup final {
@@ -62,7 +67,7 @@ namespace Elysia{
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		DirectXSetup() = default;
+		DirectXSetup();
 
 		/// <summary>
 		/// デストラクタ
@@ -118,47 +123,47 @@ namespace Elysia{
 		/// <summary>
 		/// DXGIFactoryの生成
 		/// </summary>
-		static void GenerateDXGIFactory();
+		void GenerateDXGIFactory();
 
 		/// <summary>
 		/// アダプターの生成
 		/// </summary>
-		static void SelectAdapter();
+		void SelectAdapter();
 
 		/// <summary>
 		/// デバイスの生成
 		/// </summary>
-		static void GenerateD3D12Device();
+		void GenerateD3D12Device();
 
 		/// <summary>
 		/// エラーが起こったら止める
 		/// </summary>
-		static void StopErrorWarning();
+		void StopErrorWarning();
 
 		/// <summary>
 		/// コマンドの生成
 		/// </summary>
-		static void GenerateCommand();
+		void GenerateCommand();
 
 		/// <summary>
 		/// スワップチェーンの生成
 		/// </summary>
-		static void GenerateSwapChain();
+		void GenerateSwapChain();
 
 		/// <summary>
 		/// ディスクリプタヒープの生成
 		/// </summary>
-		static void GenarateDescriptorHeap();
+		void GenarateDescriptorHeap();
 
 		/// <summary>
 		/// スワップチェーンを引っ張ってくる
 		/// </summary>
-		static void PullResourcesFromSwapChain();
+		void PullResourcesFromSwapChain();
 
 		/// <summary>
 		/// フェンスの生成
 		/// </summary>
-		static void GenarateFence();
+		void GenarateFence();
 
 
 	public:
@@ -199,24 +204,24 @@ namespace Elysia{
 		/// <summary>
 		/// FPS固定初期化
 		/// </summary>
-		static void InitializeFPS();
+		void InitializeFPS();
 
 		/// <summary>
 		/// FPS固定更新
 		/// </summary>
-		static void UpdateFPS();
+		void UpdateFPS();
 
 
 	public:
 		/// <summary>
 		/// 第一初期化
 		/// </summary>
-		static void FirstInitialize();
+		void FirstInitialize();
 
 		/// <summary>
 		/// 第二初期化
 		/// </summary>
-		static void SecondInitialize();
+		void SecondInitialize();
 
 		/// <summary>
 		/// Resource作成の関数化
@@ -311,6 +316,10 @@ namespace Elysia{
 		inline ComPtr<ID3D12Resource> GetDepthStencilResource() const {
 			return depthStencilResource_;
 		}
+
+	private:
+		//ウィンドウクラス
+		WindowsSetup* windowsSetup_ = nullptr;
 
 	private:
 

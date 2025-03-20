@@ -29,15 +29,18 @@ LRESULT Elysia::WindowsSetup::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPA
 
 }
 
-void Elysia::WindowsSetup::OutputText(std::string& stringText){
-
-	//wstringからstringに変換
-	//std::wstring newString = ConvertString::ToWString(stringText);
+void Elysia::WindowsSetup::OutputStringW(std::string& stringText){
+	//stringからwstringに変換
 	std::wstring newString = Convert::Text::ToWString(stringText);
 	//出力
 	OutputDebugStringW(newString.c_str());
-
 }
+
+void Elysia::WindowsSetup::OutPutStringA(const std::string& text){
+	//出力
+	OutputDebugStringA(text.c_str());
+}
+
 
 #pragma region Initializeに入れる関数
 

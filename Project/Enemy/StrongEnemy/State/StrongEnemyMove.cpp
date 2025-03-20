@@ -1,5 +1,7 @@
 #include "StrongEnemyMove.h"
 
+#include <imgui.h>
+
 #include "Enemy/StrongEnemy/StrongEnemy.h"
 #include "VectorCalculation.h"
 

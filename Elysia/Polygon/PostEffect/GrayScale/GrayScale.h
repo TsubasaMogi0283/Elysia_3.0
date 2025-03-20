@@ -92,9 +92,6 @@ namespace Elysia {
 
 		//SRVハンドル
 		uint32_t srvHandle_ = 0;
-		//バリア
-		D3D12_RESOURCE_BARRIER barrier = {};
-
 
 	};
 

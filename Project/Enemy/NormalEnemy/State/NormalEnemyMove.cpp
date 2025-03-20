@@ -1,5 +1,7 @@
 #include "NormalEnemyMove.h"
 
+#include <imgui.h>
+
 #include "Enemy/NormalEnemy/NormalEnemy.h"
 #include "VectorCalculation.h"
 

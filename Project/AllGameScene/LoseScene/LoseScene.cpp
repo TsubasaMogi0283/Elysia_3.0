@@ -1,10 +1,11 @@
 #include "LoseScene.h"
 
+#include <imgui.h>
+
 #include "Input.h"
 #include "TextureManager.h"
 #include "ModelManager.h"
 #include "LevelDataManager.h"
-
 #include "GameManager.h"
 #include "VectorCalculation.h"
 #include "GlobalVariables.h"

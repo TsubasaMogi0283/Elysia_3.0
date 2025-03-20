@@ -1,6 +1,7 @@
 #include "GrayScale.h"
 #include <imgui.h>
 
+#include "WindowsSetup.h"
 #include "Vector4.h"
 #include "PipelineManager.h"
 #include "SrvManager.h"

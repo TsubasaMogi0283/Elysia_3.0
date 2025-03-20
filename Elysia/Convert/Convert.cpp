@@ -1,6 +1,6 @@
 #include "Convert.h"
 
-Vector4 Convert::Color::ColorAdapter(const uint32_t& color) {
+Vector4 Convert::Color::Adapter(const uint32_t& color) {
     Vector4 result = {
         //赤
        .x = ((color >> 24) & 0xFF) / 255.0f,

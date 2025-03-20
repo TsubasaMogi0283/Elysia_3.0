@@ -1,12 +1,15 @@
 #include "Sprite.h"
 #include <vector>
 
+#include "WindowsSetup.h"
 #include "TextureManager.h"
 #include "PipelineManager.h"
 #include "Matrix4x4.h"
 #include "Matrix4x4Calculation.h"
 
 Elysia::Sprite::Sprite() {
+	//ウィンドウクラス
+	windowsSetup_ = Elysia::WindowsSetup::GetInstance();
 	//DirectXクラスを取得
 	directXSetup_ = Elysia::DirectXSetup::GetInstance();
 
@@ -199,7 +202,7 @@ void Elysia::Sprite::Draw() {
 	//遠視投影行列を計算
 	Matrix4x4 viewMatrix = Matrix4x4Calculation::MakeIdentity4x4();
 	//プロジェクション行列を計算
-	Matrix4x4 projectionMatrix = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(Elysia::WindowsSetup::GetInstance()->GetClientWidth()), float(Elysia::WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(windowsSetup_->GetClientWidth()), float(windowsSetup_->GetClientHeight()), 0.0f, 100.0f);
 	
 	//WVP行列を作成
 	Matrix4x4 worldViewProjectionMatrixSprite = Matrix4x4Calculation::Multiply(affineMatrix, Matrix4x4Calculation::Multiply(viewMatrix, projectionMatrix));
@@ -373,7 +376,7 @@ void Elysia::Sprite::Draw(const uint32_t& texturehandle){
 	//遠視投影行列を計算
 	Matrix4x4 viewMatrix = Matrix4x4Calculation::MakeIdentity4x4();
 	//プロジェクション行列を計算
-	Matrix4x4 projectionMatrix = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(Elysia::WindowsSetup::GetInstance()->GetClientWidth()), float(Elysia::WindowsSetup::GetInstance()->GetClientHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrix = Matrix4x4Calculation::MakeOrthographicMatrix(0.0f, 0.0f, float(windowsSetup_->GetClientWidth()), float(windowsSetup_->GetClientHeight()), 0.0f, 100.0f);
 
 	//WVP行列を作成
 	Matrix4x4 worldViewProjectionMatrixSprite = Matrix4x4Calculation::Multiply(affineMatrix, Matrix4x4Calculation::Multiply(viewMatrix, projectionMatrix));

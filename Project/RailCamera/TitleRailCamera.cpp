@@ -1,5 +1,6 @@
 #include "TitleRailCamera.h"
 
+#include <imgui.h>
 #include <cmath>
 #include <algorithm>
 #include <fstream>

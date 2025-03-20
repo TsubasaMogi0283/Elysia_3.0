@@ -20,9 +20,9 @@ namespace Convert {
 		/// ログ
 		/// </summary>
 		/// <param name="text"></param>
-		inline void Log(const std::string& text) {
-			OutputDebugStringA(text.c_str());
-		}
+		//inline void Log(const std::string& text) {
+		//	OutputDebugStringA(text.c_str());
+		//}
 
 		/// <summary>
 		/// string型からwstring型に変換
@@ -50,7 +50,7 @@ namespace Convert {
 		/// </summary>
 		/// <param name="color">色</param>
 		/// <returns>色(Vector4)</returns>
-		Vector4 ColorAdapter(const uint32_t& color);
+		Vector4 Adapter(const uint32_t& color);
 
 	}
 	

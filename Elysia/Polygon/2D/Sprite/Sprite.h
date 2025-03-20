@@ -21,6 +21,10 @@
 /// ElysiaEngine
 /// </summary>
 namespace Elysia {
+	/// <summary>
+	/// ウィンドウクラス
+	/// </summary>
+	class WindowsSetup;
 
 	/// <summary>
 	/// DirectXクラス
@@ -199,6 +203,8 @@ namespace Elysia {
 
 
 	private:
+		//ウィンドウクラス
+		Elysia::WindowsSetup* windowsSetup_ = nullptr;
 		//DirectXクラス
 		Elysia::DirectXSetup* directXSetup_ = nullptr;
 		//パイプライン管理クラス

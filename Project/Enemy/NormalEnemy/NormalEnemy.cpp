@@ -1,5 +1,6 @@
 #include "NormalEnemy.h"
 
+#include <imgui.h>
 #include <numbers>
 
 #include "CollisionConfig.h"

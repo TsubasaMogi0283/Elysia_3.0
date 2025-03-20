@@ -1,9 +1,12 @@
 #include "PipelineManager.h"
 
+#include <vector>
+
+#include "WindowsSetup.h"
 #include "BlendMode.h"
 #include "Convert.h"
 
-#include <vector>
+
 
 Elysia::PipelineManager* Elysia::PipelineManager::GetInstance() {
 	static PipelineManager instance;
@@ -194,7 +197,7 @@ void Elysia::PipelineManager::GenaratedLinePSO() {
 	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->linePSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
@@ -411,7 +414,7 @@ void Elysia::PipelineManager::GenerateSpritePSO() {
 	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->spritePSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
@@ -780,7 +783,7 @@ void Elysia::PipelineManager::GenerateModelPSO() {
 	HRESULT hrResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->modelPSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hrResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
@@ -1090,7 +1093,7 @@ void Elysia::PipelineManager::GenerateAnimationModelPSO() {
 	HRESULT hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->animationModelPSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hr)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
@@ -1449,7 +1452,7 @@ void Elysia::PipelineManager::GenerateParticle3DPSO() {
 	HRESULT hr = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->particle3DPSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hr)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
@@ -1677,7 +1680,7 @@ void Elysia::PipelineManager::GenarateFullScreenPSO() {
 	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->fullScreenPSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -1803,7 +1806,7 @@ void Elysia::PipelineManager::GenarateGrayScalePSO(){
 	HRESULT hr_ = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->grayScalePSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hr_)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -1972,7 +1975,7 @@ void Elysia::PipelineManager::GenarateSepiaScalePSO(){
 	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->sepiaScalePSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -2150,7 +2153,7 @@ void Elysia::PipelineManager::GenarateVignettePSO(){
 	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->vignettePSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -2285,7 +2288,7 @@ void Elysia::PipelineManager::GenarateBoxFilterPSO(){
 	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->boxFilterPSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -2467,7 +2470,7 @@ void Elysia::PipelineManager::GenarateGaussianFilterPSO(){
 	HRESULT hResult  = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->gaussianFilterPSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -2640,7 +2643,7 @@ void Elysia::PipelineManager::GenarateLuminanceBasedOutlinePSO() {
 	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->luminanceBasedOutlinePSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -2848,17 +2851,8 @@ void Elysia::PipelineManager::GenarateDepthBasedOutlinePSO() {
 	//PixelShaderで使う
 	staticSamplers[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-
-
 	descriptionRootSignature_.pStaticSamplers = staticSamplers;
 	descriptionRootSignature_.NumStaticSamplers = _countof(staticSamplers);
-
-
-
-
-
-
-
 
 
 	//シリアライズしてバイナリにする
@@ -2866,7 +2860,7 @@ void Elysia::PipelineManager::GenarateDepthBasedOutlinePSO() {
 	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->depthBasedOutlinePSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -3041,7 +3035,7 @@ void Elysia::PipelineManager::GenerateRadialBlurPSO() {
 	HRESULT hResult= D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->radialBlurPSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -3240,7 +3234,7 @@ void Elysia::PipelineManager::GenarateDissolvePSO() {
 	HRESULT hResult= D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->dissolvePSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -3410,18 +3404,12 @@ void Elysia::PipelineManager::GenarateRandomEffectPSO() {
 	descriptionRootSignature_.pStaticSamplers = staticSamplers;
 	descriptionRootSignature_.NumStaticSamplers = _countof(staticSamplers);
 
-
-
-
-
-
-
 	//シリアライズしてバイナリにする
 	ComPtr<ID3DBlob> errorBlob = nullptr;
 	HRESULT hr_= D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->randomEffectPSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hr_)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -3628,7 +3616,7 @@ void Elysia::PipelineManager::GenarateSkyBoxPSO() {
 	HRESULT hResult = D3D12SerializeRootSignature(&descriptionRootSignature_,
 		D3D_ROOT_SIGNATURE_VERSION_1, &PipelineManager::GetInstance()->skyBoxPSO_.signatureBlob_, &errorBlob);
 	if (FAILED(hResult)) {
-		Convert::Text::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Elysia::WindowsSetup::GetInstance()->OutPutStringA(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
@@ -3638,17 +3626,8 @@ void Elysia::PipelineManager::GenarateSkyBoxPSO() {
 	assert(SUCCEEDED(hResult));
 
 
-
-
-
-
-
-
 	////InputLayout
 	//InputLayout・・VertexShaderへ渡す頂点データがどのようなものかを指定するオブジェクト
-
-
-
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
 	inputElementDescs[0].SemanticName = "POSITION";
 	inputElementDescs[0].SemanticIndex = 0;

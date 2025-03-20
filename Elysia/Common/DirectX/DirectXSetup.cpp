@@ -2,12 +2,19 @@
 #include <thread>
 #include <d3dx12.h>
 
+#include "WindowsSetup.h"
 #include "Convert.h"
 #include "PipelineManager.h"
 #include "SrvManager.h"
 #include "RtvManager.h"
 #include "Vector4.h"
 
+
+
+Elysia::DirectXSetup::DirectXSetup() {
+	//ウィンドウクラスのインスタンスを取得
+	windowsSetup_ = Elysia::WindowsSetup::GetInstance();
+}
 
 Elysia::DirectXSetup* Elysia::DirectXSetup::GetInstance() {
 	//関数内static変数として宣言する
@@ -170,7 +177,7 @@ void Elysia::DirectXSetup::SelectAdapter() {
 		//ソフトウェアアダプタでなければ採用
 		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
 			//採用したアダプタの情報をログに出力.(wstring)
-			Convert::Text::Log(Convert::Text::ToString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
+			OutputDebugStringA(Convert::Text::ToString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)).c_str());
 			break;
 		}
 		//ソフトウェアアダプタだった場合無視
@@ -210,14 +217,14 @@ void Elysia::DirectXSetup::GenerateD3D12Device() {
 		//指定した機能レベルでデバイスが生成できたか確認
 		if (SUCCEEDED(hr)) {
 			//生成できたのでログ出力を行ってループを抜ける
-			Convert::Text::Log(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
+			windowsSetup_->OutPutStringA(std::format("FeatureLevel : {}\n", featureLevelStrings[i]));
 			break;
 		}
 	}
 
 	//デバイスの生成が上手くいかなかったので起動できない
 	assert(DirectXSetup::GetInstance()->device_ != nullptr);
-	Convert::Text::Log("Complete create D3D12Device!!!\n");
+	windowsSetup_->OutPutStringA("Complete create D3D12Device!!!\n");
 
 }
 
@@ -355,11 +362,11 @@ void Elysia::DirectXSetup::GenerateSwapChain() {
 
 void Elysia::DirectXSetup::GenarateDescriptorHeap() {
 	
-	ComPtr<ID3D12Resource> depthStencilResource_ = GenerateDepthStencilTextureResource(
+	ComPtr<ID3D12Resource> depthStencilResource = GenerateDepthStencilTextureResource(
 		WindowsSetup::GetInstance()->GetClientWidth(),
 		WindowsSetup::GetInstance()->GetClientHeight());
 
-	ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap_ = GenarateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
+	ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap = GenarateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
 
 
@@ -371,12 +378,12 @@ void Elysia::DirectXSetup::GenarateDescriptorHeap() {
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	//DSVHeapの先頭にDSVを作る
 	DirectXSetup::GetInstance()->device_->CreateDepthStencilView(
-		depthStencilResource_.Get(), 
+		depthStencilResource.Get(), 
 		&dsvDesc, 
-		dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart());
+		dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-	DirectXSetup::GetInstance()->dsvDescriptorHeap_ = dsvDescriptorHeap_;
-	DirectXSetup::GetInstance()->depthStencilResource_ = depthStencilResource_;
+	DirectXSetup::GetInstance()->dsvDescriptorHeap_ = dsvDescriptorHeap;
+	DirectXSetup::GetInstance()->depthStencilResource_ = depthStencilResource;
 }
 
 void Elysia::DirectXSetup::PullResourcesFromSwapChain() {
@@ -643,7 +650,7 @@ IDxcBlob* Elysia::DirectXSetup::CompileShader(const std::wstring& filePath, cons
 	assert(SUCCEEDED(hr));
 
 	//1.hlslファイルを読む
-	Convert::Text::Log(Convert::Text::ToString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
+	windowsSetup_->OutPutStringA(Convert::Text::ToString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
 	//hlslファイルを読む
 	IDxcBlobEncoding* shaderSource = nullptr;
 	hr = dxcUtils_->LoadFile(filePath.c_str(), nullptr, &shaderSource);
@@ -678,7 +685,7 @@ IDxcBlob* Elysia::DirectXSetup::CompileShader(const std::wstring& filePath, cons
 	IDxcBlobUtf8* shaderError = nullptr;
 	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
-		Convert::Text::Log(shaderError->GetStringPointer());
+		windowsSetup_->OutPutStringA(shaderError->GetStringPointer());
 		assert(false);
 	}
 
@@ -689,7 +696,7 @@ IDxcBlob* Elysia::DirectXSetup::CompileShader(const std::wstring& filePath, cons
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
 	assert(SUCCEEDED(hr));
 	//成功したログを出す
-	Convert::Text::Log(Convert::Text::ToString(std::format(L"Compile Succeeded,path:{},profile:{}\n", filePath, profile)));
+	windowsSetup_->OutPutStringA(Convert::Text::ToString(std::format(L"Compile Succeeded,path:{},profile:{}\n", filePath, profile)));
 	//もう使わないリソースを解放
 	shaderSource->Release();
 	shaderResult->Release();

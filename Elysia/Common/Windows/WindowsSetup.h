@@ -10,7 +10,6 @@
 #include <WinUser.h>
 #include <cstdint>
 #include <string>
-
 #include <imgui.h>
 #include <imgui_impl_dx12.h>
 #include <imgui_impl_win32.h>
@@ -32,7 +31,7 @@
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam);
 
 /// <summary>
-/// Elysia
+/// ElysiaEngine
 /// </summary>
 namespace Elysia {
 
@@ -91,10 +90,16 @@ namespace Elysia {
 		static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 		/// <summary>
-		/// 出力の所に文字を出す
+		/// ログ
 		/// </summary>
 		/// <param name="stringText"></param>
-		static void OutputText(std::string& stringText);
+		void OutputStringW(std::string& stringText);
+
+		/// <summary>
+		/// ログ
+		/// </summary>
+		/// <param name="text"></param>
+		void OutPutStringA(const std::string& text);
 
 	private:
 

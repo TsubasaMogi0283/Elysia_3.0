@@ -1,7 +1,10 @@
 #include "FlashLight.h"
 
 #include <numbers>
+#include <imgui.h>
 
+#include "Color.h"
+#include "Convert.h"
 #include "Camera.h"
 #include "ModelManager.h"
 #include "GlobalVariables.h"
@@ -223,16 +226,16 @@ void FlashLight::Charge() {
 			//最大値
 			if (chargeValue_ >= MAX_CHARGE_VALUE_) {
 				//赤
-				chargeColor_ = { 1.0f,0.0f,0.0f,1.0f };
+				chargeColor_ = Convert::Color::Adapter(RED);
 			}
 			else {
 				//黄色
-				chargeColor_ = { 1.0f,1.0f,0.0f,1.0f };
+				chargeColor_ = Convert::Color::Adapter(YELLOW);
 			}
 		}
 		else {
 			//色は緑
-			chargeColor_ = { 0.0f,1.0f,0.0f,1.0f };
+			chargeColor_ = Convert::Color::Adapter(GREEN);
 			isAbleToAttack_ = false;
 		}
 	}
@@ -246,7 +249,7 @@ void FlashLight::Charge() {
 		//最大値を制限
 		chargeValue_ = std::min<float_t>(MIN_CHARGE_VALUE_, chargeValue_);
 		//青
-		chargeColor_ = { 0.0f,0.0f,1.0f,1.0f };
+		chargeColor_ = Convert::Color::Adapter(BLUE);
 
 		//ゲージが0になったら解除
 		if (chargeValue_<=0.0f) {
