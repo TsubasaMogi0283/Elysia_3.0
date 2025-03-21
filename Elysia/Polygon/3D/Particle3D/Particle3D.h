@@ -292,10 +292,21 @@ namespace Elysia {
 		Elysia::PipelineManager* pipelineManager_ = nullptr;
 
 
+	private:
+		/// <summary>
+		/// インスタンシングの情報
+		/// </summary>
+		struct InstancingData {
+			//ComPtr<ID3D12Resource> resource;
+			//SRV用のインデックス
+			int srvIndex;
+		};
 
 	private:
 		//時間変化
 		const float DELTA_TIME = 1.0f / 60.0f;
+
+
 	private:
 
 		//頂点リソースを作る
@@ -313,21 +324,22 @@ namespace Elysia {
 		//座標
 		Vector3 cameraPosition_ = {};
 
-		//インスタンス
-		ComPtr<ID3D12Resource>instancingResource_ = nullptr;
+		
 		//最大数
 		const uint32_t MAX_INSTANCE_NUMBER_ = 1000u;
 		//描画すべきインスタンス数
 		uint32_t numInstance_ = 0u;
 		//インスタンスのインデックス
 		int instancingIndex_ = 0;
+		//インスタンスリソース
+		ComPtr<ID3D12Resource> instancingResource_ = nullptr;
 		//インスタンシング用のSRV管理変数
-		static std::map<uint32_t, uint32_t> instancingManagiment_;
+		static std::map<uint32_t, InstancingData> instancingManegimentMap_;
 		
 		//パーティクル
 		std::list<ParticleInformation>particles_;
 		//パーティクルデータ
-		ParticleForGPU* instancingData_ = nullptr;
+		ParticleForGPU* particleForGpuData_ = nullptr;
 
 		//エミッタの設定
 		Emitter emitter_ = {};

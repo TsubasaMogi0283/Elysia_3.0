@@ -18,7 +18,7 @@
 
 
 //静的メンバ変数の初期化
-std::map<uint32_t, uint32_t> Elysia::Particle3D::instancingManagiment_ = {};
+std::map<uint32_t, Elysia::Particle3D::InstancingData> Elysia::Particle3D::instancingManegimentMap_ = {};
 
 
 Elysia::Particle3D::Particle3D() {
@@ -67,17 +67,17 @@ std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& m
 	particle3D->instancingResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(ParticleForGPU) * particle3D->MAX_INSTANCE_NUMBER_);
 	//SRVを作る
 	//すでに作られているものだったらそこから取り出しSRVの上限突破を防ぐ
-	auto it = instancingManagiment_.find(modelHandle);
-	if (it != instancingManagiment_.end()) {
-		particle3D->instancingIndex_= it->second;
+	auto it = instancingManegimentMap_.find(modelHandle);
+	if (it != instancingManegimentMap_.end()) {
+		particle3D->instancingIndex_= it->second.srvIndex;
 	}
 	else {
 		particle3D->instancingIndex_ = particle3D->srvManager_->Allocate();
 		particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
-		instancingManagiment_.try_emplace(modelHandle, particle3D->instancingIndex_);
+		instancingManegimentMap_.try_emplace(modelHandle, particle3D->instancingIndex_);
 	}
 	//書き込み
-	particle3D->instancingResource_->Map(0u, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
+	particle3D->instancingResource_->Map(0u, nullptr, reinterpret_cast<void**>(&particle3D->particleForGpuData_));
 
 	//カメラ
 	particle3D->cameraResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(Vector3));
@@ -127,18 +127,23 @@ std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& m
 	particle3D->instancingResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(ParticleForGPU) * particle3D->MAX_INSTANCE_NUMBER_);
 	//SRVを作る
 	//すでに作られているものだったらそこから取り出しSRVの上限突破を防ぐ
-	auto it = instancingManagiment_.find(modelHandle);
-	if (it != instancingManagiment_.end()) {
-		particle3D->instancingIndex_ = it->second;
+	auto it = instancingManegimentMap_.find(modelHandle);
+	if (it != instancingManegimentMap_.end()) {
+		//particle3D->instancingResource_ = it->second.resource;
+		particle3D->instancingIndex_ = it->second.srvIndex;
 	}
 	else {
+		particle3D->instancingResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(ParticleForGPU) * particle3D->MAX_INSTANCE_NUMBER_);
 		particle3D->instancingIndex_ = particle3D->srvManager_->Allocate();
 		particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
-		instancingManagiment_.try_emplace(modelHandle, particle3D->instancingIndex_);
+		//新しいデータ
+		//ComPtr<ID3D12Resource> resource = particle3D->instancingResource_;
+		//InstancingData instancingData = { .resource = resource ,.srvIndex = particle3D->instancingIndex_ };
+		//挿入
+		//instancingManegimentMap_.try_emplace(modelHandle, instancingData);
 	}
 	//書き込み
-	particle3D->instancingResource_->Map(0u, nullptr, reinterpret_cast<void**>(&particle3D->instancingData_));
-
+	particle3D->instancingResource_->Map(0u, nullptr, reinterpret_cast<void**>(&particle3D->particleForGpuData_));
 	//カメラ
 	particle3D->cameraResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(Vector3));
 
@@ -281,16 +286,16 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 			//最大値を超えて描画しないようにする
 			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
 				//ワールド行列と色のデータを設定
-				instancingData_[numInstance_].world = worldMatrix;
+				particleForGpuData_[numInstance_].world = worldMatrix;
 				const Vector4 COLOR = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
-				instancingData_[numInstance_].color = COLOR;
+				particleForGpuData_[numInstance_].color = COLOR;
 				particleIterator->color = COLOR;
 
 				//透明になっていくようにするかどうか
 				if (isToTransparent_ == true) {
 					//アルファはVector4でのwだね
 					float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
-					instancingData_[numInstance_].color.w = alpha ;
+					particleForGpuData_[numInstance_].color.w = alpha ;
 					particleIterator->color.w = alpha;
 				}
 
@@ -336,8 +341,8 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 
 			//最大値を超えて描画しないようにする
 			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
-				instancingData_[numInstance_].world = worldMatrix;
-				instancingData_[numInstance_].color = particleIterator->color;
+				particleForGpuData_[numInstance_].world = worldMatrix;
+				particleForGpuData_[numInstance_].color = particleIterator->color;
 
 				//ワールド座標
 				Vector3 worldPosition = {
@@ -349,7 +354,7 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 				//設定した地面の高さより小さくなったら透明
 				if (worldPosition.y < groundOffset_) {
 					//アルファはVector4でのwだね
-					instancingData_[numInstance_].color.w = 0.0f;
+					particleForGpuData_[numInstance_].color.w = 0.0f;
 
 				}
 
@@ -387,15 +392,15 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 
 			//最大値を超えないようにする
 			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
-				instancingData_[numInstance_].world = worldMatrix;
-				instancingData_[numInstance_].color = particleIterator->color;
+				particleForGpuData_[numInstance_].world = worldMatrix;
+				particleForGpuData_[numInstance_].color = particleIterator->color;
 
 				//透明になっていくようにするかどうか
 				if (isToTransparent_ == true) {
 					//アルファはVector4でのwだね
 					float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
 					particleIterator->color.w = alpha;
-					instancingData_[numInstance_].color.w = alpha;
+					particleForGpuData_[numInstance_].color.w = alpha;
 				}
 
 				++numInstance_;
@@ -435,15 +440,15 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 
 			//最大値を超えないようにする
 			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
-				instancingData_[numInstance_].world = worldMatrix;
-				instancingData_[numInstance_].color = particleIterator->color;
+				particleForGpuData_[numInstance_].world = worldMatrix;
+				particleForGpuData_[numInstance_].color = particleIterator->color;
 
 				//透明になっていくようにするかどうか
 				if (isToTransparent_ == true) {
 					//線形補間でどんどん透明にしていく
 					float alpha = 1.0f - particleIterator->absorbT;
 					particleIterator->color.w = alpha;
-					instancingData_[numInstance_].color.w = alpha;
+					particleForGpuData_[numInstance_].color.w = alpha;
 				}
 
 				++numInstance_;
@@ -463,6 +468,8 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 		}
 		
 	}
+
+	
 
 	//全て見えなくなったらisAllInvisible_がtrueになる
 	if (isReeasedOnce_ == true) {
