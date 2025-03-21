@@ -180,8 +180,6 @@ void EnemyManager::Update(){
 	//通常の敵
 	for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 		
-		//AABB
-		AABB enemyAABB = enemy->GetAABB();
 		//現在の状態
 		std::string currentState = enemy->GetCurrentStateName();
 
@@ -198,23 +196,67 @@ void EnemyManager::Update(){
 			//衝突めり込み防止処理
 			for (size_t i = 0; i <  aabbs.size(); ++i) {
 
-				//AABBを取得
-				AABB objectAABB = aabbs[i];
-
+				//オブジェクトのAABB
+				AABB objectAABB = aabbs[i];  
+				// AABBを取得
+				AABB enemyAABB = enemy->GetAABB();
 
 				//お互いのAABBが接触している場合
 				if (CollisionCalculation::IsCollisionAABBPair(enemyAABB,objectAABB)&&
 					colliders[i]==true) {
 					
-					//方向を取得
-					Vector3 direction = enemy->GetDirection();
-					// 反転処理後、少し押し戻す
-					if (abs(direction.x) > abs(direction.z)) {
+					
+					
+
+					// 敵とオブジェクトの中心座標を計算
+					Vector3 objectCenter = VectorCalculation::Add(objectAABB.min , objectAABB.max);
+					objectCenter.x += 0.5f;
+					objectCenter.y += 0.5f;
+					objectCenter.z += 0.5f;
+
+
+					// X軸とZ軸の距離を計算
+					//float distanceX = abs(enemy->GetWorldPosition().x - objectCenter.x);
+					//float distanceZ = abs(enemy->GetWorldPosition().z - objectCenter.z);
+
+					// X軸とZ軸の距離を計算
+					float distanceX = std::min<float>(abs(enemyAABB.max.x - objectAABB.min.x), abs(enemyAABB.min.x - objectAABB.max.x));
+					float distanceZ = std::min<float>(abs(enemyAABB.max.z - objectAABB.min.z), abs(enemyAABB.min.z - objectAABB.max.z));
+
+					//前の座標
+					Vector3 enemyPrePosition = enemy->GetWorldPosition();
+
+					// 衝突した時の反転処理
+					if (distanceX < distanceZ) {
+						// X軸の距離が短い → X軸の反転
 						enemy->GetCurrentState()->InverseDirectionX();
+
+						// X軸の押し戻し処理
+						float pushBackDistance = 0.1f;
+						
+						if (enemyPrePosition.x < objectCenter.x) {
+							enemy->SetTranslate({ enemyAABB.min.x - pushBackDistance, enemyPrePosition.y, enemyPrePosition.z });
+						}
+						else {
+							enemy->SetTranslate({ enemyAABB.max.x + pushBackDistance, enemyPrePosition.y, enemyPrePosition.z });
+						}
 					}
 					else {
+						// Z軸の距離が短い → Z軸の反転
 						enemy->GetCurrentState()->InverseDirectionZ();
+
+						// Z軸の押し戻し処理
+						float pushBackDistance = 0.1f;
+						if (enemyPrePosition.z < objectCenter.z) {
+							enemy->SetTranslate({ enemyPrePosition.x, enemyPrePosition.y, enemyAABB.min.z - pushBackDistance });
+						}
+						else {
+							enemy->SetTranslate({ enemyPrePosition.x, enemyPrePosition.y, enemyAABB.max.z + pushBackDistance });
+						}
 					}
+
+
+
 					
 				}
 			}

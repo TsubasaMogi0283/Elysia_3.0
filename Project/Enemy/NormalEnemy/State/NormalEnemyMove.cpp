@@ -25,7 +25,7 @@ void NormalEnemyMove::Update(NormalEnemy* normalEnemy){
 	Vector3 newDirection = VectorCalculation::Normalize(direction_);
 
 	//スピードの値をかける
-	const float SPEED_AMOUNT = 0.02f;
+	const float SPEED_AMOUNT = 0.05f;
 	Vector3 speed = VectorCalculation::Multiply(newDirection, SPEED_AMOUNT);
 	//加算
 	normalEnemy->SetTranslate(VectorCalculation::Add(worldPosition, speed));
