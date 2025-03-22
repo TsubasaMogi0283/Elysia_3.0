@@ -1,4 +1,7 @@
 #include "AudioTestPlayer.h"
+
+#include <imgui.h>
+
 #include "VectorCalculation.h"
 #include "ModelManager.h"
 
@@ -8,12 +11,12 @@ void AudioTestPlayer::Initialize(){
 	worldTransform_.scale = { .x = 0.5f,.y = 0.5f,.z = 0.5f };
 	worldTransform_.translate = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
 	//モデルの生成
-	uint32_t modelHandle = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
-	model_.reset(Ellysia::Model::Create(modelHandle));
+	uint32_t modelHandle = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
+	model_.reset(Elysia::Model::Create(modelHandle));
 	
 	//マテリアルの初期化
 	material_.Initialize();
-	material_.lightingKinds_ = LightingType::DirectionalLighting;
+	material_.lightingKinds = LightingType::DirectionalLighting;
 
 	//コリジョンの初期化
 	//オーディオ

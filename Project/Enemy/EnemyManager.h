@@ -10,10 +10,10 @@
 #include <vector>
 #include <sstream>
 
-#include "Stage/Ground/StageRect.h"
-#include "Enemy.h"
-#include "StrongEnemy.h"
-#include "Audio.h"
+#include "BaseEnemy.h"
+#include "NormalEnemy/NormalEnemy.h"
+#include "StrongEnemy/StrongEnemy.h"
+
 
 
 #pragma region 前方宣言
@@ -36,12 +36,16 @@ class Player;
 /// <summary>
 /// EllysiaEngine
 /// </summary>
-namespace Ellysia {
+namespace Elysia {
 	/// <summary>
 	/// レベルデータ管理クラス
 	/// </summary>
 	class LevelDataManager;
 
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
 }
 
 #pragma endregion
@@ -59,9 +63,9 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="normalEnemyModel"></param>
-	/// <param name="strongEnemyModel"></param>
-	/// <param name="csvPath"></param>
+	/// <param name="normalEnemyModel">通常の敵のモデルハンドル</param>
+	/// <param name="strongEnemyModel">強敵のモデルハンドル</param>
+	/// <param name="csvPath">CSVのファイルパス</param>
 	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel, const std::string& csvPath);
 	
 	/// <summary>
@@ -72,7 +76,7 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="spotLight"></param>
+	/// <param name="spotLight">スポットライト</param>
 	void Draw(const Camera& camera ,const SpotLight& spotLight);
 
 
@@ -86,13 +90,13 @@ public:
 	/// <summary>
 	/// 通常の敵の生成
 	/// </summary>
-	/// <param name="position"></param>
+	/// <param name="position">座標</param>
 	void GenerateNormalEnemy(const Vector3& position);
 
 	/// <summary>
 	/// 強敵を生成
 	/// </summary>
-	/// <param name="position"></param>
+	/// <param name="position">座標</param>
 	void GenerateStrongEnemy(const Vector3& position);
 
 	/// <summary>
@@ -107,11 +111,11 @@ public:
 
 public:
 	/// <summary>
-	/// エネミーを取得(vector型の方が良いらしい)
+	/// エネミーを取得
 	/// </summary>
 	/// <returns></returns>
-	inline std::vector<Enemy*> GetEnemies() const{
-		std::vector<Enemy*> enemies;
+	inline std::vector<NormalEnemy*> GetNormalEnemies() const{
+		std::vector<NormalEnemy*> enemies;
 		for (const auto& enemy : enemies_) {
 			enemies.push_back(enemy.get()); 
 		}
@@ -143,7 +147,7 @@ public:
 	/// </summary>
 	/// <param name="levelDataManager">レベルデータ管理クラス</param>
 	/// <param name="levelDataHandle">ハンドル</param>
-	inline void SetLevelDataManager(Ellysia::LevelDataManager* levelDataManager, uint32_t levelDataHandle) {
+	inline void SetLevelDataManager(Elysia::LevelDataManager* levelDataManager,const uint32_t& levelDataHandle) {
 		this->levelDataManager_ = levelDataManager;
 		this->levelDataHandle_ = levelDataHandle;
 	}
@@ -152,24 +156,24 @@ private:
 	//プレイヤー
 	Player* player_ = nullptr;
 	//接近BGM用
-	Ellysia::Audio* audio_ = nullptr;
+	Elysia::Audio* audio_ = nullptr;
 	//ハンドル
 	uint32_t audioHandle_ = 0u;
 	//レベルデータ管理クラス
-	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//レベルデータのハンドル
 	uint32_t levelDataHandle_ = 0u;
 
 private:
 	//前方にいるかどうかの内積
-	const float FRONT_DOT = 0.7f;
+	const float FRONT_DOT_ = 0.7f;
 	//追跡開始の距離
 	const float STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
 
 private:
 	//エネミーのリスト
 	//通常
-	std::list<std::unique_ptr<Enemy>>enemies_ = {};
+	std::list<std::unique_ptr<NormalEnemy>>enemies_ = {};
 	//強敵
 	std::list<std::unique_ptr<StrongEnemy>>strongEnemies_ = {};
 
@@ -179,11 +183,8 @@ private:
 	//強敵
 	uint32_t strongEnemyModelHandle_ = 0u;
 
-
 	//生成の文字列を入れる
 	std::stringstream enemyPositionsFromCSV_;
-
-	
 
 };
 

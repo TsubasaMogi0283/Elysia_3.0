@@ -1,47 +1,38 @@
 #include "Player.h"
-#include <numbers>
 
+#include <imgui.h>
+#include <numbers>
 
 #include "Input.h"
 #include "VectorCalculation.h"
-#include "Material.h"
-#include "SpotLight.h"
-#include "GameScene/GameScene.h"
 #include "SingleCalculation.h"
-#include "CollisionConfig.h"
 #include "ModelManager.h"
+#include "SpotLight.h"
+#include "LevelDataManager.h"
+#include "PushBackCalculation.h"
 
 Player::Player(){
-	//入力クラスの取得
-	input_ = Ellysia::Input::GetInstance();
+
+	//インスタンスの取得
+	//入力クラス
+	input_ = Elysia::Input::GetInstance();
 	//モデル管理クラス
-	modelManager_ = Ellysia::ModelManager::GetInstance();
+	modelManager_ = Elysia::ModelManager::GetInstance();
+	//レベルエディタ管理クラス
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
 
 void Player::Initialize(){
 
 	//モデルの生成 	
 	uint32_t modelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
-	model_.reset(Ellysia::Model::Create(modelHandle));
-
-	//初期はコントロールできない
-	isControll_ = false;
-
-	//持っている鍵の数
-	haveKeyQuantity_ = 0u;
-	
-	//体力
-	hp_ = 3u;
-
-	//ダメージについて
-	isDamage_ = false;
+	model_.reset(Elysia::Model::Create(modelHandle));
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	const Vector3 INITIAL_POSITION = { .x=0.0f,.y=0.0f,.z=-15.0f };
 	worldTransform_.translate = INITIAL_POSITION;
 
-	//PlayerCllsion基底クラスを作ろう
 	//通常の敵
 	std::unique_ptr<PlayerCollisionToNormalEnemyAttack> colliderToNormalEnemy = std::make_unique<PlayerCollisionToNormalEnemyAttack>();
 	colliderToNormalEnemy->Initialize();
@@ -59,13 +50,11 @@ void Player::Initialize(){
 	flashLight_ = std::make_unique<FlashLight>();
 	flashLight_->Initialize();
 
-
-	//ダメージを受けたかどうか
-	isDameged_ = false;
 	
 	//マテリアル
 	material_.Initialize();
-	material_.lightingKinds_ = SpotLighting;
+	material_.lightingKinds = SpotLighting;
+	material_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 0.5f };
 }
 
 void Player::Update(){
@@ -77,22 +66,19 @@ void Player::Update(){
 	Damaged();
 
 	//ワールドトランスフォームの更新
+	worldTransform_.translate = playerCenterPosition_;
+	//Yを固定させる
+	const float HEIGHT = 0.0f;
+	worldTransform_.translate.y = HEIGHT;
 	worldTransform_.Update();
 
 	//ワールド座標
 	Vector3 worldPosition = worldTransform_.GetWorldPosition();
 
 	//AABBの計算
-	aabb_.min.x = worldPosition.x - SIDE_SIZE;
-	aabb_.min.y = worldPosition.y - SIDE_SIZE;
-	aabb_.min.z = worldPosition.z - SIDE_SIZE;
-
-	aabb_.max.x = worldPosition.x + SIDE_SIZE;
-	aabb_.max.y = worldPosition.y + SIDE_SIZE;
-	aabb_.max.z = worldPosition.z + SIDE_SIZE;
-
-	//PMで綺麗にまとめられるかも
-	//通常の敵用の当たり判定の更新
+	aabb_.min = VectorCalculation::Subtract(worldPosition, { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
+	aabb_.max = VectorCalculation::Add(worldPosition, { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
+	//コリジョンの更新
 	for (std::unique_ptr<BasePlayerCollision> &collision : colliders_) {
 		//プレイヤーの座標を設定
 		collision->SetPlayerPosition(worldPosition);
@@ -107,13 +93,15 @@ void Player::Update(){
 	//マテリアルの更新
 	material_.Update();
 
+	
+	#ifdef _DEBUG
+
 	//ImGui表示
-#ifdef _DEBUG
 	DisplayImGui();
-#endif
+	#endif
 }
 
-void Player::Draw(const Camera& camera, const SpotLight& spotLight){
+void Player::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
 
 #ifdef _DEBUG
 	//本体の描画
@@ -121,10 +109,16 @@ void Player::Draw(const Camera& camera, const SpotLight& spotLight){
 	model_->Draw(worldTransform_, camera,material_,spotLight);
 
 	//懐中電灯
-	flashLight_->Draw(camera);
+	flashLight_->DrawObject3D(camera);
 #endif // _DEBUG
 
 
+}
+
+void Player::DrawSprite(){
+
+	//懐中電灯
+	flashLight_->DrawSprite();
 }
 
 Player::~Player() {
@@ -133,25 +127,31 @@ Player::~Player() {
 }
 
 void Player::Damaged() {
+
 	//通常の敵に当たった場合
-	//ダメージを受ける
 	if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
-		//一時的にコントロールを失う
-		isControll_ = false;
-		//ダメージを受ける
-		isDameged_ = true;
 		//体力を減らす
 		--hp_;
+		//ダメージを受ける	
+		isDameged_ = true;
+	}
+
+
+	if (isDameged_ == true) {
+
+		//一時的にコントロールを失う
+		isControll_ = false;
 		//線形補間で振動処理をする
 		vibeTime_ += DELTA_TIME;
-
 		//最大の振動の強さ
 		const float MAX_VIBE_ = 1.0f;
 		//最小の振動の強さ
 		const float MIN_VIBE_ = 0.0f;
 
 		//線形補間を使い振動を減衰させる
-		vibeStrength_ = SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
+		//振動の強さ
+		float vibeStrength_ =  SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
+		//振動の設定
 		input_->SetVibration(vibeStrength_, vibeStrength_);
 
 		//振動を止める
@@ -169,13 +169,18 @@ void Player::Damaged() {
 			//コントロールを戻す
 			isControll_ = true;
 		}
-	}
 
+#ifdef _DEBUG
+		ImGui::Begin("振動");
+		ImGui::InputFloat("T", &vibeStrength_);
+		ImGui::End();
+#endif // _DEBUG
+	}
 }
 
 void Player::Move() {
 	//動けるときだけ加算
-	if (isControll_ == true && moveCondition_ == PlayerMoveCondition::OnPlayerMove) {
+	if (isControll_ == true ) {
 
 		//歩くスピード
 		const float NORMAL_MOVE_SPEED = 0.1f;
@@ -192,7 +197,21 @@ void Player::Move() {
 			moveSpeed = NORMAL_MOVE_SPEED;
 		}
 		//加算
-		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, VectorCalculation::Multiply(moveDirection_, moveSpeed));
+		playerCenterPosition_ = VectorCalculation::Add(playerCenterPosition_, VectorCalculation::Multiply(moveDirection_, moveSpeed));
+		
+		//AABB
+		std::vector<AABB> aabbs = levelDataManager_->GetObjectAABBs(levelHandle_,"Stage");
+		//コライダーを持っているかどうか
+		std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelHandle_, "Stage");
+		//衝突判定
+		for (size_t i = 0; i < aabbs.size(); ++i) {
+
+			//コライダーを持っているときだけ
+			if (colliders[i] == true) {
+				//押し戻し処理
+				PushBackCalculation::FixPosition(playerCenterPosition_, aabb_, aabbs[i]);
+			}
+		}
 
 	}
 }
@@ -201,17 +220,13 @@ void Player::DisplayImGui() {
 
 	//それぞれintに変換
 	int32_t keyQuantity = static_cast<int32_t>(haveKeyQuantity_);
-	int32_t condition = static_cast<int32_t>(moveCondition_);
 
 	ImGui::Begin("プレイヤー");
-	if (ImGui::TreeNode("状態")) {
+	if (ImGui::TreeNode("状態")==true) {
 		ImGui::InputInt("鍵の数", &keyQuantity);
 		ImGui::InputInt("体力", &hp_);
-		ImGui::InputInt("ダメージ時間", &damagedTime_);
-
 		ImGui::Checkbox("isDamage_", &isDamage_);
 		ImGui::Checkbox("振動", &isDameged_);
-
 		ImGui::TreePop();
 	}
 
@@ -219,7 +234,6 @@ void Player::DisplayImGui() {
 	ImGui::InputInt("downTime", &downTime_);
 	ImGui::InputFloat3("Transrate", &worldTransform_.translate.x);
 	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
-	ImGui::InputInt("moveCondition_", &condition);
 	ImGui::End();
 
 }

@@ -1,26 +1,30 @@
 #include "KeyManager.h"
 
+#include <imgui.h>
 #include <stdlib.h>
 #include <algorithm>
 
 #include "TextureManager.h"
 #include "Input.h"
+#include "LevelDataManager.h"
 #include "VectorCalculation.h"
 #include "Player/Player.h"
 #include "SingleCalculation.h"
+#include "Easing.h"
 
-
-KeyManager::KeyManager(){
+KeyManager::KeyManager() {
 	//インスタンスの取得
 	//オーディオ
-	audio_ = Ellysia::Audio::GetInstance();
+	audio_ = Elysia::Audio::GetInstance();
 	//テクスチャ管理クラス
-	textureManager_ = Ellysia::TextureManager::GetInstance();
+	textureManager_ = Elysia::TextureManager::GetInstance();
 	//入力
-	input_ = Ellysia::Input::GetInstance();
+	input_ = Elysia::Input::GetInstance();
+	//レベルデータ管理クラス
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
 
-void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvPath){
+void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vector3>& positions) {
 	//プレイヤーが入っているかどうか
 	assert(player_ != nullptr);
 
@@ -28,92 +32,65 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 	modelHandle_ = modelHandle;
 
 
-	//CSVManagerクラスとか作ってまとめた方が賢いかも
-	std::ifstream file;
-	file.open(csvPath);
-	//開かなかったら止まる
-	assert(file.is_open());
+	Vector3 keyInHousePosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "KeyInHouse");
 
-	//ファイルの内容を文字列ストリームにコピー
-	keyPositionsFromCSV_ << file.rdbuf();
-	//ファイルを閉じる
-	file.close();
-
-	//1行分の文字列を入れる変数
-	std::string line;
-
-
-	//コマンド実行ループ
-	while (std::getline(keyPositionsFromCSV_, line)) {
-
-		//1行分の文字列をストリームに変換して解析しやすくする
-		std::istringstream lineStream(line);
-
-		std::string word;
-		//,区切りで行の先頭文字列を取得
-		std::getline(lineStream, word, ',');
-
-		//「//」があった行の場合コメントなので飛ばす
-		if (word.find("//") == 0) {
-			//コメントは飛ばす
-			continue;
-		}
-
-
-		Vector3 position = {};
-		//X座標
-		position.x = static_cast<float>(std::atof(word.c_str()));
-
-		//Y座標
-		std::getline(lineStream, word, ',');
-		position.y = static_cast<float>(std::atof(word.c_str()));
-
-		//Z座標
-		std::getline(lineStream, word, ',');
-		position.z = static_cast<float>(std::atof(word.c_str()));
-
+	for (int i = 0; i < positions.size(); ++i) {
 		//生成
-		Genarate(position);
-
+		const float OFFSET_Y = 0.5f;
+		bool isAbleToPickUp = true;
+		Vector3 initialPosition = positions[i];
+		//if (initialPosition.x == keyInHousePosition.x&&
+		//	initialPosition.y == keyInHousePosition.y&&
+		//	initialPosition.z == keyInHousePosition.z) {
+		//	isAbleToPickUp = false;
+		//}
+		Vector3 newPosition = { .x = positions[i].x,.y = OFFSET_Y ,.z = positions[i].z };
+		Genarate(newPosition, isAbleToPickUp);
 	}
-
 
 	//読み込み
-	uint32_t keySpriteHandle = textureManager_->LoadTexture("Resources/Item/KeyList.png");
-	//座標
-	const Vector2 INITIAL_POSITION = {.x= 20.0f,.y=10.0f };
-	//鍵の画像の位置
-	Vector2 keySpritePosition = { .x= INITIAL_POSITION.x,.y= INITIAL_POSITION.y };
+	//リスト
+	uint32_t keyListSpriteHandle = textureManager_->Load("Resources/Sprite/Item/KeyList.png");
 	//生成
-	keySprite_.reset(Ellysia::Sprite::Create(keySpriteHandle, keySpritePosition));
+	keyListSprite_.reset(Elysia::Sprite::Create(keyListSpriteHandle, initialPosition_));
 
-	//数字
-	uint32_t keyNumberQuantity[NUMBER_QUANTITY_] = {};
-	for (uint32_t i = 0u; i < NUMBER_QUANTITY_; ++i) {
-		//数を文字列に変換した方が賢いよね！
-		//数をstd::stringに変換
-		const std::string number = std::to_string(i);
-		//変換した番号を組み込む
-		const std::string filePath = "Resources/Sprite/Number/" + number + ".png";
-		//テクスチャの読み込み
-		keyNumberQuantity[i] = textureManager_->LoadTexture(filePath);
-		//座標を決める
-		const Vector2 NUMBER_POSITION = {.x= 64.0f * 2.0f+ INITIAL_POSITION.x,.y= INITIAL_POSITION.y};
-		//生成
-		keyNumber[i].reset(Ellysia::Sprite::Create(keyNumberQuantity[i], NUMBER_POSITION));
+	uint32_t textureHandle = Elysia::TextureManager::GetInstance()->Load("Resources/Sprite/Item/Key/Key.png");
+	//サイズを取得
+	keySpriteWidth_ = textureManager_->GetTextureWidth(textureHandle);
+	keySpriteHeight_ = textureManager_->GetTextureHeight(textureHandle);
+
+
+	//鍵
+	const Vector2 INITIAL_SCALE = { .x = 0.0f,.y = 0.0f };
+	const Vector2 ANCHOR_POINT = { .x = 0.5f,.y = 0.5f };
+	initialPositionAddAnchorPoint = { .x = 20.0f + keySpriteWidth_ / 2.0f,.y = 10.0f + keySpriteHeight_ / 2.0f };
+	for (uint32_t i = 0u; i < MAX_KEY_QUANTITY_; ++i) {
+		Vector2 position = {
+			.x = initialPositionAddAnchorPoint.x + keySpriteWidth_ * static_cast<float>(i),
+			.y = initialPositionAddAnchorPoint.y
+		};
+		keySprites_[i].reset(Elysia::Sprite::Create(textureHandle, position));
+		//アンカーポイントの設定
+		keySprites_[i]->SetAnchorPoint(ANCHOR_POINT);
+		//初期スケール
+		keySprites_[i]->SetScale(INITIAL_SCALE);
 	}
+
+
+
 
 	//知らせる音の読み込み
 	notificationSEHandle_ = audio_->Load("Resources/External/Audio/Key/Shake.mp3");
 	//拾う音の読み込み
 	pickUpSEHandle = audio_->Load("Resources/External/Audio/Key/PickUp.mp3");
-	
+	//皿の落ちる音の読み込み
+	dropPlateSEHandle_ = audio_->Load("Resources/External/Audio/Plate/DropPlateSE.wav");
 
 	//拾う画像の読み込み
-	uint32_t pickUpTextureManager = textureManager_->LoadTexture("Resources/Game/Key/PickUpKey.png");
+	uint32_t pickUpTextureManager = textureManager_->Load("Resources/Sprite/Key/PickUpKey.png");
 	//生成
 	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
-	pickUpKey_.reset(Ellysia::Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));
+	pickUpKey_.reset(Elysia::Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));
 
 
 	//再生
@@ -124,17 +101,29 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::string& csvP
 }
 
 
-
-void KeyManager::Update(){
+void KeyManager::Update() {
 
 	//全ての要素を消す
 	keyAndPlayerDistances_.clear();
-
+	Vector3 keyInHousePosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "KeyInHouse");
 	//鍵
 	for (const std::unique_ptr<Key>& key : keies_) {
+
+		//小屋の中の鍵
+		//if (key->GetWorldPosition().x == keyInHousePosition.x &&
+		//	key->GetWorldPosition().z == keyInHousePosition.z) {
+		//	key->SetisAbleToPickUp(isOpenTreasureBox_);
+		//
+		//}
+		
 		//更新
 		key->Update();
-
+		//終点座標
+		Vector2 endPosition = {
+			.x = initialPosition_.x + keySpriteWidth_ * static_cast<float>(keyQuantity_),
+			.y = initialPosition_.y
+		};
+		key->SetEndPosition(endPosition);
 		//プレイヤーと鍵の差分
 		Vector3 playerAndKeydifference = VectorCalculation::Subtract(player_->GetWorldPosition(), key->GetWorldPosition());
 		//距離
@@ -156,18 +145,13 @@ void KeyManager::Update(){
 	if (closestDistance > MAX_DISTANCE_) {
 		closestDistance = MAX_DISTANCE_;
 	}
-	
+
 	//求めた値から音量設定をする
-	float volume = 1.0f-(closestDistance / MAX_DISTANCE_);
+	float volume = 1.0f - (closestDistance / MAX_DISTANCE_);
 	audio_->ChangeVolume(notificationSEHandle_, volume);
 
 
-#ifdef _DEBUG
-	ImGui::Begin("鍵管理クラス"); 
-	ImGui::InputFloat("音量", &volume);
-	ImGui::InputFloat("近い距離", &closestDistance);
-	ImGui::End();
-#endif // _DEBUG
+
 
 
 	//現在の鍵の数
@@ -181,40 +165,64 @@ void KeyManager::Update(){
 
 	//消去処理
 	Delete();
+
+#ifdef _DEBUG
+	ImGui::Begin("鍵管理クラス");
+	ImGui::InputFloat("音量", &volume);
+	ImGui::InputFloat("近い距離", &closestDistance);
+	ImGui::Checkbox("墓場用", &isPickUpKeyInCemetery_);
+
+	int newQuantity = static_cast<int>(keyQuantity_);
+	ImGui::InputInt("鍵の数", &newQuantity);
+	ImGui::InputFloat("ST1", &spriteTs_[0]);
+	ImGui::InputFloat("ST2", &spriteTs_[1]);
+	ImGui::InputFloat("ST3", &spriteTs_[2]);
+
+
+	ImGui::End();
+#endif // _DEBUG
+
 }
 
-void KeyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight){
+void KeyManager::DrawObject3D(const Camera& camera, const SpotLight& spotLight) {
 	//鍵モデルの描画
 	for (const std::unique_ptr<Key>& key : keies_) {
 		key->DrawModel(camera, spotLight);
 	}
 }
 
-void KeyManager::DrawSprite(){
+void KeyManager::DrawSprite() {
 	//鍵の画像の描画
-	keySprite_->Draw();
-	//数の描画
-	keyNumber[keyQuantity_]->Draw();
+	keyListSprite_->Draw();
 
 	//鍵(個別)のスプライト
 	for (const std::unique_ptr<Key>& key : keies_) {
 		key->DrawSprite();
 	}
 
-	//鍵の取得
+	//鍵を取得するかどうか
 	if (isAbleToPickUpKey_ == true) {
 		pickUpKey_->Draw();
 	}
+
+
+	//鍵
+	for (uint32_t i = 0u; i < MAX_KEY_QUANTITY_; ++i) {
+		keySprites_[i]->Draw();
+	}
+
 
 }
 
 
 
-void KeyManager::Genarate(const Vector3& position) {
+void KeyManager::Genarate(const Vector3& position, const bool& isAbleToPickUp) {
 	//生成
 	std::unique_ptr<Key> key = std::make_unique<Key>();
 	//初期化
 	key->Initialize(modelHandle_, position);
+	//取得可能かどうかの設定
+	key->SetisAbleToPickUp(isAbleToPickUp);
 	//リストに入れる
 	keies_.push_back(std::move(key));
 }
@@ -225,19 +233,63 @@ void KeyManager::Delete() {
 	keies_.remove_if([=](const std::unique_ptr<Key>& key) {
 		//拾われたら消す
 		if (key->GetIsDelete() == true) {
-			++keyQuantity_;
-			return true;
+
+			//墓場用
+			Vector3 keyInCementeryPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "KeyInCemetery");
+			if (key->GetWorldPosition().x == keyInCementeryPosition.x &&
+				key->GetWorldPosition().z == keyInCementeryPosition.z) {
+				isPickUpKeyInCemetery_ = true;
+			}
+
+			//小屋用
+			Vector3 keyInHousePosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "KeyInHouse");
+			if (key->GetWorldPosition().x == keyInHousePosition.x &&
+				key->GetWorldPosition().z == keyInHousePosition.z) {
+				isPickUpKeyInHouse_ = true;
+			}
+			
+			
+
+			spriteTs_[keyQuantity_] += 0.005f;
+			//スケール
+			float newT = Easing::EaseOutBack(spriteTs_[keyQuantity_]);
+			keySprites_[keyQuantity_]->SetScale({ .x = newT ,.y = newT });
+
+			//回転
+			float newTForRotate = Easing::EaseOutCubic(spriteTs_[keyQuantity_]);
+			float rotate = SingleCalculation::Lerp(0.0f, -std::numbers::pi_v<float>*6.0f, newTForRotate);
+			keySprites_[keyQuantity_]->SetRotate(rotate);
+			if (spriteTs_[keyQuantity_] >= 1.0f) {
+				++keyQuantity_;
+				return true;
+			}
+
+
 		}
 		return false;
 	});
+
+	//皿が落ちる音
+	if (isPickUpKeyInHouse_ == true) {
+		++dropPlateTime_;
+
+		const uint32_t SE_PLAY_TIME = 60 * 1;
+		if (dropPlateTime_ == SE_PLAY_TIME) {
+			audio_->Play(dropPlateSEHandle_, false);
+		}
+
+	}
+		
+
+
 }
 
 void KeyManager::PickUp() {
 	//鍵
 	for (const std::unique_ptr<Key>& key : keies_) {
 
-		//勿論取得されていない時だけ受け付ける
-		if (key->GetIsPickUp() == false) {
+		//勿論取得されていない時と取得可能な時だけ受け付ける
+		if (key->GetIsPickUp() == false &&key->GetIsAbleToPickUp()==true) {
 			//判定は円で
 			Vector3 distance = {
 				.x = std::powf((player_->GetWorldPosition().x - key->GetWorldPosition().x), 2.0f),
@@ -266,27 +318,16 @@ void KeyManager::PickUp() {
 					audio_->Play(pickUpSEHandle, false);
 				}
 
-				//Bボタンを押したとき
-				if (input_->IsConnetGamePad() == true) {
-
-					if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-
-						bTriggerTime_ += INCREASE_VALUE;
-
-					}
-					if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == NO_PUSH_VALUE_) {
-						bTriggerTime_ = B_NO_REACT_TIME_;
-					}
-
-					if (bTriggerTime_ == B_REACT_TIME_) {
-						//プレイヤーの持っているか鍵の数が増える
-						player_->AddHaveKeyQuantity();
-						//鍵が取得される
-						key->PickedUp();
-						//取得の音が鳴る
-						audio_->Play(pickUpSEHandle, false);
-					}
+				if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
+					//プレイヤーの持っているか鍵の数が増える
+					player_->AddHaveKeyQuantity();
+					//鍵が取得される
+					key->PickedUp();
+					//取得の音が鳴る
+					audio_->Play(pickUpSEHandle, false);
 				}
+
+				
 
 			}
 			else {
@@ -301,7 +342,7 @@ void KeyManager::PickUp() {
 	//trueの時に取得するかどうかのUIが出る
 	isAbleToPickUpKey_ = std::any_of(keies_.begin(), keies_.end(), [](const std::unique_ptr<Key>& key) {
 		return key->GetIsPrePickUp() == true;
-	});
+		});
 
 
 #ifdef _DEBUG

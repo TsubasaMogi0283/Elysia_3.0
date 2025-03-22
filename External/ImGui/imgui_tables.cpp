@@ -667,7 +667,7 @@ void ImGui::TableBeginApplyRequests(ImGuiTable* table)
             // We need to handle reordering across hidden columns.
             // In the configuration below, moving C to the right of E will lead to:
             //    ... C [D] E  --->  ... [D] E  C   (Column name/index)
-            //    ... 2  3  4        ...  2  3  4   (Display order)
+            //    ... 2  3  4        ...  2  3  4   (DisplayImGui order)
             const int reorder_dir = table->ReorderColumnDir;
             IM_ASSERT(reorder_dir == -1 || reorder_dir == +1);
             IM_ASSERT(table->Flags & ImGuiTableFlags_Reorderable);
@@ -681,7 +681,7 @@ void ImGui::TableBeginApplyRequests(ImGuiTable* table)
                 table->Columns[table->DisplayOrderToIndex[order_n]].DisplayOrder -= (ImGuiTableColumnIdx)reorder_dir;
             IM_ASSERT(dst_column->DisplayOrder == dst_order - reorder_dir);
 
-            // Display order is stored in both columns->IndexDisplayOrder and table->DisplayOrder[]. Rebuild later from the former.
+            // DisplayImGui order is stored in both columns->IndexDisplayOrder and table->DisplayOrder[]. Rebuild later from the former.
             for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
                 table->DisplayOrderToIndex[table->Columns[column_n].DisplayOrder] = (ImGuiTableColumnIdx)column_n;
             table->ReorderColumnDir = 0;
@@ -2533,7 +2533,7 @@ void ImGui::TableMergeDrawChannels(ImGuiTable* table)
         column->DrawChannelCurrent = (ImGuiTableDrawChannelIdx)-1;
     }
 
-    // [DEBUG] Display merge groups
+    // [DEBUG] DisplayImGui merge groups
 #if 0
     if (g.IO.KeyShift)
         for (int merge_group_n = 0; merge_group_n < IM_ARRAYSIZE(merge_groups); merge_group_n++)
@@ -2690,7 +2690,7 @@ void ImGui::TableDrawBorders(ImGuiTable* table)
     // FIXME: could use AddRect or explicit VLine/HLine helper?
     if (table->Flags & ImGuiTableFlags_BordersOuter)
     {
-        // Display outer border offset by 1 which is a simple way to display it without adding an extra draw call
+        // DisplayImGui outer border offset by 1 which is a simple way to display it without adding an extra draw call
         // (Without the offset, in outer_window it would be rendered behind cells, because child windows are above their
         // parent. In inner_window, it won't reach out over scrollbars. Another weird solution would be to display part
         // of it in inner window, and the part that's over scrollbars in the outer window..)

@@ -7,6 +7,7 @@
  */
 
 #include <vector>
+#include <sstream>
 
 #include "WorldTransform.h"
 #include "Camera.h"
@@ -24,7 +25,8 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	/// <param name="csvPath"></param>
+	void Initialize(const std::string& csvPath);
 
 	/// <summary>
 	/// 更新
@@ -81,8 +83,13 @@ private:
 
 	//線形補間用
 	float cameraT_ = 0.0f;
+	//tの増える値
+	const float increaseTValue_ = 0.0001f;
+
 	//制御点
-	std::vector<Vector3>points_;
+	std::vector<Vector3>points_ = {};
+	//生成の文字列を入れる
+	std::stringstream positionsFromCSV_;
 
 
 };

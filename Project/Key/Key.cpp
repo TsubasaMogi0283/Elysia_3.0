@@ -1,13 +1,16 @@
 #include "Key.h"
 
+#include <imgui.h>
+
 #include "ModelManager.h"
 #include "VectorCalculation.h"
 #include "TextureManager.h"
 #include "Easing.h"
+#include "SingleCalculation.h"
 
 void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 	//モデルの生成
-	model_.reset(Ellysia::Model::Create(modelhandle));
+	model_.reset(Elysia::Model::Create(modelhandle));
 
 	//スケールのサイズ
 	const float SCALE = 0.4f;
@@ -27,14 +30,14 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 	//マテリアルの初期化
 	material_.Initialize();
 	//ライティングの種類
-	material_.lightingKinds_ = SpotLighting;
+	material_.lightingKinds = SpotLighting;
 	//色
-	material_.color_ = {.x = 1.0f,.y = 1.0f,. z = 0.0f,. w = 1.0f };
+	material_.color = {.x = 1.0f,.y = 1.0f,. z = 0.0f,. w = 1.0f };
 
 
 	//鍵のスプライト
-	uint32_t textureHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Item/Key/Key.png");
-	sprite_.reset(Ellysia::Sprite::Create(textureHandle, {.x=0.0f,.y=0.0f}));
+	uint32_t textureHandle = Elysia::TextureManager::GetInstance()->Load("Resources/Sprite/Item/Key/Key.png");
+	sprite_.reset(Elysia::Sprite::Create(textureHandle, {.x=0.0f,.y=0.0f}));
 	//アンカーポイントを設定する
 	const Vector2 ANCHOR_POINT = { .x = 0.5f,.y = 0.5f };
 	sprite_->SetAnchorPoint(ANCHOR_POINT);
@@ -44,14 +47,14 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 
 
 #ifdef _DEBUG
-	uint32_t debugModelHandle = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube", "cube.obj");
+	uint32_t debugModelHandle = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube", "cube.obj");
 	//モデルの生成
-	debugModel_.reset(Ellysia::Model::Create(debugModelHandle));
+	debugModel_.reset(Elysia::Model::Create(debugModelHandle));
 	//ワールドトランスフォームの初期化
 	debugWorldTransform_.Initialize();
 	//マテリアルの初期化
 	debugMaterial_.Initialize();
-	debugMaterial_.lightingKinds_ = SpotLighting;
+	debugMaterial_.lightingKinds = SpotLighting;
 #endif // _DEBUG
 
 
@@ -81,7 +84,7 @@ void Key::Update(){
 	//デバッグ用
 	debugWorldTransform_.translate = GetWorldPosition();
 	debugWorldTransform_.scale = { .x = 0.1f,.y = 0.1f,.z = 0.1f };
-	debugMaterial_.color_.w = 0.3f;
+	debugMaterial_.color.w = 0.3f;
 	//ワールドトランスフォームの更新
 	debugWorldTransform_.Update();
 	//マテリアルの更新
@@ -166,32 +169,26 @@ void Key::SpriteMove(){
 
 		scaleT_ += 0.01f;
 		//サイズの設定
-		float scaleSize = std::sinf(scaleT_ *std::numbers::pi_v<float>);
+		float scaleSize = std::sinf(scaleT_ * std::numbers::pi_v<float>);
 		sprite_->SetScale({ .x = scaleSize ,.y = scaleSize });
 
 		//回転の設定
 		spriteRotate_ -= 0.5f;
 		sprite_->SetRotate(spriteRotate_);
 
-
 		//始点
 		const Vector2 SPRITE_STRAT_POSITION_ = { .x = 680,.y = 600.0f };
-		//終点
-		const Vector2 SPRITE_END_POSITION_ = { .x = 64.0f * 2.0f,.y = 20.0f };
-
-
+		
 		//座標の設定
-		Vector2 position = VectorCalculation::Lerp(SPRITE_STRAT_POSITION_, SPRITE_END_POSITION_, scaleT_);
+		Vector2 position = VectorCalculation::Lerp(SPRITE_STRAT_POSITION_, spriteEndPosition_, scaleT_);
 		sprite_->SetPosition(position);
 
 		//消える
 		if (scaleT_ >= 1.0f) {
+			sprite_->SetInvisible(true);
 			isDelete_ = true;
 			isSpriteMove_ = false;
 		}
-
-
-
 	}
 }
 

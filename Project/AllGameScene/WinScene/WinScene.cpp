@@ -1,16 +1,18 @@
 #include "WinScene.h"
+#include <imgui.h>
+
 #include "TextureManager.h"
 #include "LevelDataManager.h"
 #include "GameManager.h"
 #include "Input.h"
-#include <VectorCalculation.h>
+#include "VectorCalculation.h"
 
 WinScene::WinScene(){
 	//インスタンスの取得
 	//入力
-	input_ = Ellysia::Input::GetInstance();
+	input_ = Elysia::Input::GetInstance();
 	//レベルデータ管理クラス
-	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
 
 void WinScene::Initialize() {
@@ -19,13 +21,13 @@ void WinScene::Initialize() {
 
 
 	//テキスト(タイトルへのやつ)
-	uint32_t textHandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Result/Win/WinText.png");
-	text_.reset(Ellysia::Sprite::Create(textHandle, INITIAL_SPRITE_POSITION));
+	uint32_t textHandle = Elysia::TextureManager::GetInstance()->Load("Resources/Sprite/Result/Win/WinText.png");
+	text_.reset(Elysia::Sprite::Create(textHandle, INITIAL_SPRITE_POSITION));
 
 	//白背景
-	uint32_t whiteTexturehandle = Ellysia::TextureManager::GetInstance()->LoadTexture("Resources/Sprite/Back/White.png");
+	uint32_t whiteTexturehandle = Elysia::TextureManager::GetInstance()->Load("Resources/Sprite/Back/White.png");
 	//生成
-	whiteFade_.reset(Ellysia::Sprite::Create(whiteTexturehandle, INITIAL_SPRITE_POSITION));
+	whiteFade_.reset(Elysia::Sprite::Create(whiteTexturehandle, INITIAL_SPRITE_POSITION));
 	//透明度の設定
 	transparency_ = 0.0f;
 	whiteFade_->SetTransparency(transparency_);
@@ -38,7 +40,7 @@ void WinScene::Initialize() {
 
 	//マテリアルの初期化
 	material_.Initialize();
-	material_.lightingKinds_ = DirectionalLighting;
+	material_.lightingKinds = DirectionalLighting;
 
 	//平行光源の初期化
 	directionalLight_.Initialize();
@@ -49,7 +51,7 @@ void WinScene::Initialize() {
 	camera_.Initialize();
 	camera_.translate = { .x = 0.0f,.y = 2.0f,.z = -6.0f };
 	//ポストエフェクト
-	backTexture_ = std::make_unique<Ellysia::BackTexture>();
+	backTexture_ = std::make_unique<Elysia::BackTexture>();
 	backTexture_->SetClearColour(directionalLight_.color);
 	backTexture_->Initialize();
 
@@ -61,15 +63,10 @@ void WinScene::Initialize() {
 
 }
 
-void WinScene::Update(Ellysia::GameManager* gameManager){
+void WinScene::Update(Elysia::GameManager* gameManager){
 
 	//増える時間の値
 	const uint32_t INCREASE_VALUE = 1u;
-	//Bトリガーの反応する時間
-	const uint32_t REACT_TIME = 1u;
-	//Bトリガーの反応しない時間
-	const uint32_t NO_REACT_TIME = 0u;
-
 	//再スタート時間
 	const uint32_t RESTART_TIME = 0u;
 
@@ -102,26 +99,12 @@ void WinScene::Update(Ellysia::GameManager* gameManager){
 	//表示
 	const uint32_t DISPLAY = 0u;
 
-
-	//コントローラーを繋いでいる時
-	if (input_->IsConnetGamePad() == true) {
-
-		//Bボタンを押したとき
-		if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-			bTriggerTime_ += INCREASE_VALUE;
-
-		}
-		//押していない時
-		if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-			bTriggerTime_ = NO_REACT_TIME;
-		}
-
-		//トリガー
-		if (bTriggerTime_ == REACT_TIME) {
-			restart_ = true;
-		}
-	}
 	//次のシーンへ
+	//Bボタンを押したとき
+	if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
+		restart_ = true;
+	}
+	//スペースを押したとき
 	if (input_->IsTriggerKey(DIK_SPACE) == true) {
 		restart_ = true;
 	}
@@ -199,7 +182,7 @@ void WinScene::Update(Ellysia::GameManager* gameManager){
 	const std::string ESCAPE_SUCCEEDED_TEXT = "EscapeSucceededObject";
 	//基準となる座標
 	const float BASED_POSITION_Y = 6.0f;
-	levelDataManager_->SetPosition(levelDataHandle_, ESCAPE_SUCCEEDED_TEXT, {.x=0.0f,.y=std::sinf(objectFloatingTheta_) +BASED_POSITION_Y,.z=30.0f });
+	levelDataManager_->SetTranslate(levelDataHandle_, ESCAPE_SUCCEEDED_TEXT, {.x=0.0f,.y=std::sinf(objectFloatingTheta_) +BASED_POSITION_Y,.z=30.0f });
 
 
 	//レベルデータの更新

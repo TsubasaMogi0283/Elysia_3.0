@@ -25,7 +25,7 @@
 /// <summary>
 /// EllysiaEngine
 /// </summary>
-namespace Ellysia {
+namespace Elysia {
 	/// <summary>
 	/// 入力
 	/// </summary>
@@ -56,7 +56,7 @@ namespace Ellysia {
 /// <summary>
 /// タイトルシーン
 /// </summary>
-class TitleScene : public Ellysia::IGameScene {
+class TitleScene : public Elysia::IGameScene {
 public:
 
 	/// <summary>
@@ -73,7 +73,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gameManager">ゲーム管理クラス</param>
-	void Update(Ellysia::GameManager* gameManager)override;
+	void Update(Elysia::GameManager* gameManager)override;
 
 	/// <summary>
 	/// 3Dオブジェクト
@@ -117,11 +117,11 @@ private:
 
 private:
 	//テクスチャ管理クラス
-	Ellysia::TextureManager* textureManager_ = nullptr;
+	Elysia::TextureManager* textureManager_ = nullptr;
 	//入力クラス
-	Ellysia::Input* input_ = nullptr;
+	Elysia::Input* input_ = nullptr;
 	//レベルエディタ
-	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	uint32_t levelHandle_ = 0u;
 
 
@@ -151,16 +151,16 @@ private:
 
 
 	//黒フェード
-	std::unique_ptr<Ellysia::Sprite>blackFade_ = nullptr;
+	std::unique_ptr<Elysia::Sprite>blackFade_ = nullptr;
 	//透明度
 	float blackFadeTransparency_ = 0.0f;
 
 
 	//テキスト
-	std::unique_ptr<Ellysia::Sprite> text_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> text_ = nullptr;
 	
 	//ロゴ
-	std::unique_ptr<Ellysia::Sprite> logo = nullptr;
+	std::unique_ptr<Elysia::Sprite> logo = nullptr;
 	uint32_t logoTextureHandle_ = 0u;
 	//変化後のテクスチャ
 	uint32_t changedLogoTextureHandle_ = 0u;
@@ -173,7 +173,7 @@ private:
 
 
 	//ランダムノイズ
-	std::unique_ptr<Ellysia::RandomEffect> randomEffect_ = nullptr;
+	std::unique_ptr<Elysia::RandomEffect> randomEffect_ = nullptr;
 	float randomEffectTime_ = 0u;
 	bool isDisplayRandomEffect_ = false;
 	bool isEndDisplayRandomEffect_ = false;

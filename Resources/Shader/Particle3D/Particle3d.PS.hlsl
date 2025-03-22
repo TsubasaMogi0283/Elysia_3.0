@@ -25,6 +25,8 @@ struct Material{
     float4x4 uvTransform;
     //光沢度
     float shininess;
+    //環境光の強さ
+    float ambientIntensity;
     //環境マップ
     bool isEnviromentMap;
 };

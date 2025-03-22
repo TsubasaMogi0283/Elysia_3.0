@@ -16,9 +16,9 @@
 
 #pragma region 前方宣言
 
-/// <summary>
-/// カメラ
-/// </summary>
+ /// <summary>
+ /// カメラ
+ /// </summary>
 struct Camera;
 
 /// <summary>
@@ -35,7 +35,7 @@ class Player;
 /// <summary>
 /// EllysiaEngine(前方宣言)
 /// </summary>
-namespace Ellysia{
+namespace Elysia {
 	/// <summary>
 	/// オーディオ
 	/// </summary>
@@ -51,6 +51,10 @@ namespace Ellysia{
 	/// </summary>
 	class Input;
 
+	/// <summary>
+	/// レベルデータ管理クラス
+	/// </summary>
+	class LevelDataManager;
 }
 
 
@@ -60,7 +64,7 @@ namespace Ellysia{
 /// <summary>
 /// 鍵管理クラス
 /// </summary>
-class KeyManager{
+class KeyManager {
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -71,8 +75,8 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="modelHandle"></param>
-	/// <param name="csvPath"></param>
-	void Initialize(const uint32_t& modelHandle,const std::string& csvPath);
+	/// <param name="positions"></param>
+	void Initialize(const uint32_t& modelHandle, const std::vector<Vector3>& positions);
 
 	/// <summary>
 	/// 更新
@@ -84,8 +88,8 @@ public:
 	/// </summary>
 	/// <param name="camera"></param>
 	/// <param name="spotLight"></param>
-	void DrawObject3D(const Camera& camera,const SpotLight& spotLight);
-	
+	void DrawObject3D(const Camera& camera, const SpotLight& spotLight);
+
 	/// <summary>
 	/// スプライトの描画
 	/// </summary>
@@ -94,7 +98,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~KeyManager()=default;
+	~KeyManager() = default;
 
 
 private:
@@ -102,8 +106,9 @@ private:
 	/// <summary>
 	/// 生成
 	/// </summary>
-	/// <param name="position"></param>
-	void Genarate(const Vector3& position);
+	/// <param name="position">座標</param>
+	/// <param name="isAbleToPickUp">取得可能か</param>
+	void Genarate(const Vector3& position,const bool& isAbleToPickUp);
 
 	/// <summary>
 	/// 消去
@@ -115,14 +120,30 @@ private:
 	/// </summary>
 	void PickUp();
 
-	
+
 
 public:
 	/// <summary>
+	/// レベルデータハンドルの設定
+	/// </summary>
+	/// <param name="handle"></param>
+	inline void SetLevelDataHandle(const uint32_t& handle) {
+		this->levelDataHandle_ = handle;
+	}
+
+	/// <summary>
+	/// 宝箱を開けたかどうか
+	/// </summary>
+	/// <param name="isOpen">開けたかどうかのフラグ</param>
+	inline void SetIsOpenTreasureBox(const bool& isOpen) {
+		this->isOpenTreasureBox_ = isOpen;
+	}
+
+	/// <summary>
 	/// 鍵のリストを取得
 	/// </summary>
-	/// <returns></returns>
-	inline std::list<Key*> GetKeyes() const{
+	/// <returns>リスト</returns>
+	inline std::list<Key*> GetKeyes() const {
 		std::list <Key*> keys = {};
 		for (const std::unique_ptr<Key>& key : keies_) {
 			keys.push_back(key.get());
@@ -134,17 +155,26 @@ public:
 	/// <summary>
 	/// 今ステージ上にある鍵の数を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>鍵の数</returns>
 	inline uint32_t GetKeyQuantity() const {
 		return static_cast<uint32_t>(keies_.size());
 	}
 
 	/// <summary>
-	/// 最大で取得できる数数
+	/// 最大で取得できる数
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>最大数</returns>
 	inline uint32_t GetMaxKeyQuantity()const {
 		return MAX_KEY_QUANTITY_;
+	}
+
+	/// <summary>
+	/// 墓場の鍵を取得したかどうか
+	/// </summary>
+	/// <returns>取得のフラグ</returns>
+	inline bool GetIsPickUpKeyInCemetery()const {
+		return isPickUpKeyInCemetery_
+			;
 	}
 
 
@@ -152,9 +182,8 @@ public:
 	/// <summary>
 	/// プレイヤー
 	/// </summary>
-	/// <param name="player"></param>
-	/// <returns></returns>
-	inline void SetPlayer(Player* player) { 
+	/// <param name="player">プレイヤー</param>
+	inline void SetPlayer(Player* player) {
 		this->player_ = player;
 	};
 
@@ -163,22 +192,24 @@ public:
 	/// </summary>
 	void StopAudio();
 
-
-
 private:
 	//オーディオ
-	Ellysia::Audio* audio_ = nullptr;
+	Elysia::Audio* audio_ = nullptr;
 	//テクスチャ管理クラス
-	Ellysia::TextureManager* textureManager_ = nullptr;
+	Elysia::TextureManager* textureManager_ = nullptr;
 	//入力
-	Ellysia::Input* input_ = nullptr;
+	Elysia::Input* input_ = nullptr;
+	//レベルデータ管理クラス
+	Elysia::LevelDataManager* levelDataManager_ = nullptr;
+	//ハンドル
+	uint32_t levelDataHandle_ = 0u;
 	//プレイヤー
 	Player* player_ = nullptr;
 
 
 private:
 	//最大数
-	const uint32_t MAX_KEY_QUANTITY_ = 3u;
+	static const uint32_t MAX_KEY_QUANTITY_ = 3u;
 	//数
 	static const uint32_t NUMBER_QUANTITY_ = 10u;
 	//鍵の音が聞こえる最大距離
@@ -191,27 +222,35 @@ private:
 	const uint32_t B_NO_REACT_TIME_ = 0u;
 	//コントローラーの押していない時の値
 	const int32_t NO_PUSH_VALUE_ = 0u;
+
+
 private:
-	//鍵のリスト
+	//鍵
 	std::list<std::unique_ptr<Key>>keies_ = {};
-
-	//UI
-	std::unique_ptr<Ellysia::Sprite> keySprite_ = nullptr;
-	
-	//スプライト
-	std::unique_ptr<Ellysia::Sprite> keyNumber[NUMBER_QUANTITY_] = { nullptr };
-	//鍵取得するかどうか
-	std::unique_ptr<Ellysia::Sprite> pickUpKey_ = nullptr;
-
-	//プレイヤーと全ての鍵の距離
-	std::list<float>keyAndPlayerDistances_ = {};
-	
 	//モデルハンドル
 	uint32_t modelHandle_ = 0u;
 
-	//生成の文字列を入れる
-	std::stringstream keyPositionsFromCSV_ = {};
+	//UI
+	std::unique_ptr<Elysia::Sprite> keyListSprite_ = nullptr;
+	//鍵
+	std::array<std::unique_ptr<Elysia::Sprite>, MAX_KEY_QUANTITY_> keySprites_ = { nullptr };
+	//サイズ
+	uint64_t keySpriteWidth_ = 0u;
+	uint64_t keySpriteHeight_ = 0u;
 
+	//スケール
+	std::array<float, MAX_KEY_QUANTITY_> spriteTs_ = {};
+
+	//初期座標
+	Vector2 initialPosition_ = { .x = 20.0f,.y = 10.0f };
+	Vector2 initialPositionAddAnchorPoint = {};
+
+	//終点座標
+	std::array<Vector2, MAX_KEY_QUANTITY_> endPositions_ = {};
+	//鍵取得するかどうか
+	std::unique_ptr<Elysia::Sprite> pickUpKey_ = nullptr;
+	//プレイヤーと全ての鍵の距離
+	std::list<float>keyAndPlayerDistances_ = {};
 
 	//拾う音
 	uint32_t pickUpSEHandle = 0u;
@@ -222,10 +261,20 @@ private:
 	//鍵の数
 	uint32_t keyQuantity_ = 0u;
 
+	//宝箱に入っている鍵用
+	//宝箱を開けたかどうか
+	bool isOpenTreasureBox_ = false;
+	//取得したかどうか
+	bool isPickUpKeyInHouse_ = false;
+	//皿が落ちる音
+	uint32_t dropPlateTime_ = 0u;
+	uint32_t dropPlateSEHandle_ = 0u;
 
 
-	//Bボタンのトリガー
-	uint32_t bTriggerTime_ = 0u;
-	bool isBTrigger_ = false;
+	//墓場の鍵を取ったかどうか
+	bool isPickUpKeyInCemetery_ = false;
+
+	
+
 };
 

@@ -21,7 +21,7 @@
 /// <summary>
 /// EllysiaEngine(前方宣言)
 /// </summary>
-namespace Ellysia {
+namespace Elysia {
 	/// <summary>
 	/// 入力
 	/// </summary>
@@ -60,7 +60,7 @@ namespace Ellysia {
 /// <summary>
 /// 負けシーン
 /// </summary>
-class LoseScene : public Ellysia::IGameScene {
+class LoseScene : public Elysia::IGameScene {
 public:
 
 	/// <summary>
@@ -77,7 +77,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="gameManager"></param>
-	void Update(Ellysia::GameManager* gameManager)override;
+	void Update(Elysia::GameManager* gameManager)override;
 
 
 	/// <summary>
@@ -108,6 +108,16 @@ public:
 
 private:
 	/// <summary>
+	/// 選択
+	/// </summary>
+	void Select();
+
+	/// <summary>
+	/// 次のシーンへ変わる
+	/// </summary>
+	void ChangeNextScene();
+
+	/// <summary>
 	/// /ImGUiの表示
 	/// </summary>
 	void DisplayImGui();
@@ -119,23 +129,23 @@ private:
 
 private:
 	//入力クラス
-	Ellysia::Input* input_ = nullptr;
+	Elysia::Input* input_ = nullptr;
 	//テクスチャ管理クラス
-	Ellysia::TextureManager* textureManager_ = nullptr;
+	Elysia::TextureManager* textureManager_ = nullptr;
 	//レベルデータ管理クラス
-	Ellysia::LevelDataManager* levelDataManager_ = nullptr;
+	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
 
 	//モデル管理クラス
-	Ellysia::ModelManager* modelManager_ = nullptr;
+	Elysia::ModelManager* modelManager_ = nullptr;
 	//グローバル変数クラス
-	Ellysia::GlobalVariables* globalVariables_ = nullptr;
+	Elysia::GlobalVariables* globalVariables_ = nullptr;
 	
 private:
 	//調整項目
 	//点光源
-	const std::string POINT_LIGHT_NAME = "LoseScenePointLight";
+	const std::string POINT_LIGHT_NAME_ = "LoseScenePointLight";
 	//ディゾルブ
 	const std::string DISSOLVE_NAME_ = "LoseSceneDissolve";
 
@@ -147,82 +157,87 @@ private:
 	//点滅どのくらい
 	const uint32_t FLASH_TIME_LIMIT_ = 30u;
 
-	//高速点滅どのくらい
-	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60u;
+	
 	//高速点滅間隔
 	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
 	//タイトルに変わる時間
 	const uint32_t CHANGE_TO_TITLE_TIME_ = 60 * 1;
-
-
+	//増える時間の値
+	const uint32_t INCREASE_VALUE_ = 1u;
+	//線形補間で使う変数の最大値
+	const float MAX_T_VALUE_ = 1.0f;
 	//最大の半径
 	const float MAX_LIGHT_RADIUS_ = 11.8f;
-	
+	//矢印の回転
+	const float ROTATE_VALUE_ = 0.1f;
 
+	//テキストの名前
+	//矢印
+	const std::string SELECT_ARROW = "SelectArrow";
+	//ゲーム
+	const std::string TO_GAME = "ToGame";
+	//タイトル
+	const std::string TO_TITLE = "ToTitle";
+	
 private:
 	//カメラ
 	Camera camera_ = {};
 	//速度
 	Vector3 cameraVelocity_ = {};
-	//移動時間
-	float cameraMoveTime_ = 0.0f;
 
-
-	//マテリアル
-	Material material_ = {};
 	//点光源
 	PointLight pointLight_ = {};
 	//半径の線形補間
-	float lightRadiusT_ = 0.0f;
+	float startLightUpT_ = 0.0f;
+	float endLightUpT_ = 0.0f;
 
 	//背景(ポストエフェクト)
-	std::unique_ptr<Ellysia::BackTexture>backTexture_ = nullptr;
+	std::unique_ptr<Elysia::BackTexture>backTexture_ = nullptr;
 	//ディゾルブ
-	std::unique_ptr<Ellysia::DissolvePostEffect> dissolveEffect_ = nullptr;
+	std::unique_ptr<Elysia::DissolvePostEffect> dissolveEffect_ = nullptr;
 	Dissolve dissolve_ = {};
-
-	//テキスト
-	std::unique_ptr<Ellysia::Sprite> text_ = nullptr;
 	//黒背景
-	std::unique_ptr<Ellysia::Sprite> black_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> black_ = nullptr;
 	//透明度
 	float transparency_ = 0.0f;
 	
-	//見せる番号
-	uint32_t textDisplayCount_ = 0u;
-
 	//暗転している時間
 	uint32_t blackOutTime_ = 0u;
 
-	//Bトリガー
-	uint32_t bTriggerTime_ = 0u;
-	//フラグ
-	bool isBTrigger_ = false;
 	//タイトル
-	bool isReturnTitle = false;
+	bool isChangeNextScene_ = false;
 	float returnToTitleDissolveThresholdT_ = 0.0f;
-
-
-
-	//点滅
-	bool isFlash_ = false;
-	//時間
-	uint32_t flashTime_ = 0u;
 	
+	//選択中
+	//タイトル
+	bool isSelectingTitle_ = false;
+	//ゲーム
+	bool isSelectingGame_ = true;
+	
+	//選択時のスケール
+	float selectedScale_ = 1.5f;
+
+	//テキストの透明度
+	float textTransparency_ = 0.0f;
+	float transparencyT_ = 0.0f;
+	bool displayText_ = false;
+	
+	//矢印の回転
+	float arrowRotate_ = 0.0f;
+	//決定したときの線形補間
+	float arrowDropT_ = 0.0f;
+
+	//決定時の動きに使うθ
+	float decideArrowMoveTheta_ = 0.0f;
 
 	//高速点滅
 	bool isFastFlash_ = false;
-	
 	//時間
-	uint32_t fastFlashTime_ = 0u;
+	uint32_t waitForCameraMoveTime_ = 0u;
 
 	
 	//ライトアップが終わったかどうか
 	bool isFinishLightUp_ = false;
-	
-	//ゲームに戻るかどうか
-	bool isReturnToGame_ = false;
-
 
 
 };

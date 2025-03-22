@@ -18,11 +18,17 @@
 
 //Material...色など三角形の表面の材質を決定するもの
 struct Material{
+    //色
     float4 color;
+    //ライティングの設定
     int enableLighting;
+    //UVトランスフォーム
     float4x4 uvTransform;
     //光沢度
     float shininess;
+    //環境光の強さ
+    float ambientIntensity;
+    //環境マップ
     bool isEnviromentMap;
 };
 
@@ -111,7 +117,6 @@ struct PixelShaderOutput{
 PixelShaderOutput main(VertexShaderOutput input){
     PixelShaderOutput output;
 	
-    float3 camera = gCamera.worldPosition;
 	
 	//Materialを拡張する
     float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
@@ -121,7 +126,7 @@ PixelShaderOutput main(VertexShaderOutput input){
         discard;
     }
 	
-	//DirectionalLightingする場合
+	//DirectionalLight
     if (gMaterial.enableLighting == 1){
 	
 		//このままdotだと[-1,1]になる。
@@ -239,7 +244,7 @@ PixelShaderOutput main(VertexShaderOutput input){
         float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
 		
 		//Cameraへの方向を算出
-        float3 toEye = normalize(gCamera.worldPosition - normalize(input.worldPosition));
+        float3 toEye = normalize(normalize(gCamera.worldPosition) - normalize(input.worldPosition));
 		//入射光の反射ベクトルを求める
         float3 reflectLight = reflect(gSpotLight.position, normalize(input.normal));
 		
@@ -259,39 +264,33 @@ PixelShaderOutput main(VertexShaderOutput input){
         float cosAngle = dot(spotLightDirectionOnSurface, gSpotLight.direction);
         float falloffFactor = saturate((cosAngle - gSpotLight.cosAngle) / (gSpotLight.cosFallowoffStart - gSpotLight.cosAngle));
 		
+        // 環境光
+        float3 ambientLight = gMaterial.color.rgb * textureColor.xyz * 0.07f;
 		
         float3 diffuseSpotLight = gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * cos * gSpotLight.intensity;
         float3 specularSpotLight = gSpotLight.color.rgb * gSpotLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f);
         float3 offset = { gSpotLight.aroundOffset, gSpotLight.aroundOffset, gSpotLight.aroundOffset };
-        //float3 offset = { 0.004f, 0.004f, 0.004f };
+
         //通常はこっち
-        if (gMaterial.isEnviromentMap == false)
-        {
-            
-            output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor + offset;
+        if (gMaterial.isEnviromentMap == false){
+            output.color.rgb = ambientLight + (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor + offset;
             output.color.a = gMaterial.color.a * textureColor.a;
 
         }
 		//環境マップ
-        if (gMaterial.isEnviromentMap == true)
-        {
+        if (gMaterial.isEnviromentMap == true){
             float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
             float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
             float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
 
             output.color.rgb = (enviromentColor.rgb) * ((diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor+offset);
             output.color.a = gMaterial.color.a * textureColor.a;
-		
         }
-        
     }
-    else
-    {
+    else{
 		//Lightingしない場合
         output.color = gMaterial.color * textureColor;
     }
-
-	
-	
+    
     return output;
 }

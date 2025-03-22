@@ -1,4 +1,6 @@
 #include "EnemyManager.h"
+
+#include <imgui.h>
 #include <random>
 #include <cassert>
 
@@ -6,14 +8,26 @@
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
 #include "Input.h"
+#include "Audio.h"
 #include "LevelDataManager.h"
 
 
+#include "StrongEnemy/State/StrongEnemyNoneMove.h"
+#include "StrongEnemy/State/StrongEnemyMove.h"
+#include "StrongEnemy/State/StrongEnemyTracking.h"
 
+#include "NormalEnemy/State/NormalEnemyNoneMove.h"
+#include "NormalEnemy/State/NormalEnemyMove.h"
+#include "NormalEnemy/State/NormalEnemyPreTracking.h"
+#include "NormalEnemy/State/NormalEnemyAttack.h"
+#include <CollisionCalculation.h>
 
 EnemyManager::EnemyManager(){
-	//レベルデータ管理クラスの取得
-	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	//インスタンスの取得
+	//レベルデータ管理クラス
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 
@@ -23,17 +37,13 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	assert(player_!=nullptr);
 	assert(levelDataManager_ != nullptr);
 
-
 	//モデルハンドルを代入
 	//通常
 	normalEnemyModelHandle_ = normalEnemyModel;
 	//強敵
 	strongEnemyModelHandle_ = strongEnemyModel;
 
-
-
-	//CSVManagerクラスとか作ってまとめた方が賢いかも
-	//まとめたいね
+	//ファイルを開ける
 	std::ifstream file;
 	file.open(csvPath);
 	//開かなかったら止まる
@@ -48,7 +58,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	std::string line;
 
 
-	//コマンド実行ループ
+	//CSV読み込み
 	while (std::getline(enemyPositionsFromCSV_, line)) {
 
 		//1行分の文字列をストリームに変換して解析しやすくする
@@ -107,21 +117,13 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 
 	}
 
-
-
-
 	//接近BGMの設定
-	audio_ = Ellysia::Audio::GetInstance();
 	audioHandle_ = audio_->Load("Resources/Audio/Enemy/TrackingToPlayer.mp3");
 }
 
-
-
-
-
 void EnemyManager::DeleteEnemy(){
 	//敵が生存していなかったら消す
-	enemies_.remove_if([](const std::unique_ptr<Enemy>& enemy) {
+	enemies_.remove_if([](const std::unique_ptr<NormalEnemy>& enemy) {
 		//スマートポインタの場合はこれだけで良いよ
 		//勿論こっちもdeleteが無くなってすっきりだね!
 		return enemy->GetIsDeleted();
@@ -132,39 +134,31 @@ void EnemyManager::StopAudio(){
 	audio_->Stop(audioHandle_);
 }
 
-
 void EnemyManager::GenerateNormalEnemy(const Vector3& position) {
 	//通常の敵の生成
-	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
+	std::unique_ptr<NormalEnemy> enemy = std::make_unique<NormalEnemy>();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 	std::uniform_real_distribution<float> speedDistribute(-0.001f, 0.001f);
 
-	
 	//スピード決め
-	Vector3 speed = { .x = speedDistribute(randomEngine),.y = 0.0f,.z = speedDistribute(randomEngine) };
+	Vector3 speed = { .x = -0.8f,.y = 0.0f,.z = speedDistribute(randomEngine) };
 
 	//初期化
 	enemy->Initialize(normalEnemyModelHandle_, position,speed );
 	enemies_.push_back(std::move(enemy));
 }
 
-
 void EnemyManager::GenerateStrongEnemy(const Vector3& position){
-	//強敵の生成
+	////強敵の生成
 	std::unique_ptr<StrongEnemy> enemy = std::make_unique<StrongEnemy>();
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
-
-
-
+	
 	//スピード(方向)を決める
 	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
-	speedDistribute;
-	Vector3 speed = {.x= 0.01f,.y= 0.0f,.z= 0.00f };
-
-
-
+	Vector3 speed = {.x= speedDistribute(randomEngine),.y = 0.0f,.z = speedDistribute(randomEngine) };
+	
 	//初期化
 	enemy->Initialize(strongEnemyModelHandle_, position, speed);
 	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
@@ -173,7 +167,6 @@ void EnemyManager::GenerateStrongEnemy(const Vector3& position){
 }
 
 void EnemyManager::Update(){
-
 
 	//接近するときの距離
 	const float TRACKING_START_DISTANCE_ = 15.0f;
@@ -184,190 +177,160 @@ void EnemyManager::Update(){
 	//最小の距離
 	const float MINIMUM_DISTANCE = 2.0f;
 	
-
-
 	//通常の敵
-	for (const std::unique_ptr <Enemy>& enemy : enemies_) {
-		//プレイヤーの位置を設定
-		enemy->SetPlayerPosition(playerPosition);
+	for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
+		
+		//現在の状態
+		std::string currentState = enemy->GetCurrentStateName();
 
-
-		//更新
-		enemy->Update();
-
-		//AABB
-		AABB enemyAABB = enemy->GetAABB();
 
 		//移動中の時
-		if (enemy->GetCondition() == EnemyCondition::Move) {
-
-			#pragma region ステージオブジェクト
-
+		if (currentState == "Move") {
 
 			//レベルエディタから持ってくる
-			//座標
-			std::vector<Vector3> positions = levelDataManager_->GetStageObjectPositions(levelDataHandle_);
 			//AABB
-			std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelDataHandle_);
+			std::vector<AABB> aabbs = levelDataManager_->GetObjectAABBs(levelDataHandle_,"Stage");
 			//コライダーを持っているかどうか
-			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_);
-			//衝突判定
-			for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
+			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_,"Stage");
+			
+			//衝突めり込み防止処理
+			for (size_t i = 0; i <  aabbs.size(); ++i) {
 
-				
-				//AABBを取得
-				AABB objectAABB = aabbs[i];
-				//位置を取得
-				Vector3 objectPosition = positions[i];
-
+				//オブジェクトのAABB
+				AABB objectAABB = aabbs[i];  
+				// AABBを取得
+				AABB enemyAABB = enemy->GetAABB();
 
 				//お互いのAABBが接触している場合
-				if (((enemyAABB.max.x > objectAABB.min.x) && (enemyAABB.min.x < objectAABB.max.x)) &&
-					((enemyAABB.max.z > objectAABB.min.z) && (enemyAABB.min.z < objectAABB.max.z))) {
-					//オブジェクトとの差分ベクトル
-					Vector3 defference = VectorCalculation::Subtract(objectPosition, enemy->GetWorldPosition());
-					//正規化
-					Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
+				if (CollisionCalculation::IsCollisionAABBPair(enemyAABB,objectAABB)&&
+					colliders[i]==true) {
+					
+					
+					
+
+					// 敵とオブジェクトの中心座標を計算
+					Vector3 objectCenter = VectorCalculation::Add(objectAABB.min , objectAABB.max);
+					objectCenter.x += 0.5f;
+					objectCenter.y += 0.5f;
+					objectCenter.z += 0.5f;
 
 
-					//敵の向いている方向
-					Vector3 enemyDirection = enemy->GetDirection();
+					// X軸とZ軸の距離を計算
+					//float distanceX = abs(enemy->GetWorldPosition().x - objectCenter.x);
+					//float distanceZ = abs(enemy->GetWorldPosition().z - objectCenter.z);
 
-					//前にある場合だけ計算
-					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
+					// X軸とZ軸の距離を計算
+					float distanceX = std::min<float>(abs(enemyAABB.max.x - objectAABB.min.x), abs(enemyAABB.min.x - objectAABB.max.x));
+					float distanceZ = std::min<float>(abs(enemyAABB.max.z - objectAABB.min.z), abs(enemyAABB.min.z - objectAABB.max.z));
 
-					//進行方向上にあるときだけ計算する
-					if (dot > FRONT_DOT) {
+					//前の座標
+					Vector3 enemyPrePosition = enemy->GetWorldPosition();
 
-						//差分ベクトルのXとZの大きさを比べ
-						//値が大きい方で反転させる
-						float defferenceValueX = std::abs(defference.x);
-						float defferenceValueZ = std::abs(defference.z);
+					// 衝突した時の反転処理
+					if (distanceX < distanceZ) {
+						// X軸の距離が短い → X軸の反転
+						enemy->GetCurrentState()->InverseDirectionX();
 
-
-						//X軸反転
-						if (defferenceValueX >= defferenceValueZ) {
-							enemy->InvertSpeedX();
+						// X軸の押し戻し処理
+						float pushBackDistance = 0.1f;
+						
+						if (enemyPrePosition.x < objectCenter.x) {
+							enemy->SetTranslate({ enemyAABB.min.x - pushBackDistance, enemyPrePosition.y, enemyPrePosition.z });
 						}
-						//Z軸反転
 						else {
-							enemy->InvertSpeedZ();
+							enemy->SetTranslate({ enemyAABB.max.x + pushBackDistance, enemyPrePosition.y, enemyPrePosition.z });
 						}
-
-
-
-#ifdef _DEBUG
-						ImGui::Begin("DemoObjectEnemy");
-						ImGui::InputFloat("Dot", &dot);
-						ImGui::InputFloat3("defference", &defference.x);
-						ImGui::InputFloat("defferenceValueX", &defferenceValueX);
-						ImGui::InputFloat("defferenceValueZ", &defferenceValueZ);
-						ImGui::End();
-#endif // _DEBUG
-
 					}
+					else {
+						// Z軸の距離が短い → Z軸の反転
+						enemy->GetCurrentState()->InverseDirectionZ();
+
+						// Z軸の押し戻し処理
+						float pushBackDistance = 0.1f;
+						if (enemyPrePosition.z < objectCenter.z) {
+							enemy->SetTranslate({ enemyPrePosition.x, enemyPrePosition.y, enemyAABB.min.z - pushBackDistance });
+						}
+						else {
+							enemy->SetTranslate({ enemyPrePosition.x, enemyPrePosition.y, enemyAABB.max.z + pushBackDistance });
+						}
+					}
+
+
+
+					
 				}
 			}
-			#pragma endregion
 		}
+
+
+
+		//プレイヤーの位置を設定
+		enemy->SetPlayerPosition(playerPosition);
+		//更新
+		enemy->Update();
 	}
 	
 	//現在の敵の数
 	uint32_t enemyAmount = static_cast<uint32_t>(enemies_.size());
-
 	//1体だけの時
 	const uint32_t ONLY_ONE = 1u;
-
-	//敵同士の衝突判定をやる必要が無いからね
+	//敵同士の判定をやる必要が無いからね
 	if (enemyAmount == ONLY_ONE) {
-		for (const std::unique_ptr <Enemy>& enemy : enemies_) {
+		for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 			//状態
-			uint32_t condition = enemy->GetCondition();
-
-
+			std::string currentState = enemy->GetCurrentStateName();
 			//向き
 			Vector3 enemyDirection = enemy->GetDirection();
 
-
-			//敵
-			AABB enemyAABB = enemy->GetAABB();
-
-
 			//プレイヤーと敵の差分ベクトル
-			//対象にするものがプレイヤーなのでプレイヤーから引いてね
 			Vector3 defference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
 			//距離
 			float defferenceDistance = SingleCalculation::Length(defference);
-			//正射影ベクトル
-			Vector3 projectDifference = VectorCalculation::Project(defference, enemyDirection);
-			//差分の正規化
-			Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
-			//内積の計算
-			float dot = SingleCalculation::Dot(normalizedDefference, enemyDirection);
-
 			
-			
-
-			//後頭部に目がついているわけではないからね
-			if (dot > FRONT_DOT) {
-
-				//追跡開始距離以内になったら追跡準備に移行
-				if ((defferenceDistance < TRACKING_START_DISTANCE_ && defferenceDistance>ATTACK_START_DISTANCE_)
-					&& condition == EnemyCondition::Move) {
-
-					//前の状態を保存
-					enemy->SetPreCondition(condition);
-
-					//現在の状態を保存
-					uint32_t newCondition = EnemyCondition::PreTracking;
-					enemy->SetPlayerPosition(playerPosition);
-					enemy->SetCondition(newCondition);
-				}
-
-				//追跡している時
-				//追跡開始距離より短い時
-				if (defferenceDistance <= ATTACK_START_DISTANCE_ && condition == EnemyCondition::Tracking) {
-					//前の状態を保存
-					enemy->SetPreCondition(condition);
-
-					//現在の状態を保存
-					uint32_t newCondition = EnemyCondition::Attack;
-					enemy->SetCondition(newCondition);
-				}
-				//攻撃中にプレイヤーが離れた時
-				if (defferenceDistance > ATTACK_START_DISTANCE_ && condition == EnemyCondition::Attack) {
-					//前の状態を保存
-					enemy->SetPreCondition(condition);
-
-					//現在の状態を保存
-					uint32_t newCondition = EnemyCondition::Move;
-					enemy->SetCondition(newCondition);
-				}
+			//通常の動き
+			if (currentState == "Move") {
 				
+				//差分の正規化
+				Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
+				//内積の計算
+				float dot = SingleCalculation::Dot(normalizedDefference, enemyDirection);
+
+				//前方にいたら行動
+				if (defferenceDistance < TRACKING_START_DISTANCE_ &&
+					dot > FRONT_DOT_) {
+					//追跡準備へ
+					//enemy->ChengeState(std::make_unique<NormalEnemyPreTracking>());
+				}
+			}
+			//追跡
+			else if (currentState == "Tracking") {
+				if (defferenceDistance <= ATTACK_START_DISTANCE_) {
+					//攻撃
+					enemy->ChengeState(std::make_unique<NormalEnemyAttack>());
+				}
 
 			}
-			//前方にいなければ強制的にMove
-			else {
-				//前の状態を保存
-				enemy->SetPreCondition(condition);
-				//現在の状態を保存
-				uint32_t newCondition = EnemyCondition::Move;
-				enemy->SetCondition(newCondition);
+			//攻撃
+			else if (currentState == "Attack") {
+				//攻撃中にプレイヤーが離れた時
+				if (defferenceDistance > ATTACK_START_DISTANCE_) {
+					//通常の動き
+					enemy->ChengeState(std::make_unique<NormalEnemyMove>());
+				}
 			}
+
 
 		}
 	}
 
 	//1体より多い時
 	if (enemyAmount > ONLY_ONE) {
-		for (auto it1 = enemies_.begin(); it1 != enemies_.end(); ++it1) {
+		for (std::list<std::unique_ptr<NormalEnemy>>::iterator it1 = enemies_.begin(); it1 != enemies_.end(); ++it1) {
 
 			//比較する数
 			const uint32_t COMPARE_NUMBER = 2u;
-
 			//元となる敵
 			const uint32_t BASE_ENEMY = 0u;
-
 			//比較する敵
 			const uint32_t COMPARE_ENEMY = 1u;
 
@@ -383,8 +346,7 @@ void EnemyManager::Update(){
 
 			//敵同士の内積
 			float enemyAndEnemyDot = 0.0f;
-
-			for (auto it2 = enemies_.begin(); it2 != enemies_.end(); ++it2) {
+			for (std::list<std::unique_ptr<NormalEnemy>>::iterator it2 = enemies_.begin(); it2 != enemies_.end(); ++it2) {
 
 				//it1とit2が一致した場合は計算をせずに次のループへ
 				if (it1 == it2) {
@@ -413,117 +375,80 @@ void EnemyManager::Update(){
 					//次のループで上書きされないようにbreakさせるよ！
 					break;
 				}
-
-
-				
 			}
 
 			//現在の状態
-			uint32_t condition = (*it1)->GetCondition();
-
+			std::string currentState = (*it1)->GetCurrentStateName();
 			//プレイヤーとの差分
 			Vector3 playerEnemyDifference = VectorCalculation::Subtract(playerPosition, (*it1)->GetWorldPosition());
 			//プレイヤーとの距離 
 			float playerEnemyDistance = SingleCalculation::Length(playerEnemyDifference);
 
-			
-
-
-
-			//前方にいた場合
-			if (enemyAndEnemyDot >= FRONT_DOT && condition == EnemyCondition::Move) {
-				//接触した場合止まる
-				if ((aabb[0].min.x < aabb[1].max.x && aabb[0].max.x > aabb[1].min.x) &&
-					(aabb[0].min.y < aabb[1].max.y && aabb[0].max.y > aabb[1].min.y) &&
-					(aabb[0].min.z < aabb[1].max.z && aabb[0].max.z > aabb[1].min.z)) {
-					uint32_t newCondition = EnemyCondition::NoneMove;
-					(*it1)->SaveSpeed();
-					//前の状態を保存
-					(*it1)->SetPreCondition(condition);
-					//状態の変更
-					(*it1)->SetCondition(newCondition);
-					
-					continue;
-				}
-				//接触していない場合
-				else {
-					uint32_t newCondition = EnemyCondition::Move;
-					
-					//前の状態を保存
-					(*it1)->SetPreCondition(condition);
-					//状態の変更
-					(*it1)->SetCondition(newCondition);
+			//動いていない場合
+			if (currentState == "NoveMove") {
+				//同じ敵が前方にいない場合
+				if (enemyAndEnemyDot < FRONT_DOT_) {
+					//通常の動き
+					(*it1)->ChengeState(std::make_unique<NormalEnemyMove>());
 				}
 			}
-			//動いていない場合
-			else if (condition == EnemyCondition::NoneMove) {
+			//動いている場合
+			else if (currentState == "Move") {
+				//同じ敵が前方にいた場合
+				if (enemyAndEnemyDot >= FRONT_DOT_) {
+					//接触した場合止まる
+					if ((aabb[BASE_ENEMY].min.x < aabb[COMPARE_ENEMY].max.x && aabb[BASE_ENEMY].max.x > aabb[COMPARE_ENEMY].min.x) &&
+						(aabb[BASE_ENEMY].min.y < aabb[COMPARE_ENEMY].max.y && aabb[BASE_ENEMY].max.y > aabb[COMPARE_ENEMY].min.y) &&
+						(aabb[BASE_ENEMY].min.z < aabb[COMPARE_ENEMY].max.z && aabb[BASE_ENEMY].max.z > aabb[COMPARE_ENEMY].min.z)) {
+						//通常の動き
+						(*it1)->ChengeState(std::make_unique<NormalEnemyNoneMove>());
 
-				//前方にいない場合
-				if (enemyAndEnemyDot < 0.8f) {
-					uint32_t preCondition = EnemyCondition::NoneMove;
-					uint32_t newCondition = EnemyCondition::Move;
-					//動き出す
-					(*it1)->MoveAgain();
-
-					//前の状態を保存
-					(*it1)->SetPreCondition(preCondition);
-					//状態の変更
-					(*it1)->SetCondition(newCondition);
-
+						continue;
+					}
+					//接触していない場合
+					else {
+						//通常の動き
+						(*it1)->ChengeState(std::make_unique<NormalEnemyMove>());
+					}
 				}
-				
+				//プレイヤーが
+				if (playerEnemyDistance <= TRACKING_START_DISTANCE_) {
+					//追跡準備へ
+					//(*it1)->ChengeState(std::make_unique<NormalEnemyPreTracking>());
+				}
 
+			}
+			else if (currentState == "Tracking") {
+				if (playerEnemyDistance > TRACKING_START_DISTANCE_) {
+					//通常の動き
+					(*it1)->ChengeState(std::make_unique<NormalEnemyMove>());
+				}
+			}
+			//攻撃時
+			else if (currentState == "Attack") {
+				//攻撃開始距離より遠くなったら通常の動き
+				if (playerEnemyDistance > ATTACK_START_DISTANCE_) {
+					//通常の動き
+					(*it1)->ChengeState(std::make_unique<NormalEnemyMove>());
+				}
 			}
 			//前方にいない場合
 			else {
-				if (playerEnemyDistance > TRACKING_START_DISTANCE_) {
-					uint32_t newCondition = EnemyCondition::Move;
-
-					//前の状態を保存
-					(*it1)->SetPreCondition(condition);
-
-					//状態の変更
-					(*it1)->SetCondition(newCondition);
-				}
-
-
-				//設定した値より短くなったら接近開始
-				if (condition == EnemyCondition::Move) {
-					if (playerEnemyDistance <= TRACKING_START_DISTANCE_) {
-						//前回のMove状態を記録
-						uint32_t preCondition = condition;
-						(*it1)->SetPreCondition(preCondition);
-
-						//状態を記録
-						condition = EnemyCondition::PreTracking;
-						(*it1)->SetCondition(condition);
-					}
-				}
-
+				
 				//追跡の時に
-				if (condition == EnemyCondition::Tracking) {
+				if (currentState == "Tracking") {
 					//Moveへ
 					if (playerEnemyDistance > TRACKING_START_DISTANCE_) {
-						//前回のMove状態を記録
-						uint32_t preCondition = condition;
-						(*it1)->SetPreCondition(preCondition);
-
-						//状態を記録
-						condition = EnemyCondition::Move;
-						(*it1)->SetCondition(condition);
+						//通常の動き
+						(*it1)->ChengeState(std::make_unique<NormalEnemyMove>());
 
 					}
 
 					//設定した値より短くなったら攻撃開始
 					if (playerEnemyDistance <= ATTACK_START_DISTANCE_ &&
 						MINIMUM_DISTANCE < playerEnemyDistance) {
-						//前回のMove状態を記録
-						uint32_t preCondition = condition;
-						(*it1)->SetPreCondition(preCondition);
-
-						//状態を記録
-						condition = EnemyCondition::Attack;
-						(*it1)->SetCondition(condition);
+						//通常の動き
+						(*it1)->ChengeState(std::make_unique<NormalEnemyMove>());
 
 					}
 				}
@@ -539,25 +464,20 @@ void EnemyManager::Update(){
 		strongEnemy->SetPlayerPosition(playerPosition);
 
 		//AABBの取得
+		//通常
 		AABB strongEnemyAABB = strongEnemy->GetAABB();
-
-
-		//AABB
+		//強敵
 		AABB enemyAABB = strongEnemy->GetAABB();
 
 		//移動中の時
 		if (strongEnemy->GetCondition() == EnemyCondition::Move) {
-
-#pragma region ステージオブジェクト
-
-
 			//レベルエディタから持ってくる
 			//座標
-			std::vector<Vector3> positions = levelDataManager_->GetStageObjectPositions(levelDataHandle_);
+			std::vector<Vector3> positions = levelDataManager_->GetObjectPositions(levelDataHandle_,"Stage");
 			//AABB
-			std::vector<AABB> aabbs = levelDataManager_->GetStageObjectAABBs(levelDataHandle_);
+			std::vector<AABB> aabbs = levelDataManager_->GetObjectAABBs(levelDataHandle_,"Stage");
 			//コライダーを持っているかどうか
-			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_);
+			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_, "Stage");
 			//衝突判定
 			for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
 
@@ -584,7 +504,7 @@ void EnemyManager::Update(){
 					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
 
 					//進行方向上にあるときだけ計算する
-					if (dot > FRONT_DOT) {
+					if (dot > FRONT_DOT_) {
 
 						//差分ベクトルのXとZの大きさを比べ
 						//値が大きい方で反転させる
@@ -594,20 +514,16 @@ void EnemyManager::Update(){
 
 						//X軸反転
 						if (defferenceValueX >= defferenceValueZ) {
-							strongEnemy->InvertSpeedX();
+							strongEnemy->InvertDirectionX();
 						}
 						//Z軸反転
 						else {
-							strongEnemy->InvertSpeedZ();
+							strongEnemy->InvertDirectionZ();
 						}
 					}
 				}
 
 			}
-
-
-
-#pragma endregion
 		}
 
 		//差分を求める
@@ -640,14 +556,6 @@ void EnemyManager::Update(){
 
 
 
-		//Panの処理
-		//方向からPanを振る
-		//基本左右だけなのでX軸成分だけとる
-		//まだ不具合があるので後ほど修正
-		float pan = directionToPlayer.x;
-		pan;
-		//audio_->SetPan(audioHandle_, pan);
-
 #ifdef _DEBUG
 		ImGui::Begin("強敵");
 		ImGui::InputFloat("距離", &volume);
@@ -658,31 +566,22 @@ void EnemyManager::Update(){
 #endif // _DEBUG
 
 
-
-
-
 		//設定した距離より小さくなると追跡
 		if (playerStrongEnemyDistance <= STRONG_ENEMY_TRACKING_START_DISTANCE_) {
 			//追跡に移行
-			uint32_t newCondition = EnemyCondition::Tracking;
-			strongEnemy->SetCondition(newCondition);
+			strongEnemy->ChangeState(std::make_unique<StrongEnemyTracking>());
 		}
 		else {
 			//通常の動きに移行
-			uint32_t newCondition = EnemyCondition::Move;
-			strongEnemy->SetCondition(newCondition);
+			strongEnemy->ChangeState(std::make_unique<StrongEnemyMove>());
 		}
-
-
-
-
 	}
 }
 
 void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 
 	//描画(通常)
-	for (const std::unique_ptr <Enemy>& enemy : enemies_) {
+	for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 		enemy->Draw(camera,spotLight);
 	}
 

@@ -20,7 +20,7 @@
     <ProjectGuid>{cf451278-00c1-4d36-95d3-b55ae87e0973}</ProjectGuid>
     <RootNamespace>CG21</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Ellysia_3.0</ProjectName>
+    <ProjectName>Elysia_3.0</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -73,7 +73,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Manager\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\Manager\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Ellysia\Manager\GameManager;$(ProjectDir)Ellysia\Manager\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Manager\RtvManager;$(ProjectDir)Ellysia\Polygon\PostEffect\BackTest;$(ProjectDir)Ellysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Ellysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Ellysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Ellysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Ellysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Ellysia\Polygon\PostEffect\Vignette;$(ProjectDir)Ellysia\Polygon\PostEffect\BoxFilter;$(ProjectDir)Ellysia\Polygon\PostEffect\GaussianFilter;$(ProjectDir)Project;$(ProjectDir)Ellysia\Math\Single;$(ProjectDir)Ellysia\Manager\LevelDataManager;$(ProjectDir)Ellysia\Material;$(ProjectDir)Ellysia\Manager\CollisionManager;$(ProjectDir)Project\CollisionConfig;$(ProjectDir)Ellysia\StringOption;$(ProjectDir)Ellysia\Math\Easing;$(ProjectDir)Ellysia\GlobalVariables;$(ProjectDir)Ellysia\Framework;$(ProjectDir)Ellysia\EffectData\Dissolve</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Elysia\Audio;$(ProjectDir)Elysia\Lighting;$(ProjectDir)Elysia\Manager\ModelManager;$(ProjectDir)External\assimp\include;$(ProjectDir)Elysia\AdjustmentItems;$(ProjectDir)Elysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Elysia\Camera;$(ProjectDir)Elysia\Manager\TextureManager;$(ProjectDir)Elysia\Polygon\2D\Sprite;$(ProjectDir)Elysia\Math\WorldTransform;$(ProjectDir)Elysia\Polygon\3D\Model;$(ProjectDir)Elysia\Math\Quaternion;$(ProjectDir)Elysia\Math\Matrix\Calculation;$(ProjectDir)Elysia\Math\Vector\Calculation;$(ProjectDir)Elysia\SrvManager;$(ProjectDir)Elysia\Math\Shape;$(ProjectDir)Elysia\Polygon\3D\ModelData;$(ProjectDir)Elysia\Polygon\3D\MaterialData;$(ProjectDir)Elysia\Math\Collision;$(ProjectDir)Elysia\Manager\GameManager;$(ProjectDir)Elysia\Manager\ImGuiManager;$(ProjectDir)Elysia\Math\Transform;$(ProjectDir)Elysia\Manager\AnimationManager;$(ProjectDir)Elysia\Polygon\3D\AnimationModel;$(ProjectDir)Elysia\Manager\SrvManager;$(ProjectDir)Elysia\Polygon\3D\Particle3D;$(ProjectDir)Elysia\Common\DirectX;$(ProjectDir)Elysia\Math\Matrix;$(ProjectDir)Elysia\Common\Windows;$(ProjectDir)Elysia\Math\Vector;$(ProjectDir)Elysia\Manager\PipelineManager;$(ProjectDir)Elysia\Manager\RtvManager;$(ProjectDir)Elysia\Polygon\PostEffect\BackTest;$(ProjectDir)Elysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Elysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Elysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Elysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Elysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Elysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Elysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Elysia\Polygon\PostEffect\Vignette;$(ProjectDir)Elysia\Polygon\PostEffect\BoxFilter;$(ProjectDir)Elysia\Polygon\PostEffect\GaussianFilter;$(ProjectDir)Project;$(ProjectDir)Elysia\Math\Single;$(ProjectDir)Elysia\Manager\LevelDataManager;$(ProjectDir)Elysia\Material\Dissolve;$(ProjectDir)Elysia\Material;$(ProjectDir)Elysia\Manager\CollisionManager;$(ProjectDir)Project\CollisionConfig;$(ProjectDir)Elysia\StringOption;$(ProjectDir)Elysia\Math\Easing;$(ProjectDir)Elysia\GlobalVariables;$(ProjectDir)Elysia\Framework;$(ProjectDir)Elysia\EffectData\Dissolve;$(ProjectDir)Elysia\Polygon\Particle;$(ProjectDir)Elysia\Math\PushBackCalculation;$(ProjectDir)Elysia\Convert</AdditionalIncludeDirectories>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -101,7 +101,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Manager\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\Manager\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Ellysia\Manager\GameManager;$(ProjectDir)Ellysia\Manager\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Manager\RtvManager;$(ProjectDir)Ellysia\Polygon\PostEffect\BackTest;$(ProjectDir)Ellysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Ellysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Ellysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Ellysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Ellysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Ellysia\Polygon\PostEffect\Vignette;$(ProjectDir)Ellysia\Polygon\PostEffect\BoxFilter;$(ProjectDir)Ellysia\Polygon\PostEffect\GaussianFilter;$(ProjectDir)Project;$(ProjectDir)Ellysia\Math\Single;$(ProjectDir)Ellysia\Manager\LevelDataManager;$(ProjectDir)Ellysia\Material;$(ProjectDir)Ellysia\Manager\CollisionManager;$(ProjectDir)Project\CollisionConfig;$(ProjectDir)Ellysia\StringOption;$(ProjectDir)Ellysia\Math\Easing;$(ProjectDir)Ellysia\GlobalVariables;$(ProjectDir)Ellysia\Framework;$(ProjectDir)Ellysia\EffectData\Dissolve</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Elysia\Audio;$(ProjectDir)Elysia\Lighting;$(ProjectDir)Elysia\Manager\ModelManager;$(ProjectDir)External\assimp\include;$(ProjectDir)Elysia\AdjustmentItems;$(ProjectDir)Elysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Elysia\Camera;$(ProjectDir)Elysia\Manager\TextureManager;$(ProjectDir)Elysia\Polygon\2D\Sprite;$(ProjectDir)Elysia\Math\WorldTransform;$(ProjectDir)Elysia\Polygon\3D\Model;$(ProjectDir)Elysia\Math\Quaternion;$(ProjectDir)Elysia\Math\Matrix\Calculation;$(ProjectDir)Elysia\Math\Vector\Calculation;$(ProjectDir)Elysia\SrvManager;$(ProjectDir)Elysia\Math\Shape;$(ProjectDir)Elysia\Polygon\3D\ModelData;$(ProjectDir)Elysia\Polygon\3D\MaterialData;$(ProjectDir)Elysia\Math\Collision;$(ProjectDir)Elysia\Manager\GameManager;$(ProjectDir)Elysia\Manager\ImGuiManager;$(ProjectDir)Elysia\Math\Transform;$(ProjectDir)Elysia\Manager\AnimationManager;$(ProjectDir)Elysia\Polygon\3D\AnimationModel;$(ProjectDir)Elysia\Manager\SrvManager;$(ProjectDir)Elysia\Polygon\3D\Particle3D;$(ProjectDir)Elysia\Common\DirectX;$(ProjectDir)Elysia\Math\Matrix;$(ProjectDir)Elysia\Common\Windows;$(ProjectDir)Elysia\Math\Vector;$(ProjectDir)Elysia\Manager\PipelineManager;$(ProjectDir)Elysia\Manager\RtvManager;$(ProjectDir)Elysia\Polygon\PostEffect\BackTest;$(ProjectDir)Elysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Elysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Elysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Elysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Elysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Elysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Elysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Elysia\Polygon\PostEffect\Vignette;$(ProjectDir)Elysia\Polygon\PostEffect\BoxFilter;$(ProjectDir)Elysia\Polygon\PostEffect\GaussianFilter;$(ProjectDir)Project;$(ProjectDir)Elysia\Math\Single;$(ProjectDir)Elysia\Manager\LevelDataManager;$(ProjectDir)Elysia\Material\Dissolve;$(ProjectDir)Elysia\Material;$(ProjectDir)Elysia\Manager\CollisionManager;$(ProjectDir)Project\CollisionConfig;$(ProjectDir)Elysia\StringOption;$(ProjectDir)Elysia\Math\Easing;$(ProjectDir)Elysia\GlobalVariables;$(ProjectDir)Elysia\Framework;$(ProjectDir)Elysia\EffectData\Dissolve;$(ProjectDir)Elysia\Polygon\Particle;$(ProjectDir)Elysia\Math\PushBackCalculation;$(ProjectDir)Elysia\Convert</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MaxSpeed</Optimization>
@@ -123,88 +123,95 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">
     <ClCompile>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;USE_IMGUI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Ellysia\Audio;$(ProjectDir)\Ellysia\Lighting;$(ProjectDir)Ellysia\Manager\ModelManager;$(ProjectDir)\External\assimp\include;$(ProjectDir)Ellysia\AdjustmentItems;$(ProjectDir)Ellysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Ellysia\Camera;$(ProjectDir)Ellysia\Manager\TextureManager;$(ProjectDir)Ellysia\Polygon\2D\Sprite;$(ProjectDir)Ellysia\Math\WorldTransform;$(ProjectDir)Ellysia\Polygon\3D\Model;$(ProjectDir)Ellysia\Math\Quaternion;$(ProjectDir)Ellysia\Math\Matrix\Calculation;$(ProjectDir)Ellysia\ConvertFunction\ConvertLog;$(ProjectDir)Ellysia\Math\Vector\Calculation;$(ProjectDir)Ellysia\SrvManager;$(ProjectDir)Ellysia\Math\Shape;$(ProjectDir)Ellysia\Polygon\3D\ModelData;$(ProjectDir)Ellysia\Polygon\3D\MaterialData;$(ProjectDir)Ellysia\ConvertFunction\CompileShader;$(ProjectDir)Ellysia\Math\Collision;$(ProjectDir)Ellysia\Manager\GameManager;$(ProjectDir)Ellysia\Manager\ImGuiManager;$(ProjectDir)Ellysia\Math\Transform;$(ProjectDir)Ellysia\Manager\AnimationManager;$(ProjectDir)Ellysia\Polygon\3D\AnimationModel;$(ProjectDir)Ellysia\Manager\SrvManager;$(ProjectDir)Ellysia\Polygon\3D\Particle3D;$(ProjectDir)Ellysia\Common\DirectX;$(ProjectDir)Ellysia\Math\Matrix;$(ProjectDir)Ellysia\Common\Windows;$(ProjectDir)Ellysia\Math\Vector;$(ProjectDir)Ellysia\Manager\PipelineManager;$(ProjectDir)Ellysia\Manager\RtvManager;$(ProjectDir)Ellysia\Polygon\PostEffect\BackTest;$(ProjectDir)Ellysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Ellysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Ellysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Ellysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Ellysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Ellysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Ellysia\Polygon\PostEffect\Vignette;$(ProjectDir)Ellysia\Polygon\PostEffect\BoxFilter;$(ProjectDir)Ellysia\Polygon\PostEffect\GaussianFilter;$(ProjectDir)Project;$(ProjectDir)Ellysia\Math\Single;$(ProjectDir)Ellysia\Manager\LevelDataManager;$(ProjectDir)Ellysia\Material;$(ProjectDir)Ellysia\Manager\CollisionManager;$(ProjectDir)Project\CollisionConfig;$(ProjectDir)Ellysia\StringOption;$(ProjectDir)Ellysia\Math\Easing;$(ProjectDir)Ellysia\GlobalVariables;$(ProjectDir)Ellysia\Framework;$(ProjectDir)Ellysia\EffectData\Dissolve</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Elysia\Audio;$(ProjectDir)Elysia\Lighting;$(ProjectDir)Elysia\Manager\ModelManager;$(ProjectDir)External\assimp\include;$(ProjectDir)Elysia\AdjustmentItems;$(ProjectDir)Elysia\Input;$(ProjectDir)Project\AllGameScene;$(ProjectDir)Elysia\Camera;$(ProjectDir)Elysia\Manager\TextureManager;$(ProjectDir)Elysia\Polygon\2D\Sprite;$(ProjectDir)Elysia\Math\WorldTransform;$(ProjectDir)Elysia\Polygon\3D\Model;$(ProjectDir)Elysia\Math\Quaternion;$(ProjectDir)Elysia\Math\Matrix\Calculation;$(ProjectDir)Elysia\Math\Vector\Calculation;$(ProjectDir)Elysia\SrvManager;$(ProjectDir)Elysia\Math\Shape;$(ProjectDir)Elysia\Polygon\3D\ModelData;$(ProjectDir)Elysia\Polygon\3D\MaterialData;$(ProjectDir)Elysia\Math\Collision;$(ProjectDir)Elysia\Manager\GameManager;$(ProjectDir)Elysia\Manager\ImGuiManager;$(ProjectDir)Elysia\Math\Transform;$(ProjectDir)Elysia\Manager\AnimationManager;$(ProjectDir)Elysia\Polygon\3D\AnimationModel;$(ProjectDir)Elysia\Manager\SrvManager;$(ProjectDir)Elysia\Polygon\3D\Particle3D;$(ProjectDir)Elysia\Common\DirectX;$(ProjectDir)Elysia\Math\Matrix;$(ProjectDir)Elysia\Common\Windows;$(ProjectDir)Elysia\Math\Vector;$(ProjectDir)Elysia\Manager\PipelineManager;$(ProjectDir)Elysia\Manager\RtvManager;$(ProjectDir)Elysia\Polygon\PostEffect\BackTest;$(ProjectDir)Elysia\Polygon\PostEffect\DepthBasedOutline;$(ProjectDir)Elysia\Polygon\PostEffect\Dissolve;$(ProjectDir)Elysia\Polygon\PostEffect\RandomEffect;$(ProjectDir)Elysia\Polygon\PostEffect\LuminanceBasedOutline;$(ProjectDir)Elysia\Polygon\PostEffect\RadialBlur;$(ProjectDir)Elysia\Polygon\PostEffect\GrayScale;$(ProjectDir)Elysia\Polygon\PostEffect\SepiaScale;$(ProjectDir)Elysia\Polygon\PostEffect\Vignette;$(ProjectDir)Elysia\Polygon\PostEffect\BoxFilter;$(ProjectDir)Elysia\Polygon\PostEffect\GaussianFilter;$(ProjectDir)Project;$(ProjectDir)Elysia\Math\Single;$(ProjectDir)Elysia\Manager\LevelDataManager;$(ProjectDir)Elysia\Material\Dissolve;$(ProjectDir)Elysia\Material;$(ProjectDir)Elysia\Manager\CollisionManager;$(ProjectDir)Project\CollisionConfig;$(ProjectDir)Elysia\StringOption;$(ProjectDir)Elysia\Math\Easing;$(ProjectDir)Elysia\GlobalVariables;$(ProjectDir)Elysia\Framework;$(ProjectDir)Elysia\EffectData\Dissolve;$(ProjectDir)Elysia\Polygon\Particle;$(ProjectDir)Elysia\Math\PushBackCalculation;$(ProjectDir)Elysia\Convert</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Ellysia\Audio\Audio.cpp" />
-    <ClCompile Include="Ellysia\Camera\Camera.cpp" />
-    <ClCompile Include="Ellysia\Common\DirectX\DirectXSetup.cpp" />
-    <ClCompile Include="Ellysia\Common\Windows\WindowsSetup.cpp" />
-    <ClCompile Include="Ellysia\ConvertFunction\CompileShader\CompileShaderManager.cpp" />
-    <ClCompile Include="Ellysia\ConvertFunction\ConvertColor\ConvertColor.cpp" />
-    <ClCompile Include="Ellysia\ConvertFunction\ConvertLog\ConvertLog.cpp" />
-    <ClCompile Include="Ellysia\EffectData\Dissolve\Dissolve.cpp" />
-    <ClCompile Include="Ellysia\Framework\Framework.cpp" />
-    <ClCompile Include="Ellysia\GlobalVariables\GlobalVariables.cpp" />
-    <ClCompile Include="Ellysia\Input\Input.cpp" />
-    <ClCompile Include="Ellysia\Lighting\DirectionalLight.cpp" />
-    <ClCompile Include="Ellysia\Lighting\PointLight.cpp" />
-    <ClCompile Include="Ellysia\Lighting\SpotLight.cpp" />
-    <ClCompile Include="Ellysia\Line\Line.cpp" />
-    <ClCompile Include="Ellysia\main.cpp" />
-    <ClCompile Include="Ellysia\Manager\AnimationManager\AnimationManager.cpp" />
-    <ClCompile Include="Ellysia\Manager\CollisionManager\CollisionManager.cpp" />
-    <ClCompile Include="Ellysia\Manager\GameManager\GameManager.cpp" />
-    <ClCompile Include="Ellysia\Manager\ImGuiManager\ImGuiManager.cpp" />
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\LevelDataManager.cpp" />
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.cpp" />
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.cpp" />
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditor.cpp" />
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditor.cpp" />
-    <ClCompile Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditorCollider.cpp" />
-    <ClCompile Include="Ellysia\Manager\ModelManager\Animation.cpp" />
-    <ClCompile Include="Ellysia\Manager\ModelManager\Joint.cpp" />
-    <ClCompile Include="Ellysia\Manager\ModelManager\ModelManager.cpp" />
-    <ClCompile Include="Ellysia\Manager\ModelManager\ReadNode.cpp" />
-    <ClCompile Include="Ellysia\Manager\ModelManager\Skeleton.cpp" />
-    <ClCompile Include="Ellysia\Manager\ModelManager\SkinCluster.cpp" />
-    <ClCompile Include="Ellysia\Manager\PipelineManager\PipelineManager.cpp" />
-    <ClCompile Include="Ellysia\Manager\RtvManager\RtvManager.cpp" />
-    <ClCompile Include="Ellysia\Manager\SrvManager\SrvManager.cpp" />
-    <ClCompile Include="Ellysia\Manager\TextureManager\TextureManager.cpp" />
-    <ClCompile Include="Ellysia\Material\Material.cpp" />
-    <ClCompile Include="Ellysia\Math\BPMCalculation\BPMSetting.cpp" />
-    <ClCompile Include="Ellysia\Math\Collision\CollisionCalculation.cpp" />
-    <ClCompile Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp" />
-    <ClCompile Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.cpp" />
-    <ClCompile Include="Ellysia\Math\Single\SingleCalculation.cpp" />
-    <ClCompile Include="Ellysia\Math\Vector\Calculation\VectorCalculation.cpp" />
-    <ClCompile Include="Ellysia\Math\WorldTransform\WorldTransform.cpp" />
-    <ClCompile Include="Ellysia\Polygon\2D\Sprite\Sprite.cpp" />
-    <ClCompile Include="Ellysia\Polygon\2D\Triangle\Triangle.cpp" />
-    <ClCompile Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.cpp" />
-    <ClCompile Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.cpp" />
-    <ClCompile Include="Ellysia\Polygon\3D\Model\Model.cpp" />
-    <ClCompile Include="Ellysia\Polygon\3D\Particle3D\Particle3D.cpp" />
-    <ClCompile Include="Ellysia\Polygon\3D\SkyBox\SkyBox.cpp" />
-    <ClCompile Include="Ellysia\Polygon\3D\Sphere\Sphere.cpp" />
-    <ClCompile Include="Ellysia\Polygon\PostEffect\BackTest\BackTexture.cpp" />
-    <ClCompile Include="Ellysia\Polygon\PostEffect\BoxFilter\BoxFilter.cpp" />
-    <ClCompile Include="Ellysia\Polygon\PostEffect\Dissolve\DissolveEffect.cpp" />
-    <ClCompile Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.cpp" />
-    <ClCompile Include="Ellysia\Polygon\PostEffect\GrayScale\GrayScale.cpp" />
-    <ClCompile Include="Ellysia\Polygon\PostEffect\LuminanceBasedOutline\LuminanceBasedOutline.cpp" />
-    <ClCompile Include="Ellysia\Polygon\PostEffect\RadialBlur\RadialBlur.cpp" />
-    <ClCompile Include="Ellysia\Polygon\PostEffect\RandomEffect\RandomEffect.cpp" />
-    <ClCompile Include="Ellysia\Polygon\PostEffect\SepiaScale\SepiaScale.cpp" />
-    <ClCompile Include="Ellysia\Polygon\PostEffect\Vignette\Vignette.cpp" />
-    <ClCompile Include="Ellysia\StringOption\StringOption.cpp" />
+    <ClCompile Include="Elysia\Audio\Audio.cpp" />
+    <ClCompile Include="Elysia\Camera\Camera.cpp" />
+    <ClCompile Include="Elysia\Common\DirectX\DirectXSetup.cpp" />
+    <ClCompile Include="Elysia\Common\Windows\WindowsSetup.cpp" />
+    <ClCompile Include="Elysia\Convert\Convert.cpp" />
+    <ClCompile Include="Elysia\Framework\Framework.cpp" />
+    <ClCompile Include="Elysia\GlobalVariables\GlobalVariables.cpp" />
+    <ClCompile Include="Elysia\Input\Input.cpp" />
+    <ClCompile Include="Elysia\Lighting\DirectionalLight.cpp" />
+    <ClCompile Include="Elysia\Lighting\PointLight.cpp" />
+    <ClCompile Include="Elysia\Lighting\SpotLight.cpp" />
+    <ClCompile Include="Elysia\Line\Line.cpp" />
+    <ClCompile Include="Elysia\main.cpp" />
+    <ClCompile Include="Elysia\Manager\AnimationManager\AnimationManager.cpp" />
+    <ClCompile Include="Elysia\Manager\CollisionManager\CollisionManager.cpp" />
+    <ClCompile Include="Elysia\Manager\GameManager\GameManager.cpp" />
+    <ClCompile Include="Elysia\Manager\ImGuiManager\ImGuiManager.cpp" />
+    <ClCompile Include="Elysia\Manager\LevelDataManager\LevelDataManager.cpp" />
+    <ClCompile Include="Elysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.cpp" />
+    <ClCompile Include="Elysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.cpp" />
+    <ClCompile Include="Elysia\Manager\LevelDataManager\Model\BaseObjectForLevelEditor.cpp" />
+    <ClCompile Include="Elysia\Manager\LevelDataManager\Model\StageObjectForLevelEditor.cpp" />
+    <ClCompile Include="Elysia\Manager\LevelDataManager\Model\StageObjectForLevelEditorCollider.cpp" />
+    <ClCompile Include="Elysia\Manager\ModelManager\Animation.cpp" />
+    <ClCompile Include="Elysia\Manager\ModelManager\Joint.cpp" />
+    <ClCompile Include="Elysia\Manager\ModelManager\ModelManager.cpp" />
+    <ClCompile Include="Elysia\Manager\ModelManager\ReadNode.cpp" />
+    <ClCompile Include="Elysia\Manager\ModelManager\Skeleton.cpp" />
+    <ClCompile Include="Elysia\Manager\ModelManager\SkinCluster.cpp" />
+    <ClCompile Include="Elysia\Manager\PipelineManager\PipelineManager.cpp" />
+    <ClCompile Include="Elysia\Manager\RtvManager\RtvManager.cpp" />
+    <ClCompile Include="Elysia\Manager\SrvManager\SrvManager.cpp" />
+    <ClCompile Include="Elysia\Manager\TextureManager\TextureManager.cpp" />
+    <ClCompile Include="Elysia\Material\Dissolve\Dissolve.cpp" />
+    <ClCompile Include="Elysia\Material\Material.cpp" />
+    <ClCompile Include="Elysia\Math\BPMCalculation\BPMSetting.cpp" />
+    <ClCompile Include="Elysia\Math\Collision\CollisionCalculation.cpp" />
+    <ClCompile Include="Elysia\Math\Matrix\Calculation\Matrix4x4Calculation.cpp" />
+    <ClCompile Include="Elysia\Math\PushBackCalculation\PushBackCalculation.cpp" />
+    <ClCompile Include="Elysia\Math\Quaternion\Calculation\QuaternionCalculation.cpp" />
+    <ClCompile Include="Elysia\Math\Single\SingleCalculation.cpp" />
+    <ClCompile Include="Elysia\Math\Vector\Calculation\VectorCalculation.cpp" />
+    <ClCompile Include="Elysia\Math\WorldTransform\WorldTransform.cpp" />
+    <ClCompile Include="Elysia\Polygon\2D\Sprite\Sprite.cpp" />
+    <ClCompile Include="Elysia\Polygon\2D\Triangle\Triangle.cpp" />
+    <ClCompile Include="Elysia\Polygon\3D\AnimationModel\AnimationModel.cpp" />
+    <ClCompile Include="Elysia\Polygon\3D\InstancingModel\InstancingModel.cpp" />
+    <ClCompile Include="Elysia\Polygon\3D\Model\Model.cpp" />
+    <ClCompile Include="Elysia\Polygon\3D\Particle3D\Particle3D.cpp" />
+    <ClCompile Include="Elysia\Polygon\3D\SkyBox\SkyBox.cpp" />
+    <ClCompile Include="Elysia\Polygon\3D\Sphere\Sphere.cpp" />
+    <ClCompile Include="Elysia\Polygon\PostEffect\BackTest\BackTexture.cpp" />
+    <ClCompile Include="Elysia\Polygon\PostEffect\BoxFilter\BoxFilter.cpp" />
+    <ClCompile Include="Elysia\Polygon\PostEffect\Dissolve\DissolveEffect.cpp" />
+    <ClCompile Include="Elysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.cpp" />
+    <ClCompile Include="Elysia\Polygon\PostEffect\GrayScale\GrayScale.cpp" />
+    <ClCompile Include="Elysia\Polygon\PostEffect\LuminanceBasedOutline\LuminanceBasedOutline.cpp" />
+    <ClCompile Include="Elysia\Polygon\PostEffect\RadialBlur\RadialBlur.cpp" />
+    <ClCompile Include="Elysia\Polygon\PostEffect\RandomEffect\RandomEffect.cpp" />
+    <ClCompile Include="Elysia\Polygon\PostEffect\SepiaScale\SepiaScale.cpp" />
+    <ClCompile Include="Elysia\Polygon\PostEffect\Vignette\Vignette.cpp" />
+    <ClCompile Include="Elysia\StringOption\StringOption.cpp" />
     <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp" />
     <ClCompile Include="Project\AllGameScene\GameScene\GameScene.cpp" />
     <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp" />
+    <ClCompile Include="Project\AllGameScene\TestScene\TestScene.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\NightBackTexture.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\SunsetBackTexture.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Project\AllGameScene\WinScene\WinScene.cpp" />
-    <ClCompile Include="Project\Enemy\Enemy.cpp" />
-    <ClCompile Include="Project\Enemy\EnemyAttackCollision.cpp" />
-    <ClCompile Include="Project\Enemy\EnemyFlashLightCollision.cpp" />
     <ClCompile Include="Project\Enemy\EnemyManager.cpp" />
-    <ClCompile Include="Project\Enemy\NormalEnemy.cpp" />
-    <ClCompile Include="Project\Enemy\StrongEnemy.cpp" />
-    <ClCompile Include="Project\Enemy\StrongEnemyCollisionToPlayer.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\EnemyAttackCollision.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\EnemyFlashLightCollision.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\NormalEnemy.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyAttack.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyMove.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyNoneMove.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyPreTracking.cpp" />
+    <ClCompile Include="Project\Enemy\NormalEnemy\State\NormalEnemyTracking.cpp" />
+    <ClCompile Include="Project\Enemy\StrongEnemy\State\StrongEnemyMove.cpp" />
+    <ClCompile Include="Project\Enemy\StrongEnemy\State\StrongEnemyNoneMove.cpp" />
+    <ClCompile Include="Project\Enemy\StrongEnemy\State\StrongEnemyTracking.cpp" />
+    <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemy.cpp" />
+    <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.cpp" />
     <ClCompile Include="Project\Key\Key.cpp" />
     <ClCompile Include="Project\Key\KeyManager.cpp" />
     <ClCompile Include="Project\Light\FlashLight\FlashLight.cpp" />
@@ -392,121 +399,133 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ellysia\Audio\Audio.h" />
-    <ClInclude Include="Ellysia\Audio\AudioStruct.h" />
-    <ClInclude Include="Ellysia\Camera\Camera.h" />
-    <ClInclude Include="Ellysia\Common\DirectX\DirectXSetup.h" />
-    <ClInclude Include="Ellysia\Common\Windows\WindowsSetup.h" />
-    <ClInclude Include="Ellysia\ConvertFunction\CompileShader\CompileShaderManager.h" />
-    <ClInclude Include="Ellysia\ConvertFunction\ConvertColor\ConvertColor.h" />
-    <ClInclude Include="Ellysia\ConvertFunction\ConvertLog\ConvertLog.h" />
-    <ClInclude Include="Ellysia\EffectData\Dissolve\Dissolve.h" />
-    <ClInclude Include="Ellysia\Framework\Framework.h" />
-    <ClInclude Include="Ellysia\GlobalVariables\GlobalVariables.h" />
-    <ClInclude Include="Ellysia\Input\Input.h" />
-    <ClInclude Include="Ellysia\Input\MouseInformation.h" />
-    <ClInclude Include="Ellysia\Lighting\DirectionalLight.h" />
-    <ClInclude Include="Ellysia\Lighting\LightingType.h" />
-    <ClInclude Include="Ellysia\Lighting\PointLight.h" />
-    <ClInclude Include="Ellysia\Lighting\SpotLight.h" />
-    <ClInclude Include="Ellysia\Line\Line.h" />
-    <ClInclude Include="Ellysia\Manager\AnimationManager\AnimationManager.h" />
-    <ClInclude Include="Ellysia\Manager\CollisionManager\Collider.h" />
-    <ClInclude Include="Ellysia\Manager\CollisionManager\CollisionManager.h" />
-    <ClInclude Include="Ellysia\Manager\GameManager\IAbstractSceneFactory.h" />
-    <ClInclude Include="Ellysia\Manager\GameManager\GameManager.h" />
-    <ClInclude Include="Ellysia\Manager\GameManager\IGameScene.h" />
-    <ClInclude Include="Ellysia\Manager\ImGuiManager\ImGuiManager.h" />
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\LevelDataManager.h" />
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Listener.h" />
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.h" />
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.h" />
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditor.h" />
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\IObjectForLevelEditorCollider.h" />
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditor.h" />
-    <ClInclude Include="Ellysia\Manager\LevelDataManager\Model\StageObjectForLevelEditorCollider.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\Animation.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\Joint.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\JoinWeightData.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\KeyFrame.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\ModelData.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\ModelManager.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\Node.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\NodeAnimation.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\ReadNode.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\Skeleton.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\SkinCluster.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\VertexInfluence.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\VertexWeightData.h" />
-    <ClInclude Include="Ellysia\Manager\ModelManager\WellForGPU.h" />
-    <ClInclude Include="Ellysia\Manager\PipelineManager\BlendMode.h" />
-    <ClInclude Include="Ellysia\Manager\PipelineManager\PipelineManager.h" />
-    <ClInclude Include="Ellysia\Manager\RtvManager\RtvManager.h" />
-    <ClInclude Include="Ellysia\Manager\SrvManager\SrvManager.h" />
-    <ClInclude Include="Ellysia\Manager\TextureManager\TextureManager.h" />
-    <ClInclude Include="Ellysia\Material\Material.h" />
-    <ClInclude Include="Ellysia\Math\BPMCalculation\BPMSetting.h" />
-    <ClInclude Include="Ellysia\Math\Collision\CollisionCalculation.h" />
-    <ClInclude Include="Ellysia\Math\Easing\Easing.h" />
-    <ClInclude Include="Ellysia\Math\Matrix\Calculation\Matrix4x4Calculation.h" />
-    <ClInclude Include="Ellysia\Math\Matrix\Matrix3x3.h" />
-    <ClInclude Include="Ellysia\Math\Matrix\Matrix4x4.h" />
-    <ClInclude Include="Ellysia\Math\Matrix\TransformationMatrix.h" />
-    <ClInclude Include="Ellysia\Math\Quaternion\Calculation\QuaternionCalculation.h" />
-    <ClInclude Include="Ellysia\Math\Quaternion\Quaternion.h" />
-    <ClInclude Include="Ellysia\Math\Shape\AABB.h" />
-    <ClInclude Include="Ellysia\Math\Shape\Fan.h" />
-    <ClInclude Include="Ellysia\Math\Shape\Plane.h" />
-    <ClInclude Include="Ellysia\Math\Shape\SphereShape.h" />
-    <ClInclude Include="Ellysia\Math\Single\SingleCalculation.h" />
-    <ClInclude Include="Ellysia\Math\Transform\EulerTransform.h" />
-    <ClInclude Include="Ellysia\Math\Transform\QuaternionTransform.h" />
-    <ClInclude Include="Ellysia\Math\Vector\Calculation\VectorCalculation.h" />
-    <ClInclude Include="Ellysia\Math\Vector\Transform.h" />
-    <ClInclude Include="Ellysia\Math\Vector\Vector2.h" />
-    <ClInclude Include="Ellysia\Math\Vector\Vector3.h" />
-    <ClInclude Include="Ellysia\Math\Vector\Vector4.h" />
-    <ClInclude Include="Ellysia\Math\Vector\VertexData.h" />
-    <ClInclude Include="Ellysia\Math\WorldTransform\WorldTransform.h" />
-    <ClInclude Include="Ellysia\Polygon\2D\Sprite\Sprite.h" />
-    <ClInclude Include="Ellysia\Polygon\2D\Triangle\Triangle.h" />
-    <ClInclude Include="Ellysia\Polygon\3D\AnimationModel\AnimationModel.h" />
-    <ClInclude Include="Ellysia\Polygon\3D\InstancingModel\InstancingModel.h" />
-    <ClInclude Include="Ellysia\Polygon\3D\Model\Model.h" />
-    <ClInclude Include="Ellysia\Polygon\3D\Particle3D\AccelerationField.h" />
-    <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle.h" />
-    <ClInclude Include="Ellysia\Polygon\3D\Particle3D\Particle3D.h" />
-    <ClInclude Include="Ellysia\Polygon\3D\SkyBox\SkyBox.h" />
-    <ClInclude Include="Ellysia\Polygon\3D\Sphere\Sphere.h" />
-    <ClInclude Include="Ellysia\Polygon\PostEffect\BackTest\BackTexture.h" />
-    <ClInclude Include="Ellysia\Polygon\PostEffect\BoxFilter\BoxFilter.h" />
-    <ClInclude Include="Ellysia\Polygon\PostEffect\Dissolve\DissolveEffect.h" />
-    <ClInclude Include="Ellysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.h" />
-    <ClInclude Include="Ellysia\Polygon\PostEffect\GrayScale\GrayScale.h" />
-    <ClInclude Include="Ellysia\Polygon\PostEffect\LuminanceBasedOutline\LuminanceBasedOutline.h" />
-    <ClInclude Include="Ellysia\Polygon\PostEffect\RadialBlur\RadialBlur.h" />
-    <ClInclude Include="Ellysia\Polygon\PostEffect\RandomEffect\RandomEffect.h" />
-    <ClInclude Include="Ellysia\Polygon\PostEffect\SepiaScale\SepiaScale.h" />
-    <ClInclude Include="Ellysia\Polygon\PostEffect\Vignette\Vignette.h" />
-    <ClInclude Include="Ellysia\StringOption\StringOption.h" />
-    <ClInclude Include="Project\AllGameScene\GameManager\IGameScene.h" />
+    <ClInclude Include="Elysia\Audio\Audio.h" />
+    <ClInclude Include="Elysia\Audio\AudioInformation.h" />
+    <ClInclude Include="Elysia\Camera\Camera.h" />
+    <ClInclude Include="Elysia\Common\DirectX\DirectXSetup.h" />
+    <ClInclude Include="Elysia\Common\Windows\WindowsSetup.h" />
+    <ClInclude Include="Elysia\Convert\Convert.h" />
+    <ClInclude Include="Elysia\Framework\Framework.h" />
+    <ClInclude Include="Elysia\GlobalVariables\GlobalVariables.h" />
+    <ClInclude Include="Elysia\Input\Input.h" />
+    <ClInclude Include="Elysia\Input\MouseInformation.h" />
+    <ClInclude Include="Elysia\Lighting\DirectionalLight.h" />
+    <ClInclude Include="Elysia\Lighting\LightingType.h" />
+    <ClInclude Include="Elysia\Lighting\PointLight.h" />
+    <ClInclude Include="Elysia\Lighting\SpotLight.h" />
+    <ClInclude Include="Elysia\Line\Line.h" />
+    <ClInclude Include="Elysia\Manager\AnimationManager\AnimationManager.h" />
+    <ClInclude Include="Elysia\Manager\CollisionManager\Collider.h" />
+    <ClInclude Include="Elysia\Manager\CollisionManager\CollisionManager.h" />
+    <ClInclude Include="Elysia\Manager\GameManager\GameManager.h" />
+    <ClInclude Include="Elysia\Manager\GameManager\IAbstractSceneFactory.h" />
+    <ClInclude Include="Elysia\Manager\GameManager\IGameScene.h" />
+    <ClInclude Include="Elysia\Manager\ImGuiManager\ImGuiManager.h" />
+    <ClInclude Include="Elysia\Manager\LevelDataManager\LevelDataManager.h" />
+    <ClInclude Include="Elysia\Manager\LevelDataManager\Listener.h" />
+    <ClInclude Include="Elysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditor.h" />
+    <ClInclude Include="Elysia\Manager\LevelDataManager\Model\AudioObjectForLevelEditorCollider.h" />
+    <ClInclude Include="Elysia\Manager\LevelDataManager\Model\BaseObjectForLevelEditor.h" />
+    <ClInclude Include="Elysia\Manager\LevelDataManager\Model\IObjectForLevelEditorCollider.h" />
+    <ClInclude Include="Elysia\Manager\LevelDataManager\Model\StageObjectForLevelEditor.h" />
+    <ClInclude Include="Elysia\Manager\LevelDataManager\Model\StageObjectForLevelEditorCollider.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\Animation.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\Joint.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\JoinWeightData.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\KeyFrame.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\ModelData.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\ModelManager.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\Node.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\NodeAnimation.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\ReadNode.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\Skeleton.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\SkinCluster.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\VertexInfluence.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\VertexWeightData.h" />
+    <ClInclude Include="Elysia\Manager\ModelManager\WellForGPU.h" />
+    <ClInclude Include="Elysia\Manager\PipelineManager\BlendMode.h" />
+    <ClInclude Include="Elysia\Manager\PipelineManager\PipelineManager.h" />
+    <ClInclude Include="Elysia\Manager\RtvManager\RtvManager.h" />
+    <ClInclude Include="Elysia\Manager\SrvManager\SrvManager.h" />
+    <ClInclude Include="Elysia\Manager\TextureManager\TextureManager.h" />
+    <ClInclude Include="Elysia\Material\Color.h" />
+    <ClInclude Include="Elysia\Material\Dissolve\Dissolve.h" />
+    <ClInclude Include="Elysia\Material\Material.h" />
+    <ClInclude Include="Elysia\Math\BPMCalculation\BPMSetting.h" />
+    <ClInclude Include="Elysia\Math\Collision\CollisionCalculation.h" />
+    <ClInclude Include="Elysia\Math\Easing\Easing.h" />
+    <ClInclude Include="Elysia\Math\Matrix\Calculation\Matrix4x4Calculation.h" />
+    <ClInclude Include="Elysia\Math\Matrix\Matrix3x3.h" />
+    <ClInclude Include="Elysia\Math\Matrix\Matrix4x4.h" />
+    <ClInclude Include="Elysia\Math\Matrix\TransformationMatrix.h" />
+    <ClInclude Include="Elysia\Math\PushBackCalculation\PushBackCalculation.h" />
+    <ClInclude Include="Elysia\Math\Quaternion\Calculation\QuaternionCalculation.h" />
+    <ClInclude Include="Elysia\Math\Quaternion\Quaternion.h" />
+    <ClInclude Include="Elysia\Math\Shape\AABB.h" />
+    <ClInclude Include="Elysia\Math\Shape\Fan.h" />
+    <ClInclude Include="Elysia\Math\Shape\Plane.h" />
+    <ClInclude Include="Elysia\Math\Shape\SphereShape.h" />
+    <ClInclude Include="Elysia\Math\Single\SingleCalculation.h" />
+    <ClInclude Include="Elysia\Math\Transform\EulerTransform.h" />
+    <ClInclude Include="Elysia\Math\Transform\QuaternionTransform.h" />
+    <ClInclude Include="Elysia\Math\Transform\Transform.h" />
+    <ClInclude Include="Elysia\Math\Vector\Calculation\VectorCalculation.h" />
+    <ClInclude Include="Elysia\Math\Vector\Vector2.h" />
+    <ClInclude Include="Elysia\Math\Vector\Vector3.h" />
+    <ClInclude Include="Elysia\Math\Vector\Vector4.h" />
+    <ClInclude Include="Elysia\Math\Vector\VertexData.h" />
+    <ClInclude Include="Elysia\Math\WorldTransform\WorldTransform.h" />
+    <ClInclude Include="Elysia\Polygon\2D\Sprite\Sprite.h" />
+    <ClInclude Include="Elysia\Polygon\2D\Triangle\Triangle.h" />
+    <ClInclude Include="Elysia\Polygon\3D\AnimationModel\AnimationModel.h" />
+    <ClInclude Include="Elysia\Polygon\3D\InstancingModel\InstancingModel.h" />
+    <ClInclude Include="Elysia\Polygon\3D\Model\Model.h" />
+    <ClInclude Include="Elysia\Polygon\3D\Particle3D\AccelerationField.h" />
+    <ClInclude Include="Elysia\Polygon\3D\Particle3D\Particle.h" />
+    <ClInclude Include="Elysia\Polygon\3D\Particle3D\Particle3D.h" />
+    <ClInclude Include="Elysia\Polygon\3D\SkyBox\SkyBox.h" />
+    <ClInclude Include="Elysia\Polygon\3D\Sphere\Sphere.h" />
+    <ClInclude Include="Elysia\Polygon\Particle\Emitter.h" />
+    <ClInclude Include="Elysia\Polygon\Particle\ParticleMoveType.h" />
+    <ClInclude Include="Elysia\Polygon\PostEffect\BackTest\BackTexture.h" />
+    <ClInclude Include="Elysia\Polygon\PostEffect\BoxFilter\BoxFilter.h" />
+    <ClInclude Include="Elysia\Polygon\PostEffect\Dissolve\DissolveEffect.h" />
+    <ClInclude Include="Elysia\Polygon\PostEffect\GaussianFilter\GaussianFilter.h" />
+    <ClInclude Include="Elysia\Polygon\PostEffect\GrayScale\GrayScale.h" />
+    <ClInclude Include="Elysia\Polygon\PostEffect\LuminanceBasedOutline\LuminanceBasedOutline.h" />
+    <ClInclude Include="Elysia\Polygon\PostEffect\RadialBlur\RadialBlur.h" />
+    <ClInclude Include="Elysia\Polygon\PostEffect\RandomEffect\RandomEffect.h" />
+    <ClInclude Include="Elysia\Polygon\PostEffect\SepiaScale\SepiaScale.h" />
+    <ClInclude Include="Elysia\Polygon\PostEffect\Vignette\Vignette.h" />
+    <ClInclude Include="Elysia\StringOption\StringOption.h" />
     <ClInclude Include="Project\AllGameScene\GameSceneFactory.h" />
     <ClInclude Include="Project\AllGameScene\GameScene\GameScene.h" />
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h" />
+    <ClInclude Include="Project\AllGameScene\TestScene\TestScene.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\NightBackTexture.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\SunsetBackTexture.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\TitleScene.h" />
     <ClInclude Include="Project\AllGameScene\WinScene\WinScene.h" />
     <ClInclude Include="Project\CollisionConfig\CollisionConfig.h" />
-    <ClInclude Include="Project\Enemy\Enemy.h" />
-    <ClInclude Include="Project\Enemy\EnemyAttackCollision.h" />
+    <ClInclude Include="Project\Enemy\BaseEnemy.h" />
     <ClInclude Include="Project\Enemy\EnemyCondition.h" />
-    <ClInclude Include="Project\Enemy\EnemyFlashLightCollision.h" />
     <ClInclude Include="Project\Enemy\EnemyManager.h" />
-    <ClInclude Include="Project\Enemy\NormalEnemy.h" />
-    <ClInclude Include="Project\Enemy\StrongEnemy.h" />
-    <ClInclude Include="Project\Enemy\StrongEnemyCollisionToPlayer.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\EnemyAttackCollision.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\EnemyFlashLightCollision.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\NormalEnemy.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\BaseNormalEnemyState.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyAttack.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyMove.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyNoneMove.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyPreTracking.h" />
+    <ClInclude Include="Project\Enemy\NormalEnemy\State\NormalEnemyTracking.h" />
+    <ClInclude Include="Project\Enemy\StrongEnemy\State\BaseStongEnemyState.h" />
+    <ClInclude Include="Project\Enemy\StrongEnemy\State\StrongEnemyMove.h" />
+    <ClInclude Include="Project\Enemy\StrongEnemy\State\StrongEnemyNoneMove.h" />
+    <ClInclude Include="Project\Enemy\StrongEnemy\State\StrongEnemyTracking.h" />
+    <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemy.h" />
+    <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.h" />
     <ClInclude Include="Project\Key\Key.h" />
     <ClInclude Include="Project\Key\KeyManager.h" />
     <ClInclude Include="Project\Light\FlashLight\FlashLight.h" />
@@ -560,7 +579,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Ellysia\Audio\AudioMemo.txt" />
+    <Text Include="Elysia\Audio\AudioMemo.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

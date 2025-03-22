@@ -35,8 +35,8 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="modelhandle"></param>
-	/// <param name="position"></param>
+	/// <param name="modelhandle">ハンドル</param>
+	/// <param name="position">座標</param>
 	void Initialize(const uint32_t& modelhandle,const Vector3& position);
 
 	/// <summary>
@@ -47,8 +47,8 @@ public:
 	/// <summary>
 	/// 描画(モデル)
 	/// </summary>
-	/// <param name="camera"></param>
-	/// <param name="spotLight"></param>
+	/// <param name="camera">カメラ</param>
+	/// <param name="spotLight">スポットライト</param>
 	void DrawModel(const Camera& camera,const SpotLight& spotLight);
 
 	/// <summary>
@@ -105,7 +105,6 @@ public:
 	float GetRadius()const {
 		return radius_;
 	}
-
 	/// <summary>
 	/// 取得したかどうか
 	/// </summary>
@@ -115,11 +114,35 @@ public:
 	}
 
 	/// <summary>
+	/// 取得可能かどうか
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsAbleToPickUp()const {
+		return isAbleToPickUp_;
+	}
+
+	/// <summary>
+	/// 取得可能かどうかの設定
+	/// </summary>
+	/// <param name="isAbleToPickUp"></param>
+	void SetisAbleToPickUp(const bool& isAbleToPickUp) {
+		this->isAbleToPickUp_ = isAbleToPickUp;
+	}
+
+	/// <summary>
 	/// 取得前かどうかの設定
 	/// </summary>
 	/// <param name="isPrePickUp">取得前</param>
 	inline void SetIsPrePickUp(const bool& isPrePickUp) {
 		this->isPrePickUp_ = isPrePickUp;
+	}
+
+	/// <summary>
+	/// 終点の座標を設定
+	/// </summary>
+	/// <param name="position">座標</param>
+	inline void SetEndPosition(const Vector2& position) {
+		this->spriteEndPosition_ = position;
 	}
 
 	/// <summary>
@@ -147,15 +170,16 @@ private:
 	
 private:
 	//モデル
-	std::unique_ptr<Ellysia::Model> model_ = nullptr;
+	std::unique_ptr<Elysia::Model> model_ = nullptr;
 	//取得時回転しUIの所にいく
-	std::unique_ptr<Ellysia::Sprite> sprite_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> sprite_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 	//マテリアル
 	Material material_ = {};
 	
-
+	//取得できるかどうか
+	bool isAbleToPickUp_ = true;
 	//取得する前
 	bool isPrePickUp_ = false;
 	//取得されたか
@@ -176,6 +200,9 @@ private:
 	//回転終わり
 	bool isFinishRise_ = false;
 	float upT_ = 0.0f;
+	//終点
+	Vector2 spriteEndPosition_ = { };
+
 
 	//スプライトが動くかどうか
 	bool isSpriteMove_ = false;
@@ -193,7 +220,7 @@ private:
 
 #ifdef _DEBUG
 	//デバッグ用
-	std::unique_ptr<Ellysia::Model>debugModel_ = nullptr;
+	std::unique_ptr<Elysia::Model>debugModel_ = nullptr;
 	WorldTransform debugWorldTransform_ = {};
 	Material debugMaterial_ = {};
 #endif // _DEBUG

@@ -9,17 +9,14 @@
 #include <memory>
 #include <list>
 
-
 #include "WorldTransform.h"
 #include "Model.h"
-
-#include "Stage/Ground/StageRect.h"
 #include "AABB.h"
+
 #include "PlayerCollisionToStrongEnemy.h"
 #include "PlayerCollisionToNormalEnemyAttack.h"
-#include "Light/FlashLight/FlashLight.h"
-#include "SpotLight.h"
 #include "PlayerCollisionToAudioObject.h"
+#include "Light/FlashLight/FlashLight.h"
 
 #pragma region 前方宣言
 
@@ -41,18 +38,24 @@ class GameScene;
 /// <summary>
 /// EllysiaEngine
 /// </summary>
-namespace Ellysia {
+namespace Elysia {
 	/// <summary>
 	/// 入力クラス
 	/// </summary>
 	class Input;
 
+	/// <summary>
+	/// モデル管理クラス
+	/// </summary>
+	class ModelManager;
+
+	/// <summary>
+	/// レベルデータ管理クラス
+	/// </summary>
+	class LevelDataManager;
 };
 
-/// <summary>
-/// モデル管理クラス
-/// </summary>
-class ModelManager;
+
 
 #pragma endregion
 
@@ -93,7 +96,12 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void Draw(const Camera& camera,const SpotLight& spotLight);
+	void DrawObject3D(const Camera& camera,const SpotLight& spotLight);
+
+	/// <summary>
+	/// スプライトの描画
+	/// </summary>
+	void DrawSprite();
 
 	/// <summary>
 	/// デストラクタ
@@ -121,7 +129,7 @@ public:
 	/// <summary>
 	/// 半径の取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>半径</returns>
 	inline float GetSideSize()const {
 		return SIDE_SIZE;
 	}
@@ -129,16 +137,16 @@ public:
 	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>ワールド座標</returns>
 	inline Vector3 GetWorldPosition()const {
 		return worldTransform_.GetWorldPosition();
 	}
 
 
 	/// <summary>
-	/// 方向
+	/// 方向を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>方向</returns>
 	inline Vector3 GetDirection() const{
 		return moveDirection_;
 	}
@@ -146,6 +154,7 @@ public:
 	/// <summary>
 	/// AABBの取得
 	/// </summary>
+	/// <returns>AABB</returns>
 	inline AABB GetAABB() const{
 		return aabb_;
 	}
@@ -154,7 +163,7 @@ public:
 	/// <summary>
 	/// 体力を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>体力</returns>
 	uint32_t GetHP()const {
 		return hp_;
 	}
@@ -170,7 +179,7 @@ public:
 	/// <summary>
 	/// 懐中電灯を取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>懐中電灯</returns>
 	inline FlashLight* GetFlashLight()const {
 		return flashLight_.get();
 	}
@@ -181,13 +190,13 @@ public:
 	/// 持っている鍵の数を増やす
 	/// </summary>
 	inline void AddHaveKeyQuantity() {
-		haveKeyQuantity_++;
+		++haveKeyQuantity_;
 	}
 
 	/// <summary>
 	/// 今鍵を何個持っているか
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>鍵の数</returns>
 	inline uint32_t GetHavingKey() {
 		return haveKeyQuantity_;
 	}
@@ -195,22 +204,15 @@ public:
 	/// <summary>
 	/// 動く方向の設定
 	/// </summary>
-	/// <param name="move"></param>
+	/// <param name="move">方向</param>
 	inline void SetMoveDirection(const Vector3& moveDirection) {
 		this->moveDirection_ = moveDirection;
 	}
 
 	/// <summary>
-	/// 動きの状態を設定
-	/// </summary>
-	/// <param name="condition"></param>
-	inline void SetMoveCondition(const uint32_t& condition) {
-		this->moveCondition_ = condition;
-	}
-
-	/// <summary>
 	/// 走るかどうか
 	/// </summary>
+	/// <param name="isDash"></param>
 	inline void SetIsDash(const bool& isDash) {
 		this->isDash_ = isDash;
 	}
@@ -219,7 +221,7 @@ public:
 	/// <summary>
 	/// 操作を受け付けるか受け付けないかの設定
 	/// </summary>
-	/// <param name="isControll"></param>
+	/// <param name="isControll">操作できるかどうか</param>
 	inline void SetIsAbleToControll(const bool& isControll) {
 		this->isControll_ = isControll;
 	}
@@ -227,7 +229,7 @@ public:
 	/// <summary>
 	/// 通常の敵からの攻撃を受け入れるかどうか
 	/// </summary>
-	/// <param name="isAccept"></param>
+	/// <param name="isAccept">受け入れるかどうか</param>
 	inline void SetIsAcceptDamegeFromNoemalEnemy(const bool& isAccept) {
 		this->isAcceptDamegeFromNoemalEnemy_ = isAccept;
 	}
@@ -235,7 +237,7 @@ public:
 	/// <summary>
 	/// 通常の敵の攻撃の受け入れを取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>受け入れ状態</returns>
 	bool GetIsAcceptDamegeFromNormalEnemy()const {
 		return isAcceptDamegeFromNoemalEnemy_;
 	}
@@ -243,41 +245,27 @@ public:
 	/// <summary>
 	/// 座標の設定
 	/// </summary>
-	/// <param name="position"></param>
-	inline void SetPosition(const Vector3& position) {
+	/// <param name="position">座標</param>
+	inline void SetPosition(Vector3& position) {
 		this->worldTransform_.translate = position;
 	}
 
+	/// <summary>
+	/// レベルデータハンドルの設定
+	/// </summary>
+	/// <param name="levelHandle"></param>
+	inline void SetLevelHandle(const uint32_t& levelHandle) {
+		this->levelHandle_ = levelHandle;
+	}
+
+
 public:
 
-	///// <summary>
-	///// 通常の敵の当たり判定
-	///// </summary>
-	///// <returns></returns>
-	//inline PlayerCollisionToNormalEnemyAttack* GetCollisionToNormalEnemy()const {
-	//	return colliderToNormalEnemy_.get();
-	//}
-	//
-	///// <summary>
-	///// 強敵の当たり判定
-	///// </summary>
-	///// <returns></returns>
-	//inline PlayerCollisionToStrongEnemy* GetCollisionToStrongEnemy()const {
-	//	return collisionToStrongEnemy_.get();
-	//}
-	//
-	///// <summary>
-	///// オーディオオブジェクトに対しての当たり判定
-	///// </summary>
-	///// <returns></returns>
-	//inline PlayerCollisionToAudioObject* GetCollisionToAudioObject()const {
-	//	return collosionToAudioObject_.get();
-	//}
 
 	/// <summary>
 	/// プレイヤー用のコライダーを取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>コライダー</returns>
 	inline std::vector<BasePlayerCollision*> GetColliders()const{
 		std::vector<BasePlayerCollision*> colliders;
 		for (const auto& collider : colliders_) {
@@ -295,76 +283,68 @@ public:
 		return flashLight_->GetFanCollision();
 	}
 
-private:
-
-	//モデル
-	std::unique_ptr<Ellysia::Model> model_ = nullptr;
-	//ワールドトランスフォーム
-	WorldTransform worldTransform_={};
-	//マテリアル
-	Material material_ = {};
-
-	//持っている鍵の数
-	//可算なのでQuantity
-	uint32_t haveKeyQuantity_ = 0u;
-
-	//動く方向
-	Vector3 moveDirection_ = {};
-
-	//AABB
-	AABB aabb_ = {};
 
 
 
-	//体力
-	int32_t hp_ = 0;
-	//敵の攻撃に当たった時のタイマー
-	int32_t downTime_ = 0;
-	//敵の攻撃に当たったかどうか
-	bool isDamage_ = false;
-
-	//操作可能かどうか
-	bool isControll_ = false;
-	//移動状態
-	uint32_t moveCondition_ = 0u;
-	//ダッシュ
-	bool isDash_ = false;
-
-
-
-
-	//攻撃されたか
-	bool isDameged_ = false;
-	int32_t damagedTime_ = 0;
-	bool isAcceptDamegeFromNoemalEnemy_ = false;
-
-
-	//振動の強さ
-	float vibeStrength_ = 0.0f;
-	//時間
-	float vibeTime_ = 0u;
-
-private:
-	//幅のサイズ
-	const float SIDE_SIZE = 1.0f;
-	//時間変化
-	const float DELTA_TIME = 1.0f / 60.0f;
 
 private:
 	//入力クラス
-	Ellysia::Input* input_ = nullptr;
+	Elysia::Input* input_ = nullptr;
 	//モデル管理クラス
-	Ellysia:: ModelManager* modelManager_ = nullptr;
+	Elysia::ModelManager* modelManager_ = nullptr;
+	//レベルエディタ
+	Elysia::LevelDataManager* levelDataManager_ = nullptr;
+	//ハンドル
+	uint32_t levelHandle_ = 0u;
+
+private:
+	//幅のサイズ
+	const float_t SIDE_SIZE = 0.5f;
+	//時間変化
+	const float_t DELTA_TIME = 1.0f / 60.0f;
+	//チャージの増える値
+	const float_t CHARGE_VALUE_ = 0.1f;
+
+
+private:
+
+	//モデル
+	std::unique_ptr<Elysia::Model> model_ = nullptr;
+	//ワールドトランスフォーム
+	WorldTransform worldTransform_={};
+	//動く方向
+	Vector3 moveDirection_ = {};
+	//中心座標
+	Vector3 playerCenterPosition_ = {};
+	//マテリアル
+	Material material_ = {};
+	//AABB
+	AABB aabb_ = {};
+	//持っている鍵の数
+	uint32_t haveKeyQuantity_ = 0u;
+
+	//体力
+	int32_t hp_ = 3;
+	//敵の攻撃に当たった時のタイマー
+	int32_t downTime_ = 0;
+	//操作可能かどうか
+	bool isControll_ = false;
+	//ダッシュ
+	bool isDash_ = false;
+
+	//敵の攻撃に当たったかどうか
+	bool isDamage_ = false;
+	//攻撃されたか
+	bool isDameged_ = false;
+	//通常の敵からダメージを受けたかどうか
+	bool isAcceptDamegeFromNoemalEnemy_ = false;
+
+	//時間
+	float_t vibeTime_ = 0u;
+
 private:
 	//当たり判定のリスト
 	std::list<std::unique_ptr<BasePlayerCollision>> colliders_ = {};
-	////当たり判定(通常の敵)
-	//std::unique_ptr<PlayerCollisionToNormalEnemyAttack>colliderToNormalEnemy_ = nullptr;
-	////当たり判定(一発アウトの敵用)
-	//std::unique_ptr<PlayerCollisionToStrongEnemy>collisionToStrongEnemy_ = nullptr;
-	////オーディオオブジェクト用
-	//std::unique_ptr<PlayerCollisionToAudioObject>collosionToAudioObject_ = nullptr;
-
 	//懐中電灯
 	std::unique_ptr<FlashLight>flashLight_ = nullptr;
 

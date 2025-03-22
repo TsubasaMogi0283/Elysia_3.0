@@ -17,20 +17,23 @@
 
 
 //Material...色など三角形の表面の材質を決定するもの
-struct Material
-{
+struct Material{
+    //色
     float4 color;
+    //ライティングの設定
     int enableLighting;
+    //UVトランスフォーム
     float4x4 uvTransform;
     //光沢度
     float shininess;
+    //環境光の強さ
+    float ambientIntensity;
     //環境マップ
     bool isEnviromentMap;
 };
 
 
-struct DirectionalLight
-{
+struct DirectionalLight{
 	//ライトの色
     float4 color;
 	//ライトの向き
@@ -39,8 +42,7 @@ struct DirectionalLight
     float intensity;
 };
 
-struct PointLight
-{
+struct PointLight{
 	//ライトの色
     float4 color;
 	//ライトの位置
@@ -57,14 +59,12 @@ struct PointLight
 
 
 //カメラの位置を送る
-struct Camera
-{
+struct Camera{
     float3 worldPosition;
 };
 
 //
-struct SpotLight
-{
+struct SpotLight{
 	//ライトの色
     float4 color;
 	//ライトの位置
@@ -82,8 +82,7 @@ struct SpotLight
     float cosFallowoffStart;
 	//スポットライトの余弦
     float cosAngle;
-
-
+    
 };
 
 //
@@ -105,15 +104,11 @@ ConstantBuffer<SpotLight> gSpotLight : register(b4);
 //Textureの各PixelのことはTexelという
 //Excelみたいだね()
 
-struct PixelShaderOutput
-{
+struct PixelShaderOutput{
     float4 color : SV_TARGET0;
 };
 
-
- 
-PixelShaderOutput main(VertexShaderOutput input)
-{
+PixelShaderOutput main(VertexShaderOutput input){
     PixelShaderOutput output;
 	
     float3 camera = gCamera.worldPosition;
@@ -122,8 +117,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
 
-    if (textureColor.a <= 0.5f)
-    {
+    if (textureColor.a <= 0.0f){
         discard;
     }
 	
@@ -154,15 +148,13 @@ PixelShaderOutput main(VertexShaderOutput input)
 		
 		
 		//通常はこっち
-        if (gMaterial.isEnviromentMap == false)
-        {
+        if (gMaterial.isEnviromentMap == false){
             output.color.rgb = diffuse + specular;
             output.color.a = gMaterial.color.a * textureColor.a;
 
         }
 		//環境マップ
-        if (gMaterial.isEnviromentMap == true)
-        {
+        if (gMaterial.isEnviromentMap == true){
             float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
             float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
             float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
@@ -173,8 +165,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         }
     }
 	//PointLight
-    else if (gMaterial.enableLighting == 2)
-    {
+    else if (gMaterial.enableLighting == 2){
 		//光が当たらないところは「当たらない」のでもっと暗くなるわけではない。そこでsaturate関数を使う
 		//saturate関数は値を[0,1]にclampするもの。エフェクターにもSaturationってあるよね。
 	
@@ -207,15 +198,13 @@ PixelShaderOutput main(VertexShaderOutput input)
 		
         
          //通常はこっち
-        if (gMaterial.isEnviromentMap == false)
-        {
+        if (gMaterial.isEnviromentMap == false){
             output.color.rgb = (diffusePointLight + specularPointLight) * factor;
             output.color.a = gMaterial.color.a * textureColor.a;
 
         }
 		//環境マップ
-        if (gMaterial.isEnviromentMap == true)
-        {
+        if (gMaterial.isEnviromentMap == true){
             float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
             float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
             float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
@@ -228,8 +217,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         
     }
 	//SpotLight
-    else if (gMaterial.enableLighting == 3)
-    {
+    else if (gMaterial.enableLighting == 3){
 		//光が当たらないところは「当たらない」のでもっと暗くなるわけではない。そこでsaturate関数を使う
 		//saturate関数は値を[0,1]にclampするもの。エフェクターにもSaturationってあるよね。
 	
@@ -268,15 +256,13 @@ PixelShaderOutput main(VertexShaderOutput input)
 		
         
         //通常はこっち
-        if (gMaterial.isEnviromentMap == false)
-        {
+        if (gMaterial.isEnviromentMap == false){
             output.color.rgb = (diffuseSpotLight + specularSpotLight) * attenuationFactor * falloffFactor;
             output.color.a = gMaterial.color.a * textureColor.a;
 
         }
 		//環境マップ
-        if (gMaterial.isEnviromentMap == true)
-        {
+        if (gMaterial.isEnviromentMap == true){
             float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
             float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
             float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
@@ -287,8 +273,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         }
         
     }
-    else if (gMaterial.enableLighting == 4)
-    {
+    else if (gMaterial.enableLighting == 4){
         float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
         float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
         float4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
@@ -297,13 +282,10 @@ PixelShaderOutput main(VertexShaderOutput input)
         output.color.a = gMaterial.color.a;
 		
     }
-    else
-    {
+    else{
 		//Lightingしない場合
         output.color = gMaterial.color * textureColor;
     }
-
-	
-	
+    
     return output;
 }

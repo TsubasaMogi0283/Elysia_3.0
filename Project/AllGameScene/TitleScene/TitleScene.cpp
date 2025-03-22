@@ -18,34 +18,35 @@
 
 
 TitleScene::TitleScene(){
-	//テクスチャ管理クラスの取得
-	textureManager_ = Ellysia::TextureManager::GetInstance();
-	//入力クラスの取得
-	input_ = Ellysia::Input::GetInstance();
-	//レベルエディタ管理クラスの取得
-	levelDataManager_ = Ellysia::LevelDataManager::GetInstance();
+	//インスタンスの取得
+	//テクスチャ管理クラス
+	textureManager_ = Elysia::TextureManager::GetInstance();
+	//入力クラス
+	input_ = Elysia::Input::GetInstance();
+	//レベルエディタ管理クラス
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
 
 void TitleScene::Initialize(){
 
-	//
-	uint32_t textTextureHandle = textureManager_->LoadTexture("Resources/Title/StartText.png");
+	//テクスチャハンドルの取得
+	uint32_t textTextureHandle = textureManager_->Load("Resources/Sprite/Title/StartText.png");
 	//タイトルテクスチャ
-	uint32_t logoTextureHandle = textureManager_->LoadTexture("Resources/Title/TitleNormal.png");
-	changedLogoTextureHandle_ = textureManager_->LoadTexture("Resources/Title/TitleChanged.png");
+	uint32_t logoTextureHandle = textureManager_->Load("Resources/Sprite/Title/TitleNormal.png");
+	changedLogoTextureHandle_ = textureManager_->Load("Resources/Sprite/Title/TitleChanged.png");
 	logoTextureHandle_ = logoTextureHandle;
 	//黒フェード
-	uint32_t blackTexureHandle= textureManager_->LoadTexture("Resources/Sprite/Back/Black.png");
+	uint32_t blackTexureHandle= textureManager_->Load("Resources/Sprite/Back/Black.png");
 
 	//初期座標
 	const Vector2 INITIAL_POSITION = {.x=0.0f,.y=0.0f};
 	
 	//テキスト
-	text_.reset(Ellysia::Sprite::Create(textTextureHandle, INITIAL_POSITION));
+	text_.reset(Elysia::Sprite::Create(textTextureHandle, INITIAL_POSITION));
 	//ロゴ
-	logo.reset(Ellysia::Sprite::Create(logoTextureHandle_, INITIAL_POSITION));
+	logo.reset(Elysia::Sprite::Create(logoTextureHandle_, INITIAL_POSITION));
 	//黒フェード
-	blackFade_.reset(Ellysia::Sprite::Create(blackTexureHandle, INITIAL_POSITION));
+	blackFade_.reset(Elysia::Sprite::Create(blackTexureHandle, INITIAL_POSITION));
 	//初期の透明度設定
 	const float INITIAL_TRANSPARENCY = 0.0f;
 	blackFade_->SetTransparency(INITIAL_TRANSPARENCY);
@@ -60,7 +61,7 @@ void TitleScene::Initialize(){
 
 	//スポットライトの初期化
 	spotLight.Initialize();
-
+	//平行光源
 	directionalLight_.Initialize();
 	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
 	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
@@ -73,7 +74,7 @@ void TitleScene::Initialize(){
 	//レールカメラ
 	titleRailCamera_ = std::make_unique<TitleRailCamera>();
 	//初期化
-	titleRailCamera_->Initialize();
+	titleRailCamera_->Initialize("Resources/CSV/TitleRailCameraPoint.csv");
 	
 
 	//背景
@@ -82,13 +83,13 @@ void TitleScene::Initialize(){
 	baseTitleBackTexture_->Initialize();
 
 	//ランダムエフェクトの生成
-	randomEffect_ = std::make_unique<Ellysia::RandomEffect>();
+	randomEffect_ = std::make_unique<Elysia::RandomEffect>();
 	//初期化
 	randomEffect_->Initialize();
 	
 }
 
-void TitleScene::Update(Ellysia::GameManager* gameManager){
+void TitleScene::Update(Elysia::GameManager* gameManager){
 
 #pragma region 未スタート
 
@@ -119,31 +120,11 @@ void TitleScene::Update(Ellysia::GameManager* gameManager){
 	}
 	
 
-	//コントローラーのBを押すと高速点滅
-	if (input_->IsConnetGamePad() == true) {
 
-		//Bトリガーの反応しない時間
-		const uint32_t NO_REACT_TIME = 0u;
-		//Bトリガーの反応する時間
-		const uint32_t REACT_TIME = 1u;
-
-
-		//Bボタンを押したとき
-		if (input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) {
-			bTriggerTime_ += INCREASE_VALUE;
-		}
-		//押していない
-		if ((input_->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B) == 0) {
-			bTriggerTime_ = NO_REACT_TIME;
-		}
-
-		//反応
-		if (bTriggerTime_ == REACT_TIME) {
-			isFastFlash_ = true;
-		}
-
+	//Bボタンを押したら高速点滅
+	if (input_->IsTriggerButton(XINPUT_GAMEPAD_B)==true) {
+		isFastFlash_ = true;
 	}
-
 	//スペースを押したら高速点滅
 	if (input_->IsPushKey(DIK_SPACE) == true) {
 		//高速点滅
@@ -159,9 +140,6 @@ void TitleScene::Update(Ellysia::GameManager* gameManager){
 		//時間の加算
 		fastFlashTime_ += INCREASE_VALUE;
 		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
-			//もう一度学び直したが
-			//単純に+1にしたいなら前置インクリメント「++(名前)」がいいらしい
-			//加算される前の値を入れたいなら後置インクリメント「(名前)++」にしよう
 			++textDisplayCount_;
 		}
 

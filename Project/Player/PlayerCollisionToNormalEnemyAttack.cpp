@@ -1,12 +1,14 @@
 #include "PlayerCollisionToNormalEnemyAttack.h"
+#include <imgui.h>
+
 #include "CollisionConfig.h"
-#include <ModelManager.h>
+#include "ModelManager.h"
 
 void PlayerCollisionToNormalEnemyAttack::Initialize(){
 
 	//モデルの生成
-	uint32_t modelHandle = Ellysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere","Sphere.obj");
-	model_.reset(Ellysia::Model::Create(modelHandle));
+	uint32_t modelHandle = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere","Sphere.obj");
+	model_.reset(Elysia::Model::Create(modelHandle));
 
 
 	//初期化

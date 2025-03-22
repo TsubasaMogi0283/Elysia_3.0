@@ -1,6 +1,9 @@
 #include "TitleRailCamera.h"
 
+#include <imgui.h>
 #include <cmath>
+#include <algorithm>
+#include <fstream>
 
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
@@ -8,95 +11,78 @@
 #include "Quaternion.h"
 #include "Calculation/QuaternionCalculation.h"
 
-void TitleRailCamera::Initialize(){
+void TitleRailCamera::Initialize(const std::string& csvPath){
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	//カメラの初期化
 	camera_.Initialize();
 
-	//LevelEditorに入れたいね
-	//一旦CSVにしてみる
-	//制御点
-	points_ = {
-		{0.0f,3.0f,-75.0f},
-		{10.0f,3.0f,-75.0f},
-		{20.0f,3.0f,-75.0f},
-		{30.0f,3.0f,-75.0f},
-		{40.0f,3.0f,-75.0f},
-		{50.0f,3.0f,-75.0f},
-		{60.0f,3.0f,-70.0f},
-		{70.0f,3.0f,-65.0f},
-		{75.0f,3.0f,-60.0f},
-		{75.0f,3.0f,-45.0f},
-		{75.0f,3.0f,-30.0f},
-		{75.0f,3.0f,-20.0f},
-		{75.0f,3.0f,-10.0f},
-		{75.0f,3.0f,-5.0f},
-		{75.0f,3.0f,0.0f},
-		{75.0f,3.0f,5.0f},
-		{75.0f,3.0f,10.0f},
-		{75.0f,3.0f,20.0f},
-		{75.0f,3.0f,25.0f},
-		{75.0f,3.0f,30.0f},
-		{75.0f,3.0f,40.0f},
-		{75.0f,3.0f,50.0f},
-		{70.0f,3.0f,60.0f},
-		{65.0f,3.0f,70.0f},
-		{60.0f,3.0f,75.0f},
-		{50.0f,3.0f,75.0f},
-		{40.0f,3.0f,75.0f},
-		{30.0f,3.0f,75.0f},
-		{20.0f,3.0f,75.0f},
-		{10.0f,3.0f,75.0f},
-		{0.0f,3.0f,75.0f},
-		{-10.0f,3.0f,75.0f},
-		{-20.0f,3.0f,75.0f},
-		{-30.0f,3.0f,75.0f},
-		{-40.0f,3.0f,75.0f},
-		{-50.0f,3.0f,75.0f},
-		{-60.0f,3.0f,75.0f},
-		{-70.0f,3.0f,70.0f},
-		{-75.0f,3.0f,65.0f},
+	//ファイルを開ける
+	std::ifstream file;
+	file.open(csvPath);
+	//開かなかったら止まる
+	assert(file.is_open());
+
+	//ファイルの内容を文字列ストリームにコピー
+	positionsFromCSV_ << file.rdbuf();
+	//ファイルを閉じる
+	file.close();
+
+	//1行分の文字列を入れる変数
+	std::string line;
 
 
+	//制御点読み込み
+	while (std::getline(positionsFromCSV_, line)) {
 
-		{-75.0f,3.0f,60.0f},
-		{-75.0f,3.0f,50.0f},
-		{-75.0f,3.0f,40.0f},
-		{-75.0f,3.0f,30.0f},
-		{-75.0f,3.0f,20.0f},
-		{-75.0f,3.0f,10.0f},
-		{-75.0f,3.0f,0.0f},
-		{-75.0f,3.0f,-10.0f},
-		{-75.0f,3.0f,-20.0f},
-		{-75.0f,3.0f,-30.0f},
-		{-75.0f,3.0f,-40.0f},
-		{-75.0f,3.0f,-50.0f},
-		{-70.0f,3.0f,-60.0f},
-		{-60.0f,3.0f,-70.0f},
+		//1行分の文字列をストリームに変換して解析しやすくする
+		std::istringstream lineStream(line);
+
+		std::string word;
+		//,区切りで行の先頭文字列を取得
+		std::getline(lineStream, word, ',');
+
+		//「//」があった行の場合コメントなので飛ばす
+		if (word.find("//") == 0) {
+			//コメントは飛ばす
+			continue;
+		}
 
 
-		{-50.0f,3.0f,-75.0f},
-		{-40.0f,3.0f,-75.0f},
-		{-30.0f,3.0f,-75.0f},
-		{-20.0f,3.0f,-75.0f},
-		{-10.0f,3.0f,-75.0f},
-		{0.0f,3.0f,-75.0f},
-	};
+		Vector3 position = {};
+		//X座標
+		std::getline(lineStream, word, ',');
+		position.x = static_cast<float>(std::atof(word.c_str()));
+
+		//Y座標
+		std::getline(lineStream, word, ',');
+		position.y = static_cast<float>(std::atof(word.c_str()));
+
+		//Z座標
+		std::getline(lineStream, word, ',');
+		position.z = static_cast<float>(std::atof(word.c_str()));
+
+		//挿入
+		points_.push_back(position);
+
+
+	}
 
 }
 
 void TitleRailCamera::Update(){
 
 	//線形補間
-	cameraT_ += 0.0001f;
+	cameraT_ += increaseTValue_;
 	
 	//少し先のTの値を見て次の位置の計算をする
-	float nextT = cameraT_ + 0.001f;
+	const float NEXT_VALUE = 0.001f;
+	float nextT = cameraT_ + NEXT_VALUE;
 	//ループ時の補正
-	if (nextT > 1.0f) {
-		nextT -= 1.0f;
+	const float MAX_T_VALUE = 1.0f;
+	if (nextT > MAX_T_VALUE) {
+		nextT -= MAX_T_VALUE;
 	};
 
 	//座標
@@ -155,9 +141,9 @@ Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& poin
 	float areaLength = 1.0f / division;
 
 	//区間内の始点を0.0f、終点を1.0としたときの現在位置
-	float t_2 = std::fmod(t, areaLength) * division;
+	float t2 = std::fmod(t, areaLength) * division;
 	//下限(0.0f)と上限(1.0f)の範囲に収める
-	t_2 = SingleCalculation::Clamp(0.0f, 1.0f, t_2);
+	t2 = std::clamp(t2, 0.0f, 1.0f);
 
 	int index = static_cast<int>(t / areaLength);
 	int index0 = index - 1;
@@ -190,13 +176,13 @@ Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& poin
 	}
 
 	//4点の座標
-	const Vector3& p0 = points[index0];
-	const Vector3& p1 = points[index1];
-	const Vector3& p2 = points[index2];
-	const Vector3& p3 = points[index3];
+	const Vector3& P0 = points[index0];
+	const Vector3& P1 = points[index1];
+	const Vector3& P2 = points[index2];
+	const Vector3& P3 = points[index3];
 
 
 	//結果
-	Vector3 result = VectorCalculation::CatmullRom(p0, p1, p2, p3, t_2);
+	Vector3 result = VectorCalculation::CatmullRom(P0, P1, P2, P3, t2);
 	return  result;
 }

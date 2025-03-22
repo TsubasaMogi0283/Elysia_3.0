@@ -2380,7 +2380,7 @@ static void ShowDemoWindowWidgets()
                     // Set payload to carry the index of our item (could be anything)
                     ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
 
-                    // Display preview (could be anything, e.g. when dragging an image we could decide to display
+                    // DisplayImGui preview (could be anything, e.g. when dragging an image we could decide to display
                     // the filename and a small preview of the image, etc.)
                     if (mode == Mode_Copy) { ImGui::Text("Copy %s", names[n]); }
                     if (mode == Mode_Move) { ImGui::Text("Move %s", names[n]); }
@@ -2522,7 +2522,7 @@ static void ShowDemoWindowWidgets()
         bool hovered_delay_normal = ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal);
         bool hovered_delay_tooltip = ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip); // = Normal + Stationary
 
-        // Display the values of IsItemHovered() and other common item state functions.
+        // DisplayImGui the values of IsItemHovered() and other common item state functions.
         // Note that the ImGuiHoveredFlags_XXX flags can be combined.
         // Because BulletText is an item itself and that would affect the output of IsItemXXX functions,
         // we query every state in a single call to avoid storing them and to simplify the code.
@@ -3314,7 +3314,7 @@ static void ShowDemoWindowLayout()
         ImGui::BeginChild("scrolling", scrolling_child_size, ImGuiChildFlags_Border, ImGuiWindowFlags_HorizontalScrollbar);
         for (int line = 0; line < lines; line++)
         {
-            // Display random stuff. For the sake of this trivial demo we are using basic Button() + SameLine()
+            // DisplayImGui random stuff. For the sake of this trivial demo we are using basic Button() + SameLine()
             // If you want to create your own time line for a real application you may be better off manipulating
             // the cursor position yourself, aka using SetCursorPos/SetCursorScreenPos to position the widgets
             // yourself. You may also want to use the lower-level ImDrawList API.
@@ -4163,7 +4163,7 @@ static void ShowDemoWindowTables()
 
         if (ImGui::BeginTable("table1", 3, flags))
         {
-            // Display headers so we can inspect their interaction with borders.
+            // DisplayImGui headers so we can inspect their interaction with borders.
             // (Headers are not the main purpose of this section of the demo, so we are not elaborating on them too much. See other sections for details)
             if (display_headers)
             {
@@ -5513,7 +5513,7 @@ static void ShowDemoWindowTables()
             while (clipper.Step())
                 for (int row_n = clipper.DisplayStart; row_n < clipper.DisplayEnd; row_n++)
                 {
-                    // Display a data item
+                    // DisplayImGui a data item
                     MyItem* item = &items[row_n];
                     ImGui::PushID(item->ID);
                     ImGui::TableNextRow();
@@ -6073,7 +6073,7 @@ static void ShowDemoWindowInputs()
     {
         ImGuiIO& io = ImGui::GetIO();
 
-        // Display inputs submitted to ImGuiIO
+        // DisplayImGui inputs submitted to ImGuiIO
         IMGUI_DEMO_MARKER("Inputs & Focus/Inputs");
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);
         if (ImGui::TreeNode("Inputs"))
@@ -6107,7 +6107,7 @@ static void ShowDemoWindowInputs()
             ImGui::TreePop();
         }
 
-        // Display ImGuiIO output flags
+        // DisplayImGui ImGuiIO output flags
         IMGUI_DEMO_MARKER("Inputs & Focus/Outputs");
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);
         if (ImGui::TreeNode("Outputs"))
@@ -6151,7 +6151,7 @@ static void ShowDemoWindowInputs()
             ImGui::TreePop();
         }
 
-        // Display mouse cursors
+        // DisplayImGui mouse cursors
         IMGUI_DEMO_MARKER("Inputs & Focus/Mouse Cursors");
         if (ImGui::TreeNode("Mouse Cursors"))
         {
@@ -7024,7 +7024,7 @@ struct ExampleAppConsole
                 ImGui::EndPopup();
             }
 
-            // Display every line as a separate entry so we can change their color or add custom widgets.
+            // DisplayImGui every line as a separate entry so we can change their color or add custom widgets.
             // If you only want raw text you can use ImGui::TextUnformatted(log.begin(), log.end());
             // NB- if you have thousands of entries this approach may be too inefficient and may require user-side clipping
             // to only process visible items. The clipper will automatically measure the height of your first item and then
@@ -7707,7 +7707,7 @@ static void ShowExampleAppConstrainedResize(bool* p_open)
     // Options
     static bool auto_resize = false;
     static bool window_padding = true;
-    static int type = 6; // Aspect Ratio
+    static int type = 6; // Aspect InverseLerp
     static int display_lines = 10;
 
     // Submit constraint
@@ -7735,7 +7735,7 @@ static void ShowExampleAppConstrainedResize(bool* p_open)
         IMGUI_DEMO_MARKER("Examples/Constrained Resizing window");
         if (ImGui::GetIO().KeyShift)
         {
-            // Display a dummy viewport (in your real app you would likely use ImageButton() to display a texture.
+            // DisplayImGui a dummy viewport (in your real app you would likely use ImageButton() to display a texture.
             ImVec2 avail_size = ImGui::GetContentRegionAvail();
             ImVec2 pos = ImGui::GetCursorScreenPos();
             ImGui::ColorButton("viewport", ImVec4(0.5f, 0.2f, 0.5f, 1.0f), ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, avail_size);
@@ -8197,7 +8197,7 @@ struct MyDocument
     void DoForceClose() { Open = false; Dirty = false; }
     void DoSave()       { Dirty = false; }
 
-    // Display placeholder contents for the Document
+    // DisplayImGui placeholder contents for the Document
     static void DisplayContents(MyDocument* doc)
     {
         ImGui::PushID(doc);
@@ -8214,7 +8214,7 @@ struct MyDocument
         ImGui::PopID();
     }
 
-    // Display context menu for the Document
+    // DisplayImGui context menu for the Document
     static void DisplayContextMenu(MyDocument* doc)
     {
         if (!ImGui::BeginPopupContextItem())
@@ -8321,7 +8321,7 @@ void ShowExampleAppDocuments(bool* p_open)
 
     // About the ImGuiWindowFlags_UnsavedDocument / ImGuiTabItemFlags_UnsavedDocument flags.
     // They have multiple effects:
-    // - Display a dot next to the title.
+    // - DisplayImGui a dot next to the title.
     // - Tab is selected when clicking the X close button.
     // - Closure is not assumed (will wait for user to stop submitting the tab).
     //   Otherwise closure is assumed when pressing the X, so if you keep submitting the tab may reappear at end of tab bar.
@@ -8382,7 +8382,7 @@ void ShowExampleAppDocuments(bool* p_open)
             }
     }
 
-    // Display closing confirmation UI
+    // DisplayImGui closing confirmation UI
     if (!close_queue.empty())
     {
         int close_queue_unsaved_documents = 0;
