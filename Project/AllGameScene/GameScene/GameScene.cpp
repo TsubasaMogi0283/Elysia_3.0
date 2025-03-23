@@ -74,7 +74,7 @@ void GameScene::Initialize() {
 #pragma region ゲート
 
 	//ゲートのモデルの読み込み
-	uint32_t gateModelhandle = modelManager_->LoadModelFile("Resources/Model/Sample/Gate", "Gate.obj");
+	uint32_t gateModelhandle = modelManager_->Load("Resources/Model/Sample/Gate", "Gate.obj");
 	//生成
 	gate_ = std::make_unique<Gate>();
 	//初期化
@@ -112,7 +112,7 @@ void GameScene::Initialize() {
 #pragma endregion
 
 	//鍵のモデルの読み込み
-	uint32_t keyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/key", "Key.obj");
+	uint32_t keyModelHandle = modelManager_->Load("Resources/External/Model/key", "Key.obj");
 	//生成
 	keyManager_ = std::make_unique<KeyManager>();
 	//レベルデータハンドルの設定
@@ -127,12 +127,12 @@ void GameScene::Initialize() {
 #pragma region 敵
 	//敵モデルの読み込み
 	//通常
-	uint32_t enemyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
+	uint32_t enemyModelHandle = modelManager_->Load("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
 	//強敵
-	uint32_t strongEnemyModelHandle = modelManager_->LoadModelFile("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
+	uint32_t strongEnemyModelHandle = modelManager_->Load("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
 
 #ifdef _DEBUG
-	enemyModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube", "Cube.obj");
+	enemyModelHandle = modelManager_->Load("Resources/Model/Sample/Cube", "Cube.obj");
 #endif // _DEBUG
 
 	//敵管理システム

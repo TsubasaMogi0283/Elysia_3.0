@@ -47,7 +47,7 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 
 
 #ifdef _DEBUG
-	uint32_t debugModelHandle = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube", "cube.obj");
+	uint32_t debugModelHandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Cube", "cube.obj");
 	//モデルの生成
 	debugModel_.reset(Elysia::Model::Create(debugModelHandle));
 	//ワールドトランスフォームの初期化

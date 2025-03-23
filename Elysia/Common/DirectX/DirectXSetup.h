@@ -22,15 +22,6 @@
 #include <wrl.h>
 using Microsoft::WRL::ComPtr;
 
-
-
-
-
-
-
-
-
-
 /// <summary>
 /// リソースリークチェック
 /// ReportLiveObjects
@@ -107,10 +98,6 @@ namespace Elysia{
 
 
 	private:
-		//DepthStencilTexture...奥行の根幹をなすものであり、非常に大量の読み書きを高速に行う必要がある
-		//						Textureの中でも特に例外的な扱いが必要となっているとのこと。
-		//						Depthと名前の通り奥行きの情報を持っているものだね
-
 		/// <summary>
 		/// DepthのResourceを生成する
 		/// </summary>
@@ -172,7 +159,7 @@ namespace Elysia{
 		/// </summary>
 		/// <param name="width">横幅</param>
 		/// <param name="height">縦幅</param>
-		static void GenarateViewport(const uint32_t& width, const uint32_t& height);
+		void GenarateViewport(const uint32_t& width, const uint32_t& height);
 
 
 		/// <summary>
@@ -180,7 +167,7 @@ namespace Elysia{
 		/// </summary>
 		/// <param name="right">横幅</param>
 		/// <param name="bottom">立幅</param>
-		static void GenarateScissor(const uint32_t& right, const uint32_t& bottom);
+		void GenarateScissor(const uint32_t& right, const uint32_t& bottom);
 
 
 		/// <summary>
@@ -189,14 +176,14 @@ namespace Elysia{
 		/// <param name="resource"></param>
 		/// <param name="beforeState"></param>
 		/// <param name="afterState"></param>
-		static void SetResourceBarrier(const ComPtr<ID3D12Resource>& resource, const D3D12_RESOURCE_STATES& beforeState, const D3D12_RESOURCE_STATES& afterState);
+		void SetResourceBarrier(const ComPtr<ID3D12Resource>& resource, const D3D12_RESOURCE_STATES& beforeState, const D3D12_RESOURCE_STATES& afterState);
 
 		/// <summary>
 		/// リソースバリアの設定(スワップチェイン用)
 		/// </summary>
 		/// <param name="beforeState"></param>
 		/// <param name="afterState"></param>
-		static void SetResourceBarrierForSwapChain(const D3D12_RESOURCE_STATES& beforeState, const D3D12_RESOURCE_STATES& afterState);
+		void SetResourceBarrierForSwapChain(const D3D12_RESOURCE_STATES& beforeState, const D3D12_RESOURCE_STATES& afterState);
 
 
 

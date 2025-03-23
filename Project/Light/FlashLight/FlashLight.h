@@ -38,6 +38,22 @@ namespace Elysia {
 /// </summary>
 struct Camera;
 
+
+
+
+
+/// <summary>
+/// チャージ段階
+/// </summary>
+enum ChargeCondition {
+	//不十分
+	NoEnoughAttack,
+	//通常
+	NormalChargeAttack,
+	//強い
+	StrongChargeAttack,
+};
+
 /// <summary>
 /// 懐中電灯
 /// </summary>
@@ -191,6 +207,13 @@ public:
 		return isAbleToAttack_;
 	}
 
+	/// <summary>
+	/// チャージ状態
+	/// </summary>
+	/// <returns></returns>
+	inline uint32_t GetChargeCondition()const {
+		return chargeConditionValue_;
+	}
 
 	/// <summary>
 	/// 扇の取得(3次元)
@@ -217,17 +240,13 @@ private:
 
 private:
 	//調整項目
-	//光の強さ
-	const std::string FLASH_LIGHT_INTENSITY_STRING_ = "FlashLightIntensity";
 	//cosFallowoffStart
 	const std::string FLASH_LIGHT_COS_FALLOWOFF_START_STRING_ = "FlashLightCosFallowOffStart";
 	//最大
 	const std::string MAX_STRING_ = "Max";
-	float_t maxIntensity_ = 400.0f;
 	float_t maxStart_ = 2.4f;
 	//最小
 	const std::string MIN_STRING_ = "Min";
-	float_t minIntensity_ = 50.0f;
 	float_t minStart_ = 1.5f;
 
 	//チャージ
@@ -261,7 +280,8 @@ private:
 	const float_t MIN_CHARGE_VALUE_ = 0.0f;
 	//時間増加
 	const float_t DELTA_TIME_ = 1.0f / 60.0f;
-
+	//初期の強さ
+	const float INITIAL_INTENCITY_ = 200.0f;
 private:
 	//スポットライト
 	SpotLight spotLight_ = {};
@@ -289,7 +309,10 @@ private:
 
 	//チャージ時のパーティクル
 	std::list<std::unique_ptr<Elysia::Particle3D>>chargeParticle_ = {};
+	//パーティクルマテリアル
+	Material particleMaterial = {};
 	//生成時間
+	bool isGenerate_ = false;
 	float_t readyForGenerateParticleTime_ = 0.0f;
 	
 
@@ -304,6 +327,8 @@ private:
 	bool isCharge_ = false;
 	//チャージの値
 	float_t chargeValue_ = 0.0f;
+	//チャージ段階
+	uint32_t chargeConditionValue_ = 0u;
 
 	//攻撃できるかどうか
 	bool isAbleToAttack_ = false;

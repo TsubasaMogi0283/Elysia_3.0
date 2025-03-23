@@ -299,7 +299,7 @@ void EnemyManager::Update(){
 				if (defferenceDistance < TRACKING_START_DISTANCE_ &&
 					dot > FRONT_DOT_) {
 					//追跡準備へ
-					//enemy->ChengeState(std::make_unique<NormalEnemyPreTracking>());
+					enemy->ChengeState(std::make_unique<NormalEnemyPreTracking>());
 				}
 			}
 			//追跡

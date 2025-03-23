@@ -1,5 +1,6 @@
 #include "Particle3D.h" 
 
+
 #include <cassert>
 #include <numbers>
 #include <algorithm>
@@ -18,7 +19,7 @@
 
 
 //静的メンバ変数の初期化
-std::map<uint32_t, Elysia::Particle3D::InstancingData> Elysia::Particle3D::instancingManegimentMap_ = {};
+std::map<uint32_t, Elysia::Particle3D::InstancingData> Elysia::Particle3D::instancingDataMap_;
 
 
 Elysia::Particle3D::Particle3D() {
@@ -36,12 +37,12 @@ Elysia::Particle3D::Particle3D() {
 
 }
 
-std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& moveType){
+std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& moveType) {
 	//生成
 	std::unique_ptr<Elysia::Particle3D> particle3D = std::make_unique<Elysia::Particle3D>();
 
 	//モデルの読み込み
-	uint32_t modelHandle = particle3D->modelManager_->LoadModelFile("Resources/Model/Particle","ParticlePlane.obj");
+	uint32_t modelHandle = particle3D->modelManager_->Load("Resources/Model/Particle", "ParticlePlane.obj");
 	//テクスチャの読み込み
 	particle3D->textureHandle_ = particle3D->textureManager_->Load("Resources/External/Texture/Circle/circle.png");
 	//動きの種類
@@ -63,31 +64,29 @@ std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& m
 	std::memcpy(vertexData, particle3D->vertices_.data(), sizeof(VertexData) * particle3D->vertices_.size());
 	particle3D->vertexResource_->Unmap(0u, nullptr);
 
+
+
 	//インスタンシング
 	particle3D->instancingResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(ParticleForGPU) * particle3D->MAX_INSTANCE_NUMBER_);
-	//SRVを作る
-	//すでに作られているものだったらそこから取り出しSRVの上限突破を防ぐ
-	auto it = instancingManegimentMap_.find(modelHandle);
-	if (it != instancingManegimentMap_.end()) {
-		particle3D->instancingIndex_= it->second.srvIndex;
-	}
-	else {
-		particle3D->instancingIndex_ = particle3D->srvManager_->Allocate();
-		particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
-		instancingManegimentMap_.try_emplace(modelHandle, particle3D->instancingIndex_);
-	}
-	//書き込み
-	particle3D->instancingResource_->Map(0u, nullptr, reinterpret_cast<void**>(&particle3D->particleForGpuData_));
-
+	//インデックス
+	particle3D->instancingIndex_ = particle3D->srvManager_->Allocate();
+	//SRVの作成
+	particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
+	//マップに記録
+	InstancingData instancingData = { .resource = particle3D->instancingResource_ ,.srvIndex = particle3D->instancingIndex_ };
 	//カメラ
 	particle3D->cameraResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(Vector3));
+
+
+	//エミッターのスケール
+	particle3D->emitter_.transform.scale = { .x = 0.5f,.y = 0.5f,.z = 0.5f };
 
 
 	return particle3D;
 
 }
 
-std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& modelHandle,const uint32_t& moveType) {
+std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& modelHandle, const uint32_t& moveType) {
 	//生成
 	std::unique_ptr<Elysia::Particle3D> particle3D = std::make_unique<Elysia::Particle3D>();
 
@@ -127,8 +126,8 @@ std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& m
 	particle3D->instancingResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(ParticleForGPU) * particle3D->MAX_INSTANCE_NUMBER_);
 	//SRVを作る
 	//すでに作られているものだったらそこから取り出しSRVの上限突破を防ぐ
-	auto it = instancingManegimentMap_.find(modelHandle);
-	if (it != instancingManegimentMap_.end()) {
+	auto it = instancingDataMap_.find(modelHandle);
+	if (it != instancingDataMap_.end()) {
 		//particle3D->instancingResource_ = it->second.resource;
 		particle3D->instancingIndex_ = it->second.srvIndex;
 	}
@@ -154,13 +153,15 @@ std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& m
 
 ParticleInformation Elysia::Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
 
+	
+
 	//ランダムの値で位置を決める
 	//SRは固定
-	std::uniform_real_distribution<float> distribute(-2.0f, 2.0f);
+	std::uniform_real_distribution<float> distribute(-1.0f, 1.0f);
 	ParticleInformation particle;
-	particle.transform.scale = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
-	particle.transform.rotate = {.x= 0.0f,.y= 0.0f,.z= 0.0f };
-	Vector3 randomTranslate = {.x= distribute(randomEngine),.y= distribute(randomEngine)+1.0f,.z= distribute(randomEngine) };
+	particle.transform.scale = { .x = 0.3f,.y = 0.3f,.z = 0.3f };
+	particle.transform.rotate = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
+	Vector3 randomTranslate = { .x = distribute(randomEngine),.y = distribute(randomEngine) + 1.0f,.z = distribute(randomEngine) };
 	particle.transform.translate = VectorCalculation::Add(emitter_.transform.translate, randomTranslate);
 	//投げ上げは少しだけ上にずらす
 	if (moveType_ == ThrowUp) {
@@ -172,11 +173,11 @@ ParticleInformation Elysia::Particle3D::MakeNewParticle(std::mt19937& randomEngi
 	particle.initialTransform = particle.transform;
 	//速度
 	std::uniform_real_distribution<float>distVelocity(-1.0f, 1.0f);
-	particle.velocity = {.x= distVelocity(randomEngine),.y= distVelocity(randomEngine),.z= distVelocity(randomEngine) };
+	particle.velocity = { .x = distVelocity(randomEngine),.y = distVelocity(randomEngine),.z = distVelocity(randomEngine) };
 
 	//色
 	std::uniform_real_distribution<float> distColor(1.0f, 1.0f);
-	particle.color = {.x= distColor(randomEngine),.y= distColor(randomEngine),.z= distColor(randomEngine),.w= 1.0f};
+	particle.color = { .x = distColor(randomEngine),.y = distColor(randomEngine),.z = distColor(randomEngine),.w = 1.0f };
 
 	//時間
 	std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
@@ -209,7 +210,7 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 	std::mt19937 randomEngine(seedGenerator());
 
 	//一度だけ出すモード
-	if (isReleaseOnceMode_ == true ) {
+	if (isReleaseOnceMode_ == true) {
 		//パーティクルを作る
 		if (isReeasedOnce_ == false) {
 			particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
@@ -219,8 +220,8 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 	else {
 		//時間経過
 		emitter_.frequencyTime += DELTA_TIME;
-		//頻度より大きいなら
-		if (emitter_.frequency <= emitter_.frequencyTime) {
+		//頻度より大きいかつまだ生成が停止されていない
+		if (emitter_.frequency <= emitter_.frequencyTime && isStopGenerate_==false) {
 			//パーティクルを作る
 			particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
 			//余計に過ぎた時間も加味して頻度計算する
@@ -229,8 +230,10 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 	}
 
 
-	
-	
+	//書き込み
+	instancingResource_->Map(0u, nullptr, reinterpret_cast<void**>(&particleForGpuData_));
+
+
 	//座標の計算など
 	numInstance_ = 0;
 	for (std::list<ParticleInformation>::iterator particleIterator = particles_.begin();
@@ -249,7 +252,7 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 
 		switch (moveType_) {
 		case ParticleMoveType::NormalRelease:
-			#pragma region 通常の放出
+#pragma region 通常の放出
 
 			if (isReleaseOnceMode_ == false) {
 				if (particleIterator->lifeTime <= particleIterator->currentTime) {
@@ -258,9 +261,9 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 				}
 			}
 
-			
+
 			particleIterator->transform.translate.y += 0.0001f;
-			
+
 			//Y軸でπ/2回転
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
@@ -295,11 +298,10 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 				if (isToTransparent_ == true) {
 					//アルファはVector4でのwだね
 					float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
-					particleForGpuData_[numInstance_].color.w = alpha ;
+					particleForGpuData_[numInstance_].color.w = alpha;
 					particleIterator->color.w = alpha;
 				}
 
-				++numInstance_;
 			}
 
 			break;
@@ -308,10 +310,10 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 #pragma endregion
 
 		case ParticleMoveType::ThrowUp:
-			#pragma region 鉛直投げ上げ
+#pragma region 鉛直投げ上げ
 			//強制的にビルボードにするよ
 
-			
+
 			velocityY_ += accel;
 
 			//加速を踏まえた位置計算
@@ -358,14 +360,14 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 
 				}
 
-				++numInstance_;
+				
 			}
 			break;
 
-			#pragma endregion
+#pragma endregion
 
 		case ParticleMoveType::Rise:
-			#pragma region 上昇
+#pragma region 上昇
 			//強制的にビルボードにするよ
 			particleIterator->transform.translate.x += particleIterator->velocity.x / 15.0f;
 			particleIterator->transform.translate.y += 0.03f;
@@ -391,7 +393,8 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 			worldMatrix = Matrix4x4Calculation::Multiply(scaleMatrix, Matrix4x4Calculation::Multiply(billBoardMatrix, translateMatrix));
 
 			//最大値を超えないようにする
-			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
+			//そして生成停止までの処理
+			if (numInstance_ < MAX_INSTANCE_NUMBER_ && isStopGenerate_ == false) {
 				particleForGpuData_[numInstance_].world = worldMatrix;
 				particleForGpuData_[numInstance_].color = particleIterator->color;
 
@@ -403,20 +406,19 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 					particleForGpuData_[numInstance_].color.w = alpha;
 				}
 
-				++numInstance_;
 			}
 			break;
 
-			#pragma endregion
+#pragma endregion
 
 		case ParticleMoveType::Absorb:
-			#pragma region 吸収
+#pragma region 吸収
 
 			//線形補間
 			particleIterator->absorbT += T_INCREASE_VALUE_;
 			//線形補間でやって綺麗に集まるようにする	
 			Vector3 newPosition = VectorCalculation::Lerp(particleIterator->transform.translate, absorbPosition_, particleIterator->absorbT);
-			
+
 			//Y軸でπ/2回転
 			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
@@ -436,40 +438,50 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 			//その代わりにさっき作ったbillBoardMatrixを入れるよ
 			worldMatrix = Matrix4x4Calculation::Multiply(scaleMatrix, Matrix4x4Calculation::Multiply(billBoardMatrix, translateMatrix));
 
-			
+
 
 			//最大値を超えないようにする
-			if (numInstance_ < MAX_INSTANCE_NUMBER_) {
+			//そして生成停止までの処理
+			if (numInstance_ < MAX_INSTANCE_NUMBER_ && isStopGenerate_ == false) {
 				particleForGpuData_[numInstance_].world = worldMatrix;
 				particleForGpuData_[numInstance_].color = particleIterator->color;
 
 				//透明になっていくようにするかどうか
 				if (isToTransparent_ == true) {
-					//線形補間でどんどん透明にしていく
+					//どんどん透明にしていく
 					float alpha = 1.0f - particleIterator->absorbT;
 					particleIterator->color.w = alpha;
 					particleForGpuData_[numInstance_].color.w = alpha;
 				}
 
-				++numInstance_;
 			}
 			break;
 
 
 
-			#pragma endregion
+#pragma endregion
 
 
 		}
 
+		//生成を止めた時
+		if (isStopGenerate_ == true) {
+			const float DECREASE_ALPHA_VALUE = 0.1f;
+			particleForGpuData_[numInstance_].color.w -= DECREASE_ALPHA_VALUE;
+		}
+		
 		//見えなくなった
 		if (particleIterator->color.w <= 0.0f) {
 			particleIterator->isInvisible = true;
 		}
-		
+
+		//最後に加算をし次に回す
+		++numInstance_;
+
 	}
 
-	
+
+	instancingResource_->Unmap(0u, nullptr);
 
 	//全て見えなくなったらisAllInvisible_がtrueになる
 	if (isReeasedOnce_ == true) {
@@ -477,11 +489,11 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 		//今回の場合はparticles_にあるisInvisibleが全てtrueに鳴ったらtrueを返すという仕組みになっている
 		isAllInvisible_ = std::all_of(particles_.begin(), particles_.end(), [](const ParticleInformation& particle) {
 			return particle.isInvisible == true;
-		});
+			});
 	}
 }
 
-void Elysia::Particle3D::Draw(const Camera& camera,const Material& material){
+void Elysia::Particle3D::Draw(const Camera& camera, const Material& material) {
 
 	assert(material.lightingKinds == LightingType::NoneLighting);
 	//更新
@@ -516,7 +528,7 @@ void Elysia::Particle3D::Draw(const Camera& camera,const Material& material){
 	directXSetup_->GetCommandList()->DrawInstanced(UINT(vertices_.size()), numInstance_, 0u, 0u);
 }
 
-void Elysia::Particle3D::Draw(const Camera& camera,const  Material& material,const DirectionalLight& directionalLight) {
+void Elysia::Particle3D::Draw(const Camera& camera, const  Material& material, const DirectionalLight& directionalLight) {
 
 	//Directionalではなかったらassert
 	if (material.lightingKinds != LightingType::DirectionalLighting) {
@@ -559,7 +571,7 @@ void Elysia::Particle3D::Draw(const Camera& camera,const  Material& material,con
 
 }
 
-void Elysia::Particle3D::Draw(const Camera& camera, const Material& material, const PointLight& pointLight){
+void Elysia::Particle3D::Draw(const Camera& camera, const Material& material, const PointLight& pointLight) {
 	//Pointではなかったらassert
 	if (material.lightingKinds != LightingType::PointLighting) {
 		assert(0);
@@ -602,7 +614,7 @@ void Elysia::Particle3D::Draw(const Camera& camera, const Material& material, co
 
 }
 
-void Elysia::Particle3D::Draw(const Camera& camera, const Material& material, const SpotLight& spotLight){
+void Elysia::Particle3D::Draw(const Camera& camera, const Material& material, const SpotLight& spotLight) {
 	//Spotではなかったらassert
 	if (material.lightingKinds != LightingType::SpotLighting) {
 		assert(0);

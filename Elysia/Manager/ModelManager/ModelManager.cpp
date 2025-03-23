@@ -277,7 +277,7 @@ ModelData Elysia::ModelManager::LoadFile(const std::string& directoryPath, const
 	return modelData;
 }
 
-uint32_t Elysia::ModelManager::LoadModelFile(const std::string& directoryPath, const std::string& fileName) {
+uint32_t Elysia::ModelManager::Load(const std::string& directoryPath, const std::string& fileName) {
 
 	//一度読み込んだものはその値を返す
 	//新規は勿論読み込みをする
@@ -313,7 +313,7 @@ uint32_t Elysia::ModelManager::LoadModelFile(const std::string& directoryPath, c
 	return modelhandle;
 }
 
-uint32_t Elysia::ModelManager::LoadModelFile(const std::string& directoryPath, const std::string& fileName, bool isAnimationLoad) {
+uint32_t Elysia::ModelManager::Load(const std::string& directoryPath, const std::string& fileName, bool isAnimationLoad) {
 	//一度読み込んだものはその値を返す
 	//新規は勿論読み込みをする
 	std::string filePath = directoryPath + "/" + fileName;

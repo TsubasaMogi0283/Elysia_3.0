@@ -24,10 +24,6 @@ FlashLight::FlashLight() {
 void FlashLight::Initialize() {
 
 	//調整項目として扱う
-	//光の強さ
-	globalVariables_->CreateGroup(FLASH_LIGHT_INTENSITY_STRING_);
-	globalVariables_->AddItem(FLASH_LIGHT_INTENSITY_STRING_, MAX_STRING_, maxIntensity_);
-	globalVariables_->AddItem(FLASH_LIGHT_INTENSITY_STRING_, MIN_STRING_, minIntensity_);
 	//FallowOff
 	globalVariables_->CreateGroup(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_);
 	globalVariables_->AddItem(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_, maxStart_);
@@ -45,7 +41,7 @@ void FlashLight::Initialize() {
 	spotLight_.distance = LIGHT_DISTANCE;
 	spotLight_.decay = 0.6f;
 	spotLight_.cosFallowoffStart = 1.8f;
-	spotLight_.intensity = 200.0f;
+	spotLight_.intensity = INITIAL_INTENCITY_;
 	spotLight_.aroundOffset = 0.05f;
 
 	//ライトの片方の角度
@@ -77,17 +73,19 @@ void FlashLight::Initialize() {
 	flashLightCollision_ = std::make_unique<FlashLightCollision>();
 	flashLightCollision_->Initialize();
 
-
+	//パーティクル用のマテリアルの初期化
+	particleMaterial.Initialize();
+	particleMaterial.lightingKinds = LightingType::NoneLighting;
 	
 #ifdef _DEBUG
 
 	//マテリアルの初期化
 	material_.Initialize();
-	material_.lightingKinds = NoneLighting;
+	material_.lightingKinds = LightingType::NoneLighting;
 	material_.color = { .x = 0.5f,.y = 1.0f,.z = 0.5f,.w = 1.0f };
 
 	//デバッグ用のモデルを生成する
-	uint32_t debugModelHandle = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	uint32_t debugModelHandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Sphere", "Sphere.obj");
 
 	const float SCALE = 0.4f;
 	//左右
@@ -103,7 +101,7 @@ void FlashLight::Initialize() {
 	lightCenterWorldTransform_.Initialize();
 	lightCenterWorldTransform_.scale = { .x = SCALE,.y = SCALE ,.z = SCALE };
 	lightCenterMaterial_.Initialize();
-	lightCenterMaterial_.lightingKinds = NoneLighting;
+	lightCenterMaterial_.lightingKinds = LightingType::NoneLighting;
 
 
 #endif // _DEBUG	
@@ -142,12 +140,6 @@ void FlashLight::Update() {
 	//割合を求める
 	ratio_ = SingleCalculation::InverseLerp(minRange_, maxRange_, lightSideTheta_);
 
-	//幅から強さを計算する
-	//最大の強さ
-	maxIntensity_ = globalVariables_->GetFloatValue(FLASH_LIGHT_INTENSITY_STRING_, MAX_STRING_);
-	//最小の強さ
-	minIntensity_ = globalVariables_->GetFloatValue(FLASH_LIGHT_INTENSITY_STRING_, MIN_STRING_);
-	spotLight_.intensity = SingleCalculation::Lerp(minIntensity_, maxIntensity_, (1.0f - ratio_));
 
 	//cosFallowoffStart
 	//最大
@@ -177,6 +169,9 @@ void FlashLight::Update() {
 		.y = std::sinf(phi_),
 		.z = std::sinf(theta_ - lightSideTheta_)
 	};
+
+	//パーティクル用のマテリアルを更新
+	particleMaterial.Update();
 
 
 	//チャージ
@@ -208,7 +203,7 @@ void FlashLight::DrawObject3D(const Camera& camera) {
 	for (const std::unique_ptr <Elysia::Particle3D>& particle : chargeParticle_) {
 		if (particle != nullptr) {
 			//スポットライトの座標に集まってくるようにする
-			particle->Draw(camera, material_);
+			particle->Draw(camera, particleMaterial);
 		}
 
 
@@ -227,11 +222,20 @@ void FlashLight::GenerateParticle() {
 	std::unique_ptr<Elysia::Particle3D> particle = Elysia::Particle3D::Create(ParticleMoveType::Absorb);
 
 	//パーティクルの細かい設定
-	const float SCALE_SIZE = 20.0f;
+	const float SCALE_SIZE = 0.001f;
 	particle->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
 	particle->SetCount(5u);
-	particle->SetIsReleaseOnceMode(true);
+	particle->SetIsReleaseOnceMode(false);
 	particle->SetIsToTransparent(true);
+	const float FREQUENCY = 0.5f;
+	particle->SetFrequency(FREQUENCY);
+
+
+	const float DISTANCE = 3.0f;
+	Vector3 emitterDirection = VectorCalculation::Multiply(fan3D_.direction, DISTANCE);
+	Vector3 emitterPosition = VectorCalculation::Add(fan3D_.position, emitterDirection);
+	particle->SetTranslate(emitterPosition);
+
 	//挿入
 	chargeParticle_.push_back(std::move(particle));
 }
@@ -245,13 +249,12 @@ void FlashLight::Charge() {
 		chargeValue_=std::min<float_t>(MAX_CHARGE_VALUE_, chargeValue_);
 		
 		//パーティクルの生成
-		readyForGenerateParticleTime_ += DELTA_TIME_;
-		if (readyForGenerateParticleTime_>releaseTime_) {
-			//GenerateParticle();
-			readyForGenerateParticleTime_ = 0.0f;
+		if (isGenerate_ == false) {
+			GenerateParticle();
+			isGenerate_ = true;
+
 		}
 		
-
 		//攻撃できるかどうか
 		if (chargeValue_ > isAbleToAttackValue_) {
 			isAbleToAttack_ = true;
@@ -260,29 +263,50 @@ void FlashLight::Charge() {
 			if (chargeValue_ >= MAX_CHARGE_VALUE_) {
 				//赤
 				chargeColor_ = Convert::Color::Adapter(RED);
+				//今日攻撃
+				chargeConditionValue_ = ChargeCondition::StrongChargeAttack;
 			}
 			else {
 				//黄色
 				chargeColor_ = Convert::Color::Adapter(YELLOW);
+				//攻撃できる段階
+				chargeConditionValue_ = ChargeCondition::NormalChargeAttack;
+
 			}
 		}
 		else {
 			//色は緑
 			chargeColor_ = Convert::Color::Adapter(GREEN);
+			//不十分
+			chargeConditionValue_ = ChargeCondition::NoEnoughAttack;
+			//攻撃できない
 			isAbleToAttack_ = false;
 		}
 	}
+	else {
+		for (const std::unique_ptr <Elysia::Particle3D>& particle : chargeParticle_) {
+			if (particle != nullptr) {
+				//スポットライトの座標に集まってくるようにする
+				particle->SetIsStopGenerate(true);
+			}
+		}
+		isGenerate_ = false;
+	}
 	
 
-
+	float ratio = 0.0f;
 	//クールタイム
 	if (isCoolTime_ == true) {
-
+		//減少
 		chargeValue_ -= chargeDecreaseValue_;
 		//最大値を制限
 		chargeValue_ = std::min<float_t>(MIN_CHARGE_VALUE_, chargeValue_);
 		//青
+		//「クール」と言ったら青が良いよね！
 		chargeColor_ = Convert::Color::Adapter(BLUE);
+
+		//割合を求め強さを設定
+		ratio = SingleCalculation::InverseLerp(MIN_CHARGE_VALUE_, MAX_CHARGE_VALUE_, chargeValue_);
 
 		//ゲージが0になったら解除
 		if (chargeValue_<=0.0f) {
@@ -290,19 +314,30 @@ void FlashLight::Charge() {
 		}
 	}
 	
+#ifdef _DEBUG
+	ImGui::Begin("AA");
+	ImGui::InputFloat("割合", &ratio);
+	ImGui::InputFloat("チャージ", &chargeValue_);
 
+	
+	ImGui::End();
+#endif // _DEBUG
+
+
+	
+	//初期+割合分
+	const float ATTACK_INTENCITY = 200.0f;
+	spotLight_.intensity = INITIAL_INTENCITY_ + (ratio * ATTACK_INTENCITY);
 
 	//値によって伸びる幅が変わる
 	chargeGaugeSprite_->SetScale({ .x = chargeValue_,.y = 1.0f });
 	chargeGaugeSprite_->SetColor(chargeColor_);
 
+	//スポットライトの座標に集まってくるようにする
 	for (const std::unique_ptr <Elysia::Particle3D>& particle : chargeParticle_) {
 		if (particle != nullptr) {
-			//スポットライトの座標に集まってくるようにする
 			particle->SetAbsorbPosition(spotLight_.position);
 		}
-
-
 	}
 
 }
@@ -352,7 +387,6 @@ void FlashLight::Adjustment() {
 	releaseTime_ = globalVariables_->GetFloatValue(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_PARTICLE_RELEASE_TIME_);
 
 	//保存
-	globalVariables_->SaveFile(FLASH_LIGHT_INTENSITY_STRING_);
 	globalVariables_->SaveFile(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_);
 	globalVariables_->SaveFile(FLASH_LIGHT_CHARGE_VALUE_);
 

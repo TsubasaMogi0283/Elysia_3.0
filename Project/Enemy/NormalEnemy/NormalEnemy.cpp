@@ -63,7 +63,7 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 
 
 	//デバッグ用のモデル
-	debugModelHandle = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	debugModelHandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Sphere", "Sphere.obj");
 
 	//攻撃の当たり判定
 	attackCollision_ = std::make_unique<EnemyAttackCollision>();

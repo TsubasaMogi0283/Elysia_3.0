@@ -24,9 +24,9 @@
 
 #pragma region 前方宣言
 
-/// <summary>
-/// マテリアル
-/// </summary>
+ /// <summary>
+ /// マテリアル
+ /// </summary>
 struct Material;
 
 /// <summary>
@@ -46,6 +46,7 @@ struct SpotLight;
 
 
 #pragma endregion
+
 
 
 /// <summary>
@@ -175,6 +176,13 @@ namespace Elysia {
 			this->isReleaseOnceMode_ = isReleaseOnce;
 		}
 
+		/// <summary>
+		/// 生成を止めるかどうか
+		/// </summary>
+		/// <param name="isStop">止めるかどうか</param>
+		inline void SetIsStopGenerate(const bool& isStop) {
+			this->isStopGenerate_ = isStop;
+		}
 
 		/// <summary>
 		/// 透明になっていくようにするかどうか
@@ -291,20 +299,19 @@ namespace Elysia {
 		//パイプライン管理クラス
 		Elysia::PipelineManager* pipelineManager_ = nullptr;
 
-
+	private:
+		//時間変化
+		const float DELTA_TIME = 1.0f / 60.0f;
 	private:
 		/// <summary>
 		/// インスタンシングの情報
 		/// </summary>
 		struct InstancingData {
-			//ComPtr<ID3D12Resource> resource;
+			//リソース
+			ComPtr<ID3D12Resource> resource;
 			//SRV用のインデックス
 			int srvIndex;
 		};
-
-	private:
-		//時間変化
-		const float DELTA_TIME = 1.0f / 60.0f;
 
 
 	private:
@@ -312,9 +319,9 @@ namespace Elysia {
 		//頂点リソースを作る
 		ComPtr<ID3D12Resource> vertexResource_ = nullptr;
 		//頂点バッファビューを作成する
-		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_={};
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_ = {};
 		//頂点データ
-		std::vector<VertexData> vertices_={};
+		std::vector<VertexData> vertices_ = {};
 
 		//カメラ
 		//リソース
@@ -324,7 +331,7 @@ namespace Elysia {
 		//座標
 		Vector3 cameraPosition_ = {};
 
-		
+
 		//最大数
 		const uint32_t MAX_INSTANCE_NUMBER_ = 1000u;
 		//描画すべきインスタンス数
@@ -334,8 +341,8 @@ namespace Elysia {
 		//インスタンスリソース
 		ComPtr<ID3D12Resource> instancingResource_ = nullptr;
 		//インスタンシング用のSRV管理変数
-		static std::map<uint32_t, InstancingData> instancingManegimentMap_;
-		
+		static std::map<uint32_t, InstancingData> instancingDataMap_;
+
 		//パーティクル
 		std::list<ParticleInformation>particles_;
 		//パーティクルデータ
@@ -353,7 +360,7 @@ namespace Elysia {
 		bool isToTransparent_ = true;
 		//全て透明になったかどうか
 		bool isAllInvisible_ = false;
-		
+
 		//鉛直投げ上げ
 		float velocityY_ = 1.2f;
 		//地面の高さ設定
@@ -363,16 +370,19 @@ namespace Elysia {
 		bool isReleaseOnceMode_ = true;
 		//出し終えたかどうか
 		bool isReeasedOnce_ = false;
+		//生成を止めるかどうか
+		bool isStopGenerate_ = false;
 
 		//線形補間で増える値
 		const float T_INCREASE_VALUE_ = 0.01f;
 		//吸収し集まる場所
 		Vector3 absorbPosition_ = {};
 
-		
+
 	};
 
 };
+
 
 
 

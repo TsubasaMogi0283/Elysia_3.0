@@ -75,7 +75,7 @@ namespace Elysia {
 		/// <param name="directoryPath">パス</param>
 		/// <param name="fileName">ファイル名</param>
 		/// <returns></returns>
-		static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName);
+		static uint32_t Load(const std::string& directoryPath, const std::string& fileName);
 
 
 		/// <summary>
@@ -91,7 +91,7 @@ namespace Elysia {
 		/// <param name="fileName">ファイル名</param>
 		/// <param name="isAnimationLoad">アニメーションを読み込むかどうか</param>
 		/// <returns></returns>
-		static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName, bool isAnimationLoad);
+		static uint32_t Load(const std::string& directoryPath, const std::string& fileName, bool isAnimationLoad);
 
 
 

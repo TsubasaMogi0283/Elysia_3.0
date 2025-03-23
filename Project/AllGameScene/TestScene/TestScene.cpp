@@ -26,7 +26,7 @@ void TestScene::Initialize(){
 	levelHandle_ = levelDataManager_->Load("CollisionTest/CollisionTest.json");
 
 	//仮プレイヤー
-	uint32_t playerModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube", "cube.obj");
+	uint32_t playerModelHandle = modelManager_->Load("Resources/Model/Sample/Cube", "cube.obj");
 	playerModel_.reset(Elysia::Model::Create(playerModelHandle));
 	playerWorldTransform_.Initialize();
 	playerWorldTransform_.scale = { .x = 0.5f,.y = 1.0f,.z=2.0f };
@@ -35,7 +35,7 @@ void TestScene::Initialize(){
 
 
 	//球モデル
-	uint32_t sphereModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	uint32_t sphereModelHandle = modelManager_->Load("Resources/Model/Sample/Sphere", "Sphere.obj");
 	//四隅
 	for (uint32_t i = 0; i < COUNER_QUANTITY_; ++i) {
 		playerCounerModel_[i].reset(Elysia::Model::Create(sphereModelHandle));
