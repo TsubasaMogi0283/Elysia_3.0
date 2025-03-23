@@ -292,15 +292,12 @@ void FlashLight::Charge() {
 		}
 		isGenerate_ = false;
 	}
-	
 
 	float ratio = 0.0f;
 	//クールタイム
 	if (isCoolTime_ == true) {
 		//減少
 		chargeValue_ -= chargeDecreaseValue_;
-		//最大値を制限
-		chargeValue_ = std::min<float_t>(MIN_CHARGE_VALUE_, chargeValue_);
 		//青
 		//「クール」と言ったら青が良いよね！
 		chargeColor_ = Convert::Color::Adapter(BLUE);
@@ -310,6 +307,7 @@ void FlashLight::Charge() {
 
 		//ゲージが0になったら解除
 		if (chargeValue_<=0.0f) {
+			chargeValue_ = 0.0f;
 			isCoolTime_ = false;
 		}
 	}
@@ -326,7 +324,7 @@ void FlashLight::Charge() {
 
 	
 	//初期+割合分
-	const float ATTACK_INTENCITY = 200.0f;
+	const float ATTACK_INTENCITY = 500.0f;
 	spotLight_.intensity = INITIAL_INTENCITY_ + (ratio * ATTACK_INTENCITY);
 
 	//値によって伸びる幅が変わる

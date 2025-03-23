@@ -127,11 +127,6 @@ private:
 	void PlayerRotate();
 
 	/// <summary>
-	/// ライトの幅の設定
-	/// </summary>
-	void MoveLightSide();
-
-	/// <summary>
 	/// 逃げ状態
 	/// </summary>
 	void EscapeCondition();
@@ -211,8 +206,6 @@ private:
 	//プレイヤー
 	std::unique_ptr<Player> player_ = nullptr;
 	bool isReleaseAttack_ = false;
-	//ライトの幅
-	float_t lightSideTheta_ = 0.1f;
 	//角度
 	float_t theta_ = 0.0f;
 	float_t originPhi_ = 0.0f;

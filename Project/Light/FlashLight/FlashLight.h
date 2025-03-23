@@ -150,13 +150,6 @@ public:
 		this->phi_ = phi;
 	}
 
-	/// <summary>
-	/// ライトの幅を設定
-	/// </summary>
-	/// <param name="lightSideTheta">幅の角度</param>
-	inline void SetLightSideTheta(const float_t& lightSideTheta) {
-		this->lightSideTheta_ = lightSideTheta;
-	}
 
 	/// <summary>
 	/// 方向を取得

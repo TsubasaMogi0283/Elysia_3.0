@@ -367,9 +367,8 @@ void GameScene::RegisterToCollisionManager() {
 	std::vector<NormalEnemy*> enemyes = enemyManager_->GetNormalEnemies();
 	for (const NormalEnemy* enemy : enemyes) {
 		//懐中電灯に対して
-		if (isReleaseAttack_==true) {
-			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
-		}
+		collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+		
 		
 		//攻撃
 		if (enemy->GetIsAttack() == true) {
@@ -392,10 +391,8 @@ void GameScene::RegisterToCollisionManager() {
 
 
 	//懐中電灯に対してのコライダーを登録
-	const float MIN_THETA = 0.15f;
-	if (lightSideTheta_ < MIN_THETA) {
+	if (player_->GetFlashLight()->GetChargeCondition() >= ChargeCondition::NormalChargeAttack&& isReleaseAttack_==true) {
 		collisionManager_->RegisterList(player_->GetFlashLightCollision());
-
 	}
 
 	std::vector<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemies();
@@ -750,32 +747,6 @@ void GameScene::PlayerRotate() {
 	}
 }
 
-void GameScene::MoveLightSide() {
-
-	
-	const float LIGHT_MOVE_INTERVAL = 0.001f;
-	//広がる
-	if (input_->IsPushKey(DIK_X) == true) {
-		lightSideTheta_ += LIGHT_MOVE_INTERVAL;
-
-	}
-	//狭まる
-	if (input_->IsPushKey(DIK_Z) == true) {
-		lightSideTheta_ -= LIGHT_MOVE_INTERVAL;
-	}
-
-	//最大値固定
-	if (lightSideTheta_ > LIGHT_MAX_RANGE_) {
-		lightSideTheta_ = LIGHT_MAX_RANGE_;
-	}
-	//最低値固定
-	else if (lightSideTheta_ < LIGHT_MIN_RANGE_) {
-		lightSideTheta_ = LIGHT_MIN_RANGE_;
-	}
-
-	//幅を設定
-	player_->GetFlashLight()->SetLightSideTheta(lightSideTheta_);
-}
 
 void GameScene::Update(Elysia::GameManager* gameManager) {
 
@@ -837,8 +808,6 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 		PlayerMove();
 		//回転
 		PlayerRotate();
-		//ライトの動き
-		MoveLightSide();
 
 		//プレイヤーにそれぞれの角度を設定する
 		player_->GetFlashLight()->SetTheta(theta_);
