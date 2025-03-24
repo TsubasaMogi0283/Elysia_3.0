@@ -151,13 +151,6 @@ public:
 	}
 
 
-	/// <summary>
-	/// 方向を取得
-	/// </summary>
-	/// <returns>方向</returns>
-	inline Vector3 GetDirection()const {
-		return direction_;
-	}
 
 	/// <summary>
 	/// 最大の幅
@@ -328,6 +321,8 @@ private:
 	//クールタイム
 	bool isCoolTime_ = false;
 
+	//攻撃のホワイトフェード
+	std::unique_ptr<Elysia::Sprite>attackWhiteFadeSprite_ = nullptr;
 
 
 private:
@@ -344,7 +339,7 @@ private:
 	const uint32_t LEFT_ = 1u;
 
 	static const uint32_t SIDE_QUANTITY_ = 2u;
-	std::unique_ptr<Elysia::Model>model_[SIDE_QUANTITY_] = { nullptr };
+	std::unique_ptr<Elysia::Model>sideModel_[SIDE_QUANTITY_] = { nullptr };
 	WorldTransform worldTransform_[SIDE_QUANTITY_] = {};
 	Material material_ = {};
 

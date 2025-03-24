@@ -369,7 +369,6 @@ void GameScene::RegisterToCollisionManager() {
 		//懐中電灯に対して
 		collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 		
-		
 		//攻撃
 		if (enemy->GetIsAttack() == true) {
 			//敵の攻撃

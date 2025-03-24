@@ -55,6 +55,14 @@ void FlashLight::Initialize() {
 	fan3D_.sideThetaAngle = lightSideTheta_;
 	fan3D_.sidePhiAngleSize = lightSideTheta_;
 
+
+	//ホワイトフェード
+	uint32_t whiteTextureHandle = textureManager_->Load("Resources/Sprite/Back/White.png");
+	const Vector2 FADE_INITIAL_POSITION = { .x = 0.0f,.y = 0.0f };
+	attackWhiteFadeSprite_.reset(Elysia::Sprite::Create(whiteTextureHandle, FADE_INITIAL_POSITION));
+	//初期の透明度を設定
+	const float INITIAL_TRANSPARENCY = 0.0f;
+	attackWhiteFadeSprite_->SetTransparency(INITIAL_TRANSPARENCY);
 	//ゲージのスプライトを生成
 	uint32_t gaugeTextureHandle = textureManager_->Load("Resources/Sprite/Gauge/Gauge.png");
 	chargeGaugeSpritePosition_ = globalVariables_->GetVector2Value(FLASH_LIGHT_CHARGE_VALUE_, CHARGE_GAUGE_SPRITE_POSITION_STRING_);
@@ -90,7 +98,7 @@ void FlashLight::Initialize() {
 	const float SCALE = 0.4f;
 	//左右
 	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
-		model_[i].reset(Elysia::Model::Create(debugModelHandle));
+		sideModel_[i].reset(Elysia::Model::Create(debugModelHandle));
 		worldTransform_[i].Initialize();
 		worldTransform_[i].scale = { .x = SCALE,.y = SCALE ,.z = SCALE };
 
@@ -192,7 +200,7 @@ void FlashLight::DrawObject3D(const Camera& camera) {
 
 	//端
 	for (uint32_t i = 0; i < SIDE_QUANTITY_; ++i) {
-		model_[i]->Draw(worldTransform_[i], camera, material_, spotLight_);
+		sideModel_[i]->Draw(worldTransform_[i], camera, material_, spotLight_);
 	}
 	//中心
 	lightCenterModel_->Draw(lightCenterWorldTransform_, camera, lightCenterMaterial_, spotLight_);
@@ -211,6 +219,8 @@ void FlashLight::DrawObject3D(const Camera& camera) {
 }
 
 void FlashLight::DrawSprite(){
+	//ホワイトフェード
+	attackWhiteFadeSprite_->Draw();
 	//ゲージの描画
 	chargeGaugeSprite_->Draw();
 	//フレーム
@@ -305,6 +315,7 @@ void FlashLight::Charge() {
 		//割合を求め強さを設定
 		ratio = SingleCalculation::InverseLerp(MIN_CHARGE_VALUE_, MAX_CHARGE_VALUE_, chargeValue_);
 
+		
 		//ゲージが0になったら解除
 		if (chargeValue_<=0.0f) {
 			chargeValue_ = 0.0f;
@@ -312,19 +323,15 @@ void FlashLight::Charge() {
 		}
 	}
 	
-#ifdef _DEBUG
-	ImGui::Begin("AA");
-	ImGui::InputFloat("割合", &ratio);
-	ImGui::InputFloat("チャージ", &chargeValue_);
+	//白フェード
+	if (chargeConditionValue_ >= ChargeCondition::NormalChargeAttack) {
+		//攻撃可能な時だけにする
+		attackWhiteFadeSprite_->SetTransparency(ratio);
 
-	
-	ImGui::End();
-#endif // _DEBUG
-
-
+	}
 	
 	//初期+割合分
-	const float ATTACK_INTENCITY = 500.0f;
+	const float ATTACK_INTENCITY = 800.0f;
 	spotLight_.intensity = INITIAL_INTENCITY_ + (ratio * ATTACK_INTENCITY);
 
 	//値によって伸びる幅が変わる
