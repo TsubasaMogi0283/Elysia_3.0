@@ -9,8 +9,8 @@ NormalEnemyAttack::NormalEnemyAttack(){
 	stateName_ = "Attack";
 }
 
-void NormalEnemyAttack::Initialize()
-{
+void NormalEnemyAttack::Initialize(){
+
 }
 
 void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
@@ -18,7 +18,7 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 	//0から始める
 	const uint32_t RESTART_TIME = 0u;
 	//増える値
-	const uint32_t TIME_INCREASE_VALUE = 1;
+	const uint32_t TIME_INCREASE_VALUE = 1u;
 	//時間が増えていく
 	attackTime_ += TIME_INCREASE_VALUE;
 

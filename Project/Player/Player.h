@@ -324,7 +324,7 @@ private:
 	uint32_t haveKeyQuantity_ = 0u;
 
 	//体力
-	int32_t hp_ = 3;
+	uint32_t hp_ = 3u;
 	//敵の攻撃に当たった時のタイマー
 	int32_t downTime_ = 0;
 	//操作可能かどうか

@@ -30,10 +30,6 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 	//スケールサイズ
 	const float SCALE_SIZE = 7.0f;
 	worldTransform_.scale = { .x = SCALE_SIZE,.y = SCALE_SIZE ,.z = SCALE_SIZE };
-#ifdef _DEBUG
-	float DEBUG_SCALE = 1.0f;
-	worldTransform_.scale = { .x = DEBUG_SCALE,.y = DEBUG_SCALE ,.z = DEBUG_SCALE };
-#endif // _DEBUG
 
 	//座標の代入
 	worldTransform_.translate = position;
@@ -53,8 +49,7 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 	//追跡かどうか
 	isTracking_ = false;
 
-	//スピードの初期化
-	preSpeed_ = speed;
+	//スピード
 	speed_ = speed;
 
 	//状態
@@ -90,13 +85,6 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 
 void NormalEnemy::Update() {
 
-	//生存している時だけ行動するよ
-	if (isAlive_ == true) {
-		//状態の更新
-		currentState_->Update(this);
-
-	}
-
 	//方向を取得
 	direction_ = currentState_->GetDirection();
 
@@ -107,10 +95,6 @@ void NormalEnemy::Update() {
 	const float ROTATE_OFFSET = -std::numbers::pi_v<float> / 2.0f;
 	worldTransform_.rotate.y = directionToRotateY + ROTATE_OFFSET;
 
-#ifdef _DEBUG
-	const float DEBUG_MODEL_ROTATE_OFFSET = std::numbers::pi_v<float>;
-	worldTransform_.rotate.y = directionToRotateY + DEBUG_MODEL_ROTATE_OFFSET;
-#endif // _DEBUG
 
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
@@ -137,8 +121,14 @@ void NormalEnemy::Update() {
 	//ダメージ演出
 	Damaged();
 
-	//死亡したらパーティクルを出して消える
-	if (isAlive_ == false) {
+	//生存している時だけ行動するよ
+	if (isAlive_ == true) {
+		//状態の更新
+		currentState_->Update(this);
+
+	}
+	else {
+		//死亡したらパーティクルを出して消える
 		Dead();
 	}
 

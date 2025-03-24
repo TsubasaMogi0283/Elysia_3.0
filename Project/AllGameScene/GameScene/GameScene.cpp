@@ -139,9 +139,10 @@ void GameScene::Initialize() {
 	enemyManager_->SetLevelDataManager(levelDataManager_, levelHandle_);
 	//初期化
 	std::string initialPositionCSV = "Resources/CSV/EnemyInitialPosition.csv";
-	//レベルデータから鍵の情報を取り出す
+	//レベルデータから敵の情報を取り出す
 	std::vector<Vector3> normalEnemyPositions = levelDataManager_->GetObjectPositions(levelHandle_, "NormalEnemy");
-	enemyManager_->Initialize(enemyModelHandle, strongEnemyModelHandle, initialPositionCSV);
+	std::vector<Vector3> strongEnemyPositions = levelDataManager_->GetObjectPositions(levelHandle_, "StrongEnemy");
+	enemyManager_->Initialize(enemyModelHandle, strongEnemyModelHandle, normalEnemyPositions, strongEnemyPositions);
 #pragma endregion
 
 #pragma region カメラ
@@ -981,6 +982,7 @@ void GameScene::DrawSprite() {
 		//プレイヤーの体力(アイコン型)
 		//現在のプレイヤーの体力を取得
 		currentDisplayHP_ = player_->GetHP();
+
 		for (uint32_t i = 0u; i < currentDisplayHP_; ++i) {
 			playerHP_[i]->Draw();
 		}

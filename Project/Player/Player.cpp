@@ -132,6 +132,9 @@ void Player::Damaged() {
 	if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
 		//体力を減らす
 		--hp_;
+		if (hp_ <= 0) {
+			hp_ = 0u;
+		}
 		//ダメージを受ける	
 		isDameged_ = true;
 	}
@@ -220,11 +223,13 @@ void Player::DisplayImGui() {
 
 	//それぞれintに変換
 	int32_t keyQuantity = static_cast<int32_t>(haveKeyQuantity_);
+	int32_t hpQuantity = static_cast<int32_t>(hp_);
+
 
 	ImGui::Begin("プレイヤー");
 	if (ImGui::TreeNode("状態")==true) {
 		ImGui::InputInt("鍵の数", &keyQuantity);
-		ImGui::InputInt("体力", &hp_);
+		ImGui::InputInt("体力", &hpQuantity);
 		ImGui::Checkbox("isDamage_", &isDamage_);
 		ImGui::Checkbox("振動", &isDameged_);
 		ImGui::TreePop();

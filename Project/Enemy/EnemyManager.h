@@ -66,7 +66,8 @@ public:
 	/// <param name="normalEnemyModel"></param>
 	/// <param name="strongEnemyModel"></param>
 	/// <param name="normalEnemyPositions"></param>
-	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel, const std::vector<Vector3>& normalEnemyPositions);
+	/// <param name="strongEnemyPositions"></param>
+	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel, const std::vector<Vector3>& normalEnemyPositions, const std::vector<Vector3>& strongEnemyPositions);
 	
 	/// <summary>
 	/// 更新
