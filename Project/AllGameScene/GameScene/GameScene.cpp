@@ -20,7 +20,7 @@ GameScene::GameScene() {
 	//入力
 	input_ = Elysia::Input::GetInstance();
 	//テクスチャ管理クラス
-	texturemanager_ = Elysia::TextureManager::GetInstance();
+	textureManager_ = Elysia::TextureManager::GetInstance();
 	//モデル管理クラス
 	modelManager_ = Elysia::ModelManager::GetInstance();
 	//レベルエディタ管理クラス
@@ -35,7 +35,7 @@ void GameScene::Initialize() {
 
 	//白フェード
 	//白画像読み込み
-	uint32_t whiteTextureHandle = texturemanager_->Load("Resources/Sprite/Back/White.png");
+	uint32_t whiteTextureHandle = textureManager_->Load("Resources/Sprite/Back/White.png");
 	//フェードの初期座標
 	const Vector2 INITIAL_SPRITE_POSITION = { .x = 0.0f,.y = 0.0f };
 	//生成
@@ -54,7 +54,7 @@ void GameScene::Initialize() {
 
 	//黒フェード
 	//黒画像読み込み
-	uint32_t blackTextureHandle = texturemanager_->Load("Resources/Sprite/Back/Black.png");
+	uint32_t blackTextureHandle = textureManager_->Load("Resources/Sprite/Back/Black.png");
 	//生成
 	blackFade_.reset(Elysia::Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION));
 
@@ -81,7 +81,7 @@ void GameScene::Initialize() {
 	gate_->Initialize(gateModelhandle);
 
 	//「脱出せよ」の画像読み込み
-	uint32_t escapeTextureHandle = texturemanager_->Load("Resources/Sprite/Escape/EscapeText.png");
+	uint32_t escapeTextureHandle = textureManager_->Load("Resources/Sprite/Escape/EscapeText.png");
 	//生成
 	escapeText_.reset(Elysia::Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
 	//最初は非表示にする
@@ -166,8 +166,8 @@ void GameScene::Initialize() {
 
 	//説明画像の読み込み
 	uint32_t explanationTextureHandle[EXPLANATION_QUANTITY_] = {};
-	explanationTextureHandle[0] = texturemanager_->Load("Resources/Sprite/Explanation/Explanation1.png");
-	explanationTextureHandle[1] = texturemanager_->Load("Resources/Sprite/Explanation/Explanation2.png");
+	explanationTextureHandle[0] = textureManager_->Load("Resources/Sprite/Explanation/Explanation1.png");
+	explanationTextureHandle[1] = textureManager_->Load("Resources/Sprite/Explanation/Explanation2.png");
 
 	//生成
 	for (uint32_t i = 0u; i < explanation_.size(); ++i) {
@@ -176,8 +176,8 @@ void GameScene::Initialize() {
 
 	//スペースで次への画像読み込み
 	uint32_t spaceToNextTextureHandle[EXPLANATION_QUANTITY_] = {};
-	spaceToNextTextureHandle[0] = texturemanager_->Load("Resources/Sprite/Explanation/ExplanationNext1.png");
-	spaceToNextTextureHandle[1] = texturemanager_->Load("Resources/Sprite/Explanation/ExplanationNext2.png");
+	spaceToNextTextureHandle[0] = textureManager_->Load("Resources/Sprite/Explanation/ExplanationNext1.png");
+	spaceToNextTextureHandle[1] = textureManager_->Load("Resources/Sprite/Explanation/ExplanationNext2.png");
 	//生成
 	for (uint32_t i = 0; i < spaceToNext_.size(); ++i) {
 		spaceToNext_[i].reset(Elysia::Sprite::Create(spaceToNextTextureHandle[i], INITIAL_SPRITE_POSITION));
@@ -188,7 +188,7 @@ void GameScene::Initialize() {
 
 	//常時表示
 	//操作
-	uint32_t operationTextureHandle = texturemanager_->Load("Resources/Sprite/Operation/Operation.png");
+	uint32_t operationTextureHandle = textureManager_->Load("Resources/Sprite/Operation/Operation.png");
 	//生成
 	operation_.reset(Elysia::Sprite::Create(operationTextureHandle, { .x = 20.0f,.y = 0.0f }));
 
@@ -196,23 +196,14 @@ void GameScene::Initialize() {
 #pragma endregion
 
 #pragma region UI
-	uint32_t playerHPTextureHandle = texturemanager_->Load("Resources/Sprite/Player/PlayerHP.png");
-	uint32_t playerHPBackFrameTextureHandle = texturemanager_->Load("Resources/Sprite/Player/PlayerHPBack.png");
-	const Vector2 INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
-	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
-		playerHP_[i].reset(Elysia::Sprite::Create(playerHPTextureHandle, { .x = static_cast<float>(i) * 64 + INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
-	}
-
-	playerHPBackFrame_.reset(Elysia::Sprite::Create(playerHPBackFrameTextureHandle, { .x = INITIAL_POSITION.x,.y = INITIAL_POSITION.y }));
-	currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
-
+	
 
 	//ゴールに向かえのテキスト
-	uint32_t toEscapeTextureHandle = texturemanager_->Load("Resources/Sprite/Escape/ToGoal.png");
+	uint32_t toEscapeTextureHandle = textureManager_->Load("Resources/Sprite/Escape/ToGoal.png");
 	toEscape_.reset(Elysia::Sprite::Create(toEscapeTextureHandle, INITIAL_SPRITE_POSITION));
 
 	//宝箱
-	uint32_t openTreasureBoxSpriteHandle = texturemanager_->Load("Resources/Sprite/TreasureBox/OpenTreasureBox.png");
+	uint32_t openTreasureBoxSpriteHandle = textureManager_->Load("Resources/Sprite/TreasureBox/OpenTreasureBox.png");
 	openTreasureBoxSprite_.reset(Elysia::Sprite::Create(openTreasureBoxSpriteHandle, INITIAL_SPRITE_POSITION));
 
 
@@ -833,8 +824,7 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 
 		//体力が0になったら負け
 		//または一発アウトの敵に接触した場合
-		const uint32_t MIN_HP = 0u;
-		if (player_->GetHP() <= MIN_HP || isTouchStrongEnemy_ == true) {
+		if (player_->GetIsAlive()==false || isTouchStrongEnemy_ == true) {
 			//コントロールを失う
 			player_->SetIsAbleToControll(false);
 			//敵の音を止める
@@ -844,12 +834,9 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 
 			//敵の動きが止まりブラックアウト
 			isBlackFadeOut_ = true;
-
 			blackFadeTransparency_ += FADE_OUT_INTERVAL_;
 			blackFade_->SetTransparency(blackFadeTransparency_);
 
-			//後ろに倒れる
-			camera_.rotate.x -= 0.01f;
 
 			//負けシーンへ
 			if (blackFadeTransparency_ > CHANGE_TO_LOSE_SCENE_VALUE_) {
@@ -977,15 +964,7 @@ void GameScene::DrawSprite() {
 		keyManager_->DrawSprite();
 		//脱出
 		escapeText_->Draw();
-		//プレイヤーの体力の枠
-		playerHPBackFrame_->Draw();
-		//プレイヤーの体力(アイコン型)
-		//現在のプレイヤーの体力を取得
-		currentDisplayHP_ = player_->GetHP();
-
-		for (uint32_t i = 0u; i < currentDisplayHP_; ++i) {
-			playerHP_[i]->Draw();
-		}
+		
 		if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
 			toEscape_->Draw();
 		}

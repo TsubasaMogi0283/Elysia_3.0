@@ -50,6 +50,11 @@ namespace Elysia {
 	class ModelManager;
 
 	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
+	class TextureManager;
+
+	/// <summary>
 	/// レベルデータ管理クラス
 	/// </summary>
 	class LevelDataManager;
@@ -169,9 +174,17 @@ public:
 	}
 
 	/// <summary>
+	/// 生存中かどうかを取得
+	/// </summary>
+	/// <returns>生存中かどうか</returns>
+	bool GetIsAlive()const {
+		return isAlive_;
+	}
+
+	/// <summary>
 	/// ダメージを受けたかどうかを取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returnsダメージを受けたかどうか></returns>
 	inline bool GetIsDamaged()const {
 		return isDameged_;
 	}
@@ -212,7 +225,7 @@ public:
 	/// <summary>
 	/// 走るかどうか
 	/// </summary>
-	/// <param name="isDash"></param>
+	/// <param name="isDash">走っているかどうか</param>
 	inline void SetIsDash(const bool& isDash) {
 		this->isDash_ = isDash;
 	}
@@ -243,14 +256,6 @@ public:
 	}
 
 	/// <summary>
-	/// 座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
-	inline void SetPosition(Vector3& position) {
-		this->worldTransform_.translate = position;
-	}
-
-	/// <summary>
 	/// レベルデータハンドルの設定
 	/// </summary>
 	/// <param name="levelHandle"></param>
@@ -276,28 +281,28 @@ public:
 
 
 	/// <summary>
-	/// 懐中電灯の当たり判定
+	/// 懐中電灯のコライダーを取得
 	/// </summary>
 	/// <returns></returns>
 	inline FlashLightCollision* GetFlashLightCollision()const {
 		return flashLight_->GetFanCollision();
 	}
 
-
-
-
-
 private:
 	//入力クラス
 	Elysia::Input* input_ = nullptr;
 	//モデル管理クラス
 	Elysia::ModelManager* modelManager_ = nullptr;
+	//テクスチャ管理クラス
+	Elysia::TextureManager* textureManager_ = nullptr;
 	//レベルエディタ
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelHandle_ = 0u;
 
 private:
+	//プレイヤーの最大体力
+	static const uint32_t PLAYER_HP_MAX_QUANTITY_ = 3u;
 	//幅のサイズ
 	const float_t SIDE_SIZE = 0.5f;
 	//時間変化
@@ -324,9 +329,10 @@ private:
 	uint32_t haveKeyQuantity_ = 0u;
 
 	//体力
-	uint32_t hp_ = 3u;
-	//敵の攻撃に当たった時のタイマー
-	int32_t downTime_ = 0;
+	uint32_t hp_ = PLAYER_HP_MAX_QUANTITY_;
+	//生存かどうか
+	bool isAlive_ = true;
+
 	//操作可能かどうか
 	bool isControll_ = false;
 	//ダッシュ
@@ -341,6 +347,14 @@ private:
 
 	//時間
 	float_t vibeTime_ = 0u;
+
+
+private:
+	//UI
+	//プレイヤーHPのスプライト
+	std::unique_ptr<Elysia::Sprite> playerHpSprite_[PLAYER_HP_MAX_QUANTITY_] = { nullptr };
+	//背景フレーム
+	std::unique_ptr<Elysia::Sprite> playerHPBackFrameSprite_ = nullptr;
 
 private:
 	//当たり判定のリスト

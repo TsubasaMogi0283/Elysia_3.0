@@ -7,6 +7,7 @@
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
 #include "ModelManager.h"
+#include "TextureManager.h"
 #include "SpotLight.h"
 #include "LevelDataManager.h"
 #include "PushBackCalculation.h"
@@ -18,6 +19,8 @@ Player::Player(){
 	input_ = Elysia::Input::GetInstance();
 	//モデル管理クラス
 	modelManager_ = Elysia::ModelManager::GetInstance();
+	//テクスチャ管理クラス
+	textureManager_ = Elysia::TextureManager::GetInstance();
 	//レベルエディタ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
@@ -53,8 +56,21 @@ void Player::Initialize(){
 	
 	//マテリアル
 	material_.Initialize();
-	material_.lightingKinds = SpotLighting;
+	material_.lightingKinds = LightingType::SpotLighting;
 	material_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 0.5f };
+
+	//UI
+	uint32_t playerHPTextureHandle = textureManager_->Load("Resources/Sprite/Player/PlayerHP.png");
+	uint32_t playerHPBackFrameTextureHandle = textureManager_->Load("Resources/Sprite/Player/PlayerHPBack.png");
+	const Vector2 FRAME_INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
+	//HPを生成
+	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
+		playerHpSprite_[i].reset(Elysia::Sprite::Create(playerHPTextureHandle, { .x = static_cast<float_t>(i) * 64 + FRAME_INITIAL_POSITION.x,.y = FRAME_INITIAL_POSITION.y }));
+	}
+	//フレームを生成
+	playerHPBackFrameSprite_.reset(Elysia::Sprite::Create(playerHPBackFrameTextureHandle, FRAME_INITIAL_POSITION));
+
+
 }
 
 void Player::Update(){
@@ -64,6 +80,12 @@ void Player::Update(){
 
 	//攻撃を受ける
 	Damaged();
+
+	//体力
+	for (uint32_t i = hp_; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
+		//非表示にする
+		playerHpSprite_[i]->SetInvisible(true);
+	}
 
 	//ワールドトランスフォームの更新
 	worldTransform_.translate = playerCenterPosition_;
@@ -119,6 +141,14 @@ void Player::DrawSprite(){
 
 	//懐中電灯
 	flashLight_->DrawSprite();
+	//体力の枠
+	playerHPBackFrameSprite_->Draw();
+	//体力(アイコン型)
+	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
+		playerHpSprite_[i]->Draw();
+	}
+	
+	
 }
 
 Player::~Player() {
@@ -132,14 +162,11 @@ void Player::Damaged() {
 	if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
 		//体力を減らす
 		--hp_;
-		if (hp_ <= 0) {
-			hp_ = 0u;
-		}
 		//ダメージを受ける	
 		isDameged_ = true;
 	}
 
-
+	//ダメージを受けた時
 	if (isDameged_ == true) {
 
 		//一時的にコントロールを失う
@@ -173,12 +200,13 @@ void Player::Damaged() {
 			isControll_ = true;
 		}
 
-#ifdef _DEBUG
-		ImGui::Begin("振動");
-		ImGui::InputFloat("T", &vibeStrength_);
-		ImGui::End();
-#endif // _DEBUG
 	}
+
+	//体力が0になったら死亡
+	if (hp_ == 0u) {
+		isAlive_ = false;
+	}
+
 }
 
 void Player::Move() {
@@ -236,7 +264,6 @@ void Player::DisplayImGui() {
 	}
 
 	ImGui::Checkbox("敵からの攻撃を受け入れるか", &isAcceptDamegeFromNoemalEnemy_);
-	ImGui::InputInt("downTime", &downTime_);
 	ImGui::InputFloat3("Transrate", &worldTransform_.translate.x);
 	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
 	ImGui::End();

@@ -42,7 +42,7 @@ void EnemyAttackCollision::Update(){
 
 	
 	//間隔
-	const float INTERVAL = 5.0f;
+	const float INTERVAL = 2.0f;
 	//新しく方向を計算する
 	Vector3 newDirection = VectorCalculation::Multiply(enemyDirection_, INTERVAL);
 	

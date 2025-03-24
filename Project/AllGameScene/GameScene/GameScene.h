@@ -151,7 +151,7 @@ private:
 	//インプット
 	Elysia::Input* input_ = nullptr;
 	//テクスチャ管理クラス
-	Elysia::TextureManager* texturemanager_ = nullptr;
+	Elysia::TextureManager* textureManager_ = nullptr;
 	//モデル管理クラス
 	Elysia::ModelManager* modelManager_ = nullptr;
 	//レベルエディタ
@@ -232,14 +232,7 @@ private:
 	//鍵取得のスプライト
 	std::unique_ptr<Elysia::Sprite> pickUpKey_ = nullptr;
 
-	//プレイヤーの体力
-	static const uint32_t PLAYER_HP_MAX_QUANTITY_ = 3u;
-	//現在のHP
-	uint32_t currentDisplayHP_ = PLAYER_HP_MAX_QUANTITY_;
-	//プレイヤーHPのスプライト
-	std::unique_ptr<Elysia::Sprite> playerHP_[PLAYER_HP_MAX_QUANTITY_] = { nullptr };
-	//背景フレーム
-	std::unique_ptr<Elysia::Sprite> playerHPBackFrame_ = nullptr;
+	
 
 	//鍵管理クラス
 	std::unique_ptr<KeyManager> keyManager_ = {};

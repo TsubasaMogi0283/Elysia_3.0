@@ -35,6 +35,9 @@ public:
 	/// </summary>
 	~NormalEnemyMove()=default;
 
+private:
+	//スピードの値
+	const float SPEED_AMOUNT = 0.01f;
 
 };
 

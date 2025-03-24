@@ -14,7 +14,7 @@ void NormalEnemyTracking::Initialize(){
 }
 
 void NormalEnemyTracking::Update(NormalEnemy* normalEnemy){
-	//強敵本体の座標を取得
+	//敵本体の座標を取得
 	Vector3 worldPosition = normalEnemy->GetWorldPosition();
 	//プレイヤーの座標を取得
 	Vector3 playerPosition = normalEnemy->GetPlayerPosition();

@@ -36,9 +36,19 @@ public:
 	/// </summary>
 	~NormalEnemyAttack();
 	
+
+private:
+	//0から始める
+	const uint32_t RESTART_TIME = 0u;
+	//増える値
+	const uint32_t TIME_INCREASE_VALUE = 1u;
+	//攻撃する時間
+	const uint32_t JUST_ATTACK_TIME = 60u;
+	//戻る時間
+	const uint32_t RETURN_TIME = JUST_ATTACK_TIME * 2u;
 private:
 	//攻撃の時間
-	int32_t attackTime_ = 0;
+	uint32_t attackTime_ = 0;
 
 
 };

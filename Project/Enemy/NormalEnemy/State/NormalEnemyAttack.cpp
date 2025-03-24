@@ -14,16 +14,21 @@ void NormalEnemyAttack::Initialize(){
 }
 
 void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
-	normalEnemy;
-	//0から始める
-	const uint32_t RESTART_TIME = 0u;
-	//増える値
-	const uint32_t TIME_INCREASE_VALUE = 1u;
+	//強敵本体の座標を取得
+	Vector3 worldPosition = normalEnemy->GetWorldPosition();
+	//プレイヤーの座標を取得
+	Vector3 playerPosition = normalEnemy->GetPlayerPosition();
+
+	//向きを求める
+	direction_ = VectorCalculation::Subtract(playerPosition, worldPosition);
+	//正規化
+	direction_ = VectorCalculation::Normalize(direction_);
+
+	
 	//時間が増えていく
 	attackTime_ += TIME_INCREASE_VALUE;
 
 	//1秒の時に攻撃
-	const uint32_t JUST_ATTACK_TIME = 60;
 	if (attackTime_ == JUST_ATTACK_TIME) {
 		//ここで攻撃
 		//コライダーが当たっている時だけ通す
@@ -36,15 +41,16 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 	}
 
 	//また最初に戻る
-	if (attackTime_ > JUST_ATTACK_TIME * 3) {
+	if (attackTime_ > RETURN_TIME) {
 		attackTime_ = RESTART_TIME;
 	}
 
 
 
 #ifdef _DEBUG
+	int32_t attackTimeToInt = static_cast<int32_t>(attackTime_);
 	ImGui::Begin("通常の敵の攻撃");
-	ImGui::InputInt("攻撃時間", &attackTime_);
+	ImGui::InputInt("攻撃時間", &attackTimeToInt);
 	ImGui::End();
 #endif // _DEBUG
 
@@ -53,5 +59,5 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 
 NormalEnemyAttack::~NormalEnemyAttack(){
 	//0で設定し攻撃していないようにする
-	attackTime_ = 0;
+	attackTime_ = 0u;
 }
