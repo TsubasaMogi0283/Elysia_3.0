@@ -956,9 +956,7 @@ void GameScene::DrawPostEffect() {
 
 void GameScene::DrawSprite() {
 
-	//プレイヤー
-	player_->DrawSprite();
-
+	
 	//説明
 	for (uint32_t i = 0u; i < explanation_.size(); ++i) {
 		if (howToPlayTextureNumber_ == i + 1) {
@@ -969,12 +967,13 @@ void GameScene::DrawSprite() {
 
 	//UIを表示するかどうか
 	if (isDisplayUI_ == true) {
+		//プレイヤー
+		player_->DrawSprite();
+
 		//操作説明
 		operation_->Draw();
 		//鍵
 		keyManager_->DrawSprite();
-		//宝箱
-		//openTreasureBoxSprite_->Draw();
 		//脱出
 		escapeText_->Draw();
 		//プレイヤーの体力の枠

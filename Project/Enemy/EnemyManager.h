@@ -63,10 +63,10 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="normalEnemyModel">通常の敵のモデルハンドル</param>
-	/// <param name="strongEnemyModel">強敵のモデルハンドル</param>
-	/// <param name="csvPath">CSVのファイルパス</param>
-	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel, const std::string& csvPath);
+	/// <param name="normalEnemyModel"></param>
+	/// <param name="strongEnemyModel"></param>
+	/// <param name="normalEnemyPositions"></param>
+	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel, const std::vector<Vector3>& normalEnemyPositions);
 	
 	/// <summary>
 	/// 更新
@@ -182,9 +182,6 @@ private:
 	uint32_t normalEnemyModelHandle_ = 0u;
 	//強敵
 	uint32_t strongEnemyModelHandle_ = 0u;
-
-	//生成の文字列を入れる
-	std::stringstream enemyPositionsFromCSV_;
 
 };
 

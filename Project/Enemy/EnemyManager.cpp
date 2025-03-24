@@ -31,7 +31,7 @@ EnemyManager::EnemyManager(){
 }
 
 
-void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& strongEnemyModel, const std::string& csvPath){
+void EnemyManager::Initialize(const uint32_t& normalEnemyModel, const uint32_t& strongEnemyModel,const std::vector<Vector3>& normalEnemyPositions){
 	
 	//空だったら引っかかるようにしている
 	assert(player_!=nullptr);
@@ -43,127 +43,14 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel,const uint32_t& s
 	//強敵
 	strongEnemyModelHandle_ = strongEnemyModel;
 
-	//ファイルを開ける
-	std::ifstream file;
-	file.open(csvPath);
-	//開かなかったら止まる
-	assert(file.is_open());
-
-	//ファイルの内容を文字列ストリームにコピー
-	enemyPositionsFromCSV_ << file.rdbuf();
-	//ファイルを閉じる
-	file.close();
-
-	//1行分の文字列を入れる変数
-	std::string line;
-
-
-	//CSV読み込み
-	while (std::getline(enemyPositionsFromCSV_, line)) {
-
-		//1行分の文字列をストリームに変換して解析しやすくする
-		std::istringstream lineStream(line);
-
-		std::string word;
-		//,区切りで行の先頭文字列を取得
-		std::getline(lineStream, word, ',');
-
-		//「//」があった行の場合コメントなので飛ばす
-		if (word.find("//") == 0) {
-			//コメントは飛ばす
-			continue;
-		}
-
-
-		//通常の敵の場合
-		if (word.find("NormalEnemy") == 0) {
-			Vector3 position = {};
-			//X座標
-			std::getline(lineStream, word, ',');
-			position.x = static_cast<float>(std::atof(word.c_str()));
-
-			//Y座標
-			std::getline(lineStream, word, ',');
-			position.y = static_cast<float>(std::atof(word.c_str()));
-
-			//Z座標
-			std::getline(lineStream, word, ',');
-			position.z = static_cast<float>(std::atof(word.c_str()));
-
-			//生成
-			GenerateNormalEnemy(position);
-
-		}
-		//強敵の場合
-		else if (word.find("StrongEnemy") == 0) {
-			Vector3 position = {};
-			//X座標
-			std::getline(lineStream, word, ',');
-			position.x = static_cast<float>(std::atof(word.c_str()));
-
-			//Y座標
-			std::getline(lineStream, word, ',');
-			position.y = static_cast<float>(std::atof(word.c_str()));
-
-			//Z座標
-			std::getline(lineStream, word, ',');
-			position.z = static_cast<float>(std::atof(word.c_str()));
-
-			//生成
-			//GenerateStrongEnemy(position);
-
-		}
-
-
+	//通常の敵の生成
+	for (size_t i = 0; i < normalEnemyPositions.size(); ++i) {
+		//生成
+		GenerateNormalEnemy(normalEnemyPositions[i]);
 	}
 
 	//接近BGMの設定
 	audioHandle_ = audio_->Load("Resources/Audio/Enemy/TrackingToPlayer.mp3");
-}
-
-void EnemyManager::DeleteEnemy(){
-	//敵が生存していなかったら消す
-	enemies_.remove_if([](const std::unique_ptr<NormalEnemy>& enemy) {
-		//スマートポインタの場合はこれだけで良いよ
-		//勿論こっちもdeleteが無くなってすっきりだね!
-		return enemy->GetIsDeleted();
-	});
-}
-
-void EnemyManager::StopAudio(){
-	audio_->Stop(audioHandle_);
-}
-
-void EnemyManager::GenerateNormalEnemy(const Vector3& position) {
-	//通常の敵の生成
-	std::unique_ptr<NormalEnemy> enemy = std::make_unique<NormalEnemy>();
-	std::random_device seedGenerator;
-	std::mt19937 randomEngine(seedGenerator());
-	std::uniform_real_distribution<float> speedDistribute(-0.001f, 0.001f);
-
-	//スピード決め
-	Vector3 speed = { .x = -0.8f,.y = 0.0f,.z = speedDistribute(randomEngine) };
-
-	//初期化
-	enemy->Initialize(normalEnemyModelHandle_, position,speed );
-	enemies_.push_back(std::move(enemy));
-}
-
-void EnemyManager::GenerateStrongEnemy(const Vector3& position){
-	////強敵の生成
-	std::unique_ptr<StrongEnemy> enemy = std::make_unique<StrongEnemy>();
-	std::random_device seedGenerator;
-	std::mt19937 randomEngine(seedGenerator());
-	
-	//スピード(方向)を決める
-	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
-	Vector3 speed = {.x= speedDistribute(randomEngine),.y = 0.0f,.z = speedDistribute(randomEngine) };
-	
-	//初期化
-	enemy->Initialize(strongEnemyModelHandle_, position, speed);
-	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
-	//挿入
-	strongEnemies_.push_back(std::move(enemy));
 }
 
 void EnemyManager::Update(){
@@ -205,19 +92,11 @@ void EnemyManager::Update(){
 				if (CollisionCalculation::IsCollisionAABBPair(enemyAABB,objectAABB)&&
 					colliders[i]==true) {
 					
-					
-					
-
 					// 敵とオブジェクトの中心座標を計算
 					Vector3 objectCenter = VectorCalculation::Add(objectAABB.min , objectAABB.max);
 					objectCenter.x += 0.5f;
 					objectCenter.y += 0.5f;
 					objectCenter.z += 0.5f;
-
-
-					// X軸とZ軸の距離を計算
-					//float distanceX = abs(enemy->GetWorldPosition().x - objectCenter.x);
-					//float distanceZ = abs(enemy->GetWorldPosition().z - objectCenter.z);
 
 					// X軸とZ軸の距離を計算
 					float distanceX = std::min<float>(abs(enemyAABB.max.x - objectAABB.min.x), abs(enemyAABB.min.x - objectAABB.max.x));
@@ -261,8 +140,6 @@ void EnemyManager::Update(){
 				}
 			}
 		}
-
-
 
 		//プレイヤーの位置を設定
 		enemy->SetPlayerPosition(playerPosition);
@@ -414,14 +291,14 @@ void EnemyManager::Update(){
 				//プレイヤーが
 				if (playerEnemyDistance <= TRACKING_START_DISTANCE_) {
 					//追跡準備へ
-					//(*it1)->ChengeState(std::make_unique<NormalEnemyPreTracking>());
+					(*it1)->ChengeState(std::make_unique<NormalEnemyPreTracking>());
 				}
 
 			}
 			else if (currentState == "Tracking") {
 				if (playerEnemyDistance > TRACKING_START_DISTANCE_) {
 					//通常の動き
-					(*it1)->ChengeState(std::make_unique<NormalEnemyMove>());
+					(*it1)->ChengeState(std::make_unique<NormalEnemyAttack>());
 				}
 			}
 			//攻撃時
@@ -590,4 +467,49 @@ void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
 		strongEnemy->Draw(camera, spotLight);
 	}
 
+}
+
+void EnemyManager::GenerateNormalEnemy(const Vector3& position) {
+	//通常の敵の生成
+	std::unique_ptr<NormalEnemy> enemy = std::make_unique<NormalEnemy>();
+	std::random_device seedGenerator;
+	std::mt19937 randomEngine(seedGenerator());
+	std::uniform_real_distribution<float> speedDistribute(-0.001f, 0.001f);
+
+	//スピード決め
+	Vector3 speed = { .x = -0.8f,.y = 0.0f,.z = speedDistribute(randomEngine) };
+
+	//初期化
+	enemy->Initialize(normalEnemyModelHandle_, position, speed);
+	enemies_.push_back(std::move(enemy));
+}
+
+void EnemyManager::GenerateStrongEnemy(const Vector3& position) {
+	////強敵の生成
+	std::unique_ptr<StrongEnemy> enemy = std::make_unique<StrongEnemy>();
+	std::random_device seedGenerator;
+	std::mt19937 randomEngine(seedGenerator());
+
+	//スピード(方向)を決める
+	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
+	Vector3 speed = { .x = speedDistribute(randomEngine),.y = 0.0f,.z = speedDistribute(randomEngine) };
+
+	//初期化
+	enemy->Initialize(strongEnemyModelHandle_, position, speed);
+	enemy->SetTrackingStartDistance(STRONG_ENEMY_TRACKING_START_DISTANCE_);
+	//挿入
+	strongEnemies_.push_back(std::move(enemy));
+}
+
+void EnemyManager::DeleteEnemy() {
+	//敵が生存していなかったら消す
+	enemies_.remove_if([](const std::unique_ptr<NormalEnemy>& enemy) {
+		//スマートポインタの場合はこれだけで良いよ
+		//勿論こっちもdeleteが無くなってすっきりだね!
+		return enemy->GetIsDeleted();
+		});
+}
+
+void EnemyManager::StopAudio() {
+	audio_->Stop(audioHandle_);
 }
