@@ -45,43 +45,6 @@
         },
         {
             "type": "MESH",
-            "name": "Cube.020",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    2.190685510635376,
-                    21.92261505126953,
-                    0.0
-                ]
-            },
-            "file_name": "Cube",
-            "object_type": "Stage",
-            "is_invisible": true,
-            "collider": {
-                "type": "AABB",
-                "center": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "size": [
-                    5.9300007820129395,
-                    1.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "type": "MESH",
             "name": "Fence1.002",
             "transform": {
                 "scaling": [
@@ -1913,6 +1876,43 @@
                 ],
                 "translation": [
                     -3.7720096111297607,
+                    21.92261505126953,
+                    0.0
+                ]
+            },
+            "file_name": "Cube",
+            "object_type": "Stage",
+            "is_invisible": true,
+            "collider": {
+                "type": "AABB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    5.9300007820129395,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "Cube.020",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    2.190685510635376,
                     21.92261505126953,
                     0.0
                 ]
@@ -5835,6 +5835,73 @@
             },
             "file_name": "FenceForGrave",
             "object_type": "Stage"
+        },
+        {
+            "type": "MESH",
+            "name": "HalloweenItem_Ghost01(Clone)",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    -27.12909507751465,
+                    7.204232692718506,
+                    0.0
+                ]
+            },
+            "file_name": "Ghost",
+            "object_type": "NormalEnemy"
+        },
+        {
+            "type": "MESH",
+            "name": "HalloweenItem_Ghost01(Clone).001",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    26.331071853637695,
+                    9.103153228759766,
+                    0.0
+                ]
+            },
+            "object_type": "NormalEnemy"
+        },
+        {
+            "type": "MESH",
+            "name": "HalloweenItem_Ghost01(Clone).002",
+            "transform": {
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "translation": [
+                    12.570806503295898,
+                    -17.514352798461914,
+                    0.0
+                ]
+            },
+            "object_type": "NormalEnemy"
         }
     ]
 }

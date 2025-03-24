@@ -131,10 +131,6 @@ void GameScene::Initialize() {
 	//強敵
 	uint32_t strongEnemyModelHandle = modelManager_->Load("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
 
-#ifdef _DEBUG
-	enemyModelHandle = modelManager_->Load("Resources/Model/Sample/Cube", "Cube.obj");
-#endif // _DEBUG
-
 	//敵管理システム
 	enemyManager_ = std::make_unique<EnemyManager>();
 	//プレイヤーの設定
@@ -143,6 +139,8 @@ void GameScene::Initialize() {
 	enemyManager_->SetLevelDataManager(levelDataManager_, levelHandle_);
 	//初期化
 	std::string initialPositionCSV = "Resources/CSV/EnemyInitialPosition.csv";
+	//レベルデータから鍵の情報を取り出す
+	std::vector<Vector3> normalEnemyPositions = levelDataManager_->GetObjectPositions(levelHandle_, "NormalEnemy");
 	enemyManager_->Initialize(enemyModelHandle, strongEnemyModelHandle, initialPositionCSV);
 #pragma endregion
 

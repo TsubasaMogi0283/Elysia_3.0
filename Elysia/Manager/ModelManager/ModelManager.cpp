@@ -134,13 +134,12 @@ uint32_t Elysia::ModelManager::LoadModelFileForLevelData(const std::string& dire
 
 	//一度読み込んだものはその値を返す
 	//新規は勿論読み込みをする
-	//Resources\LevelData\Test\Ground\Ground.obj"
 	std::string filePath = directoryPath + "/" + fileName + "/" + fileName;
 	if (Elysia::ModelManager::GetInstance()->modelInfromtion_.find(filePath) != Elysia::ModelManager::GetInstance()->modelInfromtion_.end()) {
 		return Elysia::ModelManager::GetInstance()->modelInfromtion_[filePath].handle;
 	}
 
-	modelhandle++;
+	++modelhandle;
 
 	//モデルの読み込み
 	ModelData newModelData = Elysia::ModelManager::GetInstance()->LoadFileForLeveldata(directoryPath, fileName);
@@ -233,19 +232,17 @@ ModelData Elysia::ModelManager::LoadFile(const std::string& directoryPath, const
 			aiVector3D scale;
 			aiVector3D translate;
 			aiQuaternion rotate;
-
 			bindPoseMatrixAssimp.Decompose(scale, rotate, translate);
 
+			//SRTの作成
 			Vector3 scaleAfter = { scale.x,scale.y,scale.z };
 			Vector3 translateAfter = { -translate.x,translate.y,translate.z };
 			Quaternion rotateQuaternion = { rotate.x,-rotate.y,-rotate.z,rotate.w };
-
+			
+			//行列を作る
 			Matrix4x4 scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(scaleAfter);
 			Matrix4x4 rotateMatrix = QuaternionCalculation::MakeRotateMatrix(rotateQuaternion);
 			Matrix4x4 translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(translateAfter);
-
-
-
 			Matrix4x4 bindPoseMatrix = Matrix4x4Calculation::Multiply(scaleMatrix, Matrix4x4Calculation::Multiply(rotateMatrix, translateMatrix));
 			jointWeightData.inverseBindPoseMatrix = Matrix4x4Calculation::Inverse(bindPoseMatrix);
 
@@ -286,7 +283,7 @@ uint32_t Elysia::ModelManager::Load(const std::string& directoryPath, const std:
 		return Elysia::ModelManager::GetInstance()->modelInfromtion_[filePath].handle;
 	}
 
-	modelhandle++;
+	++modelhandle;
 
 	//モデルの読み込み
 	ModelData newModelData = Elysia::ModelManager::GetInstance()->LoadFile(directoryPath, fileName);
