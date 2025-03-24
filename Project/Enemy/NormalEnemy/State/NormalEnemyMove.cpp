@@ -16,6 +16,12 @@ void NormalEnemyMove::Initialize(){
 	std::mt19937 randomEngine(seedGenerator());
 	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
 	direction_ = { .x = speedDistribute(randomEngine) ,.y = 0.0f,.z = -speedDistribute(randomEngine) };
+
+#ifdef _DEBUG
+	speedAmount_ = 0.05f;//跳ね返りとかを確認するために少し早くする
+#endif // _DEBUG
+
+
 }
 
 void NormalEnemyMove::Update(NormalEnemy* normalEnemy){
@@ -25,7 +31,7 @@ void NormalEnemyMove::Update(NormalEnemy* normalEnemy){
 	Vector3 newDirection = VectorCalculation::Normalize(direction_);
 
 	//スピードの値をかける
-	Vector3 speed = VectorCalculation::Multiply(newDirection, SPEED_AMOUNT);
+	Vector3 speed = VectorCalculation::Multiply(newDirection, speedAmount_);
 	//加算
 	normalEnemy->SetTranslate(VectorCalculation::Add(worldPosition, speed));
 	

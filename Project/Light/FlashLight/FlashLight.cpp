@@ -303,6 +303,7 @@ void FlashLight::Charge() {
 		isGenerate_ = false;
 	}
 
+	//割合
 	float ratio = 0.0f;
 	//クールタイム
 	if (isCoolTime_ == true) {
@@ -325,8 +326,10 @@ void FlashLight::Charge() {
 	
 	//白フェード
 	if (chargeConditionValue_ >= ChargeCondition::NormalChargeAttack) {
+		//まぶしすぎたので弱める
+		const float OFFSET = 0.3f;
 		//攻撃可能な時だけにする
-		attackWhiteFadeSprite_->SetTransparency(ratio);
+		attackWhiteFadeSprite_->SetTransparency(ratio- OFFSET);
 
 	}
 	

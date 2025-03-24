@@ -75,83 +75,85 @@ void EnemyManager::Update(){
 		//現在の状態
 		std::string currentState = enemy->GetCurrentStateName();
 
-
-		//移動中の時
-		//if (currentState == "Move") {
-		//
-		//	//レベルエディタから持ってくる
-		//	//AABB
-		//	std::vector<AABB> aabbs = levelDataManager_->GetObjectAABBs(levelDataHandle_,"Stage");
-		//	//コライダーを持っているかどうか
-		//	std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_,"Stage");
-		//	
-		//	//衝突めり込み防止処理
-		//	for (size_t i = 0u; i <  aabbs.size(); ++i) {
-		//
-		//		//オブジェクトのAABB
-		//		AABB objectAABB = aabbs[i];  
-		//		// AABBを取得
-		//		AABB enemyAABB = enemy->GetAABB();
-		//
-		//		//お互いのAABBが接触している場合
-		//		if (CollisionCalculation::IsCollisionAABBPair(enemyAABB,objectAABB)&&
-		//			colliders[i]==true) {
-		//			
-		//			// 敵とオブジェクトの中心座標を計算
-		//			Vector3 objectCenter = VectorCalculation::Add(objectAABB.min , objectAABB.max);
-		//			objectCenter.x += 0.5f;
-		//			objectCenter.y += 0.5f;
-		//			objectCenter.z += 0.5f;
-		//
-		//			// X軸とZ軸の距離を計算
-		//			float distanceX = std::min<float>(abs(enemyAABB.max.x - objectAABB.min.x), abs(enemyAABB.min.x - objectAABB.max.x));
-		//			float distanceZ = std::min<float>(abs(enemyAABB.max.z - objectAABB.min.z), abs(enemyAABB.min.z - objectAABB.max.z));
-		//
-		//			//前の座標
-		//			Vector3 enemyPrePosition = enemy->GetWorldPosition();
-		//
-		//			// 衝突した時の反転処理
-		//			if (distanceX < distanceZ) {
-		//				// X軸の距離が短い → X軸の反転
-		//				enemy->GetCurrentState()->InverseDirectionX();
-		//
-		//				// X軸の押し戻し処理
-		//				float pushBackDistance = 0.1f;
-		//				
-		//				if (enemyPrePosition.x < objectCenter.x) {
-		//					enemy->SetTranslate({ enemyAABB.min.x - pushBackDistance, enemyPrePosition.y, enemyPrePosition.z });
-		//				}
-		//				else {
-		//					enemy->SetTranslate({ enemyAABB.max.x + pushBackDistance, enemyPrePosition.y, enemyPrePosition.z });
-		//				}
-		//			}
-		//			else {
-		//				// Z軸の距離が短い → Z軸の反転
-		//				enemy->GetCurrentState()->InverseDirectionZ();
-		//
-		//				// Z軸の押し戻し処理
-		//				float pushBackDistance = 0.1f;
-		//				if (enemyPrePosition.z < objectCenter.z) {
-		//					enemy->SetTranslate({ enemyPrePosition.x, enemyPrePosition.y, enemyAABB.min.z - pushBackDistance });
-		//				}
-		//				else {
-		//					enemy->SetTranslate({ enemyPrePosition.x, enemyPrePosition.y, enemyAABB.max.z + pushBackDistance });
-		//				}
-		//			}
-		//
-		//
-		//
-		//			
-		//		}
-		//	}
-		//}
-
 		//プレイヤーの位置を設定
 		enemy->SetPlayerPosition(playerPosition);
 		//更新
 		enemy->Update();
+
+
+		//移動中の時
+		if (currentState == "Move") {
+
+			//レベルエディタから持ってくる
+			//AABB
+			std::vector<AABB> aabbs = levelDataManager_->GetObjectAABBs(levelDataHandle_, "Stage");
+			//コライダーを持っているかどうか
+			std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelDataHandle_, "Stage");
+
+			//衝突めり込み防止処理
+			for (size_t i = 0u; i < aabbs.size(); ++i) {
+
+				//オブジェクトのAABB
+				AABB objectAABB = aabbs[i];
+				// AABBを取得
+				AABB enemyAABB = enemy->GetAABB();
+
+				//お互いのAABBが接触している場合
+				if (CollisionCalculation::IsCollisionAABBPair(enemyAABB, objectAABB) &&
+					colliders[i] == true) {
+
+					// 敵とオブジェクトの中心座標を計算
+					Vector3 objectCenter = VectorCalculation::Add(objectAABB.min, objectAABB.max);
+					objectCenter.x += 0.5f;
+					objectCenter.y += 0.5f;
+					objectCenter.z += 0.5f;
+
+					// X軸とZ軸の距離を計算
+					float distanceX = std::min<float>(abs(enemyAABB.max.x - objectAABB.min.x), abs(enemyAABB.min.x - objectAABB.max.x));
+					float distanceZ = std::min<float>(abs(enemyAABB.max.z - objectAABB.min.z), abs(enemyAABB.min.z - objectAABB.max.z));
+
+					//前の座標
+					Vector3 enemyPrePosition = enemy->GetWorldPosition();
+
+					//押し戻し分
+					const float PUSH_BACK_DISTANCE = 0.01f;
+
+					// 衝突した時の反転処理
+					if (distanceX < distanceZ) {
+						//X軸の距離が短いとX軸の反転
+						enemy->GetCurrentState()->InverseDirectionX();
+
+						//X軸の押し戻し処理
+						//押し戻した後に新しく座標を設定
+						if (enemyPrePosition.x < objectCenter.x) {
+							enemy->SetTranslate({ enemyAABB.min.x - PUSH_BACK_DISTANCE, enemyPrePosition.y, enemyPrePosition.z });
+						}
+						else {
+							enemy->SetTranslate({ enemyAABB.max.x + PUSH_BACK_DISTANCE, enemyPrePosition.y, enemyPrePosition.z });
+						}
+					}
+					else {
+						// Z軸の距離が短いとZ軸の反転
+						enemy->GetCurrentState()->InverseDirectionZ();
+
+						//Z軸の押し戻し処理
+						//押し戻した後に新しく座標を設定
+						if (enemyPrePosition.z < objectCenter.z) {
+							enemy->SetTranslate({ enemyPrePosition.x, enemyPrePosition.y, enemyAABB.min.z - PUSH_BACK_DISTANCE });
+						}
+						else {
+							enemy->SetTranslate({ enemyPrePosition.x, enemyPrePosition.y, enemyAABB.max.z + PUSH_BACK_DISTANCE });
+						}
+					}
+
+
+
+
+				}
+			}
+		}
+
 	}
-	enemies_;
 
 
 	//現在の敵の数
@@ -171,17 +173,11 @@ void EnemyManager::Update(){
 			//距離
 			float defferenceDistance = SingleCalculation::Length(defference);
 			
+
 			//通常の動き
 			if (currentState == "Move") {
-				
-				//差分の正規化
-				Vector3 normalizedDefference = VectorCalculation::Normalize(defference);
-				//内積の計算
-				float dot = SingleCalculation::Dot(normalizedDefference, enemyDirection);
-
-				//前方にいたら行動
-				if (defferenceDistance < TRACKING_START_DISTANCE &&
-					dot > FRONT_DOT_) {
+				//近くなったら追跡準備
+				if (defferenceDistance < TRACKING_START_DISTANCE ) {
 					//追跡準備へ
 					enemy->ChengeState(std::make_unique<NormalEnemyPreTracking>());
 				}
@@ -191,6 +187,11 @@ void EnemyManager::Update(){
 				if (defferenceDistance <= ATTACK_START_DISTANCE) {
 					//攻撃
 					enemy->ChengeState(std::make_unique<NormalEnemyAttack>());
+				}
+				//距離が離れたら通常の動きへ
+				if (defferenceDistance >= TRACKING_START_DISTANCE) {
+					//追跡準備へ
+					enemy->ChengeState(std::make_unique<NormalEnemyMove>());
 				}
 
 			}

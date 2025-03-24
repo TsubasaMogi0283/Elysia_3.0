@@ -37,7 +37,7 @@ public:
 
 private:
 	//スピードの値
-	const float SPEED_AMOUNT = 0.01f;
+	float speedAmount_ = 0.01f;
 
 };
 
