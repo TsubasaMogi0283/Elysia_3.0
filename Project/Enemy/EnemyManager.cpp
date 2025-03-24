@@ -44,17 +44,13 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel, const uint32_t& 
 	strongEnemyModelHandle_ = strongEnemyModel;
 
 	//通常の敵の生成
-	for (size_t i = 0u; i < 1u; ++i) {
+	for (size_t i = 0u; i < normalEnemyPositions.size(); ++i) {
 		//生成
 		GenerateNormalEnemy(normalEnemyPositions[i]);
 	}
 
-	//通常の敵の生成
-	for (size_t i = 0u; i < strongEnemyPositions.size(); ++i) {
-		//生成
-		//GenerateStrongEnemy(strongEnemyPositions[i]);
-	}
-	
+	strongEnemyPositions;
+
 	//接近BGMの設定
 	audioHandle_ = audio_->Load("Resources/Audio/Enemy/TrackingToPlayer.mp3");
 }
@@ -272,14 +268,8 @@ void EnemyManager::Update(){
 			//通常の動き
 			if (currentState == "Move") {
 
-				//差分の正規化
-				Vector3 normalizedDefference = VectorCalculation::Normalize(playerEnemyDifference);
-				//内積の計算
-				float dot = SingleCalculation::Dot(normalizedDefference, direction);
-
 				//前方にいたら行動
-				if (playerEnemyDistance < TRACKING_START_DISTANCE &&
-					dot > FRONT_DOT_) {
+				if (playerEnemyDistance < TRACKING_START_DISTANCE) {
 					//追跡準備へ
 					(*it1)->ChengeState(std::make_unique<NormalEnemyPreTracking>());
 				}

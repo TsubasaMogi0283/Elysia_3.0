@@ -852,7 +852,7 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 		//回転の値を加算
 		const float_t ROTATE_VALUE = 0.01f;
 		rightGateRotateTheta_ += ROTATE_VALUE;
-		leftGateRotateTheta_ += ROTATE_VALUE;
+		leftGateRotateTheta_ -= ROTATE_VALUE;
 
 		std::string right = "GateDoorRight";
 		std::string left = "GateDoorLeft";
