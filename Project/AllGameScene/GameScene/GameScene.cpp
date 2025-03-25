@@ -785,13 +785,17 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 			enemyManager_->DeleteEnemy();
 		}
 
-		
-		
-
 		//プレイヤーにそれぞれの角度を設定する
-		
 		player_->SetTheta(theta_);
-		player_->SetPhi(-phi_);
+		player_->SetPhi(phi_);
+
+
+		
+		//もとに戻す
+		//カメラの回転の計算
+		camera_.rotate.x = phi_;
+		camera_.rotate.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
+		camera_.rotate.z = 0.0f;
 
 
 		//脱出の仕組み
@@ -878,10 +882,13 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 
 	//カメラの更新
 	//レールカメラから2つの行列を取得
-	camera_.viewMatrix = player_->GetEyeCamera()->GetCamera().viewMatrix;
+	//camera_.viewMatrix = player_->GetEyeCamera()->GetCamera().viewMatrix;
 	////射影は初期から変えていないのでそのまま
-	camera_.projectionMatrix = player_->GetEyeCamera()->GetCamera().projectionMatrix;
-	camera_.Transfer();
+	//camera_.projectionMatrix = player_->GetEyeCamera()->GetCamera().projectionMatrix;
+	//位置の計算
+	camera_.translate = VectorCalculation::Add(player_->GetWorldPosition(), {0.0f,1.2f,0.0f});
+
+	camera_.Update();
 	
 
 	//ビネットの処理
