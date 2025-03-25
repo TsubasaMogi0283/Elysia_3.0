@@ -115,7 +115,7 @@ void Player::Update(){
 	flashLight_->SetPlayerPosition(worldTransform_.GetWorldPosition());
 	//目線の角度の設定
 	flashLight_->SetTheta(theta_);
-	flashLight_->SetPhi(phi_);
+	flashLight_->SetPhi(-phi_);
 	//更新
 	flashLight_->Update();
 
