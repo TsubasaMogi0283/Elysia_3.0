@@ -42,8 +42,8 @@ void Elysia::Framework::Initialize(){
 	//ここでタイトルバーの名前を決めてね
 	const wchar_t* TITLE_BAR_NAME = L"静寂の霊園";
 	//ウィンドウのサイズを決める
-	const int WINDOW_SIZE_WIDTH = 1280;
-	const int WINDOW_SIZE_HEIGHT = 720;
+	const int32_t WINDOW_SIZE_WIDTH = 1280;
+	const int32_t WINDOW_SIZE_HEIGHT = 720;
 
 	//初期化
 	//ウィンドウ
@@ -128,7 +128,7 @@ void Elysia::Framework::Draw(){
 	gameManager_->DrawObject3D();
 	
 	//描画始め(スワップチェイン)
-	DirectXSetup::GetInstance()->StartDraw();
+	directXSetup_->StartDraw();
 
 	//PostEffectの描画
 	gameManager_->DrawPostEffect();

@@ -152,13 +152,10 @@ void GameScene::Initialize() {
 	//それぞれに値を入れていく
 	//回転
 	//+で左回り
-	camera_.rotate.y = std::numbers::pi_v<float> / 2.0f;
+	camera_.rotate.y = std::numbers::pi_v<float_t> / 2.0f;
 	
-	//カメラ座標のオフセットの初期化
-	cameraPositionOffset_ = { .x = 0.0f,.y = 1.2f,.z = 0.0f };
-	//カメラの調整項目
-	globalVariables_->CreateGroup(GAME_SCENE_CAMERA_NAME_);
-	globalVariables_->AddItem(GAME_SCENE_CAMERA_NAME_, HEIGHT_OFFSET_, cameraPositionOffset_);
+	
+	
 
 #pragma endregion
 
@@ -213,7 +210,7 @@ void GameScene::Initialize() {
 	collisionManager_ = std::make_unique<Elysia::CollisionManager>();
 	//角度の初期化
 	//プレイヤーの向いている向きと合わせていくよ
-	theta_ = std::numbers::pi_v<float> / 2.0f;
+	theta_ = std::numbers::pi_v<float_t> / 2.0f;
 
 	//ポストエフェクトの初期化
 	//ビネット生成
@@ -243,7 +240,7 @@ void GameScene::ObjectCollision() {
 
 	//宝箱
 	if (isOpenTreasureBox_==false) {
-		const float RADIUS = 5.0f;
+		const float_t RADIUS = 5.0f;
 		Vector3 treasurePosition = levelDataManager_->GetInitialTranslate(levelHandle_, "TreasureBoxMain");
 
 		if (player_->GetWorldPosition().x >= treasurePosition.x - RADIUS &&
@@ -277,7 +274,7 @@ void GameScene::ObjectCollision() {
 		//初期回転
 		Vector3 initialRotate = levelDataManager_->GetInitialRotate(levelHandle_, "TreasureBoxLid");
 		//回転
-		Vector3 rotate = { .x = -std::numbers::pi_v<float> / 3.0f,.y = 0.0f,.z = 0.0f };
+		Vector3 rotate = { .x = -std::numbers::pi_v<float_t> / 3.0f,.y = 0.0f,.z = 0.0f };
 		//再設定
 		levelDataManager_->SetRotate(levelHandle_, "TreasureBoxLid", VectorCalculation::Add(initialRotate, rotate));
 
@@ -327,12 +324,8 @@ void GameScene::EscapeCondition() {
 
 			//コントローラーのBボタンを押したら脱出のフラグがたつ
 			//Bボタンを押したとき
-			if (input_->IsPushButton(XINPUT_GAMEPAD_B) == true) {
-				//脱出
-				isEscape_ = true;
-			}
 			//SPACEキーを押したら脱出のフラグがたつ
-			if (input_->IsPushKey(DIK_SPACE) == true) {
+			if (input_->IsPushButton(XINPUT_GAMEPAD_B) == true|| input_->IsPushKey(DIK_SPACE) == true) {
 				//脱出
 				isEscape_ = true;
 			}
@@ -418,9 +411,9 @@ void GameScene::VigntteProcess(){
 		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
 
 		//最大時間
-		const float MAX_WARNING_TIME = 1.0f;
+		const float_t MAX_WARNING_TIME = 1.0f;
 		//最小時間
-		const float MIN_WARNING_TIME = 1.0f;
+		const float_t MIN_WARNING_TIME = 1.0f;
 
 		if (warningTime_ > MAX_WARNING_TIME) {
 			warningTime_ = MIN_WARNING_TIME;
@@ -440,14 +433,6 @@ void GameScene::DisplayImGui() {
 	ImGui::Begin("ゲームシーン");
 	ImGui::Checkbox("状態", &isReleaseAttack_);
 
-	if (ImGui::TreeNode("カメラ")==true) {
-		ImGui::SliderFloat3("回転", &camera_.rotate.x, -3.0f, 3.0f);
-		ImGui::SliderFloat3("オフセット位置", &cameraPositionOffset_.x, -30.0f, 30.0f);
-		ImGui::InputFloat("Theta", &theta_);
-		ImGui::InputFloat("Phi", &originPhi_);
-		ImGui::TreePop();
-
-	}
 	if (ImGui::TreeNode("ビネット")==true) {
 		ImGui::InputFloat("POW", &vignettePow_);
 		ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
@@ -458,6 +443,14 @@ void GameScene::DisplayImGui() {
 		ImGui::InputFloat("黒", &blackFadeTransparency_);
 		ImGui::TreePop();
 	}
+
+	if (ImGui::TreeNode("カメラ") == true) {
+		ImGui::InputFloat3("座標", &camera_.translate.x);
+		ImGui::InputFloat3("回転", &camera_.rotate.x);
+		ImGui::TreePop();
+	}
+
+
 
 	ImGui::End();
 
@@ -480,9 +473,9 @@ void GameScene::PlayerMove() {
 	if (input_->IsPushKey(DIK_D) == true) {
 		//動く方向
 		playerMoveDirection = {
-			.x = std::cosf(theta_ - std::numbers::pi_v<float> / 2.0f),
+			.x = std::cosf(theta_ - std::numbers::pi_v<float_t> / 2.0f),
 			.y = 0.0f,
-			.z = std::sinf(theta_ - std::numbers::pi_v<float> / 2.0f),
+			.z = std::sinf(theta_ - std::numbers::pi_v<float_t> / 2.0f),
 		};
 
 		//キーボード入力をしている
@@ -495,9 +488,9 @@ void GameScene::PlayerMove() {
 	if (input_->IsPushKey(DIK_A) == true) {
 		//動く方向
 		playerMoveDirection = {
-			.x = std::cosf(theta_ + std::numbers::pi_v<float> / 2.0f),
+			.x = std::cosf(theta_ + std::numbers::pi_v<float_t> / 2.0f),
 			.y = 0.0f,
-			.z = std::sinf(theta_ + std::numbers::pi_v<float> / 2.0f),
+			.z = std::sinf(theta_ + std::numbers::pi_v<float_t> / 2.0f),
 		};
 
 		//キーボード入力をしている
@@ -521,8 +514,8 @@ void GameScene::PlayerMove() {
 	}
 	//Sキー(後ろ)
 	if (input_->IsPushKey(DIK_S) == true) {
-		playerMoveDirection.x = std::cosf(theta_ + std::numbers::pi_v<float>);
-		playerMoveDirection.z = std::sinf(theta_ + std::numbers::pi_v<float>);
+		playerMoveDirection.x = std::cosf(theta_ + std::numbers::pi_v<float_t>);
+		playerMoveDirection.z = std::sinf(theta_ + std::numbers::pi_v<float_t>);
 
 		//キーボード入力をしている
 		isPlayerMoveKey = true;
@@ -543,14 +536,14 @@ void GameScene::PlayerMove() {
 		bool isInput = false;
 		//左スティック
 		Vector3 leftStickInput = {
-			.x = (static_cast<float>(input_->GetCurrentState().Gamepad.sThumbLX) / SHRT_MAX * 1.0f),
+			.x = (static_cast<float_t>(input_->GetCurrentState().Gamepad.sThumbLX) / SHRT_MAX),
 			.y = 0.0f,
-			.z = (static_cast<float>(input_->GetCurrentState().Gamepad.sThumbLY) / SHRT_MAX * 1.0f),
+			.z = (static_cast<float_t>(input_->GetCurrentState().Gamepad.sThumbLY) / SHRT_MAX),
 		};
 
 
 		//デッドゾーンの設定
-		const float DEAD_ZONE = 0.1f;
+		const float_t DEAD_ZONE = 0.1f;
 		//X軸
 		if (std::abs(leftStickInput.x) < DEAD_ZONE) {
 			leftStickInput.x = 0.0f;
@@ -573,13 +566,13 @@ void GameScene::PlayerMove() {
 			isPlayerMove = true;
 
 			//角度を求める
-			float radian = std::atan2f(leftStickInput.z, leftStickInput.x);
+			float_t radian = std::atan2f(leftStickInput.z, leftStickInput.x);
 			//値を0～2πに直してtheta_に揃える
 			if (radian < 0.0f) {
-				radian += 2.0f * std::numbers::pi_v<float>;
+				radian += 2.0f * std::numbers::pi_v<float_t>;
 			}
-			const float OFFSET = std::numbers::pi_v<float> / 2.0f;
-			float resultTheta = theta_ + radian - OFFSET;
+			const float_t OFFSET = std::numbers::pi_v<float_t> / 2.0f;
+			float_t resultTheta = theta_ + radian - OFFSET;
 
 
 			//向きを代入
@@ -656,7 +649,7 @@ void GameScene::PlayerRotate() {
 	bool isRotateYKey = false;
 	bool isRotateXKey = false;
 	//回転の大きさ
-	const float ROTATE_INTERVAL = 0.025f;
+	const float_t ROTATE_INTERVAL = 0.025f;
 
 	//+が左回り
 	//左を向く
@@ -671,21 +664,21 @@ void GameScene::PlayerRotate() {
 	}
 	//上を向く
 	if (input_->IsPushKey(DIK_UP) == true) {
-		originPhi_ -= ROTATE_INTERVAL;
+		phi_ -= ROTATE_INTERVAL;
 		isRotateXKey = true;
 	}
 	//下を向く
 	if (input_->IsPushKey(DIK_DOWN) == true) {
-		originPhi_ += ROTATE_INTERVAL;
+		phi_ += ROTATE_INTERVAL;
 		isRotateXKey = true;
 	}
 
 	//2πより大きくなったら0にまた戻す
-	if (theta_ > 2.0f * std::numbers::pi_v<float>) {
+	if (theta_ > 2.0f * std::numbers::pi_v<float_t>) {
 		theta_ = 0.0f;
 	}
 	//-2πより大きくなったら0にまた戻す
-	if (theta_ < -2.0f * std::numbers::pi_v<float>) {
+	if (theta_ < -2.0f * std::numbers::pi_v<float_t>) {
 		theta_ = 0.0f;
 	}
 
@@ -697,14 +690,14 @@ void GameScene::PlayerRotate() {
 	
 
 	//コントローラーがある場合
-	const float MOVE_LIMITATION = 0.02f;
+	const float_t MOVE_LIMITATION = 0.02f;
 
 	//キーボード入力していない時
 	if (isRotateYKey == false && isRotateXKey == false) {
 
 		//入力
-		float rotateMoveX = (static_cast<float>(input_->GetCurrentState().Gamepad.sThumbRY) / SHRT_MAX * ROTATE_INTERVAL);
-		float rotateMoveY = (static_cast<float>(input_->GetCurrentState().Gamepad.sThumbRX) / SHRT_MAX * ROTATE_INTERVAL);
+		float_t rotateMoveX = (static_cast<float_t>(input_->GetCurrentState().Gamepad.sThumbRY) / SHRT_MAX * ROTATE_INTERVAL);
+		float_t rotateMoveY = (static_cast<float_t>(input_->GetCurrentState().Gamepad.sThumbRX) / SHRT_MAX * ROTATE_INTERVAL);
 
 		//勝手に動くので制限を掛ける
 		if (rotateMoveY < MOVE_LIMITATION && rotateMoveY > -MOVE_LIMITATION) {
@@ -716,7 +709,7 @@ void GameScene::PlayerRotate() {
 
 		//補正後の値を代入する
 		theta_ -= rotateMoveY;
-		originPhi_ -= rotateMoveX;
+		phi_ -= rotateMoveX;
 	}
 
 
@@ -728,11 +721,11 @@ void GameScene::PlayerRotate() {
 
 	//±π/6くらいに制限を掛けておきたい
 	//それ以下以上だと首が大変なことになっているように見えるからね
-	if (originPhi_ > std::numbers::pi_v<float> / 6.0f) {
-		originPhi_ = std::numbers::pi_v<float> / 6.0f;
+	if (phi_ > std::numbers::pi_v<float_t> / 6.0f) {
+		phi_ = std::numbers::pi_v<float_t> / 6.0f;
 	}
-	if (originPhi_ < -std::numbers::pi_v<float> / 6.0f) {
-		originPhi_ = -std::numbers::pi_v<float> / 6.0f;
+	if (phi_ < -std::numbers::pi_v<float_t> / 6.0f) {
+		phi_ = -std::numbers::pi_v<float_t> / 6.0f;
 	}
 }
 
@@ -745,7 +738,7 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 
 	//フェードイン
 	if (isWhiteFadeIn == true) {
-		const float FADE_IN_INTERVAL = 0.01f;
+		const float_t FADE_IN_INTERVAL = 0.01f;
 		whiteFadeTransparency_ -= FADE_IN_INTERVAL;
 
 		//完全に透明になったらゲームが始まる
@@ -764,15 +757,10 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 
 		//説明
 		if (isExplain_ == true) {
-			if (input_->IsTriggerKey(DIK_SPACE) == true) {
+			//スペースまたはBボタンを押したとき
+			if (input_->IsTriggerKey(DIK_SPACE) == true|| input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
 				++howToPlayTextureNumber_;
 			}
-			//コントローラー接続時
-			//Bボタンを押したとき
-			if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
-				++howToPlayTextureNumber_;
-			}
-			
 
 			//読み終わったらゲームプレイへ
 			if (howToPlayTextureNumber_ > MAX_EXPLANATION_NUMBER_) {
@@ -784,6 +772,10 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 		if (isGamePlay_ == true) {
 			//コントロール可能にする
 			player_->SetIsAbleToControll(true);
+			//プレイヤーの移動
+			PlayerMove();
+			//回転
+			PlayerRotate();
 
 			//操作説明を追加
 			isDisplayUI_ = true;
@@ -793,23 +785,14 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 			enemyManager_->DeleteEnemy();
 		}
 
-		//プレイヤーの移動
-		PlayerMove();
-		//回転
-		PlayerRotate();
+		
+		
 
 		//プレイヤーにそれぞれの角度を設定する
-		player_->GetFlashLight()->SetTheta(theta_);
-		player_->GetFlashLight()->SetPhi(-originPhi_);
+		
+		player_->SetTheta(theta_);
+		player_->SetPhi(-phi_);
 
-		//もとに戻す
-		//カメラの回転の計算
-		camera_.rotate.x = originPhi_;
-		camera_.rotate.y = -(theta_)+std::numbers::pi_v<float> / 2.0f;
-		camera_.rotate.z = 0.0f;
-
-		//位置の計算
-		camera_.translate = VectorCalculation::Add(player_->GetWorldPosition(), cameraPositionOffset_);
 
 		//脱出の仕組み
 		EscapeCondition();
@@ -870,8 +853,7 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 		whiteFadeTransparency_ += FADE_OUT_INTERVAL_;
 
 		//最大の透明度
-		//本当は1.0fだけど新しく変数を作るとネストが増えるので一緒にやることにした。
-		const float MAX_TRANSPARENCY = 2.0f;
+		const float_t MAX_TRANSPARENCY = 2.0f;
 		if (whiteFadeTransparency_ > MAX_TRANSPARENCY) {
 			gameManager->ChangeScene("Win");
 			return;
@@ -889,12 +871,18 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 	//レベルエディタの更新
 	levelDataManager_->Update(levelHandle_);
 
-	//カメラの更新
-	camera_.Update();
 	//プレイヤーの更新
 	player_->Update();
 	//門
 	gate_->Update();
+
+	//カメラの更新
+	//レールカメラから2つの行列を取得
+	camera_.viewMatrix = player_->GetEyeCamera()->GetCamera().viewMatrix;
+	////射影は初期から変えていないのでそのまま
+	camera_.projectionMatrix = player_->GetEyeCamera()->GetCamera().projectionMatrix;
+	camera_.Transfer();
+	
 
 	//ビネットの処理
 	VigntteProcess();
@@ -946,7 +934,7 @@ void GameScene::DrawSprite() {
 
 	
 	//説明
-	for (uint32_t i = 0u; i < explanation_.size(); ++i) {
+	for (size_t i = 0u; i < explanation_.size(); ++i) {
 		if (howToPlayTextureNumber_ == i + 1) {
 			explanation_[i]->Draw();
 			spaceToNext_[i]->Draw();

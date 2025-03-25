@@ -17,6 +17,7 @@
 #include "PlayerCollisionToNormalEnemyAttack.h"
 #include "PlayerCollisionToAudioObject.h"
 #include "Light/FlashLight/FlashLight.h"
+#include "Camera/PlayerCamera.h"
 
 #pragma region 前方宣言
 
@@ -36,7 +37,7 @@ struct Material;
 class GameScene;
 
 /// <summary>
-/// EllysiaEngine
+/// ElysiaEngine
 /// </summary>
 namespace Elysia {
 	/// <summary>
@@ -101,7 +102,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void DrawObject3D(const Camera& camera,const SpotLight& spotLight);
+	void DrawObject3D(const Camera& camera, const SpotLight& spotLight);
 
 	/// <summary>
 	/// スプライトの描画
@@ -132,14 +133,6 @@ private:
 public:
 
 	/// <summary>
-	/// 半径の取得
-	/// </summary>
-	/// <returns>半径</returns>
-	inline float GetSideSize()const {
-		return SIDE_SIZE;
-	}
-
-	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
 	/// <returns>ワールド座標</returns>
@@ -152,18 +145,42 @@ public:
 	/// 方向を取得
 	/// </summary>
 	/// <returns>方向</returns>
-	inline Vector3 GetDirection() const{
+	inline Vector3 GetDirection() const {
 		return moveDirection_;
 	}
+
+	/// <summary>
+	/// 目線シータの設定
+	/// </summary>
+	/// <param name="theta"></param>
+	inline void SetTheta(const float_t& theta) {
+		this->theta_ = theta;
+	}
+
+	/// <summary>
+	/// 目線ファイの設定
+	/// </summary>
+	/// <param name="phi"></param>
+	inline void SetPhi(const float_t& phi) {
+		this->phi_ = phi;
+	}
+
 
 	/// <summary>
 	/// AABBの取得
 	/// </summary>
 	/// <returns>AABB</returns>
-	inline AABB GetAABB() const{
+	inline AABB GetAABB() const {
 		return aabb_;
 	}
 
+	/// <summary>
+	/// 幅のサイズを取得
+	/// </summary>
+	/// <returns>幅のサイズ</returns>
+	inline float_t GetSideSize()const {
+		return SIDE_SIZE;
+	}
 
 	/// <summary>
 	/// 体力を取得
@@ -189,15 +206,7 @@ public:
 		return isDameged_;
 	}
 
-	/// <summary>
-	/// 懐中電灯を取得
-	/// </summary>
-	/// <returns>懐中電灯</returns>
-	inline FlashLight* GetFlashLight()const {
-		return flashLight_.get();
-	}
-
-public:
+	
 
 	/// <summary>
 	/// 持っている鍵の数を増やす
@@ -265,13 +274,27 @@ public:
 
 
 public:
+	/// <summary>
+	/// 懐中電灯を取得
+	/// </summary>
+	/// <returns>懐中電灯</returns>
+	inline FlashLight* GetFlashLight()const {
+		return flashLight_.get();
+	}
 
+	/// <summary>
+	/// カメラ(目)を取得
+	/// </summary>
+	/// <returns></returns>
+	inline PlayerEyeCamera* GetEyeCamera()const {
+		return eyeCamera_.get();
+	}
 
 	/// <summary>
 	/// プレイヤー用のコライダーを取得
 	/// </summary>
 	/// <returns>コライダー</returns>
-	inline std::vector<BasePlayerCollision*> GetColliders()const{
+	inline std::vector<BasePlayerCollision*> GetColliders()const {
 		std::vector<BasePlayerCollision*> colliders;
 		for (const auto& collider : colliders_) {
 			colliders.push_back(collider.get());
@@ -316,9 +339,12 @@ private:
 	//モデル
 	std::unique_ptr<Elysia::Model> model_ = nullptr;
 	//ワールドトランスフォーム
-	WorldTransform worldTransform_={};
+	WorldTransform worldTransform_ = {};
 	//動く方向
 	Vector3 moveDirection_ = {};
+	//目線
+	float_t theta_ = 0.0f;
+	float_t phi_ = 0.0f;
 	//中心座標
 	Vector3 playerCenterPosition_ = {};
 	//マテリアル
@@ -361,5 +387,6 @@ private:
 	std::list<std::unique_ptr<BasePlayerCollision>> colliders_ = {};
 	//懐中電灯
 	std::unique_ptr<FlashLight>flashLight_ = nullptr;
-
+	//目としてのカメラクラス
+	std::unique_ptr<PlayerEyeCamera>eyeCamera_ = nullptr;
 };

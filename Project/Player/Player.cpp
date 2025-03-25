@@ -53,7 +53,10 @@ void Player::Initialize(){
 	flashLight_ = std::make_unique<FlashLight>();
 	flashLight_->Initialize();
 
-	
+	//カメラ
+	eyeCamera_ = std::make_unique<PlayerEyeCamera>();
+	eyeCamera_->Initialize();
+
 	//マテリアル
 	material_.Initialize();
 	material_.lightingKinds = LightingType::SpotLighting;
@@ -94,23 +97,38 @@ void Player::Update(){
 	worldTransform_.translate.y = HEIGHT;
 	worldTransform_.Update();
 
-	//ワールド座標
-	Vector3 worldPosition = worldTransform_.GetWorldPosition();
 
 	//AABBの計算
-	aabb_.min = VectorCalculation::Subtract(worldPosition, { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
-	aabb_.max = VectorCalculation::Add(worldPosition, { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
+	aabb_.min = VectorCalculation::Subtract(worldTransform_.GetWorldPosition(), { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
+	aabb_.max = VectorCalculation::Add(worldTransform_.GetWorldPosition(), { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
+
 	//コリジョンの更新
 	for (std::unique_ptr<BasePlayerCollision> &collision : colliders_) {
 		//プレイヤーの座標を設定
-		collision->SetPlayerPosition(worldPosition);
+		collision->SetPlayerPosition(worldTransform_.GetWorldPosition());
 		//更新
 		collision->Update();
 	}
-	//懐中電灯の更新
+
+	//懐中電灯
 	//角度はゲームシーンで取得する
-	flashLight_->SetPlayerPosition(worldPosition);
+	flashLight_->SetPlayerPosition(worldTransform_.GetWorldPosition());
+	//目線の角度の設定
+	flashLight_->SetTheta(theta_);
+	flashLight_->SetPhi(phi_);
+	//更新
 	flashLight_->Update();
+
+	//カメラ(目)
+	//座標の設定
+	eyeCamera_->SetPlayerPosition(GetWorldPosition());
+	//角度の設定
+	eyeCamera_->SetTheta(theta_);
+	eyeCamera_->SetPhi(phi_);
+
+
+	//カメラ(目)の更新
+	eyeCamera_->Update();
 
 	//マテリアルの更新
 	material_.Update();
@@ -256,16 +274,18 @@ void Player::DisplayImGui() {
 
 	ImGui::Begin("プレイヤー");
 	if (ImGui::TreeNode("状態")==true) {
+		ImGui::InputFloat3("座標", &worldTransform_.translate.x);
+		ImGui::InputFloat3("方向", &moveDirection_.x);
 		ImGui::InputInt("鍵の数", &keyQuantity);
 		ImGui::InputInt("体力", &hpQuantity);
-		ImGui::Checkbox("isDamage_", &isDamage_);
 		ImGui::Checkbox("振動", &isDameged_);
+		ImGui::Checkbox("ダメージを受けたかどうか", &isDamage_);
+		ImGui::Checkbox("敵からの攻撃を受け入れるか", &isAcceptDamegeFromNoemalEnemy_);
 		ImGui::TreePop();
 	}
 
-	ImGui::Checkbox("敵からの攻撃を受け入れるか", &isAcceptDamegeFromNoemalEnemy_);
-	ImGui::InputFloat3("Transrate", &worldTransform_.translate.x);
-	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
+	
+	
 	ImGui::End();
 
 }

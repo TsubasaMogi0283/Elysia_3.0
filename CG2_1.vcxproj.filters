@@ -481,6 +481,9 @@
     <Filter Include="Elysia\Source File\Convert">
       <UniqueIdentifier>{84c2195e-679f-4453-b397-f2d8863e5e29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Camera\PlayerCamera">
+      <UniqueIdentifier>{0b17b273-3d95-46aa-aa3c-d0edf62c4afe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -776,6 +779,9 @@
     </ClCompile>
     <ClCompile Include="Elysia\Convert\Convert.cpp">
       <Filter>Elysia\Source File\Convert</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\Camera\PlayerCamera.cpp">
+      <Filter>Elysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1302,6 +1308,9 @@
     </ClInclude>
     <ClInclude Include="Elysia\Convert\Convert.h">
       <Filter>Elysia\Header File\Convert</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\Camera\PlayerCamera.h">
+      <Filter>Elysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

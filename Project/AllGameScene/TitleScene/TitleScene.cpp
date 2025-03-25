@@ -252,6 +252,7 @@ void TitleScene::Update(Elysia::GameManager* gameManager){
 	titleRailCamera_->Update();
 	//レールカメラから2つの行列を取得
 	camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
+	//射影は初期から変えていないのでそのまま
 	camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
 
 	//カメラの更新

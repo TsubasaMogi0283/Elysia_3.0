@@ -63,10 +63,10 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="normalEnemyModel"></param>
-	/// <param name="strongEnemyModel"></param>
-	/// <param name="normalEnemyPositions"></param>
-	/// <param name="strongEnemyPositions"></param>
+	/// <param name="normalEnemyModel">通常の敵のモデルハンドル</param>
+	/// <param name="strongEnemyModel">強敵のモデルハンドル</param>
+	/// <param name="normalEnemyPositions">通常の敵の座標</param>
+	/// <param name="strongEnemyPositions">強敵の座標</param>
 	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel, const std::vector<Vector3>& normalEnemyPositions, const std::vector<Vector3>& strongEnemyPositions);
 	
 	/// <summary>

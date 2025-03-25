@@ -161,11 +161,6 @@ private:
 	//グローバル変数クラス
 	Elysia::GlobalVariables* globalVariables_ = nullptr;
 
-private:
-	//カメラ
-	const std::string GAME_SCENE_CAMERA_NAME_ = "GameSceneCamera";
-	//ディゾルブ
-	const std::string HEIGHT_OFFSET_ = "HeightOffset";
 
 
 private:
@@ -191,8 +186,7 @@ private:
 private:
 	//カメラ
 	Camera camera_ = {};
-	//座標のオフセット
-	Vector3 cameraPositionOffset_ = {};
+	
 
 	
 	//ポストエフェクト
@@ -208,7 +202,7 @@ private:
 	bool isReleaseAttack_ = false;
 	//角度
 	float_t theta_ = 0.0f;
-	float_t originPhi_ = 0.0f;
+	float_t phi_ = 0.0f;
 
 	//敵管理
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
@@ -225,20 +219,12 @@ private:
 
 	//脱出テキストのスプライト
 	std::unique_ptr<Elysia::Sprite> escapeText_ = nullptr;
-
 	//操作のスプライト
 	std::unique_ptr<Elysia::Sprite> operation_ = nullptr;
-
 	//鍵取得のスプライト
 	std::unique_ptr<Elysia::Sprite> pickUpKey_ = nullptr;
-
-	
-
 	//鍵管理クラス
 	std::unique_ptr<KeyManager> keyManager_ = {};
-
-
-
 	//脱出のスプライト
 	std::unique_ptr<Elysia::Sprite> toEscape_ = nullptr;
 
@@ -253,7 +239,7 @@ private:
 	bool isWhiteFadeIn = true;
 	//アウト
 	bool isWhiteFadeOut_ = false;
-
+	
 
 
 	//黒フェードのスプライト

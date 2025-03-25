@@ -218,6 +218,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Light\FlashLight\FlashLightCollision.cpp" />
     <ClCompile Include="Project\Player\AudioTestPlayer.cpp" />
     <ClCompile Include="Project\Player\BasedPlayerCollision.cpp" />
+    <ClCompile Include="Project\Player\Camera\PlayerCamera.cpp" />
     <ClCompile Include="Project\Player\Player.cpp" />
     <ClCompile Include="Project\Player\PlayerCollisionToAudioObject.cpp" />
     <ClCompile Include="Project\Player\PlayerCollisionToNormalEnemyAttack.cpp" />
@@ -532,6 +533,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Light\FlashLight\FlashLightCollision.h" />
     <ClInclude Include="Project\Player\AudioTestPlayer.h" />
     <ClInclude Include="Project\Player\BasePlayerCollision.h" />
+    <ClInclude Include="Project\Player\Camera\PlayerCamera.h" />
     <ClInclude Include="Project\Player\Player.h" />
     <ClInclude Include="Project\Player\PlayerCollisionToAudioObject.h" />
     <ClInclude Include="Project\Player\PlayerCollisionToNormalEnemyAttack.h" />
