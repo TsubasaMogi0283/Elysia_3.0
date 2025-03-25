@@ -121,9 +121,9 @@ void Player::Update(){
 
 	//カメラ(目)
 	//座標の設定
-	//eyeCamera_->SetPlayerPosition(GetWorldPosition());
-	////角度の設定
-	//eyeCamera_->SetTheta(theta_);
+	eyeCamera_->SetPlayerPosition(GetWorldPosition());
+	//角度の設定
+	eyeCamera_->SetTheta(theta_);
 	eyeCamera_->SetPhi(phi_);
 
 
