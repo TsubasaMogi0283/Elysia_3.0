@@ -236,7 +236,7 @@ void LoseScene::Select() {
 		levelDataManager_->SetTranslate(levelDataHandle_, TO_TITLE, toTitleInitialPosition);
 
 		//右・D押したとき「タイトルへ」に移動
-		if ((input_->IsTriggerKey(DIK_RIGHT) == true) || (input_->IsTriggerKey(DIK_D) == true)) {
+		if ((input_->IsTriggerKey(DIK_RIGHT) == true) || (input_->IsTriggerKey(DIK_D) == true )||(input_->IsTriggerButton(XINPUT_GAMEPAD_DPAD_RIGHT)==true)) {
 			levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = toTitleInitialPosition.x,.y = arrowInitialPosition.y ,.z = toTitleInitialPosition.z });
 			isSelectingGame_ = false;
 			isSelectingTitle_ = true;
@@ -254,19 +254,15 @@ void LoseScene::Select() {
 		levelDataManager_->SetScale(levelDataHandle_, TO_GAME, noSelectedScale);
 		levelDataManager_->SetTranslate(levelDataHandle_, TO_GAME, toGameInitialPosition);
 		//左・A押したとき「タイトルへ」に移動
-		if ((input_->IsTriggerKey(DIK_LEFT) == true) || (input_->IsTriggerKey(DIK_A) == true)) {
+		if ((input_->IsTriggerKey(DIK_LEFT) == true) || (input_->IsTriggerKey(DIK_A) == true)|| input_->IsTriggerButton(XINPUT_GAMEPAD_DPAD_LEFT) == true) {
 			levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = toGameInitialPosition.x,.y = arrowInitialPosition.y ,.z = toGameInitialPosition.z });
 			isSelectingGame_ = true;
 			isSelectingTitle_ = false;
 		}
 	}
 
-	//Bボタンを押したとき
-	if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
-		isChangeNextScene_ = true;
-	}
-	//次のシーンへ
-	if (input_->IsTriggerKey(DIK_SPACE) == true) {
+	//Bボタン、スペースキーを押したとき
+	if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true|| input_->IsTriggerKey(DIK_SPACE) == true) {
 		isChangeNextScene_ = true;
 	}
 }
