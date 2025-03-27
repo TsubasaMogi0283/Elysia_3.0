@@ -47,6 +47,14 @@ public:
 	~PlayerEyeCamera() = default;
 
 
+private:
+	/// <summary>
+	/// 振動
+	/// </summary>
+	void Shake();
+
+
+
 public:
 
 	/// <summary>
@@ -81,6 +89,16 @@ public:
 		this->phi_=phi;
 	}
 
+	/// <summary>
+	/// シェイクの設定
+	/// </summary>
+	/// <param name="isShake">シェイク</param>
+	inline void SetIsShake(const bool& isShake) {
+		this->isShake_ = isShake;
+	}
+
+
+
 
 private:
 	//グローバル変数クラス
@@ -110,5 +128,12 @@ private:
 	float_t theta_ = 0.0f;
 	float_t phi_ = 0.0f;
 
+
+	//振動用
+	bool isShake_ = false;
+	//振動分
+	Vector3 shakeValue_ = {};
+	//割合
+	float_t shakeRatio_ = 0.0f;
 };
 

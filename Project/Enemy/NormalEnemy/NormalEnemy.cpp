@@ -183,7 +183,7 @@ void NormalEnemy::Damaged() {
 			//体力減っていくと同時に振動幅が大きくなっていくよ
 			std::random_device seedGenerator;
 			std::mt19937 randomEngine(seedGenerator());
-			std::uniform_real_distribution<float> distribute(-1.0f, 1.0f);
+			std::uniform_real_distribution<float_t> distribute(-1.0f, 1.0f);
 
 
 			//現在の座標に加える

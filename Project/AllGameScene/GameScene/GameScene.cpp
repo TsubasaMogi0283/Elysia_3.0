@@ -444,13 +444,6 @@ void GameScene::DisplayImGui() {
 		ImGui::TreePop();
 	}
 
-	if (ImGui::TreeNode("カメラ") == true) {
-		ImGui::InputFloat3("座標", &camera_.translate.x);
-		ImGui::InputFloat3("回転", &camera_.rotate.x);
-		ImGui::TreePop();
-	}
-
-
 
 	ImGui::End();
 
@@ -636,6 +629,11 @@ void GameScene::PlayerMove() {
 		isReleaseAttack_ = true;
 		//クールタイムにする
 		player_->GetFlashLight()->SetIsCoolTime(true);
+		//カメラの振動
+		//攻撃できる時だけにする。その方が迫力が出るよね。
+		if (player_->GetFlashLight()->GetChargeCondition() >= ChargeCondition::NormalChargeAttack) {
+			player_->GetEyeCamera()->SetIsShake(true);
+		}
 	}
 	else {
 		isReleaseAttack_ = false;

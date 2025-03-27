@@ -2,12 +2,12 @@
 
 #include <numbers>
 #include <imgui.h>
+#include <random>
 
 #include "GlobalVariables.h"
 #include "VectorCalculation.h"
 #include "Matrix4x4Calculation.h"
-
-
+#include "Easing.h"
 
 PlayerEyeCamera::PlayerEyeCamera(){
 	//インスタンスの取得
@@ -29,6 +29,9 @@ void PlayerEyeCamera::Update(){
 
 	//位置の計算
 	worldTransform_.translate = VectorCalculation::Add(playerPosition_, cameraPositionOffset_);
+	
+	//振動
+	Shake();
 
 	//カメラの回転の計算
 	worldTransform_.rotate.x = phi_;
@@ -42,13 +45,43 @@ void PlayerEyeCamera::Update(){
 	camera_.viewMatrix = Matrix4x4Calculation::Inverse(worldTransform_.worldMatrix);
 
 
-#ifdef _DEBUG
-	ImGui::Begin("プレイヤーのカメラ");
-	ImGui::InputFloat3("座標", &worldTransform_.translate.x);
-	ImGui::InputFloat3("回転", &worldTransform_.rotate.x);
-	ImGui::End();
 
-#endif // _DEBUG
+}
+
+void PlayerEyeCamera::Shake(){
+	
+	//振動するとき
+	if (isShake_ == true) {
+
+		//振動演出
+		//体力減っていくと同時に振動幅が大きくなっていくよ
+		std::random_device seedGenerator;
+		std::mt19937 randomEngine(seedGenerator());
+		std::uniform_real_distribution<float_t> distribute(-0.05f, 0.05f);
+
+
+		//現在の座標に加える
+		shakeValue_.x = distribute(randomEngine);
+		shakeValue_.y = distribute(randomEngine);
+		shakeValue_.z = distribute(randomEngine);
+
+		//割合の計算
+		const float_t SHAKE_VALUE = 0.05f;
+		shakeRatio_ += SHAKE_VALUE;
+		float_t newRatio = Easing::EaseInOutQuart(shakeRatio_);
+		Vector3 newShakeValue = VectorCalculation::Multiply(shakeValue_, (1.0f- newRatio));
+
+		//振動分を加算
+		worldTransform_.translate = VectorCalculation::Add(worldTransform_.translate, newShakeValue);
+		//振動が終わったらリセットする
+		if (newRatio>=1.0f) {
+			isShake_ = false;
+		}
+
+	}
+	else {
+		shakeRatio_ = 0.0f;
+	}
 
 
 }
