@@ -177,17 +177,9 @@ private:
 	//完全に透明になる値
 	const float_t PERFECT_TRANSPARENT_ = 0.0f;
 
-	//ライトの幅
-	//最大
-	const float_t LIGHT_MAX_RANGE_ = 0.35f;
-	//最小
-	const float_t LIGHT_MIN_RANGE_ = 0.08f;
-
 private:
 	//カメラ
 	Camera camera_ = {};
-	
-
 	
 	//ポストエフェクト
 	//ビネット

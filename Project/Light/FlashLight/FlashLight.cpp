@@ -145,8 +145,6 @@ void FlashLight::Update() {
 	//片方の角度
 	spotLight_.cosAngle = std::cosf(lightSideTheta_);
 
-	//割合を求める
-	ratio_ = SingleCalculation::InverseLerp(minRange_, maxRange_, lightSideTheta_);
 
 
 	//cosFallowoffStart
@@ -154,8 +152,6 @@ void FlashLight::Update() {
 	maxStart_ = globalVariables_->GetFloatValue(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_);
 	//最小
 	minStart_ = globalVariables_->GetFloatValue(FLASH_LIGHT_COS_FALLOWOFF_START_STRING_, MAX_STRING_);
-	spotLight_.cosFallowoffStart = SingleCalculation::Lerp(minStart_, maxStart_, ratio_);
-
 	//扇
 	fan3D_.centerRadian = theta_;
 	fan3D_.direction = direction_;
@@ -327,7 +323,7 @@ void FlashLight::Charge() {
 	//白フェード
 	if (chargeConditionValue_ >= ChargeCondition::NormalChargeAttack) {
 		//まぶしすぎたので弱める
-		const float OFFSET = 0.3f;
+		const float OFFSET = 0.5f;
 		//攻撃可能な時だけにする
 		attackWhiteFadeSprite_->SetTransparency(ratio- OFFSET);
 

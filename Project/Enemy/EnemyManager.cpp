@@ -7,6 +7,7 @@
 #include "Player/Player.h"
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
+#include "CollisionCalculation.h"
 #include "Input.h"
 #include "Audio.h"
 #include "LevelDataManager.h"
@@ -20,7 +21,6 @@
 #include "NormalEnemy/State/NormalEnemyMove.h"
 #include "NormalEnemy/State/NormalEnemyPreTracking.h"
 #include "NormalEnemy/State/NormalEnemyAttack.h"
-#include <CollisionCalculation.h>
 
 EnemyManager::EnemyManager(){
 	//インスタンスの取得
@@ -63,8 +63,6 @@ void EnemyManager::Update(){
 	const float ATTACK_START_DISTANCE = 6.0f;
 	//プレイヤーの座標
 	Vector3 playerPosition = player_->GetWorldPosition();
-	enemies_;
-
 	//通常の敵
 	for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 		
@@ -112,7 +110,7 @@ void EnemyManager::Update(){
 					Vector3 enemyPrePosition = enemy->GetWorldPosition();
 
 					//押し戻し分
-					const float PUSH_BACK_DISTANCE = 0.01f;
+					const float PUSH_BACK_DISTANCE = 0.1f;
 
 					// 衝突した時の反転処理
 					if (distanceX < distanceZ) {

@@ -105,10 +105,6 @@ void GameScene::Initialize() {
 	//最初はコントロールは出来ない用にする
 	player_->SetIsAbleToControll(false);
 
-	//最大最小の幅を設定
-	player_->GetFlashLight()->SetMaxRange(LIGHT_MAX_RANGE_);
-	player_->GetFlashLight()->SetMinRange(LIGHT_MIN_RANGE_);
-	
 #pragma endregion
 
 	//鍵のモデルの読み込み

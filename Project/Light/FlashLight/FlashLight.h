@@ -150,25 +150,6 @@ public:
 		this->phi_ = phi;
 	}
 
-
-
-	/// <summary>
-	/// 最大の幅
-	/// </summary>
-	/// <param name="range">幅</param>
-	inline void SetMaxRange(const float_t& range) {
-		this->maxRange_ = range;
-	}
-
-
-	/// <summary>
-	/// 最小の幅
-	/// </summary>
-	/// <param name="range">幅</param>
-	inline void SetMinRange(const float_t& range) {
-		this->minRange_ = range;
-	}
-
 	/// <summary>
 	/// チャージをしているかどうかの設定
 	/// </summary>
@@ -281,8 +262,6 @@ private:
 	float_t lightSideTheta_ = 0.0f;
 
 	//ライトの幅
-	float_t maxRange_ = 0.0f;
-	float_t minRange_ = 0.0f;
 	float_t ratio_ = 0.0f;
 
 	//角度
