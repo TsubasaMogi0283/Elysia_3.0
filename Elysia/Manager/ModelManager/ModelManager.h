@@ -17,7 +17,7 @@
 
 
  /// <summary>
- /// EllysiaEngine
+ /// ElysiaEngine
  /// </summary>
 namespace Elysia {
 
@@ -37,7 +37,10 @@ namespace Elysia {
 		~ModelManager() = default;
 
 	public:
-		//シングルインスタンス
+		/// <summary>
+		/// インスタンスの取得
+		/// </summary>
+		/// <returns></returns>
 		static ModelManager* GetInstance();
 
 		//コピーコンストラクタ禁止

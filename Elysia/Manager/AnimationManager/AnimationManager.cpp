@@ -148,7 +148,7 @@ uint32_t AnimationManager::LoadFile(const std::string& directoryPath, const std:
 
 
 
-    AnimationManager::GetInstance()->index_++;
+    ++AnimationManager::GetInstance()->index_;
 
     AnimationManager::GetInstance()->animationInfromtion_[AnimationManager::GetInstance()->index_].animationData = animation;
     AnimationManager::GetInstance()->animationInfromtion_[AnimationManager::GetInstance()->index_].directoryPath = directoryPath;
