@@ -781,7 +781,7 @@
       <Filter>Elysia\Source File\Convert</Filter>
     </ClCompile>
     <ClCompile Include="Project\Player\Camera\PlayerCamera.cpp">
-      <Filter>Elysia\Source File</Filter>
+      <Filter>Project\Camera\PlayerCamera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1310,7 +1310,7 @@
       <Filter>Elysia\Header File\Convert</Filter>
     </ClInclude>
     <ClInclude Include="Project\Player\Camera\PlayerCamera.h">
-      <Filter>Elysia\Header File</Filter>
+      <Filter>Project\Camera\PlayerCamera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

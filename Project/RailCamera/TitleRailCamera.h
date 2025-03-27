@@ -25,7 +25,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="csvPath"></param>
+	/// <param name="csvPath">CSVファイル</param>
 	void Initialize(const std::string& csvPath);
 
 	/// <summary>
@@ -46,19 +46,19 @@ private:
 	void DisplayImGui();
 
 	/// <summary>
-	/// スプライン曲線を使った
+	/// スプライン曲線を使ったループ
 	/// </summary>
-	/// <param name="points"></param>
-	/// <param name="t"></param>
-	/// <returns></returns>
-	Vector3 CatmullRomPositionLoop(const std::vector<Vector3>& points, const float& t);
+	/// <param name="points">座標</param>
+	/// <param name="t">割合</param>
+	/// <returns>座標</returns>
+	Vector3 CatmullRomPositionLoop(const std::vector<Vector3>& points, const float_t& t);
 
 
 public:
 	/// <summary>
 	/// カメラの取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>カメラ</returns>
 	inline Camera GetCamera() const{
 		return camera_;
 	};
@@ -66,7 +66,7 @@ public:
 	/// <summary>
 	/// 方向の取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>方向</returns>
 	inline Vector3 GetDirection()const {
 		return direction_;
 	}
@@ -82,9 +82,9 @@ private:
 	Vector3 direction_ = {};
 
 	//線形補間用
-	float cameraT_ = 0.0f;
+	float_t cameraT_ = 0.0f;
 	//tの増える値
-	const float increaseTValue_ = 0.0001f;
+	const float_t increaseTValue_ = 0.0001f;
 
 	//制御点
 	std::vector<Vector3>points_ = {};

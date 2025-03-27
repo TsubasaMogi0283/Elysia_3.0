@@ -25,7 +25,7 @@
 
 
  /// <summary>
- /// EllysiaEngine(前方宣言)
+ /// ElysiaEngine(前方宣言)
  /// </summary>
 namespace Elysia {
 	/// <summary>

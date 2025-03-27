@@ -23,7 +23,7 @@
 
 
 /// <summary>
-/// EllysiaEngine
+/// ElysiaEngine
 /// </summary>
 namespace Elysia {
 	/// <summary>
@@ -127,7 +127,7 @@ private:
 
 private:
 	//時間の変化
-	const float DELTA_TIME_ = 1.0f / 60.0f;
+	const float_t DELTA_TIME_ = 1.0f / 60.0f;
 
 	//ランダムエフェクトの表示時間
 	static const uint32_t DISPLAY_LENGTH_QUANTITY_ = 2u;
@@ -153,7 +153,7 @@ private:
 	//黒フェード
 	std::unique_ptr<Elysia::Sprite>blackFade_ = nullptr;
 	//透明度
-	float blackFadeTransparency_ = 0.0f;
+	float_t blackFadeTransparency_ = 0.0f;
 
 
 	//テキスト
@@ -174,17 +174,11 @@ private:
 
 	//ランダムノイズ
 	std::unique_ptr<Elysia::RandomEffect> randomEffect_ = nullptr;
-	float randomEffectTime_ = 0u;
+	float_t randomEffectTime_ = 0u;
 	bool isDisplayRandomEffect_ = false;
 	bool isEndDisplayRandomEffect_ = false;
 
 #pragma endregion
-
-	//Bボタンのトリガー
-	//時間
-	uint32_t bTriggerTime_ = 0;
-	//フラグ
-	bool isBTrigger_ = false;
 
 	//点滅
 	bool isFlash_ = false;

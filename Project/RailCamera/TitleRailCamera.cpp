@@ -53,15 +53,15 @@ void TitleRailCamera::Initialize(const std::string& csvPath){
 		Vector3 position = {};
 		//X座標
 		std::getline(lineStream, word, ',');
-		position.x = static_cast<float>(std::atof(word.c_str()));
+		position.x = static_cast<float_t>(std::atof(word.c_str()));
 
 		//Y座標
 		std::getline(lineStream, word, ',');
-		position.y = static_cast<float>(std::atof(word.c_str()));
+		position.y = static_cast<float_t>(std::atof(word.c_str()));
 
 		//Z座標
 		std::getline(lineStream, word, ',');
-		position.z = static_cast<float>(std::atof(word.c_str()));
+		position.z = static_cast<float_t>(std::atof(word.c_str()));
 
 		//挿入
 		points_.push_back(position);
@@ -77,10 +77,10 @@ void TitleRailCamera::Update(){
 	cameraT_ += increaseTValue_;
 	
 	//少し先のTの値を見て次の位置の計算をする
-	const float NEXT_VALUE = 0.001f;
-	float nextT = cameraT_ + NEXT_VALUE;
+	const float_t NEXT_VALUE = 0.001f;
+	float_t nextT = cameraT_ + NEXT_VALUE;
 	//ループ時の補正
-	const float MAX_T_VALUE = 1.0f;
+	const float_t MAX_T_VALUE = 1.0f;
 	if (nextT > MAX_T_VALUE) {
 		nextT -= MAX_T_VALUE;
 	};
@@ -101,7 +101,7 @@ void TitleRailCamera::Update(){
 	worldTransform_.rotate.y = std::atan2(direction_.x, direction_.z);
 	//X軸の回転
 	//XZの長さ.まず先に長さを求めてから回転を求める.
-	float velocityXZ = std::sqrt((direction_.x * direction_.x) + (direction_.z * direction_.z));
+	float_t velocityXZ = std::sqrt((direction_.x * direction_.x) + (direction_.z * direction_.z));
 	worldTransform_.rotate.x = std::atan2(-direction_.y, velocityXZ);
 
 	//ワールド行列を計算
@@ -129,7 +129,7 @@ void TitleRailCamera::DisplayImGui(){
 
 }
 
-Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& points, const float& t) {
+Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& points, const float_t& t) {
 	//4点以上で動作するので
 	//それ未満は止める
 	assert(points.size() >= 4);
@@ -138,18 +138,18 @@ Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& poin
 	//初期化処理の所の制御点に入っている数を参照してあげる
 	size_t division = points.size() - 1;
 	//1区間の長さ(全体を1.0とした割合)
-	float areaLength = 1.0f / division;
+	float_t areaLength = 1.0f / division;
 
 	//区間内の始点を0.0f、終点を1.0としたときの現在位置
-	float t2 = std::fmod(t, areaLength) * division;
+	float_t t2 = std::fmod(t, areaLength) * division;
 	//下限(0.0f)と上限(1.0f)の範囲に収める
 	t2 = std::clamp(t2, 0.0f, 1.0f);
 
-	int index = static_cast<int>(t / areaLength);
-	int index0 = index - 1;
-	int index1 = index;
-	int index2 = index + 1;
-	int index3 = index + 2;
+	int32_t index = static_cast<int32_t>(t / areaLength);
+	int32_t index0 = index - 1;
+	int32_t index1 = index;
+	int32_t index2 = index + 1;
+	int32_t index3 = index + 2;
 
 
 
@@ -183,6 +183,5 @@ Vector3 TitleRailCamera::CatmullRomPositionLoop(const std::vector<Vector3>& poin
 
 
 	//結果
-	Vector3 result = VectorCalculation::CatmullRom(P0, P1, P2, P3, t2);
-	return  result;
+	return VectorCalculation::CatmullRom(P0, P1, P2, P3, t2);
 }

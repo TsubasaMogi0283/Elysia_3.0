@@ -48,7 +48,7 @@ void TitleScene::Initialize(){
 	//黒フェード
 	blackFade_.reset(Elysia::Sprite::Create(blackTexureHandle, INITIAL_POSITION));
 	//初期の透明度設定
-	const float INITIAL_TRANSPARENCY = 0.0f;
+	const float_t INITIAL_TRANSPARENCY = 0.0f;
 	blackFade_->SetTransparency(INITIAL_TRANSPARENCY);
 
 	//レベルデータの読み込み
@@ -79,6 +79,7 @@ void TitleScene::Initialize(){
 
 	//背景
 	//ポストエフェクト
+	//まずは夕方
 	baseTitleBackTexture_ = std::make_unique<SunsetBackTexture>();
 	baseTitleBackTexture_->Initialize();
 
@@ -121,13 +122,8 @@ void TitleScene::Update(Elysia::GameManager* gameManager){
 	
 
 
-	//Bボタンを押したら高速点滅
-	if (input_->IsTriggerButton(XINPUT_GAMEPAD_B)==true) {
-		isFastFlash_ = true;
-	}
-	//スペースを押したら高速点滅
-	if (input_->IsPushKey(DIK_SPACE) == true) {
-		//高速点滅
+	//スペースをまたはBボタンを押したら高速点滅
+	if (input_->IsPushKey(DIK_SPACE) == true||input_->IsTriggerButton(XINPUT_GAMEPAD_B)==true) {
 		isFastFlash_ = true;
 	}
 
@@ -176,13 +172,13 @@ void TitleScene::Update(Elysia::GameManager* gameManager){
 		text_->SetInvisible(true);
 
 		//時間の加算
-		const float DELTA_TIME = 1.0f/60.0f;
+		const float_t DELTA_TIME = 1.0f/60.0f;
 		randomEffectTime_ += DELTA_TIME;
 
 		//開始時間
-		std::array<float, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_START_TIME = { 0.0f,2.5f };
+		std::array<float_t, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_START_TIME = { 0.0f,2.5f };
 		//表示の長さ
-		std::array<float, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_LENGTH = { 1.0f,3.0f };
+		std::array<float_t, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_LENGTH = { 1.0f,3.0f };
 
 
 
@@ -208,6 +204,10 @@ void TitleScene::Update(Elysia::GameManager* gameManager){
 				ChangeBackTexture(std::move(std::make_unique<NightBackTexture>()));
 				//タイトルロゴの変化
 				logoTextureHandle_ = changedLogoTextureHandle_;
+				//光の強さと色を変え夜っぽくする
+				directionalLight_.intensity = 0.05f;
+				directionalLight_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
+
 			}
 			else if (i == SECOND_EFFECT) {
 				//ランダムの終了
@@ -223,7 +223,7 @@ void TitleScene::Update(Elysia::GameManager* gameManager){
 		//ランダムエフェクト表示の演出が終わった場合
 		if (isEndDisplayRandomEffect_ == true) {
 			logo->SetInvisible(true);
-			const float FADE_INCREASE_VALUE = 0.01f;
+			const float_t FADE_INCREASE_VALUE = 0.01f;
 			blackFadeTransparency_ += FADE_INCREASE_VALUE;
 			
 		}
@@ -312,14 +312,21 @@ void TitleScene::DrawSprite(){
 }
 
 void TitleScene::DisplayImGui(){
-	ImGui::Begin("TitleFade&Effect");
-	ImGui::InputFloat("Count", &randomEffectTime_);
-	ImGui::Checkbox("IsDisplay", &isDisplayRandomEffect_);
-	ImGui::End();
 
-	ImGui::Begin("平行光源");
-	ImGui::SliderFloat4("色", &directionalLight_.color.x, 0.0f, 1.0f);
-	ImGui::SliderFloat3("方向", &directionalLight_.direction.x, -1.0f, 1.0f);
+	ImGui::Begin("タイトルシーン");
+	if (ImGui::TreeNode("平行光源") == true) {
+		ImGui::SliderFloat4("色", &directionalLight_.color.x, 0.0f, 1.0f);
+		ImGui::SliderFloat3("方向", &directionalLight_.direction.x, -1.0f, 1.0f);
+		ImGui::SliderFloat("強さ", &directionalLight_.intensity, 0.0f, 1.0f);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("エフェクト") == true) {
+		ImGui::InputFloat("Count", &randomEffectTime_);
+		ImGui::Checkbox("IsDisplay", &isDisplayRandomEffect_);
+		ImGui::TreePop();
+	}
+	
+	
 	ImGui::End();
 
 }
