@@ -6,7 +6,7 @@
  * @author 茂木翼
  */
 
-#include "BaseTitleBackTexture.h"
+#include "TitleScene/BaseBackTexture/BaseTitleBackTexture.h"
 
 /// <summary>
 /// 夕暮れの背景
@@ -23,7 +23,6 @@ public:
 	/// </summary>
 	void Initialize()override;
 
-private:
 
 };
 

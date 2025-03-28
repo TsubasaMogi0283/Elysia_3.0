@@ -6,7 +6,7 @@
  * @author 茂木翼
  */
 
-#include "BaseTitleBackTexture.h"
+#include "TitleScene/BaseBackTexture/BaseTitleBackTexture.h"
 
 
 /// <summary>
@@ -24,7 +24,6 @@ public:
 	/// </summary>
 	void Initialize()override;
 
-private:
 
 };
 

@@ -17,7 +17,7 @@
 #include "SpotLight.h"
 #include "RailCamera/TitleRailCamera.h"
 #include "RandomEffect.h"
-#include "BaseTitleBackTexture.h"
+#include "BaseBackTexture/BaseTitleBackTexture.h"
 
 #pragma region 前方宣言
 
@@ -146,8 +146,6 @@ private:
 
 	//平行光源
 	DirectionalLight directionalLight_ = {};
-	//スポットライト
-	SpotLight spotLight = {};
 
 
 	//黒フェード

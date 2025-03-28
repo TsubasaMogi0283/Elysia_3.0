@@ -484,6 +484,21 @@
     <Filter Include="Project\Camera\PlayerCamera">
       <UniqueIdentifier>{0b17b273-3d95-46aa-aa3c-d0edf62c4afe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Scene\Title\BaseTitleScene">
+      <UniqueIdentifier>{e419a687-4086-4eb6-a434-5d06750d528f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\BaseTitleScene\Start">
+      <UniqueIdentifier>{73a7a1c6-6c0c-4131-925d-df0a71f14510}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\BaseTitleScene\ToGame">
+      <UniqueIdentifier>{9edbc5b5-b3db-4551-8ce6-76c91d2022da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\BaseTitleScene\Noise">
+      <UniqueIdentifier>{9fdf8008-47cd-4bf0-b015-e72f6f858ffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\BaseTitleScene\Waiting">
+      <UniqueIdentifier>{4175d225-11c5-451f-8198-772c4d62c5bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -533,15 +548,6 @@
     </ClCompile>
     <ClCompile Include="Project\RailCamera\TitleRailCamera.cpp">
       <Filter>Project\Camera\TitleRailCamera</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.cpp">
-      <Filter>Project\Scene\Title\BackTexture\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\TitleScene\NightBackTexture.cpp">
-      <Filter>Project\Scene\Title\BackTexture\Night</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\TitleScene\SunsetBackTexture.cpp">
-      <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp">
       <Filter>Project\Scene\Factory</Filter>
@@ -783,6 +789,18 @@
     <ClCompile Include="Project\Player\Camera\PlayerCamera.cpp">
       <Filter>Project\Camera\PlayerCamera</Filter>
     </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseBackTexture\BaseTitleBackTexture.cpp">
+      <Filter>Project\Scene\Title\BackTexture\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseBackTexture\Night\NightBackTexture.cpp">
+      <Filter>Project\Scene\Title\BackTexture\Night</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseBackTexture\Sunset\SunsetBackTexture.cpp">
+      <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Waiting\WaitingTitleScene.cpp">
+      <Filter>Elysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -945,15 +963,6 @@
     </ClInclude>
     <ClInclude Include="Project\CollisionConfig\CollisionConfig.h">
       <Filter>Project</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.h">
-      <Filter>Project\Scene\Title\BackTexture\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\TitleScene\NightBackTexture.h">
-      <Filter>Project\Scene\Title\BackTexture\Night</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\TitleScene\SunsetBackTexture.h">
-      <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
     </ClInclude>
     <ClInclude Include="Project\Player\BasePlayerCollision.h">
       <Filter>Project\Player\Collision</Filter>
@@ -1311,6 +1320,21 @@
     </ClInclude>
     <ClInclude Include="Project\Player\Camera\PlayerCamera.h">
       <Filter>Project\Camera\PlayerCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\BaseTitleScene.h">
+      <Filter>Project\Scene\Title\BaseTitleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Waiting\WaitingTitleScene.h">
+      <Filter>Project\Scene\Title\BaseTitleScene\Waiting</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseBackTexture\BaseTitleBackTexture.h">
+      <Filter>Project\Scene\Title\BackTexture\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseBackTexture\Night\NightBackTexture.h">
+      <Filter>Project\Scene\Title\BackTexture\Night</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseBackTexture\Sunset\SunsetBackTexture.h">
+      <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,8 +13,8 @@
 #include "SingleCalculation.h"
 #include "Calculation/QuaternionCalculation.h"
 
-#include "SunsetBackTexture.h"
-#include "NightBackTexture.h"
+#include "BaseBackTexture/Sunset/SunsetBackTexture.h"
+#include "BaseBackTexture/Night/NightBackTexture.h"
 
 
 TitleScene::TitleScene(){
@@ -59,8 +59,6 @@ void TitleScene::Initialize(){
 	isFlash_ = true;
 	isFastFlash_ = false;
 
-	//スポットライトの初期化
-	spotLight.Initialize();
 	//平行光源
 	directionalLight_.Initialize();
 	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
@@ -104,17 +102,17 @@ void TitleScene::Update(Elysia::GameManager* gameManager){
 		flashTime_ += INCREASE_VALUE;
 
 		//表示
-		if (flashTime_ > FLASH_TIME_LIMIT_ * 0 &&
-			flashTime_ <= FLASH_TIME_LIMIT_ ) {
+		if (flashTime_ > FLASH_TIME_LIMIT_ * 0u &&
+			flashTime_ <= FLASH_TIME_LIMIT_*1u ) {
 			text_->SetInvisible(false);
 		}
 		//非表示
-		if (flashTime_ > FLASH_TIME_LIMIT_ &&
-			flashTime_ <= FLASH_TIME_LIMIT_*2) {
+		if (flashTime_ > FLASH_TIME_LIMIT_ * 1u &&
+			flashTime_ <= FLASH_TIME_LIMIT_*2u) {
 			text_->SetInvisible(true);
 
 		}
-		if (flashTime_ > FLASH_TIME_LIMIT_*2) {
+		if (flashTime_ > FLASH_TIME_LIMIT_*2u) {
 			flashTime_ = RESTART_TIME;
 		}
 
@@ -243,8 +241,6 @@ void TitleScene::Update(Elysia::GameManager* gameManager){
 	//更新
 	levelDataManager_->Update(levelHandle_);
 
-	//スポットライトの更新
-	spotLight.Update();
 	//平行光源
 	directionalLight_.Update();
 
