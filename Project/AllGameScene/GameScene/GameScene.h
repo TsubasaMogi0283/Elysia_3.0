@@ -90,7 +90,7 @@ public:
 	/// <summary>
 	/// ポストエフェクト描画前
 	/// </summary>
-	void PreDrawPostEffectFirst()override;
+	void PreDrawPostEffect()override;
 
 	/// <summary>
 	/// ポストエフェクトの描画

@@ -1,5 +1,12 @@
 #pragma once
 
+/**
+ * @file TitleScene.h
+ * @brief タイトルクラス
+ * @author 茂木翼
+ */
+
+
 #include "TitleScene/BaseTitleScene/BaseTitleScene.h"
 
 
@@ -7,10 +14,17 @@
 /// スタート待ちのタイトルシーン
 /// </summary>
 class WaitingTitleScene: public BaseTitleScene {
+public:
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	WaitingTitleScene();
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize() override;
+	void IndivisualInitialize()override;
 
 	/// <summary>
 	/// 更新
@@ -26,7 +40,7 @@ class WaitingTitleScene: public BaseTitleScene {
 	/// <summary>
 	/// ポストエフェクト描画処理前
 	/// </summary>
-	void PreDrawPostEffectFirst();
+	void PreDrawPostEffect();
 
 	/// <summary>
 	/// ポストエフェクト描画

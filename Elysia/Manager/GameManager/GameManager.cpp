@@ -16,7 +16,7 @@ void Elysia::GameManager::Initialize() {
 
 #ifdef _DEBUG
 	//デバッグ時はこっちに入れてね
-	currentGamaScene_ = abstractSceneFactory_->CreateScene("Lose");
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
 #endif // _DEBUG
 
 	//初期化
@@ -91,9 +91,9 @@ void Elysia::GameManager::DrawSprite(){
 	currentGamaScene_->DrawSprite();
 }
 
-void Elysia::GameManager::PreDrawPostEffectFirst(){
+void Elysia::GameManager::PreDrawPostEffect(){
 	//ポストエフェクト描画処理前
-	currentGamaScene_->PreDrawPostEffectFirst();
+	currentGamaScene_->PreDrawPostEffect();
 }
 
 

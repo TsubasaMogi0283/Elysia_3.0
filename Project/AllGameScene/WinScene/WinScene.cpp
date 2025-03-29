@@ -191,7 +191,7 @@ void WinScene::Update(Elysia::GameManager* gameManager){
 
 }
 
-void WinScene::PreDrawPostEffectFirst(){
+void WinScene::PreDrawPostEffect(){
 	backTexture_->PreDraw();
 }
 

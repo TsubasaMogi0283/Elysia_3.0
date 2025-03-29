@@ -893,7 +893,7 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 #endif // _DEBUG
 }
 
-void GameScene::PreDrawPostEffectFirst() {
+void GameScene::PreDrawPostEffect() {
 	//ビネット描画処理前
 	vignette_->PreDraw();
 }

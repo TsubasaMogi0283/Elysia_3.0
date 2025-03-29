@@ -189,7 +189,7 @@ void LoseScene::DrawObject3D(){
 	
 }
 
-void LoseScene::PreDrawPostEffectFirst(){
+void LoseScene::PreDrawPostEffect(){
 	dissolveEffect_->PreDraw();
 }
 

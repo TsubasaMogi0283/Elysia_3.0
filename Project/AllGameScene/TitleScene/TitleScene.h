@@ -18,7 +18,7 @@
 #include "RailCamera/TitleRailCamera.h"
 #include "RandomEffect.h"
 #include "BaseBackTexture/BaseTitleBackTexture.h"
-
+#include "BaseTitleScene/BaseTitleScene.h"
 #pragma region 前方宣言
 
 
@@ -83,7 +83,7 @@ public:
 	/// <summary>
 	/// ポストエフェクト描画処理前
 	/// </summary>
-	void PreDrawPostEffectFirst()override;
+	void PreDrawPostEffect()override;
 	
 	/// <summary>
 	/// ポストエフェクト描画
@@ -101,7 +101,17 @@ public:
 	/// </summary>
 	~TitleScene()=default;
 
+public:
+	/// <summary>
+	/// 背景テクスチャの遷移
+	/// </summary>
+	/// <param name="backTexture">背景テクスチャ(ポストエフェクト)</param>
+	void ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture>);
 
+	/// <summary>
+	/// タイトルシーンの遷移
+	/// </summary>
+	void ChangeDetailedScene(std::unique_ptr<BaseTitleScene>detailedScene);
 
 private:
 	/// <summary>
@@ -109,12 +119,7 @@ private:
 	/// </summary>
 	void DisplayImGui();
 
-	/// <summary>
-	/// 背景テクスチャの遷移
-	/// </summary>
-	/// <param name="backTexture">背景テクスチャ(ポストエフェクト)</param>
-	void ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture>);
-
+	
 private:
 	//テクスチャ管理クラス
 	Elysia::TextureManager* textureManager_ = nullptr;
@@ -196,6 +201,9 @@ private:
 	bool isStart_ = false;
 
 
+
+	//タイトルの細かいシーン
+	std::unique_ptr<BaseTitleScene> datailedTitleScene_ = nullptr;
 	
 
 };

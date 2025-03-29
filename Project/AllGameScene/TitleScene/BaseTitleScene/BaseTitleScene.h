@@ -49,9 +49,14 @@ class TitleScene;
 class BaseTitleScene {
 public:
 	/// <summary>
-	/// 初期化
+	/// 初期化(1度きり)
 	/// </summary>
-	virtual void Initialize()=0;
+	virtual void Initialize();
+
+	/// <summary>
+	/// 個別の初期化
+	/// </summary>
+	virtual void IndivisualInitialize() = 0;
 
 	/// <summary>
 	/// 更新
@@ -67,7 +72,7 @@ public:
 	/// <summary>
 	/// ポストエフェクト描画処理前
 	/// </summary>
-	virtual void PreDrawPostEffectFirst()=0;
+	virtual void PreDrawPostEffect()=0;
 
 	/// <summary>
 	/// ポストエフェクト描画
@@ -93,6 +98,36 @@ protected:
 	//レベルエディタ
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	uint32_t levelHandle_ = 0u;
+
+
+protected:
+	//↓↓↓タイトルシーンで使う共通の部分はここで宣言してそれぞれで使うようにする↓↓↓
+
+	//カメラ
+	Camera camera_ = {};
+	std::unique_ptr<TitleRailCamera> titleRailCamera_ = nullptr;
+
+	//座標
+	Vector3 cameraPosition_ = {};
+
+	//平行光源
+	DirectionalLight directionalLight_ = {};
+
+
+	//黒フェード
+	std::unique_ptr<Elysia::Sprite>blackFade_ = nullptr;
+	//透明度
+	float_t blackFadeTransparency_ = 0.0f;
+
+
+	//テキスト
+	std::unique_ptr<Elysia::Sprite> text_ = nullptr;
+
+	//ロゴ
+	std::unique_ptr<Elysia::Sprite> logo = nullptr;
+	uint32_t logoTextureHandle_ = 0u;
+	//変化後のテクスチャ
+	uint32_t changedLogoTextureHandle_ = 0u;
 
 
 };

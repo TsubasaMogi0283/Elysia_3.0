@@ -67,7 +67,7 @@ public:
 	/// <summary>
 	/// ポストエフェクト描画処理前
 	/// </summary>
-	void PreDrawPostEffectFirst()override;
+	void PreDrawPostEffect()override;
 
 	/// <summary>
 	/// 描画(3D描画)

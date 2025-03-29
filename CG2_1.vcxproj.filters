@@ -799,7 +799,13 @@
       <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Waiting\WaitingTitleScene.cpp">
-      <Filter>Elysia\Source File</Filter>
+      <Filter>Project\Scene\Title\BaseTitleScene\Waiting</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Start\StartTitleScene.cpp">
+      <Filter>Project\Scene\Title\BaseTitleScene\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\BaseTitleScene.cpp">
+      <Filter>Project\Scene\Title\BaseTitleScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1335,6 +1341,9 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseBackTexture\Sunset\SunsetBackTexture.h">
       <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Start\StartTitleScene.h">
+      <Filter>Project\Scene\Title\BaseTitleScene\Start</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

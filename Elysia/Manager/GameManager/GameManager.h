@@ -57,7 +57,7 @@ namespace Elysia {
 		/// <summary>
 		/// ポストエフェクト描画前処理
 		/// </summary>
-		void PreDrawPostEffectFirst();
+		void PreDrawPostEffect();
 
 		/// <summary>
 		/// 描画(ポストエフェクト)

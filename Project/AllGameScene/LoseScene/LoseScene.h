@@ -88,7 +88,7 @@ public:
 	/// <summary>
 	/// ポストエフェクト描画処理前
 	/// </summary>
-	void PreDrawPostEffectFirst()override;
+	void PreDrawPostEffect()override;
 
 	/// <summary>
 	/// ポストエフェクト描画処理前

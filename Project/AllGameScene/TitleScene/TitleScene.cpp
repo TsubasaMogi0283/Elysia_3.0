@@ -16,6 +16,7 @@
 #include "BaseBackTexture/Sunset/SunsetBackTexture.h"
 #include "BaseBackTexture/Night/NightBackTexture.h"
 
+#include "BaseTitleScene/Waiting/WaitingTitleScene.h"
 
 TitleScene::TitleScene(){
 	//インスタンスの取得
@@ -86,79 +87,15 @@ void TitleScene::Initialize(){
 	//初期化
 	randomEffect_->Initialize();
 	
+	//細かいシーンの初期化
+	datailedTitleScene_ = std::make_unique<WaitingTitleScene>();
+	datailedTitleScene_->Initialize();
 }
 
 void TitleScene::Update(Elysia::GameManager* gameManager){
+	//細かいシーンの更新
+	datailedTitleScene_->Update(this);
 
-#pragma region 未スタート
-
-	//まだボタンを押していない時
-	//通常点滅
-	if (isFlash_ == true) {
-		//再スタート時間
-		const uint32_t RESTART_TIME = 0u;
-
-		//時間の加算
-		flashTime_ += INCREASE_VALUE;
-
-		//表示
-		if (flashTime_ > FLASH_TIME_LIMIT_ * 0u &&
-			flashTime_ <= FLASH_TIME_LIMIT_*1u ) {
-			text_->SetInvisible(false);
-		}
-		//非表示
-		if (flashTime_ > FLASH_TIME_LIMIT_ * 1u &&
-			flashTime_ <= FLASH_TIME_LIMIT_*2u) {
-			text_->SetInvisible(true);
-
-		}
-		if (flashTime_ > FLASH_TIME_LIMIT_*2u) {
-			flashTime_ = RESTART_TIME;
-		}
-
-	}
-	
-
-
-	//スペースをまたはBボタンを押したら高速点滅
-	if (input_->IsPushKey(DIK_SPACE) == true||input_->IsTriggerButton(XINPUT_GAMEPAD_B)==true) {
-		isFastFlash_ = true;
-	}
-
-
-	//高速点滅
-	if (isFastFlash_ == true&& isStart_==false) {
-		//カウントが増える時間
-		const uint32_t INCREASE_COUNT_TIME = 0u;
-
-		//時間の加算
-		fastFlashTime_ += INCREASE_VALUE;
-		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
-			++textDisplayCount_;
-		}
-
-		//表示
-		const uint32_t DISPLAY_MOMENT = 0u;
-		
-		//点滅の間隔
-		const uint32_t FLASH_INTERVAL = 2u;
-
-		if (textDisplayCount_ % FLASH_INTERVAL == DISPLAY_MOMENT) {
-			text_->SetInvisible(true);
-		}
-		//非表示
-		else {
-			text_->SetInvisible(false);
-		}
-
-
-		//指定した時間を超えたらシーンチェンジ
-		if (fastFlashTime_> FAST_FLASH_TIME_LIMIT_) {
-			isStart_ = true;
-		}
-	}
-
-#pragma endregion
 
 #pragma region スタート演出
 
@@ -266,11 +203,14 @@ void TitleScene::Update(Elysia::GameManager* gameManager){
 void TitleScene::DrawObject3D(){
 	//ステージオブジェクト
 	levelDataManager_->Draw(levelHandle_,camera_, directionalLight_);
+	//細かいシーン
+	datailedTitleScene_->DrawObject3D();
 
 }
 
-void TitleScene::PreDrawPostEffectFirst(){
-
+void TitleScene::PreDrawPostEffect(){
+	//細かいシーン
+	datailedTitleScene_->PreDrawPostEffect();
 	//ランダム
 	if (isDisplayRandomEffect_ == true) {
 		//ランダム
@@ -284,6 +224,9 @@ void TitleScene::PreDrawPostEffectFirst(){
 }
 
 void TitleScene::DrawPostEffect(){
+	//細かいシーン
+	datailedTitleScene_->DrawPostEffect();
+
 	//ランダム
 	if (isDisplayRandomEffect_ == true) {
 		//ランダム
@@ -305,6 +248,8 @@ void TitleScene::DrawSprite(){
 	//黒フェード
 	blackFade_->Draw();
 
+	//細かいシーン
+	datailedTitleScene_->DrawSprite();
 }
 
 void TitleScene::DisplayImGui(){
@@ -334,4 +279,14 @@ void TitleScene::ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture> backTex
 		//引数が次に遷移する
 		baseTitleBackTexture_->Initialize();
 	}
+}
+
+void TitleScene::ChangeDetailedScene(std::unique_ptr<BaseTitleScene> detailedScene){
+	//違った時だけ遷移する
+	if (datailedTitleScene_ != detailedScene) {
+		datailedTitleScene_ = std::move(detailedScene);
+		//個別の初期化
+		datailedTitleScene_->IndivisualInitialize();
+	}
+	
 }

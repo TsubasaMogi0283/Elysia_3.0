@@ -164,7 +164,7 @@ void TestScene::DrawObject3D(){
 
 }
 
-void TestScene::PreDrawPostEffectFirst(){
+void TestScene::PreDrawPostEffect(){
 	//描画前処理
 	backTexture_->PreDraw();
 }

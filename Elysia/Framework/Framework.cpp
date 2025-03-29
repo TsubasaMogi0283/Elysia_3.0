@@ -122,7 +122,7 @@ void Elysia::Framework::Update(){
 void Elysia::Framework::Draw(){
 	
 	//PostEffectの描画前処理
-	gameManager_->PreDrawPostEffectFirst();
+	gameManager_->PreDrawPostEffect();
 
 	//3Dオブジェクトの描画
 	gameManager_->DrawObject3D();
