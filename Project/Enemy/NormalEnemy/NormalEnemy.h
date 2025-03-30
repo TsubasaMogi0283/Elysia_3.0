@@ -137,6 +137,10 @@ public:
 		this->damagedValue_ = strength;
 	}
 
+	inline void SetIsAcceptDamaged(const bool& isAccept) {
+		this->isAcceptDamage_ = isAccept;
+	}
+
 	/// <summary>
 	/// 現在の状態を取得
 	/// </summary>
@@ -168,9 +172,9 @@ private:
 	void Damaged();
 
 	/// <summary>
-	/// 絶命
+	/// 消える
 	/// </summary>
-	void Dead();
+	void Delete();
 
 	/// <summary>
 	/// ImGuiの表示
@@ -194,6 +198,18 @@ private:
 	
 
 private:
+
+	/// <summary>
+	/// 体力状態
+	/// </summary>
+	enum HPCondition {
+		Dead,
+		Dangerous,
+		Normal,
+	};
+
+
+private:
 	//パーティクル
 	std::unique_ptr<Elysia::Particle3D> deadParticle_ = {};
 	std::unique_ptr<Elysia::Particle3D> electricShockParticle_ = {};
@@ -208,6 +224,9 @@ private:
 
 	//受けるダメージ
 	uint32_t damagedValue_ = 0u;
+	//攻撃を受けるかどうか
+	bool isAcceptDamage_ = false;
+
 
 	//攻撃状態
 	bool isAttack_ = false;

@@ -14,7 +14,8 @@ enum ParticleMoveType {
 	//上昇
 	Rise,
 	//吸収
-	Absorb
-
+	Absorb,
+	//留まる
+	Stay
 
 };

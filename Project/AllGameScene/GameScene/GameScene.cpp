@@ -14,7 +14,6 @@
 #include "LevelDataManager.h"
 #include "GlobalVariables.h"
 
-
 GameScene::GameScene() {
 	//インスタンスの取得
 	//入力
@@ -347,9 +346,12 @@ void GameScene::RegisterToCollisionManager() {
 	//エネミーをコリジョンマネージャーに追加
 	//通常の敵のリストの取得
 	std::vector<NormalEnemy*> enemyes = enemyManager_->GetNormalEnemies();
-	for (const NormalEnemy* enemy : enemyes) {
+	for (const auto& enemy: enemyes) {
+		//ダメージを受け入れる
+		enemy->SetIsAcceptDamaged(isReleaseAttack_);
 		if (isReleaseAttack_ == true) {
-			enemy
+			//ライトの強さを反映
+			enemy->SetLightStrength(player_->GetFlashLight()->GetChargeCondition());
 			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
 
 		}

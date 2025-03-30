@@ -56,6 +56,9 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 	preCondition_ = EnemyCondition::NoneMove;
 	condition_ = EnemyCondition::Move;
 
+	//体力
+	hp_ = HPCondition::Normal;
+
 
 	//デバッグ用のモデル
 	debugModelHandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Sphere", "Sphere.obj");
@@ -129,7 +132,7 @@ void NormalEnemy::Update() {
 	}
 	else {
 		//死亡したらパーティクルを出して消える
-		Dead();
+		Delete();
 	}
 
 	//ImGui
@@ -173,38 +176,37 @@ void NormalEnemy::ChengeState(std::unique_ptr<BaseNormalEnemyState> newState){
 void NormalEnemy::Damaged() {
 
 	//ダメージを受ける
-	if (enemyFlashLightCollision_->GetIsTouched() == true) {
-
-		hp_-=
-
-		material_.color.y = 0.0f;
-		material_.color.z = 0.0f;
-
-		//生存している時だけ振動
-		if (isAlive_ == true) {
-			//振動演出
-			//体力減っていくと同時に振動幅が大きくなっていくよ
-			std::random_device seedGenerator;
-			std::mt19937 randomEngine(seedGenerator());
-			std::uniform_real_distribution<float_t> distribute(-1.0f, 1.0f);
-
-
-			//現在の座標に加える
-			worldTransform_.translate.x += distribute(randomEngine) * (1.0f - material_.color.y) * shakeOffset_;
-			worldTransform_.translate.z += distribute(randomEngine) * (1.0f - material_.color.y) * shakeOffset_;
-		}
-
-
+	if (enemyFlashLightCollision_->GetIsTouched() == true&& isAcceptDamage_==true) {
+		///体力を減らす
+		hp_ -= damagedValue_;
+		
 	}
 
 	//0になったら絶命
-	if (material_.color.y <= 0.0f &&
-		material_.color.z <= 0.0f) {
+	if (hp_ <= HPCondition::Dead) {
 		isAlive_ = false;
 	}
+	//瀕死状態
+	else if (hp_ == HPCondition::Dangerous) {
+
+		//生成
+		if (electricShockParticle_ == nullptr) {
+			//生成
+			electricShockParticle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Rise));
+			//パーティクルの細かい設定
+			electricShockParticle_->SetTranslate(GetWorldPosition());
+			const float SCALE_SIZE = 20.0f;
+			electricShockParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
+			electricShockParticle_->SetCount(20u);
+			electricShockParticle_->SetIsReleaseOnceMode(true);
+			electricShockParticle_->SetIsToTransparent(true);
+		}
+
+	}
+
 }
 
-void NormalEnemy::Dead() {
+void NormalEnemy::Delete() {
 	//消えていくよ
 	const float DELETE_INTERVAL = 0.01f;
 	material_.color.w -= DELETE_INTERVAL;
@@ -225,7 +227,7 @@ void NormalEnemy::Dead() {
 	//生成
 	if (deadParticle_ == nullptr) {
 		//生成
-		deadParticle_ = std::move(Elysia::Particle3D::Create(Rise));
+		deadParticle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Rise));
 		//パーティクルの細かい設定
 		deadParticle_->SetTranslate(GetWorldPosition());
 		const float SCALE_SIZE = 20.0f;
@@ -246,6 +248,7 @@ void NormalEnemy::DisplayImGui() {
 #ifdef _DEBUG
 
 	ImGui::Begin("敵");
+	ImGui::InputInt("体力", &hp_);
 	ImGui::InputFloat3("方向", &direction_.x);
 	ImGui::Checkbox("攻撃", &isAttack_);
 	ImGui::Checkbox("生存", &isAlive_);
