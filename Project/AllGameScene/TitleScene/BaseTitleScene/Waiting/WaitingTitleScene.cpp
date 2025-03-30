@@ -1,11 +1,11 @@
 #include "WaitingTitleScene.h"
 
 #include "Input.h"
-#include "ModelManager.h"
 #include "TextureManager.h"
 #include "LevelDataManager.h"
 
 #include "TitleScene/TitleScene.h"
+#include "TitleScene/BaseTitleScene/Noise/NoiseTitleScene.h"
 
 WaitingTitleScene::WaitingTitleScene()
 {
@@ -23,8 +23,6 @@ void WaitingTitleScene::IndivisualInitialize(){
 }
 
 void WaitingTitleScene::Update(TitleScene* titleScene){
-	titleScene;
-
 	//まだボタンを押していない時
 	//通常点滅
 	if (isFlash_ == true) {
@@ -49,18 +47,21 @@ void WaitingTitleScene::Update(TitleScene* titleScene){
 			flashTime_ = RESTART_TIME;
 		}
 
+
+		//スペースをまたはBボタンを押したら高速点滅
+		if (input_->IsPushKey(DIK_SPACE) == true || input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
+			isFastFlash_ = true;
+		}
+
+
 	}
 
 
 
-	//スペースをまたはBボタンを押したら高速点滅
-	if (input_->IsPushKey(DIK_SPACE) == true || input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
-		isFastFlash_ = true;
-	}
-
+	
 
 	//高速点滅
-	if (isFastFlash_ == true && isStart_ == false) {
+	if (isFastFlash_ == true) {
 		//カウントが増える時間
 		const uint32_t INCREASE_COUNT_TIME = 0u;
 
@@ -87,8 +88,9 @@ void WaitingTitleScene::Update(TitleScene* titleScene){
 
 		//指定した時間を超えたらシーンチェンジ
 		if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
-			isStart_ = true;
-			titleScene->
+			//ノイズへ
+			titleScene->ChangeDetailedScene(std::make_unique<NoiseTitleScene>());
+			return;
 		}
 	}
 
@@ -106,8 +108,11 @@ void WaitingTitleScene::DrawPostEffect()
 {
 }
 
-void WaitingTitleScene::DrawSprite()
-{
+void WaitingTitleScene::DrawSprite(){
+	//背景
+	logo->Draw(logoTextureHandle_);
+	//テキスト
+	text_->Draw();
 }
 
 WaitingTitleScene::~WaitingTitleScene()

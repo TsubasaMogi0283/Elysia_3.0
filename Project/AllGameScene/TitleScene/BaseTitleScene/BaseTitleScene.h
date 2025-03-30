@@ -9,6 +9,10 @@
 
 #include "Model.h"
 #include "Sprite.h"
+#include "Camera.h"
+#include "BackTexture.h"
+#include "DirectionalLight.h"
+#include "RailCamera/TitleRailCamera.h"
 
 
 /// <summary>
@@ -101,6 +105,13 @@ protected:
 
 
 protected:
+	//時間の変化
+	const float_t DELTA_TIME_ = 1.0f / 60.0f;
+	//増える時間の値
+	const uint32_t INCREASE_VALUE = 1u;
+
+
+protected:
 	//↓↓↓タイトルシーンで使う共通の部分はここで宣言してそれぞれで使うようにする↓↓↓
 
 	//カメラ
@@ -109,7 +120,6 @@ protected:
 
 	//座標
 	Vector3 cameraPosition_ = {};
-
 	//平行光源
 	DirectionalLight directionalLight_ = {};
 

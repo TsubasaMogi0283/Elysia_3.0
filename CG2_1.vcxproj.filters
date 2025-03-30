@@ -807,6 +807,9 @@
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\BaseTitleScene.cpp">
       <Filter>Project\Scene\Title\BaseTitleScene</Filter>
     </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Noise\NoiseTitleScene.cpp">
+      <Filter>Project\Scene\Title\BaseTitleScene\Noise</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -1344,6 +1347,9 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Start\StartTitleScene.h">
       <Filter>Project\Scene\Title\BaseTitleScene\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Noise\NoiseTitleScene.h">
+      <Filter>Project\Scene\Title\BaseTitleScene\Noise</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

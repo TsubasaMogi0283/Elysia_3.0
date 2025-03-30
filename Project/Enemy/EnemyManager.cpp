@@ -76,7 +76,7 @@ void EnemyManager::Update(){
 
 
 		//移動中の時
-		if (currentState == "Move") {
+		if (currentState == "Move" || currentState == "Tracking") {
 
 			//レベルエディタから持ってくる
 			//AABB

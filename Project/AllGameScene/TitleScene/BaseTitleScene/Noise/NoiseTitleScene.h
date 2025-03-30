@@ -1,8 +1,9 @@
 #pragma once
 
+
 /**
- * @file TitleScene.h
- * @brief タイトルクラス
+ * @file StartTitleScene.h
+ * @brief ノイズのクラス
  * @author 茂木翼
  */
 
@@ -11,15 +12,15 @@
 
 
 /// <summary>
-/// スタート待ちのタイトルシーン
+/// ノイズ
 /// </summary>
-class WaitingTitleScene: public BaseTitleScene {
+class NoiseTitleScene : public BaseTitleScene {
 public:
 
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	WaitingTitleScene();
+	NoiseTitleScene();
 
 	/// <summary>
 	/// 初期化
@@ -56,28 +57,7 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~WaitingTitleScene()override;
+	~NoiseTitleScene()override;
 
-private:
-	
-	//点滅の制限
-	const uint32_t FLASH_TIME_LIMIT_ = 30u;
-	//高速点滅の制限
-	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60u;
-	//高速点滅の間隔
-	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
-private:
-	//点滅
-	bool isFlash_ = false;
-	//時間
-	uint32_t flashTime_ = 0u;
-	
-	//高速点滅
-	bool isFastFlash_ = false;
-	//時間
-	uint32_t fastFlashTime_ = 0u;
-
-
-	//見せる番号
-	uint32_t textDisplayCount_ = 0;
 };
+

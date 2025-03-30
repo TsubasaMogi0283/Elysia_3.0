@@ -197,6 +197,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseBackTexture\Night\NightBackTexture.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseBackTexture\Sunset\SunsetBackTexture.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\BaseTitleScene.cpp" />
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Noise\NoiseTitleScene.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Start\StartTitleScene.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Waiting\WaitingTitleScene.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\TitleScene.cpp" />
@@ -510,6 +511,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseBackTexture\Night\NightBackTexture.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseBackTexture\Sunset\SunsetBackTexture.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\BaseTitleScene.h" />
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Noise\NoiseTitleScene.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Start\StartTitleScene.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Waiting\WaitingTitleScene.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\TitleScene.h" />

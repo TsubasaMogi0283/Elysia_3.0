@@ -1,7 +1,6 @@
 #include "StartTitleScene.h"
 
 #include "Input.h"
-#include "ModelManager.h"
 #include "TextureManager.h"
 #include "LevelDataManager.h"
 #include "WindowsSetup.h"
@@ -70,6 +69,11 @@ void StartTitleScene::DrawPostEffect(){
 }
 
 void StartTitleScene::DrawSprite(){
+	//背景
+	logo->Draw(logoTextureHandle_);
+	//テキスト
+	text_->Draw();
+
 	//黒い円の描画
 	circleSprite_->Draw();
 }
