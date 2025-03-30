@@ -253,7 +253,7 @@ void Player::Move() {
 		//コライダーを持っているかどうか
 		std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelHandle_, "Stage");
 		//衝突判定
-		for (size_t i = 0; i < aabbs.size(); ++i) {
+		for (size_t i = 0u; i < aabbs.size(); ++i) {
 
 			//コライダーを持っているときだけ
 			if (colliders[i] == true) {

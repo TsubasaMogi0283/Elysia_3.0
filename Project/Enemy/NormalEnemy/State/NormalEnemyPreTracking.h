@@ -35,5 +35,11 @@ public:
 	/// デストラクタ
 	/// </summary>
 	~NormalEnemyPreTracking() = default;
+
+
+private:
+	//追跡する前の方向を取得したかどうか
+	bool isGetPreDirection_ = false;
+
 };
 
