@@ -149,10 +149,17 @@ void NormalEnemy::Draw(const Camera& camera, const SpotLight& spotLight) {
 	//本体
 	model_->Draw(worldTransform_, camera, material_, spotLight);
 
-	//パーティクル
+	//感電パーティクル
+	if (electricShockParticle_ != nullptr) {
+		electricShockParticle_->Draw(camera, particleMaterial_);
+	}
+
+	//死亡パーティクル
 	if (deadParticle_ != nullptr) {
 		deadParticle_->Draw(camera, particleMaterial_);
 	}
+
+	
 }
 
 NormalEnemy::~NormalEnemy() {
@@ -186,21 +193,25 @@ void NormalEnemy::Damaged() {
 	if (hp_ <= HPCondition::Dead) {
 		isAlive_ = false;
 	}
-	//瀕死状態
+	//瀕死
 	else if (hp_ == HPCondition::Dangerous) {
 
 		//生成
 		if (electricShockParticle_ == nullptr) {
 			//生成
-			electricShockParticle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Rise));
+			electricShockParticle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Stay));
 			//パーティクルの細かい設定
-			electricShockParticle_->SetTranslate(GetWorldPosition());
-			const float SCALE_SIZE = 20.0f;
+			const float SCALE_SIZE = 2.0f;
 			electricShockParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
-			electricShockParticle_->SetCount(20u);
+			electricShockParticle_->SetCount(5u);
 			electricShockParticle_->SetIsReleaseOnceMode(true);
 			electricShockParticle_->SetIsToTransparent(true);
 		}
+		else {
+			//パーティクルの細かい設定
+		}
+		//座標の設定
+		electricShockParticle_->SetTranslate(GetWorldPosition());
 
 	}
 

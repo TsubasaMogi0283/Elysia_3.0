@@ -461,6 +461,54 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 
 #pragma endregion
 
+		
+		case ParticleMoveType::Stay:
+#pragma region 滞留
+
+			//Y軸でπ/2回転
+			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
+
+			//カメラの回転を適用する
+			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix);
+			//平行成分はいらないよ
+			//あくまで回転だけ
+			billBoardMatrix.m[3][0] = 0.0f;
+			billBoardMatrix.m[3][1] = 0.0f;
+			billBoardMatrix.m[3][2] = 0.0f;
+
+			//行列を作っていくよ
+			//拡縮
+			scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(particleIterator->transform.scale);
+			//座標
+			translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(particleIterator->transform.translate);
+
+
+			//パーティクル個別のRotateは関係ないよ
+			//その代わりにさっき作ったbillBoardMatrixを入れるよ
+			worldMatrix = Matrix4x4Calculation::Multiply(scaleMatrix, Matrix4x4Calculation::Multiply(billBoardMatrix, translateMatrix));
+
+
+
+			//最大値を超えないようにする
+			//そして生成停止までの処理
+			if (numInstance_ < MAX_INSTANCE_NUMBER_ && isStopGenerate_ == false) {
+				particleForGpuData_[numInstance_].world = worldMatrix;
+				particleForGpuData_[numInstance_].color = particleIterator->color;
+
+				//透明になっていくようにするかどうか
+				if (isToTransparent_ == true) {
+					//どんどん透明にしていく
+					float alpha = 1.0f - particleIterator->absorbT;
+					particleIterator->color.w = alpha;
+					particleForGpuData_[numInstance_].color.w = alpha;
+				}
+
+			}
+
+#pragma endregion
+			
+			
+			break;
 
 		}
 
