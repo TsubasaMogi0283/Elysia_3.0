@@ -109,7 +109,7 @@ void EnemyManager::Update(){
 				Vector3 enemyPrePosition = enemy->GetWorldPosition();
 
 				//押し戻し分
-				float PUSH_BACK_DISTANCE = 0.00001f;
+				float PUSH_BACK_DISTANCE = 0.1f;
 
 				// 衝突した時の反転処理
 				if (distanceX < distanceZ) {

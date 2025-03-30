@@ -270,7 +270,8 @@ protected:
 	Vector3 direction_ = {};
 	//生存
 	bool isAlive_ = true;
-
+	//体力
+	int32_t hp_ = 0;
 	
 	
 	//消滅

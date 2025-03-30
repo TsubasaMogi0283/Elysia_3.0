@@ -147,8 +147,8 @@ void NormalEnemy::Draw(const Camera& camera, const SpotLight& spotLight) {
 	model_->Draw(worldTransform_, camera, material_, spotLight);
 
 	//パーティクル
-	if (particle_ != nullptr) {
-		particle_->Draw(camera, particleMaterial_);
+	if (deadParticle_ != nullptr) {
+		deadParticle_->Draw(camera, particleMaterial_);
 	}
 }
 
@@ -174,6 +174,9 @@ void NormalEnemy::Damaged() {
 
 	//ダメージを受ける
 	if (enemyFlashLightCollision_->GetIsTouched() == true) {
+
+		hp_-=
+
 		material_.color.y = 0.0f;
 		material_.color.z = 0.0f;
 
@@ -220,20 +223,20 @@ void NormalEnemy::Dead() {
 	}
 
 	//生成
-	if (particle_ == nullptr) {
+	if (deadParticle_ == nullptr) {
 		//生成
-		particle_ = std::move(Elysia::Particle3D::Create(Rise));
+		deadParticle_ = std::move(Elysia::Particle3D::Create(Rise));
 		//パーティクルの細かい設定
-		particle_->SetTranslate(GetWorldPosition());
+		deadParticle_->SetTranslate(GetWorldPosition());
 		const float SCALE_SIZE = 20.0f;
-		particle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
-		particle_->SetCount(20u);
-		particle_->SetIsReleaseOnceMode(true);
-		particle_->SetIsToTransparent(true);
+		deadParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
+		deadParticle_->SetCount(20u);
+		deadParticle_->SetIsReleaseOnceMode(true);
+		deadParticle_->SetIsToTransparent(true);
 	}
 
 	//全て消えたら、消えたかどうかのフラグがたつ
-	if (particle_->GetIsAllInvisible() == true) {
+	if (deadParticle_->GetIsAllInvisible() == true) {
 		isDeleted_ = true;
 	}
 

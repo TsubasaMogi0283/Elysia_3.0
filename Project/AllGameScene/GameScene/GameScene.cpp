@@ -341,18 +341,18 @@ void GameScene::EscapeCondition() {
 
 void GameScene::RegisterToCollisionManager() {
 
-
 	//懐中電灯に対してのコライダーを登録
-	if (player_->GetFlashLight()->GetChargeCondition() >= ChargeCondition::NormalChargeAttack && isReleaseAttack_ == true) {
-		collisionManager_->RegisterList(player_->GetFlashLightCollision());
-	}
+	collisionManager_->RegisterList(player_->GetFlashLightCollision());
 
 	//エネミーをコリジョンマネージャーに追加
 	//通常の敵のリストの取得
 	std::vector<NormalEnemy*> enemyes = enemyManager_->GetNormalEnemies();
 	for (const NormalEnemy* enemy : enemyes) {
-		//懐中電灯に対して
-		collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+		if (isReleaseAttack_ == true) {
+			enemy
+			collisionManager_->RegisterList(enemy->GetEnemyFlashLightCollision());
+
+		}
 		
 		//攻撃
 		if (enemy->GetIsAttack() == true) {

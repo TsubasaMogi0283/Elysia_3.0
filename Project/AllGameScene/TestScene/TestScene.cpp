@@ -44,11 +44,11 @@ void TestScene::Initialize(){
 	}
 	
 	//吸収パーティクル
-	particle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Absorb));
-	particle_->SetIsReleaseOnceMode(false);
-	particle_->SetIsToTransparent(true);
-	particle_->SetCount(5u);
-	particle_->SetFrequency(1.0f);
+	deadParticle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Absorb));
+	deadParticle_->SetIsReleaseOnceMode(false);
+	deadParticle_->SetIsToTransparent(true);
+	deadParticle_->SetCount(5u);
+	deadParticle_->SetFrequency(1.0f);
 
 
 	particle2_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::NormalRelease));
@@ -130,7 +130,7 @@ void TestScene::Update(Elysia::GameManager* gameManager){
 	playerMaterial_.Update();
 
 
-	particle_->SetAbsorbPosition(playerWorldTransform_.GetWorldPosition());
+	deadParticle_->SetAbsorbPosition(playerWorldTransform_.GetWorldPosition());
 
 
 	gameManager;
@@ -159,7 +159,7 @@ void TestScene::DrawObject3D(){
 
 	
 	//パーティクル
-	particle_->Draw(camera_, playerMaterial_, directionalLight_);
+	deadParticle_->Draw(camera_, playerMaterial_, directionalLight_);
 	particle2_->Draw(camera_, playerMaterial_, directionalLight_);
 
 }

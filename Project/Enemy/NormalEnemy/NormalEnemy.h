@@ -122,13 +122,20 @@ public:
 	}
 
 	/// <summary>
-	/// 攻撃したかどうかのおフラグを設定
+	/// 攻撃したかどうかのフラグを設定
 	/// </summary>
 	/// <param name="isAttack">攻撃しているかどうか</param>
 	inline void SetIsAttack(const bool& isAttack) {
 		this->isAttack_ = isAttack;
 	}
 
+	/// <summary>
+	/// ライトの強さを設定
+	/// </summary>
+	/// <param name="strength">強さ</param>
+	inline void SetLightStrength(const uint32_t& strength) {
+		this->damagedValue_ = strength;
+	}
 
 	/// <summary>
 	/// 現在の状態を取得
@@ -188,7 +195,8 @@ private:
 
 private:
 	//パーティクル
-	std::unique_ptr<Elysia::Particle3D> particle_ = {};
+	std::unique_ptr<Elysia::Particle3D> deadParticle_ = {};
+	std::unique_ptr<Elysia::Particle3D> electricShockParticle_ = {};
 	//マテリアル
 	Material particleMaterial_ = {};
 	//デバッグ用のモデルハンドル
@@ -198,7 +206,9 @@ private:
 	float_t shakeOffset_ = 0.05f;
 	bool isShake_ = false;
 
-	
+	//受けるダメージ
+	uint32_t damagedValue_ = 0u;
+
 	//攻撃状態
 	bool isAttack_ = false;
 	//状態の名前
