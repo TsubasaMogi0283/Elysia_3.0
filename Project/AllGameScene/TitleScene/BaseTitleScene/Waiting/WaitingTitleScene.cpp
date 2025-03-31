@@ -84,16 +84,19 @@ void WaitingTitleScene::Update(TitleScene* titleScene){
 		else {
 			text_->SetInvisible(false);
 		}
-
+		titleScene;
 
 		//指定した時間を超えたらシーンチェンジ
 		if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
 			//ノイズへ
-			titleScene->ChangeDetailedScene(std::make_unique<NoiseTitleScene>());
-			return;
+			//titleScene->ChangeDetailedScene(std::make_unique<NoiseTitleScene>());
+			//return;
 		}
 	}
-
+	//レールカメラから2つの行列を取得
+	camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
+	//射影は初期から変えていないのでそのまま
+	camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
 }
 
 void WaitingTitleScene::DrawObject3D()

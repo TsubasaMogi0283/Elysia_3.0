@@ -60,11 +60,7 @@ void TitleScene::Initialize(){
 	isFlash_ = true;
 	isFastFlash_ = false;
 
-	//平行光源
-	directionalLight_.Initialize();
-	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
-	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
-
+	
 	//カメラの初期化
 	camera_.Initialize();
 	//座標
@@ -91,6 +87,15 @@ void TitleScene::Initialize(){
 	datailedTitleScene_ = std::make_unique<StartTitleScene>();
 	datailedTitleScene_->CommonInitialize();
 	datailedTitleScene_->Initialize();
+
+	//シーンが変わった時に消えてしまうのでメインで宣言して使う
+
+	//平行光源
+	directionalLight_.Initialize();
+	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
+	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
+
+
 }
 
 void TitleScene::Update(Elysia::GameManager* gameManager){
@@ -174,27 +179,9 @@ void TitleScene::Update(Elysia::GameManager* gameManager){
 	}
 #pragma endregion
 
-	////黒フェードの透明度の変更
-	//blackFade_->SetTransparency(blackFadeTransparency_);
-	//
-	////更新
-	//levelDataManager_->Update(levelHandle_);
-	//
-	////平行光源
-	//directionalLight_.Update();
-	//
-	////レールカメラの更新
-	//titleRailCamera_->Update();
-	////レールカメラから2つの行列を取得
-	//camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
-	////射影は初期から変えていないのでそのまま
-	//camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
-	//
-	////カメラの更新
-	//camera_.Transfer();
 
 
-
+	directionalLight_.Update();
 
 #ifdef _DEBUG
 	//ImGui用
@@ -214,15 +201,6 @@ void TitleScene::PreDrawPostEffect(){
 	//細かいシーン
 	datailedTitleScene_->CommonPreDrawPostEffect();
 	datailedTitleScene_->PreDrawPostEffect();
-	//ランダム
-	if (isDisplayRandomEffect_ == true) {
-		//ランダム
-		//randomEffect_->PreDraw();
-	}
-	else {
-		//背景
-		//baseTitleBackTexture_->PreDraw();
-	}
 
 }
 
@@ -230,28 +208,9 @@ void TitleScene::DrawPostEffect(){
 	//細かいシーン
 	datailedTitleScene_->CommonDrawPostEffect();
 	datailedTitleScene_->DrawPostEffect();
-	
-	//ランダム
-	if (isDisplayRandomEffect_ == true) {
-		//ランダム
-		//randomEffect_->Draw();
-	}
-	else {
-		//背景
-		//baseTitleBackTexture_->Draw();
-	}
 }
 
 void TitleScene::DrawSprite(){
-	//背景
-	//logo->Draw(logoTextureHandle_);
-
-	//テキスト
-	//text_->Draw();
-	
-	//黒フェード
-	//blackFade_->Draw();
-
 	//細かいシーン
 	datailedTitleScene_->CommonDrawSprite();
 	datailedTitleScene_->DrawSprite();

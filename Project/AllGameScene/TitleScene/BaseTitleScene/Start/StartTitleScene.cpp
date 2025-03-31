@@ -43,7 +43,7 @@ void StartTitleScene::Update(TitleScene* titleScene){
 	circleScaleSize_ -= SIZE_DOWN_VALUE_;
 	circleSprite_->SetScale({ .x = circleScaleSize_,.y = circleScaleSize_ });
 
-	titleScene;
+	//見えなくなるほど小さくなったら待ちへ
 	if (circleScaleSize_ < 0.0f) {
 		//もう一度設定する
 		circleScaleSize_ = 0.0f;
@@ -62,7 +62,6 @@ void StartTitleScene::Update(TitleScene* titleScene){
 }
 
 void StartTitleScene::DrawObject3D(){
-	//ステージオブジェクト
 }
 
 void StartTitleScene::PreDrawPostEffect(){

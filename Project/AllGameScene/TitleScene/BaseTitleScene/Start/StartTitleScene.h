@@ -74,7 +74,7 @@ private:
 
 private:
 	//サイズの減少値
-	const float_t SIZE_DOWN_VALUE_ = 1.0f;
+	const float_t SIZE_DOWN_VALUE_ = 0.1f;
 	//最小サイズ
 	const float_t CIRCLE_MIN_SIZE_ = 0.0f;
 
@@ -83,5 +83,5 @@ private:
 	//円
 	std::unique_ptr<Elysia::Sprite>circleSprite_ = nullptr;
 	//透明度
-	float_t circleScaleSize_ = 50.0f;
+	float_t circleScaleSize_ = 15.0f;
 };

@@ -3,13 +3,11 @@
 #include "Input.h"
 #include "TextureManager.h"
 #include "LevelDataManager.h"
+#include "DirectionalLight.h"
+
 #include "TitleScene/BaseBackTexture/Sunset/SunsetBackTexture.h"
 
 void BaseTitleScene::CommonInitialize(){
-	//モデルとかスプライトの初期化はここで全て共通化させる
-	//わざわざ個々のクラスで初期化していたら時間がかかるし変わった時に重くなる回数が多くなると思うので
-	//インスタンスはインクルードの関係でここでやることにしたのでここではやっていない
-
 
 	//インスタンスの取得
 	//テクスチャ管理クラス
@@ -46,10 +44,7 @@ void BaseTitleScene::CommonInitialize(){
 	levelHandle_ = levelDataManager_->Load("TitleStage/TitleStage.json");
 
 
-	//平行光源
-	directionalLight_.Initialize();
-	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
-	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
+	
 
 	//カメラの初期化
 	camera_.Initialize();
@@ -73,8 +68,6 @@ void BaseTitleScene::CommoonUpdate(){
 	//更新
 	levelDataManager_->Update(levelHandle_);
 
-	//平行光源
-	directionalLight_.Update();
 
 	//レールカメラの更新
 	titleRailCamera_->Update();
@@ -83,9 +76,9 @@ void BaseTitleScene::CommoonUpdate(){
 	camera_.Transfer();
 }
 
-void BaseTitleScene::CommonDrawObject3D(){
+void BaseTitleScene::CommonDrawObject3D(const DirectionalLight& directionalLight){
 	//ステージオブジェクト
-	levelDataManager_->Draw(levelHandle_, camera_, directionalLight_);
+	levelDataManager_->Draw(levelHandle_, camera_, directionalLight);
 }
 
 void BaseTitleScene::CommonPreDrawPostEffect(){
