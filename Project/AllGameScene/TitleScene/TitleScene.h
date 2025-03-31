@@ -18,13 +18,13 @@
 #include "RailCamera/TitleRailCamera.h"
 #include "RandomEffect.h"
 #include "BaseBackTexture/BaseTitleBackTexture.h"
-#include "BaseTitleScene/BaseTitleScene.h"
+
 #pragma region 前方宣言
 
 
-/// <summary>
-/// ElysiaEngine
-/// </summary>
+ /// <summary>
+ /// EllysiaEngine
+ /// </summary>
 namespace Elysia {
 	/// <summary>
 	/// 入力
@@ -35,7 +35,7 @@ namespace Elysia {
 	/// レベル管理クラス
 	/// </summary>
 	class LevelDataManager;
-	
+
 	/// <summary>
 	/// ゲーム管理クラス
 	/// </summary>
@@ -84,7 +84,7 @@ public:
 	/// ポストエフェクト描画処理前
 	/// </summary>
 	void PreDrawPostEffect()override;
-	
+
 	/// <summary>
 	/// ポストエフェクト描画
 	/// </summary>
@@ -99,19 +99,9 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~TitleScene()=default;
+	~TitleScene() = default;
 
-public:
-	/// <summary>
-	/// 背景テクスチャの遷移
-	/// </summary>
-	/// <param name="backTexture">背景テクスチャ(ポストエフェクト)</param>
-	void ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture>);
 
-	/// <summary>
-	/// タイトルシーンの遷移
-	/// </summary>
-	void ChangeDetailedScene(std::unique_ptr<BaseTitleScene>detailedScene);
 
 private:
 	/// <summary>
@@ -119,7 +109,12 @@ private:
 	/// </summary>
 	void DisplayImGui();
 
-	
+	/// <summary>
+	/// 背景テクスチャの遷移
+	/// </summary>
+	/// <param name="backTexture">背景テクスチャ(ポストエフェクト)</param>
+	void ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture>);
+
 private:
 	//テクスチャ管理クラス
 	Elysia::TextureManager* textureManager_ = nullptr;
@@ -132,11 +127,11 @@ private:
 
 private:
 	//時間の変化
-	const float_t DELTA_TIME_ = 1.0f / 60.0f;
+	const float DELTA_TIME_ = 1.0f / 60.0f;
 
 	//ランダムエフェクトの表示時間
 	static const uint32_t DISPLAY_LENGTH_QUANTITY_ = 2u;
-	
+
 	//増える時間の値
 	const uint32_t INCREASE_VALUE = 1u;
 
@@ -151,17 +146,19 @@ private:
 
 	//平行光源
 	DirectionalLight directionalLight_ = {};
+	//スポットライト
+	SpotLight spotLight = {};
 
 
 	//黒フェード
 	std::unique_ptr<Elysia::Sprite>blackFade_ = nullptr;
 	//透明度
-	float_t blackFadeTransparency_ = 0.0f;
+	float blackFadeTransparency_ = 0.0f;
 
 
 	//テキスト
 	std::unique_ptr<Elysia::Sprite> text_ = nullptr;
-	
+
 	//ロゴ
 	std::unique_ptr<Elysia::Sprite> logo = nullptr;
 	uint32_t logoTextureHandle_ = 0u;
@@ -177,17 +174,23 @@ private:
 
 	//ランダムノイズ
 	std::unique_ptr<Elysia::RandomEffect> randomEffect_ = nullptr;
-	float_t randomEffectTime_ = 0u;
+	float randomEffectTime_ = 0u;
 	bool isDisplayRandomEffect_ = false;
 	bool isEndDisplayRandomEffect_ = false;
 
 #pragma endregion
 
+	//Bボタンのトリガー
+	//時間
+	uint32_t bTriggerTime_ = 0;
+	//フラグ
+	bool isBTrigger_ = false;
+
 	//点滅
 	bool isFlash_ = false;
 	//時間
 	uint32_t flashTime_ = 0;
-	const uint32_t FLASH_TIME_LIMIT_ = 30u;
+	const uint32_t FLASH_TIME_LIMIT_ = 30;
 	//高速点滅
 	bool isFastFlash_ = false;
 	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60;
@@ -196,16 +199,11 @@ private:
 
 	//見せる番号
 	uint32_t textDisplayCount_ = 0;
-	
+
 	//スタート
 	bool isStart_ = false;
 
 
 
-	//タイトルの細かいシーン
-	std::unique_ptr<BaseTitleScene> datailedTitleScene_ = nullptr;
-	//履歴
-	std::vector<std::unique_ptr<BaseTitleScene>> sceneHistory_;
 
 };
-

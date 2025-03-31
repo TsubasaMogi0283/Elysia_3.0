@@ -50,7 +50,8 @@ void StartTitleScene::Update(TitleScene* titleScene){
 		circleSprite_->SetScale({ .x = circleScaleSize_,.y = circleScaleSize_ });
 		//待ち状態へ
 		//待ちと言ってもボタンを押してスタートのテキストが出るというもの
-		titleScene->ChangeDetailedScene(std::make_unique<WaitingTitleScene>());
+		//titleScene->ChangeDetailedScene(std::make_unique<WaitingTitleScene>());
+		titleScene;
 		return;
 	}
 	
