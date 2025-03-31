@@ -248,6 +248,7 @@ void TitleScene::ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture> backTex
 void TitleScene::ChangeDetailedScene(std::unique_ptr<BaseTitleScene> detailedScene){
 	//違った時だけ遷移する
 	if (datailedTitleScene_ != detailedScene) {
+		sceneHistory_.push_back(std::move(datailedTitleScene_));
 		datailedTitleScene_ = std::move(detailedScene);
 		//個別の初期化
 		datailedTitleScene_->Initialize();

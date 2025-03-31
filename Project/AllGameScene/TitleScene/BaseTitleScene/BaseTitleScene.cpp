@@ -3,7 +3,7 @@
 #include "Input.h"
 #include "TextureManager.h"
 #include "LevelDataManager.h"
-#include "DirectionalLight.h"
+
 
 #include "TitleScene/BaseBackTexture/Sunset/SunsetBackTexture.h"
 
@@ -45,6 +45,10 @@ void BaseTitleScene::CommonInitialize(){
 
 
 	
+	//平行光源
+	directionalLight_.Initialize();
+	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
+	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
 
 	//カメラの初期化
 	camera_.Initialize();
@@ -68,7 +72,8 @@ void BaseTitleScene::CommoonUpdate(){
 	//更新
 	levelDataManager_->Update(levelHandle_);
 
-
+	//平行光源
+	directionalLight_.Update();
 	//レールカメラの更新
 	titleRailCamera_->Update();
 	
@@ -76,9 +81,9 @@ void BaseTitleScene::CommoonUpdate(){
 	camera_.Transfer();
 }
 
-void BaseTitleScene::CommonDrawObject3D(const DirectionalLight& directionalLight){
+void BaseTitleScene::CommonDrawObject3D(){
 	//ステージオブジェクト
-	levelDataManager_->Draw(levelHandle_, camera_, directionalLight);
+	levelDataManager_->Draw(levelHandle_, camera_, directionalLight_);
 }
 
 void BaseTitleScene::CommonPreDrawPostEffect(){

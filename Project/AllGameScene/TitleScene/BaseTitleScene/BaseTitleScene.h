@@ -49,11 +49,6 @@ namespace Elysia {
 class TitleScene;
 
 /// <summary>
-/// 平行光源
-/// </summary>
-struct DirectionalLight;
-
-/// <summary>
 /// 細かいタイトルシーンの基底クラス
 /// </summary>
 class BaseTitleScene {
@@ -71,7 +66,7 @@ public:
 	/// <summary>
 	/// 共通3Dオブジェクト描画
 	/// </summary>
-	virtual void CommonDrawObject3D(const DirectionalLight& directionalLight);
+	virtual void CommonDrawObject3D();
 
 	/// <summary>
 	/// 共通ポストエフェクト描画処理前
@@ -113,7 +108,7 @@ public:
 	/// <summary>
 	/// 3Dオブジェクト
 	/// </summary>
-	virtual void DrawObject3D(const DirectionalLight& directionalLight) = 0;
+	virtual void DrawObject3D() = 0;
 
 	/// <summary>
 	/// ポストエフェクト描画処理前
@@ -158,6 +153,9 @@ protected:
 
 	//座標
 	Vector3 cameraPosition_ = {};
+	//平行光源
+	DirectionalLight directionalLight_ = {};
+
 
 
 	//黒フェード

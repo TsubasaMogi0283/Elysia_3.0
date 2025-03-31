@@ -204,7 +204,8 @@ private:
 
 	//タイトルの細かいシーン
 	std::unique_ptr<BaseTitleScene> datailedTitleScene_ = nullptr;
-	
+	//履歴
+	std::vector<std::unique_ptr<BaseTitleScene>> sceneHistory_;
 
 };
 
