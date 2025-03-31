@@ -16,7 +16,7 @@
 #include "BaseBackTexture/Sunset/SunsetBackTexture.h"
 #include "BaseBackTexture/Night/NightBackTexture.h"
 
-#include "BaseTitleScene/Waiting/WaitingTitleScene.h"
+#include "BaseTitleScene/Start/StartTitleScene.h"
 
 TitleScene::TitleScene(){
 	//インスタンスの取得
@@ -88,14 +88,16 @@ void TitleScene::Initialize(){
 	randomEffect_->Initialize();
 	
 	//細かいシーンの初期化
-	datailedTitleScene_ = std::make_unique<WaitingTitleScene>();
+	datailedTitleScene_ = std::make_unique<StartTitleScene>();
+	datailedTitleScene_->CommonInitialize();
 	datailedTitleScene_->Initialize();
 }
 
 void TitleScene::Update(Elysia::GameManager* gameManager){
 	//細かいシーンの更新
+	
 	datailedTitleScene_->Update(this);
-
+	datailedTitleScene_->CommoonUpdate();
 
 #pragma region スタート演出
 
@@ -172,24 +174,24 @@ void TitleScene::Update(Elysia::GameManager* gameManager){
 	}
 #pragma endregion
 
-	//黒フェードの透明度の変更
-	blackFade_->SetTransparency(blackFadeTransparency_);
-
-	//更新
-	levelDataManager_->Update(levelHandle_);
-
-	//平行光源
-	directionalLight_.Update();
-
-	//レールカメラの更新
-	titleRailCamera_->Update();
-	//レールカメラから2つの行列を取得
-	camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
-	//射影は初期から変えていないのでそのまま
-	camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
-
-	//カメラの更新
-	camera_.Transfer();
+	////黒フェードの透明度の変更
+	//blackFade_->SetTransparency(blackFadeTransparency_);
+	//
+	////更新
+	//levelDataManager_->Update(levelHandle_);
+	//
+	////平行光源
+	//directionalLight_.Update();
+	//
+	////レールカメラの更新
+	//titleRailCamera_->Update();
+	////レールカメラから2つの行列を取得
+	//camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
+	////射影は初期から変えていないのでそのまま
+	//camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
+	//
+	////カメラの更新
+	//camera_.Transfer();
 
 
 
@@ -201,54 +203,57 @@ void TitleScene::Update(Elysia::GameManager* gameManager){
 }
 
 void TitleScene::DrawObject3D(){
-	//ステージオブジェクト
-	levelDataManager_->Draw(levelHandle_,camera_, directionalLight_);
+	
 	//細かいシーン
+	datailedTitleScene_->CommonDrawObject3D();
 	datailedTitleScene_->DrawObject3D();
 
 }
 
 void TitleScene::PreDrawPostEffect(){
 	//細かいシーン
+	datailedTitleScene_->CommonPreDrawPostEffect();
 	datailedTitleScene_->PreDrawPostEffect();
 	//ランダム
 	if (isDisplayRandomEffect_ == true) {
 		//ランダム
-		randomEffect_->PreDraw();
+		//randomEffect_->PreDraw();
 	}
 	else {
 		//背景
-		baseTitleBackTexture_->PreDraw();
+		//baseTitleBackTexture_->PreDraw();
 	}
 
 }
 
 void TitleScene::DrawPostEffect(){
 	//細かいシーン
+	datailedTitleScene_->CommonDrawPostEffect();
 	datailedTitleScene_->DrawPostEffect();
-
+	
 	//ランダム
 	if (isDisplayRandomEffect_ == true) {
 		//ランダム
-		randomEffect_->Draw();
+		//randomEffect_->Draw();
 	}
 	else {
 		//背景
-		baseTitleBackTexture_->Draw();
+		//baseTitleBackTexture_->Draw();
 	}
 }
 
 void TitleScene::DrawSprite(){
 	//背景
-	logo->Draw(logoTextureHandle_);
+	//logo->Draw(logoTextureHandle_);
 
 	//テキスト
-	text_->Draw();
+	//text_->Draw();
 	
 	//黒フェード
-	blackFade_->Draw();
+	//blackFade_->Draw();
 
 	//細かいシーン
+	datailedTitleScene_->CommonDrawSprite();
 	datailedTitleScene_->DrawSprite();
 }
 
@@ -286,7 +291,7 @@ void TitleScene::ChangeDetailedScene(std::unique_ptr<BaseTitleScene> detailedSce
 	if (datailedTitleScene_ != detailedScene) {
 		datailedTitleScene_ = std::move(detailedScene);
 		//個別の初期化
-		datailedTitleScene_->IndivisualInitialize();
+		datailedTitleScene_->Initialize();
 	}
 	
 }

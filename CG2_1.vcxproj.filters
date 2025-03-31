@@ -140,9 +140,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Elysia\Source File\Common">
-      <UniqueIdentifier>{07c0a95e-6a93-4df8-8d44-8e73f10e1ea2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Elysia\Source File\Math">
       <UniqueIdentifier>{06a9a389-3fa9-4add-ab75-e624db9a3dd9}</UniqueIdentifier>
     </Filter>
@@ -266,9 +263,6 @@
     <Filter Include="Elysia\Header File">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Elysia\Header File\Common">
-      <UniqueIdentifier>{489343cf-64f2-4e1a-99e3-9a53fd5598b4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Elysia\Header File\Math">
       <UniqueIdentifier>{b543a5c7-1ed6-4ca8-ac06-3165a71162a0}</UniqueIdentifier>
@@ -498,6 +492,18 @@
     </Filter>
     <Filter Include="Project\Scene\Title\BaseTitleScene\Waiting">
       <UniqueIdentifier>{4175d225-11c5-451f-8198-772c4d62c5bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elysia\Header File\DirectX">
+      <UniqueIdentifier>{ff6a0e7a-52cd-4ffb-832a-5f500d9ce071}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elysia\Header File\Windows">
+      <UniqueIdentifier>{489343cf-64f2-4e1a-99e3-9a53fd5598b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elysia\Source File\Windows">
+      <UniqueIdentifier>{07c0a95e-6a93-4df8-8d44-8e73f10e1ea2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elysia\Source File\DirectX">
+      <UniqueIdentifier>{ea4c39bd-648c-4284-b623-2d33ca4c92b2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -768,11 +774,8 @@
     <ClCompile Include="Elysia\Framework\Framework.cpp">
       <Filter>Elysia\Source File\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Elysia\Common\DirectX\DirectXSetup.cpp">
-      <Filter>Elysia\Source File\Common</Filter>
-    </ClCompile>
     <ClCompile Include="Elysia\Common\Windows\WindowsSetup.cpp">
-      <Filter>Elysia\Source File\Common</Filter>
+      <Filter>Elysia\Source File\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Elysia\Camera\Camera.cpp">
       <Filter>Elysia\Source File\Camera</Filter>
@@ -809,6 +812,9 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Noise\NoiseTitleScene.cpp">
       <Filter>Project\Scene\Title\BaseTitleScene\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="Elysia\Common\DirectX\DirectXSetup.cpp">
+      <Filter>Elysia\Source File\DirectX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1142,10 +1148,7 @@
       <Filter>Elysia\Header File\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\Common\Windows\WindowsSetup.h">
-      <Filter>Elysia\Header File\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Elysia\Common\DirectX\DirectXSetup.h">
-      <Filter>Elysia\Header File\Common</Filter>
+      <Filter>Elysia\Header File\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\Material\Dissolve\Dissolve.h">
       <Filter>Elysia\Header File\Material</Filter>
@@ -1350,6 +1353,9 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Noise\NoiseTitleScene.h">
       <Filter>Project\Scene\Title\BaseTitleScene\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="Elysia\Common\DirectX\DirectXSetup.h">
+      <Filter>Elysia\Header File\DirectX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

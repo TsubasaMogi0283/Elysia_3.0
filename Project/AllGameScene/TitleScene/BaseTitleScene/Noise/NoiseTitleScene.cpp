@@ -4,7 +4,7 @@ NoiseTitleScene::NoiseTitleScene()
 {
 }
 
-void NoiseTitleScene::IndivisualInitialize(){
+void NoiseTitleScene::Initialize(){
 
 }
 

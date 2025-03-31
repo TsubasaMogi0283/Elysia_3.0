@@ -13,7 +13,8 @@
 #include "BackTexture.h"
 #include "DirectionalLight.h"
 #include "RailCamera/TitleRailCamera.h"
-
+#include "RandomEffect.h"
+#include "TitleScene/BaseBackTexture/BaseTitleBackTexture.h"
 
 /// <summary>
 /// ElysiaEngine
@@ -53,46 +54,78 @@ class TitleScene;
 class BaseTitleScene {
 public:
 	/// <summary>
-	/// 初期化(1度きり)
+	/// 共通初期化
 	/// </summary>
-	virtual void Initialize();
+	virtual void CommonInitialize();
+
+	/// <summary>
+	/// 共通更新
+	/// </summary>
+	virtual void CommoonUpdate();
+
+	/// <summary>
+	/// 共通3Dオブジェクト描画
+	/// </summary>
+	virtual void CommonDrawObject3D();
+
+	/// <summary>
+	/// 共通ポストエフェクト描画処理前
+	/// </summary>
+	virtual void CommonPreDrawPostEffect();
+
+	/// <summary>
+	/// 共通ポストエフェクト描画
+	/// </summary>
+	virtual void CommonDrawPostEffect();
+
+
+	/// <summary>
+	/// 共通スプライト
+	/// </summary>
+	virtual void CommonDrawSprite();
+
+	
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	virtual ~BaseTitleScene() = default;
+
+
+public:
 
 	/// <summary>
 	/// 個別の初期化
 	/// </summary>
-	virtual void IndivisualInitialize() = 0;
+	virtual void Initialize() = 0;
 
 	/// <summary>
 	/// 更新
 	/// </summary>
 	/// <param name="titleScene">タイトルシーン(メイン)</param>
-	virtual void Update(TitleScene* titleScene)=0;
+	virtual void Update(TitleScene* titleScene) = 0;
 
+	
 	/// <summary>
 	/// 3Dオブジェクト
 	/// </summary>
-	virtual void DrawObject3D()=0;
+	virtual void DrawObject3D() = 0;
 
 	/// <summary>
 	/// ポストエフェクト描画処理前
 	/// </summary>
-	virtual void PreDrawPostEffect()=0;
+	virtual void PreDrawPostEffect() = 0;
 
 	/// <summary>
 	/// ポストエフェクト描画
 	/// </summary>
-	virtual void DrawPostEffect()=0;
+	virtual void DrawPostEffect() = 0;
 
 
 	/// <summary>
 	/// スプライト
 	/// </summary>
-	virtual void DrawSprite()=0;
+	virtual void DrawSprite() = 0;
 
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	virtual ~BaseTitleScene() = default;
 
 protected:
 	//テクスチャ管理クラス
@@ -139,5 +172,14 @@ protected:
 	//変化後のテクスチャ
 	uint32_t changedLogoTextureHandle_ = 0u;
 
+
+	//背景(ポストエフェクト)
+	std::unique_ptr<BaseTitleBackTexture> baseTitleBackTexture_ = nullptr;
+
+	//ランダムノイズ
+	std::unique_ptr<Elysia::RandomEffect> randomEffect_ = nullptr;
+	float_t randomEffectTime_ = 0u;
+	bool isDisplayRandomEffect_ = false;
+	bool isEndDisplayRandomEffect_ = false;
 
 };

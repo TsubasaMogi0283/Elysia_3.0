@@ -20,7 +20,7 @@ StartTitleScene::StartTitleScene(){
 	windowsSetup_ = Elysia::WindowsSetup::GetInstance();
 }
 
-void StartTitleScene::IndivisualInitialize(){
+void StartTitleScene::Initialize(){
 
 	//黒い円
 	uint32_t blackCircleTextureHandle = textureManager_->Load("Resources/Sprite/SceneChange/BlackCircle.png");
@@ -43,30 +43,36 @@ void StartTitleScene::Update(TitleScene* titleScene){
 	circleScaleSize_ -= SIZE_DOWN_VALUE_;
 	circleSprite_->SetScale({ .x = circleScaleSize_,.y = circleScaleSize_ });
 
-
+	titleScene;
 	if (circleScaleSize_ < 0.0f) {
+		//もう一度設定する
 		circleScaleSize_ = 0.0f;
+		circleSprite_->SetScale({ .x = circleScaleSize_,.y = circleScaleSize_ });
 		//待ち状態へ
 		//待ちと言ってもボタンを押してスタートのテキストが出るというもの
 		titleScene->ChangeDetailedScene(std::make_unique<WaitingTitleScene>());
 		return;
 	}
 	
+	//レールカメラから2つの行列を取得
+	camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
+	//射影は初期から変えていないのでそのまま
+	camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
 
-	
 }
 
 void StartTitleScene::DrawObject3D(){
-
+	//ステージオブジェクト
 }
 
 void StartTitleScene::PreDrawPostEffect(){
-
+	
 }
 
 void StartTitleScene::DrawPostEffect(){
-
+	
 }
+
 
 void StartTitleScene::DrawSprite(){
 	//背景

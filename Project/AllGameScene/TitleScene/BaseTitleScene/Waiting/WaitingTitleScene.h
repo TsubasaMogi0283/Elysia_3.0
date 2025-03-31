@@ -24,7 +24,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void IndivisualInitialize()override;
+	void Initialize()override;
 
 	/// <summary>
 	/// 更新

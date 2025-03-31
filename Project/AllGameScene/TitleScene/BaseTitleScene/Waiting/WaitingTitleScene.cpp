@@ -18,7 +18,7 @@ WaitingTitleScene::WaitingTitleScene()
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
 
-void WaitingTitleScene::IndivisualInitialize(){
+void WaitingTitleScene::Initialize(){
 
 }
 

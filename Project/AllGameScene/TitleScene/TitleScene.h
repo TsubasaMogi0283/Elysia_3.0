@@ -187,7 +187,7 @@ private:
 	bool isFlash_ = false;
 	//時間
 	uint32_t flashTime_ = 0;
-	const uint32_t FLASH_TIME_LIMIT_ = 30;
+	const uint32_t FLASH_TIME_LIMIT_ = 30u;
 	//高速点滅
 	bool isFastFlash_ = false;
 	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60;

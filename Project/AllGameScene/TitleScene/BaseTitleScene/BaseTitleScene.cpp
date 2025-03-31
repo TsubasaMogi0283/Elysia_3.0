@@ -3,8 +3,9 @@
 #include "Input.h"
 #include "TextureManager.h"
 #include "LevelDataManager.h"
+#include "TitleScene/BaseBackTexture/Sunset/SunsetBackTexture.h"
 
-void BaseTitleScene::Initialize(){
+void BaseTitleScene::CommonInitialize(){
 	//モデルとかスプライトの初期化はここで全て共通化させる
 	//わざわざ個々のクラスで初期化していたら時間がかかるし変わった時に重くなる回数が多くなると思うので
 	//インスタンスはインクルードの関係でここでやることにしたのでここではやっていない
@@ -61,5 +62,58 @@ void BaseTitleScene::Initialize(){
 	titleRailCamera_->Initialize("Resources/CSV/TitleRailCameraPoint.csv");
 
 
+	//背景
+	//ポストエフェクト
+	//まずは夕方
+	baseTitleBackTexture_ = std::make_unique<SunsetBackTexture>();
+	baseTitleBackTexture_->Initialize();
+}
+
+void BaseTitleScene::CommoonUpdate(){
+	//更新
+	levelDataManager_->Update(levelHandle_);
+
+	//平行光源
+	directionalLight_.Update();
+
+	//レールカメラの更新
+	titleRailCamera_->Update();
+	
+	//カメラの更新
+	camera_.Transfer();
+}
+
+void BaseTitleScene::CommonDrawObject3D(){
+	//ステージオブジェクト
+	levelDataManager_->Draw(levelHandle_, camera_, directionalLight_);
+}
+
+void BaseTitleScene::CommonPreDrawPostEffect(){
+	//ランダム
+	if (isDisplayRandomEffect_ == true) {
+		//ランダム
+		randomEffect_->PreDraw();
+	}
+	else {
+		//背景
+		baseTitleBackTexture_->PreDraw();
+	}
+}
+
+
+void BaseTitleScene::CommonDrawPostEffect(){
+
+	//ランダム
+	if (isDisplayRandomEffect_ == true) {
+		//ランダム
+		randomEffect_->Draw();
+	}
+	else {
+		//背景
+		baseTitleBackTexture_->Draw();
+	}
+}
+
+void BaseTitleScene::CommonDrawSprite(){
 
 }

@@ -31,19 +31,13 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 	//モデルハンドルの代入
 	modelHandle_ = modelHandle;
 
-
+	//小屋の中にある鍵の座標を取得
 	Vector3 keyInHousePosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "KeyInHouse");
 
-	for (int i = 0; i < positions.size(); ++i) {
+	for (size_t i = 0u; i < positions.size(); ++i) {
 		//生成
-		const float OFFSET_Y = 0.5f;
+		const float_t OFFSET_Y = 0.5f;
 		bool isAbleToPickUp = true;
-		Vector3 initialPosition = positions[i];
-		//if (initialPosition.x == keyInHousePosition.x&&
-		//	initialPosition.y == keyInHousePosition.y&&
-		//	initialPosition.z == keyInHousePosition.z) {
-		//	isAbleToPickUp = false;
-		//}
 		Vector3 newPosition = { .x = positions[i].x,.y = OFFSET_Y ,.z = positions[i].z };
 		Genarate(newPosition, isAbleToPickUp);
 	}
@@ -66,7 +60,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 	initialPositionAddAnchorPoint = { .x = 20.0f + keySpriteWidth_ / 2.0f,.y = 10.0f + keySpriteHeight_ / 2.0f };
 	for (uint32_t i = 0u; i < MAX_KEY_QUANTITY_; ++i) {
 		Vector2 position = {
-			.x = initialPositionAddAnchorPoint.x + keySpriteWidth_ * static_cast<float>(i),
+			.x = initialPositionAddAnchorPoint.x + keySpriteWidth_ * static_cast<float_t>(i),
 			.y = initialPositionAddAnchorPoint.y
 		};
 		keySprites_[i].reset(Elysia::Sprite::Create(textureHandle, position));
@@ -96,7 +90,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 	//再生
 	audio_->Play(notificationSEHandle_, true);
 	//初期の音の設定
-	const float INITIAL_VOLUME = 0.0f;
+	const float_t INITIAL_VOLUME = 0.0f;
 	audio_->ChangeVolume(notificationSEHandle_, INITIAL_VOLUME);
 }
 
@@ -109,25 +103,18 @@ void KeyManager::Update() {
 	//鍵
 	for (const std::unique_ptr<Key>& key : keies_) {
 
-		//小屋の中の鍵
-		//if (key->GetWorldPosition().x == keyInHousePosition.x &&
-		//	key->GetWorldPosition().z == keyInHousePosition.z) {
-		//	key->SetisAbleToPickUp(isOpenTreasureBox_);
-		//
-		//}
-		
 		//更新
 		key->Update();
 		//終点座標
 		Vector2 endPosition = {
-			.x = initialPosition_.x + keySpriteWidth_ * static_cast<float>(keyQuantity_),
+			.x = initialPosition_.x + keySpriteWidth_ * static_cast<float_t>(keyQuantity_),
 			.y = initialPosition_.y
 		};
 		key->SetEndPosition(endPosition);
 		//プレイヤーと鍵の差分
 		Vector3 playerAndKeydifference = VectorCalculation::Subtract(player_->GetWorldPosition(), key->GetWorldPosition());
 		//距離
-		float distance = SingleCalculation::Length(playerAndKeydifference);
+		float_t distance = SingleCalculation::Length(playerAndKeydifference);
 		//挿入
 		keyAndPlayerDistances_.push_back(distance);
 	}
@@ -136,7 +123,7 @@ void KeyManager::Update() {
 	auto minIt = std::min_element(keyAndPlayerDistances_.begin(), keyAndPlayerDistances_.end());
 
 	//最短距離を求める
-	float closestDistance = 0.0f;
+	float_t closestDistance = 0.0f;
 	if (minIt != keyAndPlayerDistances_.end()) {
 		closestDistance = (*minIt);
 	}
@@ -147,16 +134,11 @@ void KeyManager::Update() {
 	}
 
 	//求めた値から音量設定をする
-	float volume = 1.0f - (closestDistance / MAX_DISTANCE_);
+	float_t volume = 1.0f - (closestDistance / MAX_DISTANCE_);
 	audio_->ChangeVolume(notificationSEHandle_, volume);
 
-
-
-
-
 	//現在の鍵の数
-	size_t currentKeyQuantity = keies_.size();
-	if (currentKeyQuantity == 0u) {
+	if (keies_.size() == 0u) {
 		audio_->Stop(notificationSEHandle_);
 	}
 
@@ -250,14 +232,14 @@ void KeyManager::Delete() {
 			
 			
 
-			spriteTs_[keyQuantity_] += 0.005f;
+			spriteTs_[keyQuantity_] += 0.01f;
 			//スケール
-			float newT = Easing::EaseOutBack(spriteTs_[keyQuantity_]);
+			float_t newT = Easing::EaseOutBack(spriteTs_[keyQuantity_]);
 			keySprites_[keyQuantity_]->SetScale({ .x = newT ,.y = newT });
 
 			//回転
-			float newTForRotate = Easing::EaseOutCubic(spriteTs_[keyQuantity_]);
-			float rotate = SingleCalculation::Lerp(0.0f, -std::numbers::pi_v<float>*6.0f, newTForRotate);
+			float_t newTForRotate = Easing::EaseOutCubic(spriteTs_[keyQuantity_]);
+			float_t rotate = SingleCalculation::Lerp(0.0f, -std::numbers::pi_v<float_t>*6.0f, newTForRotate);
 			keySprites_[keyQuantity_]->SetRotate(rotate);
 			if (spriteTs_[keyQuantity_] >= 1.0f) {
 				++keyQuantity_;
@@ -273,7 +255,7 @@ void KeyManager::Delete() {
 	if (isPickUpKeyInHouse_ == true) {
 		++dropPlateTime_;
 
-		const uint32_t SE_PLAY_TIME = 60 * 1;
+		const uint32_t SE_PLAY_TIME = 60u * 1u;
 		if (dropPlateTime_ == SE_PLAY_TIME) {
 			audio_->Play(dropPlateSEHandle_, false);
 		}
@@ -298,7 +280,7 @@ void KeyManager::PickUp() {
 			};
 
 			//距離を求める
-			float collisionDistance = sqrtf(distance.x + distance.y + distance.z);
+			float_t collisionDistance = sqrtf(distance.x + distance.y + distance.z);
 
 
 
