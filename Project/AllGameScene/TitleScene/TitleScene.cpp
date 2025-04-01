@@ -209,6 +209,10 @@ void TitleScene::Update(Elysia::GameManager* gameManager) {
 				ChangeBackTexture(std::move(std::make_unique<NightBackTexture>()));
 				//タイトルロゴの変化
 				logoTextureHandle_ = changedLogoTextureHandle_;
+				//光の強さと色を変え夜っぽくする
+				directionalLight_.intensity = 0.05f;
+				directionalLight_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
+
 			}
 			else if (i == SECOND_EFFECT) {
 				//ランダムの終了
