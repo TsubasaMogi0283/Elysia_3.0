@@ -21,10 +21,14 @@ void NormalEnemyMove::Initialize(){
 	speedAmount_ = 0.05f;//跳ね返りとかを確認するために少し早くする
 #endif // _DEBUG
 
-
+	
+	
 }
 
 void NormalEnemyMove::Update(NormalEnemy* normalEnemy){
+	//アニメーションしないように時間を設定する
+	normalEnemy->SetAnimationTime(NO_ANIMATION_TIME_);
+
 	//本体の座標を取得
 	Vector3 worldPosition = normalEnemy->GetWorldPosition();
 	//正規化

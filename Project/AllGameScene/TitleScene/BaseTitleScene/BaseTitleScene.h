@@ -139,7 +139,7 @@ protected:
 
 protected:
 	//時間の変化
-	const float_t DELTA_TIME_ = 1.0f / 60.0f;
+	const float_t DELTA_ANIMATION_TIME_ = 1.0f / 60.0f;
 	//増える時間の値
 	const uint32_t INCREASE_VALUE = 1u;
 

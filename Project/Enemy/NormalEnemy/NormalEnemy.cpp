@@ -8,6 +8,7 @@
 #include "SpotLight.h"
 #include "SingleCalculation.h"
 #include "ModelManager.h"
+#include "AnimationManager.h"
 #include "GlobalVariables.h"
 #include "State/NormalEnemyMove.h"
 
@@ -23,12 +24,18 @@ NormalEnemy::NormalEnemy() {
 void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed) {
 
 	//モデルの生成
-	model_.reset(Elysia::Model::Create(modelHandle));
+	animationmodel_.reset(AnimationModel::Create(modelHandle));
+
+	//スキニングアニメーション読み込み
+	skeleton_.Create(Elysia::ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
+	skinCluster_.Create(skeleton_, Elysia::ModelManager::GetInstance()->GetModelData(modelHandle));
+	animationHandle_ = Elysia::AnimationManager::GetInstance()->LoadFile("Resources/LevelData/GameStage/Ghost","Ghost.gltf");
+
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	//スケールサイズ
-	const float SCALE_SIZE = 7.0f;
+	const float SCALE_SIZE = 0.65f;
 	worldTransform_.scale = { .x = SCALE_SIZE,.y = SCALE_SIZE ,.z = SCALE_SIZE };
 
 	//座標の代入
@@ -121,6 +128,14 @@ void NormalEnemy::Update() {
 	attackCollision_->SetEnemyDirection(direction_);
 	attackCollision_->Update();
 
+
+	//アニメーション適用
+	Elysia::AnimationManager::GetInstance()->ApplyAnimation(skeleton_, animationHandle_, animationTime_);
+	
+	//スケルトン・クラスターを更新
+	skeleton_.Update();
+	skinCluster_.Update(skeleton_);
+
 	//ダメージ演出
 	Damaged();
 
@@ -147,7 +162,7 @@ void NormalEnemy::Draw(const Camera& camera, const SpotLight& spotLight) {
 #endif // _DEBUG
 
 	//本体
-	model_->Draw(worldTransform_, camera, material_, spotLight);
+	animationmodel_->Draw(worldTransform_, camera, skinCluster_, material_, spotLight);
 
 	//感電パーティクル
 	if (electricShockParticle_ != nullptr) {

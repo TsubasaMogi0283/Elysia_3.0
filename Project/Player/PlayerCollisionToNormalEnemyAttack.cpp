@@ -25,7 +25,7 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 
 
 	//半径
-	radius_ = 5.0f;
+	radius_ = 6.0f;
 
 
 	//自分

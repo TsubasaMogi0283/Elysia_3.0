@@ -13,7 +13,8 @@ void NormalEnemyPreTracking::Initialize(){
 }
 
 void NormalEnemyPreTracking::Update(NormalEnemy* normalEnemy) {
-
+	//アニメーションしないように時間を設定する
+	normalEnemy->SetAnimationTime(NO_ANIMATION_TIME_);
 	//追跡前の方向
 	Vector3 preDirection = {};
 	if (isGetPreDirection_==false) {

@@ -122,7 +122,7 @@ void GameScene::Initialize() {
 #pragma region 敵
 	//敵モデルの読み込み
 	//通常
-	uint32_t enemyModelHandle = modelManager_->Load("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "Ghost.gltf");
+	uint32_t enemyModelHandle = modelManager_->Load("Resources/LevelData/GameStage/Ghost","Ghost.gltf",true);
 	//強敵
 	uint32_t strongEnemyModelHandle = modelManager_->Load("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
 
@@ -401,14 +401,14 @@ void GameScene::VigntteProcess(){
 	//プレイヤーがダメージを受けた場合ビネット
 	if (player_->GetIsDamaged() == true) {
 		//時間の加算
-		vignetteChangeTime_ += DELTA_TIME_;
+		vignetteChangeTime_ += DELTA_ANIMATION_TIME_;
 
 		//線形補間で滑らかに変化
 		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
 	}
 	//ピンチ演出
 	else if (player_->GetHP() == DANGEROUS_HP) {
-		warningTime_ += DELTA_TIME_;
+		warningTime_ += DELTA_ANIMATION_TIME_;
 		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
 
 		//最大時間

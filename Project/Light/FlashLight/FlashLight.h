@@ -246,7 +246,7 @@ private:
 	//最小チャージの値
 	const float_t MIN_CHARGE_VALUE_ = 0.0f;
 	//時間増加
-	const float_t DELTA_TIME_ = 1.0f / 60.0f;
+	const float_t DELTA_ANIMATION_TIME_ = 1.0f / 60.0f;
 	//初期の強さ
 	const float INITIAL_INTENCITY_ = 100.0f;
 private:

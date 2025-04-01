@@ -168,7 +168,7 @@ private:
 	//説明テクスチャの最大数
 	const uint32_t MAX_EXPLANATION_NUMBER_ = 2u;
 	//時間変化
-	const float_t DELTA_TIME_ = 1.0f / 60.0f;
+	const float_t DELTA_ANIMATION_TIME_ = 1.0f / 60.0f;
 	//フェードアウトの具合
 	const float_t FADE_OUT_INTERVAL_ = 0.01f;
 	//負けシーンに遷移するときの値

@@ -310,7 +310,7 @@ uint32_t Elysia::ModelManager::Load(const std::string& directoryPath, const std:
 	return modelhandle;
 }
 
-uint32_t Elysia::ModelManager::Load(const std::string& directoryPath, const std::string& fileName, bool isAnimationLoad) {
+uint32_t Elysia::ModelManager::Load(const std::string& directoryPath, const std::string& fileName, const bool& isAnimationLoad) {
 	//一度読み込んだものはその値を返す
 	//新規は勿論読み込みをする
 	std::string filePath = directoryPath + "/" + fileName;

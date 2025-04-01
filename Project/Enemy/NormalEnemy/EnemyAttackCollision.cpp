@@ -28,7 +28,7 @@ void EnemyAttackCollision::Initialize(const uint32_t& modelHandle){
 	collisionType_ = ColliderType::SphereType;
 
 	//半径
-	radius_ = 3.0f;
+	radius_ = 5.0f;
 
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY_ATTACK);
@@ -43,7 +43,7 @@ void EnemyAttackCollision::Update(){
 
 	
 	//間隔
-	const float INTERVAL = 3.0f;
+	const float INTERVAL =3.0f;
 	//新しく方向を計算する
 	Vector3 newDirection = VectorCalculation::Multiply(enemyDirection_, INTERVAL);
 	

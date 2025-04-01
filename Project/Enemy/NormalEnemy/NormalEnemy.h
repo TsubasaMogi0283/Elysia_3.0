@@ -10,10 +10,11 @@
 #include <memory>
 
 #include "WorldTransform.h"
-#include "Model.h"
+#include "AnimationModel.h"
 #include "Material.h"
 #include "Particle3D.h"
 #include "DirectionalLight.h"
+#include "SkinCluster.h"
 
 #include "AABB.h"
 #include "Enemy/EnemyCondition.h"
@@ -137,9 +138,22 @@ public:
 		this->damagedValue_ = strength;
 	}
 
+	/// <summary>
+	/// ダメージの受け取り
+	/// </summary>
+	/// <param name="isAccept"></param>
 	inline void SetIsAcceptDamaged(const bool& isAccept) {
 		this->isAcceptDamage_ = isAccept;
 	}
+
+	/// <summary>
+	/// アニメーションの時間を設定
+	/// </summary>
+	/// <param name="animationTime"></param>
+	inline void SetAnimationTime(const float_t& animationTime) {
+		this->animationTime_ = animationTime;
+	}
+
 
 	/// <summary>
 	/// 現在の状態を取得
@@ -210,6 +224,18 @@ private:
 
 
 private:
+	//アニメーションモデル
+	std::unique_ptr<AnimationModel>animationmodel_ = nullptr;
+
+	//スケルトン
+	Skeleton skeleton_ = {};
+	//アニメーション時間
+	float animationTime_ = {};
+	//クラスター
+	SkinCluster skinCluster_ = {};
+	//アニメーションハンドル
+	uint32_t animationHandle_ = 0u;
+
 	//パーティクル
 	std::unique_ptr<Elysia::Particle3D> deadParticle_ = {};
 	std::unique_ptr<Elysia::Particle3D> electricShockParticle_ = {};

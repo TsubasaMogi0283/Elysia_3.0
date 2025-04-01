@@ -71,6 +71,11 @@ public:
 	}
 
 protected:
+	//アニメーションしないようにするための時間
+	const float_t NO_ANIMATION_TIME_ = 0.0f;
+
+
+protected:
 	//状態の名前
 	std::string stateName_ = "";
 

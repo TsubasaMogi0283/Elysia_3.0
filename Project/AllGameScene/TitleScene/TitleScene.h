@@ -127,7 +127,7 @@ private:
 
 private:
 	//時間の変化
-	const float DELTA_TIME_ = 1.0f / 60.0f;
+	const float DELTA_ANIMATION_TIME_ = 1.0f / 60.0f;
 
 	//ランダムエフェクトの表示時間
 	static const uint32_t DISPLAY_LENGTH_QUANTITY_ = 2u;

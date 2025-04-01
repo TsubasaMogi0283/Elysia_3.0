@@ -26,10 +26,12 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 
 	
 	//時間が増えていく
-	attackTime_ += TIME_INCREASE_VALUE;
+	animationTime_ += DELTA_ANIMATION_TIME_;
+	attackTime_ += DELTA_ATTACK_TIME_;
+	
 
-	//1秒の時に攻撃
-	if (attackTime_ == JUST_ATTACK_TIME) {
+	//攻撃
+	if (attackTime_ == JUST_ATTACK_TIME_) {
 		//ここで攻撃
 		//コライダーが当たっている時だけ通す
 		normalEnemy->SetIsAttack(true);
@@ -41,11 +43,14 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 	}
 
 	//また最初に戻る
-	if (attackTime_ > RETURN_TIME) {
-		attackTime_ = RESTART_TIME;
+	if (animationTime_ > RETURN_ANIMATION_TIME_) {
+		animationTime_ = RESTART_ANIMATION_TIME_;
+		attackTime_ = RESTART_ATTACK_TIME_;
 	}
 
 
+	//アニメーション時間の設定
+	normalEnemy->SetAnimationTime(animationTime_);
 
 #ifdef _DEBUG
 	int32_t attackTimeToInt = static_cast<int32_t>(attackTime_);

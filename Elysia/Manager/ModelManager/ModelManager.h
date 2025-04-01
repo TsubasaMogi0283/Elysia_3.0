@@ -94,7 +94,7 @@ namespace Elysia {
 		/// <param name="fileName">ファイル名</param>
 		/// <param name="isAnimationLoad">アニメーションを読み込むかどうか</param>
 		/// <returns></returns>
-		static uint32_t Load(const std::string& directoryPath, const std::string& fileName, bool isAnimationLoad);
+		static uint32_t Load(const std::string& directoryPath, const std::string& fileName,const bool& isAnimationLoad);
 
 
 

@@ -14,6 +14,9 @@ void NormalEnemyTracking::Initialize(){
 }
 
 void NormalEnemyTracking::Update(NormalEnemy* normalEnemy){
+	//アニメーションしないように時間を設定する
+	normalEnemy->SetAnimationTime(NO_ANIMATION_TIME_);
+
 	//敵本体の座標を取得
 	Vector3 worldPosition = normalEnemy->GetWorldPosition();
 	//プレイヤーの座標を取得
