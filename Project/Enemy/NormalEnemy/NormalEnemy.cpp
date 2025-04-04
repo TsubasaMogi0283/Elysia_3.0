@@ -223,14 +223,17 @@ void NormalEnemy::Damaged() {
 		if (IsFirstElectricShock_ == false) {
 			//線形補間のように加算しその値を振動の倍数として使う
 			firstElectricShockT_ += FIRST_ELECTRIC_SHOCK_DELTA_TIME_;
-
+			//感電状態になる
+			isElectricShock_ = true;
 			//振動の値
 			Vector3 randomTranslate = { .x = distribute(randomEngine),.y = 0.0f,.z = distribute(randomEngine) };
-			//村道の値をかける
+			//振動の値をかける
 			electricDamageShakeValue_ = VectorCalculation::Multiply(randomTranslate, (MAX_T_VALUE_ - firstElectricShockT_));
 			if (firstElectricShockT_ > MAX_T_VALUE_) {
 				//最初の振動済み
 				IsFirstElectricShock_ = true;
+				//感電状態になる
+				isElectricShock_ = false;
 			}
 		}
 
@@ -258,7 +261,7 @@ void NormalEnemy::Damaged() {
 			}
 
 			//感電
-			if (isElectricShock_==true) {
+			if (isElectricShock_==true&& IsFirstElectricShock_==true) {
 
 				//振動させる
 				//線形補間のように加算しその値を振動の倍数として使う
@@ -343,6 +346,7 @@ void NormalEnemy::DisplayImGui() {
 
 	if (ImGui::TreeNode("感電") == true) {
 		ImGui::InputFloat("最初の感電のT", &firstElectricShockT_);
+		ImGui::InputFloat3("振動の値", &electricDamageShakeValue_.x);
 		ImGui::TreePop();
 	}
 
