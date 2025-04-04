@@ -78,9 +78,6 @@ std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& m
 	particle3D->cameraResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(Vector3));
 
 
-	//エミッターのスケール
-	particle3D->emitter_.transform.scale = { .x = 0.5f,.y = 0.5f,.z = 0.5f };
-
 
 	return particle3D;
 
@@ -124,25 +121,11 @@ std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& m
 
 	//インスタンシング
 	particle3D->instancingResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(ParticleForGPU) * particle3D->MAX_INSTANCE_NUMBER_);
+	particle3D->instancingIndex_ = particle3D->srvManager_->Allocate();
 	//SRVを作る
-	//すでに作られているものだったらそこから取り出しSRVの上限突破を防ぐ
-	auto it = instancingDataMap_.find(modelHandle);
-	if (it != instancingDataMap_.end()) {
-		//particle3D->instancingResource_ = it->second.resource;
-		particle3D->instancingIndex_ = it->second.srvIndex;
-	}
-	else {
-		particle3D->instancingResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(ParticleForGPU) * particle3D->MAX_INSTANCE_NUMBER_);
-		particle3D->instancingIndex_ = particle3D->srvManager_->Allocate();
-		particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
-		//新しいデータ
-		//ComPtr<ID3D12Resource> resource = particle3D->instancingResource_;
-		//InstancingData instancingData = { .resource = resource ,.srvIndex = particle3D->instancingIndex_ };
-		//挿入
-		//instancingManegimentMap_.try_emplace(modelHandle, instancingData);
-	}
-	//書き込み
-	particle3D->instancingResource_->Map(0u, nullptr, reinterpret_cast<void**>(&particle3D->particleForGpuData_));
+	particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
+	
+	
 	//カメラ
 	particle3D->cameraResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(Vector3));
 
@@ -159,7 +142,7 @@ ParticleInformation Elysia::Particle3D::MakeNewParticle(std::mt19937& randomEngi
 	//SRは固定
 	std::uniform_real_distribution<float> distribute(-1.0f, 1.0f);
 	ParticleInformation particle;
-	particle.transform.scale = { .x = 0.3f,.y = 0.3f,.z = 0.3f };
+	particle.transform.scale = emitter_.transform.scale;
 	particle.transform.rotate = { .x = 0.0f,.y = 0.0f,.z = 0.0f };
 	Vector3 randomTranslate = { .x = distribute(randomEngine),.y = distribute(randomEngine) + 1.0f,.z = distribute(randomEngine) };
 	particle.transform.translate = VectorCalculation::Add(emitter_.transform.translate, randomTranslate);
@@ -218,14 +201,29 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 		}
 	}
 	else {
+		//最初に1回だけ出す
+		if (isFirstRelease_ == false) {
+			particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
+			//出し終わったことを示す
+			isFirstRelease_ = true;
+
+		}
+
+		//そのあと循環
 		//時間経過
 		emitter_.frequencyTime += DELTA_TIME;
 		//頻度より大きいかつまだ生成が停止されていない
 		if (emitter_.frequency <= emitter_.frequencyTime && isStopGenerate_==false) {
 			//パーティクルを作る
 			particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
-			//余計に過ぎた時間も加味して頻度計算する
-			emitter_.frequencyTime -= emitter_.frequency;
+			//出した
+			isRelease_ = true;
+			//もう一度最初から
+			emitter_.frequencyTime=0.0f;
+		}
+		else {
+			//出していない
+			isRelease_ = false;
 		}
 	}
 
@@ -496,7 +494,7 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 				//透明になっていくようにするかどうか
 				if (isToTransparent_ == true) {
 					//どんどん透明にしていく
-					float alpha = 1.0f - particleIterator->absorbT;
+					float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
 					particleIterator->color.w = alpha;
 					particleForGpuData_[numInstance_].color.w = alpha;
 				}

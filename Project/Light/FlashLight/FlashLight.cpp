@@ -228,7 +228,7 @@ void FlashLight::GenerateParticle() {
 	std::unique_ptr<Elysia::Particle3D> particle = Elysia::Particle3D::Create(ParticleMoveType::Absorb);
 
 	//パーティクルの細かい設定
-	const float SCALE_SIZE = 0.001f;
+	const float SCALE_SIZE = 0.1f;
 	particle->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
 	particle->SetCount(5u);
 	particle->SetIsReleaseOnceMode(false);
@@ -236,7 +236,7 @@ void FlashLight::GenerateParticle() {
 	const float FREQUENCY = 0.5f;
 	particle->SetFrequency(FREQUENCY);
 
-
+	//距離
 	const float DISTANCE = 3.0f;
 	Vector3 emitterDirection = VectorCalculation::Multiply(fan3D_.direction, DISTANCE);
 	Vector3 emitterPosition = VectorCalculation::Add(fan3D_.position, emitterDirection);

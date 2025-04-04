@@ -29,9 +29,12 @@ void NormalEnemyTracking::Update(NormalEnemy* normalEnemy){
 	//スピード
 	const float SPEED_AMOUNT = 0.05f;
 	Vector3 speed = VectorCalculation::Multiply(direction_, SPEED_AMOUNT);
-	//加算
-	normalEnemy->SetTranslate(VectorCalculation::Add(worldPosition, speed));
+	//加算(感電時を除く)
+	if (normalEnemy->GetIsElectricShock() == false) {
+		normalEnemy->SetTranslate(VectorCalculation::Add(worldPosition, speed));
 
+	}
+	
 #ifdef _DEBUG
 	ImGui::Begin("強敵追跡");
 	ImGui::InputFloat3("方向", &direction_.x);

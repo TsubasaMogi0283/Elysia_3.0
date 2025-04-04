@@ -36,9 +36,11 @@ void NormalEnemyMove::Update(NormalEnemy* normalEnemy){
 
 	//スピードの値をかける
 	Vector3 speed = VectorCalculation::Multiply(newDirection, speedAmount_);
-	//加算
-	normalEnemy->SetTranslate(VectorCalculation::Add(worldPosition, speed));
-	
+	//加算(感電時を除く)
+	if (normalEnemy->GetIsElectricShock() == false) {
+		normalEnemy->SetTranslate(VectorCalculation::Add(worldPosition, speed));
+
+	}
 #ifdef _DEBUG
 	ImGui::Begin("敵通常動作");
 	ImGui::InputFloat3("方向", &newDirection.x);

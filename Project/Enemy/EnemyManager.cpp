@@ -44,8 +44,15 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel, const uint32_t& 
 	//強敵
 	strongEnemyModelHandle_ = strongEnemyModel;
 
+	//生成数
+	size_t genarateQuantity = normalEnemyPositions.size();
+#ifdef _DEBUG
+	genarateQuantity = 1u;
+#endif // _DEBUG
+
+
 	//通常の敵の生成
-	for (size_t i = 0u; i < normalEnemyPositions.size(); ++i) {
+	for (size_t i = 0u; i < genarateQuantity; ++i) {
 		//生成
 		GenerateNormalEnemy(normalEnemyPositions[i]);
 	}

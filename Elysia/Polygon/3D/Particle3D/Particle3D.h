@@ -169,7 +169,15 @@ namespace Elysia {
 
 	public:
 		/// <summary>
-		///	一度だけ出すかどうか
+		/// 放出したかどうか
+		/// </summary>
+		inline bool GetIsRelease()const {
+			return isRelease_;
+		}
+
+
+		/// <summary>
+		///	一度だけ放出するかどうか
 		/// </summary>
 		/// <param name="isReleaseOnce">一度にするかどうかの設定</param>
 		inline void SetIsReleaseOnceMode(const bool& isReleaseOnce) {
@@ -214,6 +222,14 @@ namespace Elysia {
 		/// <param name="position">座標</param>
 		inline void SetAbsorbPosition(const Vector3& position) {
 			this->absorbPosition_ = position;
+		}
+
+		/// <summary>
+		/// テクスチャの上書き
+		/// </summary>
+		/// <param name="textureHandle">テクスチャハンドル</param>
+		inline void TextureOverride(const uint32_t& textureHandle) {
+			this->textureHandle_ = textureHandle;
 		}
 
 
@@ -270,7 +286,7 @@ namespace Elysia {
 		/// <summary>
 		/// 発生頻度
 		/// </summary>
-		/// <param name="frequency">品同</param>
+		/// <param name="frequency">頻度</param>
 		inline void SetFrequency(const float_t& frequency) {
 			this->emitter_.frequency = frequency;
 		}
@@ -365,8 +381,11 @@ namespace Elysia {
 		float velocityY_ = 1.2f;
 		//地面の高さ設定
 		float groundOffset_ = 0.0f;
-
-		//一度だけ出すかどうか
+		//最初に放出する
+		bool isFirstRelease_ = false;
+		//放出したかどうか
+		bool isRelease_ = false;
+		//一度だけ放出するかどうか
 		bool isReleaseOnceMode_ = true;
 		//出し終えたかどうか
 		bool isReeasedOnce_ = false;

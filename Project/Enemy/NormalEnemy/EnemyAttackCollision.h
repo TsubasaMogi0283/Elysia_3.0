@@ -41,7 +41,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="modelHandle"></param>
+	/// <param name="modelHandle">モデルハンドル</param>
 	void Initialize(const uint32_t& modelHandle);
 
 	/// <summary>

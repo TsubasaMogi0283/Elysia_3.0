@@ -8,6 +8,7 @@
 #include "SpotLight.h"
 #include "SingleCalculation.h"
 #include "ModelManager.h"
+#include "TextureManager.h"
 #include "AnimationManager.h"
 #include "GlobalVariables.h"
 #include "State/NormalEnemyMove.h"
@@ -30,6 +31,9 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 	skeleton_.Create(Elysia::ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
 	skinCluster_.Create(skeleton_, Elysia::ModelManager::GetInstance()->GetModelData(modelHandle));
 	animationHandle_ = Elysia::AnimationManager::GetInstance()->LoadFile("Resources/LevelData/GameStage/Ghost","Ghost.gltf");
+
+	//感電パーティクル用
+	thunderTextureHandle_ = Elysia::TextureManager::Load("Resources/Sprite/Particle/Thunder.png");
 
 
 	//ワールドトランスフォームの初期化
@@ -210,21 +214,71 @@ void NormalEnemy::Damaged() {
 	}
 	//瀕死
 	else if (hp_ == HPCondition::Dangerous) {
+		//ランダムエンジン
+		std::random_device seedGenerator;
+		std::mt19937 randomEngine(seedGenerator());
+		std::uniform_real_distribution<float> distribute(-0.01f, 0.01f);
+		
+		//最初の感電。
+		if (IsFirstElectricShock_ == false) {
+			//線形補間のように加算しその値を振動の倍数として使う
+			firstElectricShockT_ += FIRST_ELECTRIC_SHOCK_DELTA_TIME_;
+
+			//振動の値
+			Vector3 randomTranslate = { .x = distribute(randomEngine),.y = 0.0f,.z = distribute(randomEngine) };
+			//村道の値をかける
+			electricDamageShakeValue_ = VectorCalculation::Multiply(randomTranslate, (MAX_T_VALUE_ - firstElectricShockT_));
+			if (firstElectricShockT_ > MAX_T_VALUE_) {
+				//最初の振動済み
+				IsFirstElectricShock_ = true;
+			}
+		}
 
 		//生成
 		if (electricShockParticle_ == nullptr) {
 			//生成
 			electricShockParticle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Stay));
+			//テクスチャの上書き
+			electricShockParticle_->TextureOverride(thunderTextureHandle_);
 			//パーティクルの細かい設定
-			const float SCALE_SIZE = 2.0f;
+			const float SCALE_SIZE = 0.5f;
 			electricShockParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
-			electricShockParticle_->SetCount(5u);
-			electricShockParticle_->SetIsReleaseOnceMode(true);
+			electricShockParticle_->SetCount(10u);
+			const float FREQUENCY = 4.0f;
+			electricShockParticle_->SetIsReleaseOnceMode(false);
+			electricShockParticle_->SetFrequency(FREQUENCY);
 			electricShockParticle_->SetIsToTransparent(true);
 		}
 		else {
-			//パーティクルの細かい設定
+
+			//感電パーティクルの放出している時
+			if(electricShockParticle_->GetIsRelease() == true){
+				//感電状態になる
+				isElectricShock_ = true;
+			}
+
+			//感電
+			if (isElectricShock_==true) {
+
+				//振動させる
+				//線形補間のように加算しその値を振動の倍数として使う
+				electricShockT_ += ELECTRIC_SHOCK_DELTA_TIME_;
+
+				//振動の値
+				Vector3 randomTranslate = { .x = distribute(randomEngine),.y = 0.0f,.z = distribute(randomEngine) };
+				//村道の値をかける
+				electricDamageShakeValue_ = VectorCalculation::Multiply(randomTranslate, (MAX_T_VALUE_ - electricShockT_));
+				if (electricShockT_ > MAX_T_VALUE_) {
+					//一旦振動を解除
+					isElectricShock_ = false;
+					electricShockT_ = 0.0f;
+				}
+			}
+			
 		}
+		//振動分の値を座標に加算
+		worldTransform_.translate = VectorCalculation::Add(GetWorldPosition(), electricDamageShakeValue_);
+
 		//座標の設定
 		electricShockParticle_->SetTranslate(GetWorldPosition());
 
@@ -256,9 +310,9 @@ void NormalEnemy::Delete() {
 		deadParticle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Rise));
 		//パーティクルの細かい設定
 		deadParticle_->SetTranslate(GetWorldPosition());
-		const float SCALE_SIZE = 20.0f;
+		const float SCALE_SIZE = 0.4f;
 		deadParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
-		deadParticle_->SetCount(20u);
+		deadParticle_->SetCount(25u);
 		deadParticle_->SetIsReleaseOnceMode(true);
 		deadParticle_->SetIsToTransparent(true);
 	}
@@ -279,11 +333,16 @@ void NormalEnemy::DisplayImGui() {
 	ImGui::Checkbox("攻撃", &isAttack_);
 	ImGui::Checkbox("生存", &isAlive_);
 
-	if (ImGui::TreeNode("状態")) {
+	if (ImGui::TreeNode("状態")==true) {
 		int newCondition = static_cast<int>(condition_);
 		int newPreCondition = static_cast<int>(preCondition_);
 		ImGui::InputInt("現在", &newCondition);
 		ImGui::InputInt("前", &newPreCondition);
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("感電") == true) {
+		ImGui::InputFloat("最初の感電のT", &firstElectricShockT_);
 		ImGui::TreePop();
 	}
 

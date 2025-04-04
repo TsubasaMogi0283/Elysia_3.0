@@ -113,6 +113,13 @@ public:
 		return preStateName_;
 	};
 
+	/// <summary>
+	/// 感電状態を取得
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsElectricShock()const {
+		return isElectricShock_;
+	}
 
 	/// <summary>
 	/// 攻撃しているかどうか
@@ -209,7 +216,13 @@ private:
 	const float_t RADIUS_ = 2.0f;
 	//幅(Vector3)
 	const Vector3 RADIUS_INTERVAL_ = { .x = RADIUS_,.y = RADIUS_,.z = RADIUS_ };
-	
+	//感電時間変化
+	const float_t ELECTRIC_SHOCK_DELTA_TIME_ = 1.0f / 60.0f;
+
+	//最初の感電時間変化
+	const float_t FIRST_ELECTRIC_SHOCK_DELTA_TIME_ = 1.0f / 120.0f;
+	//線形補間の最大値
+	const float_t MAX_T_VALUE_ = 1.0f;
 
 private:
 
@@ -238,11 +251,24 @@ private:
 
 	//パーティクル
 	std::unique_ptr<Elysia::Particle3D> deadParticle_ = {};
+	//感電
 	std::unique_ptr<Elysia::Particle3D> electricShockParticle_ = {};
+	uint32_t thunderTextureHandle_ = 0u;
 	//マテリアル
 	Material particleMaterial_ = {};
 	//デバッグ用のモデルハンドル
 	uint32_t debugModelHandle = 0;
+
+	//感電の値
+	Vector3 electricDamageShakeValue_ = {};
+
+	//最初の感電
+	bool IsFirstElectricShock_ = false;
+	float_t firstElectricShockT_ = 0.0f;
+
+	//2回目以降の感電
+	bool isElectricShock_ = false;
+	float_t electricShockT_ = 0.0f;
 
 	//振動のオフセット
 	float_t shakeOffset_ = 0.05f;
