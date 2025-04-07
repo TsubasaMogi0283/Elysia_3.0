@@ -614,8 +614,8 @@ void GameScene::PlayerMove() {
 
 	//チャージ
 	bool isCharge = false;
-	//エンターキーまたはYボタンでチャージ開始
-	if(input_->IsPushKey(DIK_RETURN)==true|| input_->IsPushButton(XINPUT_GAMEPAD_Y) == true){
+	//エンターキーまたはXボタンでチャージ開始
+	if(input_->IsPushKey(DIK_RETURN)==true|| input_->IsPushButton(XINPUT_GAMEPAD_X) == true){
 		isCharge = true;
 	}
 	else {
@@ -626,7 +626,7 @@ void GameScene::PlayerMove() {
 	player_->GetFlashLight()->SetIsCharge(isCharge);
 
 	//エンターキーまたはYボタンを離した瞬間に攻撃する
-	if (input_->IsReleaseKey(DIK_RETURN) == true|| input_->IsReleaseButton(XINPUT_GAMEPAD_Y) == true) {
+	if (input_->IsReleaseKey(DIK_RETURN) == true|| input_->IsReleaseButton(XINPUT_GAMEPAD_X) == true) {
 		isReleaseAttack_ = true;
 		//クールタイムにする
 		player_->GetFlashLight()->SetIsCoolTime(true);
