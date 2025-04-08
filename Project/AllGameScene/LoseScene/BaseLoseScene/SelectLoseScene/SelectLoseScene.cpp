@@ -97,7 +97,7 @@ void SelectLoseScene::Update(LoseScene* loseScene){
 
 		//決定されたら跳ねるような動きをする
 		decideArrowMoveTheta_ += MOVE_AMOUNT;
-		float newTheta = std::clamp(decideArrowMoveTheta_, 0.0f, std::numbers::pi_v<float_t>);
+		float_t newTheta = std::clamp(decideArrowMoveTheta_, 0.0f, std::numbers::pi_v<float_t>);
 		if (decideArrowMoveTheta_ < std::numbers::pi_v<float_t>) {
 			//回転
 			arrowRotate_ += FAST_ROTATE_VALUE;
@@ -112,22 +112,32 @@ void SelectLoseScene::Update(LoseScene* loseScene){
 		}
 
 		//高さ
-		const float HEIGHT = 1.0f;
-		float newArrowPositionY = arrowInitialPosition.y + std::sinf(newTheta) * HEIGHT;
+		const float_t HEIGHT = 1.0f;
+		float_t newArrowPositionY = arrowInitialPosition.y + std::sinf(newTheta) * HEIGHT;
+		float_t newArrowPositionX = 0.0f;
 		//新しい座標を設定
-		levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = toTitleInitialPosition.x,.y = newArrowPositionY ,.z = arrowInitialPosition.z });
+		if (isContinue_ == true) {
+			newArrowPositionX = toGameInitialPosition.x;
+		}
+		else {
+			newArrowPositionX = toTitleInitialPosition.x;
+		}
+		levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = newArrowPositionX,.y = newArrowPositionY ,.z = arrowInitialPosition.z });
 
 
 	}
 
 	//次のシーンへ
 	if (waitForNextSceneTime_ > CHANGE_NEXTSCENE_TIME_) {
-		//カメラが後ろへ
+		//続けるかどうかを設定
+		loseScene->SetIsContinue(isContinue_);
+
+		//続けるシーンへ
 		if (isContinue_ == true) {
 			loseScene->ChangeDetailScene(std::make_unique<ContinueGameLoseScene>());
 			return;
 		}
-		//ディゾルブ
+		//タイトルに戻る
 		else {
 			loseScene->ChangeDetailScene(std::make_unique<ReturnTitleLoseScene>());
 			return;

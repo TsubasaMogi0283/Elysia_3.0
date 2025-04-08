@@ -1,6 +1,7 @@
 #include "ContinueGameLoseScene.h"
 
 #include <numbers>
+#include <imgui.h>
 
 #include "Input.h"
 #include "TextureManager.h"
@@ -47,12 +48,26 @@ void ContinueGameLoseScene::Update(LoseScene* loseScene){
 	//加速
 	cameraVelocity_ = VectorCalculation::Add(cameraVelocity_, cameraAccelation_);
 
-
-	//カメラの動きを待つ時間
-	waitForCameraMoveTime_ += DELTA_TIME_;
-
+	//半径が0になったら待ち
+	if (endLightUpT_ >= MAX_T_VALUE_) {
+		waitForCameraMoveTime_ += DELTA_TIME_;
+	}
 	//指定した時間を超えたら敗北シーンを終了する
 	if (waitForCameraMoveTime_ > FINISH_WAIT_TIME_) {
 		loseScene->SetIsEnd();
+		return;
 	}
+
+
+#ifdef _DEBUG
+	//ImGui表示用
+	DisplayImGui();
+#endif // _DEBUG
+}
+
+void ContinueGameLoseScene::DisplayImGui(){
+
+	ImGui::Begin("続ける(敗北シーン)");
+	ImGui::InputFloat("待ち時間", &waitForCameraMoveTime_);
+	ImGui::End();
 }

@@ -117,8 +117,16 @@ public:
 	/// <summary>
 	/// 終わったことを設定する
 	/// </summary>
-	void SetIsEnd() {
+	inline void SetIsEnd() {
 		this->isEnd_ = true;
+	}
+
+	/// <summary>
+	/// ゲームを続けるかどうかの設定
+	/// </summary>
+	/// <param name="isContinue">フラグ</param>
+	inline void SetIsContinue(const bool& isContinue) {
+		this->isContinue_ = isContinue;
 	}
 
 private:
@@ -258,5 +266,9 @@ private:
 	std::unique_ptr<BaseLoseScene> detailLoseScene_ = nullptr;
 	//処理が終わったかどうか
 	bool isEnd_ = false;
+	//ゲームを続けるかどうか
+	bool isContinue_ = false;
+
+
 };
 

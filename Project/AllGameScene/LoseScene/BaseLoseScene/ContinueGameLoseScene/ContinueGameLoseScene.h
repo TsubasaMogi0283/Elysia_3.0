@@ -32,6 +32,11 @@ public:
 	/// デストラクタ
 	/// </summary>
 	~ContinueGameLoseScene()override= default;
+private:
+	/// <summary>
+	/// ImGui用
+	/// </summary>
+	void DisplayImGui();
 
 private:
 	//矢印の回転
@@ -40,15 +45,22 @@ private:
 	const float_t CHANGE_NEXTSCENE_TIME_ = 2.0f;
 	//終わる時間
 	const float_t FINISH_WAIT_TIME_ = 1.0f;
-	//半径
-	const float NARROW_VALUE = 0.002f;
+	//狭める値
+	const float_t NARROW_VALUE = 0.002f;
+	//最小半径
+	const float_t MIN_RADIUS_ = 0.0f;
+
+
 private:
 	//時間
-	float_t waitForCameraMoveTime_ = 0u;
+	float_t waitForCameraMoveTime_ = 0.0f;
 	//矢印の回転θ
 	float_t arrowMoveTheta_ = 0.0f;
 	//加速
 	Vector3 cameraAccelation_ = { .x = 0.0f,.y = 0.001f,.z = -0.01f };
-	float endLightUpT_ = 0.0f;
+	//ライトの半径用の線形補間の値
+	float_t endLightUpT_ = 0.0f;
+	//変わる準備
+	bool isReadyForChange_ = false;
 };
 

@@ -93,8 +93,6 @@ public:
 		return dissolve_;
 	}
 		
-
-
 	/// <summary>
 	/// カメラの加速分の値を取得
 	/// </summary>
@@ -102,6 +100,7 @@ public:
 	inline Vector3 GetCameraVelocity()const {
 		return cameraVelocity_;
 	}
+
 
 	/// <summary>
 	/// レベルデータハンドルの設定
@@ -159,5 +158,5 @@ protected:
 	Dissolve dissolve_ = {};
 	//速度
 	Vector3 cameraVelocity_ = {};
-
+	
 };

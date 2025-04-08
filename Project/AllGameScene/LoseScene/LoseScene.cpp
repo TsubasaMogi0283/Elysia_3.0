@@ -165,6 +165,21 @@ void LoseScene::Update(Elysia::GameManager* gameManager){
 		
 	}
 
+	//処理が終わった場合
+	if (isEnd_ == true) {
+		//ゲームへ
+		if (isContinue_ == true) {
+			gameManager->ChangeScene("Game");
+			return;
+		}
+		//タイトルへ
+		else {
+			gameManager->ChangeScene("Title");
+			return;
+		}
+	}
+
+
 	gameManager;
 	//レベルデータの更新
 	levelDataManager_->Update(levelDataHandle_);
