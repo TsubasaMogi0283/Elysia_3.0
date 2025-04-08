@@ -505,6 +505,21 @@
     <Filter Include="Elysia\Source File\DirectX">
       <UniqueIdentifier>{ea4c39bd-648c-4284-b623-2d33ca4c92b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Scene\Lose\Base">
+      <UniqueIdentifier>{2c413194-299f-4d63-84a9-dcda8247b4d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Lose\Base\LightUp">
+      <UniqueIdentifier>{03d232ac-ba59-4c59-81da-469ad0968d9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Lose\Base\Select">
+      <UniqueIdentifier>{406c30bb-0c72-47d0-8cba-2171024d4d4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Lose\Base\ContinueGame">
+      <UniqueIdentifier>{9275c936-876b-4639-8abe-d847f8ec6c09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Lose\Base\ReturnTitle">
+      <UniqueIdentifier>{cb91cacc-6572-421d-a9c4-5a4d8f243f6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -815,6 +830,18 @@
     </ClCompile>
     <ClCompile Include="Elysia\Common\DirectX\DirectXSetup.cpp">
       <Filter>Elysia\Source File\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\LightUp\LightUpLoseScene.cpp">
+      <Filter>Project\Scene\Lose\Base\LightUp</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\SelectLoseScene\SelectLoseScene.cpp">
+      <Filter>Project\Scene\Lose\Base\Select</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\ContinueGameLoseScene\ContinueGameLoseScene.cpp">
+      <Filter>Project\Scene\Lose\Base\ContinueGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\ReturnTitleLoseScene\ReturnTitleLoseScene.cpp">
+      <Filter>Project\Scene\Lose\Base\ReturnTitle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1356,6 +1383,21 @@
     </ClInclude>
     <ClInclude Include="Elysia\Common\DirectX\DirectXSetup.h">
       <Filter>Elysia\Header File\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\BaseLoseScene.h">
+      <Filter>Project\Scene\Lose\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\LightUp\LightUpLoseScene.h">
+      <Filter>Project\Scene\Lose\Base\LightUp</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\SelectLoseScene\SelectLoseScene.h">
+      <Filter>Project\Scene\Lose\Base\Select</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\ContinueGameLoseScene\ContinueGameLoseScene.h">
+      <Filter>Project\Scene\Lose\Base\ContinueGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\ReturnTitleLoseScene\ReturnTitleLoseScene.h">
+      <Filter>Project\Scene\Lose\Base\ReturnTitle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

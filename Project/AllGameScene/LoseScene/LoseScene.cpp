@@ -10,6 +10,7 @@
 #include "VectorCalculation.h"
 #include "GlobalVariables.h"
 #include "Easing.h"
+#include "BaseLoseScene/LightUp/LightUpLoseScene.h"
 
 
 LoseScene::LoseScene(){
@@ -73,97 +74,107 @@ void LoseScene::Initialize(){
 	//点光源
 	//調整項目として記録
 	globalVariables_->CreateGroup(POINT_LIGHT_NAME_);
-	globalVariables_->AddItem(POINT_LIGHT_NAME_, "Translate", pointLight_.position_);
-	globalVariables_->AddItem(POINT_LIGHT_NAME_, "Decay", pointLight_.decay_);
+	globalVariables_->AddItem(POINT_LIGHT_NAME_, "Translate", pointLight_.position);
+	globalVariables_->AddItem(POINT_LIGHT_NAME_, "Decay", pointLight_.decay);
 
 	//初期化
 	pointLight_.Initialize();
-	pointLight_.position_ = globalVariables_->GetVector3Value(POINT_LIGHT_NAME_, "Translate");
-	pointLight_.decay_ = globalVariables_->GetFloatValue(POINT_LIGHT_NAME_,"Decay");
-	pointLight_.radius_ = 0.0f;
+	pointLight_.position = globalVariables_->GetVector3Value(POINT_LIGHT_NAME_, "Translate");
+	pointLight_.decay = globalVariables_->GetFloatValue(POINT_LIGHT_NAME_,"Decay");
+	pointLight_.radius = 0.0f;
 
 	//タイトルに戻る
 	isChangeNextScene_ = false;
+
+	detailLoseScene_ = std::make_unique<LightUpLoseScene>();
+	detailLoseScene_->Initialize();
+	detailLoseScene_->SetLevelDataHandle(levelDataHandle_);
+
 }
 
 void LoseScene::Update(Elysia::GameManager* gameManager){
+
+	//細かいシーンの更新
+	detailLoseScene_->Update(this);
 
 	//始め
 	//ライトアップをする
 	if (isFinishLightUp_ == false) {
 		
 
-		//ライトアップ終了する
-		if (startLightUpT_ > MAX_T_VALUE_) {
-			//増える間隔
-			const float INTERVAL = 0.025f;
-			//不透明にしていく
-			transparencyT_ += INTERVAL;
-			textTransparency_ = Easing::EaseInQuart(transparencyT_);
-			levelDataManager_->SetTransparency(levelDataHandle_, TO_GAME, textTransparency_);
-			levelDataManager_->SetTransparency(levelDataHandle_, TO_TITLE, textTransparency_);
-
-			//少しだけ待ってから選択できるようにする
-			const float ADD_T_VALUE = 1.0f;
-			if (transparencyT_ >= MAX_T_VALUE_+ ADD_T_VALUE) {
-				displayText_ = true;
-				isFinishLightUp_ = true;
-			}
-
-		}
-		else {
-			//増える間隔
-			const float INTERVAL = 0.008f;
-			startLightUpT_ += INTERVAL;
-			//点光源の半径を設定
-			pointLight_.radius_ = Easing::EaseOutSine(startLightUpT_) * MAX_LIGHT_RADIUS_;
-			//テキストは非表示にする
-			levelDataManager_->SetTransparency(levelDataHandle_, TO_GAME, 0.0f);
-			levelDataManager_->SetTransparency(levelDataHandle_, TO_TITLE, 0.0f);
-			//矢印も非表示にしておく
-			levelDataManager_->SetInvisible(levelDataHandle_, SELECT_ARROW, true);
-
-		}
+		////ライトアップ終了する
+		//if (startLightUpT_ > MAX_T_VALUE_) {
+		//	//増える間隔
+		//	const float_t INTERVAL = 0.025f;
+		//	//不透明にしていく
+		//	transparencyT_ += INTERVAL;
+		//	textTransparency_ = Easing::EaseInQuart(transparencyT_);
+		//	levelDataManager_->SetTransparency(levelDataHandle_, TO_GAME, textTransparency_);
+		//	levelDataManager_->SetTransparency(levelDataHandle_, TO_TITLE, textTransparency_);
+		//
+		//	//少しだけ待ってから選択できるようにする
+		//	const float_t ADD_T_VALUE = 1.0f;
+		//	if (transparencyT_ >= MAX_T_VALUE_+ ADD_T_VALUE) {
+		//		displayText_ = true;
+		//		isFinishLightUp_ = true;
+		//	}
+		//
+		//}
+		//else {
+		//	//増える間隔
+		//	const float_t INTERVAL = 0.008f;
+		//	startLightUpT_ += INTERVAL;
+		//	//点光源の半径を設定
+		//	pointLight_.radius = Easing::EaseOutSine(startLightUpT_) * MAX_LIGHT_RADIUS_;
+		//	//テキストは非表示にする
+		//	levelDataManager_->SetTransparency(levelDataHandle_, TO_GAME, 0.0f);
+		//	levelDataManager_->SetTransparency(levelDataHandle_, TO_TITLE, 0.0f);
+		//	//矢印も非表示にしておく
+		//	levelDataManager_->SetInvisible(levelDataHandle_, SELECT_ARROW, true);
+		//
+		//}
 	}
 	else {
 
-		if (displayText_ == true) {
-			//ゲームかタイトルか選択する
-			if (isChangeNextScene_ == false) {
-				Select();
-			}
-			//次のシーンへ変わる
-			else {
-				ChangeNextScene();
-			}
-			
-
-			//ゲームへ
-			if (pointLight_.radius_ <= 0.0f) {
-				gameManager->ChangeScene("Game");
-				return;
-			}
-			// タイトルへ
-			if (blackOutTime_ > CHANGE_TO_TITLE_TIME_) {
-				gameManager->ChangeScene("Title");
-				return;
-			}
-		}
+		//if (displayText_ == true) {
+		//	//ゲームかタイトルか選択する
+		//	if (isChangeNextScene_ == false) {
+		//		Select();
+		//	}
+		//	//次のシーンへ変わる
+		//	else {
+		//		ChangeNextScene();
+		//	}
+		//	
+		//
+		//	//ゲームへ
+		//	if (pointLight_.radius <= 0.0f) {
+		//		gameManager->ChangeScene("Game");
+		//		return;
+		//	}
+		//	// タイトルへ
+		//	if (blackOutTime_ > CHANGE_TO_TITLE_TIME_) {
+		//		gameManager->ChangeScene("Title");
+		//		return;
+		//	}
+		//}
 		
 	}
 
-	
+	gameManager;
 	//レベルデータの更新
 	levelDataManager_->Update(levelDataHandle_);
 
 	//カメラの更新
-	camera_.translate = VectorCalculation::Add(camera_.translate, cameraVelocity_);
+	camera_.translate = VectorCalculation::Add(camera_.translate, detailLoseScene_->GetCameraVelocity());
 	camera_.Update();
 	//点光源の更新
-	pointLight_.position_ = globalVariables_->GetVector3Value(POINT_LIGHT_NAME_, "Translate");
-	pointLight_.decay_ = globalVariables_->GetFloatValue(POINT_LIGHT_NAME_, "Decay");
+	pointLight_.position = globalVariables_->GetVector3Value(POINT_LIGHT_NAME_, "Translate");
+	pointLight_.decay = globalVariables_->GetFloatValue(POINT_LIGHT_NAME_, "Decay");
+	pointLight_.radius = detailLoseScene_->GetPointLight().radius;
 	pointLight_.Update();
 	//ディゾルブの更新
+	dissolve_.threshold = detailLoseScene_->GetDissolve().threshold;
 	dissolve_.edgeThinkness = globalVariables_->GetFloatValue(DISSOLVE_NAME_, "Thinkness");
 	dissolve_.Update();
 
@@ -201,6 +212,15 @@ void LoseScene::DrawSprite(){
 
 	//フェードイン
 	black_->Draw();
+}
+
+void LoseScene::ChangeDetailScene(std::unique_ptr<BaseLoseScene>detailScene){
+	//違った時だけ遷移する
+	if (detailLoseScene_ != detailScene) {
+		detailLoseScene_ = std::move(detailScene);
+		//次に遷移する
+		detailLoseScene_->Initialize();
+	}
 }
 
 void LoseScene::Select() {
@@ -269,7 +289,7 @@ void LoseScene::Select() {
 
 void LoseScene::ChangeNextScene(){
 
-	//高速点滅どのくらい
+	//終わる時間
 	const uint32_t FINISH_WAIT_TIME = 60u;
 
 	//タイトルへ戻る
@@ -351,12 +371,12 @@ void LoseScene::ChangeNextScene(){
 		//カメラの動きを待つ時間
 		waitForCameraMoveTime_ += INCREASE_VALUE_;
 
-		//指定した時間を超えたらタイトルへ遷移
+		//指定した時間を超えたらゲームへ遷移
 		if (waitForCameraMoveTime_ > FINISH_WAIT_TIME) {
 			//ライトの半径を小さくしていく
 			const float NARROW_VALUE = 0.002f;
 			endLightUpT_ += NARROW_VALUE;
-			pointLight_.radius_ = std::clamp((1.0f - Easing::EaseOutSine(endLightUpT_)),0.0f,1.0f) * MAX_LIGHT_RADIUS_;
+			pointLight_.radius = std::clamp((1.0f - Easing::EaseOutSine(endLightUpT_)),0.0f,1.0f) * MAX_LIGHT_RADIUS_;
 
 			//加速
 			Vector3 cameraAccelation_ = { .x = 0.0f,.y = 0.001f,.z = -0.01f };
@@ -372,9 +392,9 @@ void LoseScene::DisplayImGui(){
 
 	if (ImGui::TreeNode("点光源")) {
 		ImGui::InputFloat("T", &startLightUpT_);
-		ImGui::SliderFloat3("座標", &pointLight_.position_.x, -40.0f, 40.0f);
-		ImGui::SliderFloat("Decay", &pointLight_.decay_, 0.0f, 20.0f);
-		ImGui::SliderFloat("半径", &pointLight_.radius_, 0.0f, 20.0f);
+		ImGui::SliderFloat3("座標", &pointLight_.position.x, -40.0f, 40.0f);
+		ImGui::SliderFloat("Decay", &pointLight_.decay, 0.0f, 20.0f);
+		ImGui::SliderFloat("半径", &pointLight_.radius, 0.0f, 20.0f);
 		ImGui::TreePop();
 		
 	}

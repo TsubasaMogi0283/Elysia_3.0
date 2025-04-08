@@ -191,6 +191,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Elysia\StringOption\StringOption.cpp" />
     <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp" />
     <ClCompile Include="Project\AllGameScene\GameScene\GameScene.cpp" />
+    <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\ContinueGameLoseScene\ContinueGameLoseScene.cpp" />
+    <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\LightUp\LightUpLoseScene.cpp" />
+    <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\ReturnTitleLoseScene\ReturnTitleLoseScene.cpp" />
+    <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\SelectLoseScene\SelectLoseScene.cpp" />
     <ClCompile Include="Project\AllGameScene\LoseScene\LoseScene.cpp" />
     <ClCompile Include="Project\AllGameScene\TestScene\TestScene.cpp" />
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseBackTexture\BaseTitleBackTexture.cpp" />
@@ -505,6 +509,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Elysia\StringOption\StringOption.h" />
     <ClInclude Include="Project\AllGameScene\GameSceneFactory.h" />
     <ClInclude Include="Project\AllGameScene\GameScene\GameScene.h" />
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\BaseLoseScene.h" />
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\ContinueGameLoseScene\ContinueGameLoseScene.h" />
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\LightUp\LightUpLoseScene.h" />
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\ReturnTitleLoseScene\ReturnTitleLoseScene.h" />
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\SelectLoseScene\SelectLoseScene.h" />
     <ClInclude Include="Project\AllGameScene\LoseScene\LoseScene.h" />
     <ClInclude Include="Project\AllGameScene\TestScene\TestScene.h" />
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseBackTexture\BaseTitleBackTexture.h" />

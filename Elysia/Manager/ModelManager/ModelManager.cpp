@@ -321,7 +321,7 @@ uint32_t Elysia::ModelManager::Load(const std::string& directoryPath, const std:
 
 
 	//ハンドルを増やす
-	modelhandle++;
+	++modelhandle;
 
 
 	Animation newAnimation = {};

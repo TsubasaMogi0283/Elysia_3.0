@@ -14,6 +14,7 @@
 #include "BackTexture.h"
 #include "DissolveEffect.h"
 #include "Dissolve.h"
+#include "BaseLoseScene/BaseLoseScene.h"
 
 
 
@@ -105,6 +106,20 @@ public:
 	/// デストラクタ
 	/// </summary>
 	~LoseScene()=default;
+
+public:
+	/// <summary>
+	/// 敗北の細かいシーンの遷移
+	/// </summary>
+	/// <param name=""></param>
+	void ChangeDetailScene(std::unique_ptr<BaseLoseScene> detailScene);
+
+	/// <summary>
+	/// 終わったことを設定する
+	/// </summary>
+	void SetIsEnd() {
+		this->isEnd_ = true;
+	}
 
 private:
 	/// <summary>
@@ -239,6 +254,9 @@ private:
 	//ライトアップが終わったかどうか
 	bool isFinishLightUp_ = false;
 
-
+	//細かいシーン
+	std::unique_ptr<BaseLoseScene> detailLoseScene_ = nullptr;
+	//処理が終わったかどうか
+	bool isEnd_ = false;
 };
 
