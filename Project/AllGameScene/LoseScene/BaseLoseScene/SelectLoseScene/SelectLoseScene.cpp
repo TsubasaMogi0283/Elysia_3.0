@@ -1,6 +1,7 @@
 #include "SelectLoseScene.h"
 
 #include <numbers>
+#include <imgui.h>
 
 #include "Input.h"
 #include "TextureManager.h"
@@ -27,29 +28,29 @@ SelectLoseScene::SelectLoseScene() {
 
 
 void SelectLoseScene::Initialize(){
+	//矢印を表示させる
+	levelDataManager_->SetInvisible(levelDataHandle_, SELECT_ARROW, false);
+	//矢印の初期座標を取得
+	arrowInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, SELECT_ARROW);
+	//「ゲームへ」の座標を取得
+	toGameInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, TO_GAME);
+	//「タイトルへ」の座標を取得
+	toTitleInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, TO_TITLE);
+	//非選択時
+	noSelectedScale = levelDataManager_->GetInitiaScale(levelDataHandle_, TO_TITLE);
+	
 	//点光源の半径を最大に設定
 	pointLight_.radius = MAX_LIGHT_RADIUS_;
 }
 
 void SelectLoseScene::Update(LoseScene* loseScene){
-	//矢印を表示させる
-	levelDataManager_->SetInvisible(levelDataHandle_, SELECT_ARROW, false);
+	
 
 	//矢印の回転
 	arrowRotate_ += ROTATE_VALUE_;
 	levelDataManager_->SetRotate(levelDataHandle_, SELECT_ARROW, { .x = 0.0f,.y = arrowRotate_ ,.z = 0.0f });
 
-	//矢印の初期座標を取得
-	Vector3 arrowInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, SELECT_ARROW);
-	//「ゲームへ」の座標を取得
-	Vector3 toGameInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, TO_GAME);
-	//「タイトルへ」の座標を取得
-	Vector3 toTitleInitialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, TO_TITLE);
-
-	//非選択時
-	Vector3 noSelectedScale = levelDataManager_->GetInitiaScale(levelDataHandle_, TO_TITLE);
-	//選択時の高さ
-	float_t selectedHeight = 1.6f;
+	
 
 	//「ゲームへ」つまり続けるを選択時
 	if (isContinue_==true) {
@@ -119,20 +120,33 @@ void SelectLoseScene::Update(LoseScene* loseScene){
 
 	}
 
-
-
-	
 	//次のシーンへ
 	if (waitForNextSceneTime_ > CHANGE_NEXTSCENE_TIME_) {
 		//カメラが後ろへ
 		if (isContinue_ == true) {
 			loseScene->ChangeDetailScene(std::make_unique<ContinueGameLoseScene>());
+			return;
 		}
 		//ディゾルブ
 		else {
 			loseScene->ChangeDetailScene(std::make_unique<ReturnTitleLoseScene>());
+			return;
 		}
 	}
+
+#ifdef _DEBUG
+	//ImGui表示用
+	DisplayImGui();
+#endif // _DEBUG
+}
+
+void SelectLoseScene::DisplayImGui(){
+
+
+	ImGui::Begin("選択(敗北シーン)");
+	ImGui::InputFloat("矢印の回転", &arrowRotate_);
+
+	ImGui::End();
 
 
 }

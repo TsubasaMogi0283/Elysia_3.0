@@ -34,6 +34,13 @@ public:
 	~SelectLoseScene()override= default;
 
 private:
+	/// <summary>
+	/// ImGui用
+	/// </summary>
+	void DisplayImGui();
+
+
+private:
 	//矢印の回転
 	const float_t ROTATE_VALUE_ = 0.1f;
 	//遷移する時間
@@ -42,7 +49,22 @@ private:
 	const float MOVE_AMOUNT = 0.1f;
 	//高速回転
 	const float FAST_ROTATE_VALUE = 0.5f;
+	//選択時の高さ
+	float_t selectedHeight = 1.6f;
 private:
+
+	//矢印の初期座標を取得
+	Vector3 arrowInitialPosition = {};
+	//「ゲームへ」の座標を取得
+	Vector3 toGameInitialPosition = {};
+	//「タイトルへ」の座標を取得
+	Vector3 toTitleInitialPosition = {};
+
+	//非選択時
+	Vector3 noSelectedScale = {};
+	
+
+
 	//矢印の回転
 	float_t arrowRotate_ = 0.0f;
 	//選択時のスケール
@@ -50,7 +72,7 @@ private:
 
 	//選択中
 	//ゲームを続けるかどうか
-	bool isContinue_ = false;
+	bool isContinue_ = true;
 
 	//次へ
 	bool isChangeNextScene_ = false;

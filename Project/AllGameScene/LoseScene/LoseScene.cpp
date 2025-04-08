@@ -86,9 +86,13 @@ void LoseScene::Initialize(){
 	//タイトルに戻る
 	isChangeNextScene_ = false;
 
+	//細かいシーン
 	detailLoseScene_ = std::make_unique<LightUpLoseScene>();
-	detailLoseScene_->Initialize();
+	//レベルデータハンドルの設定
 	detailLoseScene_->SetLevelDataHandle(levelDataHandle_);
+	//初期化
+	detailLoseScene_->Initialize();
+	
 
 }
 
@@ -219,6 +223,7 @@ void LoseScene::ChangeDetailScene(std::unique_ptr<BaseLoseScene>detailScene){
 	if (detailLoseScene_ != detailScene) {
 		detailLoseScene_ = std::move(detailScene);
 		//次に遷移する
+		detailLoseScene_->SetLevelDataHandle(levelDataHandle_);
 		detailLoseScene_->Initialize();
 	}
 }
