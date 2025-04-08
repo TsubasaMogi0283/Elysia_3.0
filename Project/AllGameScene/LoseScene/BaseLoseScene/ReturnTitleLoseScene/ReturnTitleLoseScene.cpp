@@ -41,10 +41,9 @@ void ReturnTitleLoseScene::Initialize(){
 
 void ReturnTitleLoseScene::Update(LoseScene* loseScene){
 
-	
 	//新しい座標を設定
 	levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = toTitleInitialPosition_.x,.y = arrowInitialPosition_.y ,.z = arrowInitialPosition_.z });
-	//カメラの動きを待つ時間
+	//エフェクトがかかるのを待つ時間
 	changeWaitingTime_ += DELTA_TIME_;
 
 	//指定した時間を超えたらタイトルへ遷移
@@ -56,8 +55,14 @@ void ReturnTitleLoseScene::Update(LoseScene* loseScene){
 		fadeTransparency_ += TRANSPARENCY_INTERVAL_;
 	}
 
-	//完全い不透明になったら終了
+	//完全に不透明になったら場合
 	if (fadeTransparency_ > MAX_T_VALUE_) {
+		waitTime_ += DELTA_TIME_;
+	}
+
+	//指定した時間を超えたら処理終了
+	if (waitTime_ > FINISH_WAIT_TIME_) {
 		loseScene->SetIsEnd();
 	}
+
 }

@@ -131,16 +131,6 @@ public:
 
 private:
 	/// <summary>
-	/// 選択
-	/// </summary>
-	void Select();
-
-	/// <summary>
-	/// 次のシーンへ変わる
-	/// </summary>
-	void ChangeNextScene();
-
-	/// <summary>
 	/// /ImGUiの表示
 	/// </summary>
 	void DisplayImGui();
@@ -205,14 +195,9 @@ private:
 private:
 	//カメラ
 	Camera camera_ = {};
-	//速度
-	Vector3 cameraVelocity_ = {};
 
 	//点光源
 	PointLight pointLight_ = {};
-	//半径の線形補間
-	float startLightUpT_ = 0.0f;
-	float endLightUpT_ = 0.0f;
 
 	//背景(ポストエフェクト)
 	std::unique_ptr<Elysia::BackTexture>backTexture_ = nullptr;
@@ -221,46 +206,7 @@ private:
 	Dissolve dissolve_ = {};
 	//黒背景
 	std::unique_ptr<Elysia::Sprite> black_ = nullptr;
-	//透明度
-	float transparency_ = 0.0f;
 	
-	//暗転している時間
-	uint32_t blackOutTime_ = 0u;
-
-	//タイトル
-	bool isChangeNextScene_ = false;
-	float returnToTitleDissolveThresholdT_ = 0.0f;
-	
-	//選択中
-	//タイトル
-	bool isSelectingTitle_ = false;
-	//ゲーム
-	bool isSelectingGame_ = true;
-	
-	//選択時のスケール
-	float selectedScale_ = 1.5f;
-
-	//テキストの透明度
-	float textTransparency_ = 0.0f;
-	float transparencyT_ = 0.0f;
-	bool displayText_ = false;
-	
-	//矢印の回転
-	float arrowRotate_ = 0.0f;
-	//決定したときの線形補間
-	float arrowDropT_ = 0.0f;
-
-	//決定時の動きに使うθ
-	float decideArrowMoveTheta_ = 0.0f;
-
-	//高速点滅
-	bool isFastFlash_ = false;
-	//時間
-	uint32_t waitForCameraMoveTime_ = 0u;
-
-	
-	//ライトアップが終わったかどうか
-	bool isFinishLightUp_ = false;
 
 	//細かいシーン
 	std::unique_ptr<BaseLoseScene> detailLoseScene_ = nullptr;
