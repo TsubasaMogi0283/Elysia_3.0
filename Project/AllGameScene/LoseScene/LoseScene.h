@@ -39,20 +39,9 @@ namespace Elysia {
 	class GlobalVariables;
 
 	/// <summary>
-	/// テクスチャ管理クラス
-	/// </summary>
-	class TextureManager;
-
-	/// <summary>
 	/// ゲーム管理クラス
 	/// </summary>
 	class GameManager;
-
-
-	/// <summary>
-	/// モデル管理クラス
-	/// </summary>
-	class ModelManager;
 
 
 };
@@ -143,15 +132,10 @@ private:
 private:
 	//入力クラス
 	Elysia::Input* input_ = nullptr;
-	//テクスチャ管理クラス
-	Elysia::TextureManager* textureManager_ = nullptr;
 	//レベルデータ管理クラス
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
-
-	//モデル管理クラス
-	Elysia::ModelManager* modelManager_ = nullptr;
 	//グローバル変数クラス
 	Elysia::GlobalVariables* globalVariables_ = nullptr;
 	
@@ -162,35 +146,6 @@ private:
 	//ディゾルブ
 	const std::string DISSOLVE_NAME_ = "LoseSceneDissolve";
 
-	//時間変化
-	const float DELTA_TIME = 1.0f / 60.0f;
-
-	//間隔
-	const float TRANSPARENCY_INTERVAL_ = 0.01f;
-	//点滅どのくらい
-	const uint32_t FLASH_TIME_LIMIT_ = 30u;
-
-	
-	//高速点滅間隔
-	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
-	//タイトルに変わる時間
-	const uint32_t CHANGE_TO_TITLE_TIME_ = 60 * 1;
-	//増える時間の値
-	const uint32_t INCREASE_VALUE_ = 1u;
-	//線形補間で使う変数の最大値
-	const float MAX_T_VALUE_ = 1.0f;
-	//最大の半径
-	const float MAX_LIGHT_RADIUS_ = 11.8f;
-	//矢印の回転
-	const float ROTATE_VALUE_ = 0.1f;
-
-	//テキストの名前
-	//矢印
-	const std::string SELECT_ARROW = "SelectArrow";
-	//ゲーム
-	const std::string TO_GAME = "ToGame";
-	//タイトル
-	const std::string TO_TITLE = "ToTitle";
 	
 private:
 	//カメラ
@@ -204,9 +159,6 @@ private:
 	//ディゾルブ
 	std::unique_ptr<Elysia::DissolvePostEffect> dissolveEffect_ = nullptr;
 	Dissolve dissolve_ = {};
-	//黒背景
-	std::unique_ptr<Elysia::Sprite> black_ = nullptr;
-	
 
 	//細かいシーン
 	std::unique_ptr<BaseLoseScene> detailLoseScene_ = nullptr;

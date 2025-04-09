@@ -18,28 +18,14 @@ LoseScene::LoseScene(){
 	//インスタンスの取得
 	//入力クラス
 	input_ = Elysia::Input::GetInstance();
-	//テクスチャ管理クラス
-	textureManager_ = Elysia::TextureManager::GetInstance();
 	//レベルデータ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
-	//モデル管理クラス
-	modelManager_ = Elysia::ModelManager::GetInstance();
 	//グローバル変数クラス
 	globalVariables_ = Elysia::GlobalVariables::GetInstance();
 }
 
 void LoseScene::Initialize(){
 
-	//スプライトの初期座標
-	const Vector2 INITIAL_SPRITE_POSITION_ = { .x = 0.0f,.y = 0.0f };
-
-	//黒背景
-	uint32_t blackTextureHandle = textureManager_->Load("Resources/Sprite/Back/Black.png");
-	black_.reset(Elysia::Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION_));
-	//透明度の設定
-	const float_t INITIAL_TRANSPARENCY = 0.0f;
-	black_->SetTransparency(INITIAL_TRANSPARENCY);
-	
 	//負けシーン用のレベルデータを入れる
 	levelDataHandle_ = levelDataManager_->Load("LoseStage/LoseStage.json");
 	
@@ -114,7 +100,6 @@ void LoseScene::Update(Elysia::GameManager* gameManager){
 	}
 
 
-	gameManager;
 	//レベルデータの更新
 	levelDataManager_->Update(levelDataHandle_);
 
@@ -163,8 +148,6 @@ void LoseScene::DrawPostEffect(){
 
 void LoseScene::DrawSprite(){
 
-	//フェードイン
-	black_->Draw();
 }
 
 void LoseScene::ChangeDetailScene(std::unique_ptr<BaseLoseScene>detailScene){

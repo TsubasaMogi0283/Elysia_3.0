@@ -49,9 +49,9 @@ public:
 
 public:
 	//色
-	Vector4 color= { 1.0f,1.0f,1.0f,1.0f };
+	Vector4 color= {.x =1.0f,.y = 1.0f,.z = 1.0f,.w =1.0f };
 	//位置
-	Vector3 position = {0.0f,0.0f,0.0f};
+	Vector3 position = {.x =0.0f,.y = 0.0f,.z = 0.0f};
 	//輝度
 	float_t intensity=4.0f;
 	//ライトに届く最大距離
