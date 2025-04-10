@@ -7,33 +7,15 @@
 #include "Input.h"
 #include "VectorCalculation.h"
 
+#include "BaseWinScene/SelectWinScene/SelectWinScene.h"
+
 WinScene::WinScene(){
 	//インスタンスの取得
-	//入力
-	input_ = Elysia::Input::GetInstance();
 	//レベルデータ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
 
 void WinScene::Initialize() {
-	//スプライトの初期位置
-	const Vector2 INITIAL_SPRITE_POSITION = { .x = 0.0f,.y = 0.0f };
-
-
-	//テキスト(タイトルへのやつ)
-	uint32_t textHandle = Elysia::TextureManager::GetInstance()->Load("Resources/Sprite/Result/Win/WinText.png");
-	text_.reset(Elysia::Sprite::Create(textHandle, INITIAL_SPRITE_POSITION));
-
-	//白背景
-	uint32_t whiteTexturehandle = Elysia::TextureManager::GetInstance()->Load("Resources/Sprite/Back/White.png");
-	//生成
-	whiteFade_.reset(Elysia::Sprite::Create(whiteTexturehandle, INITIAL_SPRITE_POSITION));
-	//透明度の設定
-	transparency_ = 0.0f;
-	whiteFade_->SetTransparency(transparency_);
-	
-	//ブラックアウトの時間を初期化
-	blackOutTime_ = 0;
 
 	//レベルデータの読み込み
 	levelDataHandle_ = levelDataManager_->Load("WinStage/WinStage.json");
@@ -55,107 +37,25 @@ void WinScene::Initialize() {
 	backTexture_->SetClearColour(directionalLight_.color);
 	backTexture_->Initialize();
 
-	//点滅
-	isFlash_ = true;
-
-	//再開
-	restart_ = false;
+	//細かいシーン
+	detailWinScene_ = std::make_unique<SelectWinScene>();
+	//レベルデータハンドルの設定
+	detailWinScene_->SetLevelDataHandle(levelDataHandle_);
+	//初期化
+	detailWinScene_->Initialize();
 
 }
 
 void WinScene::Update(Elysia::GameManager* gameManager){
-
-	//増える時間の値
-	const uint32_t INCREASE_VALUE = 1u;
-	//再スタート時間
-	const uint32_t RESTART_TIME = 0u;
+	//細かいシーンの更新
+	detailWinScene_->Update(this);
 
 
-
-	//通常の点滅
-	flashTime_ += INCREASE_VALUE;
-	//表示
-	if (flashTime_ > FLASH_TIME_LIMIT_ * 0 &&
-		flashTime_ <= FLASH_TIME_LIMIT_) {
-		text_->SetInvisible(false);
-	}
-	//非表示
-	if (flashTime_ > FLASH_TIME_LIMIT_ &&
-		flashTime_ <= FLASH_TIME_LIMIT_ * 2) {
-		text_->SetInvisible(true);
-
-	}
-	//循環
-	if (flashTime_ > FLASH_TIME_LIMIT_ * 2) {
-		flashTime_ = RESTART_TIME;
-	}
-
-
-
-	//カウントが増える時間
-	const uint32_t INCREASE_COUNT_TIME = 0u;
-	//点滅の間隔
-	const uint32_t FLASH_INTERVAL = 2u;
-	//表示
-	const uint32_t DISPLAY = 0u;
-
-	//次のシーンへ
-	//Bボタンを押したとき
-	if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
-		restart_ = true;
-	}
-	//スペースを押したとき
-	if (input_->IsTriggerKey(DIK_SPACE) == true) {
-		restart_ = true;
-	}
-
-	//再スタート
-	if (restart_ == true) {
-
-		//時間を足していく
-		fastFlashTime_ += INCREASE_VALUE;
-		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
-			++textDisplayCount_;
-		}
-		//表示
-		if (textDisplayCount_ % FLASH_INTERVAL == DISPLAY) {
-			text_->SetInvisible(true);
-		}
-		//非表示
-		else {
-			text_->SetInvisible(false);
-		}
-
-
-		//指定した時間を超えたらタイトルへ遷移
-		if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
-			text_->SetInvisible(true);
-			//透明度の設定
-			whiteFade_->SetTransparency(transparency_);
-
-			//加速
-			cameraAcceleration_.z = 0.05f;
-			cameraVelocity_ = VectorCalculation::Add(cameraVelocity_, cameraAcceleration_);
-
-
-			//暗くなったらシーンチェンジ
-			transparency_ += TRANSPARENCY_INTERVAL;
-		}
-
-		//指定した時間まで時間が足される
-		if (transparency_ > COMPLETELY_NO_TRANSPARENT_) {
-			
-			blackOutTime_ += INCREASE_VALUE;
-		}
-	}
-
-	//タイトルシーンへ
-	if (blackOutTime_ > CHANGE_TO_TITLE_TIME_) {
+	//処理が終わったらタイトルへ
+	if (isEnd_ == true) {
 		gameManager->ChangeScene("Title");
 		return;
 	}
-
-	
 
 	//マテリアルの更新
 	material_.Update();
@@ -166,36 +66,22 @@ void WinScene::Update(Elysia::GameManager* gameManager){
 	camera_.translate = VectorCalculation::Add(camera_.translate, cameraVelocity_);
 	camera_.Update();
 
-#ifdef _DEBUG
-	ImGui::Begin("カメラ"); 
-	ImGui::SliderFloat3("座標", &camera_.translate.x, -30.0f, 30.0f);
-	ImGui::End();
-#endif // _DEBUG
 
+	//脱出成功のオブジェクトの浮遊感を出すためにsinを使う
+	objectFloatingTheta_ += FLOATING_THETA_;
 
-
-	//脱出成功のオブジェクトの浮遊感を出すために
-	//sinを使う
-	const float FLLOATING_THETA_INTERVAL = 0.05f;
-	objectFloatingTheta_ += FLLOATING_THETA_INTERVAL;
-	//テキスト
-	const std::string ESCAPE_SUCCEEDED_TEXT = "EscapeSucceededObject";
 	//基準となる座標
-	const float BASED_POSITION_Y = 6.0f;
-	levelDataManager_->SetTranslate(levelDataHandle_, ESCAPE_SUCCEEDED_TEXT, {.x=0.0f,.y=std::sinf(objectFloatingTheta_) +BASED_POSITION_Y,.z=30.0f });
-
+	Vector3 newPosition = { .x = 0.0f,.y = std::sinf(objectFloatingTheta_) + BASED_POSITION_Y_,.z = 30.0f };
+	levelDataManager_->SetTranslate(levelDataHandle_, ESCAPE_SUCCEEDED_TEXT, newPosition);
 
 	//レベルデータの更新
 	levelDataManager_->Update(levelDataHandle_);
-
 
 }
 
 void WinScene::PreDrawPostEffect(){
 	backTexture_->PreDraw();
 }
-
-
 
 void WinScene::DrawObject3D(){
 	levelDataManager_->Draw(levelDataHandle_, camera_, directionalLight_);
@@ -206,14 +92,16 @@ void WinScene::DrawPostEffect(){
 }
 
 void WinScene::DrawSprite(){
-	//テキスト
-	text_->Draw();
-	//フェードイン
-	whiteFade_->Draw();
-
-
+	//細かいシーンの描画
+	detailWinScene_->DrawSprite();
 }
 
-WinScene::~WinScene(){
-
+void WinScene::ChangeDetailScene(std::unique_ptr<BaseWinScene> detailScene){
+	//違った時だけ遷移する
+	if (detailWinScene_ != detailScene) {
+		detailWinScene_ = std::move(detailScene);
+		//次に遷移する
+		detailWinScene_->SetLevelDataHandle(levelDataHandle_);
+		detailWinScene_->Initialize();
+	}
 }

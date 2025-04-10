@@ -14,7 +14,7 @@
 #include "DirectionalLight.h"
 #include "BackTexture.h"
 
-
+#include "BaseWinScene/BaseWinScene.h"
 
 
 /// <summary>
@@ -61,7 +61,7 @@ public:
 	/// <summary>
 	/// 更新
 	/// </summary>
-	/// <param name="gameManager"></param>
+	/// <param name="gameManager">ゲーム管理クラス</param>
 	void Update(Elysia::GameManager* gameManager)override;
 
 	/// <summary>
@@ -87,88 +87,65 @@ public:
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~WinScene();
+	~WinScene()override=default;
 
+public:
+	/// <summary>
+	/// 敗北の細かいシーンの遷移
+	/// </summary>
+	/// <param name="">細かいシーン</param>
+	void ChangeDetailScene(std::unique_ptr<BaseWinScene> detailScene);
+
+	/// <summary>
+	/// カメラの速度を設定
+	/// </summary>
+	/// <param name="cameraVelocity">速度分</param>
+	inline void SetCameraVelocity(const Vector3& cameraVelocity) {
+		this->cameraVelocity_ = cameraVelocity;
+	}
+
+	/// <summary>
+	/// 終わったことを設定する
+	/// </summary>
+	inline void SetIsEnd() {
+		this->isEnd_ = true;
+	}
 
 private:
-	//入力
-	Elysia::Input* input_ = nullptr;
 	//レベルデータ管理クラス
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
 
 private:
+
+	//テキスト
+	const std::string ESCAPE_SUCCEEDED_TEXT = "EscapeSucceededObject";
+	//浮遊用のθ
+	const float_t FLOATING_THETA_ = 0.05f;
+	//Y座標
+	const float_t BASED_POSITION_Y_ = 6.0f;
+private:
 	//カメラ
 	Camera camera_ = {};
 	//速度
 	Vector3 cameraVelocity_ = {};
-	//加速
-	Vector3 cameraAcceleration_ = {};
 
 	//マテリアル
 	Material material_ = {};
 	//平行光源
 	DirectionalLight directionalLight_ = {};
 
-
 	//ポストエフェクト
 	std::unique_ptr<Elysia::BackTexture> backTexture_ = nullptr;
 
 	//オブジェクトの浮遊感を出す
-	float objectFloatingTheta_ = 0.0f;
+	float_t objectFloatingTheta_ = 0.0f;
 
 
-
-	//タイトルへのスプライト
-	std::unique_ptr<Elysia::Sprite> text_ = nullptr;
-	//背景のスプライト
-	std::unique_ptr<Elysia::Sprite> whiteFade_ = nullptr;
-	//見せるカウント
-	uint32_t textDisplayCount_ = 0u;
-
-	//透明度
-	float transparency_ = 0.0f;
-	
-
-	//暗転している時間
-	uint32_t blackOutTime_ = 0u;
-
-	//再開
-	bool restart_ = false;
-
-	
-
-	//点滅
-	bool isFlash_ = false;
-	//時間
-	uint32_t flashTime_ = 0u;
-	
-
-	//高速点滅
-	bool isFastFlash_ = false;
-	//時間
-	uint32_t fastFlashTime_ = 0u;
-
-
-	
-	
-
-
-private:
-	//透明変化の間隔
-	const float TRANSPARENCY_INTERVAL = 0.01f;
-	//完全に「不透明」になる値
-	const float COMPLETELY_NO_TRANSPARENT_ = 1.0f;
-	//タイトルシーンに変わる時間
-	const uint32_t CHANGE_TO_TITLE_TIME_ = 60 * 2;
-
-	//この時間になるまで点滅
-	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60u;
-	//高速点滅の間隔
-	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
-	//この時間になるまで高速点滅
-	const uint32_t FLASH_TIME_LIMIT_ = 30u;
-	
+	//細かいシーン
+	std::unique_ptr<BaseWinScene> detailWinScene_ = nullptr;
+	//処理が終わったかどうか
+	bool isEnd_ = false;
 };
 

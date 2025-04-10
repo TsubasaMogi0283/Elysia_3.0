@@ -478,21 +478,6 @@
     <Filter Include="Project\Camera\PlayerCamera">
       <UniqueIdentifier>{0b17b273-3d95-46aa-aa3c-d0edf62c4afe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Scene\Title\BaseTitleScene">
-      <UniqueIdentifier>{e419a687-4086-4eb6-a434-5d06750d528f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Scene\Title\BaseTitleScene\Start">
-      <UniqueIdentifier>{73a7a1c6-6c0c-4131-925d-df0a71f14510}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Scene\Title\BaseTitleScene\ToGame">
-      <UniqueIdentifier>{9edbc5b5-b3db-4551-8ce6-76c91d2022da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Scene\Title\BaseTitleScene\Noise">
-      <UniqueIdentifier>{9fdf8008-47cd-4bf0-b015-e72f6f858ffc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Scene\Title\BaseTitleScene\Waiting">
-      <UniqueIdentifier>{4175d225-11c5-451f-8198-772c4d62c5bd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Elysia\Header File\DirectX">
       <UniqueIdentifier>{ff6a0e7a-52cd-4ffb-832a-5f500d9ce071}</UniqueIdentifier>
     </Filter>
@@ -519,6 +504,15 @@
     </Filter>
     <Filter Include="Project\Scene\Lose\Base\ReturnTitle">
       <UniqueIdentifier>{cb91cacc-6572-421d-a9c4-5a4d8f243f6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Win\BaseWinScene">
+      <UniqueIdentifier>{5593b3c1-aabc-477a-9ee3-8ea32182ff2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Win\BaseWinScene\SelectWinScene">
+      <UniqueIdentifier>{70e9de86-8286-40f8-822c-e8d3b924ce65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Win\BaseWinScene\ReturnTitle">
+      <UniqueIdentifier>{5ca6554b-7d23-49cc-89a2-44fc4263d9b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -816,18 +810,6 @@
     <ClCompile Include="Project\AllGameScene\TitleScene\BaseBackTexture\Sunset\SunsetBackTexture.cpp">
       <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
     </ClCompile>
-    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Waiting\WaitingTitleScene.cpp">
-      <Filter>Project\Scene\Title\BaseTitleScene\Waiting</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Start\StartTitleScene.cpp">
-      <Filter>Project\Scene\Title\BaseTitleScene\Start</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\BaseTitleScene.cpp">
-      <Filter>Project\Scene\Title\BaseTitleScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Noise\NoiseTitleScene.cpp">
-      <Filter>Project\Scene\Title\BaseTitleScene\Noise</Filter>
-    </ClCompile>
     <ClCompile Include="Elysia\Common\DirectX\DirectXSetup.cpp">
       <Filter>Elysia\Source File\DirectX</Filter>
     </ClCompile>
@@ -842,6 +824,12 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\ReturnTitleLoseScene\ReturnTitleLoseScene.cpp">
       <Filter>Project\Scene\Lose\Base\ReturnTitle</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\WinScene\BaseWinScene\SelectWinScene\SelectWinScene.cpp">
+      <Filter>Project\Scene\Win\BaseWinScene\SelectWinScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\WinScene\BaseWinScene\ReturnTitleWinScene\ReturnTitleWinScene.cpp">
+      <Filter>Project\Scene\Win\BaseWinScene\ReturnTitle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1360,12 +1348,6 @@
     <ClInclude Include="Project\Player\Camera\PlayerCamera.h">
       <Filter>Project\Camera\PlayerCamera</Filter>
     </ClInclude>
-    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\BaseTitleScene.h">
-      <Filter>Project\Scene\Title\BaseTitleScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Waiting\WaitingTitleScene.h">
-      <Filter>Project\Scene\Title\BaseTitleScene\Waiting</Filter>
-    </ClInclude>
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseBackTexture\BaseTitleBackTexture.h">
       <Filter>Project\Scene\Title\BackTexture\Base</Filter>
     </ClInclude>
@@ -1374,12 +1356,6 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\TitleScene\BaseBackTexture\Sunset\SunsetBackTexture.h">
       <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Start\StartTitleScene.h">
-      <Filter>Project\Scene\Title\BaseTitleScene\Start</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Noise\NoiseTitleScene.h">
-      <Filter>Project\Scene\Title\BaseTitleScene\Noise</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\Common\DirectX\DirectXSetup.h">
       <Filter>Elysia\Header File\DirectX</Filter>
@@ -1398,6 +1374,15 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\ReturnTitleLoseScene\ReturnTitleLoseScene.h">
       <Filter>Project\Scene\Lose\Base\ReturnTitle</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\WinScene\BaseWinScene\BaseWinScene.h">
+      <Filter>Project\Scene\Win\BaseWinScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\WinScene\BaseWinScene\SelectWinScene\SelectWinScene.h">
+      <Filter>Project\Scene\Win\BaseWinScene\SelectWinScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\WinScene\BaseWinScene\ReturnTitleWinScene\ReturnTitleWinScene.h">
+      <Filter>Project\Scene\Win\BaseWinScene\ReturnTitle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
