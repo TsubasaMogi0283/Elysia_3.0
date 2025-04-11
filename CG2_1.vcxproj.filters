@@ -514,6 +514,18 @@
     <Filter Include="Project\Scene\Win\BaseWinScene\ReturnTitle">
       <UniqueIdentifier>{5ca6554b-7d23-49cc-89a2-44fc4263d9b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Scene\Title\BaseTitleScene">
+      <UniqueIdentifier>{d6d0251b-28e0-44e7-90f0-20d7a6e65870}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\BaseTitleScene\Start">
+      <UniqueIdentifier>{ff0840a8-919c-43cc-9c8c-0c96c55c75ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\BaseTitleScene\Waiting">
+      <UniqueIdentifier>{b6f61bc0-90f2-457c-91df-45fe3bdf4f44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\BaseTitleScene\Noise">
+      <UniqueIdentifier>{bb4f6485-f015-4d80-97c6-0c3947bc8baf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -830,6 +842,15 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\WinScene\BaseWinScene\ReturnTitleWinScene\ReturnTitleWinScene.cpp">
       <Filter>Project\Scene\Win\BaseWinScene\ReturnTitle</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Start\StartTitleScene.cpp">
+      <Filter>Project\Scene\Title\BaseTitleScene\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Waiting\WaitingTitleScene.cpp">
+      <Filter>Project\Scene\Title\BaseTitleScene\Waiting</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Noise\NoiseTitleScene.cpp">
+      <Filter>Project\Scene\Title\BaseTitleScene\Noise</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1383,6 +1404,18 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\WinScene\BaseWinScene\ReturnTitleWinScene\ReturnTitleWinScene.h">
       <Filter>Project\Scene\Win\BaseWinScene\ReturnTitle</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\BaseTitleScene.h">
+      <Filter>Project\Scene\Title\BaseTitleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Start\StartTitleScene.h">
+      <Filter>Project\Scene\Title\BaseTitleScene\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Waiting\WaitingTitleScene.h">
+      <Filter>Project\Scene\Title\BaseTitleScene\Waiting</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Noise\NoiseTitleScene.h">
+      <Filter>Project\Scene\Title\BaseTitleScene\Noise</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,94 @@
+#pragma once
+
+
+/**
+ * @file StartTitleScene.h
+ * @brief ノイズのクラス
+ * @author 茂木翼
+ */
+
+#include <array>
+
+#include "Sprite.h"
+
+#include "TitleScene/BaseTitleScene/BaseTitleScene.h"
+
+
+/// <summary>
+/// ノイズ
+/// </summary>
+class NoiseTitleScene : public BaseTitleScene {
+public:
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	NoiseTitleScene();
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize()override;
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="titleScene">タイトルシーン(メイン)</param>
+	void Update(TitleScene* titleScene);
+
+	/// <summary>
+	/// 3Dオブジェクト
+	/// </summary>
+	void DrawObject3D();
+
+	/// <summary>
+	/// ポストエフェクト描画処理前
+	/// </summary>
+	void PreDrawPostEffect();
+
+	/// <summary>
+	/// ポストエフェクト描画
+	/// </summary>
+	void DrawPostEffect();
+
+
+	/// <summary>
+	/// スプライト
+	/// </summary>
+	void DrawSprite();
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~NoiseTitleScene()override=default;
+
+
+private:
+	/// <summary>
+	/// ImGui表示用
+	/// </summary>
+	void DisplayImGui()override;
+
+
+
+private:	
+	//ランダムエフェクトの表示時間の数
+	static const uint32_t DISPLAY_LENGTH_QUANTITY_ = 2u;
+
+	//開始時間
+	const std::array<float_t, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_START_TIME = { 0.0f,2.5f };
+	//表示の長さ
+	const std::array<float_t, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_LENGTH = { 1.0f,3.0f };
+
+	//1回目のエフェクト
+	const uint32_t FIRST_EFFECT = 0u;
+	//2回目のエフェクト
+	const uint32_t SECOND_EFFECT = 1u;
+
+private:
+	//ロゴ
+	std::unique_ptr<Elysia::Sprite> logoSprite_ = nullptr;
+	//ランダムエフェクトの時間
+	float_t randomEffectTime_ = 0.0f;
+
+};

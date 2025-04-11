@@ -31,10 +31,10 @@ void ReturnTitleWinScene::Initialize(){
 	//白背景
 	uint32_t whiteTexturehandle = Elysia::TextureManager::GetInstance()->Load("Resources/Sprite/Back/White.png");
 	//生成
-	whiteFade_.reset(Elysia::Sprite::Create(whiteTexturehandle, INITIAL_SPRITE_POSITION_));
+	whiteFadeSprite_.reset(Elysia::Sprite::Create(whiteTexturehandle, INITIAL_SPRITE_POSITION_));
 	//透明度の設定
 	transparency_ = 0.0f;
-	whiteFade_->SetTransparency(transparency_);
+	whiteFadeSprite_->SetTransparency(transparency_);
 }
 
 void ReturnTitleWinScene::Update(WinScene* winScene){
@@ -46,7 +46,7 @@ void ReturnTitleWinScene::Update(WinScene* winScene){
 
 	//透明度の設定。どんどん白くなっていく
 	transparency_ += INCREASE_TRANSPARENCY_VALUE_;
-	whiteFade_->SetTransparency(transparency_);
+	whiteFadeSprite_->SetTransparency(transparency_);
 
 	//動く時間を加算
 	moveTime_ += DELTA_TIME_;
@@ -67,7 +67,7 @@ void ReturnTitleWinScene::Update(WinScene* winScene){
 
 void ReturnTitleWinScene::DrawSprite(){
 	//白フェードの設定
-	whiteFade_->Draw();
+	whiteFadeSprite_->Draw();
 
 }
 

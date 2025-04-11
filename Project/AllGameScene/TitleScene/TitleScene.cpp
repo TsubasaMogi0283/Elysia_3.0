@@ -5,8 +5,6 @@
 
 #include "Input.h"
 #include "GameManager.h"
-#include "ModelManager.h"
-#include "AnimationManager.h"
 #include "TextureManager.h"
 #include "LevelDataManager.h"
 #include "VectorCalculation.h"
@@ -17,6 +15,8 @@
 #include "BaseBackTexture/Sunset/SunsetBackTexture.h"
 #include "BaseBackTexture/Night/NightBackTexture.h"
 
+
+#include "BaseTitleScene/Waiting/WaitingTitleScene.h"
 
 TitleScene::TitleScene() {
 	//インスタンスの取得
@@ -60,8 +60,6 @@ void TitleScene::Initialize() {
 	isFlash_ = true;
 	isFastFlash_ = false;
 
-	//スポットライトの初期化
-	spotLight.Initialize();
 	//平行光源
 	directionalLight_.Initialize();
 	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
@@ -88,159 +86,22 @@ void TitleScene::Initialize() {
 	//初期化
 	randomEffect_->Initialize();
 
+
+	//細かいシーン
+	detailTitleScene_ = std::make_unique<WaitingTitleScene>();
+	//レベルデータハンドルの設定
+	detailTitleScene_->SetLevelDataHandle(levelHandle_);
+	//初期化
+	detailTitleScene_->Initialize();
+
+
 }
 
 void TitleScene::Update(Elysia::GameManager* gameManager) {
+	//細かいシーンの更新
+	detailTitleScene_->Update(this);
 
-#pragma region 未スタート
-
-	//まだボタンを押していない時
-	//通常点滅
-	if (isFlash_ == true) {
-		//再スタート時間
-		const uint32_t RESTART_TIME = 0u;
-
-		//時間の加算
-		flashTime_ += INCREASE_VALUE;
-
-		//表示
-		if (flashTime_ > FLASH_TIME_LIMIT_ * 0 &&
-			flashTime_ <= FLASH_TIME_LIMIT_) {
-			text_->SetInvisible(false);
-		}
-		//非表示
-		if (flashTime_ > FLASH_TIME_LIMIT_ &&
-			flashTime_ <= FLASH_TIME_LIMIT_ * 2) {
-			text_->SetInvisible(true);
-
-		}
-		if (flashTime_ > FLASH_TIME_LIMIT_ * 2) {
-			flashTime_ = RESTART_TIME;
-		}
-
-	}
-
-
-
-	//Bボタンを押したら高速点滅
-	if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
-		isFastFlash_ = true;
-	}
-	//スペースを押したら高速点滅
-	if (input_->IsPushKey(DIK_SPACE) == true) {
-		//高速点滅
-		isFastFlash_ = true;
-	}
-
-
-	//高速点滅
-	if (isFastFlash_ == true && isStart_ == false) {
-		//カウントが増える時間
-		const uint32_t INCREASE_COUNT_TIME = 0u;
-
-		//時間の加算
-		fastFlashTime_ += INCREASE_VALUE;
-		if (fastFlashTime_ % FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME) {
-			++textDisplayCount_;
-		}
-
-		//表示
-		const uint32_t DISPLAY_MOMENT = 0u;
-
-		//点滅の間隔
-		const uint32_t FLASH_INTERVAL = 2u;
-
-		if (textDisplayCount_ % FLASH_INTERVAL == DISPLAY_MOMENT) {
-			text_->SetInvisible(true);
-		}
-		//非表示
-		else {
-			text_->SetInvisible(false);
-		}
-
-
-		//指定した時間を超えたらシーンチェンジ
-		if (fastFlashTime_ > FAST_FLASH_TIME_LIMIT_) {
-			isStart_ = true;
-		}
-	}
-
-#pragma endregion
-
-#pragma region スタート演出
-
-	//シーン遷移演出
-	if (isStart_ == true) {
-
-		//スタートのテキストを非表示にさせる
-		logo->SetInvisible(false);
-		text_->SetInvisible(true);
-
-		//時間の加算
-		const float DELTA_TIME = 1.0f / 60.0f;
-		randomEffectTime_ += DELTA_TIME;
-
-		//開始時間
-		std::array<float, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_START_TIME = { 0.0f,2.5f };
-		//表示の長さ
-		std::array<float, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_LENGTH = { 1.0f,3.0f };
-
-
-
-		//通常はfalse
-		//指定時間内に入ったらtrue
-		isDisplayRandomEffect_ = false;
-		for (uint32_t i = 0; i < DISPLAY_LENGTH_QUANTITY_; ++i) {
-			if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[i] &&
-				randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME[i] + RANDOM_EFFECT_DISPLAY_LENGTH[i]) {
-				//ランダムエフェクトの表示
-				isDisplayRandomEffect_ = true;
-				logo->SetInvisible(true);
-				break;
-			}
-
-			//2回目のエフェクト
-			const uint32_t FIRST_EFFECT = 0u;
-			//2回目のエフェクト
-			const uint32_t SECOND_EFFECT = 1u;
-
-			if (i == FIRST_EFFECT) {
-				//夜へ遷移
-				ChangeBackTexture(std::move(std::make_unique<NightBackTexture>()));
-				//タイトルロゴの変化
-				logoTextureHandle_ = changedLogoTextureHandle_;
-				//光の強さと色を変え夜っぽくする
-				directionalLight_.intensity = 0.05f;
-				directionalLight_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
-
-			}
-			else if (i == SECOND_EFFECT) {
-				//ランダムの終了
-				if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[SECOND_EFFECT] + RANDOM_EFFECT_DISPLAY_LENGTH[SECOND_EFFECT]) {
-					isEndDisplayRandomEffect_ = true;
-				}
-			}
-
-
-		}
-
-
-		//ランダムエフェクト表示の演出が終わった場合
-		if (isEndDisplayRandomEffect_ == true) {
-			logo->SetInvisible(true);
-			const float FADE_INCREASE_VALUE = 0.01f;
-			blackFadeTransparency_ += FADE_INCREASE_VALUE;
-
-		}
-
-		//時間も兼ねている
-		if (blackFadeTransparency_ > 2.0f) {
-			gameManager->ChangeScene("Game");
-			return;
-		}
-
-	}
-#pragma endregion
+	gameManager;
 
 	//黒フェードの透明度の変更
 	blackFade_->SetTransparency(blackFadeTransparency_);
@@ -248,9 +109,9 @@ void TitleScene::Update(Elysia::GameManager* gameManager) {
 	//更新
 	levelDataManager_->Update(levelHandle_);
 
-	//スポットライトの更新
-	spotLight.Update();
 	//平行光源
+	directionalLight_.color = detailTitleScene_->SetDirectionalLight().color;
+	directionalLight_.direction = detailTitleScene_->SetDirectionalLight().direction;
 	directionalLight_.Update();
 
 	//レールカメラの更新
@@ -304,14 +165,8 @@ void TitleScene::DrawPostEffect() {
 }
 
 void TitleScene::DrawSprite() {
-	//背景
-	logo->Draw(logoTextureHandle_);
-
-	//テキスト
-	text_->Draw();
-
-	//黒フェード
-	blackFade_->Draw();
+	//細かいシーンの描画
+	detailTitleScene_->DrawSprite();
 
 }
 
@@ -328,11 +183,24 @@ void TitleScene::DisplayImGui() {
 
 }
 
+
 void TitleScene::ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture> backTexture) {
 	//違った時だけ遷移する
 	if (baseTitleBackTexture_ != backTexture) {
 		baseTitleBackTexture_ = std::move(backTexture);
-		//引数が次に遷移する
+		//次に遷移する
 		baseTitleBackTexture_->Initialize();
 	}
 }
+
+void TitleScene::ChangeDetailScene(std::unique_ptr<BaseTitleScene> detailTitleScene){
+	//違った時だけ遷移する
+	if (detailTitleScene_ != detailTitleScene) {
+		detailTitleScene_ = std::move(detailTitleScene);
+		//レベルデータハンドルの設定
+		detailTitleScene_->SetLevelDataHandle(levelHandle_);
+		//次に遷移する
+		detailTitleScene_->Initialize();
+	}
+}
+

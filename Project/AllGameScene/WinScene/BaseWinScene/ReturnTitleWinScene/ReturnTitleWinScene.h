@@ -55,7 +55,7 @@ private:
 
 private:
 	//背景のスプライト
-	std::unique_ptr<Elysia::Sprite> whiteFade_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> whiteFadeSprite_ = nullptr;
 	//透明度
 	float_t transparency_ = 0.0f;
 

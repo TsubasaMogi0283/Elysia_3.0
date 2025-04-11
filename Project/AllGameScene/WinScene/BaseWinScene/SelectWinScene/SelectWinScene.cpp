@@ -30,7 +30,7 @@ void SelectWinScene::Initialize(){
 
 	//テキスト(タイトルへのやつ)
 	uint32_t textHandle = textureManager_->Load("Resources/Sprite/Result/Win/WinText.png");
-	text_.reset(Elysia::Sprite::Create(textHandle, INITIAL_SPRITE_POSITION_));
+	textSprite_.reset(Elysia::Sprite::Create(textHandle, INITIAL_SPRITE_POSITION_));
 
 }
 
@@ -45,12 +45,12 @@ void SelectWinScene::Update(WinScene* winScene){
 		//表示
 		if (flashTime_ > RESTART_TIME_ &&
 			flashTime_ <= FLASH_TIME_LIMIT_) {
-			text_->SetInvisible(false);
+			textSprite_->SetInvisible(false);
 		}
 		//非表示
 		else if (flashTime_ > FLASH_TIME_LIMIT_ &&
 			flashTime_ <= FLASH_END_TIME_) {
-			text_->SetInvisible(true);
+			textSprite_->SetInvisible(true);
 
 		}
 		//循環
@@ -74,11 +74,11 @@ void SelectWinScene::Update(WinScene* winScene){
 		}
 		//表示
 		if (textDisplayCount_ % FLASH_INTERVAL_ == DISPLAY_) {
-			text_->SetInvisible(true);
+			textSprite_->SetInvisible(true);
 		}
 		//非表示
 		else {
-			text_->SetInvisible(false);
+			textSprite_->SetInvisible(false);
 		}
 
 		//指定した時間を超えたら戻る演出へ
@@ -98,7 +98,7 @@ void SelectWinScene::Update(WinScene* winScene){
 
 void SelectWinScene::DrawSprite(){
 	//テキストの描画
-	text_->Draw();
+	textSprite_->Draw();
 }
 
 void SelectWinScene::DisplayImGui(){

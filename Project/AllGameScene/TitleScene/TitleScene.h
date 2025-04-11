@@ -18,6 +18,7 @@
 #include "RailCamera/TitleRailCamera.h"
 #include "RandomEffect.h"
 #include "BaseBackTexture/BaseTitleBackTexture.h"
+#include "BaseTitleScene/BaseTitleScene.h"
 
 #pragma region 前方宣言
 
@@ -102,12 +103,14 @@ public:
 	~TitleScene() = default;
 
 
-
 private:
 	/// <summary>
 	/// ImGui用関数
 	/// </summary>
 	void DisplayImGui();
+
+
+public:
 
 	/// <summary>
 	/// 背景テクスチャの遷移
@@ -115,6 +118,26 @@ private:
 	/// <param name="backTexture">背景テクスチャ(ポストエフェクト)</param>
 	void ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture>);
 
+
+	/// <summary>
+	/// 細かいシーンの遷移
+	/// </summary>
+	/// <param name="detailTitleScene"></param>
+	void ChangeDetailScene(std::unique_ptr<BaseTitleScene>detailTitleScene);
+
+
+	
+	/// <summary>
+	/// ランダムノイズを見せるかどうか
+	/// </summary>
+	/// <param name="isDisplay">見せるかどうか</param>
+	inline void SetIsDisplayRandomEffect(const bool& isDisplay) {
+		this->isDisplayRandomEffect_= isDisplay;
+	}
+
+
+
+	
 private:
 	//テクスチャ管理クラス
 	Elysia::TextureManager* textureManager_ = nullptr;
@@ -128,13 +151,12 @@ private:
 private:
 	//時間の変化
 	const float DELTA_ANIMATION_TIME_ = 1.0f / 60.0f;
-
 	//ランダムエフェクトの表示時間
 	static const uint32_t DISPLAY_LENGTH_QUANTITY_ = 2u;
-
 	//増える時間の値
 	const uint32_t INCREASE_VALUE = 1u;
 
+	
 private:
 
 	//カメラ
@@ -146,8 +168,6 @@ private:
 
 	//平行光源
 	DirectionalLight directionalLight_ = {};
-	//スポットライト
-	SpotLight spotLight = {};
 
 
 	//黒フェード
@@ -166,6 +186,10 @@ private:
 	uint32_t changedLogoTextureHandle_ = 0u;
 
 
+	//細かいシーン
+	std::unique_ptr<BaseTitleScene>detailTitleScene_ = nullptr;
+
+
 #pragma region ポストエフェクト
 
 	//背景(ポストエフェクト)
@@ -175,6 +199,7 @@ private:
 	//ランダムノイズ
 	std::unique_ptr<Elysia::RandomEffect> randomEffect_ = nullptr;
 	float randomEffectTime_ = 0u;
+	//見せるかどうか
 	bool isDisplayRandomEffect_ = false;
 	bool isEndDisplayRandomEffect_ = false;
 

@@ -1,0 +1,102 @@
+#include "NoiseTitleScene.h"
+
+#include "Input.h"
+#include "TextureManager.h"
+#include "LevelDataManager.h"
+
+#include "TitleScene/TitleScene.h"
+#include "TitleScene/BaseBackTexture/Night/NightBackTexture.h"
+
+NoiseTitleScene::NoiseTitleScene(){
+	//インスタンスの取得
+	//テクスチャ管理クラス
+	textureManager_ = Elysia::TextureManager::GetInstance();
+	//入力クラス
+	input_ = Elysia::Input::GetInstance();
+	//レベルエディタ管理クラス
+	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
+}
+
+void NoiseTitleScene::Initialize(){
+	//ロゴの読み込み
+	uint32_t logoTextureHandle = textureManager_->Load("Resources/Sprite/Title/TitleChanged.png");
+
+	//ロゴスプライトのの生成
+	logoSprite_.reset(Elysia::Sprite::Create(logoTextureHandle, SPRITE_INITIAL_POSITION_));
+
+	//平行光源の初期化
+	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
+	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
+
+
+
+}
+
+void NoiseTitleScene::Update(TitleScene* titleScene){
+
+	//時間の加算
+	randomEffectTime_ += DELTA_TIME;
+
+	
+	//通常はfalse
+	//指定時間内に入ったらtrue
+	titleScene->SetIsDisplayRandomEffect(false);
+	logoSprite_->SetInvisible(false);
+	for (uint32_t i = 0u; i < DISPLAY_LENGTH_QUANTITY_; ++i) {
+		if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[i] &&
+			randomEffectTime_ <= RANDOM_EFFECT_DISPLAY_START_TIME[i] + RANDOM_EFFECT_DISPLAY_LENGTH[i]) {
+			//ランダムエフェクトの表示
+			titleScene->SetIsDisplayRandomEffect(true);
+			//一旦非表示
+			logoSprite_->SetInvisible(true);
+			break;
+		}
+
+		
+		//1回目
+		if (i == FIRST_EFFECT) {
+			//夜へ遷移
+			titleScene->ChangeBackTexture(std::move(std::make_unique<NightBackTexture>()));
+			//光の強さと色を変え夜っぽくする
+			directionalLight_.intensity = 0.05f;
+			directionalLight_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
+
+		}
+		//2回目
+		else if (i == SECOND_EFFECT) {
+			//ランダムの終了
+			if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[SECOND_EFFECT] + RANDOM_EFFECT_DISPLAY_LENGTH[SECOND_EFFECT]) {
+				//ロゴの非表示
+				logoSprite_->SetInvisible(true);
+			}
+		}
+
+
+	}
+
+#ifdef _DEBUG
+	//ImGui表示用
+	DisplayImGui();
+#endif // _DEBUG
+
+
+}
+
+void NoiseTitleScene::DrawObject3D(){
+
+}
+
+void NoiseTitleScene::PreDrawPostEffect(){
+
+}
+
+void NoiseTitleScene::DrawPostEffect(){
+
+}
+
+void NoiseTitleScene::DrawSprite(){
+}
+
+void NoiseTitleScene::DisplayImGui()
+{
+}

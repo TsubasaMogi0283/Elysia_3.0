@@ -70,7 +70,7 @@ private:
 private:
 
 	//タイトルへのスプライト
-	std::unique_ptr<Elysia::Sprite> text_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> textSprite_ = nullptr;
 	//点滅時間
 	float_t flashTime_ = 0.0f;
 
