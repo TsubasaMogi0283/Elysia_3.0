@@ -1,8 +1,8 @@
 #pragma once
 
 /**
- * @file TitleScene.h
- * @brief タイトルクラス
+ * @file WaitingTitleScene.h
+ * @brief スタート待ちのタイトルシーンクラス
  * @author 茂木翼
  */
 
@@ -31,28 +31,13 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="titleScene">タイトルシーン(メイン)</param>
-	void Update(TitleScene* titleScene);
-
-	/// <summary>
-	/// 3Dオブジェクト
-	/// </summary>
-	void DrawObject3D();
-
-	/// <summary>
-	/// ポストエフェクト描画処理前
-	/// </summary>
-	void PreDrawPostEffect();
-
-	/// <summary>
-	/// ポストエフェクト描画
-	/// </summary>
-	void DrawPostEffect();
+	void Update(TitleScene* titleScene)override;
 
 
 	/// <summary>
 	/// スプライト
 	/// </summary>
-	void DrawSprite();
+	void DrawSprite()override;
 
 	/// <summary>
 	/// デストラクタ

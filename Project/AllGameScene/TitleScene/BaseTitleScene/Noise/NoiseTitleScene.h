@@ -2,7 +2,7 @@
 
 
 /**
- * @file StartTitleScene.h
+ * @file NoiseTitleScene.h
  * @brief ノイズのクラス
  * @author 茂木翼
  */
@@ -10,7 +10,6 @@
 #include <array>
 
 #include "Sprite.h"
-
 #include "TitleScene/BaseTitleScene/BaseTitleScene.h"
 
 
@@ -34,28 +33,12 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="titleScene">タイトルシーン(メイン)</param>
-	void Update(TitleScene* titleScene);
-
-	/// <summary>
-	/// 3Dオブジェクト
-	/// </summary>
-	void DrawObject3D();
-
-	/// <summary>
-	/// ポストエフェクト描画処理前
-	/// </summary>
-	void PreDrawPostEffect();
-
-	/// <summary>
-	/// ポストエフェクト描画
-	/// </summary>
-	void DrawPostEffect();
-
+	void Update(TitleScene* titleScene)override;
 
 	/// <summary>
 	/// スプライト
 	/// </summary>
-	void DrawSprite();
+	void DrawSprite()override;
 
 	/// <summary>
 	/// デストラクタ
@@ -90,5 +73,8 @@ private:
 	std::unique_ptr<Elysia::Sprite> logoSprite_ = nullptr;
 	//ランダムエフェクトの時間
 	float_t randomEffectTime_ = 0.0f;
+	//表示終了
+	bool isEndDisplay_ = false;
+
 
 };

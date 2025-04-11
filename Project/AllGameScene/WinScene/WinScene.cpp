@@ -20,9 +20,6 @@ void WinScene::Initialize() {
 	//レベルデータの読み込み
 	levelDataHandle_ = levelDataManager_->Load("WinStage/WinStage.json");
 
-	//マテリアルの初期化
-	material_.Initialize();
-	material_.lightingKinds = DirectionalLighting;
 
 	//平行光源の初期化
 	directionalLight_.Initialize();
@@ -57,8 +54,6 @@ void WinScene::Update(Elysia::GameManager* gameManager){
 		return;
 	}
 
-	//マテリアルの更新
-	material_.Update();
 
 	//平行光源の更新
 	directionalLight_.Update();

@@ -55,35 +55,15 @@ void StartTitleScene::Update(TitleScene* titleScene){
 		circleSprite_->SetScale({ .x = circleScaleSize_,.y = circleScaleSize_ });
 		//待ち状態へ
 		//待ちと言ってもボタンを押してスタートのテキストが出るというもの
-		//titleScene->ChangeDetailedScene(std::make_unique<WaitingTitleScene>());
-		titleScene;
+		titleScene->ChangeDetailScene(std::make_unique<WaitingTitleScene>());
+		
 		return;
 	}
-	
-	//レールカメラから2つの行列を取得
-	//camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
-	//射影は初期から変えていないのでそのまま
-	//camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
-
-}
-
-void StartTitleScene::DrawObject3D(){
-}
-
-void StartTitleScene::PreDrawPostEffect(){
-	
-}
-
-void StartTitleScene::DrawPostEffect(){
 	
 }
 
 
 void StartTitleScene::DrawSprite(){
-	//背景
-	//logo->Draw(logoTextureHandle_);
-	//テキスト
-	//text_->Draw();
 
 	//黒い円の描画
 	circleSprite_->Draw();

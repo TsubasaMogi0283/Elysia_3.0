@@ -100,11 +100,14 @@ void TitleScene::Initialize() {
 void TitleScene::Update(Elysia::GameManager* gameManager) {
 	//細かいシーンの更新
 	detailTitleScene_->Update(this);
+	//処理を終えたらゲームシーンへ
+	if(isEnd_ == true) {
+		gameManager->ChangeScene("Game");
+		return;
+	}
+	
 
-	gameManager;
-
-	//黒フェードの透明度の変更
-	blackFade_->SetTransparency(blackFadeTransparency_);
+	
 
 	//更新
 	levelDataManager_->Update(levelHandle_);
@@ -122,8 +125,6 @@ void TitleScene::Update(Elysia::GameManager* gameManager) {
 
 	//カメラの更新
 	camera_.Transfer();
-
-
 
 
 #ifdef _DEBUG

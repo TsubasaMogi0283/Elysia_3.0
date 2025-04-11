@@ -1,11 +1,14 @@
 #include "NoiseTitleScene.h"
 
+#include <imgui.h>
+
 #include "Input.h"
 #include "TextureManager.h"
 #include "LevelDataManager.h"
 
 #include "TitleScene/TitleScene.h"
 #include "TitleScene/BaseBackTexture/Night/NightBackTexture.h"
+#include "TitleScene/BaseTitleScene/ToGame/ToGameTitleScene.h"
 
 NoiseTitleScene::NoiseTitleScene(){
 	//インスタンスの取得
@@ -68,12 +71,18 @@ void NoiseTitleScene::Update(TitleScene* titleScene){
 			if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[SECOND_EFFECT] + RANDOM_EFFECT_DISPLAY_LENGTH[SECOND_EFFECT]) {
 				//ロゴの非表示
 				logoSprite_->SetInvisible(true);
+				isEndDisplay_ = true;
 			}
 		}
 
 
 	}
 
+	//表示終了
+	if (isEndDisplay_==true){
+		titleScene->ChangeDetailScene(std::make_unique<ToGameTitleScene>());
+		return;
+	}
 #ifdef _DEBUG
 	//ImGui表示用
 	DisplayImGui();
@@ -82,21 +91,14 @@ void NoiseTitleScene::Update(TitleScene* titleScene){
 
 }
 
-void NoiseTitleScene::DrawObject3D(){
-
-}
-
-void NoiseTitleScene::PreDrawPostEffect(){
-
-}
-
-void NoiseTitleScene::DrawPostEffect(){
-
-}
 
 void NoiseTitleScene::DrawSprite(){
+	//ロゴ
+	logoSprite_->Draw();
 }
 
-void NoiseTitleScene::DisplayImGui()
-{
+void NoiseTitleScene::DisplayImGui(){
+	ImGui::Begin("ノイズ(タイトル)");
+	ImGui::InputFloat("ランダムエフェクトの時間", &randomEffectTime_);
+	ImGui::End();
 }

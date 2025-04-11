@@ -44,22 +44,6 @@ public:
 	void Update(TitleScene* titleScene)override;
 
 	/// <summary>
-	/// 3Dオブジェクト
-	/// </summary>
-	void DrawObject3D()override;
-
-	/// <summary>
-	/// ポストエフェクト描画処理前
-	/// </summary>
-	void PreDrawPostEffect()override;
-
-	/// <summary>
-	/// ポストエフェクト描画
-	/// </summary>
-	void DrawPostEffect()override;
-
-
-	/// <summary>
 	/// スプライト
 	/// </summary>
 	void DrawSprite()override;

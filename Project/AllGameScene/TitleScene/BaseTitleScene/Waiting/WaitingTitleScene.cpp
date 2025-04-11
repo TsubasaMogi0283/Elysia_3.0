@@ -107,17 +107,6 @@ void WaitingTitleScene::Update(TitleScene* titleScene){
 
 }
 
-void WaitingTitleScene::DrawObject3D()
-{
-}
-
-void WaitingTitleScene::PreDrawPostEffect()
-{
-}
-
-void WaitingTitleScene::DrawPostEffect(){
-
-}
 
 void WaitingTitleScene::DrawSprite(){
 	//ロゴ

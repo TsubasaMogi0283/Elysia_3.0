@@ -131,8 +131,6 @@ private:
 	//速度
 	Vector3 cameraVelocity_ = {};
 
-	//マテリアル
-	Material material_ = {};
 	//平行光源
 	DirectionalLight directionalLight_ = {};
 

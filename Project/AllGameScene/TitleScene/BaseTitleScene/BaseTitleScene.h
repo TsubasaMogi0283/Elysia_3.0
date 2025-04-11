@@ -60,21 +60,6 @@ public:
 	virtual void Update(TitleScene* titleScene) = 0;
 
 	
-	/// <summary>
-	/// 3Dオブジェクト
-	/// </summary>
-	virtual void DrawObject3D() = 0;
-
-	/// <summary>
-	/// ポストエフェクト描画処理前
-	/// </summary>
-	virtual void PreDrawPostEffect() = 0;
-
-	/// <summary>
-	/// ポストエフェクト描画
-	/// </summary>
-	virtual void DrawPostEffect() = 0;
-
 
 	/// <summary>
 	/// スプライト
@@ -131,7 +116,8 @@ protected:
 
 	//スプライトの初期座標
 	const Vector2 SPRITE_INITIAL_POSITION_ = { .x = 0.0f,.y = 0.0f };
-
+	//完全不透明値
+	const float_t PERFECT_NO_TRANSPARENT_ = 1.0f;
 
 
 protected:

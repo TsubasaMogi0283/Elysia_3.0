@@ -135,7 +135,12 @@ public:
 		this->isDisplayRandomEffect_= isDisplay;
 	}
 
-
+	/// <summary>
+	/// 処理を終えた
+	/// </summary>
+	inline void SetIsEnd() {
+		isEnd_ = true;
+	}
 
 	
 private:
@@ -188,7 +193,8 @@ private:
 
 	//細かいシーン
 	std::unique_ptr<BaseTitleScene>detailTitleScene_ = nullptr;
-
+	//処理を終えたかどうか
+	bool isEnd_ = false;
 
 #pragma region ポストエフェクト
 
@@ -205,11 +211,6 @@ private:
 
 #pragma endregion
 
-	//Bボタンのトリガー
-	//時間
-	uint32_t bTriggerTime_ = 0;
-	//フラグ
-	bool isBTrigger_ = false;
 
 	//点滅
 	bool isFlash_ = false;
