@@ -84,7 +84,7 @@ public:
 	/// 平行光源の取得
 	/// </summary>
 	/// <returns>平行光源</returns>
-	inline DirectionalLight SetDirectionalLight()const {
+	inline DirectionalLight GetDirectionalLight()const {
 		return directionalLight_;
 	}
 

@@ -13,9 +13,6 @@
 
 
 #include "BaseBackTexture/Sunset/SunsetBackTexture.h"
-#include "BaseBackTexture/Night/NightBackTexture.h"
-
-
 #include "BaseTitleScene/Waiting/WaitingTitleScene.h"
 
 TitleScene::TitleScene() {
@@ -29,36 +26,8 @@ TitleScene::TitleScene() {
 }
 
 void TitleScene::Initialize() {
-
-	//テクスチャハンドルの取得
-	uint32_t textTextureHandle = textureManager_->Load("Resources/Sprite/Title/StartText.png");
-	//タイトルテクスチャ
-	uint32_t logoTextureHandle = textureManager_->Load("Resources/Sprite/Title/TitleNormal.png");
-	changedLogoTextureHandle_ = textureManager_->Load("Resources/Sprite/Title/TitleChanged.png");
-	logoTextureHandle_ = logoTextureHandle;
-	//黒フェード
-	uint32_t blackTexureHandle = textureManager_->Load("Resources/Sprite/Back/Black.png");
-
-	//初期座標
-	const Vector2 INITIAL_POSITION = { .x = 0.0f,.y = 0.0f };
-
-	//テキスト
-	text_.reset(Elysia::Sprite::Create(textTextureHandle, INITIAL_POSITION));
-	//ロゴ
-	logo.reset(Elysia::Sprite::Create(logoTextureHandle_, INITIAL_POSITION));
-	//黒フェード
-	blackFade_.reset(Elysia::Sprite::Create(blackTexureHandle, INITIAL_POSITION));
-	//初期の透明度設定
-	const float INITIAL_TRANSPARENCY = 0.0f;
-	blackFade_->SetTransparency(INITIAL_TRANSPARENCY);
-
 	//レベルデータの読み込み
 	levelHandle_ = levelDataManager_->Load("TitleStage/TitleStage.json");
-
-
-	isStart_ = false;
-	isFlash_ = true;
-	isFastFlash_ = false;
 
 	//平行光源
 	directionalLight_.Initialize();
@@ -67,14 +36,11 @@ void TitleScene::Initialize() {
 
 	//カメラの初期化
 	camera_.Initialize();
-	//座標
-	camera_.translate = { .x = 0.0f,.y = 0.0f,.z = -30.8f };
 
 	//レールカメラ
 	titleRailCamera_ = std::make_unique<TitleRailCamera>();
 	//初期化
 	titleRailCamera_->Initialize("Resources/CSV/TitleRailCameraPoint.csv");
-
 
 	//背景
 	//ポストエフェクト
@@ -106,15 +72,13 @@ void TitleScene::Update(Elysia::GameManager* gameManager) {
 		return;
 	}
 	
-
-	
-
 	//更新
 	levelDataManager_->Update(levelHandle_);
 
 	//平行光源
-	directionalLight_.color = detailTitleScene_->SetDirectionalLight().color;
-	directionalLight_.direction = detailTitleScene_->SetDirectionalLight().direction;
+	directionalLight_.intensity = detailTitleScene_->GetDirectionalLight().intensity;
+	directionalLight_.color = detailTitleScene_->GetDirectionalLight().color;
+	directionalLight_.direction = detailTitleScene_->GetDirectionalLight().direction;
 	directionalLight_.Update();
 
 	//レールカメラの更新
@@ -140,8 +104,6 @@ void TitleScene::DrawObject3D() {
 }
 
 void TitleScene::PreDrawPostEffect() {
-
-	//ランダム
 	if (isDisplayRandomEffect_ == true) {
 		//ランダム
 		randomEffect_->PreDraw();
@@ -154,7 +116,6 @@ void TitleScene::PreDrawPostEffect() {
 }
 
 void TitleScene::DrawPostEffect() {
-	//ランダム
 	if (isDisplayRandomEffect_ == true) {
 		//ランダム
 		randomEffect_->Draw();
@@ -173,7 +134,6 @@ void TitleScene::DrawSprite() {
 
 void TitleScene::DisplayImGui() {
 	ImGui::Begin("TitleFade&Effect");
-	ImGui::InputFloat("Count", &randomEffectTime_);
 	ImGui::Checkbox("IsDisplay", &isDisplayRandomEffect_);
 	ImGui::End();
 

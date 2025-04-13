@@ -28,10 +28,10 @@ void NoiseTitleScene::Initialize(){
 	logoSprite_.reset(Elysia::Sprite::Create(logoTextureHandle, SPRITE_INITIAL_POSITION_));
 
 	//平行光源の初期化
-	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
+	directionalLight_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
 	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
-
-
+	directionalLight_.intensity = 0.05f;
+	
 
 }
 
@@ -60,10 +60,6 @@ void NoiseTitleScene::Update(TitleScene* titleScene){
 		if (i == FIRST_EFFECT) {
 			//夜へ遷移
 			titleScene->ChangeBackTexture(std::move(std::make_unique<NightBackTexture>()));
-			//光の強さと色を変え夜っぽくする
-			directionalLight_.intensity = 0.05f;
-			directionalLight_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
-
 		}
 		//2回目
 		else if (i == SECOND_EFFECT) {
@@ -71,6 +67,7 @@ void NoiseTitleScene::Update(TitleScene* titleScene){
 			if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[SECOND_EFFECT] + RANDOM_EFFECT_DISPLAY_LENGTH[SECOND_EFFECT]) {
 				//ロゴの非表示
 				logoSprite_->SetInvisible(true);
+				//h当時終わりを示す
 				isEndDisplay_ = true;
 			}
 		}
@@ -100,5 +97,12 @@ void NoiseTitleScene::DrawSprite(){
 void NoiseTitleScene::DisplayImGui(){
 	ImGui::Begin("ノイズ(タイトル)");
 	ImGui::InputFloat("ランダムエフェクトの時間", &randomEffectTime_);
+
+	if (ImGui::TreeNode("平行光源") == true) {
+		ImGui::SliderFloat("強さ",&directionalLight_.intensity,0.0f,10.0f);
+		ImGui::SliderFloat3("方向", &directionalLight_.direction.x, -1.0f, 1.0f);
+		ImGui::TreePop();
+	}
+
 	ImGui::End();
 }

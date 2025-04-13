@@ -28,10 +28,10 @@ void ToGameTitleScene::Initialize(){
 	//初期の透明度設定
 	blackFade_->SetTransparency(INITIAL_TRANSPARENCY);
 
-
-	directionalLight_.intensity = 0.05f;
+	//平行光源の初期化
 	directionalLight_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
-
+	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
+	directionalLight_.intensity = 0.05f;
 }
 
 void ToGameTitleScene::Update(TitleScene* titleScene){

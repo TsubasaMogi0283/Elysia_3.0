@@ -33,7 +33,8 @@ void WaitingTitleScene::Initialize(){
 	//ロゴ
 	logoSprite_.reset(Elysia::Sprite::Create(logoTextureHandle, SPRITE_INITIAL_POSITION_));
 
-
+	//平行光源の初期化
+	directionalLight_.intensity = 0.5f;
 	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
 	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
 
@@ -123,6 +124,12 @@ void WaitingTitleScene::DisplayImGui(){
 	ImGui::Checkbox("通常点滅", &isFlash_);
 	ImGui::Checkbox("高速点滅", &isFastFlash_);
 	ImGui::InputInt("点滅時間", &newFlashTime);
+	if (ImGui::TreeNode("平行光源") == true) {
+		ImGui::SliderFloat("強さ", &directionalLight_.intensity, 0.0f, 10.0f);
+		ImGui::SliderFloat3("方向", &directionalLight_.direction.x, -1.0f, 1.0f);
+		ImGui::TreePop();
+	}
+
 	ImGui::End();
 
 

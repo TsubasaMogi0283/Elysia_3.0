@@ -154,41 +154,14 @@ private:
 
 
 private:
-	//時間の変化
-	const float DELTA_ANIMATION_TIME_ = 1.0f / 60.0f;
-	//ランダムエフェクトの表示時間
-	static const uint32_t DISPLAY_LENGTH_QUANTITY_ = 2u;
-	//増える時間の値
-	const uint32_t INCREASE_VALUE = 1u;
-
-	
-private:
 
 	//カメラ
 	Camera camera_ = {};
+	//レールカメラ
 	std::unique_ptr<TitleRailCamera> titleRailCamera_ = nullptr;
-
-	//座標
-	Vector3 cameraPosition_ = {};
 
 	//平行光源
 	DirectionalLight directionalLight_ = {};
-
-
-	//黒フェード
-	std::unique_ptr<Elysia::Sprite>blackFade_ = nullptr;
-	//透明度
-	float blackFadeTransparency_ = 0.0f;
-
-
-	//テキスト
-	std::unique_ptr<Elysia::Sprite> text_ = nullptr;
-
-	//ロゴ
-	std::unique_ptr<Elysia::Sprite> logo = nullptr;
-	uint32_t logoTextureHandle_ = 0u;
-	//変化後のテクスチャ
-	uint32_t changedLogoTextureHandle_ = 0u;
 
 
 	//細かいシーン
@@ -196,39 +169,12 @@ private:
 	//処理を終えたかどうか
 	bool isEnd_ = false;
 
-#pragma region ポストエフェクト
-
 	//背景(ポストエフェクト)
 	std::unique_ptr<BaseTitleBackTexture> baseTitleBackTexture_ = nullptr;
-
-
 	//ランダムノイズ
 	std::unique_ptr<Elysia::RandomEffect> randomEffect_ = nullptr;
-	float randomEffectTime_ = 0u;
 	//見せるかどうか
 	bool isDisplayRandomEffect_ = false;
-	bool isEndDisplayRandomEffect_ = false;
-
-#pragma endregion
-
-
-	//点滅
-	bool isFlash_ = false;
-	//時間
-	uint32_t flashTime_ = 0;
-	const uint32_t FLASH_TIME_LIMIT_ = 30;
-	//高速点滅
-	bool isFastFlash_ = false;
-	const uint32_t FAST_FLASH_TIME_LIMIT_ = 60;
-	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3;
-	uint32_t fastFlashTime_ = 0;
-
-	//見せる番号
-	uint32_t textDisplayCount_ = 0;
-
-	//スタート
-	bool isStart_ = false;
-
 
 
 
