@@ -133,7 +133,6 @@ void GameScene::Initialize() {
 	//レベルデータ管理クラスの設定
 	enemyManager_->SetLevelDataManager(levelDataManager_, levelHandle_);
 	//初期化
-	std::string initialPositionCSV = "Resources/CSV/EnemyInitialPosition.csv";
 	//レベルデータから敵の情報を取り出す
 	std::vector<Vector3> normalEnemyPositions = levelDataManager_->GetObjectPositions(levelHandle_, "NormalEnemy");
 	std::vector<Vector3> strongEnemyPositions = levelDataManager_->GetObjectPositions(levelHandle_, "StrongEnemy");

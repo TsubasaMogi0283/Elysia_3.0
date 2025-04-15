@@ -24,7 +24,7 @@
 
 
  /// <summary>
- /// EllysiaEngine
+ /// ElysiaEngine
  /// </summary>
 namespace Elysia {
 	/// <summary>

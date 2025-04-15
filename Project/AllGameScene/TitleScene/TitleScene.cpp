@@ -13,7 +13,7 @@
 
 
 #include "BaseBackTexture/Sunset/SunsetBackTexture.h"
-#include "BaseTitleScene/Waiting/WaitingTitleScene.h"
+#include "BaseTitleScene/Start/StartTitleScene.h"
 
 TitleScene::TitleScene() {
 	//インスタンスの取得
@@ -54,7 +54,7 @@ void TitleScene::Initialize() {
 
 
 	//細かいシーン
-	detailTitleScene_ = std::make_unique<WaitingTitleScene>();
+	detailTitleScene_ = std::make_unique<StartTitleScene>();
 	//レベルデータハンドルの設定
 	detailTitleScene_->SetLevelDataHandle(levelHandle_);
 	//初期化

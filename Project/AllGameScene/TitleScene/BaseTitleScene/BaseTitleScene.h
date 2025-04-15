@@ -71,6 +71,14 @@ public:
 	/// </summary>
 	virtual ~BaseTitleScene() = default;
 
+
+protected:
+	/// <summary>
+	/// ImGui表示用
+	/// </summary>
+	virtual void DisplayImGui() = 0;
+
+
 public:
 	/// <summary>
 	/// レベルデータハンドルの設定
@@ -89,11 +97,6 @@ public:
 	}
 
 
-protected:
-	/// <summary>
-	/// ImGui表示用
-	/// </summary>
-	virtual void DisplayImGui() = 0;
 
 
 protected:

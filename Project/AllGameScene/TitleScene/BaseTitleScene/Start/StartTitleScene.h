@@ -12,7 +12,7 @@
 #include "TitleScene/BaseTitleScene/BaseTitleScene.h"
 
 /// <summary>
-/// ELysiaEngine
+/// ElysiaEngine
 /// </summary>
 namespace Elysia {
 
@@ -53,13 +53,20 @@ public:
 	/// </summary>
 	~StartTitleScene()override=default;
 
+
+private:
+	/// <summary>
+	/// ImGUi表示用
+	/// </summary>
+	void DisplayImGui()override;
+
 private:
 	//ウィンドウクラス
 	Elysia::WindowsSetup* windowsSetup_ = nullptr;
 
 private:
 	//サイズの減少値
-	const float_t SIZE_DOWN_VALUE_ = 0.1f;
+	const float_t SIZE_DOWN_VALUE_ = 0.05f;
 	//最小サイズ
 	const float_t CIRCLE_MIN_SIZE_ = 0.0f;
 

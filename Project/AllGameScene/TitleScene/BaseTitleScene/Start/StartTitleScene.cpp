@@ -33,11 +33,12 @@ void StartTitleScene::Initialize(){
 	circleSprite_.reset(Elysia::Sprite::Create(blackCircleTextureHandle, CIRCLE_POSITION));
 	circleSprite_->SetAnchorPoint(CIRCLE_ANCHOR_POINT);
 	//サイズの設定
-	circleScaleSize_ = 50.0f;
+	circleScaleSize_ = 10.0f;
 	circleSprite_->SetScale({.x= circleScaleSize_,.y= circleScaleSize_ });
 
 
 	//平行光源の初期化
+	directionalLight_.intensity = 0.5f;
 	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
 	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
 
@@ -59,7 +60,14 @@ void StartTitleScene::Update(TitleScene* titleScene){
 		
 		return;
 	}
-	
+
+
+#ifdef _DEBUG
+	//ImGui表示用
+	DisplayImGui();
+#endif // _DEBUG
+
+
 }
 
 
@@ -67,4 +75,14 @@ void StartTitleScene::DrawSprite(){
 
 	//黒い円の描画
 	circleSprite_->Draw();
+}
+
+void StartTitleScene::DisplayImGui(){
+	ImGui::Begin("開始(タイトル)");
+	ImGui::InputFloat("円のサイズ", &circleScaleSize_);
+
+	ImGui::End();
+
+
+	
 }
