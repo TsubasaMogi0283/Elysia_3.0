@@ -244,9 +244,9 @@ void NormalEnemy::Damaged() {
 			//テクスチャの上書き
 			electricShockParticle_->TextureOverride(thunderTextureHandle_);
 			//パーティクルの細かい設定
-			const float SCALE_SIZE = 1.0f;
+			const float SCALE_SIZE = 0.6f;
 			electricShockParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
-			electricShockParticle_->SetCount(10u);
+			electricShockParticle_->SetCount(6u);
 			const float FREQUENCY = 4.0f;
 			electricShockParticle_->SetIsReleaseOnceMode(false);
 			electricShockParticle_->SetFrequency(FREQUENCY);
