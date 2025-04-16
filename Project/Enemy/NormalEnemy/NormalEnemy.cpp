@@ -161,7 +161,7 @@ void NormalEnemy::Update() {
 void NormalEnemy::Draw(const Camera& camera, const SpotLight& spotLight) {
 #ifdef _DEBUG
 	//攻撃
-	attackCollision_->Draw(camera, spotLight);
+	//attackCollision_->Draw(camera, spotLight);
 
 #endif // _DEBUG
 
@@ -244,7 +244,7 @@ void NormalEnemy::Damaged() {
 			//テクスチャの上書き
 			electricShockParticle_->TextureOverride(thunderTextureHandle_);
 			//パーティクルの細かい設定
-			const float SCALE_SIZE = 0.6f;
+			const float SCALE_SIZE = 1.0f;
 			electricShockParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
 			electricShockParticle_->SetCount(10u);
 			const float FREQUENCY = 4.0f;

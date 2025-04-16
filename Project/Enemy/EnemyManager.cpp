@@ -47,7 +47,7 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel, const uint32_t& 
 	//生成数
 	size_t genarateQuantity = normalEnemyPositions.size();
 #ifdef _DEBUG
-	genarateQuantity = 1u;
+	//genarateQuantity = 1u;
 #endif // _DEBUG
 
 

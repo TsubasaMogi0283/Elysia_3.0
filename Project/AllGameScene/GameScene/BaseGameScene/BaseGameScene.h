@@ -6,7 +6,9 @@
  */
 
 #include <cstdint>
+#include <memory>
 
+#include "Sprite.h"
 
 /// <summary>
 /// ElysiaEngine
@@ -95,5 +97,13 @@ protected:
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
+
+
+protected:
+	//完全に透明になる値
+	const float_t PERFECT_TRANSPARENT_ = 0.0f;
+	//フェードの初期座標
+	const Vector2 INITIAL_SPRITE_POSITION_ = { .x = 0.0f,.y = 0.0f };
+
 
 };

@@ -116,13 +116,13 @@ public:
 	/// 背景テクスチャの遷移
 	/// </summary>
 	/// <param name="backTexture">背景テクスチャ(ポストエフェクト)</param>
-	void ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture>);
+	void ChangeBackTexture(std::unique_ptr<BaseTitleBackTexture> backTexture);
 
 
 	/// <summary>
 	/// 細かいシーンの遷移
 	/// </summary>
-	/// <param name="detailTitleScene"></param>
+	/// <param name="detailTitleScene">細かいタイトルシーン</param>
 	void ChangeDetailScene(std::unique_ptr<BaseTitleScene>detailTitleScene);
 
 

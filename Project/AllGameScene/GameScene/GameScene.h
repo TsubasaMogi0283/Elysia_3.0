@@ -21,7 +21,7 @@
 #include "CollisionCalculation.h"
 
 #include "Vignette.h"
-
+#include "BaseGameScene/BaseGameScene.h"
 
 
  /// <summary>
@@ -106,6 +106,15 @@ public:
 	/// デストラクタ
 	/// </summary>
 	~GameScene() = default;
+
+public:
+	/// <summary>
+	/// 細かいシーンの遷移
+	/// </summary>
+	/// <param name="detailGameScene">細かいシーン</param>
+	void ChangeDetailScene(std::unique_ptr<BaseGameScene>detailGameScene);
+
+
 
 private:
 
@@ -224,9 +233,9 @@ private:
 
 #pragma region フェード
 	//白フェードのスプライト
-	std::unique_ptr<Elysia::Sprite> whiteFade_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> blackFadeSprite_ = nullptr;
 	//透明度
-	float_t whiteFadeTransparency_ = 1.0f;
+	float_t fadeTransparency_ = 1.0f;
 	//イン
 	bool isWhiteFadeIn = true;
 	//アウト
@@ -280,5 +289,9 @@ private:
 	//門の回転
 	float_t rightGateRotateTheta_ = 0.0f;
 	float_t leftGateRotateTheta_ = 0.0f;
+
+	//細かいシーン
+	std::unique_ptr<BaseGameScene>detailGameScene_ = nullptr;
+
 
 };

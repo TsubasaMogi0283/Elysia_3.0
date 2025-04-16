@@ -1,4 +1,5 @@
 #include "GameScene.h"
+
 #include <imgui.h>
 #include <numbers>
 #include <algorithm>
@@ -13,6 +14,8 @@
 #include "ModelManager.h"
 #include "LevelDataManager.h"
 #include "GlobalVariables.h"
+
+#include "BaseGameScene/Start/StartGameScene.h"
 
 GameScene::GameScene() {
 	//インスタンスの取得
@@ -38,7 +41,7 @@ void GameScene::Initialize() {
 	//フェードの初期座標
 	const Vector2 INITIAL_SPRITE_POSITION = { .x = 0.0f,.y = 0.0f };
 	//生成
-	whiteFade_.reset(Elysia::Sprite::Create(whiteTextureHandle, INITIAL_SPRITE_POSITION));
+	blackFadeSprite_.reset(Elysia::Sprite::Create(whiteTextureHandle, INITIAL_SPRITE_POSITION));
 
 	//フェードインから始まる
 	//イン
@@ -170,7 +173,7 @@ void GameScene::Initialize() {
 	spaceToNextTextureHandle[0] = textureManager_->Load("Resources/Sprite/Explanation/ExplanationNext1.png");
 	spaceToNextTextureHandle[1] = textureManager_->Load("Resources/Sprite/Explanation/ExplanationNext2.png");
 	//生成
-	for (uint32_t i = 0; i < spaceToNext_.size(); ++i) {
+	for (uint32_t i = 0u; i < spaceToNext_.size(); ++i) {
 		spaceToNext_[i].reset(Elysia::Sprite::Create(spaceToNextTextureHandle[i], INITIAL_SPRITE_POSITION));
 	}
 
@@ -219,6 +222,7 @@ void GameScene::Initialize() {
 	isGamePlay_ = false;
 	isExplain_ = false;
 
+	
 
 #ifdef _DEBUG 
 	//デバッグするときはこっちで設定
@@ -227,8 +231,28 @@ void GameScene::Initialize() {
 #endif // _DEBUG
 
 
+
+	//スタートから始まる
+	detailGameScene_ = std::make_unique<StartGameScene>();
+	//レベルデータハンドルの設定
+	detailGameScene_->SetLevelDataHandle(levelHandle_);
+	//初期化
+	detailGameScene_->Initialize();
+
+
 }
 
+
+void GameScene::ChangeDetailScene(std::unique_ptr<BaseGameScene> detailGameScene){
+	//違った時だけ遷移する
+	if (detailGameScene_ != detailGameScene) {
+		detailGameScene_ = std::move(detailGameScene);
+		//レベルデータハンドルの設定
+		detailGameScene_->SetLevelDataHandle(levelHandle_);
+		//次に遷移する
+		detailGameScene_->Initialize();
+	}
+}
 
 void GameScene::ObjectCollision() {
 
@@ -439,7 +463,7 @@ void GameScene::DisplayImGui() {
 		ImGui::TreePop();
 	}
 	if (ImGui::TreeNode("フェード")==true) {
-		ImGui::InputFloat("白", &whiteFadeTransparency_);
+		ImGui::InputFloat("白", &fadeTransparency_);
 		ImGui::InputFloat("黒", &blackFadeTransparency_);
 		ImGui::TreePop();
 	}
@@ -730,6 +754,9 @@ void GameScene::PlayerRotate() {
 
 void GameScene::Update(Elysia::GameManager* gameManager) {
 
+	//細かいシーンの更新
+	//detailGameScene_->Update(this);
+
 	//フレーム初めに
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
@@ -737,11 +764,11 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 	//フェードイン
 	if (isWhiteFadeIn == true) {
 		const float_t FADE_IN_INTERVAL = 0.01f;
-		whiteFadeTransparency_ -= FADE_IN_INTERVAL;
+		fadeTransparency_ -= FADE_IN_INTERVAL;
 
 		//完全に透明になったらゲームが始まる
-		if (whiteFadeTransparency_ < PERFECT_TRANSPARENT_) {
-			whiteFadeTransparency_ = PERFECT_TRANSPARENT_;
+		if (fadeTransparency_ < PERFECT_TRANSPARENT_) {
+			fadeTransparency_ = PERFECT_TRANSPARENT_;
 			isWhiteFadeIn = false;
 			isExplain_ = true;
 			//1枚目
@@ -751,7 +778,7 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 
 	//ゲーム
 	if (isWhiteFadeIn == false && isWhiteFadeOut_ == false) {
-		whiteFadeTransparency_ = PERFECT_TRANSPARENT_;
+		fadeTransparency_ = PERFECT_TRANSPARENT_;
 
 		//説明
 		if (isExplain_ == true) {
@@ -838,22 +865,28 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 
 		//音を止める
 		enemyManager_->StopAudio();
+		//鍵の音を止める
+		keyManager_->StopAudio();
+
 		//非表示
 		escapeText_->SetInvisible(true);
 		//振動しないようにする
 		player_->SetIsAbleToControll(false);
 		//加算
-		whiteFadeTransparency_ += FADE_OUT_INTERVAL_;
+		fadeTransparency_ += FADE_OUT_INTERVAL_;
 
 		//最大の透明度
 		const float_t MAX_TRANSPARENCY = 2.0f;
-		if (whiteFadeTransparency_ > MAX_TRANSPARENCY) {
+		if (fadeTransparency_ > MAX_TRANSPARENCY) {
 			gameManager->ChangeScene("Win");
 			return;
 		}
 	}
 	//フェードの透明度の設定
-	whiteFade_->SetTransparency(whiteFadeTransparency_);
+	blackFadeSprite_->SetTransparency(fadeTransparency_);
+
+	//プレイヤーの更新
+	player_->Update();
 
 	//レベルエディタで使うリスナーの設定
 	Listener listener = {
@@ -864,8 +897,7 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 	//レベルエディタの更新
 	levelDataManager_->Update(levelHandle_);
 
-	//プレイヤーの更新
-	player_->Update();
+	
 	//門
 	gate_->Update();
 
@@ -927,7 +959,7 @@ void GameScene::DrawSprite() {
 	
 	//説明
 	for (size_t i = 0u; i < explanation_.size(); ++i) {
-		if (howToPlayTextureNumber_ == i + 1) {
+		if (howToPlayTextureNumber_ == i + 1u) {
 			explanation_[i]->Draw();
 			spaceToNext_[i]->Draw();
 		}
@@ -952,12 +984,15 @@ void GameScene::DrawSprite() {
 
 	//フェード
 	if (isWhiteFadeIn == true || isWhiteFadeOut_ == true) {
-		whiteFade_->Draw();
+		blackFadeSprite_->Draw();
 	}
 	//黒フェード
 	if (isBlackFadeIn == true || isBlackFadeOut_ == true) {
 		blackFade_->Draw();
 	}
 
+
+	//細かいシーンのスプライト描画
+	//detailGameScene_->DrawSprite();
 
 }

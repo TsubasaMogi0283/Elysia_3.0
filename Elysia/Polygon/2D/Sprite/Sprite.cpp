@@ -26,19 +26,19 @@ void Elysia::Sprite::Initialize(const uint32_t& textureHandle, const Vector2& po
 	
 	//テクスチャの情報を取得
 	D3D12_RESOURCE_DESC resourceDesc_ = {}; resourceDesc_ = Elysia::TextureManager::GetInstance()->GetResourceDesc(textureHandle_);
-	size_ = {.x = static_cast<float>(resourceDesc_.Width),.y = static_cast<float>(resourceDesc_.Height) };
+	size_ = {.x = static_cast<float_t>(resourceDesc_.Width),.y = static_cast<float_t>(resourceDesc_.Height) };
 
 
 	//頂点リソースを作る
 	vertexResource_ = directXSetup_->CreateBufferResource(sizeof(VertexData) * 6);
 	//index用のリソースを作る
-	indexResource_ = directXSetup_->CreateBufferResource(sizeof(uint32_t) * 6);
+	indexResource_ = directXSetup_->CreateBufferResource(sizeof(uint32_t) * 6u);
 	
 	//頂点バッファビューを作成する
 	//リソースの先頭のアドレスから使う
 	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点３つ分のサイズ
-	vertexBufferView_.SizeInBytes = sizeof(VertexData) * 4;
+	vertexBufferView_.SizeInBytes = sizeof(VertexData) * 4u;
 	//１頂点あたりのサイズ
 	vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
@@ -47,7 +47,7 @@ void Elysia::Sprite::Initialize(const uint32_t& textureHandle, const Vector2& po
 	//リsp－スの先頭のアドレスから使う
 	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
 	//使用するリソースのサイズはインデックス6つ分のサイズ
-	indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6;
+	indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6u;
 	//インデックスはuint32_tとする
 	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
@@ -125,16 +125,16 @@ void Elysia::Sprite::Draw() {
 	//書き込むためのアドレスを取得
 	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData_));
 
-	float left = (0.0f-anchorPoint_.x) * size_.x;
-	float right = (1.0f-anchorPoint_.x) * size_.x;
-	float top = (0.0f-anchorPoint_.y) * size_.y;
-	float bottom = (1.0f-anchorPoint_.y) * size_.y;
+	float_t left = (0.0f-anchorPoint_.x) * size_.x;
+	float_t right = (1.0f-anchorPoint_.x) * size_.x;
+	float_t top = (0.0f-anchorPoint_.y) * size_.y;
+	float_t bottom = (1.0f-anchorPoint_.y) * size_.y;
 
 
-	float texLeft =0.0f;
-	float texRight = 1.0f;
-	float texTop= 0.0f;
-	float texBottom= 1.0f;
+	float_t texLeft =0.0f;
+	float_t texRight = 1.0f;
+	float_t texTop= 0.0f;
+	float_t texBottom= 1.0f;
 
 	//UVをいじりたいとき設定するもの
 	if (isUVSetting_ == true) {
@@ -295,16 +295,16 @@ void Elysia::Sprite::Draw(const uint32_t& texturehandle){
 	//書き込むためのアドレスを取得
 	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData_));
 
-	float left = (0.0f - anchorPoint_.x) * size_.x;
-	float right = (1.0f - anchorPoint_.x) * size_.x;
-	float top = (0.0f - anchorPoint_.y) * size_.y;
-	float bottom = (1.0f - anchorPoint_.y) * size_.y;
+	float_t left = (0.0f - anchorPoint_.x) * size_.x;
+	float_t right = (1.0f - anchorPoint_.x) * size_.x;
+	float_t top = (0.0f - anchorPoint_.y) * size_.y;
+	float_t bottom = (1.0f - anchorPoint_.y) * size_.y;
 
 
-	float texLeft = 0.0f;
-	float texRight = 1.0f;
-	float texTop = 0.0f;
-	float texBottom = 1.0f;
+	float_t texLeft = 0.0f;
+	float_t texRight = 1.0f;
+	float_t texTop = 0.0f;
+	float_t texBottom = 1.0f;
 
 	//UVをいじりたいとき設定するもの
 	if (isUVSetting_ == true) {
