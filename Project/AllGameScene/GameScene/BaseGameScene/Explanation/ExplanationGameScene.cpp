@@ -6,6 +6,7 @@
 #include "TextureManager.h"
 #include "LevelDataManager.h"
 #include "GameScene/GameScene.h"
+#include "GameScene/BaseGameScene/Play/PlayGameScene.h"
 
 
 ExplanationGameScene::ExplanationGameScene(){
@@ -55,7 +56,8 @@ void ExplanationGameScene::Update(GameScene* gameScene){
 
 	//読み終わったらゲームプレイへ
 	if (howToPlayTextureNumber_ > EXPLANATION_QUANTITY_) {
-		gameScene;
+		//本編のプレイシーンへ
+		gameScene->ChangeDetailScene(std::make_unique<PlayGameScene>());
 		return;
 	}
 

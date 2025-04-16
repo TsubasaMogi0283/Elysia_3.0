@@ -47,15 +47,11 @@ public:
 
 private:
 	/// <summary>
-	/// ImGUi表示用
+	/// ImGui表示用
 	/// </summary>
 	void DisplayImGui()override;
 
-
-
-
 private:
-
 
 	//場面
 	//説明

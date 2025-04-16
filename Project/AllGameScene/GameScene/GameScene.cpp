@@ -236,6 +236,8 @@ void GameScene::Initialize() {
 	detailGameScene_ = std::make_unique<StartGameScene>();
 	//レベルデータハンドルの設定
 	detailGameScene_->SetLevelDataHandle(levelHandle_);
+	detailGameScene_->SetPlayer(player_.get());
+
 	//初期化
 	detailGameScene_->Initialize();
 

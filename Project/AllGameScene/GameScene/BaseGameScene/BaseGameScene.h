@@ -43,6 +43,21 @@ namespace Elysia {
 class GameScene;
 
 /// <summary>
+/// プレイヤー
+/// </summary>
+class Player;
+
+/// <summary>
+/// 敵管理クラス
+/// </summary>
+class EnemyManager;
+
+/// <summary>
+/// 鍵管理クラス
+/// </summary>
+class KeyManager;
+
+/// <summary>
 /// 細かいゲームシーンの基底クラス
 /// </summary>
 class BaseGameScene {
@@ -85,6 +100,40 @@ public:
 	inline void SetLevelDataHandle(const uint32_t& levelDataHandle) {
 		this->levelDataHandle_ = levelDataHandle;
 	}
+	
+	/// <summary>
+	/// プレイヤーの設定
+	/// </summary>
+	/// <param name="player">プレイヤー</param>
+	inline void SetPlayer(Player* player) {
+		this->player_ = player;
+	}
+
+
+	/// <summary>
+	/// 敵管理クラスの設定
+	/// </summary>
+	/// <param name="enemyManager">敵管理クラス</param>
+	inline void SetEnemyManager(EnemyManager* enemyManager) {
+		this->enemyManager_ = enemyManager;
+	}
+
+	/// <summary>
+	/// 鍵管理クラス
+	/// </summary>
+	/// <param name="keyManager">鍵管理クラス</param>
+	inline void SetEnemyManager(KeyManager* keyManager) {
+		this->keyManager_ = keyManager;
+	}
+
+
+	/// <summary>
+	/// 強い敵と接触したかどうか
+	/// </summary>
+	/// <returns>接触たかどうか</returns>
+	inline bool GetIsTouch()const {
+		return isTouchStrongEnemy_;
+	}
 
 
 
@@ -100,10 +149,21 @@ protected:
 
 
 protected:
+	//GameScene本体から持ってくる
+	//プレイヤー
+	Player* player_ = nullptr;
+	//敵管理
+	EnemyManager* enemyManager_ = nullptr;
+	//鍵管理クラス
+	KeyManager* keyManager_ = nullptr;
+protected:
 	//完全に透明になる値
 	const float_t PERFECT_TRANSPARENT_ = 0.0f;
 	//フェードの初期座標
 	const Vector2 INITIAL_SPRITE_POSITION_ = { .x = 0.0f,.y = 0.0f };
 
+protected:
+	//強敵と接触したかどうか
+	bool isTouchStrongEnemy_ = false;
 
 };

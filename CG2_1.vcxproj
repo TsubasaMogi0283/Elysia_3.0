@@ -191,6 +191,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Elysia\StringOption\StringOption.cpp" />
     <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp" />
     <ClCompile Include="Project\AllGameScene\GameScene\BaseGameScene\Explanation\ExplanationGameScene.cpp" />
+    <ClCompile Include="Project\AllGameScene\GameScene\BaseGameScene\Play\PlayGameScene.cpp" />
     <ClCompile Include="Project\AllGameScene\GameScene\BaseGameScene\Start\StartGameScene.cpp" />
     <ClCompile Include="Project\AllGameScene\GameScene\GameScene.cpp" />
     <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\ContinueGameLoseScene\ContinueGameLoseScene.cpp" />
@@ -514,6 +515,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\AllGameScene\GameSceneFactory.h" />
     <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\BaseGameScene.h" />
     <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\Explanation\ExplanationGameScene.h" />
+    <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\Play\PlayGameScene.h" />
     <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\Start\StartGameScene.h" />
     <ClInclude Include="Project\AllGameScene\GameScene\GameScene.h" />
     <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\BaseLoseScene.h" />

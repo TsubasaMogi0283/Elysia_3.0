@@ -213,7 +213,6 @@ private:
 	//コリジョン管理
 	std::unique_ptr<Elysia::CollisionManager> collisionManager_ = nullptr;
 
-	
 #pragma region ゲーム中のUI
 	//UIを表示するかどうか
 	bool isDisplayUI_ = false;
@@ -225,7 +224,7 @@ private:
 	//鍵取得のスプライト
 	std::unique_ptr<Elysia::Sprite> pickUpKey_ = nullptr;
 	//鍵管理クラス
-	std::unique_ptr<KeyManager> keyManager_ = {};
+	std::unique_ptr<KeyManager> keyManager_ = nullptr;
 	//脱出のスプライト
 	std::unique_ptr<Elysia::Sprite> toEscape_ = nullptr;
 

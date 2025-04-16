@@ -538,6 +538,9 @@
     <Filter Include="Project\Scene\Game\Base\Explanation">
       <UniqueIdentifier>{a9dcdc5c-e086-4045-9c31-c5812dac3fc8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Scene\Game\Base\Play">
+      <UniqueIdentifier>{6cce928a-35ee-49f8-a1e6-4b2ce45e8f0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -872,6 +875,9 @@
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\GameScene\BaseGameScene\Explanation\ExplanationGameScene.cpp">
       <Filter>Project\Scene\Game\Base\Explanation</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\GameScene\BaseGameScene\Play\PlayGameScene.cpp">
+      <Filter>Project\Scene\Game\Base\Play</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1449,6 +1455,9 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\Explanation\ExplanationGameScene.h">
       <Filter>Project\Scene\Game\Base\Explanation</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\Play\PlayGameScene.h">
+      <Filter>Project\Scene\Game\Base\Play</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
