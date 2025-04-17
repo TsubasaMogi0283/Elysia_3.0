@@ -35,8 +35,8 @@ EnemyManager::EnemyManager(){
 void EnemyManager::Initialize(const uint32_t& normalEnemyModel, const uint32_t& strongEnemyModel, const std::vector<Vector3>& normalEnemyPositions, const std::vector<Vector3>& strongEnemyPositions){
 	
 	//空だったら引っかかるようにしている
-	assert(player_!=nullptr);
-	assert(levelDataManager_ != nullptr);
+	assert(player_);
+	assert(levelDataManager_);
 
 	//モデルハンドルを代入
 	//通常

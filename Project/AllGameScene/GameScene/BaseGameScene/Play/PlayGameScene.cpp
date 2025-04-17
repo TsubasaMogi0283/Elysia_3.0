@@ -23,6 +23,10 @@ PlayGameScene::PlayGameScene(){
 
 
 void PlayGameScene::Initialize(){
+	//空の場合停止させる
+	assert(player_);
+	assert(enemyManager_);
+	assert(keyManager_);
 
 	//コリジョン管理クラスの生成
 	collisionManager_ = std::make_unique<Elysia::CollisionManager>();
@@ -77,11 +81,14 @@ void PlayGameScene::Update(GameScene* gameScene){
 
 		//負けシーンへ
 		if (false) {
-			gameScene->ChangeDetailScene();
+			//gameScene->ChangeDetailScene();
 			return;
 		}
 	}
 
+
+	//ビネットの処理
+	VigntteProcess();
 	//コリジョン管理クラスに登録
 	RegisterToCollisionManager();
 
@@ -444,24 +451,19 @@ void PlayGameScene::ObjectCollision(){
 			player_->GetWorldPosition().z <= treasurePosition.z + RADIUS) {
 
 			//表示
-			openTreasureBoxSprite_->SetInvisible(false);
+			//openTreasureBoxSprite_->SetInvisible(false);
 
 
-			//Bボタンを押したとき
-			if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
+			//Bボタンまたはスペースキーを押したとき
+			if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true|| input_->IsTriggerKey(DIK_SPACE) == true) {
 				//脱出
 				isOpenTreasureBox_ = true;
 			}
 
-			//SPACEキーを押したとき
-			if (input_->IsPushKey(DIK_SPACE) == true) {
-				//脱出
-				isOpenTreasureBox_ = true;
-			}
 		}
 		else {
 			//非表示
-			openTreasureBoxSprite_->SetInvisible(true);
+			//openTreasureBoxSprite_->SetInvisible(true);
 		}
 	}
 	//開いた動作
@@ -500,6 +502,39 @@ void PlayGameScene::ObjectCollision(){
 	levelDataManager_->SetTranslate(levelDataHandle_, "CloseFenceInCemetery", fenceTranslate_);
 
 
+}
+
+void PlayGameScene::VigntteProcess(){
+	////HPが1でピンチの場合
+	//const uint32_t DANGEROUS_HP = 1u;
+	////プレイヤーがダメージを受けた場合ビネット
+	//if (player_->GetIsDamaged() == true) {
+	//	//時間の加算
+	//	vignetteChangeTime_ += DELTA_ANIMATION_TIME_;
+	//
+	//	//線形補間で滑らかに変化
+	//	vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
+	//}
+	////ピンチ演出
+	//else if (player_->GetHP() == DANGEROUS_HP) {
+	//	warningTime_ += DELTA_ANIMATION_TIME_;
+	//	vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
+	//
+	//	//最大時間
+	//	const float_t MAX_WARNING_TIME = 1.0f;
+	//	//最小時間
+	//	const float_t MIN_WARNING_TIME = 1.0f;
+	//
+	//	if (warningTime_ > MAX_WARNING_TIME) {
+	//		warningTime_ = MIN_WARNING_TIME;
+	//	}
+	//}
+	////通常時の場合
+	//else {
+	//	vignettePow_ = 0.0f;
+	//	vignetteChangeTime_ = 0.0f;
+	//}
+	//vignette_->SetPow(vignettePow_);
 }
 
 void PlayGameScene::DisplayImGui(){

@@ -70,6 +70,11 @@ private:
 	void ObjectCollision();
 
 	/// <summary>
+	/// ビネットの処理
+	/// </summary>
+	void VigntteProcess();
+
+	/// <summary>
 	/// ImGui表示用
 	/// </summary>
 	void DisplayImGui()override;
@@ -89,4 +94,11 @@ private:
 	//柵の座標
 	Vector3 fenceTranslate_ = {};
 
+	//離した瞬間の状態
+	bool isReleaseAttack_ = false;
+
+	//宝箱が開いているかどうか
+	bool isOpenTreasureBox_ = false;
+	//開けるかどうかを表示する
+	std::unique_ptr<Elysia::Sprite>openTreasureBoxSprite_ = nullptr;
 };

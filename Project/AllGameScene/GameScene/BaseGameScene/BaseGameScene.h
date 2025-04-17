@@ -122,7 +122,7 @@ public:
 	/// 鍵管理クラス
 	/// </summary>
 	/// <param name="keyManager">鍵管理クラス</param>
-	inline void SetEnemyManager(KeyManager* keyManager) {
+	inline void SetKeyManager(KeyManager* keyManager) {
 		this->keyManager_ = keyManager;
 	}
 
@@ -156,11 +156,14 @@ protected:
 	EnemyManager* enemyManager_ = nullptr;
 	//鍵管理クラス
 	KeyManager* keyManager_ = nullptr;
+
 protected:
 	//完全に透明になる値
 	const float_t PERFECT_TRANSPARENT_ = 0.0f;
 	//フェードの初期座標
 	const Vector2 INITIAL_SPRITE_POSITION_ = { .x = 0.0f,.y = 0.0f };
+	//時間変化
+	const float_t DELTA_TIME_ = 1.0f / 60.0f;
 
 protected:
 	//強敵と接触したかどうか

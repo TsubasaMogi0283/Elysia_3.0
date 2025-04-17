@@ -236,8 +236,10 @@ void GameScene::Initialize() {
 	detailGameScene_ = std::make_unique<StartGameScene>();
 	//レベルデータハンドルの設定
 	detailGameScene_->SetLevelDataHandle(levelHandle_);
+	//各ゲームオブジェクトのポインタを設定
 	detailGameScene_->SetPlayer(player_.get());
-
+	detailGameScene_->SetEnemyManager(enemyManager_.get());
+	detailGameScene_->SetKeyManager(keyManager_.get());
 	//初期化
 	detailGameScene_->Initialize();
 
@@ -251,6 +253,10 @@ void GameScene::ChangeDetailScene(std::unique_ptr<BaseGameScene> detailGameScene
 		detailGameScene_ = std::move(detailGameScene);
 		//レベルデータハンドルの設定
 		detailGameScene_->SetLevelDataHandle(levelHandle_);
+		//各ゲームオブジェクトのポインタを設定
+		detailGameScene_->SetPlayer(player_.get());
+		detailGameScene_->SetEnemyManager(enemyManager_.get());
+		detailGameScene_->SetKeyManager(keyManager_.get());
 		//次に遷移する
 		detailGameScene_->Initialize();
 	}
@@ -426,14 +432,14 @@ void GameScene::VigntteProcess(){
 	//プレイヤーがダメージを受けた場合ビネット
 	if (player_->GetIsDamaged() == true) {
 		//時間の加算
-		vignetteChangeTime_ += DELTA_ANIMATION_TIME_;
+		vignetteChangeTime_ += DELTA_TIME_;
 
 		//線形補間で滑らかに変化
 		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
 	}
 	//ピンチ演出
 	else if (player_->GetHP() == DANGEROUS_HP) {
-		warningTime_ += DELTA_ANIMATION_TIME_;
+		warningTime_ += DELTA_TIME_;
 		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
 
 		//最大時間
