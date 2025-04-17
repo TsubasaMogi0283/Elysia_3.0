@@ -1,4 +1,4 @@
-#include "Vignette.h"
+#include "VignettePostEffect.h"
 #include <imgui.h>
 
 #include "WindowsSetup.h"
@@ -7,8 +7,9 @@
 #include "TextureManager.h"
 #include "SrvManager.h"
 #include "RtvManager.h"
+#include "Vignette.h"
 
-Elysia::Vignette::Vignette(){
+Elysia::VignettePostEffect::VignettePostEffect(){
 	//ウィンドウクラスの取得
 	windowsSetup_ = Elysia::WindowsSetup::GetInstance();
 	//DirectXクラスの取得
@@ -21,7 +22,7 @@ Elysia::Vignette::Vignette(){
 	srvManager_ = Elysia::SrvManager::GetInstance();;
 }
 
-void Elysia::Vignette::Initialize() {
+void Elysia::VignettePostEffect::Initialize() {
 
 	//RTV用のリソースを生成
 	const Vector4 RENDER_TARGET_CLEAR_VALUE = { .x = 0.0f,.y = 0.0f,.z = 0.0f,.w = 1.0f };
@@ -37,16 +38,9 @@ void Elysia::Vignette::Initialize() {
 	//SRVの生成
 	srvManager_->CreateSRVForRenderTexture(rtvResource_.Get(), srvHandle_);
 
-	
-	//リソースの生成
-	valueResource_ = directXSetup_->CreateBufferResource(sizeof(VignetteData));
-	//初期化
-	vignetteValue_.scale = 16.0f;
-	vignetteValue_.pow = 0.8f;
-	vignetteValue_.color = { .x = 0.0f,.y = 0.0f,.z = 1.0f };
 }
 
-void Elysia::Vignette::PreDraw() {
+void Elysia::VignettePostEffect::PreDraw() {
 	//RT
 	const float RENDER_TARGET_CLEAR_VALUE[] = {0.0f, 0.0f,0.0f,1.0f };
 	directXSetup_->GetCommandList()->OMSetRenderTargets(
@@ -68,19 +62,12 @@ void Elysia::Vignette::PreDraw() {
 	directXSetup_->GenarateScissor(width, height);
 }
 
-void Elysia::Vignette::Draw() {
+void Elysia::VignettePostEffect::Draw(const Vignette& vignette) {
 
 	//ResourceBarrierを張る
 	directXSetup_->SetResourceBarrier(
 		rtvResource_.Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-
-	//数値の書き込み
-	valueResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vignetteData_));
-	vignetteData_->scale = vignetteValue_.scale;
-	vignetteData_->pow = vignetteValue_.pow;
-	vignetteData_->color = vignetteValue_.color;
-	valueResource_->Unmap(0u, nullptr);
 
 	//PSOの設定
 	directXSetup_->GetCommandList()->SetGraphicsRootSignature(pipelinemanager_->GetVignetteRootSignature().Get());
@@ -91,7 +78,7 @@ void Elysia::Vignette::Draw() {
 	//SRV
 	srvManager_->SetGraphicsRootDescriptorTable(0u, srvHandle_);
 	//数値をGPUへ送る
-	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, valueResource_->GetGPUVirtualAddress());
+	directXSetup_->GetCommandList()->SetGraphicsRootConstantBufferView(1u, vignette.resource->GetGPUVirtualAddress());
 	//描画(DrawCall)３頂点で１つのインスタンス。
 	directXSetup_->GetCommandList()->DrawInstanced(3u, 1u, 0u, 0u);
 	//ResourceBarrierを張る

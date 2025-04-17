@@ -211,12 +211,12 @@ void GameScene::Initialize() {
 
 	//ポストエフェクトの初期化
 	//ビネット生成
-	vignette_ = std::make_unique<Elysia::Vignette>();
+	vignettePostEffect_ = std::make_unique<Elysia::VignettePostEffect>();
 	//初期化
-	vignette_->Initialize();
+	vignettePostEffect_->Initialize();
 	//値の設定
-	vignettePow_ = 0.0f;
-	vignette_->SetPow(vignettePow_);
+	vignette_.Initialize();
+	vignette_.pow = 0.0f;
 
 	//シーンのどこから始めるかを設定する
 	isGamePlay_ = false;
@@ -435,12 +435,12 @@ void GameScene::VigntteProcess(){
 		vignetteChangeTime_ += DELTA_TIME_;
 
 		//線形補間で滑らかに変化
-		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
+		vignette_.pow = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
 	}
 	//ピンチ演出
 	else if (player_->GetHP() == DANGEROUS_HP) {
 		warningTime_ += DELTA_TIME_;
-		vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
+		vignette_.pow = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
 
 		//最大時間
 		const float_t MAX_WARNING_TIME = 1.0f;
@@ -453,11 +453,11 @@ void GameScene::VigntteProcess(){
 	}
 	//通常時の場合
 	else {
-		vignettePow_ = 0.0f;
+		vignette_.pow = 0.0f;
 		vignetteChangeTime_ = 0.0f;
 	}
-	vignette_->SetPow(vignettePow_);
-
+	//ビネットの更新
+	vignette_.Update();
 }
 
 void GameScene::DisplayImGui() {
@@ -466,7 +466,7 @@ void GameScene::DisplayImGui() {
 	ImGui::Checkbox("状態", &isReleaseAttack_);
 
 	if (ImGui::TreeNode("ビネット")==true) {
-		ImGui::InputFloat("POW", &vignettePow_);
+		ImGui::InputFloat("POW", &vignette_.pow);
 		ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
 		ImGui::TreePop();
 	}
@@ -939,7 +939,7 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 
 void GameScene::PreDrawPostEffect() {
 	//ビネット描画処理前
-	vignette_->PreDraw();
+	vignettePostEffect_->PreDraw();
 }
 
 void GameScene::DrawObject3D() {
@@ -959,7 +959,7 @@ void GameScene::DrawObject3D() {
 
 void GameScene::DrawPostEffect() {
 	//ビネット描画
-	vignette_->Draw();
+	vignettePostEffect_->Draw(vignette_);
 }
 
 void GameScene::DrawSprite() {

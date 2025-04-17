@@ -33,6 +33,9 @@ void PlayGameScene::Initialize(){
 }
 
 void PlayGameScene::Update(GameScene* gameScene){
+
+	gameScene;
+
 	//フレーム初めに
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();

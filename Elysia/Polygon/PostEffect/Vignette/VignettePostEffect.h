@@ -1,17 +1,24 @@
 #pragma once
 /**
- * @file Vignette.h
- * @brief ビネットのクラス
+ * @file VignettePostEffect.h
+ * @brief ビネットポストエフェクトのクラス
  * @author 茂木翼
  */
 
 #include "DirectXSetup.h"
 #include "Vector3.h"
 
+
 /// <summary>
 /// ベクトル(4次元)
 /// </summary>
 struct Vector4;
+
+/// <summary>
+/// ビネット
+/// </summary>
+struct Vignette;
+
 
 /// <summary>
 /// ElysiaEngine
@@ -45,14 +52,14 @@ namespace Elysia {
 
 
 	/// <summary>
-	/// ビネット
+	/// ビネットポストエフェクト
 	/// </summary>
-	class Vignette {
+	class VignettePostEffect {
 	public:
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		Vignette();
+		VignettePostEffect();
 
 		/// <summary>
 		/// 初期化
@@ -67,56 +74,14 @@ namespace Elysia {
 		/// <summary>
 		/// 描画
 		/// </summary>
-		void Draw();
+		/// <param name="vignette">ビネット</param>
+		void Draw(const Vignette& vignette);
 
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
-		~Vignette() = default;
+		~VignettePostEffect() = default;
 
-
-
-	public:
-
-		/// <summary>
-		/// 何倍にするかの設定
-		/// </summary>
-		/// <param name="scale"></param>
-		inline void SetScale(const float& scale) {
-			this->vignetteValue_.scale = scale;
-		}
-
-		/// <summary>
-		/// 何乗するかの設定
-		/// </summary>
-		/// <param name="pow"></param>
-		inline void SetPow(const float& pow) {
-			this->vignetteValue_.pow = pow;
-		}
-
-		/// <summary>
-		/// 色の設定
-		/// </summary>
-		/// <param name="color"></param>
-		inline void SetColor(const Vector3& color) {
-			this->vignetteValue_.color = color;
-		}
-
-	private:
-		//送るデータ
-		struct VignetteData {
-		public:
-			//倍
-			float scale;
-			//乗
-			float pow;
-			//色
-			Vector3 color;
-
-		private:
-			float padding[3];
-
-		};
 
 	private:
 		//ウィンドウクラス
@@ -135,16 +100,9 @@ namespace Elysia {
 		uint32_t rtvHandle_ = 0;
 		//RTV
 		ComPtr<ID3D12Resource> rtvResource_ = nullptr;
+
 		//SRV
 		uint32_t srvHandle_ = 0;
-
-		//リソース
-		ComPtr<ID3D12Resource> valueResource_ = nullptr;
-		//送るデータ
-		VignetteData* vignetteData_ = nullptr;
-		//値
-		VignetteData vignetteValue_ = {};
-
 		//リソースバリア
 		D3D12_RESOURCE_BARRIER barrier = {};
 

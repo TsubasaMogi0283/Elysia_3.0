@@ -642,7 +642,7 @@
     <ClCompile Include="Elysia\StringOption\StringOption.cpp">
       <Filter>Elysia\Source File\StringOption</Filter>
     </ClCompile>
-    <ClCompile Include="Elysia\Polygon\PostEffect\Vignette\Vignette.cpp">
+    <ClCompile Include="Elysia\Polygon\PostEffect\Vignette\VignettePostEffect.cpp">
       <Filter>Elysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Elysia\Polygon\PostEffect\BackTest\BackTexture.cpp">
@@ -879,6 +879,9 @@
     <ClCompile Include="Project\AllGameScene\GameScene\BaseGameScene\Play\PlayGameScene.cpp">
       <Filter>Project\Scene\Game\Base\Play</Filter>
     </ClCompile>
+    <ClCompile Include="Elysia\Material\Vignette\Vignette.cpp">
+      <Filter>Elysia\Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -1099,7 +1102,7 @@
     <ClInclude Include="Elysia\StringOption\StringOption.h">
       <Filter>Elysia\Header File\StringOption</Filter>
     </ClInclude>
-    <ClInclude Include="Elysia\Polygon\PostEffect\Vignette\Vignette.h">
+    <ClInclude Include="Elysia\Polygon\PostEffect\Vignette\VignettePostEffect.h">
       <Filter>Elysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\Polygon\PostEffect\BackTest\BackTexture.h">
@@ -1458,6 +1461,9 @@
     </ClInclude>
     <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\Play\PlayGameScene.h">
       <Filter>Project\Scene\Game\Base\Play</Filter>
+    </ClInclude>
+    <ClInclude Include="Elysia\Material\Vignette\Vignette.h">
+      <Filter>Elysia\Header File\Material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

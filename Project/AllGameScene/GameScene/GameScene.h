@@ -20,6 +20,7 @@
 #include "Stage/Gate/Gate.h"
 #include "CollisionCalculation.h"
 
+#include "VignettePostEffect.h"
 #include "Vignette.h"
 #include "BaseGameScene/BaseGameScene.h"
 
@@ -192,9 +193,9 @@ private:
 	
 	//ポストエフェクト
 	//ビネット
-	std::unique_ptr<Elysia::Vignette> vignette_ = nullptr;
+	Vignette vignette_ = {};
+	std::unique_ptr<Elysia::VignettePostEffect> vignettePostEffect_ = nullptr;
 	const float_t MAX_VIGNETTE_POW_ = 1.6f;
-	float_t vignettePow_ = 17.0f;
 	float_t vignetteChangeTime_ = 0.0f;
 	float_t warningTime_ = 0.0f;
 
