@@ -7,6 +7,7 @@
 #include "TextureManager.h"
 #include "LevelDataManager.h"
 #include "VectorCalculation.h"
+#include "SingleCalculation.h"
 #include "GameScene/GameScene.h"
 
 
@@ -30,6 +31,14 @@ void PlayGameScene::Initialize(){
 
 	//コリジョン管理クラスの生成
 	collisionManager_ = std::make_unique<Elysia::CollisionManager>();
+
+	//出口の画像読み込み
+	uint32_t escapeTextureHandle = textureManager_->Load("Resources/Sprite/Escape/EscapeText.png");
+	//生成
+	escapeText_.reset(Elysia::Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
+	//最初は非表示にする
+	escapeText_->SetInvisible(true);
+
 }
 
 void PlayGameScene::Update(GameScene* gameScene){
@@ -68,8 +77,6 @@ void PlayGameScene::Update(GameScene* gameScene){
 	//鍵
 	keyManager_->Update();
 
-
-
 	//体力が0になったら負け
 	//または一発アウトの敵に接触した場合
 	if (player_->GetIsAlive() == false || isTouchStrongEnemy_ == true) {
@@ -80,13 +87,43 @@ void PlayGameScene::Update(GameScene* gameScene){
 		//鍵の音を止める
 		keyManager_->StopAudio();
 
-		//敵の動きが止まりブラックアウト
+		//処理終了にし負け
+		isEnd_ = true;
+		isLose_ = true;
+		return;
 
-		//負けシーンへ
-		if (false) {
-			//gameScene->ChangeDetailScene();
-			return;
-		}
+	}
+
+	//ホワイトアウト
+	if (isSucceedEscape_ == true) {
+
+		//回転の値を加算
+		
+		rightGateRotateTheta_ += ROTATE_VALUE;
+		leftGateRotateTheta_ -= ROTATE_VALUE;
+
+		std::string right = "GateDoorRight";
+		std::string left = "GateDoorLeft";
+		//門の回転
+		levelDataManager_->SetRotate(levelDataHandle_, right, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelDataHandle_, left, { .x = 0.0f,.y = leftGateRotateTheta_,.z = 0.0f });
+
+		//音を止める
+		enemyManager_->StopAudio();
+		//鍵の音を止める
+		keyManager_->StopAudio();
+
+		//非表示
+		escapeText_->SetInvisible(true);
+		//振動しないようにする
+		player_->SetIsAbleToControll(false);
+		//加算
+		//fadeTransparency_ += FADE_OUT_INTERVAL_;
+
+		//処理終了にし負け
+		isEnd_ = true;
+		isWin_ = true;
+		return;
 	}
 
 
@@ -107,7 +144,9 @@ void PlayGameScene::Update(GameScene* gameScene){
 
 void PlayGameScene::DrawSprite(){
 
+	escapeText_->Draw();
 
+	//openTreasureBoxSprite_->Draw();
 }
 
 void PlayGameScene::RegisterToCollisionManager(){
@@ -365,27 +404,27 @@ void PlayGameScene::PlayerRotate(){
 	bool isRotateYKey = false;
 	bool isRotateXKey = false;
 	//回転の大きさ
-	const float_t ROTATE_INTERVAL = 0.025f;
+	const float_t ROTATE_INTERVAL_ = 0.025f;
 
 	//+が左回り
 	//左を向く
 	if (input_->IsPushKey(DIK_LEFT) == true) {
-		theta_ += ROTATE_INTERVAL;
+		theta_ += ROTATE_INTERVAL_;
 		isRotateYKey = true;
 	}
 	//右を向く
 	if (input_->IsPushKey(DIK_RIGHT) == true) {
-		theta_ -= ROTATE_INTERVAL;
+		theta_ -= ROTATE_INTERVAL_;
 		isRotateYKey = true;
 	}
 	//上を向く
 	if (input_->IsPushKey(DIK_UP) == true) {
-		phi_ -= ROTATE_INTERVAL;
+		phi_ -= ROTATE_INTERVAL_;
 		isRotateXKey = true;
 	}
 	//下を向く
 	if (input_->IsPushKey(DIK_DOWN) == true) {
-		phi_ += ROTATE_INTERVAL;
+		phi_ += ROTATE_INTERVAL_;
 		isRotateXKey = true;
 	}
 
@@ -402,21 +441,20 @@ void PlayGameScene::PlayerRotate(){
 #pragma region コントローラーの回転
 
 
-	//コントローラーがある場合
-	const float_t MOVE_LIMITATION = 0.02f;
+	
 
 	//キーボード入力していない時
 	if (isRotateYKey == false && isRotateXKey == false) {
 
 		//入力
-		float_t rotateMoveX = (static_cast<float_t>(input_->GetCurrentState().Gamepad.sThumbRY) / SHRT_MAX * ROTATE_INTERVAL);
-		float_t rotateMoveY = (static_cast<float_t>(input_->GetCurrentState().Gamepad.sThumbRX) / SHRT_MAX * ROTATE_INTERVAL);
+		float_t rotateMoveX = (static_cast<float_t>(input_->GetCurrentState().Gamepad.sThumbRY) / SHRT_MAX * ROTATE_INTERVAL_);
+		float_t rotateMoveY = (static_cast<float_t>(input_->GetCurrentState().Gamepad.sThumbRX) / SHRT_MAX * ROTATE_INTERVAL_);
 
 		//勝手に動くので制限を掛ける
-		if (rotateMoveY < MOVE_LIMITATION && rotateMoveY > -MOVE_LIMITATION) {
+		if (rotateMoveY < MOVE_LIMITATION_ && rotateMoveY > -MOVE_LIMITATION_) {
 			rotateMoveY = 0.0f;
 		}
-		if (rotateMoveX < MOVE_LIMITATION && rotateMoveX > -MOVE_LIMITATION) {
+		if (rotateMoveX < MOVE_LIMITATION_ && rotateMoveX > -MOVE_LIMITATION_) {
 			rotateMoveX = 0.0f;
 		}
 
@@ -438,6 +476,28 @@ void PlayGameScene::PlayerRotate(){
 }
 
 void PlayGameScene::EscapeCondition(){
+	//ゲート
+	if (gate_->isCollision(player_->GetWorldPosition())) {
+
+		//3個取得したら脱出できる
+		uint32_t playerKeyQuantity = player_->GetHavingKey();
+		if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
+			//「出口へ」が表示
+			escapeText_->SetInvisible(false);
+
+			//コントローラーのBボタンを押したら脱出のフラグがたつ
+			//Bボタンを押したとき
+			//SPACEキーを押したら脱出のフラグがたつ
+			if (input_->IsPushButton(XINPUT_GAMEPAD_B) == true || input_->IsPushKey(DIK_SPACE) == true) {
+				//脱出
+				isSucceedEscape_ = true;
+			}
+		}
+	}
+	else {
+		//まだ脱出できない
+		escapeText_->SetInvisible(true);
+	}
 
 }
 
@@ -508,36 +568,31 @@ void PlayGameScene::ObjectCollision(){
 }
 
 void PlayGameScene::VigntteProcess(){
-	////HPが1でピンチの場合
-	//const uint32_t DANGEROUS_HP = 1u;
-	////プレイヤーがダメージを受けた場合ビネット
-	//if (player_->GetIsDamaged() == true) {
-	//	//時間の加算
-	//	vignetteChangeTime_ += DELTA_ANIMATION_TIME_;
-	//
-	//	//線形補間で滑らかに変化
-	//	vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
-	//}
-	////ピンチ演出
-	//else if (player_->GetHP() == DANGEROUS_HP) {
-	//	warningTime_ += DELTA_ANIMATION_TIME_;
-	//	vignettePow_ = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
-	//
-	//	//最大時間
-	//	const float_t MAX_WARNING_TIME = 1.0f;
-	//	//最小時間
-	//	const float_t MIN_WARNING_TIME = 1.0f;
-	//
-	//	if (warningTime_ > MAX_WARNING_TIME) {
-	//		warningTime_ = MIN_WARNING_TIME;
-	//	}
-	//}
-	////通常時の場合
-	//else {
-	//	vignettePow_ = 0.0f;
-	//	vignetteChangeTime_ = 0.0f;
-	//}
-	//vignette_->SetPow(vignettePow_);
+	
+	//プレイヤーがダメージを受けた場合ビネット
+	if (player_->GetIsDamaged() == true) {
+		//時間の加算
+		vignetteChangeTime_ += DELTA_TIME_;
+	
+		//線形補間で滑らかに変化
+		vignette_.pow = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
+	}
+	//ピンチ演出
+	else if (player_->GetHP() == DANGEROUS_HP_) {
+		warningTime_ += DELTA_TIME_;
+		vignette_.pow = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
+	
+		
+		//循環
+		if (warningTime_ > MAX_WARNING_TIME_) {
+			warningTime_ = MIN_WARNING_TIME_;
+		}
+	}
+	//通常時の場合
+	else {
+		vignette_.pow = 0.0f;
+		vignetteChangeTime_ = 0.0f;
+	}
 }
 
 void PlayGameScene::DisplayImGui(){

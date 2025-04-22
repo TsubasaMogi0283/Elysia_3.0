@@ -55,13 +55,11 @@ void ExplanationGameScene::Update(GameScene* gameScene){
 	}
 
 	//読み終わったらゲームプレイへ
-	if (howToPlayTextureNumber_ > EXPLANATION_QUANTITY_) {
+	if (howToPlayTextureNumber_ >= EXPLANATION_QUANTITY_) {
 		//本編のプレイシーンへ
 		gameScene->ChangeDetailScene(std::make_unique<PlayGameScene>());
 		return;
 	}
-
-
 
 #ifdef _DEBUG
 	//ImGui表示用
@@ -73,12 +71,12 @@ void ExplanationGameScene::Update(GameScene* gameScene){
 void ExplanationGameScene::DrawSprite(){
 	//説明
 	for (size_t i = 0u; i < explanation_.size(); ++i) {
-		if (howToPlayTextureNumber_ == i + 1u) {
+		if (howToPlayTextureNumber_ == i) {
 			explanation_[i]->Draw();
 			spaceToNext_[i]->Draw();
 		}
+		
 	}
-
 }
 
 void ExplanationGameScene::DisplayImGui(){

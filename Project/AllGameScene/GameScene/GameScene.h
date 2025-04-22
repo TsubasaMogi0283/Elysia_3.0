@@ -156,7 +156,6 @@ private:
 	/// </summary>
 	void DisplayImGui();
 
-
 private:
 	//インプット
 	Elysia::Input* input_ = nullptr;
@@ -293,5 +292,10 @@ private:
 	//細かいシーン
 	std::unique_ptr<BaseGameScene>detailGameScene_ = nullptr;
 
+	//処理が終了したかどうか
+	bool isEnd_ = false;
+	//結果
+	bool isWin_ = false;
+	bool isLose_ = false;
 
 };

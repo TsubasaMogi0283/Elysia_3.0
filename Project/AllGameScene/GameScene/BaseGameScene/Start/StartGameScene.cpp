@@ -35,6 +35,7 @@ void StartGameScene::Update(GameScene* gameScene){
 	//透明度の設定
 	//徐々に透明になっていく
 	fadeTransparency_ -= FADE_VALUE_;
+	blackFadeSprite_->SetTransparency(fadeTransparency_);
 
 	//完全に透明になったらゲームが始まる
 	if (fadeTransparency_ < PERFECT_TRANSPARENT_) {

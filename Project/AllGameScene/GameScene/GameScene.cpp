@@ -763,135 +763,162 @@ void GameScene::PlayerRotate() {
 void GameScene::Update(Elysia::GameManager* gameManager) {
 
 	//細かいシーンの更新
-	//detailGameScene_->Update(this);
+	detailGameScene_->Update(this);
+
+	//
+	isEnd_ = detailGameScene_->GetIsEnd();
+	isWin_ = detailGameScene_->GetIsWin();
+	isLose_ = detailGameScene_->GetIsLose();
+
+
+
+	//処理が終わった時
+	if (isEnd_ == true) {
+		//勝ったとき
+		if (isWin_ == true) {
+			gameManager->ChangeScene("Win");
+			return;
+		}
+		//負けた時
+		if (isLose_ == true) {
+			gameManager->ChangeScene("Lose");
+			return;
+		}
+
+
+	}
 
 	//フレーム初めに
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
 
-	//フェードイン
-	if (isWhiteFadeIn == true) {
-		const float_t FADE_IN_INTERVAL = 0.01f;
-		fadeTransparency_ -= FADE_IN_INTERVAL;
+	////フェードイン
+	//if (isWhiteFadeIn == true) {
+	//	const float_t FADE_IN_INTERVAL = 0.01f;
+	//	fadeTransparency_ -= FADE_IN_INTERVAL;
+	//
+	//	//完全に透明になったらゲームが始まる
+	//	if (fadeTransparency_ < PERFECT_TRANSPARENT_) {
+	//		fadeTransparency_ = PERFECT_TRANSPARENT_;
+	//		isWhiteFadeIn = false;
+	//		isExplain_ = true;
+	//		//1枚目
+	//		howToPlayTextureNumber_ = 1u;
+	//	}
+	//}
+	//
+	////ゲーム
+	//if (isWhiteFadeIn == false && isWhiteFadeOut_ == false) {
+	//	fadeTransparency_ = PERFECT_TRANSPARENT_;
+	//
+	//	//説明
+	//	if (isExplain_ == true) {
+	//		//スペースまたはBボタンを押したとき
+	//		if (input_->IsTriggerKey(DIK_SPACE) == true|| input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
+	//			++howToPlayTextureNumber_;
+	//		}
+	//
+	//		//読み終わったらゲームプレイへ
+	//		if (howToPlayTextureNumber_ > MAX_EXPLANATION_NUMBER_) {
+	//			isExplain_ = false;
+	//			isGamePlay_ = true;
+	//		}
+	//	}
+	//	//プレイ
+	//	if (isGamePlay_ == true) {
+	//		//コントロール可能にする
+	//		player_->SetIsAbleToControll(true);
+	//		//プレイヤーの移動
+	//		PlayerMove();
+	//		//回転
+	//		PlayerRotate();
+	//
+	//		//操作説明を追加
+	//		isDisplayUI_ = true;
+	//		//敵
+	//		enemyManager_->Update();
+	//		//敵を消す
+	//		enemyManager_->DeleteEnemy();
+	//	}
+	//
+	//	//プレイヤーにそれぞれの角度を設定する
+	//	player_->SetTheta(theta_);
+	//	player_->SetPhi(phi_);
+	//
+	//	//脱出の仕組み
+	//	EscapeCondition();
+	//
+	//	//オブジェクトの当たり判定
+	//	ObjectCollision();
+	//
+	//	//鍵
+	//	keyManager_->Update();
+	//
+	//
+	//
+	//	//体力が0になったら負け
+	//	//または一発アウトの敵に接触した場合
+	//	if (player_->GetIsAlive()==false || isTouchStrongEnemy_ == true) {
+	//		//コントロールを失う
+	//		player_->SetIsAbleToControll(false);
+	//		//敵の音を止める
+	//		enemyManager_->StopAudio();
+	//		//鍵の音を止める
+	//		keyManager_->StopAudio();
+	//
+	//		//敵の動きが止まりブラックアウト
+	//		isBlackFadeOut_ = true;
+	//		blackFadeTransparency_ += FADE_OUT_INTERVAL_;
+	//		blackFade_->SetTransparency(blackFadeTransparency_);
+	//
+	//
+	//		//負けシーンへ
+	//		if (blackFadeTransparency_ > CHANGE_TO_LOSE_SCENE_VALUE_) {
+	//			gameManager->ChangeScene("Lose");
+	//			return;
+	//		}
+	//	}
+	//}
+	//
+	////ホワイトアウト
+	//if (isWhiteFadeOut_ == true) {
+	//
+	//	//回転の値を加算
+	//	const float_t ROTATE_VALUE = 0.01f;
+	//	rightGateRotateTheta_ += ROTATE_VALUE;
+	//	leftGateRotateTheta_ -= ROTATE_VALUE;
+	//
+	//	std::string right = "GateDoorRight";
+	//	std::string left = "GateDoorLeft";
+	//	//門の回転
+	//	levelDataManager_->SetRotate(levelHandle_, right, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
+	//	levelDataManager_->SetRotate(levelHandle_, left, { .x = 0.0f,.y = leftGateRotateTheta_,.z = 0.0f });
+	//
+	//	//音を止める
+	//	enemyManager_->StopAudio();
+	//	//鍵の音を止める
+	//	keyManager_->StopAudio();
+	//
+	//	//非表示
+	//	escapeText_->SetInvisible(true);
+	//	//振動しないようにする
+	//	player_->SetIsAbleToControll(false);
+	//	//加算
+	//	fadeTransparency_ += FADE_OUT_INTERVAL_;
+	//
+	//	//最大の透明度
+	//	const float_t MAX_TRANSPARENCY = 2.0f;
+	//	if (fadeTransparency_ > MAX_TRANSPARENCY) {
+	//		gameManager->ChangeScene("Win");
+	//		return;
+	//	}
+	//}
 
-		//完全に透明になったらゲームが始まる
-		if (fadeTransparency_ < PERFECT_TRANSPARENT_) {
-			fadeTransparency_ = PERFECT_TRANSPARENT_;
-			isWhiteFadeIn = false;
-			isExplain_ = true;
-			//1枚目
-			howToPlayTextureNumber_ = 1u;
-		}
-	}
-
-	//ゲーム
-	if (isWhiteFadeIn == false && isWhiteFadeOut_ == false) {
-		fadeTransparency_ = PERFECT_TRANSPARENT_;
-
-		//説明
-		if (isExplain_ == true) {
-			//スペースまたはBボタンを押したとき
-			if (input_->IsTriggerKey(DIK_SPACE) == true|| input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
-				++howToPlayTextureNumber_;
-			}
-
-			//読み終わったらゲームプレイへ
-			if (howToPlayTextureNumber_ > MAX_EXPLANATION_NUMBER_) {
-				isExplain_ = false;
-				isGamePlay_ = true;
-			}
-		}
-		//プレイ
-		if (isGamePlay_ == true) {
-			//コントロール可能にする
-			player_->SetIsAbleToControll(true);
-			//プレイヤーの移動
-			PlayerMove();
-			//回転
-			PlayerRotate();
-
-			//操作説明を追加
-			isDisplayUI_ = true;
-			//敵
-			enemyManager_->Update();
-			//敵を消す
-			enemyManager_->DeleteEnemy();
-		}
-
-		//プレイヤーにそれぞれの角度を設定する
-		player_->SetTheta(theta_);
-		player_->SetPhi(phi_);
-
-		//脱出の仕組み
-		EscapeCondition();
-
-		//オブジェクトの当たり判定
-		ObjectCollision();
-
-		//鍵
-		keyManager_->Update();
+	
 
 
-
-		//体力が0になったら負け
-		//または一発アウトの敵に接触した場合
-		if (player_->GetIsAlive()==false || isTouchStrongEnemy_ == true) {
-			//コントロールを失う
-			player_->SetIsAbleToControll(false);
-			//敵の音を止める
-			enemyManager_->StopAudio();
-			//鍵の音を止める
-			keyManager_->StopAudio();
-
-			//敵の動きが止まりブラックアウト
-			isBlackFadeOut_ = true;
-			blackFadeTransparency_ += FADE_OUT_INTERVAL_;
-			blackFade_->SetTransparency(blackFadeTransparency_);
-
-
-			//負けシーンへ
-			if (blackFadeTransparency_ > CHANGE_TO_LOSE_SCENE_VALUE_) {
-				gameManager->ChangeScene("Lose");
-				return;
-			}
-		}
-	}
-
-	//ホワイトアウト
-	if (isWhiteFadeOut_ == true) {
-
-		//回転の値を加算
-		const float_t ROTATE_VALUE = 0.01f;
-		rightGateRotateTheta_ += ROTATE_VALUE;
-		leftGateRotateTheta_ -= ROTATE_VALUE;
-
-		std::string right = "GateDoorRight";
-		std::string left = "GateDoorLeft";
-		//門の回転
-		levelDataManager_->SetRotate(levelHandle_, right, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
-		levelDataManager_->SetRotate(levelHandle_, left, { .x = 0.0f,.y = leftGateRotateTheta_,.z = 0.0f });
-
-		//音を止める
-		enemyManager_->StopAudio();
-		//鍵の音を止める
-		keyManager_->StopAudio();
-
-		//非表示
-		escapeText_->SetInvisible(true);
-		//振動しないようにする
-		player_->SetIsAbleToControll(false);
-		//加算
-		fadeTransparency_ += FADE_OUT_INTERVAL_;
-
-		//最大の透明度
-		const float_t MAX_TRANSPARENCY = 2.0f;
-		if (fadeTransparency_ > MAX_TRANSPARENCY) {
-			gameManager->ChangeScene("Win");
-			return;
-		}
-	}
 	//フェードの透明度の設定
-	blackFadeSprite_->SetTransparency(fadeTransparency_);
+	//blackFadeSprite_->SetTransparency(fadeTransparency_);
 
 	//プレイヤーの更新
 	player_->Update();
@@ -965,42 +992,42 @@ void GameScene::DrawPostEffect() {
 void GameScene::DrawSprite() {
 
 	
-	//説明
-	for (size_t i = 0u; i < explanation_.size(); ++i) {
-		if (howToPlayTextureNumber_ == i + 1u) {
-			explanation_[i]->Draw();
-			spaceToNext_[i]->Draw();
-		}
-	}
-
-	//UIを表示するかどうか
-	if (isDisplayUI_ == true) {
-		//プレイヤー
-		player_->DrawSprite();
-
-		//操作説明
-		operation_->Draw();
-		//鍵
-		keyManager_->DrawSprite();
-		//脱出
-		escapeText_->Draw();
-		
-		if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
-			toEscape_->Draw();
-		}
-	}
-
-	//フェード
-	if (isWhiteFadeIn == true || isWhiteFadeOut_ == true) {
-		blackFadeSprite_->Draw();
-	}
-	//黒フェード
-	if (isBlackFadeIn == true || isBlackFadeOut_ == true) {
-		blackFade_->Draw();
-	}
+	////説明
+	//for (size_t i = 0u; i < explanation_.size(); ++i) {
+	//	if (howToPlayTextureNumber_ == i + 1u) {
+	//		explanation_[i]->Draw();
+	//		spaceToNext_[i]->Draw();
+	//	}
+	//}
+	//
+	////UIを表示するかどうか
+	//if (isDisplayUI_ == true) {
+	//	//プレイヤー
+	//	player_->DrawSprite();
+	//
+	//	//操作説明
+	//	operation_->Draw();
+	//	//鍵
+	//	keyManager_->DrawSprite();
+	//	//脱出
+	//	escapeText_->Draw();
+	//	
+	//	if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
+	//		toEscape_->Draw();
+	//	}
+	//}
+	//
+	////フェード
+	//if (isWhiteFadeIn == true || isWhiteFadeOut_ == true) {
+	//	blackFadeSprite_->Draw();
+	//}
+	////黒フェード
+	//if (isBlackFadeIn == true || isBlackFadeOut_ == true) {
+	//	blackFade_->Draw();
+	//}
 
 
 	//細かいシーンのスプライト描画
-	//detailGameScene_->DrawSprite();
+	detailGameScene_->DrawSprite();
 
 }

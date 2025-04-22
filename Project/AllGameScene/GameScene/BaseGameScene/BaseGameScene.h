@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "Sprite.h"
+#include "Vignette.h"
 
 /// <summary>
 /// ElysiaEngine
@@ -135,7 +136,38 @@ public:
 		return isTouchStrongEnemy_;
 	}
 
+	/// <summary>
+	/// ビネットの値を取得
+	/// </summary>
+	/// <returns>値</returns>
+	inline Vignette GetVignette() {
+		return vignette_;
+	}
 
+
+	/// <summary>
+	/// 処理が終わったかどうか
+	/// </summary>
+	/// <returns>フラグ</returns>
+	inline bool GetIsEnd()const {
+		return isEnd_;
+	}
+
+	/// <summary>
+	/// 勝ったかどうか
+	/// </summary>
+	/// <returns>フラグ</returns>
+	inline bool GetIsWin()const {
+		return isWin_;
+	}
+
+	/// <summary>
+	/// 負けたかどうか
+	/// </summary>
+	/// <returns>フラグ</returns>
+	inline bool GetIsLose()const {
+		return isLose_;
+	}
 
 protected:
 	//テクスチャ管理クラス
@@ -168,5 +200,15 @@ protected:
 protected:
 	//強敵と接触したかどうか
 	bool isTouchStrongEnemy_ = false;
+
+	//ビネット
+	Vignette vignette_ = {};
+
+
+	//処理が終了したかどうか
+	bool isEnd_ = false;
+	//結果
+	bool isWin_ = false;
+	bool isLose_ = false;
 
 };
