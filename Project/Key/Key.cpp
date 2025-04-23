@@ -48,9 +48,8 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 }
 
 void Key::Update(){
-	
+	//取得
 	if (isPickUp_ == false) {
-		
 		//角度の計算
 		heightTheta_ += ROTATE_AMOUNT_;
 		//上下する

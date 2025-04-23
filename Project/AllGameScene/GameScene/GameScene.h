@@ -161,8 +161,6 @@ private:
 	//グローバル変数クラス
 	Elysia::GlobalVariables* globalVariables_ = nullptr;
 
-
-
 private:
 
 	//説明テクスチャの最大数
@@ -176,6 +174,8 @@ private:
 
 	//完全に透明になる値
 	const float_t PERFECT_TRANSPARENT_ = 0.0f;
+	//ビネットの最大値
+	const float_t MAX_VIGNETTE_POW_ = 1.6f;
 
 private:
 	//カメラ
@@ -185,7 +185,7 @@ private:
 	//ビネット
 	Vignette vignette_ = {};
 	std::unique_ptr<Elysia::VignettePostEffect> vignettePostEffect_ = nullptr;
-	const float_t MAX_VIGNETTE_POW_ = 1.6f;
+	
 	float_t vignetteChangeTime_ = 0.0f;
 	float_t warningTime_ = 0.0f;
 

@@ -139,8 +139,7 @@ private:
 	//宝箱が開いているかどうか
 	bool isOpenTreasureBox_ = false;
 	//開けるかどうかを表示する
-	std::unique_ptr<Elysia::Sprite>openTreasureBoxSprite_ = nullptr;
-
+	std::unique_ptr<Elysia::Sprite> openTreasureBoxSprite_ = nullptr;
 	//脱出テキストのスプライト
 	std::unique_ptr<Elysia::Sprite> escapeTextSprite_ = nullptr;
 	//脱出のスプライト

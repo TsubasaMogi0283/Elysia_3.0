@@ -61,7 +61,7 @@ void PlayGameScene::Initialize(){
 	//ゴールに向かえのテキスト
 	uint32_t toEscapeTextureHandle = textureManager_->Load("Resources/Sprite/Escape/ToGoal.png");
 	toEscapeSprite_.reset(Elysia::Sprite::Create(toEscapeTextureHandle, INITIAL_SPRITE_POSITION_));
-
+	//宝箱
 	uint32_t openTreasureBoxSpriteHandle = textureManager_->Load("Resources/Sprite/TreasureBox/OpenTreasureBox.png");
 	openTreasureBoxSpriteHandle;
 

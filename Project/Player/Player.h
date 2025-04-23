@@ -332,12 +332,19 @@ private:
 	const float_t DELTA_TIME = 1.0f / 60.0f;
 	//チャージの増える値
 	const float_t CHARGE_VALUE_ = 0.1f;
-
-
+	//最大の振動の強さ
+	const float_t MAX_VIBE_ = 1.0f;
+	//最小の振動の強さ
+	const float_t MIN_VIBE_ = 0.0f;
+	//戻る時間
+	const float_t RESTART_TIME_ = 0.0f;
+	//歩くスピード
+	const float_t NORMAL_MOVE_SPEED_ = 0.1f;
+	//走るスピード
+	const float_t DASH_MOVE_SPEED_ = 0.2f;
+	//Yを固定させる
+	const float_t HEIGHT_ = 0.0f;
 private:
-
-	//モデル
-	std::unique_ptr<Elysia::Model> model_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_ = {};
 	//動く方向

@@ -27,10 +27,6 @@ Player::Player(){
 
 void Player::Initialize(){
 
-	//モデルの生成 	
-	uint32_t modelHandle = modelManager_->Load("Resources/Model/Sample/Cube","cube.obj");
-	model_.reset(Elysia::Model::Create(modelHandle));
-
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	const Vector3 INITIAL_POSITION = { .x=0.0f,.y=0.0f,.z=-15.0f };
@@ -73,17 +69,14 @@ void Player::Initialize(){
 	//フレームを生成
 	playerHPBackFrameSprite_.reset(Elysia::Sprite::Create(playerHPBackFrameTextureHandle, FRAME_INITIAL_POSITION));
 
-
 }
 
 void Player::Update(){
 	
 	//移動処理
 	Move();
-
 	//攻撃を受ける
 	Damaged();
-
 	//体力
 	for (uint32_t i = hp_; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
 		//非表示にする
@@ -92,9 +85,7 @@ void Player::Update(){
 
 	//ワールドトランスフォームの更新
 	worldTransform_.translate = playerCenterPosition_;
-	//Yを固定させる
-	const float HEIGHT = 0.0f;
-	worldTransform_.translate.y = HEIGHT;
+	worldTransform_.translate.y = HEIGHT_;
 	worldTransform_.Update();
 
 
@@ -125,28 +116,21 @@ void Player::Update(){
 	//角度の設定
 	eyeCamera_->SetTheta(theta_);
 	eyeCamera_->SetPhi(phi_);
-
-
 	//カメラ(目)の更新
 	eyeCamera_->Update();
-
 	//マテリアルの更新
 	material_.Update();
 
 	
-	#ifdef _DEBUG
-
+#ifdef _DEBUG
 	//ImGui表示
 	DisplayImGui();
-	#endif
+#endif
 }
 
 void Player::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
 
 #ifdef _DEBUG
-	//本体の描画
-	//1人称視点だからいらないね
-	//model_->Draw(worldTransform_, camera,material_,spotLight);
 	spotLight;
 	//懐中電灯
 	flashLight_->DrawObject3D(camera);
@@ -186,14 +170,10 @@ void Player::Damaged() {
 		isControll_ = false;
 		//線形補間で振動処理をする
 		vibeTime_ += DELTA_TIME;
-		//最大の振動の強さ
-		const float MAX_VIBE_ = 1.0f;
-		//最小の振動の強さ
-		const float MIN_VIBE_ = 0.0f;
-
+		
 		//線形補間を使い振動を減衰させる
 		//振動の強さ
-		float vibeStrength_ =  SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
+		float_t vibeStrength_ =  SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
 		//振動の設定
 		input_->SetVibration(vibeStrength_, vibeStrength_);
 
@@ -201,18 +181,13 @@ void Player::Damaged() {
 		if (vibeStrength_ <= MIN_VIBE_) {
 			//振動が止まる
 			input_->StopVibration();
-
-			//戻る時間
-			const float RESTART_TIME = 0.0f;
 			//時間を戻す
-			vibeTime_ = RESTART_TIME;
+			vibeTime_ = RESTART_TIME_;
 			//ダメージを受けていないようにする
 			isDameged_ = false;
-
 			//コントロールを戻す
 			isControll_ = true;
 		}
-
 	}
 
 	//体力が0になったら死亡
@@ -225,20 +200,14 @@ void Player::Damaged() {
 void Player::Move() {
 	//動けるときだけ加算
 	if (isControll_ == true ) {
-
-		//歩くスピード
-		const float NORMAL_MOVE_SPEED = 0.1f;
-		//走るスピード
-		const float DASH_MOVE_SPEED = 0.2f;
-
-		float moveSpeed = 0.0f;
+		float_t moveSpeed = 0.0f;
 		//走っている時
 		if (isDash_ == true) {
-			moveSpeed = DASH_MOVE_SPEED;
+			moveSpeed = DASH_MOVE_SPEED_;
 		}
 		//通常の動きの時
 		else {
-			moveSpeed = NORMAL_MOVE_SPEED;
+			moveSpeed = NORMAL_MOVE_SPEED_;
 		}
 		//加算
 		playerCenterPosition_ = VectorCalculation::Add(playerCenterPosition_, VectorCalculation::Multiply(moveDirection_, moveSpeed));
@@ -249,7 +218,6 @@ void Player::Move() {
 		std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelHandle_, "Stage");
 		//衝突判定
 		for (size_t i = 0u; i < aabbs.size(); ++i) {
-
 			//コライダーを持っているときだけ
 			if (colliders[i] == true) {
 				//押し戻し処理

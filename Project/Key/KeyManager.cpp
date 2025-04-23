@@ -260,41 +260,32 @@ void KeyManager::PickUp() {
 			//距離を求める
 			float_t collisionDistance = sqrtf(distance.x + distance.y + distance.z);
 
-
-
 			//範囲内にいれば入力を受け付ける
 			if (collisionDistance <= player_->GetSideSize() + key->GetRadius()) {
-
 				//取得可能
 				key->SetIsPrePickUp(true);
-
-				//SPACEキーで取得
-				if (input_->IsPushKey(DIK_SPACE) == true) {
-					//プレイヤーの持っているか鍵の数が増える
-					player_->AddHaveKeyQuantity();
-					//鍵が取得される
-					key->PickedUp();
-					//取得の音が鳴る
-					audio_->Play(pickUpSEHandle, false);
-				}
-
-				if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
-					//プレイヤーの持っているか鍵の数が増える
-					player_->AddHaveKeyQuantity();
-					//鍵が取得される
-					key->PickedUp();
-					//取得の音が鳴る
-					audio_->Play(pickUpSEHandle, false);
-				}
-
 				
-
+				//SPACEキーで取得
+				if (input_->IsPushKey(DIK_SPACE) == true|| input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
+					//プレイヤーの持っているか鍵の数が増える
+					player_->AddHaveKeyQuantity();
+					//鍵が取得される
+					key->PickedUp();
+					//取得の音が鳴る
+					audio_->Play(pickUpSEHandle, false);
+					
+				}
 			}
 			else {
+				//取得可能を表示しない
 				key->SetIsPrePickUp(false);
 			}
 
 
+		}
+		else {
+			//取得可能を表示しない
+			key->SetIsPrePickUp(false);
 		}
 	}
 
@@ -302,7 +293,7 @@ void KeyManager::PickUp() {
 	//trueの時に取得するかどうかのUIが出る
 	isAbleToPickUpKey_ = std::any_of(keies_.begin(), keies_.end(), [](const std::unique_ptr<Key>& key) {
 		return key->GetIsPrePickUp() == true;
-		});
+	});
 
 
 
