@@ -34,42 +34,8 @@ GameScene::GameScene() {
 
 void GameScene::Initialize() {
 
-#pragma region フェード
-
-	//白フェード
-	//白画像読み込み
-	uint32_t whiteTextureHandle = textureManager_->Load("Resources/Sprite/Back/White.png");
-	//フェードの初期座標
-	const Vector2 INITIAL_SPRITE_POSITION = { .x = 0.0f,.y = 0.0f };
-	//生成
-	whiteFadeSprite_.reset(Elysia::Sprite::Create(whiteTextureHandle, INITIAL_SPRITE_POSITION));
-
-	//フェードインから始まる
-	//イン
-	isBlackFadeIn = false;
-	//アウト
-	isBlackFadeOut_ = false;
-
-
-	//黒フェード
-	//黒画像読み込み
-	uint32_t blackTextureHandle = textureManager_->Load("Resources/Sprite/Back/Black.png");
-	//生成
-	blackFadeSprite_.reset(Elysia::Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION));
-
-	//透明度
-	blackFadeTransparency_ = 0.0f;
-
-
-#pragma endregion
-
-
 	//ハンドルの取得
 	levelHandle_ = levelDataManager_->Load("GameStage/GameStage.json");
-
-	//門の初期回転
-	rightGateRotateTheta_ = 0.0f;
-	leftGateRotateTheta_ = -std::numbers::pi_v<float_t>;
 
 #pragma region プレイヤー
 	//生成
@@ -131,14 +97,10 @@ void GameScene::Initialize() {
 	
 	//宝箱
 	uint32_t openTreasureBoxSpriteHandle = textureManager_->Load("Resources/Sprite/TreasureBox/OpenTreasureBox.png");
-	openTreasureBoxSprite_.reset(Elysia::Sprite::Create(openTreasureBoxSpriteHandle, INITIAL_SPRITE_POSITION));
+	openTreasureBoxSprite_.reset(Elysia::Sprite::Create(openTreasureBoxSpriteHandle, {.x=0.0f,.y=0.0f}));
 
 
 #pragma endregion
-
-	//角度の初期化
-	//プレイヤーの向いている向きと合わせていくよ
-	theta_ = std::numbers::pi_v<float_t> / 2.0f;
 
 	//ポストエフェクトの初期化
 	//ビネット生成
@@ -148,18 +110,6 @@ void GameScene::Initialize() {
 	//値の設定
 	vignette_.Initialize();
 	vignette_.pow = 0.0f;
-
-	//シーンのどこから始めるかを設定する
-	isGamePlay_ = false;
-	isExplain_ = false;
-
-	
-
-#ifdef _DEBUG 
-	//デバッグするときはこっちで設定
-	isGamePlay_ = true;
-#endif // _DEBUG
-
 
 
 	//スタートから始まる
@@ -190,11 +140,6 @@ void GameScene::ChangeDetailScene(std::unique_ptr<BaseGameScene> detailGameScene
 		//次に遷移する
 		detailGameScene_->Initialize();
 	}
-}
-
-void GameScene::EscapeCondition() {
-	//ゲート
-
 }
 
 void GameScene::VigntteProcess(){
@@ -241,12 +186,6 @@ void GameScene::DisplayImGui() {
 		ImGui::InputFloat("変化の時間", &vignetteChangeTime_);
 		ImGui::TreePop();
 	}
-	if (ImGui::TreeNode("フェード")==true) {
-		ImGui::InputFloat("白", &fadeTransparency_);
-		ImGui::InputFloat("黒", &blackFadeTransparency_);
-		ImGui::TreePop();
-	}
-
 
 	ImGui::End();
 
@@ -299,7 +238,6 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 	//転送
 	camera_.Transfer();
 	
-
 	//ビネットの処理
 	VigntteProcess();
 

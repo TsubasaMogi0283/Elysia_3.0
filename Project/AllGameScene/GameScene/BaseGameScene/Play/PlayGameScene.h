@@ -71,10 +71,6 @@ private:
 	/// </summary>
 	void ObjectCollision();
 
-	/// <summary>
-	/// ビネットの処理
-	/// </summary>
-	void VigntteProcess();
 
 	/// <summary>
 	/// ImGui表示用
@@ -88,6 +84,8 @@ private:
 	const float_t ROTATE_VALUE = 0.01f;
 	//回転用の線形補間
 	const float_t OPEN_T_VALUE_ = 0.01f;
+	//フェードの増加分
+	const float_t FADE_AMOUNT_ = 0.01f;
 
 	//最大の回転
 	const float_t MAX_OPEN_VALUE_ = std::numbers::pi_v<float_t> / 2.0f;
@@ -117,8 +115,10 @@ private:
 
 	//白フェードのスプライト
 	std::unique_ptr<Elysia::Sprite> whiteFadeSprite_ = nullptr;
+	//黒フェードのスプライト
+	std::unique_ptr<Elysia::Sprite> blackFadeSprite_ = nullptr;
 	//透明度
-	float_t fadeTransparency_ = 1.0f;
+	float_t fadeTransparency_ = 0.0f;
 
 	//角度
 	float_t theta_ = 0.0f;

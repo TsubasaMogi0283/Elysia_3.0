@@ -52,6 +52,14 @@ void PlayGameScene::Initialize(){
 	whiteFadeSprite_.reset(Elysia::Sprite::Create(whiteTextureHandle, INITIAL_SPRITE_POSITION_));
 	whiteFadeSprite_->SetTransparency(PERFECT_TRANSPARENT_);
 
+
+	//黒フェード
+	//黒画像読み込み
+	uint32_t blackTextureHandle = textureManager_->Load("Resources/Sprite/Back/Black.png");
+	//生成
+	blackFadeSprite_.reset(Elysia::Sprite::Create(blackTextureHandle, INITIAL_SPRITE_POSITION_));
+	blackFadeSprite_->SetTransparency(PERFECT_TRANSPARENT_);
+
 	//ゴールに向かえのテキスト
 	uint32_t toEscapeTextureHandle = textureManager_->Load("Resources/Sprite/Escape/ToGoal.png");
 	toEscapeSprite_.reset(Elysia::Sprite::Create(toEscapeTextureHandle, INITIAL_SPRITE_POSITION_));
@@ -86,8 +94,6 @@ void PlayGameScene::Update(GameScene* gameScene){
 	EscapeCondition();
 	//オブジェクトの当たり判定
 	ObjectCollision();
-	//ビネットの処理
-	VigntteProcess();
 	//コリジョン管理クラスに登録
 	RegisterToCollisionManager();
 
@@ -102,28 +108,28 @@ void PlayGameScene::Update(GameScene* gameScene){
 		//鍵の音を止める
 		keyManager_->StopAudio();
 
-		//処理終了にし負け
-		gameScene->SetIsEnd();
-		gameScene->SetIsLose();
-		return;
-
-	}
-	levelDataManager_->SetRotate(levelDataHandle_, right, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
-
-	//成功
-	if (isSucceedEscape_ == true) {
 
 		//フェードの透明度を設定
-		fadeTransparency_ += OPEN_T_VALUE_;
+		fadeTransparency_ += FADE_AMOUNT_;
+		blackFadeSprite_->SetTransparency(fadeTransparency_);
+
+		//処理終了にし負け
+		if (fadeTransparency_ >= PERFECT_NONE_TRANSPARENT_) {
+			gameScene->SetIsEnd();
+			gameScene->SetIsLose();
+			return;
+		}
 		
+
+	}
+	//成功
+	if (isSucceedEscape_ == true) {
 
 		//回転とフェードを線形補間で管理する
 		openT_ += OPEN_T_VALUE_;
 		float_t newOpenT_ = Easing::EaseInOutQuart(openT_);
 		rightGateRotateTheta_ = SingleCalculation::Lerp(0.0f, MAX_OPEN_VALUE_, newOpenT_);
 		leftGateRotateTheta_=SingleCalculation::Lerp(-std::numbers::pi_v<float_t>, -MAX_OPEN_VALUE_, newOpenT_);
-
-		
 		whiteFadeSprite_->SetTransparency(newOpenT_);
 
 		//門の回転
@@ -168,13 +174,16 @@ void PlayGameScene::DrawSprite(){
 	keyManager_->DrawSprite();
 	//脱出
 	escapeTextSprite_->Draw();
-
+	//出口へ向かえ
 	if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
 		toEscapeSprite_->Draw();
 	}
 
 	//白フェード
 	whiteFadeSprite_->Draw();
+
+	//黒フェード
+	blackFadeSprite_->Draw();
 
 	//openTreasureBoxSprite_->Draw();
 }
@@ -598,40 +607,13 @@ void PlayGameScene::ObjectCollision(){
 
 }
 
-void PlayGameScene::VigntteProcess(){
-	
-	//プレイヤーがダメージを受けた場合ビネット
-	if (player_->GetIsDamaged() == true) {
-		//時間の加算
-		vignetteChangeTime_ += DELTA_TIME_;
-	
-		//線形補間で滑らかに変化
-		vignette_.pow = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, vignetteChangeTime_);
-	}
-	//ピンチ演出
-	else if (player_->GetHP() == DANGEROUS_HP_) {
-		warningTime_ += DELTA_TIME_;
-		vignette_.pow = SingleCalculation::Lerp(MAX_VIGNETTE_POW_, 0.0f, warningTime_);
-	
-		
-		//循環
-		if (warningTime_ > MAX_WARNING_TIME_) {
-			warningTime_ = MIN_WARNING_TIME_;
-		}
-	}
-	//通常時の場合
-	else {
-		vignette_.pow = 0.0f;
-		vignetteChangeTime_ = 0.0f;
-	}
-}
-
 void PlayGameScene::DisplayImGui(){
 
 	ImGui::Begin("プレイ(ゲーム)");
 	ImGui::SliderFloat3("座標", &fenceTranslate_.x, 0.0f, 100.0f);
 	ImGui::SliderFloat("右門の回転", &rightGateRotateTheta_, 0.0f, 3.0f);
 	ImGui::InputFloat("線形補間", &openT_);
+	ImGui::InputFloat("フェード", &fadeTransparency_);
 
 	ImGui::End();
 

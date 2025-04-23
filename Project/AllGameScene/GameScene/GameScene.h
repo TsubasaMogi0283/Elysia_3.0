@@ -137,13 +137,6 @@ public:
 	}
 
 private:
-
-
-	/// <summary>
-	/// 逃げ状態
-	/// </summary>
-	void EscapeCondition();
-
 	/// <summary>
 	/// ビネットの処理
 	/// </summary>
@@ -199,10 +192,6 @@ private:
 	//プレイヤー
 	std::unique_ptr<Player> player_ = nullptr;
 	bool isReleaseAttack_ = false;
-	//角度
-	float_t theta_ = 0.0f;
-	float_t phi_ = 0.0f;
-
 	//敵管理
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
 	//強い敵と接触したかどうか
@@ -219,41 +208,10 @@ private:
 
 #pragma endregion
 
-#pragma region フェード
-	//白フェードのスプライト
-	std::unique_ptr<Elysia::Sprite> whiteFadeSprite_ = nullptr;
-	//透明度
-	float_t fadeTransparency_ = 1.0f;
-
-	//黒フェードのスプライト
-	std::unique_ptr<Elysia::Sprite> blackFadeSprite_ = nullptr;
-	//透明度
-	float_t blackFadeTransparency_ = 0.0f;
-	//イン
-	bool isBlackFadeIn = false;
-	//アウト
-	bool isBlackFadeOut_ = false;
-
-	
-
-#pragma endregion
-
-	//場面
-	//説明
-	bool isExplain_ = false;
-	//ゲーム
-	bool isGamePlay_ = false;
-
-
 
 	//宝箱が開いているかどうか
 	bool isOpenTreasureBox_ = false;
 	std::unique_ptr<Elysia::Sprite>openTreasureBoxSprite_ = nullptr;
-
-	Vector3 translate_ = {};
-	//門の回転
-	float_t rightGateRotateTheta_ = 0.0f;
-	float_t leftGateRotateTheta_ = 0.0f;
 
 	//細かいシーン
 	std::unique_ptr<BaseGameScene>detailGameScene_ = nullptr;
