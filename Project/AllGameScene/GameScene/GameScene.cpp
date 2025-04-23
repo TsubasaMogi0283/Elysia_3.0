@@ -37,7 +37,6 @@ void GameScene::Initialize() {
 	//ハンドルの取得
 	levelHandle_ = levelDataManager_->Load("GameStage/GameStage.json");
 
-#pragma region プレイヤー
 	//生成
 	player_ = std::make_unique<Player>();
 	//初期化
@@ -47,8 +46,6 @@ void GameScene::Initialize() {
 	//最初はコントロールは出来ない用にする
 	player_->SetIsAbleToControll(false);
 
-#pragma endregion
-
 	//鍵のモデルの読み込み
 	uint32_t keyModelHandle = modelManager_->Load("Resources/External/Model/key", "Key.obj");
 	//生成
@@ -57,18 +54,15 @@ void GameScene::Initialize() {
 	keyManager_->SetLevelDataHandle(levelHandle_);
 	//プレイヤーの設定
 	keyManager_->SetPlayer(player_.get());
-
 	//レベルデータから鍵の情報を取り出す
 	std::vector<Vector3> keyPositions = levelDataManager_->GetObjectPositions(levelHandle_,"Key");
 	keyManager_->Initialize(keyModelHandle, keyPositions);
 
-#pragma region 敵
 	//敵モデルの読み込み
 	//通常
 	uint32_t enemyModelHandle = modelManager_->Load("Resources/LevelData/GameStage/Ghost","Ghost.gltf",true);
 	//強敵
 	uint32_t strongEnemyModelHandle = modelManager_->Load("Resources/External/Model/01_HalloweenItems00/01_HalloweenItems00/EditedGLTF", "StrongGhost.gltf");
-
 	//敵管理システム
 	enemyManager_ = std::make_unique<EnemyManager>();
 	//プレイヤーの設定
@@ -80,27 +74,9 @@ void GameScene::Initialize() {
 	std::vector<Vector3> normalEnemyPositions = levelDataManager_->GetObjectPositions(levelHandle_, "NormalEnemy");
 	std::vector<Vector3> strongEnemyPositions = levelDataManager_->GetObjectPositions(levelHandle_, "StrongEnemy");
 	enemyManager_->Initialize(enemyModelHandle, strongEnemyModelHandle, normalEnemyPositions, strongEnemyPositions);
-#pragma endregion
-
-#pragma region カメラ
 
 	//カメラの初期化
 	camera_.Initialize();
-	//それぞれに値を入れていく
-	//回転
-	//+で左回り
-	camera_.rotate.y = std::numbers::pi_v<float_t> / 2.0f;
-	
-#pragma endregion
-
-#pragma region UI
-	
-	//宝箱
-	uint32_t openTreasureBoxSpriteHandle = textureManager_->Load("Resources/Sprite/TreasureBox/OpenTreasureBox.png");
-	openTreasureBoxSprite_.reset(Elysia::Sprite::Create(openTreasureBoxSpriteHandle, {.x=0.0f,.y=0.0f}));
-
-
-#pragma endregion
 
 	//ポストエフェクトの初期化
 	//ビネット生成
@@ -110,7 +86,6 @@ void GameScene::Initialize() {
 	//値の設定
 	vignette_.Initialize();
 	vignette_.pow = 0.0f;
-
 
 	//スタートから始まる
 	detailGameScene_ = std::make_unique<PlayGameScene>();
@@ -122,7 +97,6 @@ void GameScene::Initialize() {
 	detailGameScene_->SetKeyManager(keyManager_.get());
 	//初期化
 	detailGameScene_->Initialize();
-
 
 }
 
@@ -179,7 +153,6 @@ void GameScene::VigntteProcess(){
 void GameScene::DisplayImGui() {
 
 	ImGui::Begin("ゲームシーン");
-	ImGui::Checkbox("状態", &isReleaseAttack_);
 
 	if (ImGui::TreeNode("ビネット")==true) {
 		ImGui::InputFloat("POW", &vignette_.pow);
@@ -195,7 +168,6 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 
 	//プレイヤーの更新
 	player_->Update();
-
 	//敵管理クラスの更新
 	enemyManager_->Update();
 	//敵を消す
@@ -208,6 +180,14 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 	camera_.viewMatrix = player_->GetEyeCamera()->GetCamera().viewMatrix;
 	//転送
 	camera_.Transfer();
+	//レベルエディタで使うリスナーの設定
+	Listener listener = {
+		.position = player_->GetWorldPosition(),
+		.move = player_->GetDirection(),
+	};
+	levelDataManager_->SetListener(levelHandle_, listener);
+	//レベルエディタの更新
+	levelDataManager_->Update(levelHandle_);
 
 	//ビネットの処理
 	VigntteProcess();
@@ -227,22 +207,9 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 			gameManager->ChangeScene("Lose");
 			return;
 		}
-
-
 	}
 
-	//レベルエディタで使うリスナーの設定
-	Listener listener = {
-		.position = player_->GetWorldPosition(),
-		.move = player_->GetDirection(),
-	};
-	levelDataManager_->SetListener(levelHandle_, listener);
-	//レベルエディタの更新
-	levelDataManager_->Update(levelHandle_);
-
-
 	
-
 #ifdef _DEBUG 
 
 	//再読み込み

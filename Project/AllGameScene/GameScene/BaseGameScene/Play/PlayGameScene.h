@@ -130,7 +130,6 @@ private:
 	//離した瞬間の状態
 	bool isReleaseAttack_ = false;
 
-
 	//門の回転
 	float_t rightGateRotateTheta_ = 0.0f;
 	float_t leftGateRotateTheta_ = 0.0f;

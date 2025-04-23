@@ -191,27 +191,13 @@ private:
 
 	//プレイヤー
 	std::unique_ptr<Player> player_ = nullptr;
-	bool isReleaseAttack_ = false;
 	//敵管理
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
 	//強い敵と接触したかどうか
 	bool isTouchStrongEnemy_ = false;
 
-#pragma region ゲーム中のUI
-	//UIを表示するかどうか
-	bool isDisplayUI_ = false;
-
-	//鍵取得のスプライト
-	std::unique_ptr<Elysia::Sprite> pickUpKey_ = nullptr;
 	//鍵管理クラス
 	std::unique_ptr<KeyManager> keyManager_ = nullptr;
-
-#pragma endregion
-
-
-	//宝箱が開いているかどうか
-	bool isOpenTreasureBox_ = false;
-	std::unique_ptr<Elysia::Sprite>openTreasureBoxSprite_ = nullptr;
 
 	//細かいシーン
 	std::unique_ptr<BaseGameScene>detailGameScene_ = nullptr;

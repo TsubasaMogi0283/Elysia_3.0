@@ -70,9 +70,6 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 		keySprites_[i]->SetScale(INITIAL_SCALE);
 	}
 
-
-
-
 	//知らせる音の読み込み
 	notificationSEHandle_ = audio_->Load("Resources/External/Audio/Key/Shake.mp3");
 	//拾う音の読み込み
@@ -85,7 +82,6 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 	//生成
 	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
 	pickUpKey_.reset(Elysia::Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));
-
 
 	//再生
 	audio_->Play(notificationSEHandle_, true);
@@ -121,18 +117,15 @@ void KeyManager::Update() {
 
 	//全ての要素から一番小さい値を調べる
 	auto minIt = std::min_element(keyAndPlayerDistances_.begin(), keyAndPlayerDistances_.end());
-
 	//最短距離を求める
 	float_t closestDistance = 0.0f;
 	if (minIt != keyAndPlayerDistances_.end()) {
 		closestDistance = (*minIt);
 	}
-
 	//最大の距離を超えないようにする
 	if (closestDistance > MAX_DISTANCE_) {
 		closestDistance = MAX_DISTANCE_;
 	}
-
 	//求めた値から音量設定をする
 	float_t volume = 1.0f - (closestDistance / MAX_DISTANCE_);
 	audio_->ChangeVolume(notificationSEHandle_, volume);
@@ -144,30 +137,15 @@ void KeyManager::Update() {
 
 	//取得処理
 	PickUp();
-
 	//消去処理
 	Delete();
-
 #ifdef _DEBUG
-	ImGui::Begin("鍵管理クラス");
-	ImGui::InputFloat("音量", &volume);
-	ImGui::InputFloat("近い距離", &closestDistance);
-	ImGui::Checkbox("墓場用", &isPickUpKeyInCemetery_);
-
-	int newQuantity = static_cast<int>(keyQuantity_);
-	ImGui::InputInt("鍵の数", &newQuantity);
-	ImGui::InputFloat("ST1", &spriteTs_[0]);
-	ImGui::InputFloat("ST2", &spriteTs_[1]);
-	ImGui::InputFloat("ST3", &spriteTs_[2]);
-
-
-	ImGui::End();
+	//ImGui表示用
+	DisplayImGui();
 #endif // _DEBUG
-
 }
 
 void KeyManager::DrawObject3D(const Camera& camera, const SpotLight& spotLight) {
-	camera, spotLight;
 	//鍵モデルの描画
 	for (const std::unique_ptr<Key>& key : keies_) {
 		//key;
@@ -197,8 +175,6 @@ void KeyManager::DrawSprite() {
 
 
 }
-
-
 
 void KeyManager::Genarate(const Vector3& position, const bool& isAbleToPickUp) {
 	//生成
@@ -329,12 +305,17 @@ void KeyManager::PickUp() {
 		});
 
 
-#ifdef _DEBUG
-	ImGui::Begin("KeyPickUp");
-	ImGui::Checkbox("IsPickUp", &isAbleToPickUpKey_);
-	ImGui::End();
-#endif // _DEBUG
 
+}
+
+void KeyManager::DisplayImGui(){
+
+	ImGui::Begin("鍵管理クラス");
+	ImGui::Checkbox("墓場用", &isPickUpKeyInCemetery_);
+	int newQuantity = static_cast<int>(keyQuantity_);
+	ImGui::InputInt("鍵の数", &newQuantity);
+	ImGui::Checkbox("取得可能か", &isAbleToPickUpKey_);
+	ImGui::End();
 }
 
 

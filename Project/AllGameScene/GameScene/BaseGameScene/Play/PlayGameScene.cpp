@@ -44,14 +44,12 @@ void PlayGameScene::Initialize(){
 	rightGateRotateTheta_ = 0.0f;
 	leftGateRotateTheta_ = -std::numbers::pi_v<float_t>;
 
-
 	//白フェード
 	//白画像読み込み
 	uint32_t whiteTextureHandle = textureManager_->Load("Resources/Sprite/Back/White.png");
 	//生成
 	whiteFadeSprite_.reset(Elysia::Sprite::Create(whiteTextureHandle, INITIAL_SPRITE_POSITION_));
 	whiteFadeSprite_->SetTransparency(PERFECT_TRANSPARENT_);
-
 
 	//黒フェード
 	//黒画像読み込み
@@ -63,6 +61,9 @@ void PlayGameScene::Initialize(){
 	//ゴールに向かえのテキスト
 	uint32_t toEscapeTextureHandle = textureManager_->Load("Resources/Sprite/Escape/ToGoal.png");
 	toEscapeSprite_.reset(Elysia::Sprite::Create(toEscapeTextureHandle, INITIAL_SPRITE_POSITION_));
+
+	uint32_t openTreasureBoxSpriteHandle = textureManager_->Load("Resources/Sprite/TreasureBox/OpenTreasureBox.png");
+	openTreasureBoxSpriteHandle;
 
 	//ゲートのモデルの読み込み
 	uint32_t gateModelhandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Gate", "Gate.obj");

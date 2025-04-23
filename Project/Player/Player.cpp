@@ -60,7 +60,7 @@ void Player::Initialize(){
 	//マテリアル
 	material_.Initialize();
 	material_.lightingKinds = LightingType::SpotLighting;
-	material_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 0.5f };
+	material_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 0.0f };
 
 	//UI
 	uint32_t playerHPTextureHandle = textureManager_->Load("Resources/Sprite/Player/PlayerHP.png");
@@ -146,17 +146,14 @@ void Player::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
 #ifdef _DEBUG
 	//本体の描画
 	//1人称視点だからいらないね
-	model_->Draw(worldTransform_, camera,material_,spotLight);
-
+	//model_->Draw(worldTransform_, camera,material_,spotLight);
+	spotLight;
 	//懐中電灯
 	flashLight_->DrawObject3D(camera);
 #endif // _DEBUG
-
-
 }
 
 void Player::DrawSprite(){
-
 	//懐中電灯
 	flashLight_->DrawSprite();
 	//体力の枠
@@ -165,8 +162,6 @@ void Player::DrawSprite(){
 	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
 		playerHpSprite_[i]->Draw();
 	}
-	
-	
 }
 
 Player::~Player() {
