@@ -105,12 +105,6 @@ void Key::DrawModel(const Camera& camera,const SpotLight& spotLight){
 	//鍵(モデル)の描画
 	model_->Draw(worldTransform_, camera, material_, spotLight);
 
-#ifdef _DEBUG
-	//デバッグ用の描画
-	debugModel_->Draw(debugWorldTransform_, camera, debugMaterial_);
-#endif // _DEBUG
-
-
 }
 
 void Key::DrawSprite(){

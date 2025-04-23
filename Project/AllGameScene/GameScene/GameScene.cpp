@@ -203,6 +203,15 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 	//鍵管理クラスの更新
 	keyManager_->Update();
 
+	//カメラの更新
+	//レールカメラから2つの行列を取得
+	camera_.viewMatrix = player_->GetEyeCamera()->GetCamera().viewMatrix;
+	//転送
+	camera_.Transfer();
+
+	//ビネットの処理
+	VigntteProcess();
+
 	//細かいシーンの更新
 	detailGameScene_->Update(this);
 
@@ -232,14 +241,7 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 	levelDataManager_->Update(levelHandle_);
 
 
-	//カメラの更新
-	//レールカメラから2つの行列を取得
-	camera_.viewMatrix = player_->GetEyeCamera()->GetCamera().viewMatrix;
-	//転送
-	camera_.Transfer();
 	
-	//ビネットの処理
-	VigntteProcess();
 
 #ifdef _DEBUG 
 

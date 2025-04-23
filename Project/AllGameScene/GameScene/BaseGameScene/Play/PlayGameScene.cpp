@@ -522,18 +522,18 @@ void PlayGameScene::EscapeCondition(){
 		//3個取得したら脱出できる
 		uint32_t playerKeyQuantity = player_->GetHavingKey();
 		playerKeyQuantity;
-		//if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
+		if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
 			//「出口へ」が表示
-		escapeTextSprite_->SetInvisible(false);
+			escapeTextSprite_->SetInvisible(false);
 
-		//コントローラーのBボタンを押したら脱出のフラグがたつ
-		//Bボタンを押したとき
-		//SPACEキーを押したら脱出のフラグがたつ
-		if (input_->IsPushButton(XINPUT_GAMEPAD_B) == true || input_->IsPushKey(DIK_SPACE) == true) {
-			//脱出
-			isSucceedEscape_ = true;
+			//コントローラーのBボタンを押したら脱出のフラグがたつ
+			//Bボタンを押したとき
+			//SPACEキーを押したら脱出のフラグがたつ
+			if (input_->IsPushButton(XINPUT_GAMEPAD_B) == true || input_->IsPushKey(DIK_SPACE) == true) {
+				//脱出
+				isSucceedEscape_ = true;
+			}
 		}
-		//}
 	}
 	else {
 		//まだ脱出できない

@@ -170,8 +170,8 @@ void KeyManager::DrawObject3D(const Camera& camera, const SpotLight& spotLight) 
 	camera, spotLight;
 	//鍵モデルの描画
 	for (const std::unique_ptr<Key>& key : keies_) {
-		key;
-		//key->DrawModel(camera, spotLight);
+		//key;
+		key->DrawModel(camera, spotLight);
 	}
 }
 
