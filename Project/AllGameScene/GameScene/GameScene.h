@@ -115,36 +115,34 @@ public:
 	/// <param name="detailGameScene">細かいシーン</param>
 	void ChangeDetailScene(std::unique_ptr<BaseGameScene>detailGameScene);
 
+	/// <summary>
+	/// 処理終了
+	/// </summary>
+	void SetIsEnd() {
+		this->isEnd_ = true;
+	}
 
+	/// <summary>
+	/// 勝利の設定
+	/// </summary>
+	void SetIsWin() {
+		this->isWin_ = true;
+	}
+
+	/// <summary>
+	/// 敗北の設定
+	/// </summary>
+	void SetIsLose() {
+		this->isLose_ = true;
+	}
 
 private:
 
-
-
-	/// <summary>
-	/// ステージオブジェクトとの当たり判定
-	/// </summary>
-	void ObjectCollision();
-
-	/// <summary>
-	/// プレイヤーの移動
-	/// </summary>
-	void PlayerMove();
-
-	/// <summary>
-	/// プレイヤーの回転
-	/// </summary>
-	void PlayerRotate();
 
 	/// <summary>
 	/// 逃げ状態
 	/// </summary>
 	void EscapeCondition();
-
-	/// <summary>
-	/// コリジョン管理クラスに登録
-	/// </summary>
-	void RegisterToCollisionManager();
 
 	/// <summary>
 	/// ビネットの処理
@@ -210,40 +208,25 @@ private:
 	//強い敵と接触したかどうか
 	bool isTouchStrongEnemy_ = false;
 
-	//コリジョン管理
-	std::unique_ptr<Elysia::CollisionManager> collisionManager_ = nullptr;
-
 #pragma region ゲーム中のUI
 	//UIを表示するかどうか
 	bool isDisplayUI_ = false;
 
-	//脱出テキストのスプライト
-	std::unique_ptr<Elysia::Sprite> escapeText_ = nullptr;
-	//操作のスプライト
-	std::unique_ptr<Elysia::Sprite> operation_ = nullptr;
 	//鍵取得のスプライト
 	std::unique_ptr<Elysia::Sprite> pickUpKey_ = nullptr;
 	//鍵管理クラス
 	std::unique_ptr<KeyManager> keyManager_ = nullptr;
-	//脱出のスプライト
-	std::unique_ptr<Elysia::Sprite> toEscape_ = nullptr;
 
 #pragma endregion
 
 #pragma region フェード
 	//白フェードのスプライト
-	std::unique_ptr<Elysia::Sprite> blackFadeSprite_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> whiteFadeSprite_ = nullptr;
 	//透明度
 	float_t fadeTransparency_ = 1.0f;
-	//イン
-	bool isWhiteFadeIn = true;
-	//アウト
-	bool isWhiteFadeOut_ = false;
-	
-
 
 	//黒フェードのスプライト
-	std::unique_ptr<Elysia::Sprite> blackFade_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> blackFadeSprite_ = nullptr;
 	//透明度
 	float_t blackFadeTransparency_ = 0.0f;
 	//イン
@@ -262,23 +245,6 @@ private:
 	bool isGamePlay_ = false;
 
 
-#pragma region 説明
-	//説明の数
-	static const uint32_t EXPLANATION_QUANTITY_ = 2u;
-	//説明スプライト
-	std::array<std::unique_ptr<Elysia::Sprite>, EXPLANATION_QUANTITY_> explanation_ = { nullptr };
-
-	//Spaceで次に進むテキスト
-	std::array<std::unique_ptr<Elysia::Sprite>, EXPLANATION_QUANTITY_> spaceToNext_ = { nullptr };
-
-	//テクスチャの番号
-	uint32_t howToPlayTextureNumber_ = 0u;
-
-#pragma endregion
-
-	//ゲート
-	std::unique_ptr<Gate> gate_ = nullptr;
-	bool isEscape_ = false;
 
 	//宝箱が開いているかどうか
 	bool isOpenTreasureBox_ = false;

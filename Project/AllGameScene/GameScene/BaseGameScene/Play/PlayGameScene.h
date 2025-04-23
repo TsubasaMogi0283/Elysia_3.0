@@ -7,6 +7,8 @@
  * @author 茂木翼
  */
 
+#include <numbers>
+
 #include "CollisionManager.h"
 #include "GameScene/BaseGameScene/BaseGameScene.h"
 #include "Stage/Gate/Gate.h"
@@ -84,6 +86,12 @@ private:
 private:
 	//回転
 	const float_t ROTATE_VALUE = 0.01f;
+	//回転用の線形補間
+	const float_t OPEN_T_VALUE_ = 0.01f;
+
+	//最大の回転
+	const float_t MAX_OPEN_VALUE_ = std::numbers::pi_v<float_t> / 2.0f;
+
 	//コントローラーがある場合
 	const float_t MOVE_LIMITATION_ = 0.02f;
 	//最大値
@@ -97,13 +105,20 @@ private:
 	const float_t MAX_WARNING_TIME_ = 1.0f;
 	//最小時間
 	const float_t MIN_WARNING_TIME_ = 1.0f;
+
+	//レベルエディタのオブジェクトの名前
+	std::string right = "GateDoorRight";
+	std::string left = "GateDoorLeft";
+
 private:
 
 	//コリジョン管理
 	std::unique_ptr<Elysia::CollisionManager> collisionManager_ = nullptr;
 
-	//UIの表示
-	bool isDisplayUI_ = false;
+	//白フェードのスプライト
+	std::unique_ptr<Elysia::Sprite> whiteFadeSprite_ = nullptr;
+	//透明度
+	float_t fadeTransparency_ = 1.0f;
 
 	//角度
 	float_t theta_ = 0.0f;
@@ -119,6 +134,8 @@ private:
 	//門の回転
 	float_t rightGateRotateTheta_ = 0.0f;
 	float_t leftGateRotateTheta_ = 0.0f;
+	//線形補間
+	float_t openT_ = 0.0f;
 
 	//宝箱が開いているかどうか
 	bool isOpenTreasureBox_ = false;
@@ -126,7 +143,9 @@ private:
 	std::unique_ptr<Elysia::Sprite>openTreasureBoxSprite_ = nullptr;
 
 	//脱出テキストのスプライト
-	std::unique_ptr<Elysia::Sprite> escapeText_ = nullptr;
+	std::unique_ptr<Elysia::Sprite> escapeTextSprite_ = nullptr;
+	//脱出のスプライト
+	std::unique_ptr<Elysia::Sprite> toEscapeSprite_ = nullptr;
 
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;

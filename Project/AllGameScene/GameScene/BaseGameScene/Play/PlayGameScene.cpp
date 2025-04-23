@@ -5,11 +5,12 @@
 
 #include "Input.h"
 #include "TextureManager.h"
+#include "ModelManager.h"
 #include "LevelDataManager.h"
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
 #include "GameScene/GameScene.h"
-
+#include <Easing.h>
 
 
 PlayGameScene::PlayGameScene(){
@@ -35,20 +36,41 @@ void PlayGameScene::Initialize(){
 	//出口の画像読み込み
 	uint32_t escapeTextureHandle = textureManager_->Load("Resources/Sprite/Escape/EscapeText.png");
 	//生成
-	escapeText_.reset(Elysia::Sprite::Create(escapeTextureHandle, { .x = 0.0f,.y = 0.0f }));
+	escapeTextSprite_.reset(Elysia::Sprite::Create(escapeTextureHandle, INITIAL_SPRITE_POSITION_));
 	//最初は非表示にする
-	escapeText_->SetInvisible(true);
+	escapeTextSprite_->SetInvisible(true);
 
+	//門の初期回転
+	rightGateRotateTheta_ = 0.0f;
+	leftGateRotateTheta_ = -std::numbers::pi_v<float_t>;
+
+
+	//白フェード
+	//白画像読み込み
+	uint32_t whiteTextureHandle = textureManager_->Load("Resources/Sprite/Back/White.png");
+	//生成
+	whiteFadeSprite_.reset(Elysia::Sprite::Create(whiteTextureHandle, INITIAL_SPRITE_POSITION_));
+	whiteFadeSprite_->SetTransparency(PERFECT_TRANSPARENT_);
+
+	//ゴールに向かえのテキスト
+	uint32_t toEscapeTextureHandle = textureManager_->Load("Resources/Sprite/Escape/ToGoal.png");
+	toEscapeSprite_.reset(Elysia::Sprite::Create(toEscapeTextureHandle, INITIAL_SPRITE_POSITION_));
+
+	//ゲートのモデルの読み込み
+	uint32_t gateModelhandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Gate", "Gate.obj");
+	//生成
+	gate_ = std::make_unique<Gate>();
+	//初期化
+	gate_->Initialize(gateModelhandle);
 }
 
 void PlayGameScene::Update(GameScene* gameScene){
 
-	gameScene;
-
 	//フレーム初めに
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
-
+	//ゲートの更新
+	gate_->Update();
 	//コントロール可能にする
 	player_->SetIsAbleToControll(true);
 	//プレイヤーの移動
@@ -56,26 +78,19 @@ void PlayGameScene::Update(GameScene* gameScene){
 	//回転
 	PlayerRotate();
 
-	//操作説明を追加
-	isDisplayUI_ = true;
-	//敵
-	enemyManager_->Update();
-	//敵を消す
-	enemyManager_->DeleteEnemy();
-
-
 	//プレイヤーにそれぞれの角度を設定する
 	player_->SetTheta(theta_);
 	player_->SetPhi(phi_);
 
 	//脱出の仕組み
 	EscapeCondition();
-
 	//オブジェクトの当たり判定
 	ObjectCollision();
+	//ビネットの処理
+	VigntteProcess();
+	//コリジョン管理クラスに登録
+	RegisterToCollisionManager();
 
-	//鍵
-	keyManager_->Update();
 
 	//体力が0になったら負け
 	//または一発アウトの敵に接触した場合
@@ -88,25 +103,32 @@ void PlayGameScene::Update(GameScene* gameScene){
 		keyManager_->StopAudio();
 
 		//処理終了にし負け
-		isEnd_ = true;
-		isLose_ = true;
+		gameScene->SetIsEnd();
+		gameScene->SetIsLose();
 		return;
 
 	}
+	levelDataManager_->SetRotate(levelDataHandle_, right, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
 
-	//ホワイトアウト
+	//成功
 	if (isSucceedEscape_ == true) {
 
-		//回転の値を加算
+		//フェードの透明度を設定
+		fadeTransparency_ += OPEN_T_VALUE_;
 		
-		rightGateRotateTheta_ += ROTATE_VALUE;
-		leftGateRotateTheta_ -= ROTATE_VALUE;
 
-		std::string right = "GateDoorRight";
-		std::string left = "GateDoorLeft";
+		//回転とフェードを線形補間で管理する
+		openT_ += OPEN_T_VALUE_;
+		float_t newOpenT_ = Easing::EaseInOutQuart(openT_);
+		rightGateRotateTheta_ = SingleCalculation::Lerp(0.0f, MAX_OPEN_VALUE_, newOpenT_);
+		leftGateRotateTheta_=SingleCalculation::Lerp(-std::numbers::pi_v<float_t>, -MAX_OPEN_VALUE_, newOpenT_);
+
+		
+		whiteFadeSprite_->SetTransparency(newOpenT_);
+
 		//門の回転
 		levelDataManager_->SetRotate(levelDataHandle_, right, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
-		levelDataManager_->SetRotate(levelDataHandle_, left, { .x = 0.0f,.y = leftGateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelDataHandle_, left, { .x = 0.0f,.y = -leftGateRotateTheta_,.z = 0.0f });
 
 		//音を止める
 		enemyManager_->StopAudio();
@@ -114,24 +136,19 @@ void PlayGameScene::Update(GameScene* gameScene){
 		keyManager_->StopAudio();
 
 		//非表示
-		escapeText_->SetInvisible(true);
+		escapeTextSprite_->SetInvisible(true);
 		//振動しないようにする
 		player_->SetIsAbleToControll(false);
-		//加算
-		//fadeTransparency_ += FADE_OUT_INTERVAL_;
 
-		//処理終了にし負け
-		isEnd_ = true;
-		isWin_ = true;
-		return;
+		//処理終了にし勝ち
+		if (openT_ >= PERFECT_NONE_TRANSPARENT_) {
+			gameScene->SetIsEnd();
+			gameScene->SetIsWin();
+			return;
+		}
+		
 	}
-
-
-	//ビネットの処理
-	VigntteProcess();
-	//コリジョン管理クラスに登録
-	RegisterToCollisionManager();
-
+	
 	//当たり判定チェック
 	collisionManager_->CheckAllCollision();
 
@@ -143,8 +160,21 @@ void PlayGameScene::Update(GameScene* gameScene){
 
 
 void PlayGameScene::DrawSprite(){
+	//出口へのスプライト
+	escapeTextSprite_->Draw();
+	//プレイヤー
+	player_->DrawSprite();
+	//鍵
+	keyManager_->DrawSprite();
+	//脱出
+	escapeTextSprite_->Draw();
 
-	escapeText_->Draw();
+	if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
+		toEscapeSprite_->Draw();
+	}
+
+	//白フェード
+	whiteFadeSprite_->Draw();
 
 	//openTreasureBoxSprite_->Draw();
 }
@@ -476,29 +506,30 @@ void PlayGameScene::PlayerRotate(){
 }
 
 void PlayGameScene::EscapeCondition(){
+	
 	//ゲート
 	if (gate_->isCollision(player_->GetWorldPosition())) {
 
 		//3個取得したら脱出できる
 		uint32_t playerKeyQuantity = player_->GetHavingKey();
-		if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
+		playerKeyQuantity;
+		//if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
 			//「出口へ」が表示
-			escapeText_->SetInvisible(false);
+		escapeTextSprite_->SetInvisible(false);
 
-			//コントローラーのBボタンを押したら脱出のフラグがたつ
-			//Bボタンを押したとき
-			//SPACEキーを押したら脱出のフラグがたつ
-			if (input_->IsPushButton(XINPUT_GAMEPAD_B) == true || input_->IsPushKey(DIK_SPACE) == true) {
-				//脱出
-				isSucceedEscape_ = true;
-			}
+		//コントローラーのBボタンを押したら脱出のフラグがたつ
+		//Bボタンを押したとき
+		//SPACEキーを押したら脱出のフラグがたつ
+		if (input_->IsPushButton(XINPUT_GAMEPAD_B) == true || input_->IsPushKey(DIK_SPACE) == true) {
+			//脱出
+			isSucceedEscape_ = true;
 		}
+		//}
 	}
 	else {
 		//まだ脱出できない
-		escapeText_->SetInvisible(true);
+		escapeTextSprite_->SetInvisible(true);
 	}
-
 }
 
 void PlayGameScene::ObjectCollision(){
@@ -599,6 +630,8 @@ void PlayGameScene::DisplayImGui(){
 
 	ImGui::Begin("プレイ(ゲーム)");
 	ImGui::SliderFloat3("座標", &fenceTranslate_.x, 0.0f, 100.0f);
+	ImGui::SliderFloat("右門の回転", &rightGateRotateTheta_, 0.0f, 3.0f);
+	ImGui::InputFloat("線形補間", &openT_);
 
 	ImGui::End();
 

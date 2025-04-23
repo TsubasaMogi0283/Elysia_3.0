@@ -144,31 +144,6 @@ public:
 		return vignette_;
 	}
 
-
-	/// <summary>
-	/// 処理が終わったかどうか
-	/// </summary>
-	/// <returns>フラグ</returns>
-	inline bool GetIsEnd()const {
-		return isEnd_;
-	}
-
-	/// <summary>
-	/// 勝ったかどうか
-	/// </summary>
-	/// <returns>フラグ</returns>
-	inline bool GetIsWin()const {
-		return isWin_;
-	}
-
-	/// <summary>
-	/// 負けたかどうか
-	/// </summary>
-	/// <returns>フラグ</returns>
-	inline bool GetIsLose()const {
-		return isLose_;
-	}
-
 protected:
 	//テクスチャ管理クラス
 	Elysia::TextureManager* textureManager_ = nullptr;
@@ -192,6 +167,8 @@ protected:
 protected:
 	//完全に透明になる値
 	const float_t PERFECT_TRANSPARENT_ = 0.0f;
+	//完全に不透明になる値
+	const float_t PERFECT_NONE_TRANSPARENT_ = 1.0f;
 	//フェードの初期座標
 	const Vector2 INITIAL_SPRITE_POSITION_ = { .x = 0.0f,.y = 0.0f };
 	//時間変化
@@ -204,11 +181,5 @@ protected:
 	//ビネット
 	Vignette vignette_ = {};
 
-
-	//処理が終了したかどうか
-	bool isEnd_ = false;
-	//結果
-	bool isWin_ = false;
-	bool isLose_ = false;
 
 };
