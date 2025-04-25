@@ -85,8 +85,6 @@ void NoiseTitleScene::Update(TitleScene* titleScene){
 				isEndDisplay_ = true;
 			}
 		}
-
-
 	}
 
 	//表示終了
