@@ -18,6 +18,8 @@ NoiseTitleScene::NoiseTitleScene(){
 	input_ = Elysia::Input::GetInstance();
 	//レベルエディタ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 void NoiseTitleScene::Initialize(){
@@ -32,15 +34,22 @@ void NoiseTitleScene::Initialize(){
 	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
 	directionalLight_.intensity = 0.05f;
 	
-
+	//読み込み
+	noiseHandle_ = audio_->Load("Resources/Audio/Title/Noise.wav");
+	//再生
+	audio_->Play(noiseHandle_, true);
+	//ボリュームの設定
+	noiseVolume_ = 0.0f;
+	
 }
 
 void NoiseTitleScene::Update(TitleScene* titleScene){
+	//ボリュームの設定
+	audio_->ChangeVolume(noiseHandle_, noiseVolume_);
 
 	//時間の加算
 	randomEffectTime_ += DELTA_TIME;
 
-	
 	//通常はfalse
 	//指定時間内に入ったらtrue
 	titleScene->SetIsDisplayRandomEffect(false);
@@ -52,10 +61,15 @@ void NoiseTitleScene::Update(TitleScene* titleScene){
 			titleScene->SetIsDisplayRandomEffect(true);
 			//一旦非表示
 			logoSprite_->SetInvisible(true);
+			//聞こえるようにする
+			noiseVolume_ = 0.7f;
 			break;
 		}
+		else {
+			//聞こえなくする
+			noiseVolume_ = 0.0f;
+		}
 
-		
 		//1回目
 		if (i == FIRST_EFFECT) {
 			//夜へ遷移
@@ -77,6 +91,8 @@ void NoiseTitleScene::Update(TitleScene* titleScene){
 
 	//表示終了
 	if (isEndDisplay_==true){
+		audio_->Stop(noiseHandle_);
+
 		titleScene->ChangeDetailScene(std::make_unique<ToGameTitleScene>());
 		return;
 	}

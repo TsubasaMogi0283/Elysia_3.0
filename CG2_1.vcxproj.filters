@@ -880,7 +880,7 @@
       <Filter>Project\Scene\Game\Base\Play</Filter>
     </ClCompile>
     <ClCompile Include="Elysia\Material\Vignette\Vignette.cpp">
-      <Filter>Elysia\Source File</Filter>
+      <Filter>Elysia\Source File\Material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

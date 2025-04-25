@@ -66,12 +66,7 @@ void TitleScene::Initialize() {
 void TitleScene::Update(Elysia::GameManager* gameManager) {
 	//細かいシーンの更新
 	detailTitleScene_->Update(this);
-	//処理を終えたらゲームシーンへ
-	if(isEnd_ == true) {
-		gameManager->ChangeScene("Game");
-		return;
-	}
-	
+
 	//更新
 	levelDataManager_->Update(levelHandle_);
 
@@ -86,11 +81,15 @@ void TitleScene::Update(Elysia::GameManager* gameManager) {
 	//レールカメラから2つの行列を取得
 	camera_.viewMatrix = titleRailCamera_->GetCamera().viewMatrix;
 	camera_.projectionMatrix = titleRailCamera_->GetCamera().projectionMatrix;
-
 	//カメラの更新
 	camera_.Transfer();
 
-
+	//処理を終えたらゲームシーンへ
+	if(isEnd_ == true) {
+		gameManager->ChangeScene("Game");
+		return;
+	}
+	
 #ifdef _DEBUG
 	//ImGui用
 	DisplayImGui();

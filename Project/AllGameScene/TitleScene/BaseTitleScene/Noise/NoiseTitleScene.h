@@ -12,6 +12,15 @@
 #include "Sprite.h"
 #include "TitleScene/BaseTitleScene/BaseTitleScene.h"
 
+/// <summary>
+/// ElysiaEngine
+/// </summary>
+namespace Elysia {
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
+}
 
 /// <summary>
 /// ノイズ
@@ -52,17 +61,17 @@ private:
 	/// </summary>
 	void DisplayImGui()override;
 
-
+private:
+	//オーディオ
+	Elysia::Audio* audio_ = nullptr;
 
 private:	
 	//ランダムエフェクトの表示時間の数
 	static const uint32_t DISPLAY_LENGTH_QUANTITY_ = 2u;
-
 	//開始時間
 	const std::array<float_t, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_START_TIME = { 0.0f,2.5f };
 	//表示の長さ
 	const std::array<float_t, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_LENGTH = { 1.0f,3.0f };
-
 	//1回目のエフェクト
 	const uint32_t FIRST_EFFECT = 0u;
 	//2回目のエフェクト
@@ -76,5 +85,7 @@ private:
 	//表示終了
 	bool isEndDisplay_ = false;
 
-
+	//ノイズ音のハンドル
+	uint32_t noiseHandle_ = 0u;
+	float_t noiseVolume_ = 0.0f;
 };
