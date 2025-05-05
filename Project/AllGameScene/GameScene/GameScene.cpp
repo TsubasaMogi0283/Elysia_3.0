@@ -88,7 +88,14 @@ void GameScene::Initialize() {
 	vignette_.pow = 0.0f;
 
 	//スタートから始まる
+	detailGameScene_ = std::make_unique<StartGameScene>();
+
+#ifdef _DEBUG
+	//デバッグ時はプレイシーンから始める
 	detailGameScene_ = std::make_unique<PlayGameScene>();
+
+#endif // _DEBUG
+
 	//レベルデータハンドルの設定
 	detailGameScene_->SetLevelDataHandle(levelHandle_);
 	//各ゲームオブジェクトのポインタを設定

@@ -76,6 +76,8 @@ private:
 	const uint32_t FIRST_EFFECT = 0u;
 	//2回目のエフェクト
 	const uint32_t SECOND_EFFECT = 1u;
+	//ノイズ再生時のボリューム
+	const float_t PLAY_NOISE_AUDIO_VALUME_ = 0.7f;
 
 private:
 	//ロゴ

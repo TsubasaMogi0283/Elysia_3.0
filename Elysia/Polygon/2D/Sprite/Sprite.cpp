@@ -30,10 +30,7 @@ void Elysia::Sprite::Initialize(const uint32_t& textureHandle, const Vector2& po
 
 
 	//頂点リソースを作る
-	vertexResource_ = directXSetup_->CreateBufferResource(sizeof(VertexData) * 6);
-	//index用のリソースを作る
-	indexResource_ = directXSetup_->CreateBufferResource(sizeof(uint32_t) * 6u);
-	
+	vertexResource_ = directXSetup_->CreateBufferResource(sizeof(VertexData) * 6u);
 	//頂点バッファビューを作成する
 	//リソースの先頭のアドレスから使う
 	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
@@ -42,7 +39,8 @@ void Elysia::Sprite::Initialize(const uint32_t& textureHandle, const Vector2& po
 	//１頂点あたりのサイズ
 	vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
-
+	//index用のリソースを作る
+	indexResource_ = directXSetup_->CreateBufferResource(sizeof(uint32_t) * 6u);
 	//Indexを利用
 	//リsp－スの先頭のアドレスから使う
 	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();

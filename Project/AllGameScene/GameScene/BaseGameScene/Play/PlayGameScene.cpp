@@ -33,6 +33,12 @@ void PlayGameScene::Initialize(){
 	//コリジョン管理クラスの生成
 	collisionManager_ = std::make_unique<Elysia::CollisionManager>();
 
+	//操作
+	uint32_t operationTextureHandle = textureManager_->Load("Resources/Sprite/Operation/Operation.png");
+	//生成
+	operationSprite_.reset(Elysia::Sprite::Create(operationTextureHandle, { .x = 20.0f,.y = 0.0f }));
+
+
 	//出口の画像読み込み
 	uint32_t escapeTextureHandle = textureManager_->Load("Resources/Sprite/Escape/EscapeText.png");
 	//生成
@@ -167,8 +173,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 
 
 void PlayGameScene::DrawSprite(){
-	//出口へのスプライト
-	escapeTextSprite_->Draw();
+	//操作
+	operationSprite_->Draw();
 	//プレイヤー
 	player_->DrawSprite();
 	//鍵
@@ -186,7 +192,6 @@ void PlayGameScene::DrawSprite(){
 	//黒フェード
 	blackFadeSprite_->Draw();
 
-	//openTreasureBoxSprite_->Draw();
 }
 
 void PlayGameScene::RegisterToCollisionManager(){
@@ -544,45 +549,6 @@ void PlayGameScene::EscapeCondition(){
 
 void PlayGameScene::ObjectCollision(){
 
-	//宝箱
-	if (isOpenTreasureBox_ == false) {
-		const float_t RADIUS = 5.0f;
-		Vector3 treasurePosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "TreasureBoxMain");
-
-		if (player_->GetWorldPosition().x >= treasurePosition.x - RADIUS &&
-			player_->GetWorldPosition().x <= treasurePosition.x + RADIUS &&
-			player_->GetWorldPosition().z >= treasurePosition.z - RADIUS &&
-			player_->GetWorldPosition().z <= treasurePosition.z + RADIUS) {
-
-			//表示
-			//openTreasureBoxSprite_->SetInvisible(false);
-
-
-			//Bボタンまたはスペースキーを押したとき
-			if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true|| input_->IsTriggerKey(DIK_SPACE) == true) {
-				//脱出
-				isOpenTreasureBox_ = true;
-			}
-
-		}
-		else {
-			//非表示
-			//openTreasureBoxSprite_->SetInvisible(true);
-		}
-	}
-	//開いた動作
-	else {
-		//初期回転
-		Vector3 initialRotate = levelDataManager_->GetInitialRotate(levelDataHandle_, "TreasureBoxLid");
-		//回転
-		Vector3 rotate = { .x = -std::numbers::pi_v<float_t> / 3.0f,.y = 0.0f,.z = 0.0f };
-		//再設定
-		levelDataManager_->SetRotate(levelDataHandle_, "TreasureBoxLid", VectorCalculation::Add(initialRotate, rotate));
-
-	}
-
-	//宝箱を開けたかどうかの設定
-	keyManager_->SetIsOpenTreasureBox(isOpenTreasureBox_);
 	//初期座標を取得
 	Vector3 initialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "CloseFenceInCemetery");
 

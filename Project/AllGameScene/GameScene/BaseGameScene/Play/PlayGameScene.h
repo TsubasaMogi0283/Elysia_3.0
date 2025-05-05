@@ -117,6 +117,10 @@ private:
 	std::unique_ptr<Elysia::Sprite> whiteFadeSprite_ = nullptr;
 	//黒フェードのスプライト
 	std::unique_ptr<Elysia::Sprite> blackFadeSprite_ = nullptr;
+	//操作のスプライト
+	std::unique_ptr<Elysia::Sprite> operationSprite_ = nullptr;
+
+
 	//透明度
 	float_t fadeTransparency_ = 0.0f;
 
@@ -136,10 +140,6 @@ private:
 	//線形補間
 	float_t openT_ = 0.0f;
 
-	//宝箱が開いているかどうか
-	bool isOpenTreasureBox_ = false;
-	//開けるかどうかを表示する
-	std::unique_ptr<Elysia::Sprite> openTreasureBoxSprite_ = nullptr;
 	//脱出テキストのスプライト
 	std::unique_ptr<Elysia::Sprite> escapeTextSprite_ = nullptr;
 	//脱出のスプライト

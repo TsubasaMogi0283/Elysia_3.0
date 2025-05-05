@@ -62,7 +62,7 @@ void NoiseTitleScene::Update(TitleScene* titleScene){
 			//一旦非表示
 			logoSprite_->SetInvisible(true);
 			//聞こえるようにする
-			noiseVolume_ = 0.7f;
+			noiseVolume_ = PLAY_NOISE_AUDIO_VALUME_;
 			break;
 		}
 		else {
