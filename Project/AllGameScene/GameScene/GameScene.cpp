@@ -242,7 +242,7 @@ void GameScene::DrawObject3D() {
 	//レベルエディタ  
 	levelDataManager_->Draw(levelHandle_, camera_, spotLight);
 	//敵
-	enemyManager_->Draw(camera_, spotLight);
+	enemyManager_->DrawObject3D(camera_, spotLight);
 	//プレイヤー
 	player_->DrawObject3D(camera_, spotLight);
 	//鍵

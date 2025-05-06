@@ -78,7 +78,7 @@ public:
 	/// 描画
 	/// </summary>
 	/// <param name="spotLight">スポットライト</param>
-	void Draw(const Camera& camera ,const SpotLight& spotLight);
+	void DrawObject3D(const Camera& camera ,const SpotLight& spotLight);
 
 
 	/// <summary>
@@ -110,6 +110,14 @@ public:
 	/// </summary>
 	void StopAudio();
 
+
+private:
+	/// <summary>
+	/// ImGui表示用
+	/// </summary>
+	void DisplayImGui();
+
+
 public:
 	/// <summary>
 	/// エネミーを取得
@@ -133,6 +141,14 @@ public:
 			enemies.push_back(enemy.get());
 		}
 		return enemies;
+	}
+
+	/// <summary>
+	/// 通常の敵の最短距離を取得
+	/// </summary>
+	/// <returns></returns>
+	inline float_t GeClosestNormalEnemyDistance()const {
+		return closestNormalEnemyDistance_;
 	}
 
 	/// <summary>
@@ -167,9 +183,22 @@ private:
 
 private:
 	//前方にいるかどうかの内積
-	const float FRONT_DOT_ = 0.7f;
+	const float_t FRONT_DOT_ = 0.7f;
 	//追跡開始の距離
-	const float STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
+	const float_t STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
+
+
+private:
+	/// <summary>
+	/// 最短の情報
+	/// </summary>
+	struct ClosestEnemyInformation {
+		//座標
+		Vector3 position;
+		//方向
+		Vector3 direction;
+
+	};
 
 private:
 	//エネミーのリスト
@@ -184,5 +213,13 @@ private:
 	//強敵
 	uint32_t strongEnemyModelHandle_ = 0u;
 
+	// 最短距離と敵の座標のペアを格納する
+	std::vector<std::pair<float_t, ClosestEnemyInformation>> enemyDistancePairs;
+	//最短距離
+	float_t closestNormalEnemyDistance_ = 0.0f;
+	//最短情報
+	ClosestEnemyInformation closestEnemyInformation_ = {};
+	//内積
+	float_t playerAndNormalEnemyDot_ = 0.0f;
 };
 

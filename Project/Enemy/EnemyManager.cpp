@@ -71,6 +71,8 @@ void EnemyManager::Update(){
 	const float ATTACK_START_DISTANCE = 6.0f;
 	//プレイヤーの座標
 	Vector3 playerPosition = player_->GetWorldPosition();
+
+	
 	//通常の敵
 	for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 		
@@ -82,7 +84,15 @@ void EnemyManager::Update(){
 		//更新
 		enemy->Update();
 
+		//敵との最短距離を求める
+		//プレイヤーと鍵の差分
+		Vector3 playerAndKeydifference = VectorCalculation::Subtract(player_->GetWorldPosition(), enemy->GetWorldPosition());
+		//距離
+		float_t distance = SingleCalculation::Length(playerAndKeydifference);
 
+		// 距離と敵の座標をペアで保存
+		ClosestEnemyInformation newClosestEnemyInformation = { .position = enemy->GetWorldPosition(),.direction = enemy->GetDirection() };
+		enemyDistancePairs.push_back({ distance,newClosestEnemyInformation });
 		
 		//レベルエディタから持ってくる
 		//AABB
@@ -160,6 +170,18 @@ void EnemyManager::Update(){
 		}
 		
 
+	}
+	//最短距離を持つペアを探す
+	auto minIt = std::min_element(enemyDistancePairs.begin(), enemyDistancePairs.end(),
+		[](const auto& a, const auto& b) {
+			return a.first < b.first;
+	});
+
+	//最短だった場合を記録
+	if (minIt != enemyDistancePairs.end()) {
+		closestNormalEnemyDistance_ = minIt->first;
+		closestEnemyInformation_.position = minIt->second.position;
+		closestEnemyInformation_.direction = minIt->second.direction;
 	}
 
 
@@ -425,9 +447,21 @@ void EnemyManager::Update(){
 			strongEnemy->ChangeState(std::make_unique<StrongEnemyMove>());
 		}
 	}
+
+
+	//入っているものを全てクリアする
+	enemyDistancePairs.clear();
+
+
+#ifdef _DEBUG
+	//ImGui表示用
+	DisplayImGui();
+#endif // _DEBUG
+
+
 }
 
-void EnemyManager::Draw(const Camera& camera,const SpotLight& spotLight){
+void EnemyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight){
 
 	//描画(通常)
 	for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
@@ -484,4 +518,22 @@ void EnemyManager::DeleteEnemy() {
 
 void EnemyManager::StopAudio() {
 	audio_->Stop(audioHandle_);
+}
+
+void EnemyManager::DisplayImGui(){
+	ImGui::Begin("敵管理クラス");
+	if (ImGui::TreeNode("最短") == true) {
+		ImGui::InputFloat("距離", &closestNormalEnemyDistance_);
+		ImGui::InputFloat3("座標", &closestEnemyInformation_.position.x);
+		ImGui::InputFloat3("方向", &closestEnemyInformation_.direction.x);
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("プレイヤー") == true) {
+		Vector3 direction = player_->GetDirection();
+		ImGui::InputFloat3("方向", &direction.x);
+		
+		ImGui::TreePop();
+	}
+	ImGui::End();
 }
