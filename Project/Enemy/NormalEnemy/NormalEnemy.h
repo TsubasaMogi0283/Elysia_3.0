@@ -138,6 +138,22 @@ public:
 	}
 
 	/// <summary>
+	/// 攻撃アニメーションをしているかどうか
+	/// </summary>
+	/// <returns></returns>
+	inline bool GetIsAttackAnimation()const {
+		return isAttackAnimation_;
+	}
+
+	/// <summary>
+	/// 攻撃アニメーションをしているかどうか
+	/// </summary>
+	/// <param name="isAttackAnimation"></param>
+	inline void SetIsAttackAnimation(const bool& isAttackAnimation) {
+		this->isAttackAnimation_ = isAttackAnimation;
+	}
+
+	/// <summary>
 	/// ライトの強さを設定
 	/// </summary>
 	/// <param name="strength">強さ</param>
@@ -202,8 +218,6 @@ private:
 	/// </summary>
 	void DisplayImGui();
 
-
-
 private:
 	//グローバル変数クラス
 	Elysia::GlobalVariables* globalVariables_ = nullptr;
@@ -234,7 +248,6 @@ private:
 		Dangerous,
 		Normal,
 	};
-
 
 private:
 	//アニメーションモデル
@@ -282,6 +295,9 @@ private:
 
 	//攻撃状態
 	bool isAttack_ = false;
+	//攻撃アニメーションをしているかどうか
+	bool isAttackAnimation_ = false;
+
 	//状態の名前
 	//前回
 	std::string preStateName_ = "";

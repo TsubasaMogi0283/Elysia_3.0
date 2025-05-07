@@ -9,10 +9,6 @@ NormalEnemyAttack::NormalEnemyAttack(){
 	stateName_ = "Attack";
 }
 
-void NormalEnemyAttack::Initialize(){
-
-}
-
 void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 	//強敵本体の座標を取得
 	Vector3 worldPosition = normalEnemy->GetWorldPosition();
@@ -24,7 +20,6 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 	//正規化
 	direction_ = VectorCalculation::Normalize(direction_);
 
-	
 	//時間が増えていく
 	animationTime_ += DELTA_ANIMATION_TIME_;
 	attackTime_ += DELTA_ATTACK_TIME_;
@@ -34,7 +29,6 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 	if (attackTime_ == JUST_ATTACK_TIME_) {
 		//ここで攻撃
 		normalEnemy->SetIsAttack(true);
-
 	}
 	else {
 		//攻撃しない
@@ -46,6 +40,16 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 		animationTime_ = RESTART_ANIMATION_TIME_;
 		attackTime_ = RESTART_ATTACK_TIME_;
 	}
+
+	//0秒の時はアニメーションをしていない
+	//攻撃のアニメーションが最後まで行かないと次の行動に移らないようにする。
+	if (attackTime_ == RESTART_ATTACK_TIME_) {
+		normalEnemy->SetIsAttackAnimation(false);
+	}
+	else {
+		normalEnemy->SetIsAttackAnimation(true);
+	}
+	
 
 
 	//アニメーション時間の設定

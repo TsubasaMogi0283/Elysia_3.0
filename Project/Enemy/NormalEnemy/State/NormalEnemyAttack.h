@@ -1,6 +1,5 @@
 #pragma once
 
-
 /**
  * @file NormalEnemyAttack.h
  * @brief 通常の敵が攻撃するクラス
@@ -8,7 +7,6 @@
  */
 
 #include "BaseNormalEnemyState.h"
-
 
 /// <summary>
 /// 通常の敵が攻撃する
@@ -23,7 +21,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize()override;
+	void Initialize()override {};
 
 	/// <summary>
 	/// 更新
@@ -38,9 +36,6 @@ public:
 	
 
 private:
-	
-	
-
 	//0から始める
 	const uint32_t RESTART_ATTACK_TIME_ = 0u;
 	//攻撃する時間用の時間変化
@@ -50,14 +45,12 @@ private:
 	//戻る時間
 	const uint32_t RETURN_ATTACK_TIME_ = JUST_ATTACK_TIME_ * 4u;
 
-
 	//0に戻る
 	const float_t RESTART_ANIMATION_TIME_ = 0.0f;
 	//増える値
 	const float_t DELTA_ANIMATION_TIME_ = 1.0f / 60.0f;
 	//戻る時間(4秒いっぱいまで)
 	const float_t RETURN_ANIMATION_TIME_ = 5.0f;
-
 
 private:
 	//アニメーションの時間

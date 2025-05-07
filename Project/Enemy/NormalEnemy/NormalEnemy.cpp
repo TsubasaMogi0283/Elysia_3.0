@@ -136,7 +136,7 @@ void NormalEnemy::Update() {
 	//アニメーション適用
 	Elysia::AnimationManager::GetInstance()->ApplyAnimation(skeleton_, animationHandle_, animationTime_);
 	
-	//スケルトン・クラスターを更新
+	//スケルトン、クラスターを更新
 	skeleton_.Update();
 	skinCluster_.Update(skeleton_);
 
@@ -147,7 +147,6 @@ void NormalEnemy::Update() {
 	if (isAlive_ == true) {
 		//状態の更新
 		currentState_->Update(this);
-
 	}
 	else {
 		//死亡したらパーティクルを出して消える
@@ -239,7 +238,7 @@ void NormalEnemy::Damaged() {
 			//テクスチャの上書き
 			electricShockParticle_->TextureOverride(thunderTextureHandle_);
 			//パーティクルの細かい設定
-			const float SCALE_SIZE = 0.6f;
+			const float SCALE_SIZE = 0.7f;
 			electricShockParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
 			electricShockParticle_->SetCount(6u);
 			const float FREQUENCY = 4.0f;
@@ -257,14 +256,13 @@ void NormalEnemy::Damaged() {
 
 			//感電
 			if (isElectricShock_==true&& IsFirstElectricShock_==true) {
-
 				//振動させる
 				//線形補間のように加算しその値を振動の倍数として使う
 				electricShockT_ += ELECTRIC_SHOCK_DELTA_TIME_;
 
 				//振動の値
 				Vector3 randomTranslate = { .x = distribute(randomEngine),.y = 0.0f,.z = distribute(randomEngine) };
-				//村道の値をかける
+				//振動の値をかける
 				electricDamageShakeValue_ = VectorCalculation::Multiply(randomTranslate, (MAX_T_VALUE_ - electricShockT_));
 				if (electricShockT_ > MAX_T_VALUE_) {
 					//一旦振動を解除
@@ -276,7 +274,6 @@ void NormalEnemy::Damaged() {
 		}
 		//振動分の値を座標に加算
 		worldTransform_.translate = VectorCalculation::Add(GetWorldPosition(), electricDamageShakeValue_);
-
 		//座標の設定
 		electricShockParticle_->SetTranslate(GetWorldPosition());
 
@@ -295,11 +292,11 @@ void NormalEnemy::Delete() {
 	worldTransform_.scale.y += SCALE_DOWN_VALUE;
 	worldTransform_.scale.z += SCALE_DOWN_VALUE;
 
+	//反転しないようにする
 	if (worldTransform_.scale.z < 0.0f) {
 		worldTransform_.scale.x = 0.0f;
 		worldTransform_.scale.y = 0.0f;
 		worldTransform_.scale.z = 0.0f;
-
 	}
 
 	//生成
@@ -308,7 +305,7 @@ void NormalEnemy::Delete() {
 		deadParticle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Rise));
 		//パーティクルの細かい設定
 		deadParticle_->SetTranslate(GetWorldPosition());
-		const float SCALE_SIZE = 0.4f;
+		const float SCALE_SIZE = 0.8f;
 		deadParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
 		deadParticle_->SetCount(20u);
 		deadParticle_->SetIsReleaseOnceMode(true);

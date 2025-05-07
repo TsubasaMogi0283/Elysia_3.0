@@ -136,8 +136,6 @@ std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& m
 
 ParticleInformation Elysia::Particle3D::MakeNewParticle(std::mt19937& randomEngine) {
 
-	
-
 	//ランダムの値で位置を決める
 	//SRは固定
 	std::uniform_real_distribution<float> distribute(-1.0f, 1.0f);
