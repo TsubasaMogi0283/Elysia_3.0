@@ -219,9 +219,6 @@ void PlayGameScene::RegisterToCollisionManager(){
 			collisionManager_->RegisterList(enemy->GetEnemyAttackCollision());
 			player_->SetIsAcceptDamegeFromNoemalEnemy(true);
 		}
-		else {
-			player_->SetIsAcceptDamegeFromNoemalEnemy(true);
-		}
 
 	}
 

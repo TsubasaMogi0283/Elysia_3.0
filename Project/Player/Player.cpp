@@ -176,7 +176,8 @@ void Player::Damaged() {
 
 	//ダメージを受けた時
 	if (isDameged_ == true) {
-
+		//攻撃を受け付けないようにする
+		isAcceptDamegeFromNoemalEnemy_ = false;
 		//一時的にコントロールを失う
 		isControll_ = false;
 		//線形補間で振動処理をする
