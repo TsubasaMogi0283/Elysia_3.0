@@ -1,7 +1,5 @@
 #include "RandomEffect.hlsli"
 
-
-//hlsliでは絶対に日本語を使わないでね
 struct PixelShaderOutput{
     float4 color : SV_TARGET0;
 };
@@ -40,7 +38,7 @@ PixelShaderOutput main(VertexShaderOutput input){
         //テクスチャの色を取得
         float4 textureColor = gTexture.Sample(gSample, input.texcoord);
         //色にする
-        output.color = float4(random * gRandomEngine.strength, random * gRandomEngine.strength, random * gRandomEngine.strength, 1.0f) * textureColor * ;
+        output.color = float4(random, random, random, 1.0f) * textureColor;
     }
     //しない場合
     else{
