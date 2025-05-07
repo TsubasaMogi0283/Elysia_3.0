@@ -26,7 +26,7 @@ Elysia::RandomEffect::RandomEffect(){
 void Elysia::RandomEffect::Initialize() {
 
 	//RTV
-	const Vector4 RENDER_TARGET_CLEAR_VALUE = { 0.0f,0.0f,0.0f,1.0f };
+	const Vector4 RENDER_TARGET_CLEAR_VALUE = {.x = 0.0f,.y = 0.0f,.z = 0.0f,.w = 1.0f };
 	//リソース
 	rtvResource_ = rtvManager_->CreateRenderTextureResource(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, RENDER_TARGET_CLEAR_VALUE);
 	//テクスチャヲ使うかどうか
@@ -49,7 +49,7 @@ void Elysia::RandomEffect::Initialize() {
 	//ランダム
 	//リソース
 	randomValueResource_ = directXSetup_->CreateBufferResource(sizeof(RandomValue));
-	std::uniform_real_distribution<float> distribute(0.0f, 1.0f);
+	std::uniform_real_distribution<float_t> distribute(0.0f, 1.0f);
 	//値の生成
 	randomValue_.value = distribute(randomEngine_);
 
@@ -58,7 +58,7 @@ void Elysia::RandomEffect::Initialize() {
 void Elysia::RandomEffect::PreDraw() {
 	
 	//RTの設定
-	const float RENDER_TARGET_CLEAR_VALUE[] = { 0.0f,0.0f,0.0f,1.0f };
+	const float_t RENDER_TARGET_CLEAR_VALUE[] = { 0.0f,0.0f,0.0f,1.0f };
 	directXSetup_->GetCommandList()->OMSetRenderTargets(
 		1u, &rtvManager_->GetRtvHandle(rtvHandle_), false, &directXSetup_->GetDsvHandle());
 	//クリア
@@ -87,15 +87,17 @@ void Elysia::RandomEffect::Draw() {
 
 #pragma region 閾値
 #ifdef _DEBUG
-	ImGui::Begin("RandomEffect");
-	ImGui::InputFloat("threshold", &randomValue_.value);
-	ImGui::Checkbox("UseTexture", &randomValue_.isUseTexture);
+	ImGui::Begin("ランダムノイズ");
+	ImGui::InputFloat("値", &randomValue_.value);
+	ImGui::SliderFloat("強さ", &randomValue_.strength, 0.0f, 1.0f);
+	ImGui::Checkbox("テクスチャを使うかどうか", &randomValue_.isUseTexture);
 	ImGui::End();
 #endif
 	randomValueResource_->Map(0u,nullptr,reinterpret_cast<void**>(&randomValueData_));
-	std::uniform_real_distribution<float> distribute(0.0f, 1.0f);
+	std::uniform_real_distribution<float_t> distribute(0.0f, 1.0f);
 	randomValue_.value = distribute(randomEngine_);
 	randomValueData_->value = randomValue_.value;
+	randomValueData_->strength = randomValue_.strength;
 	randomValueData_->isUseTexture = randomValue_.isUseTexture;
 	randomValueResource_->Unmap(0u, nullptr);
 #pragma endregion

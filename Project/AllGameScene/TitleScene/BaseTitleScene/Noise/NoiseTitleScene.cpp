@@ -81,7 +81,7 @@ void NoiseTitleScene::Update(TitleScene* titleScene){
 			if (randomEffectTime_ > RANDOM_EFFECT_DISPLAY_START_TIME[SECOND_EFFECT] + RANDOM_EFFECT_DISPLAY_LENGTH[SECOND_EFFECT]) {
 				//ロゴの非表示
 				logoSprite_->SetInvisible(true);
-				//h当時終わりを示す
+				//表示の終わりを示す
 				isEndDisplay_ = true;
 			}
 		}

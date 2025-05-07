@@ -71,7 +71,7 @@ private:
 	//開始時間
 	const std::array<float_t, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_START_TIME = { 0.0f,2.5f };
 	//表示の長さ
-	const std::array<float_t, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_LENGTH = { 1.0f,3.0f };
+	const std::array<float_t, DISPLAY_LENGTH_QUANTITY_> RANDOM_EFFECT_DISPLAY_LENGTH = { 10.0f,3.0f };
 	//1回目のエフェクト
 	const uint32_t FIRST_EFFECT = 0u;
 	//2回目のエフェクト

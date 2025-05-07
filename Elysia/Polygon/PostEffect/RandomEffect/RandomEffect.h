@@ -15,7 +15,6 @@
 #include "VertexData.h"
 
 
-
  /// <summary>
  /// ElysiaEngine
  /// </summary>
@@ -44,8 +43,6 @@ namespace Elysia {
 	/// SRV管理クラス
 	/// </summary>
 	class SrvManager;
-
-
 
 	/// <summary>
 	/// ランダムエフェクト
@@ -96,7 +93,9 @@ namespace Elysia {
 		/// </summary>
 		struct RandomValue {
 			//値
-			float value;
+			float_t value;
+			//ノイズの強さ
+			float_t strength;
 			//テクスチャと乗算させるか
 			bool isUseTexture;
 		};
@@ -116,18 +115,14 @@ namespace Elysia {
 		//リソース
 		ComPtr<ID3D12Resource> rtvResource_ = nullptr;
 		//ハンドル
-		uint32_t rtvHandle_ = 0;
-
+		uint32_t rtvHandle_ = 0u;
 
 		//SRVハンドル
-		uint32_t srvHandle_ = 0;
+		uint32_t srvHandle_ = 0u;
 
 		//バリア
 		D3D12_RESOURCE_BARRIER barrier = {};
 
 
 	};
-
-
-
 };
