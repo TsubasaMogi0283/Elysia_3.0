@@ -178,7 +178,6 @@ void EnemyManager::Update(){
 			}
 		}
 		
-
 	}
 	
 	//警告
