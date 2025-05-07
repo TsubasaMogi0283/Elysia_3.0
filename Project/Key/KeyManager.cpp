@@ -48,7 +48,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 	//生成
 	keyListSprite_.reset(Elysia::Sprite::Create(keyListSpriteHandle, initialPosition_));
 
-	uint32_t textureHandle = Elysia::TextureManager::GetInstance()->Load("Resources/Sprite/Item/Key/Key.png");
+	uint32_t textureHandle = Elysia::TextureManager::GetInstance()->Load("Resources/Sprite/Item/Key.png");
 	//サイズを取得
 	keySpriteWidth_ = textureManager_->GetTextureWidth(textureHandle);
 	keySpriteHeight_ = textureManager_->GetTextureHeight(textureHandle);
@@ -78,7 +78,7 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 	dropPlateSEHandle_ = audio_->Load("Resources/External/Audio/Plate/DropPlateSE.wav");
 
 	//拾う画像の読み込み
-	uint32_t pickUpTextureManager = textureManager_->Load("Resources/Sprite/Key/PickUpKey.png");
+	uint32_t pickUpTextureManager = textureManager_->Load("Resources/Sprite/Item/PickUpKey.png");
 	//生成
 	const Vector2 INITIAL_FADE_POSITION = { .x = 0.0f,.y = 0.0f };
 	pickUpKey_.reset(Elysia::Sprite::Create(pickUpTextureManager, INITIAL_FADE_POSITION));

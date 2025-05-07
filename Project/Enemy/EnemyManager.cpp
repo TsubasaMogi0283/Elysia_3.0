@@ -11,8 +11,9 @@
 #include "PushBackCalculation.h"
 #include "Input.h"
 #include "Audio.h"
+#include "TextureManager.h"
 #include "LevelDataManager.h"
-
+#include "WindowsSetup.h"
 
 #include "StrongEnemy/State/StrongEnemyNoneMove.h"
 #include "StrongEnemy/State/StrongEnemyMove.h"
@@ -29,6 +30,10 @@ EnemyManager::EnemyManager(){
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 	//オーディオ
 	audio_ = Elysia::Audio::GetInstance();
+	//テクスチャ管理クラス
+	textureManager_ = Elysia::TextureManager::GetInstance();
+	//ウィンドウクラス
+	windowSetup_ = Elysia::WindowsSetup::GetInstance();
 }
 
 
@@ -47,9 +52,8 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel, const uint32_t& 
 	//生成数
 	size_t genarateQuantity = normalEnemyPositions.size();
 #ifdef _DEBUG
-	//genarateQuantity = 1u;
+	genarateQuantity = 1u;
 #endif // _DEBUG
-
 
 	//通常の敵の生成
 	for (size_t i = 0u; i < genarateQuantity; ++i) {
@@ -59,20 +63,25 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel, const uint32_t& 
 
 	strongEnemyPositions;
 
+	//警告
+	uint32_t warningTextureHandle = textureManager_->Load("Resources/Sprite/Warning/Warning.png");
+	//生成
+	warningSprite_.reset(Elysia::Sprite::Create(warningTextureHandle, warningTexturePosition_));
+	//アンカーポイントの設定
+	warningSprite_->SetAnchorPoint(WARNING_TEXTURE_ANCHOR_POINT_);
+	//座標の再設定
+	warningTexturePosition_ = { .x = static_cast<float_t>(windowSetup_->GetClientWidth())/2.0f,.y=650.0f };
+	warningSprite_->SetPosition(warningTexturePosition_);
+
 	//接近BGMの設定
 	audioHandle_ = audio_->Load("Resources/Audio/Enemy/TrackingToPlayer.mp3");
 }
 
 void EnemyManager::Update(){
 
-	//接近するときの距離
-	const float TRACKING_START_DISTANCE = 15.0f;
-	//攻撃するときの距離
-	const float ATTACK_START_DISTANCE = 6.0f;
 	//プレイヤーの座標
 	Vector3 playerPosition = player_->GetWorldPosition();
 
-	
 	//通常の敵
 	for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 		
@@ -91,7 +100,7 @@ void EnemyManager::Update(){
 		float_t distance = SingleCalculation::Length(playerAndKeydifference);
 
 		// 距離と敵の座標をペアで保存
-		ClosestEnemyInformation newClosestEnemyInformation = { .position = enemy->GetWorldPosition(),.direction = enemy->GetDirection() };
+		ClosestEnemyInformation newClosestEnemyInformation = { .position = enemy->GetWorldPosition(),.direction = enemy->GetMoveDirection() };
 		enemyDistancePairs.push_back({ distance,newClosestEnemyInformation });
 		
 		//レベルエディタから持ってくる
@@ -171,31 +180,18 @@ void EnemyManager::Update(){
 		
 
 	}
-	//最短距離を持つペアを探す
-	auto minIt = std::min_element(enemyDistancePairs.begin(), enemyDistancePairs.end(),
-		[](const auto& a, const auto& b) {
-			return a.first < b.first;
-	});
-
-	//最短だった場合を記録
-	if (minIt != enemyDistancePairs.end()) {
-		closestNormalEnemyDistance_ = minIt->first;
-		closestEnemyInformation_.position = minIt->second.position;
-		closestEnemyInformation_.direction = minIt->second.direction;
-	}
-
-
-	//現在の敵の数
-	size_t enemyAmount = enemies_.size();
-	//1体だけの時
-	const uint32_t ONLY_ONE = 1u;
+	
+	//警告
+	Warning();
+	
+	
 	//敵同士の判定をやる必要が無いからね
-	if (enemyAmount == ONLY_ONE) {
+	if (enemies_.size() == ENEMY_ONE_) {
 		for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
 			//状態
 			std::string currentState = enemy->GetCurrentStateName();
 			//向き
-			Vector3 enemyDirection = enemy->GetDirection();
+			Vector3 enemyDirection = enemy->GetMoveDirection();
 
 			//プレイヤーと敵の差分ベクトル
 			Vector3 defference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
@@ -206,19 +202,19 @@ void EnemyManager::Update(){
 			//通常の動き
 			if (currentState == "Move") {
 				//近くなったら追跡準備
-				if (defferenceDistance < TRACKING_START_DISTANCE ) {
+				if (defferenceDistance < TRACKING_START_DISTANCE_ ) {
 					//追跡準備へ
 					enemy->ChengeState(std::make_unique<NormalEnemyPreTracking>());
 				}
 			}
 			//追跡
 			else if (currentState == "Tracking") {
-				if (defferenceDistance <= ATTACK_START_DISTANCE) {
+				if (defferenceDistance <= ATTACK_START_DISTANCE_) {
 					//攻撃
 					enemy->ChengeState(std::make_unique<NormalEnemyAttack>());
 				}
 				//距離が離れたら通常の動きへ
-				if (defferenceDistance >= TRACKING_START_DISTANCE) {
+				if (defferenceDistance >= TRACKING_START_DISTANCE_) {
 					//追跡準備へ
 					enemy->ChengeState(std::make_unique<NormalEnemyMove>());
 				}
@@ -227,7 +223,7 @@ void EnemyManager::Update(){
 			//攻撃
 			else if (currentState == "Attack") {
 				//攻撃中にプレイヤーが離れた時
-				if (defferenceDistance > ATTACK_START_DISTANCE) {
+				if (defferenceDistance > ATTACK_START_DISTANCE_) {
 					//通常の動き
 					enemy->ChengeState(std::make_unique<NormalEnemyMove>());
 				}
@@ -238,7 +234,7 @@ void EnemyManager::Update(){
 	}
 
 	//1体より多い時
-	if (enemyAmount > ONLY_ONE) {
+	if (enemies_.size() > ENEMY_ONE_) {
 		for (std::list<std::unique_ptr<NormalEnemy>>::iterator it1 = enemies_.begin(); it1 != enemies_.end(); ++it1) {
 
 			//比較する数
@@ -256,7 +252,7 @@ void EnemyManager::Update(){
 			//元となる敵のAABBと座標、向きを取得
 			aabb[BASE_ENEMY] = (*it1)->GetAABB();
 			enemyPosition[BASE_ENEMY] = (*it1)->GetWorldPosition();
-			Vector3 direction = (*it1)->GetDirection();
+			Vector3 direction = (*it1)->GetMoveDirection();
 
 			//敵同士の内積
 			float enemyAndEnemyDot = 0.0f;
@@ -302,14 +298,14 @@ void EnemyManager::Update(){
 			if (currentState == "Move") {
 
 				//前方にいたら行動
-				if (playerEnemyDistance < TRACKING_START_DISTANCE) {
+				if (playerEnemyDistance < TRACKING_START_DISTANCE_) {
 					//追跡準備へ
 					(*it1)->ChengeState(std::make_unique<NormalEnemyPreTracking>());
 				}
 			}
 			//追跡
 			else if (currentState == "Tracking") {
-				if (playerEnemyDistance <= ATTACK_START_DISTANCE) {
+				if (playerEnemyDistance <= ATTACK_START_DISTANCE_) {
 					//攻撃
 					(*it1)->ChengeState(std::make_unique<NormalEnemyAttack>());
 				}
@@ -318,7 +314,7 @@ void EnemyManager::Update(){
 			//攻撃
 			else if (currentState == "Attack") {
 				//攻撃中にプレイヤーが離れた時
-				if (playerEnemyDistance > ATTACK_START_DISTANCE) {
+				if (playerEnemyDistance > ATTACK_START_DISTANCE_) {
 					//通常の動き
 					(*it1)->ChengeState(std::make_unique<NormalEnemyMove>());
 				}
@@ -369,7 +365,7 @@ void EnemyManager::Update(){
 
 
 					//敵の向いている方向
-					Vector3 enemyDirection = strongEnemy->GetDirection();
+					Vector3 enemyDirection = strongEnemy->GetMoveDirection();
 
 					//前にある場合だけ計算
 					float dot = SingleCalculation::Dot(enemyDirection, normalizedDefference);
@@ -448,10 +444,8 @@ void EnemyManager::Update(){
 		}
 	}
 
-
 	//入っているものを全てクリアする
 	enemyDistancePairs.clear();
-
 
 #ifdef _DEBUG
 	//ImGui表示用
@@ -473,6 +467,11 @@ void EnemyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight)
 		strongEnemy->Draw(camera, spotLight);
 	}
 
+}
+
+void EnemyManager::DrawSprite(){
+	//警告
+	warningSprite_->Draw();
 }
 
 void EnemyManager::GenerateNormalEnemy(const Vector3& position) {
@@ -520,8 +519,37 @@ void EnemyManager::StopAudio() {
 	audio_->Stop(audioHandle_);
 }
 
+void EnemyManager::Warning(){
+
+	//最短距離を持つペアを探す
+	auto minIt = std::min_element(enemyDistancePairs.begin(), enemyDistancePairs.end(),
+		[](const auto& a, const auto& b) {
+			return a.first < b.first;
+		});
+
+	//最短だった場合を記録
+	if (minIt != enemyDistancePairs.end()) {
+		closestNormalEnemyDistance_ = minIt->first;
+		closestEnemyInformation_.position = minIt->second.position;
+		closestEnemyInformation_.direction = minIt->second.direction;
+	}
+
+	//内積を計算
+	playerAndNormalEnemyDot_ = SingleCalculation::Dot(closestEnemyInformation_.direction, player_->GetLightDirection());
+	//プレイヤーの背後にいたら警告表示をするようにする
+	if (playerAndNormalEnemyDot_ >= BACK_DOT_VALUE_ && closestNormalEnemyDistance_ <= TRACKING_START_DISTANCE_) {
+		warningSprite_->SetInvisible(false);
+	}
+	else {
+		warningSprite_->SetInvisible(true);
+	}
+}
+
 void EnemyManager::DisplayImGui(){
+
 	ImGui::Begin("敵管理クラス");
+	ImGui::SliderFloat2("警告座標", &warningTexturePosition_.x, 0.0f, 720.0f);
+	ImGui::InputFloat("内積", &playerAndNormalEnemyDot_);
 	if (ImGui::TreeNode("最短") == true) {
 		ImGui::InputFloat("距離", &closestNormalEnemyDistance_);
 		ImGui::InputFloat3("座標", &closestEnemyInformation_.position.x);
@@ -530,7 +558,7 @@ void EnemyManager::DisplayImGui(){
 	}
 
 	if (ImGui::TreeNode("プレイヤー") == true) {
-		Vector3 direction = player_->GetDirection();
+		Vector3 direction = player_->GetMoveDirection();
 		ImGui::InputFloat3("方向", &direction.x);
 		
 		ImGui::TreePop();

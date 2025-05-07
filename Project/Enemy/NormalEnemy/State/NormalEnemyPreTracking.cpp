@@ -19,7 +19,7 @@ void NormalEnemyPreTracking::Update(NormalEnemy* normalEnemy) {
 	Vector3 preDirection = {};
 	if (isGetPreDirection_==false) {
 		//取得
-		preDirection = normalEnemy->GetDirection();
+		preDirection = normalEnemy->GetMoveDirection();
 		//取得済みにする
 		isGetPreDirection_ = true;
 	}

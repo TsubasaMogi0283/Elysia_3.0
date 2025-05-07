@@ -190,7 +190,7 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 	//レベルエディタで使うリスナーの設定
 	Listener listener = {
 		.position = player_->GetWorldPosition(),
-		.move = player_->GetDirection(),
+		.move = player_->GetMoveDirection(),
 	};
 	levelDataManager_->SetListener(levelHandle_, listener);
 	//レベルエディタの更新

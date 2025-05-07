@@ -142,12 +142,21 @@ public:
 
 
 	/// <summary>
-	/// 方向を取得
+	/// 移動方向を取得
 	/// </summary>
 	/// <returns>方向</returns>
-	inline Vector3 GetDirection() const {
+	inline Vector3 GetMoveDirection() const {
 		return moveDirection_;
 	}
+
+	/// <summary>
+	/// ライトの方向を取得
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetLightDirection()const {
+		return flashLight_->GetSpotLight().direction;
+	}
+
 
 	/// <summary>
 	/// 目線シータの設定

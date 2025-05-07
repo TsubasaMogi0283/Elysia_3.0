@@ -37,8 +37,6 @@ void PlayGameScene::Initialize(){
 	uint32_t operationTextureHandle = textureManager_->Load("Resources/Sprite/Operation/Operation.png");
 	//生成
 	operationSprite_.reset(Elysia::Sprite::Create(operationTextureHandle, { .x = 20.0f,.y = 0.0f }));
-
-
 	//出口の画像読み込み
 	uint32_t escapeTextureHandle = textureManager_->Load("Resources/Sprite/Escape/EscapeText.png");
 	//生成
@@ -185,6 +183,9 @@ void PlayGameScene::DrawSprite(){
 	if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
 		toEscapeSprite_->Draw();
 	}
+
+	//敵管理クラス
+	enemyManager_->DrawSprite();
 
 	//白フェード
 	whiteFadeSprite_->Draw();
@@ -526,9 +527,7 @@ void PlayGameScene::EscapeCondition(){
 	if (gate_->isCollision(player_->GetWorldPosition())) {
 
 		//3個取得したら脱出できる
-		uint32_t playerKeyQuantity = player_->GetHavingKey();
-		playerKeyQuantity;
-		if (playerKeyQuantity >= keyManager_->GetMaxKeyQuantity()) {
+		if (player_->GetHavingKey() >= keyManager_->GetMaxKeyQuantity()) {
 			//「出口へ」が表示
 			escapeTextSprite_->SetInvisible(false);
 

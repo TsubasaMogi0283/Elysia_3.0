@@ -10,6 +10,7 @@
 #include <vector>
 #include <sstream>
 
+#include "Sprite.h"
 #include "BaseEnemy.h"
 #include "NormalEnemy/NormalEnemy.h"
 #include "StrongEnemy/StrongEnemy.h"
@@ -46,6 +47,16 @@ namespace Elysia {
 	/// オーディオ
 	/// </summary>
 	class Audio;
+
+	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
+	class TextureManager;
+
+	/// <summary>
+	/// ウィンドウクラス
+	/// </summary>
+	class WindowsSetup;
 }
 
 #pragma endregion
@@ -80,6 +91,11 @@ public:
 	/// <param name="spotLight">スポットライト</param>
 	void DrawObject3D(const Camera& camera ,const SpotLight& spotLight);
 
+	/// <summary>
+	/// スプライトの描画
+	/// </summary>
+	void DrawSprite();
+
 
 	/// <summary>
 	/// デストラクタ
@@ -112,6 +128,11 @@ public:
 
 
 private:
+	/// <summary>
+	/// 警告の処理
+	/// </summary>
+	void Warning();
+
 	/// <summary>
 	/// ImGui表示用
 	/// </summary>
@@ -176,17 +197,35 @@ private:
 	Elysia::Audio* audio_ = nullptr;
 	//ハンドル
 	uint32_t audioHandle_ = 0u;
+	//テクスチャ管理クラス
+	Elysia::TextureManager* textureManager_ = nullptr;
 	//レベルデータ管理クラス
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//レベルデータのハンドル
 	uint32_t levelDataHandle_ = 0u;
+	//ウィンドウクラス
+	Elysia::WindowsSetup* windowSetup_ = nullptr;
 
 private:
+	//接近するときの距離
+	const float_t TRACKING_START_DISTANCE_ = 15.0f;
+	//攻撃するときの距離
+	const float_t ATTACK_START_DISTANCE_ = 6.0f;
 	//前方にいるかどうかの内積
 	const float_t FRONT_DOT_ = 0.7f;
 	//追跡開始の距離
 	const float_t STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
+	//1体だけの時
+	const uint32_t ENEMY_ONE_ = 1u;
 
+	//警告テクスチャ用のアンカーポイント
+	const Vector2 WARNING_TEXTURE_ANCHOR_POINT_ = { .x = 0.5f,.y=0.5f };
+	//斜めの時の内積
+	const float_t BACK_DOT_VALUE_ = 0.0f;
+	//最大のスケール値
+	const float_t MAX_WARNING_SCALE_ = 2.0f;
+	//最小のスケール値
+	const float_t MIN_WARNING_SCALE_ = 1.0f;
 
 private:
 	/// <summary>
@@ -212,6 +251,13 @@ private:
 	uint32_t normalEnemyModelHandle_ = 0u;
 	//強敵
 	uint32_t strongEnemyModelHandle_ = 0u;
+
+	//警告
+	std::unique_ptr<Elysia::Sprite>warningSprite_ = nullptr;
+	//座標
+	Vector2 warningTexturePosition_ = {};
+	//スケール
+	float_t warningTextureScale_ = {};
 
 	// 最短距離と敵の座標のペアを格納する
 	std::vector<std::pair<float_t, ClosestEnemyInformation>> enemyDistancePairs;

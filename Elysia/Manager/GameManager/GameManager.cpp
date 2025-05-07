@@ -11,7 +11,6 @@ void Elysia::GameManager::Initialize() {
 	
 	//シーンファクトリーの生成
 	abstractSceneFactory_ = std::make_unique<GameSceneFactory>();
-	
 	//シーンごとに動作確認したいときはここを変えてね
 	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
 

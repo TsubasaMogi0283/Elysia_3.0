@@ -100,7 +100,7 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 void NormalEnemy::Update() {
 
 	//方向を取得
-	direction_ = currentState_->GetDirection();
+	direction_ = currentState_->GetMoveDirection();
 
 	//向きを計算しモデルを回転させる
 	float directionToRotateY = std::atan2f(-direction_.z, direction_.x);

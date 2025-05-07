@@ -60,7 +60,7 @@ void StrongEnemy::Update(){
 	currentState_->Update(this);
 
 	//方向を取得
-	Vector3 direction = currentState_->GetDirection();
+	Vector3 direction = currentState_->GetMoveDirection();
 	direction_ = direction;
 
 	//向きを計算しモデルを回転させる

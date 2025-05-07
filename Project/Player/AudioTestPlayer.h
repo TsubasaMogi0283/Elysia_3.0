@@ -69,7 +69,7 @@ public:
 	/// 方向を取得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetDirection()const {
+	Vector3 GetMoveDirection()const {
 		return direction_;
 	}
 

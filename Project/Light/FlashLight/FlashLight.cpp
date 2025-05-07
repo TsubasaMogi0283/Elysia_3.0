@@ -228,7 +228,7 @@ void FlashLight::GenerateParticle() {
 	std::unique_ptr<Elysia::Particle3D> particle = Elysia::Particle3D::Create(ParticleMoveType::Absorb);
 
 	//パーティクルの細かい設定
-	const float SCALE_SIZE = 0.1f;
+	const float SCALE_SIZE = 0.4f;
 	particle->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
 	particle->SetCount(5u);
 	particle->SetIsReleaseOnceMode(false);

@@ -44,7 +44,7 @@ public:
 	/// 方向を取得
 	/// </summary>
 	/// <returns></returns>
-	inline Vector3 GetDirection()const {
+	inline Vector3 GetMoveDirection()const {
 		return direction_;
 	}
 
