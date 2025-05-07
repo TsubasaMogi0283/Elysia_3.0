@@ -1,8 +1,8 @@
 #pragma once
 
 /**
- * @file RandomEffect.h
- * @brief ランダムエフェクトのクラス
+ * @file RandomNoisePostEffect.h
+ * @brief ランダムノイズポストエフェクトのクラス
  * @author 茂木翼
  */
 
@@ -14,6 +14,10 @@
 #include "Vector3.h"
 #include "VertexData.h"
 
+/// <summary>
+/// ランダムノイズ
+/// </summary>
+struct RandomNoise;
 
  /// <summary>
  /// ElysiaEngine
@@ -45,14 +49,14 @@ namespace Elysia {
 	class SrvManager;
 
 	/// <summary>
-	/// ランダムエフェクト
+	/// ランダムノイズポストエフェクト
 	/// </summary>
-	class RandomEffect {
+	class RandomNoisePostEffect {
 	public:
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		RandomEffect();
+		RandomNoisePostEffect();
 
 		/// <summary>
 		/// 初期化
@@ -60,19 +64,20 @@ namespace Elysia {
 		void Initialize();
 
 		/// <summary>
-		/// 描画前処理1
+		/// 描画前処理
 		/// </summary>
 		void PreDraw();
 
 		/// <summary>
 		/// 描画
 		/// </summary>
-		void Draw();
+		/// <param name="randomNoise">ランダムノイズ</param>
+		void Draw(const RandomNoise& randomNoise);
 
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
-		~RandomEffect() = default;
+		~RandomNoisePostEffect() = default;
 
 	private:
 		//Windowクラス
@@ -86,31 +91,8 @@ namespace Elysia {
 		//SRV管理クラス
 		Elysia::SrvManager* srvManager_ = nullptr;
 
-
 	private:
-		/// <summary>
-		/// ランダムの値
-		/// </summary>
-		struct RandomValue {
-			//値
-			float_t value;
-			//ノイズの強さ
-			float_t strength;
-			//テクスチャと乗算させるか
-			bool isUseTexture;
-		};
-
-	private:
-		//ランダム
-		//リソース
-		ComPtr<ID3D12Resource> randomValueResource_ = nullptr;
-		//値
-		RandomValue randomValue_ = {};
-		//データ
-		RandomValue* randomValueData_ = nullptr;
-		//エンジン
-		std::mt19937 randomEngine_ = {};
-
+		
 		//RTV
 		//リソース
 		ComPtr<ID3D12Resource> rtvResource_ = nullptr;

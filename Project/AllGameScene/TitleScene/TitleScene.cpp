@@ -34,6 +34,9 @@ void TitleScene::Initialize() {
 	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
 	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
 
+	//ランダムノイズ
+	randomNoise_.Initialize();
+
 	//カメラの初期化
 	camera_.Initialize();
 
@@ -48,7 +51,7 @@ void TitleScene::Initialize() {
 	baseTitleBackTexture_->Initialize();
 
 	//ランダムエフェクトの生成
-	randomEffect_ = std::make_unique<Elysia::RandomEffect>();
+	randomEffect_ = std::make_unique<Elysia::RandomNoisePostEffect>();
 	//初期化
 	randomEffect_->Initialize();
 
@@ -60,21 +63,23 @@ void TitleScene::Initialize() {
 	//初期化
 	detailTitleScene_->Initialize();
 
-
 }
 
 void TitleScene::Update(Elysia::GameManager* gameManager) {
 	//細かいシーンの更新
 	detailTitleScene_->Update(this);
 
-	//更新
+	//レベルエディタの更新
 	levelDataManager_->Update(levelHandle_);
 
-	//平行光源
+	//平行光源の更新
 	directionalLight_.intensity = detailTitleScene_->GetDirectionalLight().intensity;
 	directionalLight_.color = detailTitleScene_->GetDirectionalLight().color;
 	directionalLight_.direction = detailTitleScene_->GetDirectionalLight().direction;
 	directionalLight_.Update();
+
+	//ランダムノイズの更新
+	randomNoise_.Update();
 
 	//レールカメラの更新
 	titleRailCamera_->Update();
@@ -117,7 +122,7 @@ void TitleScene::PreDrawPostEffect() {
 void TitleScene::DrawPostEffect() {
 	if (isDisplayRandomEffect_ == true) {
 		//ランダム
-		randomEffect_->Draw();
+		randomEffect_->Draw(randomNoise_);
 	}
 	else {
 		//背景

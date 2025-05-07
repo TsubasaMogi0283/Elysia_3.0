@@ -666,7 +666,7 @@
     <ClCompile Include="Elysia\Polygon\PostEffect\RadialBlur\RadialBlur.cpp">
       <Filter>Elysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Elysia\Polygon\PostEffect\RandomEffect\RandomEffect.cpp">
+    <ClCompile Include="Elysia\Polygon\PostEffect\RandomEffect\RandomNoisePostEffect.cpp">
       <Filter>Elysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Elysia\Polygon\PostEffect\SepiaScale\SepiaScale.cpp">
@@ -881,6 +881,9 @@
     </ClCompile>
     <ClCompile Include="Elysia\Material\Vignette\Vignette.cpp">
       <Filter>Elysia\Source File\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Elysia\Material\RandomNoise\RandomNoise.cpp">
+      <Filter>Elysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1126,7 +1129,7 @@
     <ClInclude Include="Elysia\Polygon\PostEffect\RadialBlur\RadialBlur.h">
       <Filter>Elysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Elysia\Polygon\PostEffect\RandomEffect\RandomEffect.h">
+    <ClInclude Include="Elysia\Polygon\PostEffect\RandomEffect\RandomNoisePostEffect.h">
       <Filter>Elysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\Polygon\PostEffect\SepiaScale\SepiaScale.h">
@@ -1464,6 +1467,9 @@
     </ClInclude>
     <ClInclude Include="Elysia\Material\Vignette\Vignette.h">
       <Filter>Elysia\Header File\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Elysia\Material\RandomNoise\RandomNoise.h">
+      <Filter>Elysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

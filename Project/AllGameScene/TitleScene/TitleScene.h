@@ -15,8 +15,9 @@
 #include "BackTexture.h"
 #include "DirectionalLight.h"
 #include "SpotLight.h"
+#include "RandomNoise.h"
 #include "RailCamera/TitleRailCamera.h"
-#include "RandomEffect.h"
+#include "RandomNoisePostEffect.h"
 #include "BaseBackTexture/BaseTitleBackTexture.h"
 #include "BaseTitleScene/BaseTitleScene.h"
 
@@ -172,7 +173,8 @@ private:
 	//背景(ポストエフェクト)
 	std::unique_ptr<BaseTitleBackTexture> baseTitleBackTexture_ = nullptr;
 	//ランダムノイズ
-	std::unique_ptr<Elysia::RandomEffect> randomEffect_ = nullptr;
+	std::unique_ptr<Elysia::RandomNoisePostEffect> randomEffect_ = nullptr;
+	RandomNoise randomNoise_ = {};
 	//見せるかどうか
 	bool isDisplayRandomEffect_ = false;
 

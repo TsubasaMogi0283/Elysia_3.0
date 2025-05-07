@@ -24,8 +24,6 @@ public:
 	/// </summary>
 	void Update();
 
-
-
 private:
 
 	/// <summary>
@@ -52,9 +50,6 @@ public:
 
 	//リソース
 	ComPtr<ID3D12Resource> resource = nullptr;
-
-	
-
 	//倍
 	float_t scale;
 	//乗
