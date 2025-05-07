@@ -23,6 +23,7 @@
 #include "NormalEnemy/State/NormalEnemyMove.h"
 #include "NormalEnemy/State/NormalEnemyPreTracking.h"
 #include "NormalEnemy/State/NormalEnemyAttack.h"
+#include <Easing.h>
 
 EnemyManager::EnemyManager(){
 	//インスタンスの取得
@@ -178,149 +179,52 @@ void EnemyManager::Update(){
 			}
 		}
 		
+
+
+		//向き
+		Vector3 wwwww = enemy->GetMoveDirection();
+
+		//プレイヤーと敵の差分ベクトル
+		Vector3 defference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
+		//距離
+		float defferenceDistance = SingleCalculation::Length(defference);
+
+
+		//通常の動き
+		if (currentState == "Move") {
+			//近くなったら追跡準備
+			if (defferenceDistance < TRACKING_START_DISTANCE_) {
+				//追跡準備へ
+				enemy->ChengeState(std::make_unique<NormalEnemyPreTracking>());
+			}
+		}
+		//追跡
+		else if (currentState == "Tracking") {
+			if (defferenceDistance <= ATTACK_START_DISTANCE_) {
+				//攻撃
+				enemy->ChengeState(std::make_unique<NormalEnemyAttack>());
+			}
+			//距離が離れたら通常の動きへ
+			if (defferenceDistance >= TRACKING_START_DISTANCE_) {
+				//追跡準備へ
+				enemy->ChengeState(std::make_unique<NormalEnemyMove>());
+			}
+
+		}
+		//攻撃
+		else if (currentState == "Attack") {
+			//攻撃中にプレイヤーが離れた時
+			if (defferenceDistance > ATTACK_START_DISTANCE_) {
+				//通常の動き
+				enemy->ChengeState(std::make_unique<NormalEnemyMove>());
+			}
+		}
+
 	}
 	
 	//警告
 	Warning();
 	
-	
-	//敵同士の判定をやる必要が無いからね
-	if (enemies_.size() == ENEMY_ONE_) {
-		for (const std::unique_ptr <NormalEnemy>& enemy : enemies_) {
-			//状態
-			std::string currentState = enemy->GetCurrentStateName();
-			//向き
-			Vector3 enemyDirection = enemy->GetMoveDirection();
-
-			//プレイヤーと敵の差分ベクトル
-			Vector3 defference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
-			//距離
-			float defferenceDistance = SingleCalculation::Length(defference);
-			
-
-			//通常の動き
-			if (currentState == "Move") {
-				//近くなったら追跡準備
-				if (defferenceDistance < TRACKING_START_DISTANCE_ ) {
-					//追跡準備へ
-					enemy->ChengeState(std::make_unique<NormalEnemyPreTracking>());
-				}
-			}
-			//追跡
-			else if (currentState == "Tracking") {
-				if (defferenceDistance <= ATTACK_START_DISTANCE_) {
-					//攻撃
-					enemy->ChengeState(std::make_unique<NormalEnemyAttack>());
-				}
-				//距離が離れたら通常の動きへ
-				if (defferenceDistance >= TRACKING_START_DISTANCE_) {
-					//追跡準備へ
-					enemy->ChengeState(std::make_unique<NormalEnemyMove>());
-				}
-
-			}
-			//攻撃
-			else if (currentState == "Attack") {
-				//攻撃中にプレイヤーが離れた時
-				if (defferenceDistance > ATTACK_START_DISTANCE_) {
-					//通常の動き
-					enemy->ChengeState(std::make_unique<NormalEnemyMove>());
-				}
-			}
-
-
-		}
-	}
-
-	//1体より多い時
-	if (enemies_.size() > ENEMY_ONE_) {
-		for (std::list<std::unique_ptr<NormalEnemy>>::iterator it1 = enemies_.begin(); it1 != enemies_.end(); ++it1) {
-
-			//比較する数
-			const uint32_t COMPARE_NUMBER = 2u;
-			//元となる敵
-			const uint32_t BASE_ENEMY = 0u;
-			//比較する敵
-			const uint32_t COMPARE_ENEMY = 1u;
-
-			//AABB
-			AABB aabb[COMPARE_NUMBER] = {};
-			//座標
-			Vector3 enemyPosition[COMPARE_NUMBER] = {};
-			
-			//元となる敵のAABBと座標、向きを取得
-			aabb[BASE_ENEMY] = (*it1)->GetAABB();
-			enemyPosition[BASE_ENEMY] = (*it1)->GetWorldPosition();
-			Vector3 direction = (*it1)->GetMoveDirection();
-
-			//敵同士の内積
-			float enemyAndEnemyDot = 0.0f;
-			for (std::list<std::unique_ptr<NormalEnemy>>::iterator it2 = enemies_.begin(); it2 != enemies_.end(); ++it2) {
-
-				//it1とit2が一致した場合は計算をせずに次のループへ
-				if (it1 == it2) {
-					continue;
-				}
-
-				//2体目のAABBを取得
-				aabb[COMPARE_ENEMY] = (*it2)->GetAABB();
-
-				//接触している場合
-				if ((aabb[BASE_ENEMY].min.x < aabb[COMPARE_ENEMY].max.x && aabb[BASE_ENEMY].max.x > aabb[COMPARE_ENEMY].min.x) &&
-					(aabb[BASE_ENEMY].min.y < aabb[COMPARE_ENEMY].max.y && aabb[BASE_ENEMY].max.y > aabb[COMPARE_ENEMY].min.y) &&
-					(aabb[BASE_ENEMY].min.z < aabb[COMPARE_ENEMY].max.z && aabb[BASE_ENEMY].max.z > aabb[COMPARE_ENEMY].min.z)) {
-					//ワールド座標
-					enemyPosition[COMPARE_ENEMY] = (*it2)->GetWorldPosition();
-
-
-					//敵同士の差分ベクトル
-					Vector3 enemyAndEnemyDifference = VectorCalculation::Subtract(enemyPosition[COMPARE_ENEMY], enemyPosition[BASE_ENEMY]);
-
-					//正規化
-					Vector3 normalizedEnemyAndEnemy = VectorCalculation::Normalize(enemyAndEnemyDifference);
-					//内積
-					enemyAndEnemyDot = SingleCalculation::Dot(direction, normalizedEnemyAndEnemy);
-
-					//次のループで上書きされないようにbreakさせるよ！
-					break;
-				}
-			}
-
-			//現在の状態
-			std::string currentState = (*it1)->GetCurrentStateName();
-			//プレイヤーとの差分
-			Vector3 playerEnemyDifference = VectorCalculation::Subtract(playerPosition, (*it1)->GetWorldPosition());
-			//プレイヤーとの距離 
-			float playerEnemyDistance = SingleCalculation::Length(playerEnemyDifference);
-
-			//通常の動き
-			if (currentState == "Move") {
-
-				//前方にいたら行動
-				if (playerEnemyDistance < TRACKING_START_DISTANCE_) {
-					//追跡準備へ
-					(*it1)->ChengeState(std::make_unique<NormalEnemyPreTracking>());
-				}
-			}
-			//追跡
-			else if (currentState == "Tracking") {
-				if (playerEnemyDistance <= ATTACK_START_DISTANCE_) {
-					//攻撃
-					(*it1)->ChengeState(std::make_unique<NormalEnemyAttack>());
-				}
-
-			}
-			//攻撃
-			else if (currentState == "Attack") {
-				//攻撃中にプレイヤーが離れた時
-				if (playerEnemyDistance > ATTACK_START_DISTANCE_) {
-					//通常の動き
-					(*it1)->ChengeState(std::make_unique<NormalEnemyMove>());
-				}
-			}
-
-		}
-	}
 
 	//強敵の更新
 	for (const std::unique_ptr<StrongEnemy>& strongEnemy : strongEnemies_) {
@@ -451,7 +355,6 @@ void EnemyManager::Update(){
 	DisplayImGui();
 #endif // _DEBUG
 
-
 }
 
 void EnemyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight){
@@ -542,6 +445,19 @@ void EnemyManager::Warning(){
 	else {
 		warningSprite_->SetInvisible(true);
 	}
+
+
+	//拡縮
+	warningScaleT_ += SCALE_T_INCREASE_VALUE_;
+	if (warningScaleT_ > MAX_SCALE_T_) {
+		warningScaleT_ = MIN_SCALE_T_;
+	}
+
+
+	//線形補間とイージングを使い警告感を出す
+	float_t newWarningScaleT_ = Easing::EaseInOutCubic(warningScaleT_);
+	warningTextureScale_ = SingleCalculation::Lerp(MAX_WARNING_SCALE_, MIN_WARNING_SCALE_, newWarningScaleT_);
+	warningSprite_->SetScale({ .x = warningTextureScale_ ,.y = warningTextureScale_ });
 }
 
 void EnemyManager::DisplayImGui(){

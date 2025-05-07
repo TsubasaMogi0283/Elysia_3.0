@@ -226,6 +226,12 @@ private:
 	const float_t MAX_WARNING_SCALE_ = 2.0f;
 	//最小のスケール値
 	const float_t MIN_WARNING_SCALE_ = 1.0f;
+	//線形補間の増える値
+	const float_t SCALE_T_INCREASE_VALUE_ = 0.025f;
+	//線形補間の最大値
+	const float_t MAX_SCALE_T_ = 1.0f;
+	//最小値
+	const float_t MIN_SCALE_T_ = 0.0f;
 
 private:
 	/// <summary>
@@ -258,6 +264,8 @@ private:
 	Vector2 warningTexturePosition_ = {};
 	//スケール
 	float_t warningTextureScale_ = {};
+	//線形補間
+	float_t warningScaleT_ = 0.0f;
 
 	// 最短距離と敵の座標のペアを格納する
 	std::vector<std::pair<float_t, ClosestEnemyInformation>> enemyDistancePairs;
