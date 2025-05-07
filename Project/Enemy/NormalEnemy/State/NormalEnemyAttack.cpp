@@ -50,8 +50,6 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 		normalEnemy->SetIsAttackAnimation(true);
 	}
 	
-
-
 	//アニメーション時間の設定
 	normalEnemy->SetAnimationTime(animationTime_);
 

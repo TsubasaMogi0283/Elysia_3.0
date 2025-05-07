@@ -220,7 +220,7 @@ void PlayGameScene::RegisterToCollisionManager(){
 			player_->SetIsAcceptDamegeFromNoemalEnemy(true);
 		}
 		else {
-			player_->SetIsAcceptDamegeFromNoemalEnemy(false);
+			player_->SetIsAcceptDamegeFromNoemalEnemy(true);
 		}
 
 	}

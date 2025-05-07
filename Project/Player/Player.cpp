@@ -56,7 +56,7 @@ void Player::Initialize(){
 	//マテリアル
 	material_.Initialize();
 	material_.lightingKinds = LightingType::SpotLighting;
-	material_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 0.0f };
+	material_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
 
 	//UI
 	uint32_t playerHPTextureHandle = textureManager_->Load("Resources/Sprite/Player/PlayerHP.png");
@@ -131,7 +131,10 @@ void Player::Update(){
 void Player::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
 
 #ifdef _DEBUG
-	spotLight;
+	//コリジョンの描画
+	for (std::unique_ptr<BasePlayerCollision>& collision : colliders_) {
+		collision->Draw(camera, material_, spotLight);
+	}
 	//懐中電灯
 	flashLight_->DrawObject3D(camera);
 #endif // _DEBUG
@@ -155,8 +158,16 @@ Player::~Player() {
 
 void Player::Damaged() {
 
+	bool isAttacked = false;
+	for (std::unique_ptr<BasePlayerCollision>& collision : colliders_) {
+		if (collision->GetName() == "ToNormalEnemyAttack") {
+			isAttacked = collision->GetIsTouch();
+			break;
+		}
+	}
+
 	//通常の敵に当たった場合
-	if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
+	if (isAttacked == true && isDameged_ == false&& isAcceptDamegeFromNoemalEnemy_==true) {
 		//体力を減らす
 		--hp_;
 		//ダメージを受ける	

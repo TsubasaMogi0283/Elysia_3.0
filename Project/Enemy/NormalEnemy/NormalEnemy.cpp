@@ -159,6 +159,12 @@ void NormalEnemy::Update() {
 
 void NormalEnemy::Draw(const Camera& camera, const SpotLight& spotLight) {
 
+#ifdef _DEBUG
+	//あたり判定
+	attackCollision_->Draw(camera, spotLight);
+#endif // _DEBUG
+
+
 	//本体
 	animationmodel_->Draw(worldTransform_, camera, skinCluster_, material_, spotLight);
 

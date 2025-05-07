@@ -208,7 +208,6 @@ void EnemyManager::Update(){
 		//攻撃
 		else if (currentState == "Attack") {
 
-
 			//攻撃中にプレイヤーが離れた時
 			if (defferenceDistance > ATTACK_START_DISTANCE_&& enemy->GetIsAttackAnimation() == false) {
 				//通常の動き

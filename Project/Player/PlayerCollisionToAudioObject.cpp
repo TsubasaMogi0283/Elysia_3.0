@@ -5,16 +5,13 @@
 void PlayerCollisionToAudioObject::Initialize(){
 	//名前の設定
 	name_ = "ToAudioObject";
-
+	
 	//種類
 	collisionType_ = ColliderType::PointType;
-
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_PLAYER3);
 	//相手
 	SetCollisionMask(COLLISION_ATTRIBUTE_AUDIO_OBJECT);
-
-
 
 }
 

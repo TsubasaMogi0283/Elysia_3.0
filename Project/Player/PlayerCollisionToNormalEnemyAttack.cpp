@@ -13,28 +13,19 @@ void PlayerCollisionToNormalEnemyAttack::Initialize(){
 
 	//初期化
 	worldTransform_.Initialize();
-	worldTransform_.scale = {.x= 5.0f,.y= 5.0f,.z= 5.0f };
+	worldTransform_.scale = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
 
 
 	//名前の設定
 	name_ = "ToNormalEnemyAttack";
-
 	//種類
 	collisionType_ = ColliderType::SphereType;
-
-
-
 	//半径
-	radius_ = 6.0f;
-
-
+	radius_ = 1.0f;
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_PLAYER);
 	//相手
 	SetCollisionMask(COLLISION_ATTRIBUTE_ENEMY_ATTACK);
-
-
-	
 
 }
 

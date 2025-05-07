@@ -8,7 +8,6 @@ void EnemyAttackCollision::Initialize(const uint32_t& modelHandle){
 	//モデルの生成
 	model_.reset(Elysia::Model::Create(modelHandle));
 
-
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 
@@ -17,31 +16,22 @@ void EnemyAttackCollision::Initialize(const uint32_t& modelHandle){
 	//ライティング
 	material_.lightingKinds = SpotLighting;
 	
-	
-
-
-
-	#pragma region 当たり判定
-	//球じゃなくてAABBの方が良いかもね
 	//計算の量が減るからね
 	//種類
 	collisionType_ = ColliderType::SphereType;
-
 	//半径
-	radius_ = 5.0f;
+	radius_ = 1.0f;
 
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_ENEMY_ATTACK);
 	//相手
 	SetCollisionMask(COLLISION_ATTRIBUTE_PLAYER);
 
-	#pragma endregion
 
 }
 
 void EnemyAttackCollision::Update(){
 
-	
 	//間隔
 	const float INTERVAL =2.0f;
 	//新しく方向を計算する
@@ -64,11 +54,7 @@ void EnemyAttackCollision::Draw(const Camera& camera,const SpotLight& spotLight)
 	
 #endif // _DEBUG
 
-
-	
 }
-
-
 
 Vector3 EnemyAttackCollision::GetWorldPosition(){
 	return worldTransform_.GetWorldPosition();
