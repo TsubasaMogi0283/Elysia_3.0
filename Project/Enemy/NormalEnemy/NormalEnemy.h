@@ -238,7 +238,7 @@ private:
 
 private:
 	//アニメーションモデル
-	std::unique_ptr<AnimationModel>animationmodel_ = nullptr;
+	std::unique_ptr<Elysia::AnimationModel>animationmodel_ = nullptr;
 
 	//スケルトン
 	Skeleton skeleton_ = {};

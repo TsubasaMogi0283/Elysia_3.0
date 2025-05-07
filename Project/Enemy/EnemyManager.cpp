@@ -179,16 +179,10 @@ void EnemyManager::Update(){
 			}
 		}
 		
-
-
-		//向き
-		Vector3 wwwww = enemy->GetMoveDirection();
-
 		//プレイヤーと敵の差分ベクトル
 		Vector3 defference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
 		//距離
 		float defferenceDistance = SingleCalculation::Length(defference);
-
 
 		//通常の動き
 		if (currentState == "Move") {
@@ -452,7 +446,6 @@ void EnemyManager::Warning(){
 	if (warningScaleT_ > MAX_SCALE_T_) {
 		warningScaleT_ = MIN_SCALE_T_;
 	}
-
 
 	//線形補間とイージングを使い警告感を出す
 	float_t newWarningScaleT_ = Easing::EaseInOutCubic(warningScaleT_);

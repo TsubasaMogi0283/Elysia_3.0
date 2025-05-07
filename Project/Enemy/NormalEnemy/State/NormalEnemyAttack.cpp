@@ -33,7 +33,6 @@ void NormalEnemyAttack::Update(NormalEnemy* normalEnemy){
 	//攻撃
 	if (attackTime_ == JUST_ATTACK_TIME_) {
 		//ここで攻撃
-		//コライダーが当たっている時だけ通す
 		normalEnemy->SetIsAttack(true);
 
 	}

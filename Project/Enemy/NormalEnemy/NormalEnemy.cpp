@@ -25,7 +25,7 @@ NormalEnemy::NormalEnemy() {
 void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed) {
 
 	//モデルの生成
-	animationmodel_.reset(AnimationModel::Create(modelHandle));
+	animationmodel_.reset(Elysia::AnimationModel::Create(modelHandle));
 
 	//スキニングアニメーション読み込み
 	skeleton_.Create(Elysia::ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
@@ -159,11 +159,6 @@ void NormalEnemy::Update() {
 }
 
 void NormalEnemy::Draw(const Camera& camera, const SpotLight& spotLight) {
-#ifdef _DEBUG
-	//攻撃
-	//attackCollision_->Draw(camera, spotLight);
-
-#endif // _DEBUG
 
 	//本体
 	animationmodel_->Draw(worldTransform_, camera, skinCluster_, material_, spotLight);
