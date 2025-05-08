@@ -48,7 +48,10 @@ namespace Elysia {
 	/// </summary>
 	class TextureManager;
 
-
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
 }
 
 
@@ -143,7 +146,15 @@ public:
 		isEnd_ = true;
 	}
 
-	
+	/// <summary>
+	/// 環境音のハンドルを取得
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetEnviromentAudioHandle()const {
+		return enviromentAudioHandle_;
+	}
+
+
 private:
 	//テクスチャ管理クラス
 	Elysia::TextureManager* textureManager_ = nullptr;
@@ -152,7 +163,8 @@ private:
 	//レベルエディタ
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	uint32_t levelHandle_ = 0u;
-
+	//オーディオ
+	Elysia::Audio* audio_ = nullptr;
 
 private:
 
@@ -177,6 +189,9 @@ private:
 	RandomNoise randomNoise_ = {};
 	//見せるかどうか
 	bool isDisplayRandomEffect_ = false;
+
+	//環境音
+	uint32_t enviromentAudioHandle_ = 0u;
 
 
 

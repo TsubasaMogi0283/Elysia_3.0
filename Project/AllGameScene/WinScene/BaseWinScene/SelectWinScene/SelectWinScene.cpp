@@ -8,6 +8,7 @@
 #include "LevelDataManager.h"
 #include "TextureManager.h"
 #include "GlobalVariables.h"
+#include "Audio.h"
 
 #include "WinScene/WinScene.h"
 #include "WinScene/BaseWinScene/ReturnTitleWinScene/ReturnTitleWinScene.h"
@@ -22,24 +23,27 @@ SelectWinScene::SelectWinScene() {
 	textureManager_ = Elysia::TextureManager::GetInstance();
 	//グローバル変数クラス
 	globalVariables_ = Elysia::GlobalVariables::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
+
 }
 
 
 void SelectWinScene::Initialize(){
 
-
-	//テキスト(タイトルへのやつ)
+	//テキスト(タイトルへ)
 	uint32_t textHandle = textureManager_->Load("Resources/Sprite/Result/Win/WinText.png");
 	textSprite_.reset(Elysia::Sprite::Create(textHandle, INITIAL_SPRITE_POSITION_));
 
+	//決定音
+	desideSEHandle_ = audio_->Load("Resources/Audio/SE/Deside.wav");
+	
 }
 
 void SelectWinScene::Update(WinScene* winScene){
 	
-
 	//まだ決定していない時
 	if (isDeside_ == false) {
-
 		//通常の点滅
 		flashTime_ += DELTA_TIME_;
 		//表示
@@ -51,7 +55,6 @@ void SelectWinScene::Update(WinScene* winScene){
 		else if (flashTime_ > FLASH_TIME_LIMIT_ &&
 			flashTime_ <= FLASH_END_TIME_) {
 			textSprite_->SetInvisible(true);
-
 		}
 		//循環
 		else if (flashTime_ > FLASH_END_TIME_) {
@@ -62,12 +65,15 @@ void SelectWinScene::Update(WinScene* winScene){
 		//Bボタンまたはスペースを押したとき
 		if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true|| input_->IsTriggerKey(DIK_SPACE) == true) {
 			isDeside_ = true;
+			//決定音の再生
+			audio_->Play(desideSEHandle_, false);
+			audio_->ChangeVolume(desideSEHandle_, desideSEVolume_);
 		}
-
 	}
 	else {
 		//時間を足していく
-		//uintではないと上手く加算できなかった
+		//除算するときuintではないと上手く加算できなかったので
+		//fastFlashTime_はuintにしている
 		fastFlashTime_ += FAST_FLASH_DELTA_TIME_;
 		if (fastFlashTime_%FAST_FLASH_TIME_INTERVAL_ == INCREASE_COUNT_TIME_) {
 			++textDisplayCount_;
@@ -87,8 +93,6 @@ void SelectWinScene::Update(WinScene* winScene){
 			return;
 		}
 	}
-
-
 
 #ifdef _DEBUG
 	//ImGui表示用
@@ -110,8 +114,5 @@ void SelectWinScene::DisplayImGui(){
 	ImGui::Begin("選択(勝利シーン)");
 	ImGui::InputInt("表示回数", &newTextDisplayCount);
 	ImGui::InputInt("高速点滅時間", &newFastFlashTime);
-
 	ImGui::End();
-
-
 }

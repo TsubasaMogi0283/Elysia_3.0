@@ -23,9 +23,6 @@ void PlayerCollisionToAudioObject::Update(){
 	ImGui::InputFloat3("座標", &playerPosition_.x);
 	ImGui::End();
 #endif // _DEBUG
-
-
-
 }
 
 void PlayerCollisionToAudioObject::Draw(const Camera& camera, const Material& material, const SpotLight& spotLight){

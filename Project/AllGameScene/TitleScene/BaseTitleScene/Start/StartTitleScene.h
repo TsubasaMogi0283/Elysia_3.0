@@ -20,6 +20,11 @@ namespace Elysia {
 	/// ウィンドウクラス
 	/// </summary>
 	class WindowsSetup;
+
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
 }
 
 /// <summary>
@@ -63,17 +68,21 @@ private:
 private:
 	//ウィンドウクラス
 	Elysia::WindowsSetup* windowsSetup_ = nullptr;
-
 private:
 	//サイズの減少値
 	const float_t SIZE_DOWN_VALUE_ = 0.05f;
 	//最小サイズ
 	const float_t CIRCLE_MIN_SIZE_ = 0.0f;
-
+	//最大音量
+	const float_t MAX_VOLUME_ = 0.6f;
+	//音量の増える値
+	const float_t VOLUME_INCREASE_VALUE_ = 0.0005f;
 private:
 
 	//円
 	std::unique_ptr<Elysia::Sprite>circleSprite_ = nullptr;
 	//透明度
 	float_t circleScaleSize_ = 15.0f;
+	//環境音の音量
+	float_t enviromentAudioVolume_ = 0.0f;
 };

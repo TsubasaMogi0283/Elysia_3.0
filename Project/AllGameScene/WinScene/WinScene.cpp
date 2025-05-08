@@ -1,10 +1,12 @@
 #include "WinScene.h"
+
 #include <imgui.h>
 
 #include "TextureManager.h"
 #include "LevelDataManager.h"
 #include "GameManager.h"
 #include "Input.h"
+#include "Audio.h"
 #include "VectorCalculation.h"
 
 #include "BaseWinScene/SelectWinScene/SelectWinScene.h"
@@ -13,6 +15,8 @@ WinScene::WinScene(){
 	//インスタンスの取得
 	//レベルデータ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 void WinScene::Initialize() {
@@ -34,6 +38,10 @@ void WinScene::Initialize() {
 	backTexture_->SetClearColour(directionalLight_.color);
 	backTexture_->Initialize();
 
+	//決定音
+	bgmHandle_ = audio_->Load("Resources/Audio/Win/WinBGM.wav");
+	
+
 	//細かいシーン
 	detailWinScene_ = std::make_unique<SelectWinScene>();
 	//レベルデータハンドルの設定
@@ -41,15 +49,22 @@ void WinScene::Initialize() {
 	//初期化
 	detailWinScene_->Initialize();
 
+	//再生
+	audio_->Play(bgmHandle_, true);
+	audio_->ChangeVolume(bgmHandle_, bgmVolume_);
 }
 
 void WinScene::Update(Elysia::GameManager* gameManager){
 	//細かいシーンの更新
 	detailWinScene_->Update(this);
 
+	//BGMの音量を設定
+	audio_->ChangeVolume(bgmHandle_, bgmVolume_);
 
 	//処理が終わったらタイトルへ
-	if (isEnd_ == true) {
+	if (isEnd_ == true && bgmVolume_<=0.0f) {
+		//BGMを止める
+		audio_->Stop(bgmHandle_);
 		gameManager->ChangeScene("Title");
 		return;
 	}
@@ -72,6 +87,7 @@ void WinScene::Update(Elysia::GameManager* gameManager){
 	//レベルデータの更新
 	levelDataManager_->Update(levelDataHandle_);
 
+	
 }
 
 void WinScene::PreDrawPostEffect(){

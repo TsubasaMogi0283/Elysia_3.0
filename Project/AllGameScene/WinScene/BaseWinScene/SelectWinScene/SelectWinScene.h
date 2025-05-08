@@ -82,5 +82,11 @@ private:
 	uint32_t fastFlashTime_ = 0u;
 	//決定したかどうか
 	bool isDeside_ = false;
+
+	//決定音のハンドル
+	uint32_t desideSEHandle_ = 0u;
+	//音量
+	float_t desideSEVolume_ = 0.5f;
+
 };
 

@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "TextureManager.h"
 #include "LevelDataManager.h"
+#include "Audio.h"
 
 #include "TitleScene/TitleScene.h"
 #include "TitleScene/BaseTitleScene/Noise/NoiseTitleScene.h"
@@ -17,6 +18,8 @@ WaitingTitleScene::WaitingTitleScene(){
 	input_ = Elysia::Input::GetInstance();
 	//レベルエディタ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 void WaitingTitleScene::Initialize(){
@@ -38,7 +41,9 @@ void WaitingTitleScene::Initialize(){
 	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
 	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
 
-
+	//決定音
+	desideSEHandle_ = audio_->Load("Resources/Audio/SE/Deside.wav");
+	audio_->ChangeVolume(desideSEHandle_, desideSEVolume_);
 }
 
 void WaitingTitleScene::Update(TitleScene* titleScene){
@@ -68,6 +73,11 @@ void WaitingTitleScene::Update(TitleScene* titleScene){
 
 		//スペースをまたはBボタンを押したら高速点滅
 		if (input_->IsPushKey(DIK_SPACE) == true || input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
+
+			//決定音の再生
+			audio_->Play(desideSEHandle_, false);
+
+			//高速点滅へ
 			isFastFlash_ = true;
 			isFlash_ = false;
 		}

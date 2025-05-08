@@ -123,5 +123,8 @@ private:
 
 	//衝突しているかどうか
 	bool isTouch_ = false;
+
+	//間隔
+	const float INTERVAL = 2.0f;
 };
 

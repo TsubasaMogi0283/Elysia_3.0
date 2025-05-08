@@ -8,6 +8,7 @@
 #include "ModelManager.h"
 #include "LevelDataManager.h"
 #include "GlobalVariables.h"
+#include "Audio.h"
 
 #include "Easing.h"
 #include "VectorCalculation.h"
@@ -23,6 +24,8 @@ ReturnTitleWinScene::ReturnTitleWinScene() {
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 	//グローバル変数クラス
 	globalVariables_ = Elysia::GlobalVariables::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 
@@ -35,6 +38,11 @@ void ReturnTitleWinScene::Initialize(){
 	//透明度の設定
 	transparency_ = 0.0f;
 	whiteFadeSprite_->SetTransparency(transparency_);
+
+	//決定音
+	sweepUpSEHandle_ = audio_->Load("Resources/Audio/SE/SweepUp.wav");
+	audio_->Play(sweepUpSEHandle_, false);
+	audio_->ChangeVolume(sweepUpSEHandle_, sweepUpSEVolume_);
 }
 
 void ReturnTitleWinScene::Update(WinScene* winScene){
@@ -50,6 +58,9 @@ void ReturnTitleWinScene::Update(WinScene* winScene){
 
 	//動く時間を加算
 	moveTime_ += DELTA_TIME_;
+
+	//BGMの音量を下げていく
+	winScene->BgmVolumeDown(BGM_VOLUME_DECREASE_VALUE_);
 
 	//動く時間が終わったら処理終了
 	if (moveTime_>MOVE_END_TIME_) {
