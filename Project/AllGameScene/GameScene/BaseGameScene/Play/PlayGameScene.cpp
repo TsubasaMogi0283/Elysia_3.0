@@ -222,14 +222,11 @@ void PlayGameScene::RegisterToCollisionManager(){
 
 	}
 
-
 	//プレイヤーのコライダー
 	std::vector<BasePlayerCollision*> playerColliders = player_->GetColliders();
 	for (const auto& collider : playerColliders) {
 		collisionManager_->RegisterList(collider);
 	}
-
-
 
 	//強敵
 	std::vector<StrongEnemy*> strongEnemyes = enemyManager_->GetStrongEnemies();
