@@ -13,11 +13,13 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 	model_.reset(Elysia::Model::Create(modelhandle));
 
 	//スケールのサイズ
-	const float SCALE = 0.4f;
+	const float_t SCALE = 0.4f;
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	//拡縮
 	worldTransform_.scale = {.x = SCALE,.y = SCALE ,.z = SCALE };
+	//回転
+	worldTransform_.rotate.z = std::numbers::pi_v<float_t> / 2.0f;
 	//座標
 	worldTransform_.translate = position;
 	originalPositionY_ = position.y;
@@ -34,9 +36,8 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 	//色
 	material_.color = {.x = 1.0f,.y = 1.0f,. z = 0.0f,. w = 1.0f };
 
-
 	//鍵のスプライト
-	uint32_t textureHandle = Elysia::TextureManager::GetInstance()->Load("Resources/Sprite/Item/Key/Key.png");
+	uint32_t textureHandle = Elysia::TextureManager::GetInstance()->Load("Resources/Sprite/Item/Key.png");
 	sprite_.reset(Elysia::Sprite::Create(textureHandle, {.x=0.0f,.y=0.0f}));
 	//アンカーポイントを設定する
 	const Vector2 ANCHOR_POINT = { .x = 0.5f,.y = 0.5f };
@@ -44,33 +45,17 @@ void Key::Initialize(const uint32_t& modelhandle,const Vector3& position){
 	//最初は非表示
 	sprite_->SetInvisible(true);
 
-
-
-#ifdef _DEBUG
-	uint32_t debugModelHandle = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube", "cube.obj");
-	//モデルの生成
-	debugModel_.reset(Elysia::Model::Create(debugModelHandle));
-	//ワールドトランスフォームの初期化
-	debugWorldTransform_.Initialize();
-	//マテリアルの初期化
-	debugMaterial_.Initialize();
-	debugMaterial_.lightingKinds = SpotLighting;
-#endif // _DEBUG
-
-
 }
 
 void Key::Update(){
-	
+	//取得
 	if (isPickUp_ == false) {
-		//回転の大きさ
-		const float ROTATE_AMOUNT = 0.1f;
 		//角度の計算
-		heightTheta_ += ROTATE_AMOUNT;
+		heightTheta_ += ROTATE_AMOUNT_;
 		//上下する
 		worldTransform_.translate.y = std::sinf(heightTheta_) * MOVE_AMOUNT_ + originalPositionY_;
 		//回転
-		worldTransform_.rotate.y += ROTATE_AMOUNT;
+		worldTransform_.rotate.x += ROTATE_AMOUNT_;
 
 	}
 	else {
@@ -80,36 +65,19 @@ void Key::Update(){
 		SpriteMove();
 	}
 
-#ifdef _DEBUG
-	//デバッグ用
-	debugWorldTransform_.translate = GetWorldPosition();
-	debugWorldTransform_.scale = { .x = 0.1f,.y = 0.1f,.z = 0.1f };
-	debugMaterial_.color.w = 0.3f;
-	//ワールドトランスフォームの更新
-	debugWorldTransform_.Update();
-	//マテリアルの更新
-	debugMaterial_.Update();
-#endif // _DEBUG
-
-
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
-	
 	//マテリアルの更新
 	material_.Update();
 	
+	//ImGui表示用
+	DisplayImGui();
 
 }
 
 void Key::DrawModel(const Camera& camera,const SpotLight& spotLight){
 	//鍵(モデル)の描画
 	model_->Draw(worldTransform_, camera, material_, spotLight);
-
-#ifdef _DEBUG
-	//デバッグ用の描画
-	debugModel_->Draw(debugWorldTransform_, camera, debugMaterial_);
-#endif // _DEBUG
-
 
 }
 
@@ -128,21 +96,20 @@ void Key::RiseAndRotate(){
 
 	//イージングを使い急上昇する感じを出す
 	upT_ += 0.001f;
-	float t = Easing::EaseOutSine(upT_);
-	//高さ
-	const float HEIGHT =0.5f;
+	float_t newUpT = Easing::EaseOutSine(upT_);
+	
 	//線形補間を使い
-	float lerpedPositionY = SingleCalculation::Lerp(preUpPosition_.y, preUpPosition_.y+HEIGHT, t);
+	float_t lerpedPositionY = SingleCalculation::Lerp(preUpPosition_.y, preUpPosition_.y+HEIGHT_, newUpT);
 	worldTransform_.translate.y = lerpedPositionY;
 
 	//高速回転
-	const float RAPID_ROTATE_AMOUNT = 0.5f;
-	worldTransform_.rotate.y += RAPID_ROTATE_AMOUNT;
+	const float_t RAPID_ROTATE_AMOUNT = 0.5f;
+	worldTransform_.rotate.x += RAPID_ROTATE_AMOUNT;
 
 	//4回転した後に拡縮
-	if (worldTransform_.rotate.y > std::numbers::pi_v<float>*12.0f) {
-		const float SCALE_DOWM_VALUE = -0.05f;
-		const Vector3 SCALE_DOWN = { .x = SCALE_DOWM_VALUE,.y = SCALE_DOWM_VALUE ,.z = SCALE_DOWM_VALUE };
+	if (worldTransform_.rotate.x > std::numbers::pi_v<float_t>*12.0f) {
+		
+		const Vector3 SCALE_DOWN = { .x = SCALE_DOWM_VALUE_,.y = SCALE_DOWM_VALUE_ ,.z = SCALE_DOWM_VALUE_ };
 		worldTransform_.scale = VectorCalculation::Add(worldTransform_.scale, SCALE_DOWN);
 	}
 
@@ -169,15 +136,13 @@ void Key::SpriteMove(){
 
 		scaleT_ += 0.01f;
 		//サイズの設定
-		float scaleSize = std::sinf(scaleT_ * std::numbers::pi_v<float>);
+		float_t scaleSize = std::sinf(scaleT_ * std::numbers::pi_v<float_t>);
 		sprite_->SetScale({ .x = scaleSize ,.y = scaleSize });
 
 		//回転の設定
 		spriteRotate_ -= 0.5f;
 		sprite_->SetRotate(spriteRotate_);
 
-		//始点
-		const Vector2 SPRITE_STRAT_POSITION_ = { .x = 680,.y = 600.0f };
 		
 		//座標の設定
 		Vector2 position = VectorCalculation::Lerp(SPRITE_STRAT_POSITION_, spriteEndPosition_, scaleT_);
@@ -196,7 +161,7 @@ void Key::DisplayImGui(){
 #ifdef _DEBUG
 	ImGui::Begin("鍵のスプライト");
 	ImGui::InputFloat("scaleT_", &scaleT_);
-	ImGui::InputFloat3("回転", &worldTransform_.rotate.y);
+	ImGui::SliderFloat3("回転", &worldTransform_.rotate.x,0.0f,3.0f);
 	ImGui::End();
 #endif // _DEBUG
 

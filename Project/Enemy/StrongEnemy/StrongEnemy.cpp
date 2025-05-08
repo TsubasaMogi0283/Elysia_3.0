@@ -41,7 +41,7 @@ void StrongEnemy::Initialize(const uint32_t& modelHandle,const Vector3& position
 
 
 	//デバッグ用モデル
-	uint32_t collisionDebugModel = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
+	uint32_t collisionDebugModel = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Cube","cube.obj");
 
 	//プレイヤーに対してのコリジョン
 	collisionToPlayer_ = std::make_unique<StrongEnemyCollisionToPlayer>();
@@ -60,7 +60,7 @@ void StrongEnemy::Update(){
 	currentState_->Update(this);
 
 	//方向を取得
-	Vector3 direction = currentState_->GetDirection();
+	Vector3 direction = currentState_->GetMoveDirection();
 	direction_ = direction;
 
 	//向きを計算しモデルを回転させる

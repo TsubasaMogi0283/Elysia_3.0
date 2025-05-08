@@ -167,7 +167,14 @@ private:
 	const float MOVE_AMOUNT_ = 0.1f;
 	//縮小
 	const float SCALE_DOWN_AMOUNT_ = 0.05f;
-	
+	//回転の大きさ
+	const float_t ROTATE_AMOUNT_ = 0.1f;
+	//始点
+	const Vector2 SPRITE_STRAT_POSITION_ = { .x = 680,.y = 600.0f };
+	//縮小
+	const float_t SCALE_DOWM_VALUE_ = -0.05f;
+	//高さ
+	const float_t HEIGHT_ = 0.5f;
 private:
 	//モデル
 	std::unique_ptr<Elysia::Model> model_ = nullptr;
@@ -216,16 +223,6 @@ private:
 	//消える
 	bool isDelete_ = false;
 
-private:
-
-#ifdef _DEBUG
-	//デバッグ用
-	std::unique_ptr<Elysia::Model>debugModel_ = nullptr;
-	WorldTransform debugWorldTransform_ = {};
-	Material debugMaterial_ = {};
-#endif // _DEBUG
-
-	
 
 
 };

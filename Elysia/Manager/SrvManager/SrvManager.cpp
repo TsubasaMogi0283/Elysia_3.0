@@ -6,9 +6,6 @@ Elysia::SrvManager* Elysia::SrvManager::GetInstance(){
 	return &instance;
 }
 
-/// <summary>
-/// 初期化
-/// </summary>
 void Elysia::SrvManager::Initialize(){
 	//デスクリプタヒープの生成
 	descriptorHeap_ = DirectXSetup::GetInstance()->GenarateDescriptorHeap(

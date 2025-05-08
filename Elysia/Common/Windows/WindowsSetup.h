@@ -104,9 +104,10 @@ namespace Elysia {
 	private:
 
 		/// <summary>
-		/// //ウィンドウクラスを登録
+		/// ウィンドウクラスを登録
 		/// </summary>
-		void RegisterWindowsClass();
+		/// <param name="title">タイトル名</param>
+		void RegisterWindowsClass(const wchar_t* title);
 
 		/// <summary>
 		/// Windowを表示
@@ -122,7 +123,7 @@ namespace Elysia {
 		/// <param name="title">タイトル名</param>
 		/// <param name="clientWidth">横サイズ</param>
 		/// <param name="clientHeight">縦サイズ</param>
-		void Initialize(const wchar_t* title, int32_t clientWidth, int32_t clientHeight);
+		void Initialize(const wchar_t* title,const int32_t& clientWidth,const int32_t& clientHeight);
 
 		/// <summary>
 		/// メッセージ
@@ -172,10 +173,6 @@ namespace Elysia {
 
 
 	private:
-
-		//タイトルバー
-		const wchar_t* title_ = L"Ellysia";
-
 		//クライアントのサイズ
 		uint32_t clientWidth_ = 0;
 		uint32_t clientHeight_ = 0;

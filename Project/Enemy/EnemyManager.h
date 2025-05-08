@@ -10,6 +10,7 @@
 #include <vector>
 #include <sstream>
 
+#include "Sprite.h"
 #include "BaseEnemy.h"
 #include "NormalEnemy/NormalEnemy.h"
 #include "StrongEnemy/StrongEnemy.h"
@@ -34,7 +35,7 @@ struct SpotLight;
 class Player;
 
 /// <summary>
-/// EllysiaEngine
+/// ElysiaEngine
 /// </summary>
 namespace Elysia {
 	/// <summary>
@@ -46,6 +47,16 @@ namespace Elysia {
 	/// オーディオ
 	/// </summary>
 	class Audio;
+
+	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
+	class TextureManager;
+
+	/// <summary>
+	/// ウィンドウクラス
+	/// </summary>
+	class WindowsSetup;
 }
 
 #pragma endregion
@@ -65,8 +76,9 @@ public:
 	/// </summary>
 	/// <param name="normalEnemyModel">通常の敵のモデルハンドル</param>
 	/// <param name="strongEnemyModel">強敵のモデルハンドル</param>
-	/// <param name="csvPath">CSVのファイルパス</param>
-	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel, const std::string& csvPath);
+	/// <param name="normalEnemyPositions">通常の敵の座標</param>
+	/// <param name="strongEnemyPositions">強敵の座標</param>
+	void Initialize(const uint32_t& normalEnemyModel,const uint32_t &strongEnemyModel, const std::vector<Vector3>& normalEnemyPositions, const std::vector<Vector3>& strongEnemyPositions);
 	
 	/// <summary>
 	/// 更新
@@ -77,7 +89,12 @@ public:
 	/// 描画
 	/// </summary>
 	/// <param name="spotLight">スポットライト</param>
-	void Draw(const Camera& camera ,const SpotLight& spotLight);
+	void DrawObject3D(const Camera& camera ,const SpotLight& spotLight);
+
+	/// <summary>
+	/// スプライトの描画
+	/// </summary>
+	void DrawSprite();
 
 
 	/// <summary>
@@ -109,6 +126,19 @@ public:
 	/// </summary>
 	void StopAudio();
 
+
+private:
+	/// <summary>
+	/// 警告の処理
+	/// </summary>
+	void Warning();
+
+	/// <summary>
+	/// ImGui表示用
+	/// </summary>
+	void DisplayImGui();
+
+
 public:
 	/// <summary>
 	/// エネミーを取得
@@ -132,6 +162,14 @@ public:
 			enemies.push_back(enemy.get());
 		}
 		return enemies;
+	}
+
+	/// <summary>
+	/// 通常の敵の最短距離を取得
+	/// </summary>
+	/// <returns></returns>
+	inline float_t GeClosestNormalEnemyDistance()const {
+		return closestNormalEnemyDistance_;
 	}
 
 	/// <summary>
@@ -159,16 +197,53 @@ private:
 	Elysia::Audio* audio_ = nullptr;
 	//ハンドル
 	uint32_t audioHandle_ = 0u;
+	//テクスチャ管理クラス
+	Elysia::TextureManager* textureManager_ = nullptr;
 	//レベルデータ管理クラス
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//レベルデータのハンドル
 	uint32_t levelDataHandle_ = 0u;
+	//ウィンドウクラス
+	Elysia::WindowsSetup* windowSetup_ = nullptr;
 
 private:
+	//接近するときの距離
+	const float_t TRACKING_START_DISTANCE_ = 15.0f;
+	//攻撃するときの距離
+	const float_t ATTACK_START_DISTANCE_ = 6.0f;
 	//前方にいるかどうかの内積
-	const float FRONT_DOT_ = 0.7f;
+	const float_t FRONT_DOT_ = 0.7f;
 	//追跡開始の距離
-	const float STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
+	const float_t STRONG_ENEMY_TRACKING_START_DISTANCE_ = 30.0f;
+	//1体だけの時
+	const uint32_t ENEMY_ONE_ = 1u;
+
+	//警告テクスチャ用のアンカーポイント
+	const Vector2 WARNING_TEXTURE_ANCHOR_POINT_ = { .x = 0.5f,.y=0.5f };
+	//斜めの時の内積
+	const float_t BACK_DOT_VALUE_ = 0.0f;
+	//最大のスケール値
+	const float_t MAX_WARNING_SCALE_ = 2.0f;
+	//最小のスケール値
+	const float_t MIN_WARNING_SCALE_ = 1.0f;
+	//線形補間の増える値
+	const float_t SCALE_T_INCREASE_VALUE_ = 0.025f;
+	//線形補間の最大値
+	const float_t MAX_SCALE_T_ = 1.0f;
+	//最小値
+	const float_t MIN_SCALE_T_ = 0.0f;
+
+private:
+	/// <summary>
+	/// 最短の情報
+	/// </summary>
+	struct ClosestEnemyInformation {
+		//座標
+		Vector3 position;
+		//方向
+		Vector3 direction;
+
+	};
 
 private:
 	//エネミーのリスト
@@ -183,8 +258,22 @@ private:
 	//強敵
 	uint32_t strongEnemyModelHandle_ = 0u;
 
-	//生成の文字列を入れる
-	std::stringstream enemyPositionsFromCSV_;
+	//警告
+	std::unique_ptr<Elysia::Sprite>warningSprite_ = nullptr;
+	//座標
+	Vector2 warningTexturePosition_ = {};
+	//スケール
+	float_t warningTextureScale_ = {};
+	//線形補間
+	float_t warningScaleT_ = 0.0f;
 
+	// 最短距離と敵の座標のペアを格納する
+	std::vector<std::pair<float_t, ClosestEnemyInformation>> enemyDistancePairs;
+	//最短距離
+	float_t closestNormalEnemyDistance_ = 0.0f;
+	//最短情報
+	ClosestEnemyInformation closestEnemyInformation_ = {};
+	//内積
+	float_t playerAndNormalEnemyDot_ = 0.0f;
 };
 

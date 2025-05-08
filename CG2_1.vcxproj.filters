@@ -140,9 +140,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Elysia\Source File\Common">
-      <UniqueIdentifier>{07c0a95e-6a93-4df8-8d44-8e73f10e1ea2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Elysia\Source File\Math">
       <UniqueIdentifier>{06a9a389-3fa9-4add-ab75-e624db9a3dd9}</UniqueIdentifier>
     </Filter>
@@ -266,9 +263,6 @@
     <Filter Include="Elysia\Header File">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Elysia\Header File\Common">
-      <UniqueIdentifier>{489343cf-64f2-4e1a-99e3-9a53fd5598b4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Elysia\Header File\Math">
       <UniqueIdentifier>{b543a5c7-1ed6-4ca8-ac06-3165a71162a0}</UniqueIdentifier>
@@ -481,6 +475,72 @@
     <Filter Include="Elysia\Source File\Convert">
       <UniqueIdentifier>{84c2195e-679f-4453-b397-f2d8863e5e29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Camera\PlayerCamera">
+      <UniqueIdentifier>{0b17b273-3d95-46aa-aa3c-d0edf62c4afe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elysia\Header File\DirectX">
+      <UniqueIdentifier>{ff6a0e7a-52cd-4ffb-832a-5f500d9ce071}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elysia\Header File\Windows">
+      <UniqueIdentifier>{489343cf-64f2-4e1a-99e3-9a53fd5598b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elysia\Source File\Windows">
+      <UniqueIdentifier>{07c0a95e-6a93-4df8-8d44-8e73f10e1ea2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elysia\Source File\DirectX">
+      <UniqueIdentifier>{ea4c39bd-648c-4284-b623-2d33ca4c92b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Lose\Base">
+      <UniqueIdentifier>{2c413194-299f-4d63-84a9-dcda8247b4d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Lose\Base\LightUp">
+      <UniqueIdentifier>{03d232ac-ba59-4c59-81da-469ad0968d9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Lose\Base\Select">
+      <UniqueIdentifier>{406c30bb-0c72-47d0-8cba-2171024d4d4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Lose\Base\ContinueGame">
+      <UniqueIdentifier>{9275c936-876b-4639-8abe-d847f8ec6c09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Lose\Base\ReturnTitle">
+      <UniqueIdentifier>{cb91cacc-6572-421d-a9c4-5a4d8f243f6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\Base">
+      <UniqueIdentifier>{d6d0251b-28e0-44e7-90f0-20d7a6e65870}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\Base\Start">
+      <UniqueIdentifier>{ff0840a8-919c-43cc-9c8c-0c96c55c75ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\Base\Waiting">
+      <UniqueIdentifier>{b6f61bc0-90f2-457c-91df-45fe3bdf4f44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\Base\Noise">
+      <UniqueIdentifier>{bb4f6485-f015-4d80-97c6-0c3947bc8baf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Win\Base">
+      <UniqueIdentifier>{5593b3c1-aabc-477a-9ee3-8ea32182ff2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Win\Base\ReturnTitle">
+      <UniqueIdentifier>{5ca6554b-7d23-49cc-89a2-44fc4263d9b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Win\Base\Select">
+      <UniqueIdentifier>{70e9de86-8286-40f8-822c-e8d3b924ce65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Title\Base\ToGame">
+      <UniqueIdentifier>{30f5dc5c-2571-4a90-8fad-db9c892ccd67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Game\Base">
+      <UniqueIdentifier>{8bb2d471-429a-424e-aeb9-e7b5a9344ad7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Game\Base\Start">
+      <UniqueIdentifier>{3e01b9eb-0019-46c5-a799-e1ad53cde2bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Game\Base\Explanation">
+      <UniqueIdentifier>{a9dcdc5c-e086-4045-9c31-c5812dac3fc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Scene\Game\Base\Play">
+      <UniqueIdentifier>{6cce928a-35ee-49f8-a1e6-4b2ce45e8f0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -530,15 +590,6 @@
     </ClCompile>
     <ClCompile Include="Project\RailCamera\TitleRailCamera.cpp">
       <Filter>Project\Camera\TitleRailCamera</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.cpp">
-      <Filter>Project\Scene\Title\BackTexture\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\TitleScene\NightBackTexture.cpp">
-      <Filter>Project\Scene\Title\BackTexture\Night</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\AllGameScene\TitleScene\SunsetBackTexture.cpp">
-      <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
     </ClCompile>
     <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp">
       <Filter>Project\Scene\Factory</Filter>
@@ -591,7 +642,7 @@
     <ClCompile Include="Elysia\StringOption\StringOption.cpp">
       <Filter>Elysia\Source File\StringOption</Filter>
     </ClCompile>
-    <ClCompile Include="Elysia\Polygon\PostEffect\Vignette\Vignette.cpp">
+    <ClCompile Include="Elysia\Polygon\PostEffect\Vignette\VignettePostEffect.cpp">
       <Filter>Elysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Elysia\Polygon\PostEffect\BackTest\BackTexture.cpp">
@@ -615,7 +666,7 @@
     <ClCompile Include="Elysia\Polygon\PostEffect\RadialBlur\RadialBlur.cpp">
       <Filter>Elysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Elysia\Polygon\PostEffect\RandomEffect\RandomEffect.cpp">
+    <ClCompile Include="Elysia\Polygon\PostEffect\RandomEffect\RandomNoisePostEffect.cpp">
       <Filter>Elysia\Source File\Polygone\PostEffect</Filter>
     </ClCompile>
     <ClCompile Include="Elysia\Polygon\PostEffect\SepiaScale\SepiaScale.cpp">
@@ -759,11 +810,8 @@
     <ClCompile Include="Elysia\Framework\Framework.cpp">
       <Filter>Elysia\Source File\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Elysia\Common\DirectX\DirectXSetup.cpp">
-      <Filter>Elysia\Source File\Common</Filter>
-    </ClCompile>
     <ClCompile Include="Elysia\Common\Windows\WindowsSetup.cpp">
-      <Filter>Elysia\Source File\Common</Filter>
+      <Filter>Elysia\Source File\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Elysia\Camera\Camera.cpp">
       <Filter>Elysia\Source File\Camera</Filter>
@@ -776,6 +824,66 @@
     </ClCompile>
     <ClCompile Include="Elysia\Convert\Convert.cpp">
       <Filter>Elysia\Source File\Convert</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Player\Camera\PlayerCamera.cpp">
+      <Filter>Project\Camera\PlayerCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseBackTexture\BaseTitleBackTexture.cpp">
+      <Filter>Project\Scene\Title\BackTexture\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseBackTexture\Night\NightBackTexture.cpp">
+      <Filter>Project\Scene\Title\BackTexture\Night</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseBackTexture\Sunset\SunsetBackTexture.cpp">
+      <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
+    </ClCompile>
+    <ClCompile Include="Elysia\Common\DirectX\DirectXSetup.cpp">
+      <Filter>Elysia\Source File\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\LightUp\LightUpLoseScene.cpp">
+      <Filter>Project\Scene\Lose\Base\LightUp</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\SelectLoseScene\SelectLoseScene.cpp">
+      <Filter>Project\Scene\Lose\Base\Select</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\ContinueGameLoseScene\ContinueGameLoseScene.cpp">
+      <Filter>Project\Scene\Lose\Base\ContinueGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\LoseScene\BaseLoseScene\ReturnTitleLoseScene\ReturnTitleLoseScene.cpp">
+      <Filter>Project\Scene\Lose\Base\ReturnTitle</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\WinScene\BaseWinScene\SelectWinScene\SelectWinScene.cpp">
+      <Filter>Project\Scene\Win\Base\Select</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\WinScene\BaseWinScene\ReturnTitleWinScene\ReturnTitleWinScene.cpp">
+      <Filter>Project\Scene\Win\Base\ReturnTitle</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Start\StartTitleScene.cpp">
+      <Filter>Project\Scene\Title\Base\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Waiting\WaitingTitleScene.cpp">
+      <Filter>Project\Scene\Title\Base\Waiting</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\Noise\NoiseTitleScene.cpp">
+      <Filter>Project\Scene\Title\Base\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\TitleScene\BaseTitleScene\ToGame\ToGameTitleScene.cpp">
+      <Filter>Project\Scene\Title\Base\ToGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\GameScene\BaseGameScene\Start\StartGameScene.cpp">
+      <Filter>Project\Scene\Game\Base\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\GameScene\BaseGameScene\Explanation\ExplanationGameScene.cpp">
+      <Filter>Project\Scene\Game\Base\Explanation</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\AllGameScene\GameScene\BaseGameScene\Play\PlayGameScene.cpp">
+      <Filter>Project\Scene\Game\Base\Play</Filter>
+    </ClCompile>
+    <ClCompile Include="Elysia\Material\Vignette\Vignette.cpp">
+      <Filter>Elysia\Source File\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Elysia\Material\RandomNoise\RandomNoise.cpp">
+      <Filter>Elysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -940,15 +1048,6 @@
     <ClInclude Include="Project\CollisionConfig\CollisionConfig.h">
       <Filter>Project</Filter>
     </ClInclude>
-    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleBackTexture.h">
-      <Filter>Project\Scene\Title\BackTexture\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\TitleScene\NightBackTexture.h">
-      <Filter>Project\Scene\Title\BackTexture\Night</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\AllGameScene\TitleScene\SunsetBackTexture.h">
-      <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Player\BasePlayerCollision.h">
       <Filter>Project\Player\Collision</Filter>
     </ClInclude>
@@ -1006,7 +1105,7 @@
     <ClInclude Include="Elysia\StringOption\StringOption.h">
       <Filter>Elysia\Header File\StringOption</Filter>
     </ClInclude>
-    <ClInclude Include="Elysia\Polygon\PostEffect\Vignette\Vignette.h">
+    <ClInclude Include="Elysia\Polygon\PostEffect\Vignette\VignettePostEffect.h">
       <Filter>Elysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\Polygon\PostEffect\BackTest\BackTexture.h">
@@ -1030,7 +1129,7 @@
     <ClInclude Include="Elysia\Polygon\PostEffect\RadialBlur\RadialBlur.h">
       <Filter>Elysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Elysia\Polygon\PostEffect\RandomEffect\RandomEffect.h">
+    <ClInclude Include="Elysia\Polygon\PostEffect\RandomEffect\RandomNoisePostEffect.h">
       <Filter>Elysia\Header File\Polygone\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\Polygon\PostEffect\SepiaScale\SepiaScale.h">
@@ -1118,10 +1217,7 @@
       <Filter>Elysia\Header File\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\Common\Windows\WindowsSetup.h">
-      <Filter>Elysia\Header File\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Elysia\Common\DirectX\DirectXSetup.h">
-      <Filter>Elysia\Header File\Common</Filter>
+      <Filter>Elysia\Header File\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\Material\Dissolve\Dissolve.h">
       <Filter>Elysia\Header File\Material</Filter>
@@ -1302,6 +1398,78 @@
     </ClInclude>
     <ClInclude Include="Elysia\Convert\Convert.h">
       <Filter>Elysia\Header File\Convert</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Player\Camera\PlayerCamera.h">
+      <Filter>Project\Camera\PlayerCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseBackTexture\BaseTitleBackTexture.h">
+      <Filter>Project\Scene\Title\BackTexture\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseBackTexture\Night\NightBackTexture.h">
+      <Filter>Project\Scene\Title\BackTexture\Night</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseBackTexture\Sunset\SunsetBackTexture.h">
+      <Filter>Project\Scene\Title\BackTexture\Sunset</Filter>
+    </ClInclude>
+    <ClInclude Include="Elysia\Common\DirectX\DirectXSetup.h">
+      <Filter>Elysia\Header File\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\BaseLoseScene.h">
+      <Filter>Project\Scene\Lose\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\LightUp\LightUpLoseScene.h">
+      <Filter>Project\Scene\Lose\Base\LightUp</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\SelectLoseScene\SelectLoseScene.h">
+      <Filter>Project\Scene\Lose\Base\Select</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\ContinueGameLoseScene\ContinueGameLoseScene.h">
+      <Filter>Project\Scene\Lose\Base\ContinueGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\LoseScene\BaseLoseScene\ReturnTitleLoseScene\ReturnTitleLoseScene.h">
+      <Filter>Project\Scene\Lose\Base\ReturnTitle</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\WinScene\BaseWinScene\BaseWinScene.h">
+      <Filter>Project\Scene\Win\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\WinScene\BaseWinScene\SelectWinScene\SelectWinScene.h">
+      <Filter>Project\Scene\Win\Base\Select</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\WinScene\BaseWinScene\ReturnTitleWinScene\ReturnTitleWinScene.h">
+      <Filter>Project\Scene\Win\Base\ReturnTitle</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\BaseTitleScene.h">
+      <Filter>Project\Scene\Title\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Start\StartTitleScene.h">
+      <Filter>Project\Scene\Title\Base\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Waiting\WaitingTitleScene.h">
+      <Filter>Project\Scene\Title\Base\Waiting</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\Noise\NoiseTitleScene.h">
+      <Filter>Project\Scene\Title\Base\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\TitleScene\BaseTitleScene\ToGame\ToGameTitleScene.h">
+      <Filter>Project\Scene\Title\Base\ToGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\BaseGameScene.h">
+      <Filter>Project\Scene\Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\Start\StartGameScene.h">
+      <Filter>Project\Scene\Game\Base\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\Explanation\ExplanationGameScene.h">
+      <Filter>Project\Scene\Game\Base\Explanation</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\Play\PlayGameScene.h">
+      <Filter>Project\Scene\Game\Base\Play</Filter>
+    </ClInclude>
+    <ClInclude Include="Elysia\Material\Vignette\Vignette.h">
+      <Filter>Elysia\Header File\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Elysia\Material\RandomNoise\RandomNoise.h">
+      <Filter>Elysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

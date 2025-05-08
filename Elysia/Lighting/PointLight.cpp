@@ -6,31 +6,31 @@ void PointLight::Initialize(){
 
 	//初期値
 	//色
-	color_= { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
+	color= { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
 	//位置
-	position_= {.x = 0.0f,.y = 0.0f,.z = 0.0f };
+	position= {.x = 0.0f,.y = 0.0f,.z = 0.0f };
 	//輝度
-	intensity_ = 4.0f;
+	intensity = 4.0f;
 	//ライトに届く最大距離
-	radius_ = 5.0f;
+	radius = 5.0f;
 	//減衰率
-	decay_ = 5.0f;
+	decay = 5.0f;
 
 }
 
 void PointLight::Update(){
 	//書き込み
-	resource->Map(0u, nullptr, reinterpret_cast<void**>(&pointLightdata_));
+	resource->Map(0u, nullptr, reinterpret_cast<void**>(&pointLightdata));
 	//色
-	pointLightdata_->color = color_;
+	pointLightdata->color = color;
 	//座標
-	pointLightdata_->position= position_;
+	pointLightdata->position= position;
 	//輝度
-	pointLightdata_->intensity = intensity_;
+	pointLightdata->intensity = intensity;
 	//ライトに届く最大距離
-	pointLightdata_->radius = radius_;
+	pointLightdata->radius = radius;
 	//減衰率
-	pointLightdata_->decay = decay_;
+	pointLightdata->decay = decay;
 	//書き込み終了
 	resource->Unmap(0u, nullptr);
 }

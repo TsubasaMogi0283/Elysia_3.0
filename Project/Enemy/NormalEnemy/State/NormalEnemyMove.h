@@ -35,6 +35,9 @@ public:
 	/// </summary>
 	~NormalEnemyMove()=default;
 
+private:
+	//スピードの値
+	float speedAmount_ = 0.01f;
 
 };
 

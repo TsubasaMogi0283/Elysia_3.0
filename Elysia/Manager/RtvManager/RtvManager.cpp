@@ -130,7 +130,7 @@ uint32_t  Elysia::RtvManager::Allocate(const std::string& name){
 	assert(index_ < RTV_DESCRIPTOR_SIZE_);
 
 	//既存だったらindexを返す
-	for (uint32_t i = 0; i < RTV_DESCRIPTOR_SIZE_; ++i) {
+	for (uint32_t i = 0u; i < RTV_DESCRIPTOR_SIZE_; ++i) {
 		if (RtvManager::GetInstance()->rtvInformation_[i].name == name) {
 			uint32_t index = RtvManager::GetInstance()->rtvInformation_[i].index;
 			return index;
@@ -144,7 +144,7 @@ uint32_t  Elysia::RtvManager::Allocate(const std::string& name){
 	int index = index_;
 	
 	//次のために番号を1進める
-	index_++;
+	++index_;
 
 	RtvManager::GetInstance()->rtvInformation_[index].name = name;
 	RtvManager::GetInstance()->rtvInformation_[index].index =index;

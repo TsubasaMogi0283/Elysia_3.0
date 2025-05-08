@@ -18,7 +18,7 @@
 #include "DirectionalLight.h"
 
 
-AnimationModel::AnimationModel(){
+Elysia::AnimationModel::AnimationModel(){
 	//DirectXのクラスを取得
 	directXSetup_ = Elysia::DirectXSetup::GetInstance();
 	//パイプライン管理クラスを取得
@@ -32,9 +32,9 @@ AnimationModel::AnimationModel(){
 
 }
 
-AnimationModel* AnimationModel::Create(const uint32_t& modelHandle){
+Elysia::AnimationModel* Elysia::AnimationModel::Create(const uint32_t& modelHandle){
 	//新たなModel型のインスタンスのメモリを確保
-	AnimationModel* model = new AnimationModel();
+	Elysia::AnimationModel* model = new AnimationModel();
 
 	//テクスチャの読み込み
 	model->textureHandle_ = model->textureManager_->Load(Elysia::ModelManager::GetInstance()->GetModelData(modelHandle).textureFilePath);
@@ -72,14 +72,10 @@ AnimationModel* AnimationModel::Create(const uint32_t& modelHandle){
 	
 }
 
-void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const DirectionalLight& directionalLight){
+void Elysia::AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const DirectionalLight& directionalLight){
 	//Materialのライティングの設定が平行光源ではない場合止める
 	assert(material.lightingKinds == DirectionalLighting);
 
-	//資料にはなかったけどUnMapはあった方がいいらしい
-	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
-	//プログラムが安定するとのこと
-#pragma region 頂点バッファ
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
 	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
@@ -141,15 +137,11 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 
 }
 
-void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const PointLight& pointLight){
+void Elysia::AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const PointLight& pointLight){
 	
 	//Materialのライティングの設定が点光源ではない場合止める
 	assert(material.lightingKinds == PointLighting);
 
-	//資料にはなかったけどUnMapはあった方がいいらしい
-	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
-	//プログラムが安定するとのこと
-	
 	//頂点
 	VertexData* vertexData = nullptr;
 	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
@@ -214,22 +206,16 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	directXSetup_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1u, 0u, 0u, 0u);
 }
 
-void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const SpotLight& spotLight){
+void Elysia::AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& camera, const SkinCluster& skinCluster, const Material& material, const SpotLight& spotLight){
 	
 	//Materialのライティングの設定がスポットライトではない場合止める
 	assert(material.lightingKinds == SpotLighting);
-	
-	// 資料にはなかったけどUnMapはあった方がいいらしい
-	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
-	//プログラムが安定するとのこと
-	
 	//頂点
 	VertexData * vertexData = nullptr;
 	vertexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&vertexData));//書き込むためのアドレスを取得
 	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
 	vertexResource_->Unmap(0u, nullptr);
 
-	
 	//Index
 	uint32_t* mappedIndex = nullptr;
 	indexResource_->Map(0u, nullptr, reinterpret_cast<void**>(&mappedIndex));
@@ -240,7 +226,6 @@ void AnimationModel::Draw(const WorldTransform& worldTransform, const Camera& ca
 	cameraResource_->Map(0u, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
 	cameraForGPU_->worldPosition = camera.GetWorldPosition();
 	cameraResource_->Unmap(0u, nullptr);
-
 
 	//コマンドを積む
 	//パイプラインの設定

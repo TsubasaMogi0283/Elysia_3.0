@@ -345,6 +345,12 @@ uint32_t Elysia::LevelDataManager::Load(const std::string& filePath) {
 	//パスの結合
 	std::string fullFilePath = LEVEL_DATA_PATH_ + filePath;
 
+	//一度読み込んだものはその値を返す
+	//新規は勿論読み込みをする
+	auto it = levelDatas_.find(filePath);
+	if (it != levelDatas_.end()) {
+		return it->second->handle;
+	}
 	//JSON文字列から解凍したデータ
 	nlohmann::json deserialized = Deserialize(fullFilePath);
 
@@ -360,6 +366,8 @@ uint32_t Elysia::LevelDataManager::Load(const std::string& filePath) {
 		fileName = filePath.substr(slashPosition + 1);
 	}
 
+	//ハンドルの加算
+	++handle_;
 
 	//インスタンスを生成
 	levelDatas_[fullFilePath] = std::make_unique<LevelData>();
@@ -370,8 +378,7 @@ uint32_t Elysia::LevelDataManager::Load(const std::string& filePath) {
 	levelDatas_[fullFilePath]->handle = handle_;
 	levelDatas_[fullFilePath]->fullPath = fullFilePath;
 
-	//ハンドルの加算
-	++handle_;
+	
 
 	//指定したファイルパスのレベルデータを持ってくる
 	LevelData& levelData = *levelDatas_[fullFilePath];

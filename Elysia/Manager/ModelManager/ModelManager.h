@@ -17,7 +17,7 @@
 
 
  /// <summary>
- /// EllysiaEngine
+ /// ElysiaEngine
  /// </summary>
 namespace Elysia {
 
@@ -37,7 +37,10 @@ namespace Elysia {
 		~ModelManager() = default;
 
 	public:
-		//シングルインスタンス
+		/// <summary>
+		/// インスタンスの取得
+		/// </summary>
+		/// <returns></returns>
 		static ModelManager* GetInstance();
 
 		//コピーコンストラクタ禁止
@@ -75,7 +78,7 @@ namespace Elysia {
 		/// <param name="directoryPath">パス</param>
 		/// <param name="fileName">ファイル名</param>
 		/// <returns></returns>
-		static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName);
+		static uint32_t Load(const std::string& directoryPath, const std::string& fileName);
 
 
 		/// <summary>
@@ -91,7 +94,7 @@ namespace Elysia {
 		/// <param name="fileName">ファイル名</param>
 		/// <param name="isAnimationLoad">アニメーションを読み込むかどうか</param>
 		/// <returns></returns>
-		static uint32_t LoadModelFile(const std::string& directoryPath, const std::string& fileName, bool isAnimationLoad);
+		static uint32_t Load(const std::string& directoryPath, const std::string& fileName,const bool& isAnimationLoad);
 
 
 

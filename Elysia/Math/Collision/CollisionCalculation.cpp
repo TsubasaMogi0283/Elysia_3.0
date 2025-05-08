@@ -166,7 +166,7 @@ bool CollisionCalculation::IsFanCollision(const Fan3D& fan, const Vector3& point
     };
     
     //距離を求める
-    float distance = sqrtf(vectorFanAndPont.x * vectorFanAndPont.x + vectorFanAndPont.y * vectorFanAndPont.y+ vectorFanAndPont.z* vectorFanAndPont.z);
+    float_t distance = sqrtf(vectorFanAndPont.x * vectorFanAndPont.x + vectorFanAndPont.y * vectorFanAndPont.y+ vectorFanAndPont.z* vectorFanAndPont.z);
 
     //設定した扇の半径より大きい場合
     //範囲外なのでfalseを返す
@@ -195,21 +195,18 @@ bool CollisionCalculation::IsFanCollision(const Fan3D& fan, const Vector3& point
         .z = std::sinf(fan.centerRadian - fan.sideThetaAngle)
     };
     
-   
-
     //縦方向
     //縦
-    float phi = fan.centerPhi;
-    const float UP_OFFSET = 10.0f;
-    const float DOWN_OFFSET = 30.0f;
-    float radian = UP_OFFSET * std::numbers::pi_v<float> / 180.0f;
-    float downRadian = DOWN_OFFSET * std::numbers::pi_v<float> / 180.0f;
-
-    
+    float_t phi = fan.centerPhi;
+    const float_t UP_OFFSET = 10.0f;
+    const float_t DOWN_OFFSET = 30.0f;
+    float_t radian = UP_OFFSET * std::numbers::pi_v<float_t> / 180.0f;
+    float_t downRadian = DOWN_OFFSET * std::numbers::pi_v<float_t> / 180.0f;
+    //上限と下限以内に収まらなかったらfalse
     if (phi > radian ||phi< -downRadian) {
         return false;
     }
-
+    //上
     Vector3 upOriginDirection = { 
         .x = 0.0f, 
         .y = std::sinf(phi + radian),
@@ -222,35 +219,13 @@ bool CollisionCalculation::IsFanCollision(const Fan3D& fan, const Vector3& point
         .z = std::cosf(phi - radian),
     };
 
-#ifdef _DEBUG
-    ImGui::Begin("FanDirectionOrigin");
-    ImGui::InputFloat3("FanAndPoint", &vectorFanAndPont.x);
-    ImGui::InputFloat3("Up", &upOriginDirection.x);
-    ImGui::InputFloat3("Down", &downOriginDirection.x);
-    ImGui::InputFloat3("Left", &leftOriginDirection.x);
-    ImGui::InputFloat3("Right", &rightOriginDirection.x);
-    ImGui::InputFloat("Phi", &phi);
-    ImGui::InputFloat("radian", &radian);
-
-
-    ImGui::End();
-
-#endif
-
-
     //それぞれを正規化する
     Vector3 rightDirection = VectorCalculation::Normalize(rightOriginDirection);
     Vector3 leftDirection = VectorCalculation::Normalize(leftOriginDirection);
     Vector3 upDirection = VectorCalculation::Normalize(upOriginDirection);
     Vector3 downDirection = VectorCalculation::Normalize(downOriginDirection);
 
-    
-
-
-
-
-    //縦と横で2次元にして別々で計算した方が良いかも
-    //上手く出来なかったから
+    //新しく変数を作る
     Vector2 newLeftDirection = { .x = leftDirection.x,.y = leftDirection.z };
     Vector2 newRightDirection = { .x = rightDirection.x,.y = rightDirection.z };
     Vector2 newUpDirection = { .x = upDirection.z,.y = upDirection.y };
@@ -258,56 +233,14 @@ bool CollisionCalculation::IsFanCollision(const Fan3D& fan, const Vector3& point
     Vector2 newXZDirection = { .x = normalizedFanAndPoint.x,.y = normalizedFanAndPoint.z };
     Vector2 newZYDirection = { .x = normalizedFanAndPoint.z,.y = normalizedFanAndPoint.y };
 
-#ifdef _DEBUG
-    ImGui::Begin("FanDirection");
-    ImGui::InputFloat3("FanAndPoint", &normalizedFanAndPoint.x);
-    ImGui::InputFloat3("Up", &upDirection.x);
-    ImGui::InputFloat3("Down", &downDirection.x);
-    ImGui::InputFloat3("Left", &leftDirection.x);
-    ImGui::InputFloat3("Right", &rightDirection.x);
-    ImGui::End();
-
-
-#endif
     //左側
-    float dotLS = SingleCalculation::Dot({.x = direction.x,.y = direction.z }, newLeftDirection);
+    float_t dotLS = SingleCalculation::Dot({.x = direction.x,.y = direction.z }, newLeftDirection);
     //右側
-    float dotRS = SingleCalculation::Dot({.x = direction.x,.y = direction.z }, newRightDirection);
+    float_t dotRS = SingleCalculation::Dot({.x = direction.x,.y = direction.z }, newRightDirection);
     //ターゲット
-    float dotCenterXZ = SingleCalculation::Dot({ .x = direction.x,.y = direction.z }, newXZDirection);
-    //これより小さくなったら当たっていないと返す
-    
-    
-    //上側
-    float dotUS = SingleCalculation::Dot({ .x = direction.z,.y = direction.y }, newUpDirection);
-    //下側
-    float dotDS = SingleCalculation::Dot({ .x = direction.z,.y = direction.y }, newDownDirection);
-    //ターゲット
-    float dotCenterYZ = SingleCalculation::Dot({.x = direction.z,.y = direction.y }, newZYDirection);
-
-#ifdef _DEBUG
-
-
-
-    ImGui::Begin("FanDot");
-    ImGui::InputFloat("LSDot", &dotLS);
-    ImGui::InputFloat("RSDot", &dotRS);
-    ImGui::InputFloat("UpDot", &dotUS);
-    ImGui::InputFloat("DownDot", &dotDS);
-
-    ImGui::InputFloat("dotCenterXZ", &dotCenterXZ);
-    ImGui::InputFloat("dotCenterYZ", &dotCenterYZ);
-
-    ImGui::End();
-
-
-
+    float_t dotCenterXZ = SingleCalculation::Dot({ .x = direction.x,.y = direction.z }, newXZDirection);
     //角度を測って当たり判定をとろうと思ったけど一周した後が大変なことになっている
     //内積でやった方が良いことに気づいたのでそちらで計算する
-
-
-#endif // _DEBUG
-
     if (dotCenterXZ < dotLS ||
         dotCenterXZ < dotRS ) {
         return false;

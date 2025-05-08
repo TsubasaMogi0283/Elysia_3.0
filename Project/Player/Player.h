@@ -17,6 +17,7 @@
 #include "PlayerCollisionToNormalEnemyAttack.h"
 #include "PlayerCollisionToAudioObject.h"
 #include "Light/FlashLight/FlashLight.h"
+#include "Camera/PlayerCamera.h"
 
 #pragma region 前方宣言
 
@@ -36,7 +37,7 @@ struct Material;
 class GameScene;
 
 /// <summary>
-/// EllysiaEngine
+/// ElysiaEngine
 /// </summary>
 namespace Elysia {
 	/// <summary>
@@ -48,6 +49,11 @@ namespace Elysia {
 	/// モデル管理クラス
 	/// </summary>
 	class ModelManager;
+
+	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
+	class TextureManager;
 
 	/// <summary>
 	/// レベルデータ管理クラス
@@ -96,7 +102,7 @@ public:
 	/// <param name="camera"></param>
 	/// <param name="material"></param>
 	/// <param name="spotLight"></param>
-	void DrawObject3D(const Camera& camera,const SpotLight& spotLight);
+	void DrawObject3D(const Camera& camera, const SpotLight& spotLight);
 
 	/// <summary>
 	/// スプライトの描画
@@ -127,14 +133,6 @@ private:
 public:
 
 	/// <summary>
-	/// 半径の取得
-	/// </summary>
-	/// <returns>半径</returns>
-	inline float GetSideSize()const {
-		return SIDE_SIZE;
-	}
-
-	/// <summary>
 	/// ワールド座標を取得
 	/// </summary>
 	/// <returns>ワールド座標</returns>
@@ -144,21 +142,54 @@ public:
 
 
 	/// <summary>
-	/// 方向を取得
+	/// 移動方向を取得
 	/// </summary>
 	/// <returns>方向</returns>
-	inline Vector3 GetDirection() const{
+	inline Vector3 GetMoveDirection() const {
 		return moveDirection_;
 	}
+
+	/// <summary>
+	/// ライトの方向を取得
+	/// </summary>
+	/// <returns></returns>
+	inline Vector3 GetLightDirection()const {
+		return flashLight_->GetSpotLight().direction;
+	}
+
+
+	/// <summary>
+	/// 目線シータの設定
+	/// </summary>
+	/// <param name="theta"></param>
+	inline void SetTheta(const float_t& theta) {
+		this->theta_ = theta;
+	}
+
+	/// <summary>
+	/// 目線ファイの設定
+	/// </summary>
+	/// <param name="phi"></param>
+	inline void SetPhi(const float_t& phi) {
+		this->phi_ = phi;
+	}
+
 
 	/// <summary>
 	/// AABBの取得
 	/// </summary>
 	/// <returns>AABB</returns>
-	inline AABB GetAABB() const{
+	inline AABB GetAABB() const {
 		return aabb_;
 	}
 
+	/// <summary>
+	/// 幅のサイズを取得
+	/// </summary>
+	/// <returns>幅のサイズ</returns>
+	inline float_t GetSideSize()const {
+		return SIDE_SIZE;
+	}
 
 	/// <summary>
 	/// 体力を取得
@@ -169,22 +200,22 @@ public:
 	}
 
 	/// <summary>
+	/// 生存中かどうかを取得
+	/// </summary>
+	/// <returns>生存中かどうか</returns>
+	bool GetIsAlive()const {
+		return isAlive_;
+	}
+
+	/// <summary>
 	/// ダメージを受けたかどうかを取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returnsダメージを受けたかどうか></returns>
 	inline bool GetIsDamaged()const {
 		return isDameged_;
 	}
 
-	/// <summary>
-	/// 懐中電灯を取得
-	/// </summary>
-	/// <returns>懐中電灯</returns>
-	inline FlashLight* GetFlashLight()const {
-		return flashLight_.get();
-	}
-
-public:
+	
 
 	/// <summary>
 	/// 持っている鍵の数を増やす
@@ -212,7 +243,7 @@ public:
 	/// <summary>
 	/// 走るかどうか
 	/// </summary>
-	/// <param name="isDash"></param>
+	/// <param name="isDash">走っているかどうか</param>
 	inline void SetIsDash(const bool& isDash) {
 		this->isDash_ = isDash;
 	}
@@ -243,14 +274,6 @@ public:
 	}
 
 	/// <summary>
-	/// 座標の設定
-	/// </summary>
-	/// <param name="position">座標</param>
-	inline void SetPosition(Vector3& position) {
-		this->worldTransform_.translate = position;
-	}
-
-	/// <summary>
 	/// レベルデータハンドルの設定
 	/// </summary>
 	/// <param name="levelHandle"></param>
@@ -260,13 +283,27 @@ public:
 
 
 public:
+	/// <summary>
+	/// 懐中電灯を取得
+	/// </summary>
+	/// <returns>懐中電灯</returns>
+	inline FlashLight* GetFlashLight()const {
+		return flashLight_.get();
+	}
 
+	/// <summary>
+	/// カメラ(目)を取得
+	/// </summary>
+	/// <returns></returns>
+	inline PlayerEyeCamera* GetEyeCamera()const {
+		return eyeCamera_.get();
+	}
 
 	/// <summary>
 	/// プレイヤー用のコライダーを取得
 	/// </summary>
 	/// <returns>コライダー</returns>
-	inline std::vector<BasePlayerCollision*> GetColliders()const{
+	inline std::vector<BasePlayerCollision*> GetColliders()const {
 		std::vector<BasePlayerCollision*> colliders;
 		for (const auto& collider : colliders_) {
 			colliders.push_back(collider.get());
@@ -276,44 +313,54 @@ public:
 
 
 	/// <summary>
-	/// 懐中電灯の当たり判定
+	/// 懐中電灯のコライダーを取得
 	/// </summary>
 	/// <returns></returns>
 	inline FlashLightCollision* GetFlashLightCollision()const {
 		return flashLight_->GetFanCollision();
 	}
 
-
-
-
-
 private:
 	//入力クラス
 	Elysia::Input* input_ = nullptr;
 	//モデル管理クラス
 	Elysia::ModelManager* modelManager_ = nullptr;
+	//テクスチャ管理クラス
+	Elysia::TextureManager* textureManager_ = nullptr;
 	//レベルエディタ
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelHandle_ = 0u;
 
 private:
+	//プレイヤーの最大体力
+	static const uint32_t PLAYER_HP_MAX_QUANTITY_ = 3u;
 	//幅のサイズ
 	const float_t SIDE_SIZE = 0.5f;
 	//時間変化
 	const float_t DELTA_TIME = 1.0f / 60.0f;
 	//チャージの増える値
 	const float_t CHARGE_VALUE_ = 0.1f;
-
-
+	//最大の振動の強さ
+	const float_t MAX_VIBE_ = 1.0f;
+	//最小の振動の強さ
+	const float_t MIN_VIBE_ = 0.0f;
+	//戻る時間
+	const float_t RESTART_TIME_ = 0.0f;
+	//歩くスピード
+	const float_t NORMAL_MOVE_SPEED_ = 0.1f;
+	//走るスピード
+	const float_t DASH_MOVE_SPEED_ = 0.2f;
+	//Yを固定させる
+	const float_t HEIGHT_ = 0.0f;
 private:
-
-	//モデル
-	std::unique_ptr<Elysia::Model> model_ = nullptr;
 	//ワールドトランスフォーム
-	WorldTransform worldTransform_={};
+	WorldTransform worldTransform_ = {};
 	//動く方向
 	Vector3 moveDirection_ = {};
+	//目線
+	float_t theta_ = 0.0f;
+	float_t phi_ = 0.0f;
 	//中心座標
 	Vector3 playerCenterPosition_ = {};
 	//マテリアル
@@ -324,9 +371,10 @@ private:
 	uint32_t haveKeyQuantity_ = 0u;
 
 	//体力
-	int32_t hp_ = 3;
-	//敵の攻撃に当たった時のタイマー
-	int32_t downTime_ = 0;
+	uint32_t hp_ = PLAYER_HP_MAX_QUANTITY_;
+	//生存かどうか
+	bool isAlive_ = true;
+
 	//操作可能かどうか
 	bool isControll_ = false;
 	//ダッシュ
@@ -342,10 +390,19 @@ private:
 	//時間
 	float_t vibeTime_ = 0u;
 
+
+private:
+	//UI
+	//プレイヤーHPのスプライト
+	std::unique_ptr<Elysia::Sprite> playerHpSprite_[PLAYER_HP_MAX_QUANTITY_] = { nullptr };
+	//背景フレーム
+	std::unique_ptr<Elysia::Sprite> playerHPBackFrameSprite_ = nullptr;
+
 private:
 	//当たり判定のリスト
 	std::list<std::unique_ptr<BasePlayerCollision>> colliders_ = {};
 	//懐中電灯
 	std::unique_ptr<FlashLight>flashLight_ = nullptr;
-
+	//目としてのカメラクラス
+	std::unique_ptr<PlayerEyeCamera>eyeCamera_ = nullptr;
 };

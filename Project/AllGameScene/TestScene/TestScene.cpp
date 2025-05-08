@@ -26,7 +26,7 @@ void TestScene::Initialize(){
 	levelHandle_ = levelDataManager_->Load("CollisionTest/CollisionTest.json");
 
 	//仮プレイヤー
-	uint32_t playerModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube", "cube.obj");
+	uint32_t playerModelHandle = modelManager_->Load("Resources/Model/Sample/Cube", "cube.obj");
 	playerModel_.reset(Elysia::Model::Create(playerModelHandle));
 	playerWorldTransform_.Initialize();
 	playerWorldTransform_.scale = { .x = 0.5f,.y = 1.0f,.z=2.0f };
@@ -35,7 +35,7 @@ void TestScene::Initialize(){
 
 
 	//球モデル
-	uint32_t sphereModelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	uint32_t sphereModelHandle = modelManager_->Load("Resources/Model/Sample/Sphere", "Sphere.obj");
 	//四隅
 	for (uint32_t i = 0; i < COUNER_QUANTITY_; ++i) {
 		playerCounerModel_[i].reset(Elysia::Model::Create(sphereModelHandle));
@@ -44,14 +44,14 @@ void TestScene::Initialize(){
 	}
 	
 	//吸収パーティクル
-	particle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Absorb));
-	particle_->SetIsReleaseOnceMode(false);
-	particle_->SetIsToTransparent(true);
-	particle_->SetCount(5u);
-	particle_->SetFrequency(1.0f);
+	deadParticle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Absorb));
+	deadParticle_->SetIsReleaseOnceMode(false);
+	deadParticle_->SetIsToTransparent(true);
+	deadParticle_->SetCount(5u);
+	deadParticle_->SetFrequency(1.0f);
 
 
-	particle2_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Absorb));
+	particle2_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::NormalRelease));
 	particle2_->SetIsReleaseOnceMode(false);
 	particle2_->SetIsToTransparent(true);
 	particle2_->SetCount(10u);
@@ -130,8 +130,7 @@ void TestScene::Update(Elysia::GameManager* gameManager){
 	playerMaterial_.Update();
 
 
-	particle_->SetAbsorbPosition(playerWorldTransform_.GetWorldPosition());
-	particle2_->SetAbsorbPosition(playerWorldTransform_.GetWorldPosition());
+	deadParticle_->SetAbsorbPosition(playerWorldTransform_.GetWorldPosition());
 
 
 	gameManager;
@@ -154,18 +153,18 @@ void TestScene::Update(Elysia::GameManager* gameManager){
 
 void TestScene::DrawObject3D(){
 	//レベルエディタ  
-	levelDataManager_->Draw(levelHandle_, camera_, directionalLight_);
+	//levelDataManager_->Draw(levelHandle_, camera_, directionalLight_);
 	//仮プレイヤー
-	playerModel_->Draw(playerWorldTransform_,camera_, playerMaterial_, directionalLight_);
+	//playerModel_->Draw(playerWorldTransform_,camera_, playerMaterial_, directionalLight_);
 
 	
 	//パーティクル
-	//particle_->Draw(camera_, playerMaterial_, directionalLight_);
+	deadParticle_->Draw(camera_, playerMaterial_, directionalLight_);
 	particle2_->Draw(camera_, playerMaterial_, directionalLight_);
 
 }
 
-void TestScene::PreDrawPostEffectFirst(){
+void TestScene::PreDrawPostEffect(){
 	//描画前処理
 	backTexture_->PreDraw();
 }

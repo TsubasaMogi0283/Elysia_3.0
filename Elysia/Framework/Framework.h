@@ -11,12 +11,6 @@
 #include "GameManager.h"
 #include "IAbstractSceneFactory.h"
 
-//Elysia(エリシア・エレシア)
-//Aile + Sheer...「エイル・エル(フランス語で自分の名前になる)」と「シア」
-//sheer・・・全くの、完全な。混じりけのない、純粋な
-//「Elysia Engine」というように、後ろにEngine加えても自然な語感だと思う
-
-
 /// <summary>
 /// ElysiaEngine
 /// </summary>

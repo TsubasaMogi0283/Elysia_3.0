@@ -69,10 +69,6 @@ Elysia::Model* Elysia::Model::Create(const uint32_t& modelHandle) {
 }
 
 void Elysia::Model::Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material){
-	//資料にはなかったけどUnMapはあった方がいいらしい
-	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
-	//プログラムが安定するらしいとのこと
-
 
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;
@@ -121,10 +117,6 @@ void Elysia::Model::Draw(const WorldTransform& worldTransform, const Camera& cam
 
 //描画
 void Elysia::Model::Draw(const WorldTransform& worldTransform, const Camera& camera, const Material& material, const DirectionalLight& directionalLight) {
-	//資料にはなかったけどUnMapはあった方がいいらしい
-	//Unmapを行うことで、リソースの変更が完了し、GPUとの同期が取られる。
-	//プログラムが安定するらしいとのこと
-
 
 	//頂点バッファにデータを書き込む
 	VertexData* vertexData = nullptr;

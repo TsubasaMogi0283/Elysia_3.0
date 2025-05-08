@@ -14,6 +14,7 @@
 #include "BackTexture.h"
 #include "DissolveEffect.h"
 #include "Dissolve.h"
+#include "BaseLoseScene/BaseLoseScene.h"
 
 
 
@@ -38,20 +39,9 @@ namespace Elysia {
 	class GlobalVariables;
 
 	/// <summary>
-	/// テクスチャ管理クラス
-	/// </summary>
-	class TextureManager;
-
-	/// <summary>
 	/// ゲーム管理クラス
 	/// </summary>
 	class GameManager;
-
-
-	/// <summary>
-	/// モデル管理クラス
-	/// </summary>
-	class ModelManager;
 
 
 };
@@ -88,7 +78,7 @@ public:
 	/// <summary>
 	/// ポストエフェクト描画処理前
 	/// </summary>
-	void PreDrawPostEffectFirst()override;
+	void PreDrawPostEffect()override;
 
 	/// <summary>
 	/// ポストエフェクト描画処理前
@@ -106,17 +96,29 @@ public:
 	/// </summary>
 	~LoseScene()=default;
 
+public:
+	/// <summary>
+	/// 敗北の細かいシーンの遷移
+	/// </summary>
+	/// <param name=""></param>
+	void ChangeDetailScene(std::unique_ptr<BaseLoseScene> detailScene);
+
+	/// <summary>
+	/// 終わったことを設定する
+	/// </summary>
+	inline void SetIsEnd() {
+		this->isEnd_ = true;
+	}
+
+	/// <summary>
+	/// ゲームを続けるかどうかの設定
+	/// </summary>
+	/// <param name="isContinue">フラグ</param>
+	inline void SetIsContinue(const bool& isContinue) {
+		this->isContinue_ = isContinue;
+	}
+
 private:
-	/// <summary>
-	/// 選択
-	/// </summary>
-	void Select();
-
-	/// <summary>
-	/// 次のシーンへ変わる
-	/// </summary>
-	void ChangeNextScene();
-
 	/// <summary>
 	/// /ImGUiの表示
 	/// </summary>
@@ -130,15 +132,10 @@ private:
 private:
 	//入力クラス
 	Elysia::Input* input_ = nullptr;
-	//テクスチャ管理クラス
-	Elysia::TextureManager* textureManager_ = nullptr;
 	//レベルデータ管理クラス
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
-
-	//モデル管理クラス
-	Elysia::ModelManager* modelManager_ = nullptr;
 	//グローバル変数クラス
 	Elysia::GlobalVariables* globalVariables_ = nullptr;
 	
@@ -149,95 +146,26 @@ private:
 	//ディゾルブ
 	const std::string DISSOLVE_NAME_ = "LoseSceneDissolve";
 
-	//時間変化
-	const float DELTA_TIME = 1.0f / 60.0f;
-
-	//間隔
-	const float TRANSPARENCY_INTERVAL_ = 0.01f;
-	//点滅どのくらい
-	const uint32_t FLASH_TIME_LIMIT_ = 30u;
-
-	
-	//高速点滅間隔
-	const uint32_t FAST_FLASH_TIME_INTERVAL_ = 3u;
-	//タイトルに変わる時間
-	const uint32_t CHANGE_TO_TITLE_TIME_ = 60 * 1;
-	//増える時間の値
-	const uint32_t INCREASE_VALUE_ = 1u;
-	//線形補間で使う変数の最大値
-	const float MAX_T_VALUE_ = 1.0f;
-	//最大の半径
-	const float MAX_LIGHT_RADIUS_ = 11.8f;
-	//矢印の回転
-	const float ROTATE_VALUE_ = 0.1f;
-
-	//テキストの名前
-	//矢印
-	const std::string SELECT_ARROW = "SelectArrow";
-	//ゲーム
-	const std::string TO_GAME = "ToGame";
-	//タイトル
-	const std::string TO_TITLE = "ToTitle";
 	
 private:
 	//カメラ
 	Camera camera_ = {};
-	//速度
-	Vector3 cameraVelocity_ = {};
 
 	//点光源
 	PointLight pointLight_ = {};
-	//半径の線形補間
-	float startLightUpT_ = 0.0f;
-	float endLightUpT_ = 0.0f;
 
 	//背景(ポストエフェクト)
 	std::unique_ptr<Elysia::BackTexture>backTexture_ = nullptr;
 	//ディゾルブ
 	std::unique_ptr<Elysia::DissolvePostEffect> dissolveEffect_ = nullptr;
 	Dissolve dissolve_ = {};
-	//黒背景
-	std::unique_ptr<Elysia::Sprite> black_ = nullptr;
-	//透明度
-	float transparency_ = 0.0f;
-	
-	//暗転している時間
-	uint32_t blackOutTime_ = 0u;
 
-	//タイトル
-	bool isChangeNextScene_ = false;
-	float returnToTitleDissolveThresholdT_ = 0.0f;
-	
-	//選択中
-	//タイトル
-	bool isSelectingTitle_ = false;
-	//ゲーム
-	bool isSelectingGame_ = true;
-	
-	//選択時のスケール
-	float selectedScale_ = 1.5f;
-
-	//テキストの透明度
-	float textTransparency_ = 0.0f;
-	float transparencyT_ = 0.0f;
-	bool displayText_ = false;
-	
-	//矢印の回転
-	float arrowRotate_ = 0.0f;
-	//決定したときの線形補間
-	float arrowDropT_ = 0.0f;
-
-	//決定時の動きに使うθ
-	float decideArrowMoveTheta_ = 0.0f;
-
-	//高速点滅
-	bool isFastFlash_ = false;
-	//時間
-	uint32_t waitForCameraMoveTime_ = 0u;
-
-	
-	//ライトアップが終わったかどうか
-	bool isFinishLightUp_ = false;
+	//細かいシーン
+	std::unique_ptr<BaseLoseScene> detailLoseScene_ = nullptr;
+	//処理が終わったかどうか
+	bool isEnd_ = false;
+	//ゲームを続けるかどうか
+	bool isContinue_ = false;
 
 
 };

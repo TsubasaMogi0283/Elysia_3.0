@@ -1,4 +1,11 @@
 #pragma once
+
+/**
+ * @file Convert.h
+ * @brief 変換関数を集めた
+ * @author 茂木翼
+ */
+
 #include <cstdint>
 #include <string>
 #include <format>
@@ -16,25 +23,18 @@ namespace Convert {
 	/// テキスト
 	/// </summary>
 	namespace Text {
-		/// <summary>
-		/// ログ
-		/// </summary>
-		/// <param name="text"></param>
-		//inline void Log(const std::string& text) {
-		//	OutputDebugStringA(text.c_str());
-		//}
 
 		/// <summary>
 		/// string型からwstring型に変換
 		/// </summary>
-		/// <param name="text"></param>
+		/// <param name="text">テキスト</param>
 		/// <returns></returns>
 		std::wstring ToWString(const std::string& text);
 
 		/// <summary>
 		/// wstring型からstring型に変換
 		/// </summary>
-		/// <param name="text"></param>
+		/// <param name="text">テキスト</param>
 		/// <returns></returns>
 		std::string ToString(const std::wstring& text);
 

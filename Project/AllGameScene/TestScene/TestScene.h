@@ -76,7 +76,7 @@ public:
 	/// <summary>
 	/// ポストエフェクト描画前
 	/// </summary>
-	void PreDrawPostEffectFirst()override;
+	void PreDrawPostEffect()override;
 
 	/// <summary>
 	/// ポストエフェクトの描画
@@ -116,7 +116,7 @@ private:
 	Vector3 playerCenterPosition_ = {};
 
 	//パーティクル
-	std::unique_ptr<Elysia::Particle3D>particle_ = nullptr;
+	std::unique_ptr<Elysia::Particle3D>deadParticle_ = nullptr;
 	std::unique_ptr<Elysia::Particle3D>particle2_ = nullptr;
 
 

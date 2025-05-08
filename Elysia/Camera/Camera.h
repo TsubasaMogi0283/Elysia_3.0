@@ -55,7 +55,7 @@ public:
 	/// <summary>
 	/// ワールド座標の取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>ワールド座標</returns>
 	Vector3 GetWorldPosition() const{
 		Vector3 worldPosition = {
 			.x = worldMatrix.m[3][0],
@@ -79,7 +79,6 @@ public:
 	//奥行の変数
 	float_t nearClip = 0.1f;
 	float_t farClip = 1000.0f;
-
 
 	//回転
 	Vector3 rotate = {};

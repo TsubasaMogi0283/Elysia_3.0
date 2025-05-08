@@ -8,6 +8,8 @@
 #include "SpotLight.h"
 #include "SingleCalculation.h"
 #include "ModelManager.h"
+#include "TextureManager.h"
+#include "AnimationManager.h"
 #include "GlobalVariables.h"
 #include "State/NormalEnemyMove.h"
 
@@ -23,17 +25,22 @@ NormalEnemy::NormalEnemy() {
 void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& position, const Vector3& speed) {
 
 	//モデルの生成
-	model_.reset(Elysia::Model::Create(modelHandle));
+	animationmodel_.reset(Elysia::AnimationModel::Create(modelHandle));
+
+	//スキニングアニメーション読み込み
+	skeleton_.Create(Elysia::ModelManager::GetInstance()->GetModelData(modelHandle).rootNode);
+	skinCluster_.Create(skeleton_, Elysia::ModelManager::GetInstance()->GetModelData(modelHandle));
+	animationHandle_ = Elysia::AnimationManager::GetInstance()->LoadFile("Resources/LevelData/GameStage/Ghost","Ghost.gltf");
+
+	//感電パーティクル用
+	thunderTextureHandle_ = Elysia::TextureManager::Load("Resources/Sprite/Particle/Thunder.png");
+
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	//スケールサイズ
-	const float SCALE_SIZE = 7.0f;
+	const float SCALE_SIZE = 0.65f;
 	worldTransform_.scale = { .x = SCALE_SIZE,.y = SCALE_SIZE ,.z = SCALE_SIZE };
-#ifdef _DEBUG
-	float DEBUG_SCALE = 1.0f;
-	worldTransform_.scale = { .x = DEBUG_SCALE,.y = DEBUG_SCALE ,.z = DEBUG_SCALE };
-#endif // _DEBUG
 
 	//座標の代入
 	worldTransform_.translate = position;
@@ -53,17 +60,19 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 	//追跡かどうか
 	isTracking_ = false;
 
-	//スピードの初期化
-	preSpeed_ = speed;
+	//スピード
 	speed_ = speed;
 
 	//状態
 	preCondition_ = EnemyCondition::NoneMove;
 	condition_ = EnemyCondition::Move;
 
+	//体力
+	hp_ = HPCondition::Normal;
+
 
 	//デバッグ用のモデル
-	debugModelHandle = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere", "Sphere.obj");
+	debugModelHandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Sphere", "Sphere.obj");
 
 	//攻撃の当たり判定
 	attackCollision_ = std::make_unique<EnemyAttackCollision>();
@@ -90,27 +99,16 @@ void NormalEnemy::Initialize(const uint32_t& modelHandle, const Vector3& positio
 
 void NormalEnemy::Update() {
 
-	//生存している時だけ行動するよ
-	if (isAlive_ == true) {
-		//状態の更新
-		currentState_->Update(this);
-
-	}
-
 	//方向を取得
-	direction_ = currentState_->GetDirection();
+	direction_ = currentState_->GetMoveDirection();
 
 	//向きを計算しモデルを回転させる
 	float directionToRotateY = std::atan2f(-direction_.z, direction_.x);
 	//回転のオフセット
 	//元々のモデルの回転が変だったのでこれを足している
-	const float ROTATE_OFFSET = -std::numbers::pi_v<float> / 2.0f;
+	const float ROTATE_OFFSET = -std::numbers::pi_v<float_t> / 2.0f;
 	worldTransform_.rotate.y = directionToRotateY + ROTATE_OFFSET;
 
-#ifdef _DEBUG
-	const float DEBUG_MODEL_ROTATE_OFFSET = std::numbers::pi_v<float>;
-	worldTransform_.rotate.y = directionToRotateY + DEBUG_MODEL_ROTATE_OFFSET;
-#endif // _DEBUG
 
 	//ワールドトランスフォームの更新
 	worldTransform_.Update();
@@ -134,12 +132,25 @@ void NormalEnemy::Update() {
 	attackCollision_->SetEnemyDirection(direction_);
 	attackCollision_->Update();
 
+
+	//アニメーション適用
+	Elysia::AnimationManager::GetInstance()->ApplyAnimation(skeleton_, animationHandle_, animationTime_);
+	
+	//スケルトン、クラスターを更新
+	skeleton_.Update();
+	skinCluster_.Update(skeleton_);
+
 	//ダメージ演出
 	Damaged();
 
-	//死亡したらパーティクルを出して消える
-	if (isAlive_ == false) {
-		Dead();
+	//生存している時だけ行動するよ
+	if (isAlive_ == true) {
+		//状態の更新
+		currentState_->Update(this);
+	}
+	else {
+		//死亡したらパーティクルを出して消える
+		Delete();
 	}
 
 	//ImGui
@@ -147,19 +158,27 @@ void NormalEnemy::Update() {
 }
 
 void NormalEnemy::Draw(const Camera& camera, const SpotLight& spotLight) {
-#ifdef _DEBUG
-	//攻撃
-	attackCollision_->Draw(camera, spotLight);
 
+#ifdef _DEBUG
+	//あたり判定
+	attackCollision_->Draw(camera, spotLight);
 #endif // _DEBUG
 
-	//本体
-	model_->Draw(worldTransform_, camera, material_, spotLight);
 
-	//パーティクル
-	if (particle_ != nullptr) {
-		particle_->Draw(camera, particleMaterial_);
+	//本体
+	animationmodel_->Draw(worldTransform_, camera, skinCluster_, material_, spotLight);
+
+	//感電パーティクル
+	if (electricShockParticle_ != nullptr) {
+		electricShockParticle_->Draw(camera, particleMaterial_);
 	}
+
+	//死亡パーティクル
+	if (deadParticle_ != nullptr) {
+		deadParticle_->Draw(camera, particleMaterial_);
+	}
+
+	
 }
 
 NormalEnemy::~NormalEnemy() {
@@ -183,35 +202,92 @@ void NormalEnemy::ChengeState(std::unique_ptr<BaseNormalEnemyState> newState){
 void NormalEnemy::Damaged() {
 
 	//ダメージを受ける
-	if (enemyFlashLightCollision_->GetIsTouched() == true) {
-		material_.color.y = 0.0f;
-		material_.color.z = 0.0f;
-
-		//生存している時だけ振動
-		if (isAlive_ == true) {
-			//振動演出
-			//体力減っていくと同時に振動幅が大きくなっていくよ
-			std::random_device seedGenerator;
-			std::mt19937 randomEngine(seedGenerator());
-			std::uniform_real_distribution<float> distribute(-1.0f, 1.0f);
-
-
-			//現在の座標に加える
-			worldTransform_.translate.x += distribute(randomEngine) * (1.0f - material_.color.y) * shakeOffset_;
-			worldTransform_.translate.z += distribute(randomEngine) * (1.0f - material_.color.y) * shakeOffset_;
-		}
-
-
+	if (enemyFlashLightCollision_->GetIsTouched() == true&& isAcceptDamage_==true) {
+		///体力を減らす
+		hp_ -= damagedValue_;
+		
 	}
 
 	//0になったら絶命
-	if (material_.color.y <= 0.0f &&
-		material_.color.z <= 0.0f) {
+	if (hp_ <= HPCondition::Dead) {
 		isAlive_ = false;
 	}
+	//瀕死
+	else if (hp_ == HPCondition::Dangerous) {
+		//ランダムエンジン
+		std::random_device seedGenerator;
+		std::mt19937 randomEngine(seedGenerator());
+		std::uniform_real_distribution<float_t> distribute(-0.01f, 0.01f);
+		
+		//最初の感電。
+		if (IsFirstElectricShock_ == false) {
+			//線形補間のように加算しその値を振動の倍数として使う
+			firstElectricShockT_ += FIRST_ELECTRIC_SHOCK_DELTA_TIME_;
+			//感電状態になる
+			isElectricShock_ = true;
+			//振動の値
+			Vector3 randomTranslate = { .x = distribute(randomEngine),.y = 0.0f,.z = distribute(randomEngine) };
+			//振動の値をかける
+			electricDamageShakeValue_ = VectorCalculation::Multiply(randomTranslate, (MAX_T_VALUE_ - firstElectricShockT_));
+			if (firstElectricShockT_ > MAX_T_VALUE_) {
+				//最初の振動済み
+				IsFirstElectricShock_ = true;
+				//感電状態になる
+				isElectricShock_ = false;
+			}
+		}
+
+		//生成
+		if (electricShockParticle_ == nullptr) {
+			//生成
+			electricShockParticle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Stay));
+			//テクスチャの上書き
+			electricShockParticle_->TextureOverride(thunderTextureHandle_);
+			//パーティクルの細かい設定
+			const float SCALE_SIZE = 0.7f;
+			electricShockParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
+			electricShockParticle_->SetCount(6u);
+			const float FREQUENCY = 4.0f;
+			electricShockParticle_->SetIsReleaseOnceMode(false);
+			electricShockParticle_->SetFrequency(FREQUENCY);
+			electricShockParticle_->SetIsToTransparent(true);
+		}
+		else {
+
+			//感電パーティクルの放出している時
+			if(electricShockParticle_->GetIsRelease() == true){
+				//感電状態になる
+				isElectricShock_ = true;
+			}
+
+			//感電
+			if (isElectricShock_==true&& IsFirstElectricShock_==true) {
+				//振動させる
+				//線形補間のように加算しその値を振動の倍数として使う
+				electricShockT_ += ELECTRIC_SHOCK_DELTA_TIME_;
+
+				//振動の値
+				Vector3 randomTranslate = { .x = distribute(randomEngine),.y = 0.0f,.z = distribute(randomEngine) };
+				//振動の値をかける
+				electricDamageShakeValue_ = VectorCalculation::Multiply(randomTranslate, (MAX_T_VALUE_ - electricShockT_));
+				if (electricShockT_ > MAX_T_VALUE_) {
+					//一旦振動を解除
+					isElectricShock_ = false;
+					electricShockT_ = 0.0f;
+				}
+			}
+			
+		}
+		//振動分の値を座標に加算
+		worldTransform_.translate = VectorCalculation::Add(GetWorldPosition(), electricDamageShakeValue_);
+		//座標の設定
+		electricShockParticle_->SetTranslate(GetWorldPosition());
+
+	}
+
 }
 
-void NormalEnemy::Dead() {
+void NormalEnemy::Delete() {
 	//消えていくよ
 	const float DELETE_INTERVAL = 0.01f;
 	material_.color.w -= DELETE_INTERVAL;
@@ -222,28 +298,28 @@ void NormalEnemy::Dead() {
 	worldTransform_.scale.y += SCALE_DOWN_VALUE;
 	worldTransform_.scale.z += SCALE_DOWN_VALUE;
 
+	//反転しないようにする
 	if (worldTransform_.scale.z < 0.0f) {
 		worldTransform_.scale.x = 0.0f;
 		worldTransform_.scale.y = 0.0f;
 		worldTransform_.scale.z = 0.0f;
-
 	}
 
 	//生成
-	if (particle_ == nullptr) {
+	if (deadParticle_ == nullptr) {
 		//生成
-		particle_ = std::move(Elysia::Particle3D::Create(Rise));
+		deadParticle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Rise));
 		//パーティクルの細かい設定
-		particle_->SetTranslate(GetWorldPosition());
-		const float SCALE_SIZE = 20.0f;
-		particle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
-		particle_->SetCount(20u);
-		particle_->SetIsReleaseOnceMode(true);
-		particle_->SetIsToTransparent(true);
+		deadParticle_->SetTranslate(GetWorldPosition());
+		const float SCALE_SIZE = 0.8f;
+		deadParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
+		deadParticle_->SetCount(20u);
+		deadParticle_->SetIsReleaseOnceMode(true);
+		deadParticle_->SetIsToTransparent(true);
 	}
 
 	//全て消えたら、消えたかどうかのフラグがたつ
-	if (particle_->GetIsAllInvisible() == true) {
+	if (deadParticle_->GetIsAllInvisible() == true) {
 		isDeleted_ = true;
 	}
 
@@ -253,15 +329,22 @@ void NormalEnemy::DisplayImGui() {
 #ifdef _DEBUG
 
 	ImGui::Begin("敵");
+	ImGui::InputInt("体力", &hp_);
 	ImGui::InputFloat3("方向", &direction_.x);
 	ImGui::Checkbox("攻撃", &isAttack_);
 	ImGui::Checkbox("生存", &isAlive_);
 
-	if (ImGui::TreeNode("状態")) {
+	if (ImGui::TreeNode("状態")==true) {
 		int newCondition = static_cast<int>(condition_);
 		int newPreCondition = static_cast<int>(preCondition_);
 		ImGui::InputInt("現在", &newCondition);
 		ImGui::InputInt("前", &newPreCondition);
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("感電") == true) {
+		ImGui::InputFloat("最初の感電のT", &firstElectricShockT_);
+		ImGui::InputFloat3("振動の値", &electricDamageShakeValue_.x);
 		ImGui::TreePop();
 	}
 

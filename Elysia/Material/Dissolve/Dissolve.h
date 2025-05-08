@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+ * @file Dissolve.h
+ * @brief ディゾルブの構造体
+ * @author 茂木翼
+ */
+
 #include "Vector3.h"
 #include "DirectXSetup.h"
 

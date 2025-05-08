@@ -45,12 +45,12 @@ void Elysia::WindowsSetup::OutPutStringA(const std::string& text){
 #pragma region Initializeに入れる関数
 
 //ウィンドウに情報を入れる
-void  Elysia::WindowsSetup::RegisterWindowsClass() {
+void  Elysia::WindowsSetup::RegisterWindowsClass(const wchar_t* title) {
 	
 	//ウィンドウプロシャージャ
 	windowClass_.lpfnWndProc = WindowProc;
 	//ウィンドウクラス名
-	windowClass_.lpszClassName = L"%s",title_;
+	windowClass_.lpszClassName = L"%s", title;
 	//インスタンドハンドル
 	windowClass_.hInstance = GetModuleHandle(nullptr);
 	//カーソル
@@ -68,7 +68,7 @@ void  Elysia::WindowsSetup::RegisterWindowsClass() {
 		//クラス名
 		windowClass_.lpszClassName,
 		//タイトルバーの文字
-		title_,
+		title,
 		//標準的なウィンドウスタイル
 		WS_OVERLAPPEDWINDOW,
 		//標準X座標
@@ -100,9 +100,8 @@ void Elysia::WindowsSetup::DisplayWindow() {
 
 #pragma endregion
 
-void Elysia::WindowsSetup::Initialize(const wchar_t* title, int32_t clientWidth,int32_t clientHeight) {
+void Elysia::WindowsSetup::Initialize(const wchar_t* title, const int32_t& clientWidth, const int32_t& clientHeight) {
 	//値を入れる
-	title_ = title;
 	clientWidth_ = clientWidth;
 	clientHeight_ = clientHeight;
 
@@ -110,7 +109,7 @@ void Elysia::WindowsSetup::Initialize(const wchar_t* title, int32_t clientWidth,
 	timeBeginPeriod(1);
 
 	//ウィンドウクラスを登録
-	RegisterWindowsClass();
+	RegisterWindowsClass(title);
 
 	//ウィンドウを表示
 	DisplayWindow();

@@ -7,6 +7,7 @@
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
 #include "ModelManager.h"
+#include "TextureManager.h"
 #include "SpotLight.h"
 #include "LevelDataManager.h"
 #include "PushBackCalculation.h"
@@ -18,15 +19,13 @@ Player::Player(){
 	input_ = Elysia::Input::GetInstance();
 	//モデル管理クラス
 	modelManager_ = Elysia::ModelManager::GetInstance();
+	//テクスチャ管理クラス
+	textureManager_ = Elysia::TextureManager::GetInstance();
 	//レベルエディタ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 }
 
 void Player::Initialize(){
-
-	//モデルの生成 	
-	uint32_t modelHandle = modelManager_->LoadModelFile("Resources/Model/Sample/Cube","cube.obj");
-	model_.reset(Elysia::Model::Create(modelHandle));
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -50,75 +49,106 @@ void Player::Initialize(){
 	flashLight_ = std::make_unique<FlashLight>();
 	flashLight_->Initialize();
 
-	
+	//カメラ
+	eyeCamera_ = std::make_unique<PlayerEyeCamera>();
+	eyeCamera_->Initialize();
+
 	//マテリアル
 	material_.Initialize();
-	material_.lightingKinds = SpotLighting;
-	material_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 0.5f };
+	material_.lightingKinds = LightingType::SpotLighting;
+	material_.color = { .x = 1.0f,.y = 1.0f,.z = 1.0f,.w = 1.0f };
+
+	//UI
+	uint32_t playerHPTextureHandle = textureManager_->Load("Resources/Sprite/Player/PlayerHP.png");
+	uint32_t playerHPBackFrameTextureHandle = textureManager_->Load("Resources/Sprite/Player/PlayerHPBack.png");
+	const Vector2 FRAME_INITIAL_POSITION = { .x = 20.0f,.y = 80.0f };
+	//HPを生成
+	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
+		playerHpSprite_[i].reset(Elysia::Sprite::Create(playerHPTextureHandle, { .x = static_cast<float_t>(i) * 64 + FRAME_INITIAL_POSITION.x,.y = FRAME_INITIAL_POSITION.y }));
+	}
+	//フレームを生成
+	playerHPBackFrameSprite_.reset(Elysia::Sprite::Create(playerHPBackFrameTextureHandle, FRAME_INITIAL_POSITION));
+
 }
 
 void Player::Update(){
 	
 	//移動処理
 	Move();
-
 	//攻撃を受ける
 	Damaged();
+	//体力
+	for (uint32_t i = hp_; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
+		//非表示にする
+		playerHpSprite_[i]->SetInvisible(true);
+	}
 
 	//ワールドトランスフォームの更新
 	worldTransform_.translate = playerCenterPosition_;
-	//Yを固定させる
-	const float HEIGHT = 0.0f;
-	worldTransform_.translate.y = HEIGHT;
+	worldTransform_.translate.y = HEIGHT_;
 	worldTransform_.Update();
 
-	//ワールド座標
-	Vector3 worldPosition = worldTransform_.GetWorldPosition();
 
 	//AABBの計算
-	aabb_.min = VectorCalculation::Subtract(worldPosition, { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
-	aabb_.max = VectorCalculation::Add(worldPosition, { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
+	aabb_.min = VectorCalculation::Subtract(worldTransform_.GetWorldPosition(), { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
+	aabb_.max = VectorCalculation::Add(worldTransform_.GetWorldPosition(), { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
+
 	//コリジョンの更新
 	for (std::unique_ptr<BasePlayerCollision> &collision : colliders_) {
 		//プレイヤーの座標を設定
-		collision->SetPlayerPosition(worldPosition);
+		collision->SetPlayerPosition(worldTransform_.GetWorldPosition());
 		//更新
 		collision->Update();
 	}
-	//懐中電灯の更新
+
+	//懐中電灯
 	//角度はゲームシーンで取得する
-	flashLight_->SetPlayerPosition(worldPosition);
+	flashLight_->SetPlayerPosition(worldTransform_.GetWorldPosition());
+	//目線の角度の設定
+	flashLight_->SetTheta(theta_);
+	flashLight_->SetPhi(-phi_);
+	//更新
 	flashLight_->Update();
 
+	//カメラ(目)
+	//座標の設定
+	eyeCamera_->SetPlayerPosition(GetWorldPosition());
+	//角度の設定
+	eyeCamera_->SetTheta(theta_);
+	eyeCamera_->SetPhi(phi_);
+	//カメラ(目)の更新
+	eyeCamera_->Update();
 	//マテリアルの更新
 	material_.Update();
 
 	
-	#ifdef _DEBUG
-
+#ifdef _DEBUG
 	//ImGui表示
 	DisplayImGui();
-	#endif
+#endif
 }
 
 void Player::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
 
 #ifdef _DEBUG
-	//本体の描画
-	//1人称視点だからいらないね
-	model_->Draw(worldTransform_, camera,material_,spotLight);
-
+	//コリジョンの描画
+	for (std::unique_ptr<BasePlayerCollision>& collision : colliders_) {
+		collision->Draw(camera, material_, spotLight);
+	}
 	//懐中電灯
 	flashLight_->DrawObject3D(camera);
 #endif // _DEBUG
-
-
 }
 
 void Player::DrawSprite(){
-
 	//懐中電灯
 	flashLight_->DrawSprite();
+	//体力の枠
+	playerHPBackFrameSprite_->Draw();
+	//体力(アイコン型)
+	for (uint32_t i = 0u; i < PLAYER_HP_MAX_QUANTITY_; ++i) {
+		playerHpSprite_[i]->Draw();
+	}
 }
 
 Player::~Player() {
@@ -128,29 +158,35 @@ Player::~Player() {
 
 void Player::Damaged() {
 
+	bool isAttacked = false;
+	for (std::unique_ptr<BasePlayerCollision>& collision : colliders_) {
+		if (collision->GetName() == "ToNormalEnemyAttack") {
+			isAttacked = collision->GetIsTouch();
+			break;
+		}
+	}
+
 	//通常の敵に当たった場合
-	if (isAcceptDamegeFromNoemalEnemy_ == true && isDameged_ == false) {
+	if (isAttacked == true && isDameged_ == false&& 
+		isAcceptDamegeFromNoemalEnemy_==true) {
 		//体力を減らす
 		--hp_;
 		//ダメージを受ける	
 		isDameged_ = true;
 	}
 
-
+	//ダメージを受けた時
 	if (isDameged_ == true) {
-
+		//攻撃を受け付けないようにする
+		isAcceptDamegeFromNoemalEnemy_ = false;
 		//一時的にコントロールを失う
 		isControll_ = false;
 		//線形補間で振動処理をする
 		vibeTime_ += DELTA_TIME;
-		//最大の振動の強さ
-		const float MAX_VIBE_ = 1.0f;
-		//最小の振動の強さ
-		const float MIN_VIBE_ = 0.0f;
-
+		
 		//線形補間を使い振動を減衰させる
 		//振動の強さ
-		float vibeStrength_ =  SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
+		float_t vibeStrength_ =  SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
 		//振動の設定
 		input_->SetVibration(vibeStrength_, vibeStrength_);
 
@@ -158,43 +194,33 @@ void Player::Damaged() {
 		if (vibeStrength_ <= MIN_VIBE_) {
 			//振動が止まる
 			input_->StopVibration();
-
-			//戻る時間
-			const float RESTART_TIME = 0.0f;
 			//時間を戻す
-			vibeTime_ = RESTART_TIME;
+			vibeTime_ = RESTART_TIME_;
 			//ダメージを受けていないようにする
 			isDameged_ = false;
-
 			//コントロールを戻す
 			isControll_ = true;
 		}
-
-#ifdef _DEBUG
-		ImGui::Begin("振動");
-		ImGui::InputFloat("T", &vibeStrength_);
-		ImGui::End();
-#endif // _DEBUG
 	}
+
+	//体力が0になったら死亡
+	if (hp_ == 0u) {
+		isAlive_ = false;
+	}
+
 }
 
 void Player::Move() {
 	//動けるときだけ加算
 	if (isControll_ == true ) {
-
-		//歩くスピード
-		const float NORMAL_MOVE_SPEED = 0.1f;
-		//走るスピード
-		const float DASH_MOVE_SPEED = 0.2f;
-
-		float moveSpeed = 0.0f;
+		float_t moveSpeed = 0.0f;
 		//走っている時
 		if (isDash_ == true) {
-			moveSpeed = DASH_MOVE_SPEED;
+			moveSpeed = DASH_MOVE_SPEED_;
 		}
 		//通常の動きの時
 		else {
-			moveSpeed = NORMAL_MOVE_SPEED;
+			moveSpeed = NORMAL_MOVE_SPEED_;
 		}
 		//加算
 		playerCenterPosition_ = VectorCalculation::Add(playerCenterPosition_, VectorCalculation::Multiply(moveDirection_, moveSpeed));
@@ -204,8 +230,7 @@ void Player::Move() {
 		//コライダーを持っているかどうか
 		std::vector<bool> colliders = levelDataManager_->GetIsHavingColliders(levelHandle_, "Stage");
 		//衝突判定
-		for (size_t i = 0; i < aabbs.size(); ++i) {
-
+		for (size_t i = 0u; i < aabbs.size(); ++i) {
 			//コライダーを持っているときだけ
 			if (colliders[i] == true) {
 				//押し戻し処理
@@ -220,20 +245,23 @@ void Player::DisplayImGui() {
 
 	//それぞれintに変換
 	int32_t keyQuantity = static_cast<int32_t>(haveKeyQuantity_);
+	int32_t hpQuantity = static_cast<int32_t>(hp_);
+
 
 	ImGui::Begin("プレイヤー");
 	if (ImGui::TreeNode("状態")==true) {
+		ImGui::InputFloat3("座標", &worldTransform_.translate.x);
+		ImGui::InputFloat3("方向", &moveDirection_.x);
 		ImGui::InputInt("鍵の数", &keyQuantity);
-		ImGui::InputInt("体力", &hp_);
-		ImGui::Checkbox("isDamage_", &isDamage_);
+		ImGui::InputInt("体力", &hpQuantity);
 		ImGui::Checkbox("振動", &isDameged_);
+		ImGui::Checkbox("ダメージを受けたかどうか", &isDamage_);
+		ImGui::Checkbox("敵からの攻撃を受け入れるか", &isAcceptDamegeFromNoemalEnemy_);
 		ImGui::TreePop();
 	}
 
-	ImGui::Checkbox("敵からの攻撃を受け入れるか", &isAcceptDamegeFromNoemalEnemy_);
-	ImGui::InputInt("downTime", &downTime_);
-	ImGui::InputFloat3("Transrate", &worldTransform_.translate.x);
-	ImGui::InputFloat3("MoveDirection", &moveDirection_.x);
+	
+	
 	ImGui::End();
 
 }

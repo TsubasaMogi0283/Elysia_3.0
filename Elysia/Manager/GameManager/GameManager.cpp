@@ -1,16 +1,16 @@
 #include "GameManager.h"
+
 #include <cassert>
 #include <imgui.h>
+#include <vector>
 
 #include "GameSceneFactory.h"
-#include <vector>
 
 
 void Elysia::GameManager::Initialize() {
 	
 	//シーンファクトリーの生成
 	abstractSceneFactory_ = std::make_unique<GameSceneFactory>();
-	
 	//シーンごとに動作確認したいときはここを変えてね
 	currentGamaScene_ = abstractSceneFactory_->CreateScene("Title");
 
@@ -91,9 +91,9 @@ void Elysia::GameManager::DrawSprite(){
 	currentGamaScene_->DrawSprite();
 }
 
-void Elysia::GameManager::PreDrawPostEffectFirst(){
+void Elysia::GameManager::PreDrawPostEffect(){
 	//ポストエフェクト描画処理前
-	currentGamaScene_->PreDrawPostEffectFirst();
+	currentGamaScene_->PreDrawPostEffect();
 }
 
 

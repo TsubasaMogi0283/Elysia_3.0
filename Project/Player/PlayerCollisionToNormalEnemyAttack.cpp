@@ -7,34 +7,25 @@
 void PlayerCollisionToNormalEnemyAttack::Initialize(){
 
 	//モデルの生成
-	uint32_t modelHandle = Elysia::ModelManager::GetInstance()->LoadModelFile("Resources/Model/Sample/Sphere","Sphere.obj");
+	uint32_t modelHandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Sphere","Sphere.obj");
 	model_.reset(Elysia::Model::Create(modelHandle));
 
 
 	//初期化
 	worldTransform_.Initialize();
-	worldTransform_.scale = {.x= 5.0f,.y= 5.0f,.z= 5.0f };
+	worldTransform_.scale = {.x= 1.0f,.y= 1.0f,.z= 1.0f };
 
 
 	//名前の設定
 	name_ = "ToNormalEnemyAttack";
-
 	//種類
 	collisionType_ = ColliderType::SphereType;
-
-
-
 	//半径
-	radius_ = 5.0f;
-
-
+	radius_ = 1.0f;
 	//自分
 	SetCollisionAttribute(COLLISION_ATTRIBUTE_PLAYER);
 	//相手
 	SetCollisionMask(COLLISION_ATTRIBUTE_ENEMY_ATTACK);
-
-
-	
 
 }
 

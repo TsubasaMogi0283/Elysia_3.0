@@ -44,7 +44,7 @@ public:
 	/// 方向を取得
 	/// </summary>
 	/// <returns></returns>
-	inline Vector3 GetDirection()const {
+	inline Vector3 GetMoveDirection()const {
 		return direction_;
 	}
 
@@ -69,6 +69,11 @@ public:
 	std::string GetStateName()const {
 		return stateName_;
 	}
+
+protected:
+	//アニメーションしないようにするための時間
+	const float_t NO_ANIMATION_TIME_ = 0.0f;
+
 
 protected:
 	//状態の名前

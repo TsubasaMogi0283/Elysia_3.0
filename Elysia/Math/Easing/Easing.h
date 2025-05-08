@@ -18,15 +18,25 @@
 /// </summary>
 namespace Easing{
 	
+	/// <summary>
+	/// 直線
+	/// </summary>
+	/// <param name="value"></param>
+	/// <returns></returns>
+	inline float_t EaseStreat(const float_t& value) {
+		//0.0fから1.0fに変換する
+		return std::clamp(value, 0.0f, 1.0f);
+	}
+
 	#pragma region Sine
 	/// <summary>
 	/// SineのIn
 	/// </summary>
 	/// <param name="value">値(t)</param>
 	/// <returns></returns>
-	inline float EaseInSine(const float& value) {
+	inline float_t EaseInSine(const float_t& value) {
 		//計算
-		float result = 1.0f - std::cosf((value * std::numbers::pi_v<float>) / 2.0f);
+		float_t result = 1.0f - std::cosf((value * std::numbers::pi_v<float_t>) / 2.0f);
 		//0.0fから1.0fに変換する
 		return std::clamp(result, 0.0f, 1.0f);
 	};
@@ -36,9 +46,9 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value">値(t)</param>
 	/// <returns></returns>
-	inline float EaseOutSine(const float& value) {
+	inline float_t EaseOutSine(const float_t& value) {
 		//計算
-		float result = std::sinf((value * std::numbers::pi_v<float>) / 2.0f);
+		float_t result = std::sinf((value * std::numbers::pi_v<float_t>) / 2.0f);
 		//0.0fから1.0fに変換する
 		return std::clamp(result, 0.0f, 1.0f);
 	};
@@ -48,9 +58,9 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value">値(t)</param>
 	/// <returns></returns>
-	inline float EaseInOutSine(const float& value) {
+	inline float_t EaseInOutSine(const float_t& value) {
 		//計算
-		float result = -(std::cosf(std::numbers::pi_v<float> *value) - 1.0f) / 2.0f;
+		float_t result = -(std::cosf(std::numbers::pi_v<float_t> *value) - 1.0f) / 2.0f;
 		//0.0fから1.0fに変換する
 		return std::clamp(result, 0.0f, 1.0f);
 	};
@@ -63,9 +73,9 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value">値(t)</param>
 	/// <returns></returns>
-	inline float EaseInQuad(const float& value) {
+	inline float_t EaseInQuad(const float_t& value) {
 		//計算
-		float result = value * value;
+		float_t result = value * value;
 		//0.0fから1.0fに変換する
 		return std::clamp(result, 0.0f, 1.0f);
 	};
@@ -75,9 +85,9 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value">値(t)</param>
 	/// <returns></returns>
-	inline float EaseOutQuad(const float& value) {
+	inline float_t EaseOutQuad(const float_t& value) {
 		//計算
-		float result = 1.0f - (1.0f - value) * (1.0f - value);
+		float_t result = 1.0f - (1.0f - value) * (1.0f - value);
 		//0.0fから1.0fに変換する
 		return std::clamp(result, 0.0f, 1.0f);
 	};
@@ -87,9 +97,9 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value"></param>
 	/// <returns></returns>
-	inline float EaseInOutQuad(const float& value) {
+	inline float_t EaseInOutQuad(const float_t& value) {
 		//計算
-		float result = 0.0f;
+		float_t result = 0.0f;
 		if (value < 0.5f) {
 			result = 2.0f * value * value;
 		}
@@ -109,9 +119,9 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value">値(t)</param>
 	/// <returns></returns>
-	inline float EaseInCubic(const float& value) {
+	inline float_t EaseInCubic(const float_t& value) {
 		//計算
-		float result = value * value*value;
+		float_t result = value * value*value;
 		//0.0fから1.0fに変換する
 		return std::clamp(result, 0.0f, 1.0f);
 	};
@@ -121,9 +131,9 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value">値(t)</param>
 	/// <returns></returns>
-	inline float EaseOutCubic(const float& value) {
+	inline float_t EaseOutCubic(const float_t& value) {
 		//計算
-		float result = 1.0f - std::powf(1.0f - value, 3.0f);
+		float_t result = 1.0f - std::powf(1.0f - value, 3.0f);
 		//0.0fから1.0fに変換する
 		return std::clamp(result, 0.0f, 1.0f);
 	};
@@ -133,9 +143,9 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value"></param>
 	/// <returns></returns>
-	inline float EaseInOutCubic(const float& value) {
+	inline float_t EaseInOutCubic(const float_t& value) {
 		//計算
-		float result = 0.0f;
+		float_t result = 0.0f;
 		if (value < 0.5f) {
 			result = 4.0f * value * value * value;
 		}
@@ -154,9 +164,9 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value">値(t)</param>
 	/// <returns></returns>
-	inline float EaseInQuart(const float& value) {
+	inline float_t EaseInQuart(const float_t& value) {
 		//計算
-		float result = value * value * value * value;
+		float_t result = value * value * value * value;
 		//0.0fから1.0fに変換する
 		return std::clamp(result, 0.0f, 1.0f);
 	};
@@ -166,9 +176,9 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value">値(t)</param>
 	/// <returns></returns>
-	inline float EaseOutQuart(const float& value) {
+	inline float_t EaseOutQuart(const float_t& value) {
 		//計算
-		float result = 1.0f - std::powf(1.0f - value, 4.0f);
+		float_t result = 1.0f - std::powf(1.0f - value, 4.0f);
 		//0.0fから1.0fに変換する
 		return std::clamp(result, 0.0f, 1.0f);
 	};
@@ -178,9 +188,9 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value"></param>
 	/// <returns></returns>
-	inline float EaseInOutQuart(const float& value) {
+	inline float_t EaseInOutQuart(const float_t& value) {
 		//計算
-		float result = 0.0f;
+		float_t result = 0.0f;
 		if (value < 0.5f) {
 			result = 8.0f * value * value * value * value;
 		}
@@ -199,14 +209,14 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value">値(t)</param>
 	/// <returns></returns>
-	inline float EaseInBack(const float& value) {
+	inline float_t EaseInBack(const float_t& value) {
 		//指定された定数1
-		const float value1 = 1.70158f;
+		const float_t value1 = 1.70158f;
 		//指定された定数2
-		const float value2 = value1 + 1.0f;
+		const float_t value2 = value1 + 1.0f;
 
 		//計算
-		float result = value2 * value * value * value - value1 * value * value;
+		float_t result = value2 * value * value * value - value1 * value * value;
 		//0.0fから1.0fに変換する
 		return std::clamp(result, 0.0f, 1.0f);
 	};
@@ -216,14 +226,14 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value">値(t)</param>
 	/// <returns></returns>
-	inline float EaseOutBack(const float& value) {
+	inline float_t EaseOutBack(const float_t& value) {
 		//指定された定数1
-		const float value1 = 1.70158f;
+		const float_t value1 = 1.70158f;
 		//指定された定数2
-		const float value2 = value1 + 1.0f;
+		const float_t value2 = value1 + 1.0f;
 
 		//計算
-		float result = 1.0f + value2 * std::powf(value - 1.0f, 3.0f) + value1 * std::powf(value - 1.0f, 2.0f);
+		float_t result = 1.0f + value2 * std::powf(value - 1.0f, 3.0f) + value1 * std::powf(value - 1.0f, 2.0f);
 		//0.0fから1.0fに変換する
 		return std::clamp(result, 0.0f, 1.0f);
 	};
@@ -233,14 +243,14 @@ namespace Easing{
 	/// </summary>
 	/// <param name="value"></param>
 	/// <returns></returns>
-	inline float EaseInOutBack(const float& value) {
+	inline float_t EaseInOutBack(const float_t& value) {
 		//指定された定数1
-		const float value1 = 1.70158f;
+		const float_t value1 = 1.70158f;
 		//指定された定数2
-		const float value2 = value1 * 1.525f;
+		const float_t value2 = value1 * 1.525f;
 
 		//計算
-		float result = 0.0f;
+		float_t result = 0.0f;
 		if (value < 0.5f) {
 			result = (std::powf(2.0f * value, 2.0f) * ((value2 + 1.0f) * 2.0f * value - value2)) / 2.0f;
 		}

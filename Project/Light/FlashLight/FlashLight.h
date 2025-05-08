@@ -19,7 +19,7 @@
 
 
  /// <summary>
- /// EllysiaEngine(前方宣言)
+ /// ElysiaEngine(前方宣言)
  /// </summary>
 namespace Elysia {
 	/// <summary>
@@ -37,6 +37,22 @@ namespace Elysia {
 /// カメラ
 /// </summary>
 struct Camera;
+
+
+
+
+
+/// <summary>
+/// チャージ段階
+/// </summary>
+enum ChargeCondition {
+	//不十分
+	NoEnoughAttack,
+	//通常
+	NormalChargeAttack,
+	//強い
+	StrongChargeAttack,
+};
 
 /// <summary>
 /// 懐中電灯
@@ -135,39 +151,6 @@ public:
 	}
 
 	/// <summary>
-	/// ライトの幅を設定
-	/// </summary>
-	/// <param name="lightSideTheta">幅の角度</param>
-	inline void SetLightSideTheta(const float_t& lightSideTheta) {
-		this->lightSideTheta_ = lightSideTheta;
-	}
-
-	/// <summary>
-	/// 方向を取得
-	/// </summary>
-	/// <returns>方向</returns>
-	inline Vector3 GetDirection()const {
-		return direction_;
-	}
-
-	/// <summary>
-	/// 最大の幅
-	/// </summary>
-	/// <param name="range">幅</param>
-	inline void SetMaxRange(const float_t& range) {
-		this->maxRange_ = range;
-	}
-
-
-	/// <summary>
-	/// 最小の幅
-	/// </summary>
-	/// <param name="range">幅</param>
-	inline void SetMinRange(const float_t& range) {
-		this->minRange_ = range;
-	}
-
-	/// <summary>
 	/// チャージをしているかどうかの設定
 	/// </summary>
 	/// <param name="isCharge">チャージ中か</param>
@@ -191,6 +174,13 @@ public:
 		return isAbleToAttack_;
 	}
 
+	/// <summary>
+	/// チャージ状態
+	/// </summary>
+	/// <returns></returns>
+	inline uint32_t GetChargeCondition()const {
+		return chargeConditionValue_;
+	}
 
 	/// <summary>
 	/// 扇の取得(3次元)
@@ -217,17 +207,13 @@ private:
 
 private:
 	//調整項目
-	//光の強さ
-	const std::string FLASH_LIGHT_INTENSITY_STRING_ = "FlashLightIntensity";
 	//cosFallowoffStart
 	const std::string FLASH_LIGHT_COS_FALLOWOFF_START_STRING_ = "FlashLightCosFallowOffStart";
 	//最大
 	const std::string MAX_STRING_ = "Max";
-	float_t maxIntensity_ = 400.0f;
 	float_t maxStart_ = 2.4f;
 	//最小
 	const std::string MIN_STRING_ = "Min";
-	float_t minIntensity_ = 50.0f;
 	float_t minStart_ = 1.5f;
 
 	//チャージ
@@ -260,8 +246,9 @@ private:
 	//最小チャージの値
 	const float_t MIN_CHARGE_VALUE_ = 0.0f;
 	//時間増加
-	const float_t DELTA_TIME_ = 1.0f / 60.0f;
-
+	const float_t DELTA_ANIMATION_TIME_ = 1.0f / 60.0f;
+	//初期の強さ
+	const float INITIAL_INTENCITY_ = 100.0f;
 private:
 	//スポットライト
 	SpotLight spotLight_ = {};
@@ -275,8 +262,6 @@ private:
 	float_t lightSideTheta_ = 0.0f;
 
 	//ライトの幅
-	float_t maxRange_ = 0.0f;
-	float_t minRange_ = 0.0f;
 	float_t ratio_ = 0.0f;
 
 	//角度
@@ -289,7 +274,10 @@ private:
 
 	//チャージ時のパーティクル
 	std::list<std::unique_ptr<Elysia::Particle3D>>chargeParticle_ = {};
+	//パーティクルマテリアル
+	Material particleMaterial = {};
 	//生成時間
+	bool isGenerate_ = false;
 	float_t readyForGenerateParticleTime_ = 0.0f;
 	
 
@@ -304,12 +292,16 @@ private:
 	bool isCharge_ = false;
 	//チャージの値
 	float_t chargeValue_ = 0.0f;
+	//チャージ段階
+	uint32_t chargeConditionValue_ = 0u;
 
 	//攻撃できるかどうか
 	bool isAbleToAttack_ = false;
 	//クールタイム
 	bool isCoolTime_ = false;
 
+	//攻撃のホワイトフェード
+	std::unique_ptr<Elysia::Sprite>attackWhiteFadeSprite_ = nullptr;
 
 
 private:
@@ -326,7 +318,7 @@ private:
 	const uint32_t LEFT_ = 1u;
 
 	static const uint32_t SIDE_QUANTITY_ = 2u;
-	std::unique_ptr<Elysia::Model>model_[SIDE_QUANTITY_] = { nullptr };
+	std::unique_ptr<Elysia::Model>sideModel_[SIDE_QUANTITY_] = { nullptr };
 	WorldTransform worldTransform_[SIDE_QUANTITY_] = {};
 	Material material_ = {};
 

@@ -149,7 +149,7 @@ namespace Elysia {
 
 	private:
 		//最大SRV数
-		const uint32_t MAX_SRV_COUNT_ = 2024u;
+		const uint32_t MAX_SRV_COUNT_ = 4048u;
 
 		//SRV用のデスクリプタサイズ
 		uint32_t descriptorSize_ = 0;
