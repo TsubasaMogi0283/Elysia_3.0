@@ -71,5 +71,8 @@ private:
 	//テクスチャの番号
 	uint32_t howToPlayTextureNumber_ = 0u;
 
-
+	//決定音のハンドル
+	uint32_t desideSeHandle_ = 0u;
+	//音量
+	float_t desideSeVolume_ = 0.5f;
 };

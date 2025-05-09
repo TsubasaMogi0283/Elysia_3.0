@@ -123,7 +123,6 @@ void PlayGameScene::Update(GameScene* gameScene){
 		if (enviromentAudioVolume_ <= MIN_VOLUME_) {
 			enviromentAudioVolume_ = MIN_VOLUME_;
 		}
-		audio_->ChangeVolume(gameScene->GetEnviromentAudioHandle(), enviromentAudioVolume_);
 		gameScene->SetEnviromentAudioVolume(enviromentAudioVolume_);
 
 		//処理終了にし負け
@@ -165,7 +164,6 @@ void PlayGameScene::Update(GameScene* gameScene){
 		if (enviromentAudioVolume_ <= MIN_VOLUME_) {
 			enviromentAudioVolume_ = MIN_VOLUME_;
 		}
-		audio_->ChangeVolume(gameScene->GetEnviromentAudioHandle(), enviromentAudioVolume_);
 		gameScene->SetEnviromentAudioVolume(enviromentAudioVolume_);
 
 

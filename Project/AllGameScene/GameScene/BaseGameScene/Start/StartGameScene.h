@@ -50,9 +50,9 @@ private:
 	//フェードインの増える値
 	const float_t FADE_VALUE_ = 0.01f;
 	//最大音量
-	const float_t MAX_VOLUME_ = 0.6f;
+	const float_t MAX_VOLUME_ = 0.8f;
 	//音量の増える値
-	const float_t VOLUME_INCREASE_VALUE_ = 0.0005f;
+	const float_t VOLUME_INCREASE_VALUE_ = 0.001f;
 
 private:
 	//白フェードのスプライト

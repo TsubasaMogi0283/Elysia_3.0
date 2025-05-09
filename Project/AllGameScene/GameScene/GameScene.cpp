@@ -98,7 +98,7 @@ void GameScene::Initialize() {
 
 #ifdef _DEBUG
 	//デバッグ時はプレイシーンから始める
-	detailGameScene_ = std::make_unique<PlayGameScene>();
+	detailGameScene_ = std::make_unique<StartGameScene>();
 #endif // _DEBUG
 	//レベルデータハンドルの設定
 	detailGameScene_->SetLevelDataHandle(levelHandle_);
@@ -110,12 +110,10 @@ void GameScene::Initialize() {
 	detailGameScene_->Initialize();
 
 	//再生
-	audio_->Play(enviromentAudioHandle_, false);
+	audio_->Play(enviromentAudioHandle_, true);
 	//最初は音量を0にする
 	audio_->ChangeVolume(enviromentAudioHandle_, enviromentAudioVolume_);
-
 }
-
 
 void GameScene::ChangeDetailScene(std::unique_ptr<BaseGameScene> detailGameScene){
 	//違った時だけ遷移する
@@ -207,6 +205,9 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 
 	//ビネットの処理
 	VigntteProcess();
+
+	//音量の設定
+	audio_->ChangeVolume(enviromentAudioHandle_, enviromentAudioVolume_);
 
 	//細かいシーンの更新
 	detailGameScene_->Update(this);
