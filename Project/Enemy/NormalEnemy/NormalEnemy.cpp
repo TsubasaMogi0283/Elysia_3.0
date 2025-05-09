@@ -177,8 +177,6 @@ void NormalEnemy::Draw(const Camera& camera, const SpotLight& spotLight) {
 	if (deadParticle_ != nullptr) {
 		deadParticle_->Draw(camera, particleMaterial_);
 	}
-
-	
 }
 
 NormalEnemy::~NormalEnemy() {

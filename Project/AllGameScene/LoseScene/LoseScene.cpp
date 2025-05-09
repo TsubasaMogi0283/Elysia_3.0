@@ -6,6 +6,7 @@
 #include "TextureManager.h"
 #include "ModelManager.h"
 #include "LevelDataManager.h"
+#include "Audio.h"
 #include "GameManager.h"
 #include "VectorCalculation.h"
 #include "GlobalVariables.h"
@@ -22,6 +23,8 @@ LoseScene::LoseScene(){
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 	//グローバル変数クラス
 	globalVariables_ = Elysia::GlobalVariables::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 void LoseScene::Initialize(){
@@ -68,6 +71,8 @@ void LoseScene::Initialize(){
 	pointLight_.decay = globalVariables_->GetFloatValue(POINT_LIGHT_NAME_,"Decay");
 	pointLight_.radius = 0.0f;
 
+	//読み込み
+	bgmHandle_ = audio_->Load("Resources/Audio/Lose/LoseBGM.wav");
 
 	//細かいシーン
 	detailLoseScene_ = std::make_unique<LightUpLoseScene>();
@@ -76,7 +81,8 @@ void LoseScene::Initialize(){
 	//初期化
 	detailLoseScene_->Initialize();
 	
-
+	//再生
+	audio_->Play(bgmHandle_, true);
 }
 
 void LoseScene::Update(Elysia::GameManager* gameManager){
@@ -98,7 +104,6 @@ void LoseScene::Update(Elysia::GameManager* gameManager){
 			return;
 		}
 	}
-
 
 	//レベルデータの更新
 	levelDataManager_->Update(levelDataHandle_);
@@ -164,7 +169,6 @@ void LoseScene::ChangeDetailScene(std::unique_ptr<BaseLoseScene>detailScene){
 void LoseScene::DisplayImGui(){
 
 	ImGui::Begin("脱出失敗シーン");
-
 	if (ImGui::TreeNode("点光源")) {
 		ImGui::SliderFloat3("座標", &pointLight_.position.x, -40.0f, 40.0f);
 		ImGui::SliderFloat("Decay", &pointLight_.decay, 0.0f, 20.0f);

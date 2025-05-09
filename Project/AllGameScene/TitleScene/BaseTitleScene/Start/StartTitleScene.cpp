@@ -45,8 +45,6 @@ void StartTitleScene::Initialize(){
 	directionalLight_.color = { .x = 1.0f,.y = 0.22f,.z = 0.0f,.w = 1.0f };
 	directionalLight_.direction = { .x = 0.91f,.y = -1.0f,.z = 0.0f };
 
-
-
 }
 
 void StartTitleScene::Update(TitleScene* titleScene){

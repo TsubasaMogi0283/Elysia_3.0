@@ -108,6 +108,14 @@ private:
 	std::string right = "GateDoorRight";
 	std::string left = "GateDoorLeft";
 
+
+	//最大音量
+	const float_t MAX_VOLUME_ = 0.6f;
+	//最小音量
+	const float_t MIN_VOLUME_ = 0.0f;
+	//音量の減る値
+	const float_t VOLUME_DECREASE_VALUE_ = 0.0005f;
+	
 private:
 
 	//コリジョン管理
@@ -154,6 +162,9 @@ private:
 	float_t vignetteChangeTime_ = 0.0f;
 	//警告の時間
 	float_t warningTime_ = 0.0f;
+
+	//環境音の音量
+	float_t enviromentAudioVolume_ = 0u;
 
 
 };

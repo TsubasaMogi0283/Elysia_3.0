@@ -49,7 +49,8 @@ private:
 	const float_t NARROW_VALUE = 0.002f;
 	//最小半径
 	const float_t MIN_RADIUS_ = 0.0f;
-
+	//音量が下がる値
+	const float_t DECREASE_VOLUME_VALUE_ = 0.005f;
 
 private:
 	//時間
@@ -62,5 +63,8 @@ private:
 	float_t endLightUpT_ = 0.0f;
 	//変わる準備
 	bool isReadyForChange_ = false;
+
+	//音量
+	float_t bgmVolume_ = MAX_VOLUME_;
 };
 

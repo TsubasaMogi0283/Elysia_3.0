@@ -14,6 +14,7 @@
 #include "ModelManager.h"
 #include "LevelDataManager.h"
 #include "GlobalVariables.h"
+#include "Audio.h"
 
 #include "BaseGameScene/Start/StartGameScene.h"
 #include "BaseGameScene/Play/PlayGameScene.h"
@@ -30,6 +31,8 @@ GameScene::GameScene() {
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 	//グローバル変数クラス
 	globalVariables_ = Elysia::GlobalVariables::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 void GameScene::Initialize() {
@@ -87,15 +90,16 @@ void GameScene::Initialize() {
 	vignette_.Initialize();
 	vignette_.pow = 0.0f;
 
+	//環境音の読み込み
+	enviromentAudioHandle_ = audio_->Load("Resources/Audio/Environment/Environment.wav");
+	
 	//スタートから始まる
 	detailGameScene_ = std::make_unique<StartGameScene>();
 
 #ifdef _DEBUG
 	//デバッグ時はプレイシーンから始める
 	detailGameScene_ = std::make_unique<PlayGameScene>();
-
 #endif // _DEBUG
-
 	//レベルデータハンドルの設定
 	detailGameScene_->SetLevelDataHandle(levelHandle_);
 	//各ゲームオブジェクトのポインタを設定
@@ -104,6 +108,11 @@ void GameScene::Initialize() {
 	detailGameScene_->SetKeyManager(keyManager_.get());
 	//初期化
 	detailGameScene_->Initialize();
+
+	//再生
+	audio_->Play(enviromentAudioHandle_, false);
+	//最初は音量を0にする
+	audio_->ChangeVolume(enviromentAudioHandle_, enviromentAudioVolume_);
 
 }
 

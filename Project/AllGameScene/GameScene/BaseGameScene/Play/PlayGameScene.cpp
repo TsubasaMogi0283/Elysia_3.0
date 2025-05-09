@@ -113,13 +113,21 @@ void PlayGameScene::Update(GameScene* gameScene){
 		//鍵の音を止める
 		keyManager_->StopAudio();
 
-
 		//フェードの透明度を設定
 		fadeTransparency_ += FADE_AMOUNT_;
 		blackFadeSprite_->SetTransparency(fadeTransparency_);
 
+		//音量の設定
+		//環境音の音量の設定
+		enviromentAudioVolume_ -= VOLUME_DECREASE_VALUE_;
+		if (enviromentAudioVolume_ <= MIN_VOLUME_) {
+			enviromentAudioVolume_ = MIN_VOLUME_;
+		}
+		audio_->ChangeVolume(gameScene->GetEnviromentAudioHandle(), enviromentAudioVolume_);
+		gameScene->SetEnviromentAudioVolume(enviromentAudioVolume_);
+
 		//処理終了にし負け
-		if (fadeTransparency_ >= PERFECT_NONE_TRANSPARENT_) {
+		if (fadeTransparency_ >= PERFECT_NONE_TRANSPARENT_ && enviromentAudioVolume_ <= MIN_VOLUME_) {
 			gameScene->SetIsEnd();
 			gameScene->SetIsLose();
 			return;
@@ -151,8 +159,18 @@ void PlayGameScene::Update(GameScene* gameScene){
 		//振動しないようにする
 		player_->SetIsAbleToControll(false);
 
+		//音量の設定
+		//環境音の音量の設定
+		enviromentAudioVolume_ -= VOLUME_DECREASE_VALUE_;
+		if (enviromentAudioVolume_ <= MIN_VOLUME_) {
+			enviromentAudioVolume_ = MIN_VOLUME_;
+		}
+		audio_->ChangeVolume(gameScene->GetEnviromentAudioHandle(), enviromentAudioVolume_);
+		gameScene->SetEnviromentAudioVolume(enviromentAudioVolume_);
+
+
 		//処理終了にし勝ち
-		if (openT_ >= PERFECT_NONE_TRANSPARENT_) {
+		if (openT_ >= PERFECT_NONE_TRANSPARENT_ && enviromentAudioVolume_ <= MIN_VOLUME_) {
 			gameScene->SetIsEnd();
 			gameScene->SetIsWin();
 			return;

@@ -16,7 +16,7 @@ void Elysia::GameManager::Initialize() {
 
 #ifdef _DEBUG
 	//デバッグ時はこっちに入れてね
-	currentGamaScene_ = abstractSceneFactory_->CreateScene("Win");
+	currentGamaScene_ = abstractSceneFactory_->CreateScene("Lose");
 #endif // _DEBUG
 
 	//初期化
@@ -44,7 +44,6 @@ void Elysia::GameManager::ChangeScene(const std::string& sceneName){
 	assert(currentGamaScene_ != nullptr);
 	//初期化
 	currentGamaScene_->Initialize();
-	
 	
 }
 

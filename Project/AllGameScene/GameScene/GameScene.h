@@ -58,6 +58,11 @@ namespace Elysia {
 	/// 調整項目クラス
 	/// </summary>
 	class GlobalVariables;
+
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
 }
 
 
@@ -118,22 +123,38 @@ public:
 	/// <summary>
 	/// 処理終了
 	/// </summary>
-	void SetIsEnd() {
+	inline void SetIsEnd() {
 		this->isEnd_ = true;
 	}
 
 	/// <summary>
 	/// 勝利の設定
 	/// </summary>
-	void SetIsWin() {
+	inline void SetIsWin() {
 		this->isWin_ = true;
 	}
 
 	/// <summary>
 	/// 敗北の設定
 	/// </summary>
-	void SetIsLose() {
+	inline void SetIsLose() {
 		this->isLose_ = true;
+	}
+
+	/// <summary>
+	/// 環境音のハンドルを取得
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetEnviromentAudioHandle()const {
+		return enviromentAudioHandle_;
+	}
+
+	/// <summary>
+	/// 環境音の音量の設置
+	/// </summary>
+	/// <param name="volume">音量</param>
+	inline void SetEnviromentAudioVolume(const float_t& volume) {
+		this->enviromentAudioVolume_ = volume;
 	}
 
 private:
@@ -160,6 +181,8 @@ private:
 	uint32_t levelHandle_ = 0u;
 	//グローバル変数クラス
 	Elysia::GlobalVariables* globalVariables_ = nullptr;
+	//オーディオ
+	Elysia::Audio* audio_ = nullptr;
 
 private:
 
@@ -208,4 +231,8 @@ private:
 	bool isWin_ = false;
 	bool isLose_ = false;
 
+	//環境音のハンドル
+	uint32_t enviromentAudioHandle_ = 0u;
+	//音量
+	float_t enviromentAudioVolume_ = 0.0f;
 };

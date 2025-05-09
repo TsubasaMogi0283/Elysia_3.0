@@ -128,8 +128,6 @@ public:
 	/// </summary>
 	/// <param name="detailTitleScene">細かいタイトルシーン</param>
 	void ChangeDetailScene(std::unique_ptr<BaseTitleScene>detailTitleScene);
-
-
 	
 	/// <summary>
 	/// ランダムノイズを見せるかどうか
@@ -172,10 +170,8 @@ private:
 	Camera camera_ = {};
 	//レールカメラ
 	std::unique_ptr<TitleRailCamera> titleRailCamera_ = nullptr;
-
 	//平行光源
 	DirectionalLight directionalLight_ = {};
-
 
 	//細かいシーン
 	std::unique_ptr<BaseTitleScene>detailTitleScene_ = nullptr;
@@ -190,7 +186,7 @@ private:
 	//見せるかどうか
 	bool isDisplayRandomEffect_ = false;
 
-	//環境音
+	//環境音のハンドル
 	uint32_t enviromentAudioHandle_ = 0u;
 
 

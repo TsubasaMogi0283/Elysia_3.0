@@ -35,7 +35,10 @@ namespace Elysia {
 	/// </summary>
 	class TextureManager;
 
-
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
 }
 
 /// <summary>
@@ -153,7 +156,8 @@ protected:
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
-
+	//オーディオ
+	Elysia::Audio* audio_ = nullptr;
 
 protected:
 	//GameScene本体から持ってくる

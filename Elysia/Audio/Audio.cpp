@@ -592,7 +592,7 @@ void Elysia::Audio::PartlyLoopPlayWave(const uint32_t& audioHandle, const float_
 
 //一応マイナスにも出来るらしい
 //位相の反転するために使うらしい。使い道は分からない。
-//音量を変える
+
 void Elysia::Audio::ChangeVolume(const uint32_t& audioHandle, const float_t& volume) {
 
 	//ファイルキーの取得
@@ -602,13 +602,8 @@ void Elysia::Audio::ChangeVolume(const uint32_t& audioHandle, const float_t& vol
 	assert(SUCCEEDED(hResult));
 }
 
-//ピッチの変更(滑らか)
-void Elysia::Audio::ChangeFrequency(const uint32_t& audioHandle, float_t& ratio_) {
+void Elysia::Audio::ChangeFrequencyRatio(const uint32_t& audioHandle, float_t& ratio_) {
 
-	//2.0fより上がらなかった
-	ratio_ = max(ratio_, 2.0f);
-	//0.0fより下がらなかった
-	ratio_ = min(ratio_, 0.0f);
 
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
@@ -616,10 +611,6 @@ void Elysia::Audio::ChangeFrequency(const uint32_t& audioHandle, float_t& ratio_
 	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFrequencyRatio(ratio_);
 	assert(SUCCEEDED(hResult));
 }
-
-
-
-
 
 void Elysia::Audio::ChangePitch(const uint32_t& audioHandle, const int32_t& scale) {
 

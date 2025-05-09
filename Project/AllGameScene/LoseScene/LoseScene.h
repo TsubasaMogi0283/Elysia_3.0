@@ -43,7 +43,10 @@ namespace Elysia {
 	/// </summary>
 	class GameManager;
 
-
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
 };
 
 
@@ -118,6 +121,22 @@ public:
 		this->isContinue_ = isContinue;
 	}
 
+	/// <summary>
+	/// BGMのハンドルを取得
+	/// </summary>
+	/// <returns></returns>
+	inline uint32_t GetBgmHandle()const {
+		return bgmHandle_;
+	}
+
+	/// <summary>
+	/// BGMの音量を設定
+	/// </summary>
+	inline void SetBgmVolumeDown(const float_t& volume) {
+		this->bgmVolume_ = volume;
+	}
+
+
 private:
 	/// <summary>
 	/// /ImGUiの表示
@@ -138,15 +157,16 @@ private:
 	uint32_t levelDataHandle_ = 0u;
 	//グローバル変数クラス
 	Elysia::GlobalVariables* globalVariables_ = nullptr;
-	
+	//オーディオ
+	Elysia::Audio* audio_ = nullptr;
 private:
 	//調整項目
 	//点光源
 	const std::string POINT_LIGHT_NAME_ = "LoseScenePointLight";
 	//ディゾルブ
 	const std::string DISSOLVE_NAME_ = "LoseSceneDissolve";
-
 	
+
 private:
 	//カメラ
 	Camera camera_ = {};
@@ -167,6 +187,10 @@ private:
 	//ゲームを続けるかどうか
 	bool isContinue_ = false;
 
+	//敗北シーンのハンドル
+	uint32_t bgmHandle_ = 0u;
+	//音量
+	float_t bgmVolume_ = 0.9f;
 
 };
 

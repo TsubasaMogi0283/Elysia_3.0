@@ -74,10 +74,8 @@ private:
 	//点滅時間
 	float_t flashTime_ = 0.0f;
 
-
 	//見せるカウント
 	uint32_t textDisplayCount_ = 0u;
-
 	//高速点滅時間
 	uint32_t fastFlashTime_ = 0u;
 	//決定したかどうか

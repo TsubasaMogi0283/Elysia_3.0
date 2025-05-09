@@ -49,6 +49,10 @@ private:
 private:
 	//フェードインの増える値
 	const float_t FADE_VALUE_ = 0.01f;
+	//最大音量
+	const float_t MAX_VOLUME_ = 0.6f;
+	//音量の増える値
+	const float_t VOLUME_INCREASE_VALUE_ = 0.0005f;
 
 private:
 	//白フェードのスプライト
@@ -56,4 +60,6 @@ private:
 	//透明度
 	float_t fadeTransparency_ = 1.0f;
 
+	//環境音の音量
+	float_t enviromentAudioVolume_ = 0.0f;
 };

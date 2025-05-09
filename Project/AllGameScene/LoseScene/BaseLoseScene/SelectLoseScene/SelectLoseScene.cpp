@@ -8,6 +8,7 @@
 #include "ModelManager.h"
 #include "LevelDataManager.h"
 #include "GlobalVariables.h"
+#include "Audio.h"
 #include "LoseScene/LoseScene.h"
 #include "LoseScene/BaseLoseScene/ContinueGameLoseScene/ContinueGameLoseScene.h"
 #include "LoseScene/BaseLoseScene/ReturnTitleLoseScene/ReturnTitleLoseScene.h"
@@ -24,6 +25,8 @@ SelectLoseScene::SelectLoseScene() {
 	modelManager_ = Elysia::ModelManager::GetInstance();
 	//グローバル変数クラス
 	globalVariables_ = Elysia::GlobalVariables::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 
@@ -41,16 +44,19 @@ void SelectLoseScene::Initialize(){
 	
 	//点光源の半径を最大に設定
 	pointLight_.radius = MAX_LIGHT_RADIUS_;
+
+
+	//決定音の読み込み
+	desideSeHandle_ = audio_->Load("Resources/Audio/SE/Deside.wav");
+	//選択音
+	selectSeHandle_ = audio_->Load("Resources/Audio/SE/Select.wav");
 }
 
 void SelectLoseScene::Update(LoseScene* loseScene){
 	
-
 	//矢印の回転
 	arrowRotate_ += ROTATE_VALUE_;
 	levelDataManager_->SetRotate(levelDataHandle_, SELECT_ARROW, { .x = 0.0f,.y = arrowRotate_ ,.z = 0.0f });
-
-	
 
 	//「ゲームへ」つまり続けるを選択時
 	if (isContinue_==true) {
@@ -67,6 +73,8 @@ void SelectLoseScene::Update(LoseScene* loseScene){
 		if ((input_->IsTriggerKey(DIK_RIGHT) == true) || (input_->IsTriggerKey(DIK_D) == true) || (input_->IsTriggerButton(XINPUT_GAMEPAD_DPAD_RIGHT) == true)) {
 			levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = toTitleInitialPosition.x,.y = arrowInitialPosition.y ,.z = toTitleInitialPosition.z });
 			isContinue_ = false;
+			//選択音の再生
+			audio_->Play(selectSeHandle_, false);
 		}
 
 	}
@@ -84,12 +92,16 @@ void SelectLoseScene::Update(LoseScene* loseScene){
 		if ((input_->IsTriggerKey(DIK_LEFT) == true) || (input_->IsTriggerKey(DIK_A) == true) || input_->IsTriggerButton(XINPUT_GAMEPAD_DPAD_LEFT) == true) {
 			levelDataManager_->SetTranslate(levelDataHandle_, SELECT_ARROW, { .x = toGameInitialPosition.x,.y = arrowInitialPosition.y ,.z = toGameInitialPosition.z });
 			isContinue_ = true;
+			//選択音の再生
+			audio_->Play(selectSeHandle_,false);
 		}
 	}
 
 	//Bボタン、スペースキーを押したとき
 	if (input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true || input_->IsTriggerKey(DIK_SPACE) == true) {
 		isChangeNextScene_ = true;
+		//決定音の再生
+		audio_->Play(desideSeHandle_,false);
 	}
 
 	//決定後
@@ -131,7 +143,7 @@ void SelectLoseScene::Update(LoseScene* loseScene){
 	if (waitForNextSceneTime_ > CHANGE_NEXTSCENE_TIME_) {
 		//続けるかどうかを設定
 		loseScene->SetIsContinue(isContinue_);
-
+		
 		//続けるシーンへ
 		if (isContinue_ == true) {
 			loseScene->ChangeDetailScene(std::make_unique<ContinueGameLoseScene>());
@@ -152,11 +164,8 @@ void SelectLoseScene::Update(LoseScene* loseScene){
 
 void SelectLoseScene::DisplayImGui(){
 
-
 	ImGui::Begin("選択(敗北シーン)");
 	ImGui::InputFloat("矢印の回転", &arrowRotate_);
-
 	ImGui::End();
-
 
 }
