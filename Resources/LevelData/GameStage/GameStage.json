@@ -3,28 +3,6 @@
     "objects": [
         {
             "type": "MESH",
-            "name": "HalloweenItem_Ghost02",
-            "transform": {
-                "scaling": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "translation": [
-                    -39.78791809082031,
-                    15.460683822631836,
-                    0.0
-                ]
-            },
-            "object_type": "StrongEnemy"
-        },
-        {
-            "type": "MESH",
             "name": "Ground",
             "transform": {
                 "scaling": [

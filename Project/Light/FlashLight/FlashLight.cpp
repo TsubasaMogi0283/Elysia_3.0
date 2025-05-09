@@ -46,7 +46,7 @@ void FlashLight::Initialize() {
 
 	//ライトの片方の角度
 	//15度=π/12
-	lightSideTheta_ = (std::numbers::pi_v<float> / 12.0f);
+	lightSideTheta_ = (std::numbers::pi_v<float_t> / 12.0f);
 
 	//扇
 	fan3D_.length = LIGHT_DISTANCE;
@@ -236,12 +236,6 @@ void FlashLight::GenerateParticle() {
 	const float FREQUENCY = 0.5f;
 	particle->SetFrequency(FREQUENCY);
 
-	//距離
-	const float DISTANCE = 3.0f;
-	Vector3 emitterDirection = VectorCalculation::Multiply(fan3D_.direction, DISTANCE);
-	Vector3 emitterPosition = VectorCalculation::Add(fan3D_.position, emitterDirection);
-	particle->SetTranslate(emitterPosition);
-
 	//挿入
 	chargeParticle_.push_back(std::move(particle));
 }
@@ -292,6 +286,11 @@ void FlashLight::Charge() {
 	else {
 		for (const std::unique_ptr <Elysia::Particle3D>& particle : chargeParticle_) {
 			if (particle != nullptr) {
+				//発生座標を上書き
+				const float DISTANCE = 3.0f;
+				Vector3 emitterDirection = VectorCalculation::Multiply(fan3D_.direction, DISTANCE);
+				Vector3 emitterPosition = VectorCalculation::Add(fan3D_.position, emitterDirection);
+				particle->SetReleasePositionForAbsorb(emitterPosition);
 				//スポットライトの座標に集まってくるようにする
 				particle->SetIsStopGenerate(true);
 			}

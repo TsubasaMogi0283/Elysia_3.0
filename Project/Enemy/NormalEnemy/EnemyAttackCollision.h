@@ -125,6 +125,6 @@ private:
 	bool isTouch_ = false;
 
 	//間隔
-	const float INTERVAL = 2.0f;
+	const float INTERVAL = 4.0f;
 };
 

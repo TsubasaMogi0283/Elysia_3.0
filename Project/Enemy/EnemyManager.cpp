@@ -62,7 +62,13 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel, const uint32_t& 
 		GenerateNormalEnemy(normalEnemyPositions[i]);
 	}
 
-	strongEnemyPositions;
+	//プレイ会の時に強敵入れない方が良いとの感想があったので生成はしない
+	//レベルエディタ側でやっておく
+	for (size_t i = 0u; i < strongEnemyPositions.size(); ++i) {
+		//生成
+		GenerateStrongEnemy(strongEnemyPositions[i]);
+	}
+
 
 	//警告
 	uint32_t warningTextureHandle = textureManager_->Load("Resources/Sprite/Warning/Warning.png");
@@ -368,7 +374,10 @@ void EnemyManager::DrawObject3D(const Camera& camera,const SpotLight& spotLight)
 
 void EnemyManager::DrawSprite(){
 	//警告
-	warningSprite_->Draw();
+	if (enemies_.size() > 0u) {
+		warningSprite_->Draw();
+	}
+	
 }
 
 void EnemyManager::GenerateNormalEnemy(const Vector3& position) {

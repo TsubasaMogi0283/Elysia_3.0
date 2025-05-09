@@ -232,6 +232,13 @@ namespace Elysia {
 			this->textureHandle_ = textureHandle;
 		}
 
+		/// <summary>
+		/// 吸収用の発生座標を設定
+		/// </summary>
+		/// <param name="position"></param>
+		inline void SetReleasePositionForAbsorb(const Vector3& position) {
+			this->releasePositionForAbsorb_ = position;
+		}
 
 #pragma region エミッタの中の設定
 
@@ -356,9 +363,6 @@ namespace Elysia {
 		int instancingIndex_ = 0;
 		//インスタンスリソース
 		ComPtr<ID3D12Resource> instancingResource_ = nullptr;
-		//インスタンシング用のSRV管理変数
-		static std::map<uint32_t, InstancingData> instancingDataMap_;
-
 		//パーティクル
 		std::list<ParticleInformation>particles_;
 		//パーティクルデータ
@@ -396,7 +400,8 @@ namespace Elysia {
 		const float T_INCREASE_VALUE_ = 0.01f;
 		//吸収し集まる場所
 		Vector3 absorbPosition_ = {};
-
+		//吸収用の発生座標
+		Vector3 releasePositionForAbsorb_ = {};
 
 	};
 

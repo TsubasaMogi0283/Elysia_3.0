@@ -117,6 +117,10 @@ void PlayGameScene::Update(GameScene* gameScene){
 		fadeTransparency_ += FADE_AMOUNT_;
 		blackFadeSprite_->SetTransparency(fadeTransparency_);
 
+		//非表示
+		escapeTextSprite_->SetInvisible(true);
+		toEscapeSprite_->SetInvisible(true);
+
 		//音量の設定
 		//環境音の音量の設定
 		enviromentAudioVolume_ -= VOLUME_DECREASE_VALUE_;
@@ -428,7 +432,7 @@ void PlayGameScene::PlayerMove(){
 	//チャージ
 	bool isCharge = false;
 	//エンターキーまたはXボタンでチャージ開始
-	if (input_->IsPushKey(DIK_RETURN) == true || input_->IsPushButton(XINPUT_GAMEPAD_X) == true) {
+	if (input_->IsPushKey(DIK_RETURN) == true || input_->IsPushButton(XINPUT_GAMEPAD_RIGHT_SHOULDER) == true) {
 		isCharge = true;
 	}
 	else {
@@ -439,7 +443,7 @@ void PlayGameScene::PlayerMove(){
 	player_->GetFlashLight()->SetIsCharge(isCharge);
 
 	//エンターキーまたはYボタンを離した瞬間に攻撃する
-	if (input_->IsReleaseKey(DIK_RETURN) == true || input_->IsReleaseButton(XINPUT_GAMEPAD_X) == true) {
+	if (input_->IsReleaseKey(DIK_RETURN) == true || input_->IsReleaseButton(XINPUT_GAMEPAD_RIGHT_SHOULDER) == true) {
 		isReleaseAttack_ = true;
 		//クールタイムにする
 		player_->GetFlashLight()->SetIsCoolTime(true);
@@ -540,7 +544,9 @@ void PlayGameScene::EscapeCondition(){
 		if (player_->GetHavingKey() >= keyManager_->GetMaxKeyQuantity()) {
 			//「出口へ」が表示
 			escapeTextSprite_->SetInvisible(false);
-
+			if (escapeTextSprite_->GetIsInvisible() == false) {
+				toEscapeSprite_->SetInvisible(true);
+			}
 			//コントローラーのBボタンを押したら脱出のフラグがたつ
 			//Bボタンを押したとき
 			//SPACEキーを押したら脱出のフラグがたつ
@@ -553,7 +559,15 @@ void PlayGameScene::EscapeCondition(){
 	else {
 		//まだ脱出できない
 		escapeTextSprite_->SetInvisible(true);
+		//3個取得している
+		if (player_->GetHavingKey() >= keyManager_->GetMaxKeyQuantity()) {
+			toEscapeSprite_->SetInvisible(false);
+		}
 	}
+
+	
+	
+
 }
 
 void PlayGameScene::ObjectCollision(){
