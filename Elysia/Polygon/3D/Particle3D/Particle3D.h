@@ -111,22 +111,22 @@ namespace Elysia {
 		/// <summary>
 		/// 新しいパーティクルの生成
 		/// </summary>
-		/// <param name="randomEngine"></param>
+		/// <param name="randomEngine">ランダムエンジン</param>
 		/// <returns></returns>
 		ParticleInformation MakeNewParticle(std::mt19937& randomEngine);
 
 		/// <summary>
 		/// Emitterで発生させる
 		/// </summary>
-		/// <param name="emmitter"></param>
-		/// <param name="randomEngine"></param>
+		/// <param name="emmitter">エミッター</param>
+		/// <param name="randomEngine">ランダムエンジン</param>
 		/// <returns></returns>
 		std::list<ParticleInformation> Emission(const Emitter& emmitter, std::mt19937& randomEngine);
 
 		/// <summary>
 		/// 更新
 		/// </summary>
-		/// <param name="camera"></param>
+		/// <param name="camera">カメラ</param>
 		void Update(const Camera& camera);
 
 	public:
@@ -134,32 +134,32 @@ namespace Elysia {
 		/// <summary>
 		/// 通常描画
 		/// </summary>
-		/// <param name="camera"></param>
-		/// <param name="material"></param>
+		/// <param name="camera">カメラ</param>
+		/// <param name="material">マテリアル</param>
 		void Draw(const Camera& camera, const Material& material);
 
 		/// <summary>
 		/// 描画(平行光源)
 		/// </summary>
-		/// <param name="camera"></param>
-		/// <param name="material"></param>
-		/// <param name="directionalLight"></param>
+		/// <param name="camera">カメラ</param>
+		/// <param name="material">マテリアル</param>
+		/// <param name="directionalLight">平行光源</param>
 		void Draw(const Camera& camera, const Material& material, const DirectionalLight& directionalLight);
 
 		/// <summary>
 		/// 描画(点光源)
 		/// </summary>
-		/// <param name="camera"></param>
-		/// <param name="material"></param>
-		/// <param name="pointLight"></param>
+		/// <param name="camera">カメラ</param>
+		/// <param name="material">マテリアル</param>
+		/// <param name="pointLight">点光源</param>
 		void Draw(const Camera& camera, const Material& material, const PointLight& pointLight);
 
 		/// <summary>
 		/// 描画(スポットライト)
 		/// </summary>
-		/// <param name="camera"></param>
-		/// <param name="material"></param>
-		/// <param name="spotLight"></param>
+		/// <param name="camera">カメラ</param>
+		/// <param name="material">マテリアル</param>
+		/// <param name="spotLight">スポットライト</param>
 		void Draw(const Camera& camera, const Material& material, const SpotLight& spotLight);
 
 		/// <summary>
@@ -235,7 +235,7 @@ namespace Elysia {
 		/// <summary>
 		/// 吸収用の発生座標を設定
 		/// </summary>
-		/// <param name="position"></param>
+		/// <param name="position">座標</param>
 		inline void SetReleasePositionForAbsorb(const Vector3& position) {
 			this->releasePositionForAbsorb_ = position;
 		}
@@ -334,7 +334,9 @@ namespace Elysia {
 
 	private:
 		//時間変化
-		const float DELTA_TIME = 1.0f / 60.0f;
+		const float_t DELTA_TIME = 1.0f / 60.0f;
+		//線形補間で増える値
+		const float_t T_INCREASE_VALUE_ = 0.01f;
 	private:
 
 		//頂点リソースを作る
@@ -370,7 +372,7 @@ namespace Elysia {
 		Emitter emitter_ = {};
 
 		//テクスチャハンドル
-		uint32_t textureHandle_ = 0;
+		uint32_t textureHandle_ = 0u;
 		//動きの種類
 		uint32_t moveType_ = ParticleMoveType::NormalRelease;
 
@@ -380,9 +382,9 @@ namespace Elysia {
 		bool isAllInvisible_ = false;
 
 		//鉛直投げ上げ
-		float velocityY_ = 1.2f;
+		float_t velocityY_ = 1.2f;
 		//地面の高さ設定
-		float groundOffset_ = 0.0f;
+		float_t groundOffset_ = 0.0f;
 		//最初に放出する
 		bool isFirstRelease_ = false;
 		//放出したかどうか
@@ -394,8 +396,7 @@ namespace Elysia {
 		//生成を止めるかどうか
 		bool isStopGenerate_ = false;
 
-		//線形補間で増える値
-		const float T_INCREASE_VALUE_ = 0.01f;
+		
 		//吸収し集まる場所
 		Vector3 absorbPosition_ = {};
 		//吸収用の発生座標

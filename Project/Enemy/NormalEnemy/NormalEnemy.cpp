@@ -149,6 +149,12 @@ void NormalEnemy::Update() {
 		currentState_->Update(this);
 	}
 	else {
+		//生成中止
+		if (electricShockParticle_ != nullptr) {
+			electricShockParticle_->SetIsStopGenerate(true);
+
+		}
+		
 		//死亡したらパーティクルを出して消える
 		Delete();
 	}
@@ -285,9 +291,7 @@ void NormalEnemy::Damaged() {
 }
 
 void NormalEnemy::Delete() {
-	//生成中止
-	electricShockParticle_->SetIsStopGenerate(true);
-
+	
 	//消えていくよ
 	const float_t DELETE_INTERVAL = 0.01f;
 	material_.color.w -= DELETE_INTERVAL;
