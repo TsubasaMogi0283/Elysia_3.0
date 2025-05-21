@@ -7,6 +7,7 @@
 #include "GameManager.h"
 #include "TextureManager.h"
 #include "LevelDataManager.h"
+#include "Audio.h"
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
 #include "Calculation/QuaternionCalculation.h"
@@ -23,6 +24,8 @@ TitleScene::TitleScene() {
 	input_ = Elysia::Input::GetInstance();
 	//レベルエディタ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 void TitleScene::Initialize() {
@@ -55,6 +58,10 @@ void TitleScene::Initialize() {
 	//初期化
 	randomEffect_->Initialize();
 
+	//環境音の読み込み
+	enviromentAudioHandle_ = audio_->Load("Resources/Audio/Environment/Environment.wav");
+	//最初は音量を0にする
+	audio_->ChangeVolume(enviromentAudioHandle_, 0.0f);
 
 	//細かいシーン
 	detailTitleScene_ = std::make_unique<StartTitleScene>();
@@ -63,6 +70,11 @@ void TitleScene::Initialize() {
 	//初期化
 	detailTitleScene_->Initialize();
 
+	
+	//再生
+	//遅延を防ぐためには初期化の最後でやった方が良いと気づいた
+	audio_->Play(enviromentAudioHandle_, true);
+	
 }
 
 void TitleScene::Update(Elysia::GameManager* gameManager) {

@@ -48,7 +48,10 @@ namespace Elysia {
 	/// </summary>
 	class TextureManager;
 
-
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
 }
 
 
@@ -125,8 +128,6 @@ public:
 	/// </summary>
 	/// <param name="detailTitleScene">細かいタイトルシーン</param>
 	void ChangeDetailScene(std::unique_ptr<BaseTitleScene>detailTitleScene);
-
-
 	
 	/// <summary>
 	/// ランダムノイズを見せるかどうか
@@ -143,7 +144,15 @@ public:
 		isEnd_ = true;
 	}
 
-	
+	/// <summary>
+	/// 環境音のハンドルを取得
+	/// </summary>
+	/// <returns></returns>
+	uint32_t GetEnviromentAudioHandle()const {
+		return enviromentAudioHandle_;
+	}
+
+
 private:
 	//テクスチャ管理クラス
 	Elysia::TextureManager* textureManager_ = nullptr;
@@ -152,7 +161,8 @@ private:
 	//レベルエディタ
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	uint32_t levelHandle_ = 0u;
-
+	//オーディオ
+	Elysia::Audio* audio_ = nullptr;
 
 private:
 
@@ -160,10 +170,8 @@ private:
 	Camera camera_ = {};
 	//レールカメラ
 	std::unique_ptr<TitleRailCamera> titleRailCamera_ = nullptr;
-
 	//平行光源
 	DirectionalLight directionalLight_ = {};
-
 
 	//細かいシーン
 	std::unique_ptr<BaseTitleScene>detailTitleScene_ = nullptr;
@@ -177,6 +185,9 @@ private:
 	RandomNoise randomNoise_ = {};
 	//見せるかどうか
 	bool isDisplayRandomEffect_ = false;
+
+	//環境音のハンドル
+	uint32_t enviromentAudioHandle_ = 0u;
 
 
 

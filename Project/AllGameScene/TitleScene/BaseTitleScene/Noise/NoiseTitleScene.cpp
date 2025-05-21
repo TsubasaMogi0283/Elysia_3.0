@@ -72,6 +72,8 @@ void NoiseTitleScene::Update(TitleScene* titleScene){
 
 		//1回目
 		if (i == FIRST_EFFECT) {
+			//環境音を止める
+			audio_->Stop(titleScene->GetEnviromentAudioHandle());
 			//夜へ遷移
 			titleScene->ChangeBackTexture(std::move(std::make_unique<NightBackTexture>()));
 		}

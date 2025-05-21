@@ -180,6 +180,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Elysia\Polygon\3D\Particle3D\Particle3D.cpp" />
     <ClCompile Include="Elysia\Polygon\3D\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Elysia\Polygon\3D\Sphere\Sphere.cpp" />
+    <ClCompile Include="Elysia\Polygon\Particle\Emitter.cpp" />
     <ClCompile Include="Elysia\Polygon\PostEffect\BackTest\BackTexture.cpp" />
     <ClCompile Include="Elysia\Polygon\PostEffect\BoxFilter\BoxFilter.cpp" />
     <ClCompile Include="Elysia\Polygon\PostEffect\Dissolve\DissolveEffect.cpp" />

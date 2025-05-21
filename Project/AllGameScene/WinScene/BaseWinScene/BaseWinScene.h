@@ -36,6 +36,11 @@ namespace Elysia {
 	/// グローバル変数
 	/// </summary>
 	class GlobalVariables;
+
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
 }
 
 
@@ -51,7 +56,7 @@ class BaseWinScene {
 public:
 
 	/// <summary>
-	/// 個別の初期化
+	/// 初期化
 	/// </summary>
 	virtual void Initialize() = 0;
 
@@ -78,9 +83,6 @@ protected:
 	virtual void DisplayImGui()=0;
 
 public:
-
-
-
 	/// <summary>
 	/// レベルデータハンドルの設定
 	/// </summary>
@@ -100,9 +102,8 @@ protected:
 	Elysia::TextureManager* textureManager_ = nullptr;
 	//グローバル変数クラス
 	Elysia::GlobalVariables* globalVariables_ = nullptr;
-
-
-
+	//オーディオ
+	Elysia::Audio* audio_ = nullptr;
 
 protected:
 	//線形補間で使う変数の最大値
@@ -115,9 +116,10 @@ protected:
 	const float_t PERFECT_TRANSPARENT_ = 0.0f;
 	//完全不透明値
 	const float_t PERFECT_NO_TRANSPARENT_ = 1.0f;
-
 	//時間変化
 	const float_t DELTA_TIME_ = 1.0f / 60.0f;
+	//BGMの音量が減る値
+	const float_t BGM_VOLUME_DECREASE_VALUE_ = 0.01f;
 
 	//スプライトの初期位置
 	const Vector2 INITIAL_SPRITE_POSITION_ = { .x = 0.0f,.y = 0.0f };

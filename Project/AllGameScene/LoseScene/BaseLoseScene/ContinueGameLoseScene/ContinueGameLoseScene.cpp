@@ -8,6 +8,7 @@
 #include "ModelManager.h"
 #include "LevelDataManager.h"
 #include "GlobalVariables.h"
+#include "Audio.h"
 
 #include "Easing.h"
 #include "VectorCalculation.h"
@@ -25,6 +26,8 @@ ContinueGameLoseScene::ContinueGameLoseScene() {
 	modelManager_ = Elysia::ModelManager::GetInstance();
 	//グローバル変数クラス
 	globalVariables_ = Elysia::GlobalVariables::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 
@@ -48,9 +51,19 @@ void ContinueGameLoseScene::Update(LoseScene* loseScene){
 	//加速
 	cameraVelocity_ = VectorCalculation::Add(cameraVelocity_, cameraAccelation_);
 
+
+	//音量
+	bgmVolume_ -= DECREASE_VOLUME_VALUE_;
+	if (bgmVolume_ <= MIN_VOLUME_) {
+		bgmVolume_ = MIN_VOLUME_;
+	}
+	audio_->ChangeVolume(loseScene->GetBgmHandle(), bgmVolume_);
+
 	//半径が0になったら待ち
 	if (endLightUpT_ >= MAX_T_VALUE_) {
 		waitForCameraMoveTime_ += DELTA_TIME_;
+		//BGMを止める
+		audio_->Stop(loseScene->GetBgmHandle());
 	}
 	//指定した時間を超えたら敗北シーンを終了する
 	if (waitForCameraMoveTime_ > FINISH_WAIT_TIME_) {

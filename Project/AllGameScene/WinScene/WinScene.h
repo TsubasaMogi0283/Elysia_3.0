@@ -38,7 +38,10 @@ namespace Elysia {
 	/// </summary>
 	class GameManager;
 
-
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
 }
 
 
@@ -111,11 +114,25 @@ public:
 		this->isEnd_ = true;
 	}
 
+	/// <summary>
+	/// BGMの音量を下げる
+	/// </summary>
+	/// <param name="downValue"></param>
+	inline void BgmVolumeDown(const float_t& downValue) {
+		this->bgmVolume_ -= downValue;
+		//0より小さくしないようにする
+		if (this->bgmVolume_ <= 0.0f) {
+			this->bgmVolume_ = 0.0f;
+		}
+	}
+
 private:
 	//レベルデータ管理クラス
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
+	//オーディオ
+	Elysia::Audio* audio_ = nullptr;
 
 private:
 
@@ -125,6 +142,7 @@ private:
 	const float_t FLOATING_THETA_ = 0.05f;
 	//Y座標
 	const float_t BASED_POSITION_Y_ = 6.0f;
+
 private:
 	//カメラ
 	Camera camera_ = {};
@@ -145,5 +163,10 @@ private:
 	std::unique_ptr<BaseWinScene> detailWinScene_ = nullptr;
 	//処理が終わったかどうか
 	bool isEnd_ = false;
+
+	//勝利のBGMハンドル
+	uint32_t bgmHandle_ = 0u;
+	//音量
+	float_t bgmVolume_ = 0.8f;
 };
 

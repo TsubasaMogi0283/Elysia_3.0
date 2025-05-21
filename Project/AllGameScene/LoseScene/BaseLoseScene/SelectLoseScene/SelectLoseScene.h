@@ -59,11 +59,8 @@ private:
 	Vector3 toGameInitialPosition = {};
 	//「タイトルへ」の座標を取得
 	Vector3 toTitleInitialPosition = {};
-
 	//非選択時
 	Vector3 noSelectedScale = {};
-	
-
 
 	//矢印の回転
 	float_t arrowRotate_ = 0.0f;
@@ -73,14 +70,18 @@ private:
 	//選択中
 	//ゲームを続けるかどうか
 	bool isContinue_ = true;
-
 	//次へ
 	bool isChangeNextScene_ = false;
 	//決定時の動きに使うθ
 	float_t decideArrowMoveTheta_ = 0.0f;
 
-
 	//遷移まで待つ時間
 	float_t waitForNextSceneTime_ = 0.0f;
+
+
+	//決定音のハンドル
+	uint32_t desideSeHandle_ = 0u;
+	//選択音のハンドル
+	uint32_t selectSeHandle_ = 0u;
 };
 

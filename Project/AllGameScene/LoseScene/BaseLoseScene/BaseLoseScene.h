@@ -42,6 +42,11 @@ namespace Elysia {
 	/// グローバル変数
 	/// </summary>
 	class GlobalVariables;
+
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
 }
 
 
@@ -124,9 +129,8 @@ protected:
 	Elysia::ModelManager* modelManager_ = nullptr;
 	//グローバル変数クラス
 	Elysia::GlobalVariables* globalVariables_ = nullptr;
-
-
-
+	//オーディオ
+	Elysia::Audio* audio_ = nullptr;
 
 protected:
 	//線形補間で使う変数の最大値
@@ -142,6 +146,11 @@ protected:
 	const float_t DELTA_TIME_ = 1.0f / 60.0f;
 	//点光源の最大の半径
 	const float MAX_LIGHT_RADIUS_ = 11.8f;
+	//最大値
+	const float_t MAX_VOLUME_ = 0.9f;
+	//最小値
+	const float_t MIN_VOLUME_ = 0.0f;
+
 
 	//テキストの名前
 	//矢印
@@ -150,6 +159,8 @@ protected:
 	const std::string TO_GAME = "ToGame";
 	//タイトル
 	const std::string TO_TITLE = "ToTitle";
+
+	
 protected:
 	
 	//点光源
@@ -159,4 +170,5 @@ protected:
 	//速度
 	Vector3 cameraVelocity_ = {};
 	
+
 };

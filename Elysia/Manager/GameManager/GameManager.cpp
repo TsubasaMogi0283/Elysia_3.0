@@ -45,7 +45,6 @@ void Elysia::GameManager::ChangeScene(const std::string& sceneName){
 	//初期化
 	currentGamaScene_->Initialize();
 	
-	
 }
 
 void Elysia::GameManager::Update() {

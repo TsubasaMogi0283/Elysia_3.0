@@ -4,6 +4,7 @@
 #include "TextureManager.h"
 #include "LevelDataManager.h"
 #include "WindowsSetup.h"
+#include "Audio.h"
 
 #include "TitleScene/TitleScene.h"
 #include "TitleScene/BaseTitleScene/Waiting/WaitingTitleScene.h"
@@ -18,6 +19,8 @@ StartTitleScene::StartTitleScene(){
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
 	//ウィンドウクラス
 	windowsSetup_ = Elysia::WindowsSetup::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 void StartTitleScene::Initialize(){
@@ -48,6 +51,13 @@ void StartTitleScene::Update(TitleScene* titleScene){
 	//円が小さくなっていく
 	circleScaleSize_ -= SIZE_DOWN_VALUE_;
 	circleSprite_->SetScale({ .x = circleScaleSize_,.y = circleScaleSize_ });
+
+	//音量の設定
+	enviromentAudioVolume_ += VOLUME_INCREASE_VALUE_;
+	if (enviromentAudioVolume_ > MAX_VOLUME_) {
+		enviromentAudioVolume_ = MAX_VOLUME_;
+	}
+	audio_->ChangeVolume(titleScene->GetEnviromentAudioHandle(), enviromentAudioVolume_);
 
 	//見えなくなるほど小さくなったら待ちへ
 	if (circleScaleSize_ < 0.0f) {

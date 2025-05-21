@@ -129,7 +129,7 @@ void TestScene::Update(Elysia::GameManager* gameManager){
 	directionalLight_.Update();
 	playerMaterial_.Update();
 
-
+	//吸収座標の設定
 	deadParticle_->SetAbsorbPosition(playerWorldTransform_.GetWorldPosition());
 
 

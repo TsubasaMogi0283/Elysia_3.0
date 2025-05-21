@@ -40,7 +40,6 @@ void ToGameTitleScene::Update(TitleScene* titleScene){
 	blackFadeTransparency_ += INITIAL_TRANSPARENCY;
 	blackFade_->SetTransparency(blackFadeTransparency_);
 
-
 	//完全不透明の時処理が終わる
 	if (blackFadeTransparency_ > PERFECT_NO_TRANSPARENT_) {
 		titleScene->SetIsEnd();
@@ -52,8 +51,6 @@ void ToGameTitleScene::Update(TitleScene* titleScene){
 	DisplayImGui();
 #endif // _DEBUG
 
-
-
 }
 
 void ToGameTitleScene::DrawSprite(){
@@ -61,6 +58,9 @@ void ToGameTitleScene::DrawSprite(){
 	blackFade_->Draw();
 }
 
-void ToGameTitleScene::DisplayImGui()
-{
+void ToGameTitleScene::DisplayImGui(){
+	ImGui::Begin("ゲームシーンへ(タイトル)");
+	ImGui::InputFloat("フェードの透明度", &blackFadeTransparency_);
+	ImGui::End();
+
 }

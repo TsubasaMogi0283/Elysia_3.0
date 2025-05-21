@@ -1463,14 +1463,8 @@ void Elysia::PipelineManager::GenerateParticle3DPSO() {
 
 
 
-
-
-
-
-
 	////InputLayout
 	//InputLayout・・VertexShaderへ渡す頂点データがどのようなものかを指定するオブジェクト
-	//InputLayout
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
 	//float4
 	inputElementDescs[0].SemanticName = "POSITION";
@@ -1490,15 +1484,9 @@ void Elysia::PipelineManager::GenerateParticle3DPSO() {
 	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
-
-
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
 	inputLayoutDesc.pInputElementDescs = inputElementDescs;
 	inputLayoutDesc.NumElements = _countof(inputElementDescs);
-
-
-
-
 
 	//BlendStateの設定
 	D3D12_BLEND_DESC blendDesc{};
@@ -1515,7 +1503,6 @@ void Elysia::PipelineManager::GenerateParticle3DPSO() {
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 
 
-	//RasterizerState
 	//RasterizerState・・・Rasterizerに対する設定
 	//					  三角形の内部をピクセルに分解して、
 	//					  PixelShaderを起動することでこの処理への設定を行う
@@ -1523,33 +1510,22 @@ void Elysia::PipelineManager::GenerateParticle3DPSO() {
 	//RasterizerStateの設定
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 	//今回はカリングをオフにする
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
 	//三角形の中を塗りつぶす
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
-
-
 
 	//ShaderをCompileする
 	PipelineManager::GetInstance()->particle3DPSO_.vertexShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Particle3D/Particle3d.VS.hlsl", L"vs_6_0");
 	assert(PipelineManager::GetInstance()->particle3DPSO_.vertexShaderBlob_ != nullptr);
-
-
-
 	PipelineManager::GetInstance()->particle3DPSO_.pixelShaderBlob_ = DirectXSetup::GetInstance()->CompileShader(L"Resources/Shader/Particle3D/Particle3d.PS.hlsl", L"ps_6_0");
 	assert(PipelineManager::GetInstance()->particle3DPSO_.pixelShaderBlob_ != nullptr);
-
-
-
-
 
 	//PSO生成
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	graphicsPipelineStateDesc.pRootSignature = PipelineManager::GetInstance()->particle3DPSO_.rootSignature_.Get();
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
 	graphicsPipelineStateDesc.VS = { PipelineManager::GetInstance()->particle3DPSO_.vertexShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->particle3DPSO_.vertexShaderBlob_->GetBufferSize() };
-	//vertexShaderBlob_->GetBufferSize();
 	graphicsPipelineStateDesc.PS = { PipelineManager::GetInstance()->particle3DPSO_.pixelShaderBlob_->GetBufferPointer(),PipelineManager::GetInstance()->particle3DPSO_.pixelShaderBlob_->GetBufferSize() };
-	//pixelShaderBlob_->GetBufferSize();
 	graphicsPipelineStateDesc.BlendState = blendDesc;
 	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
 

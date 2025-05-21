@@ -74,13 +74,17 @@ private:
 	//点滅時間
 	float_t flashTime_ = 0.0f;
 
-
 	//見せるカウント
 	uint32_t textDisplayCount_ = 0u;
-
 	//高速点滅時間
 	uint32_t fastFlashTime_ = 0u;
 	//決定したかどうか
 	bool isDeside_ = false;
+
+	//決定音のハンドル
+	uint32_t desideSEHandle_ = 0u;
+	//音量
+	float_t desideSEVolume_ = 0.5f;
+
 };
 

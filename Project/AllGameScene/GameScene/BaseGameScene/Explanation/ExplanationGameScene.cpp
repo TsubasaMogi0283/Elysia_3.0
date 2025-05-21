@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "TextureManager.h"
 #include "LevelDataManager.h"
+#include "Audio.h"
 #include "GameScene/GameScene.h"
 #include "GameScene/BaseGameScene/Play/PlayGameScene.h"
 
@@ -17,6 +18,8 @@ ExplanationGameScene::ExplanationGameScene(){
 	input_ = Elysia::Input::GetInstance();
 	//レベルエディタ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 
@@ -43,7 +46,8 @@ void ExplanationGameScene::Initialize(){
 	//最初は0番目
 	howToPlayTextureNumber_ = 0u;
 
-	
+	//選択音
+	desideSeHandle_ = audio_->Load("Resources/Audio/SE/Select.wav");
 	
 }
 
@@ -52,6 +56,10 @@ void ExplanationGameScene::Update(GameScene* gameScene){
 	//スペースまたはBボタンを押したとき
 	if (input_->IsTriggerKey(DIK_SPACE) == true || input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
 		++howToPlayTextureNumber_;
+		//決定音
+		audio_->Play(desideSeHandle_, false);
+		//音量の設定
+		audio_->ChangeVolume(desideSeHandle_, desideSeVolume_);
 	}
 
 	//読み終わったらゲームプレイへ
@@ -85,8 +93,5 @@ void ExplanationGameScene::DisplayImGui(){
 	
 	ImGui::Begin("説明(ゲーム)");
 	ImGui::InputInt("テクスチャ番号", &newHowToPlayTextureNumber);
-
-
 	ImGui::End();
-
 }

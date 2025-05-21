@@ -63,9 +63,14 @@ private:
 	Vector3 cameraVelocity_ = {};
 	//加速
 	Vector3 cameraAcceleration_ = {};
-
 	//動く時間
 	float_t moveTime_ = 0.0f;
+
+	//スウィープアップ音(「シュー」っと上がっていく音)のハンドル
+	uint32_t sweepUpSEHandle_ = 0u;
+	//音量
+	float_t sweepUpSEVolume_ = 0.5f;
+
 
 };
 

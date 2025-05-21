@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "TextureManager.h"
 #include "LevelDataManager.h"
+#include "Audio.h"
 #include "GameScene/GameScene.h"
 #include "GameScene/BaseGameScene/Explanation/ExplanationGameScene.h"
 
@@ -16,6 +17,8 @@ StartGameScene::StartGameScene(){
 	input_ = Elysia::Input::GetInstance();
 	//レベルエディタ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 
@@ -32,6 +35,14 @@ void StartGameScene::Initialize(){
 }
 
 void StartGameScene::Update(GameScene* gameScene){
+
+	//環境音の音量の設定
+	enviromentAudioVolume_+=VOLUME_INCREASE_VALUE_;
+	if (enviromentAudioVolume_ >= MAX_VOLUME_) {
+		enviromentAudioVolume_ = MAX_VOLUME_;
+	}
+	gameScene->SetEnviromentAudioVolume(enviromentAudioVolume_);
+
 	//透明度の設定
 	//徐々に透明になっていく
 	fadeTransparency_ -= FADE_VALUE_;

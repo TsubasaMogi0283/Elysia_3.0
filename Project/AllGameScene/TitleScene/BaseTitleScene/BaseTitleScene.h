@@ -34,6 +34,10 @@ namespace Elysia {
 	/// </summary>
 	class TextureManager;
 
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
 
 }
 
@@ -108,6 +112,8 @@ protected:
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
+	//オーディオ
+	Elysia::Audio* audio_ = nullptr;
 
 protected:
 	//再スタート時間
@@ -126,6 +132,8 @@ protected:
 protected:
 	//平行光源
 	DirectionalLight directionalLight_ = {};
-
-
+	//決定音のハンドル
+	uint32_t desideSEHandle_ = 0u;
+	//音量
+	float_t desideSEVolume_ = 0.5f;
 };

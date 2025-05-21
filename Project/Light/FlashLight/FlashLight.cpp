@@ -46,7 +46,7 @@ void FlashLight::Initialize() {
 
 	//ライトの片方の角度
 	//15度=π/12
-	lightSideTheta_ = (std::numbers::pi_v<float> / 12.0f);
+	lightSideTheta_ = (std::numbers::pi_v<float_t> / 12.0f);
 
 	//扇
 	fan3D_.length = LIGHT_DISTANCE;
@@ -203,7 +203,6 @@ void FlashLight::DrawObject3D(const Camera& camera) {
 
 #endif // _DEBUG
 
-
 	for (const std::unique_ptr <Elysia::Particle3D>& particle : chargeParticle_) {
 		if (particle != nullptr) {
 			//スポットライトの座標に集まってくるようにする
@@ -236,24 +235,23 @@ void FlashLight::GenerateParticle() {
 	const float FREQUENCY = 0.5f;
 	particle->SetFrequency(FREQUENCY);
 
-	//距離
-	const float DISTANCE = 3.0f;
-	Vector3 emitterDirection = VectorCalculation::Multiply(fan3D_.direction, DISTANCE);
-	Vector3 emitterPosition = VectorCalculation::Add(fan3D_.position, emitterDirection);
-	particle->SetTranslate(emitterPosition);
-
 	//挿入
 	chargeParticle_.push_back(std::move(particle));
 }
 
 void FlashLight::Charge() {
 	
+	//発生座標の設定
+	const float_t DISTANCE = 5.0f;
+	Vector3 emitterDirection = VectorCalculation::Multiply(fan3D_.direction, DISTANCE);
+	Vector3 emitterPosition = VectorCalculation::Add(fan3D_.position, emitterDirection);
+
+
 	//チャージ中の時
 	if (isCharge_ == true) {
 		chargeValue_ += chargeIncreaseValue_;
 		//最大値を制限
-		chargeValue_=std::min<float_t>(MAX_CHARGE_VALUE_, chargeValue_);
-		
+		chargeValue_ = std::min<float_t>(MAX_CHARGE_VALUE_, chargeValue_);
 		//パーティクルの生成
 		if (isGenerate_ == false) {
 			GenerateParticle();
@@ -300,7 +298,7 @@ void FlashLight::Charge() {
 	}
 
 	//割合
-	float ratio = 0.0f;
+	float_t ratio = 0.0f;
 	//クールタイム
 	if (isCoolTime_ == true) {
 		//減少
@@ -323,14 +321,14 @@ void FlashLight::Charge() {
 	//白フェード
 	if (chargeConditionValue_ >= ChargeCondition::NormalChargeAttack) {
 		//まぶしすぎたので弱める
-		const float OFFSET = 0.5f;
+		const float_t OFFSET = 0.5f;
 		//攻撃可能な時だけにする
 		attackWhiteFadeSprite_->SetTransparency(ratio- OFFSET);
 
 	}
 	
 	//初期+割合分
-	const float ATTACK_INTENCITY = 800.0f;
+	const float_t ATTACK_INTENCITY = 800.0f;
 	spotLight_.intensity = INITIAL_INTENCITY_ + (ratio * ATTACK_INTENCITY);
 
 	//値によって伸びる幅が変わる
@@ -340,6 +338,7 @@ void FlashLight::Charge() {
 	//スポットライトの座標に集まってくるようにする
 	for (const std::unique_ptr <Elysia::Particle3D>& particle : chargeParticle_) {
 		if (particle != nullptr) {
+			particle->SetReleasePositionForAbsorb(emitterPosition);
 			particle->SetAbsorbPosition(spotLight_.position);
 		}
 	}
