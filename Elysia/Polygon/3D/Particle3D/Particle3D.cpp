@@ -240,13 +240,13 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 
 
 			//カメラの回転を適用する
-			billBoardMatrix =  camera.worldMatrix;
+			billBoardMatrix = camera.viewMatrix;
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
 			billBoardMatrix.m[3][1] = 0.0f;
 			billBoardMatrix.m[3][2] = 0.0f;
-
+			billBoardMatrix = Matrix4x4Calculation::Inverse(billBoardMatrix);
 			//行列を作っていくよ
 			//Scale
 			scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(particleIterator->transform.scale);
@@ -291,13 +291,13 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 			particleIterator->transform.translate.z += particleIterator->velocity.z / 3.0f;
 
 			//カメラの回転を適用する
-			billBoardMatrix = camera.worldMatrix;
+			billBoardMatrix = camera.viewMatrix;
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
 			billBoardMatrix.m[3][1] = 0.0f;
 			billBoardMatrix.m[3][2] = 0.0f;
-
+			billBoardMatrix = Matrix4x4Calculation::Inverse(billBoardMatrix);
 			//行列を作っていくよ
 			scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(particleIterator->transform.scale);
 			translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(particleIterator->transform.translate);
@@ -339,13 +339,13 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 			particleIterator->transform.translate.y += 0.03f;
 			particleIterator->transform.translate.z += particleIterator->velocity.z / 15.0f;
 			//カメラの回転を適用する
-			billBoardMatrix = camera.worldMatrix;
+			billBoardMatrix = camera.viewMatrix;
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
 			billBoardMatrix.m[3][1] = 0.0f;
 			billBoardMatrix.m[3][2] = 0.0f;
-
+			billBoardMatrix = Matrix4x4Calculation::Inverse(billBoardMatrix);
 			//行列を作っていくよ
 			scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(particleIterator->transform.scale);
 			translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(particleIterator->transform.translate);
@@ -384,13 +384,13 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 			Vector3 newPosition = VectorCalculation::Lerp(VectorCalculation::Add(releasePositionForAbsorb_, particleIterator->transform.translate), absorbPosition_, particleIterator->absorbT);
 
 			//カメラの回転を適用する
-			billBoardMatrix = camera.worldMatrix;
+			billBoardMatrix = camera.viewMatrix;
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
 			billBoardMatrix.m[3][1] = 0.0f;
 			billBoardMatrix.m[3][2] = 0.0f;
-
+			billBoardMatrix = Matrix4x4Calculation::Inverse(billBoardMatrix);
 			//行列を作っていくよ
 			scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(particleIterator->transform.scale);
 			translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(newPosition);
@@ -422,13 +422,13 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 		case ParticleMoveType::Stay:
 #pragma region 滞留
 			//カメラの回転を適用する
-			billBoardMatrix = camera.worldMatrix;
+			billBoardMatrix = camera.viewMatrix;
 			//平行成分はいらないよ
 			//あくまで回転だけ
 			billBoardMatrix.m[3][0] = 0.0f;
 			billBoardMatrix.m[3][1] = 0.0f;
 			billBoardMatrix.m[3][2] = 0.0f;
-
+			billBoardMatrix = Matrix4x4Calculation::Inverse(billBoardMatrix);
 			//行列を作っていくよ
 			//拡縮
 			scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(particleIterator->transform.scale);

@@ -242,7 +242,7 @@ void FlashLight::GenerateParticle() {
 void FlashLight::Charge() {
 	
 	//発生座標の設定
-	const float_t DISTANCE = 3.0f;
+	const float_t DISTANCE = 5.0f;
 	Vector3 emitterDirection = VectorCalculation::Multiply(fan3D_.direction, DISTANCE);
 	Vector3 emitterPosition = VectorCalculation::Add(fan3D_.position, emitterDirection);
 
@@ -290,7 +290,8 @@ void FlashLight::Charge() {
 	else {
 		for (const std::unique_ptr <Elysia::Particle3D>& particle : chargeParticle_) {
 			if (particle != nullptr) {
-				
+				//スポットライトの座標に集まってくるようにする
+				particle->SetIsStopGenerate(true);
 			}
 		}
 		isGenerate_ = false;
@@ -337,8 +338,6 @@ void FlashLight::Charge() {
 	//スポットライトの座標に集まってくるようにする
 	for (const std::unique_ptr <Elysia::Particle3D>& particle : chargeParticle_) {
 		if (particle != nullptr) {
-			//スポットライトの座標に集まってくるようにする
-			particle->SetIsStopGenerate(true);
 			particle->SetReleasePositionForAbsorb(emitterPosition);
 			particle->SetAbsorbPosition(spotLight_.position);
 		}
