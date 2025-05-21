@@ -883,7 +883,7 @@
       <Filter>Elysia\Source File\Material</Filter>
     </ClCompile>
     <ClCompile Include="Elysia\Material\RandomNoise\RandomNoise.cpp">
-      <Filter>Elysia\Source File</Filter>
+      <Filter>Elysia\Source File\Material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1469,7 +1469,7 @@
       <Filter>Elysia\Header File\Material</Filter>
     </ClInclude>
     <ClInclude Include="Elysia\Material\RandomNoise\RandomNoise.h">
-      <Filter>Elysia\Header File</Filter>
+      <Filter>Elysia\Header File\Material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
