@@ -399,6 +399,10 @@ void PlayGameScene::PlayerMove(){
 
 #pragma region
 
+#ifdef _DEBUG
+
+
+
 	//プレイヤーが動いている時
 	if (isPlayerMove == true) {
 		//ダッシュ
@@ -424,6 +428,8 @@ void PlayGameScene::PlayerMove(){
 		//ダッシュをしているかどうかの設定
 		player_->SetIsDash(isPlayerDash);
 	}
+#endif // _DEBUG
+
 	//プレイヤーの動く方向を入れる
 	player_->SetMoveDirection(playerMoveDirection);
 
