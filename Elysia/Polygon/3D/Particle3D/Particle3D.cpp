@@ -222,10 +222,9 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 		Matrix4x4 scaleMatrix = {};
 		Matrix4x4 translateMatrix = {};
 		Matrix4x4 billBoardMatrix = {};
-		Matrix4x4 backToFrontMatrix = {};
-
+		Matrix4x4 backToFrontMatrix =  Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float_t>);
 		//加速
-		float accel = -0.001f;
+		float_t accel = -0.001f;
 		particleIterator->currentTime += DELTA_TIME;
 
 		switch (moveType_) {
@@ -239,11 +238,8 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 				}
 			}
 
-
 			particleIterator->transform.translate.y += 0.0001f;
 
-			//Y軸でπ/2回転
-			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
 			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix);
@@ -289,18 +285,12 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 
 		case ParticleMoveType::ThrowUp:
 #pragma region 鉛直投げ上げ
-			//強制的にビルボードにするよ
-
-
 			velocityY_ += accel;
 
 			//加速を踏まえた位置計算
 			particleIterator->transform.translate.x += particleIterator->velocity.x / 3.0f;
 			particleIterator->transform.translate.y += velocityY_;
 			particleIterator->transform.translate.z += particleIterator->velocity.z / 3.0f;
-
-			//Y軸でπ/2回転
-			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 			//カメラの回転を適用する
 			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix);
@@ -399,9 +389,6 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 			//線形補間でやって綺麗に集まるようにする	
 			Vector3 newPosition = VectorCalculation::Lerp(releasePositionForAbsorb_, absorbPosition_, particleIterator->absorbT);
 
-			//Y軸でπ/2回転
-			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
-
 			//カメラの回転を適用する
 			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix);
 			//平行成分はいらないよ
@@ -446,7 +433,7 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 #pragma region 滞留
 
 			//Y軸でπ/2回転
-			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float>);
+			backToFrontMatrix = Matrix4x4Calculation::MakeRotateYMatrix(std::numbers::pi_v<float_t>);
 
 			//カメラの回転を適用する
 			billBoardMatrix = Matrix4x4Calculation::Multiply(backToFrontMatrix, camera.worldMatrix);
@@ -463,7 +450,7 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 			translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(VectorCalculation::Add(particleIterator->transform.translate,trackingPosition_));
 			//パーティクル個別のRotateは関係ないよ
 			//その代わりにさっき作ったbillBoardMatrixを入れるよ
-			worldMatrix = Matrix4x4Calculation::Multiply(scaleMatrix, Matrix4x4Calculation::Multiply(billBoardMatrix, translateMatrix));
+			worldMatrix = Matrix4x4Calculation::Multiply(Matrix4x4Calculation::Multiply(scaleMatrix, billBoardMatrix), translateMatrix);
 
 
 
@@ -476,7 +463,7 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 				//透明になっていくようにするかどうか
 				if (isToTransparent_ == true) {
 					//どんどん透明にしていく
-					float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
+					float_t alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
 					particleIterator->color.w = alpha;
 					particleForGpuData_[numInstance_].color.w = alpha;
 				}

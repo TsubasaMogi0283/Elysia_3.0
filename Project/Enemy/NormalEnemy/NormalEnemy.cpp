@@ -242,10 +242,10 @@ void NormalEnemy::Damaged() {
 			//テクスチャの上書き
 			electricShockParticle_->TextureOverride(thunderTextureHandle_);
 			//パーティクルの細かい設定
-			const float SCALE_SIZE = 0.7f;
+			const float_t SCALE_SIZE = 0.7f;
 			electricShockParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
 			electricShockParticle_->SetCount(6u);
-			const float FREQUENCY = 4.0f;
+			const float_t FREQUENCY = 4.0f;
 			electricShockParticle_->SetIsReleaseOnceMode(false);
 			electricShockParticle_->SetFrequency(FREQUENCY);
 			electricShockParticle_->SetIsToTransparent(true);
@@ -285,12 +285,15 @@ void NormalEnemy::Damaged() {
 }
 
 void NormalEnemy::Delete() {
+	//生成中止
+	electricShockParticle_->SetIsStopGenerate(true);
+
 	//消えていくよ
-	const float DELETE_INTERVAL = 0.01f;
+	const float_t DELETE_INTERVAL = 0.01f;
 	material_.color.w -= DELETE_INTERVAL;
 
 	//縮小
-	const float SCALE_DOWN_VALUE = -0.1f;
+	const float_t SCALE_DOWN_VALUE = -0.1f;
 	worldTransform_.scale.x += SCALE_DOWN_VALUE;
 	worldTransform_.scale.y += SCALE_DOWN_VALUE;
 	worldTransform_.scale.z += SCALE_DOWN_VALUE;
