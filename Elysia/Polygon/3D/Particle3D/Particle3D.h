@@ -240,6 +240,14 @@ namespace Elysia {
 			this->releasePositionForAbsorb_ = position;
 		}
 
+		/// <summary>
+		/// 追従座標の設定
+		/// </summary>
+		/// <param name="position"></param>
+		inline void SetTrackingPosition(const Vector3& position) {
+			this->trackingPosition_ = position;
+		}
+
 #pragma region エミッタの中の設定
 
 
@@ -307,6 +315,8 @@ namespace Elysia {
 		}
 
 
+
+
 #pragma endregion
 
 	private:
@@ -325,18 +335,6 @@ namespace Elysia {
 	private:
 		//時間変化
 		const float DELTA_TIME = 1.0f / 60.0f;
-	private:
-		/// <summary>
-		/// インスタンシングの情報
-		/// </summary>
-		struct InstancingData {
-			//リソース
-			ComPtr<ID3D12Resource> resource;
-			//SRV用のインデックス
-			int srvIndex;
-		};
-
-
 	private:
 
 		//頂点リソースを作る
@@ -402,7 +400,8 @@ namespace Elysia {
 		Vector3 absorbPosition_ = {};
 		//吸収用の発生座標
 		Vector3 releasePositionForAbsorb_ = {};
-
+		//追従座標
+		Vector3 trackingPosition_ = {};
 	};
 
 };

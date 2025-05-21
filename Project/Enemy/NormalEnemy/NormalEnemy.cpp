@@ -279,8 +279,7 @@ void NormalEnemy::Damaged() {
 		//振動分の値を座標に加算
 		worldTransform_.translate = VectorCalculation::Add(GetWorldPosition(), electricDamageShakeValue_);
 		//座標の設定
-		electricShockParticle_->SetTranslate(GetWorldPosition());
-
+		electricShockParticle_->SetTrackingPosition(GetWorldPosition());
 	}
 
 }

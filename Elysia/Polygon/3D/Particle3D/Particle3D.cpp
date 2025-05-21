@@ -66,8 +66,6 @@ std::unique_ptr<Elysia::Particle3D> Elysia::Particle3D::Create(const uint32_t& m
 	particle3D->instancingIndex_ = particle3D->srvManager_->Allocate();
 	//SRVの作成
 	particle3D->srvManager_->CreateSRVForStructuredBuffer(particle3D->instancingIndex_, particle3D->instancingResource_.Get(), particle3D->MAX_INSTANCE_NUMBER_, sizeof(ParticleForGPU));
-	//マップに記録
-	InstancingData instancingData = { .resource = particle3D->instancingResource_ ,.srvIndex = particle3D->instancingIndex_ };
 	//カメラ
 	particle3D->cameraResource_ = particle3D->directXSetup_->CreateBufferResource(sizeof(Vector3));
 
@@ -138,15 +136,15 @@ ParticleInformation Elysia::Particle3D::MakeNewParticle(std::mt19937& randomEngi
 	//初期トランスフォームを記録
 	particle.initialTransform = particle.transform;
 	//速度
-	std::uniform_real_distribution<float>distVelocity(-1.0f, 1.0f);
+	std::uniform_real_distribution<float_t>distVelocity(-1.0f, 1.0f);
 	particle.velocity = { .x = distVelocity(randomEngine),.y = distVelocity(randomEngine),.z = distVelocity(randomEngine) };
 
 	//色
-	std::uniform_real_distribution<float> distColor(1.0f, 1.0f);
+	std::uniform_real_distribution<float_t> distColor(1.0f, 1.0f);
 	particle.color = { .x = distColor(randomEngine),.y = distColor(randomEngine),.z = distColor(randomEngine),.w = 1.0f };
 
 	//時間
-	std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
+	std::uniform_real_distribution<float_t> distTime(0.5f, 1.5f);
 	particle.lifeTime = distTime(randomEngine);
 	particle.currentTime = 0.0f;
 
@@ -462,7 +460,7 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 			//拡縮
 			scaleMatrix = Matrix4x4Calculation::MakeScaleMatrix(particleIterator->transform.scale);
 			//座標
-			translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(particleIterator->transform.translate);
+			translateMatrix = Matrix4x4Calculation::MakeTranslateMatrix(VectorCalculation::Add(particleIterator->transform.translate,trackingPosition_));
 			//パーティクル個別のRotateは関係ないよ
 			//その代わりにさっき作ったbillBoardMatrixを入れるよ
 			worldMatrix = Matrix4x4Calculation::Multiply(scaleMatrix, Matrix4x4Calculation::Multiply(billBoardMatrix, translateMatrix));
