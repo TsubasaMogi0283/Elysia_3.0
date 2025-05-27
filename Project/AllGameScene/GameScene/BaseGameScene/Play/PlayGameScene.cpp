@@ -75,6 +75,9 @@ void PlayGameScene::Initialize(){
 	gate_ = std::make_unique<Gate>();
 	//初期化
 	gate_->Initialize(gateModelhandle);
+
+	//骨の初期座標を取得
+	bonePosition_= levelDataManager_->GetInitialTranslate(levelDataHandle_, bone_);
 }
 
 void PlayGameScene::Update(GameScene* gameScene){
@@ -99,6 +102,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 	EscapeCondition();
 	//オブジェクトの当たり判定
 	ObjectCollision();
+	//ポルターガイストの処理
+	PoltergeistProcess();
 	//コリジョン管理クラスに登録
 	RegisterToCollisionManager();
 
@@ -149,8 +154,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 		whiteFadeSprite_->SetTransparency(newOpenT_);
 
 		//門の回転
-		levelDataManager_->SetRotate(levelDataHandle_, right, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
-		levelDataManager_->SetRotate(levelDataHandle_, left, { .x = 0.0f,.y = -leftGateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelDataHandle_, right_, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelDataHandle_, left_, { .x = 0.0f,.y = -leftGateRotateTheta_,.z = 0.0f });
 
 		//音を止める
 		enemyManager_->StopAudio();
@@ -270,7 +275,6 @@ void PlayGameScene::RegisterToCollisionManager(){
 void PlayGameScene::PlayerMove(){
 
 	//何も押していない時つまり動いていないので通常はfalseと0にしておく
-
 	//キーボードで動かしているかどうか
 	bool isPlayerMoveKey = false;
 	//動いているかどうか
@@ -603,9 +607,65 @@ void PlayGameScene::ObjectCollision(){
 
 }
 
+void PlayGameScene::PoltergeistProcess(){
+	//墓場内の鍵を取ったら動き出す
+	if (keyManager_->GetIsPickUpKeyInCemetery() == true) {
+
+
+		if (isBoneRise_ == true) {
+			bonePosition_.y += 0.05f;
+			if (bonePosition_.y > FLOATING_HEIGHT_) {
+				bonePosition_.y = FLOATING_HEIGHT_;
+				isBoneRise_ = false;
+				isFinishRiseBone_ = true;
+			}
+		}
+		
+
+
+		//上がり切った時に浮遊
+		if (isFinishRiseBone_ == true) {
+			floatingTheta_ += ROTATE_THETA_VALUE_;
+
+			floatingBoneTime_ += DELTA_TIME_;
+			if (floatingBoneTime_ > FLOATING_TIME_) {
+				isFinishRiseBone_ = false;
+				isReadyForBoneDrop_ = true;
+			}
+		}
+
+		//落下準備
+		if (isReadyForBoneDrop_ == true) {
+			floatingTheta_+=RAPID_ROTATE_THETA_VALUE_;
+			readyForDropTime_ += DELTA_TIME_;
+			if (readyForDropTime_ >READY_FOR_DROP_TIME_) {
+				isReadyForBoneDrop_ = false;
+				isBoneDrop_ = true;
+			}
+		}
+
+
+		//骨が落下する
+		if (isBoneDrop_ == true) {
+			floatingTheta_ += RAPID_ROTATE_THETA_VALUE_;
+
+			bonePosition_.y -= dropSpeed_;
+		}
+
+		//回転の変更
+		levelDataManager_->SetRotate(levelDataHandle_, bone_, { .x = floatingTheta_,.y = rightGateRotateTheta_,.z = floatingTheta_ });
+		//座標の変更
+		levelDataManager_->SetTranslate(levelDataHandle_, bone_, bonePosition_);
+
+	}
+	
+}
+
 void PlayGameScene::DisplayImGui(){
 
 	ImGui::Begin("プレイ(ゲーム)");
+	ImGui::InputFloat3("骨の座標", &bonePosition_.x);
+
 	ImGui::SliderFloat3("座標", &fenceTranslate_.x, 0.0f, 100.0f);
 	ImGui::SliderFloat("右門の回転", &rightGateRotateTheta_, 0.0f, 3.0f);
 	ImGui::InputFloat("線形補間", &openT_);

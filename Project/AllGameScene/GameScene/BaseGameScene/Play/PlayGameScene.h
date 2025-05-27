@@ -71,6 +71,10 @@ private:
 	/// </summary>
 	void ObjectCollision();
 
+	/// <summary>
+	/// ポルターガイストの処理
+	/// </summary>
+	void PoltergeistProcess();
 
 	/// <summary>
 	/// ImGui表示用
@@ -105,8 +109,23 @@ private:
 	const float_t MIN_WARNING_TIME_ = 1.0f;
 
 	//レベルエディタのオブジェクトの名前
-	std::string right = "GateDoorRight";
-	std::string left = "GateDoorLeft";
+	std::string right_ = "GateDoorRight";
+	std::string left_ = "GateDoorLeft";
+
+	//骨の名前
+	std::string bone_ = "Bone001";
+	//浮遊の高さ
+	const float_t FLOATING_HEIGHT_ = 4.0f;
+	//浮遊時間
+	const float_t FLOATING_TIME_ = 4.0f;
+	//落下準備時間
+	const float_t READY_FOR_DROP_TIME_=3.0f;
+
+	//回転の値
+	const float_t ROTATE_THETA_VALUE_ = 0.1f;
+	//高速回転
+	const float_t RAPID_ROTATE_THETA_VALUE_ = 0.5f;
+
 
 
 	//最大音量
@@ -152,6 +171,25 @@ private:
 	std::unique_ptr<Elysia::Sprite> escapeTextSprite_ = nullptr;
 	//脱出のスプライト
 	std::unique_ptr<Elysia::Sprite> toEscapeSprite_ = nullptr;
+
+	//骨が上がる
+	bool isBoneRise_ = true;
+	//骨が上がり切ったかどうか
+	bool isFinishRiseBone_ = false;
+	//浮遊時間
+	float_t floatingBoneTime_ = 0.0f;
+	//浮遊時に使うθ
+	float_t floatingTheta_ = 0.0f;
+	//骨の座標
+	Vector3 bonePosition_ = {};
+	//落下準備
+	bool isReadyForBoneDrop_ = false;
+	//落下準備委時間
+	float_t readyForDropTime_ = 0.0f;
+	//落下
+	bool isBoneDrop_ = false;
+	//落下スピード
+	float_t dropSpeed_ = 0.4f;
 
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;

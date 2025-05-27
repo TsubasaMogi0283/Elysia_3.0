@@ -350,7 +350,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
     }
 
     // Most "big" widgets share a common width settings by default. See 'Demo->Layout->Widgets Width' for details.
-    // e.g. Use 2/3 of the space for widgets and 1/3 for labels (right align)
+    // e.g. Use 2/3 of the space for widgets and 1/3 for labels (right_ align)
     //ImGui::PushItemWidth(-ImGui::GetWindowWidth() * 0.35f);
     // e.g. Leave a fixed amount of width for labels (by passing a negative value), the rest goes to widgets.
     ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
@@ -1130,8 +1130,8 @@ static void ShowDemoWindowWidgets()
             ImGui::Checkbox("Use Text Color for Tint", &use_text_color_for_tint);
             ImGui::Text("%.0fx%.0f", my_tex_w, my_tex_h);
             ImVec2 pos = ImGui::GetCursorScreenPos();
-            ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
-            ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
+            ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left_
+            ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right_
             ImVec4 tint_col = use_text_color_for_tint ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
             ImVec4 border_col = ImGui::GetStyleColorVec4(ImGuiCol_Border);
             ImGui::Image(my_tex_id, ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
@@ -1166,7 +1166,7 @@ static void ShowDemoWindowWidgets()
             if (i > 0)
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(i - 1.0f, i - 1.0f));
             ImVec2 size = ImVec2(32.0f, 32.0f);                         // Size of the image we want to make visible
-            ImVec2 uv0 = ImVec2(0.0f, 0.0f);                            // UV coordinates for lower-left
+            ImVec2 uv0 = ImVec2(0.0f, 0.0f);                            // UV coordinates for lower-left_
             ImVec2 uv1 = ImVec2(32.0f / my_tex_w, 32.0f / my_tex_h);    // UV coordinates for (32,32) in our texture
             ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);             // Black background
             ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);           // No tint
@@ -3283,7 +3283,7 @@ static void ShowDemoWindowLayout()
                     if (enable_track && item == track_item)
                     {
                         ImGui::TextColored(ImVec4(1, 1, 0, 1), "Item %d", item);
-                        ImGui::SetScrollHereX(i * 0.25f); // 0.0f:left, 0.5f:center, 1.0f:right
+                        ImGui::SetScrollHereX(i * 0.25f); // 0.0f:left_, 0.5f:center, 1.0f:right_
                     }
                     else
                     {
@@ -3730,7 +3730,7 @@ static void ShowDemoWindowPopups()
             }
 
             // We can also use OpenPopupOnItemClick() to toggle the visibility of a given popup.
-            // Here we make it that right-clicking this other text element opens the same popup as above.
+            // Here we make it that right_-clicking this other text element opens the same popup as above.
             // The popup itself will be submitted by the code above.
             ImGui::Text("(2) Or right-click this text");
             ImGui::OpenPopupOnItemClick("my popup", ImGuiPopupFlags_MouseButtonRight);
@@ -5192,7 +5192,7 @@ static void ShowDemoWindowTables()
                 ImGui::TableSetColumnIndex(1);
                 ImGui::SliderFloat("float1", &dummy_f, 0.0f, 1.0f);
                 ImGui::TableSetColumnIndex(2);
-                ImGui::SliderFloat("##float2", &dummy_f, 0.0f, 1.0f); // No visible label since right-aligned
+                ImGui::SliderFloat("##float2", &dummy_f, 0.0f, 1.0f); // No visible label since right_-aligned
                 ImGui::PopID();
             }
             ImGui::EndTable();
@@ -7014,7 +7014,7 @@ struct ExampleAppConsole
         Filter.Draw("Filter (\"incl,-excl\") (\"error\")", 180);
         ImGui::Separator();
 
-        // Reserve enough left-over height for 1 separator + 1 input text
+        // Reserve enough left_-over height for 1 separator + 1 input text
         const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing();
         if (ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), ImGuiChildFlags_None, ImGuiWindowFlags_HorizontalScrollbar))
         {
@@ -7043,7 +7043,7 @@ struct ExampleAppConsole
             // We would need random-access on the post-filtered list.
             // A typical application wanting coarse clipping and filtering may want to pre-compute an array of indices
             // or offsets of items that passed the filtering test, recomputing this array when user changes the filter,
-            // and appending newly elements as they are inserted. This is left as a task to the user until we can manage
+            // and appending newly elements as they are inserted. This is left_ as a task to the user until we can manage
             // to improve this example code!
             // If your items are of variable height:
             // - Split them into same height items would be simpler and facilitate random-seeking into your list.

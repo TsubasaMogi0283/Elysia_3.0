@@ -115,9 +115,9 @@ namespace Matrix4x4Calculation {
 	/// <summary>
 	/// 正射影行列
 	/// </summary>
-	/// <param name="left"></param>
+	/// <param name="left_"></param>
 	/// <param name="top"></param>
-	/// <param name="right"></param>
+	/// <param name="right_"></param>
 	/// <param name="bottom"></param>
 	/// <param name="neaClip"></param>
 	/// <param name="farClip"></param>

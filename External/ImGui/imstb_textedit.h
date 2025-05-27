@@ -147,8 +147,8 @@
 //
 //    STB_TEXTEDIT_K_SHIFT       a power of two that is or'd in to a keyboard input to represent the shift key
 //
-//    STB_TEXTEDIT_K_LEFT        keyboard input to move cursor left
-//    STB_TEXTEDIT_K_RIGHT       keyboard input to move cursor right
+//    STB_TEXTEDIT_K_LEFT        keyboard input to move cursor left_
+//    STB_TEXTEDIT_K_RIGHT       keyboard input to move cursor right_
 //    STB_TEXTEDIT_K_UP          keyboard input to move cursor up
 //    STB_TEXTEDIT_K_DOWN        keyboard input to move cursor down
 //    STB_TEXTEDIT_K_PGUP        keyboard input to move cursor up a page
@@ -158,7 +158,7 @@
 //    STB_TEXTEDIT_K_TEXTSTART   keyboard input to move cursor to start of text  // e.g. ctrl-HOME
 //    STB_TEXTEDIT_K_TEXTEND     keyboard input to move cursor to end of text    // e.g. ctrl-END
 //    STB_TEXTEDIT_K_DELETE      keyboard input to delete selection or character under cursor
-//    STB_TEXTEDIT_K_BACKSPACE   keyboard input to delete selection or character left of cursor
+//    STB_TEXTEDIT_K_BACKSPACE   keyboard input to delete selection or character left_ of cursor
 //    STB_TEXTEDIT_K_UNDO        keyboard input to perform undo
 //    STB_TEXTEDIT_K_REDO        keyboard input to perform redo
 //
@@ -168,8 +168,8 @@
 //                                          required for default WORDLEFT/WORDRIGHT handlers
 //    STB_TEXTEDIT_MOVEWORDLEFT(obj,i)   custom handler for WORDLEFT, returns index to move cursor to
 //    STB_TEXTEDIT_MOVEWORDRIGHT(obj,i)  custom handler for WORDRIGHT, returns index to move cursor to
-//    STB_TEXTEDIT_K_WORDLEFT            keyboard input to move cursor left one word // e.g. ctrl-LEFT
-//    STB_TEXTEDIT_K_WORDRIGHT           keyboard input to move cursor right one word // e.g. ctrl-RIGHT
+//    STB_TEXTEDIT_K_WORDLEFT            keyboard input to move cursor left_ one word // e.g. ctrl-LEFT
+//    STB_TEXTEDIT_K_WORDRIGHT           keyboard input to move cursor right_ one word // e.g. ctrl-RIGHT
 //    STB_TEXTEDIT_K_LINESTART2          secondary keyboard input to move cursor to start of line
 //    STB_TEXTEDIT_K_LINEEND2            secondary keyboard input to move cursor to end of line
 //    STB_TEXTEDIT_K_TEXTSTART2          secondary keyboard input to move cursor to start of text
@@ -178,7 +178,7 @@
 // Keyboard input must be encoded as a single integer value; e.g. a character code
 // and some bitflags that represent shift states. to simplify the interface, SHIFT must
 // be a bitflag, so we can test the shifted state of cursor movements to allow selection,
-// i.e. (STB_TEXTEDIT_K_RIGHT|STB_TEXTEDIT_K_SHIFT) should be shifted right-arrow.
+// i.e. (STB_TEXTEDIT_K_RIGHT|STB_TEXTEDIT_K_SHIFT) should be shifted right_-arrow.
 //
 // You can encode other things, such as CONTROL or ALT, in additional bits, and
 // then test for their presence in e.g. STB_TEXTEDIT_K_WORDLEFT. For example,
@@ -219,7 +219,7 @@
 //      click:
 //          call this with the mouse x,y on a mouse down; it will update the cursor
 //          and reset the selection start/end to the cursor point. the x,y must
-//          be relative to the text widget, with (0,0) being the top left.
+//          be relative to the text widget, with (0,0) being the top left_.
 //
 //      drag:
 //          call this with the mouse x,y on a mouse drag/up; it will update the
@@ -366,7 +366,7 @@ typedef struct
 // result of layout query
 typedef struct
 {
-   float x0,x1;             // starting x location, end x location (allows for align=right, etc)
+   float x0,x1;             // starting x location, end x location (allows for align=right_, etc)
    float baseline_y_delta;  // position of baseline relative to previous row's baseline
    float ymin,ymax;         // height of row above and below baseline
    int num_chars;
@@ -791,7 +791,7 @@ retry:
       case STB_TEXTEDIT_K_LEFT | STB_TEXTEDIT_K_SHIFT:
          stb_textedit_clamp(str, state);
          stb_textedit_prep_selection_at_cursor(state);
-         // move selection left
+         // move selection left_
          if (state->select_end > 0)
             --state->select_end;
          state->cursor = state->select_end;
@@ -842,7 +842,7 @@ retry:
 
       case STB_TEXTEDIT_K_RIGHT | STB_TEXTEDIT_K_SHIFT:
          stb_textedit_prep_selection_at_cursor(state);
-         // move selection right
+         // move selection right_
          ++state->select_end;
          stb_textedit_clamp(str, state);
          state->cursor = state->select_end;
@@ -860,7 +860,7 @@ retry:
          int row_count = is_page ? state->row_count_per_page : 1;
 
          if (!is_page && state->single_line) {
-            // on windows, up&down in single-line behave like left&right
+            // on windows, up&down in single-line behave like left_&right_
             key = STB_TEXTEDIT_K_RIGHT | (key & STB_TEXTEDIT_K_SHIFT);
             goto retry;
          }
@@ -927,7 +927,7 @@ retry:
          int row_count = is_page ? state->row_count_per_page : 1;
 
          if (!is_page && state->single_line) {
-            // on windows, up&down become left&right
+            // on windows, up&down become left_&right_
             key = STB_TEXTEDIT_K_LEFT | (key & STB_TEXTEDIT_K_SHIFT);
             goto retry;
          }
