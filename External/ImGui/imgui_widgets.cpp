@@ -482,7 +482,7 @@ bool ImGui::ButtonBehavior(const ImRect& bb, ImGuiID id, bool* out_hovered, bool
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
 
-    // Default only reacts to left mouse button
+    // Default only reacts to left_ mouse button
     if ((flags & ImGuiButtonFlags_MouseButtonMask_) == 0)
         flags |= ImGuiButtonFlags_MouseButtonDefault_;
 
@@ -950,7 +950,7 @@ bool ImGui::ScrollbarEx(const ImRect& bb_frame, ImGuiID id, ImGuiAxis axis, ImS6
     const float grab_h_pixels = ImClamp(scrollbar_size_v * ((float)size_avail_v / (float)win_size_v), style.GrabMinSize, scrollbar_size_v);
     const float grab_h_norm = grab_h_pixels / scrollbar_size_v;
 
-    // Handle input right away. None of the code of Begin() is relying on scrolling position before calling Scrollbar().
+    // Handle input right_ away. None of the code of Begin() is relying on scrolling position before calling Scrollbar().
     bool held = false;
     bool hovered = false;
     ItemAdd(bb_frame, id, NULL, ImGuiItemFlags_NoNav);
@@ -1628,7 +1628,7 @@ void ImGui::ShrinkWidths(ImGuiShrinkWidthItem* items, int count, float width_exc
     }
 
     // Round width and redistribute remainder
-    // Ensure that e.g. the right-most tab of a shrunk tab-bar always reaches exactly at the same distance from the right-most edge of the tab bar separator.
+    // Ensure that e.g. the right_-most tab of a shrunk tab-bar always reaches exactly at the same distance from the right_-most edge of the tab bar separator.
     width_excess = 0.0f;
     for (int n = 0; n < count; n++)
     {
@@ -2288,7 +2288,7 @@ bool ImGui::DragBehaviorT(ImGuiDataType data_type, TYPE* v, float v_speed, const
         adjust_delta /= (float)(v_max - v_min);
 
     // Clear current value on activation
-    // Avoid altering values and clamping when we are _already_ past the limits and heading in the same direction, so e.g. if range is 0..255, current value is 300 and we are pushing to the right side, keep the 300.
+    // Avoid altering values and clamping when we are _already_ past the limits and heading in the same direction, so e.g. if range is 0..255, current value is 300 and we are pushing to the right_ side, keep the 300.
     bool is_just_activated = g.ActiveIdIsJustActivated;
     bool is_already_past_limits_and_pushing_outward = is_clamped && ((*v >= v_max && adjust_delta > 0.0f) || (*v <= v_min && adjust_delta < 0.0f));
     if (is_just_activated || is_already_past_limits_and_pushing_outward)
@@ -2718,7 +2718,7 @@ template<typename TYPE, typename SIGNEDTYPE, typename FLOATTYPE>
 TYPE ImGui::ScaleValueFromRatioT(ImGuiDataType data_type, float t, TYPE v_min, TYPE v_max, bool is_logarithmic, float logarithmic_zero_epsilon, float zero_deadzone_halfsize)
 {
     // We special-case the extents because otherwise our logarithmic fudging can lead to "mathematically correct"
-    // but non-intuitive behaviors like a fully-left slider not actually reaching the minimum value. Also generally simpler.
+    // but non-intuitive behaviors like a fully-left_ slider not actually reaching the minimum value. Also generally simpler.
     if (t <= 0.0f || v_min == v_max)
         return v_min;
     if (t >= 1.0f)
@@ -3810,8 +3810,8 @@ static bool STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const Im
 }
 
 // We don't use an enum so we can build even with conflicting symbols (if another user of stb_textedit.h leak their STB_TEXTEDIT_K_* symbols)
-#define STB_TEXTEDIT_K_LEFT         0x200000 // keyboard input to move cursor left
-#define STB_TEXTEDIT_K_RIGHT        0x200001 // keyboard input to move cursor right
+#define STB_TEXTEDIT_K_LEFT         0x200000 // keyboard input to move cursor left_
+#define STB_TEXTEDIT_K_RIGHT        0x200001 // keyboard input to move cursor right_
 #define STB_TEXTEDIT_K_UP           0x200002 // keyboard input to move cursor up
 #define STB_TEXTEDIT_K_DOWN         0x200003 // keyboard input to move cursor down
 #define STB_TEXTEDIT_K_LINESTART    0x200004 // keyboard input to move cursor to start of line
@@ -3819,11 +3819,11 @@ static bool STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const Im
 #define STB_TEXTEDIT_K_TEXTSTART    0x200006 // keyboard input to move cursor to start of text
 #define STB_TEXTEDIT_K_TEXTEND      0x200007 // keyboard input to move cursor to end of text
 #define STB_TEXTEDIT_K_DELETE       0x200008 // keyboard input to delete selection or character under cursor
-#define STB_TEXTEDIT_K_BACKSPACE    0x200009 // keyboard input to delete selection or character left of cursor
+#define STB_TEXTEDIT_K_BACKSPACE    0x200009 // keyboard input to delete selection or character left_ of cursor
 #define STB_TEXTEDIT_K_UNDO         0x20000A // keyboard input to perform undo
 #define STB_TEXTEDIT_K_REDO         0x20000B // keyboard input to perform redo
-#define STB_TEXTEDIT_K_WORDLEFT     0x20000C // keyboard input to move cursor left one word
-#define STB_TEXTEDIT_K_WORDRIGHT    0x20000D // keyboard input to move cursor right one word
+#define STB_TEXTEDIT_K_WORDLEFT     0x20000C // keyboard input to move cursor left_ one word
+#define STB_TEXTEDIT_K_WORDRIGHT    0x20000D // keyboard input to move cursor right_ one word
 #define STB_TEXTEDIT_K_PGUP         0x20000E // keyboard input to move cursor up a page
 #define STB_TEXTEDIT_K_PGDOWN       0x20000F // keyboard input to move cursor down a page
 #define STB_TEXTEDIT_K_SHIFT        0x400000
@@ -4335,7 +4335,7 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
         state->BufCapacityA = buf_size;
         state->Flags = flags;
 
-        // Although we are active we don't prevent mouse from hovering other elements unless we are interacting right now with the widget.
+        // Although we are active we don't prevent mouse from hovering other elements unless we are interacting right_ now with the widget.
         // Down the line we should have a cleaner library-wide concept of Selected vs Active.
         g.ActiveIdAllowOverlap = !io.MouseDown[0];
 
@@ -4356,7 +4356,7 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
             {
                 // Double-click: Select word
                 // We always use the "Mac" word advance for double-click select vs CTRL+Right which use the platform dependent variant:
-                // FIXME: There are likely many ways to improve this behavior, but there's no "right" behavior (depends on use-case, software, OS)
+                // FIXME: There are likely many ways to improve this behavior, but there's no "right_" behavior (depends on use-case, software, OS)
                 const bool is_bol = (state->Stb.cursor == 0) || ImStb::STB_TEXTEDIT_GETCHAR(state, state->Stb.cursor - 1) == '\n';
                 if (STB_TEXT_HAS_SELECTION(&state->Stb) || !is_bol)
                     state->OnKeyPressed(STB_TEXTEDIT_K_WORDLEFT);
@@ -6327,7 +6327,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
             RenderBullet(window->DrawList, ImVec2(text_pos.x - text_offset_x * 0.60f, text_pos.y + g.FontSize * 0.5f), text_col);
         else if (!is_leaf)
             RenderArrow(window->DrawList, ImVec2(text_pos.x - text_offset_x + padding.x, text_pos.y), text_col, is_open ? ((flags & ImGuiTreeNodeFlags_UpsideDownArrow) ? ImGuiDir_Up : ImGuiDir_Down) : ImGuiDir_Right, 1.0f);
-        else // Leaf without bullet, left-adjusted text
+        else // Leaf without bullet, left_-adjusted text
             text_pos.x -= text_offset_x -padding.x;
         if (flags & ImGuiTreeNodeFlags_ClipLabelForTrailingButton)
             frame_bb.Max.x -= g.FontSize + style.FramePadding.x;
@@ -6510,7 +6510,7 @@ bool ImGui::Selectable(const char* label, bool selected, ImGuiSelectableFlags fl
     ItemSize(size, 0.0f);
 
     // Fill horizontal space
-    // We don't support (size < 0.0f) in Selectable() because the ItemSpacing extension would make explicitly right-aligned sizes not visibly match other widgets.
+    // We don't support (size < 0.0f) in Selectable() because the ItemSpacing extension would make explicitly right_-aligned sizes not visibly match other widgets.
     const bool span_all_columns = (flags & ImGuiSelectableFlags_SpanAllColumns) != 0;
     const float min_x = span_all_columns ? window->ParentWorkRect.Min.x : pos.x;
     const float max_x = span_all_columns ? window->ParentWorkRect.Max.x : window->WorkRect.Max.x;
@@ -7239,7 +7239,7 @@ bool ImGui::BeginMenuBar()
     PushID("##menubar");
 
     // We don't clip with current window clipping rectangle as it is already set to the area below. However we clip with window full rect.
-    // We remove 1 worth of rounding to Max.x to that text in long menus and small windows don't tend to display over the lower-right rounded area, which looks particularly glitchy.
+    // We remove 1 worth of rounding to Max.x to that text in long menus and small windows don't tend to display over the lower-right_ rounded area, which looks particularly glitchy.
     ImRect bar_rect = window->MenuBarRect();
     ImRect clip_rect(IM_ROUND(bar_rect.Min.x + window->WindowBorderSize), IM_ROUND(bar_rect.Min.y + window->WindowBorderSize), IM_ROUND(ImMax(bar_rect.Min.x, bar_rect.Max.x - ImMax(window->WindowRounding, window->WindowBorderSize))), IM_ROUND(bar_rect.Max.y));
     clip_rect.ClipWith(window->OuterRectClipped);
@@ -7366,7 +7366,7 @@ void ImGui::EndMainMenuBar()
 {
     EndMenuBar();
 
-    // When the user has left the menu layer (typically: closed menus through activation of an item), we restore focus to the previous window
+    // When the user has left_ the menu layer (typically: closed menus through activation of an item), we restore focus to the previous window
     // FIXME: With this strategy we won't be able to restore a NULL focus.
     ImGuiContext& g = *GImGui;
     if (g.CurrentWindow == g.NavWindow && g.NavLayer == ImGuiNavLayer_Main && !g.NavAnyRequest)
@@ -7603,7 +7603,7 @@ bool ImGui::BeginMenu(const char* label, bool enabled)
 
 void ImGui::EndMenu()
 {
-    // Nav: When a left move request our menu failed, close ourselves.
+    // Nav: When a left_ move request our menu failed, close ourselves.
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
     IM_ASSERT(window->Flags & ImGuiWindowFlags_Popup);  // Mismatched BeginMenu()/EndMenu() calls
@@ -8285,13 +8285,13 @@ static void ImGui::TabBarScrollToTab(ImGuiTabBar* tab_bar, ImGuiID tab_id, ImGui
     tab_bar->ScrollingTargetDistToVisibility = 0.0f;
     if (tab_bar->ScrollingTarget > tab_x1 || (tab_x2 - tab_x1 >= scrollable_width))
     {
-        // Scroll to the left
+        // Scroll to the left_
         tab_bar->ScrollingTargetDistToVisibility = ImMax(tab_bar->ScrollingAnim - tab_x2, 0.0f);
         tab_bar->ScrollingTarget = tab_x1;
     }
     else if (tab_bar->ScrollingTarget < tab_x2 - scrollable_width)
     {
-        // Scroll to the right
+        // Scroll to the right_
         tab_bar->ScrollingTargetDistToVisibility = ImMax((tab_x1 - scrollable_width) - tab_bar->ScrollingAnim, 0.0f);
         tab_bar->ScrollingTarget = tab_x2 - scrollable_width;
     }
@@ -8731,7 +8731,7 @@ bool    ImGui::TabItemEx(ImGuiTabBar* tab_bar, const char* label, bool* p_open, 
     TabItemBackground(display_draw_list, bb, flags, tab_col);
     RenderNavHighlight(bb, id);
 
-    // Select with right mouse button. This is so the common idiom for context menu automatically highlight the current widget.
+    // Select with right_ mouse button. This is so the common idiom for context menu automatically highlight the current widget.
     const bool hovered_unblocked = IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup);
     if (hovered_unblocked && (IsMouseClicked(1) || IsMouseReleased(1)) && !is_tab_button)
         TabBarQueueFocus(tab_bar, tab);
@@ -8845,7 +8845,7 @@ void ImGui::TabItemLabelAndCloseButton(ImDrawList* draw_list, const ImRect& bb, 
         return;
 
     // In Style V2 we'll have full override of all colors per state (e.g. focused, selected)
-    // But right now if you want to alter text color of tabs this is what you need to do.
+    // But right_ now if you want to alter text color of tabs this is what you need to do.
 #if 0
     const float backup_alpha = g.Style.Alpha;
     if (!is_contents_visible)

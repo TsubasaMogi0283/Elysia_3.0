@@ -98,7 +98,7 @@ void GameScene::Initialize() {
 
 #ifdef _DEBUG
 	//デバッグ時はプレイシーンから始める
-	detailGameScene_ = std::make_unique<StartGameScene>();
+	detailGameScene_ = std::make_unique<PlayGameScene>();
 #endif // _DEBUG
 	//レベルデータハンドルの設定
 	detailGameScene_->SetLevelDataHandle(levelHandle_);

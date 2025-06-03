@@ -7,8 +7,8 @@
  */
 
 //色の早見表
+//欲しいものや、使いやすいものが合ったらどんどん追加していく
 //https://www.colordic.org/
-
 
 #include "cstdint"
 

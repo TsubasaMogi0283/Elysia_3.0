@@ -103,10 +103,10 @@ void NormalEnemy::Update() {
 	direction_ = currentState_->GetMoveDirection();
 
 	//向きを計算しモデルを回転させる
-	float directionToRotateY = std::atan2f(-direction_.z, direction_.x);
+	float_t directionToRotateY = std::atan2f(-direction_.z, direction_.x);
 	//回転のオフセット
 	//元々のモデルの回転が変だったのでこれを足している
-	const float ROTATE_OFFSET = -std::numbers::pi_v<float_t> / 2.0f;
+	const float_t ROTATE_OFFSET = -std::numbers::pi_v<float_t> / 2.0f;
 	worldTransform_.rotate.y = directionToRotateY + ROTATE_OFFSET;
 
 
@@ -315,7 +315,7 @@ void NormalEnemy::Delete() {
 		deadParticle_ = std::move(Elysia::Particle3D::Create(ParticleMoveType::Rise));
 		//パーティクルの細かい設定
 		deadParticle_->SetTranslate(GetWorldPosition());
-		const float SCALE_SIZE = 0.8f;
+		const float_t SCALE_SIZE = 0.8f;
 		deadParticle_->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
 		deadParticle_->SetCount(20u);
 		deadParticle_->SetIsReleaseOnceMode(true);

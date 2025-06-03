@@ -75,6 +75,9 @@ void PlayGameScene::Initialize(){
 	gate_ = std::make_unique<Gate>();
 	//初期化
 	gate_->Initialize(gateModelhandle);
+
+	//骨の初期座標を取得
+	bonePosition_= levelDataManager_->GetInitialTranslate(levelDataHandle_, bone_);
 }
 
 void PlayGameScene::Update(GameScene* gameScene){
@@ -99,6 +102,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 	EscapeCondition();
 	//オブジェクトの当たり判定
 	ObjectCollision();
+	//ポルターガイストの処理
+	PoltergeistProcess();
 	//コリジョン管理クラスに登録
 	RegisterToCollisionManager();
 
@@ -149,8 +154,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 		whiteFadeSprite_->SetTransparency(newOpenT_);
 
 		//門の回転
-		levelDataManager_->SetRotate(levelDataHandle_, right, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
-		levelDataManager_->SetRotate(levelDataHandle_, left, { .x = 0.0f,.y = -leftGateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelDataHandle_, right_, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelDataHandle_, left_, { .x = 0.0f,.y = -leftGateRotateTheta_,.z = 0.0f });
 
 		//音を止める
 		enemyManager_->StopAudio();
@@ -270,7 +275,6 @@ void PlayGameScene::RegisterToCollisionManager(){
 void PlayGameScene::PlayerMove(){
 
 	//何も押していない時つまり動いていないので通常はfalseと0にしておく
-
 	//キーボードで動かしているかどうか
 	bool isPlayerMoveKey = false;
 	//動いているかどうか
@@ -399,6 +403,10 @@ void PlayGameScene::PlayerMove(){
 
 #pragma region
 
+#ifdef _DEBUG
+
+
+
 	//プレイヤーが動いている時
 	if (isPlayerMove == true) {
 		//ダッシュ
@@ -424,6 +432,8 @@ void PlayGameScene::PlayerMove(){
 		//ダッシュをしているかどうかの設定
 		player_->SetIsDash(isPlayerDash);
 	}
+#endif // _DEBUG
+
 	//プレイヤーの動く方向を入れる
 	player_->SetMoveDirection(playerMoveDirection);
 
@@ -564,10 +574,6 @@ void PlayGameScene::EscapeCondition(){
 			toEscapeSprite_->SetInvisible(false);
 		}
 	}
-
-	
-	
-
 }
 
 void PlayGameScene::ObjectCollision(){
@@ -597,9 +603,88 @@ void PlayGameScene::ObjectCollision(){
 
 }
 
+void PlayGameScene::PoltergeistProcess(){
+	//墓場内の鍵を取ったら動き出す
+	if (keyManager_->GetIsPickUpKeyInCemetery() == true) {
+
+		//上昇
+		if (isBoneRise_ == true) {
+			floatingTheta_ += ROTATE_THETA_VALUE_;
+			bonePosition_.y += 0.05f;
+			//上がり切る
+			if (bonePosition_.y > FLOATING_HEIGHT_) {
+				//浮遊へ
+				bonePosition_.y = FLOATING_HEIGHT_;
+				isBoneRise_ = false;
+				isFinishRiseBone_ = true;
+			}
+		}
+		
+		//上がり切った時に浮遊
+		if (isFinishRiseBone_ == true) {
+			//回転
+			floatingTheta_ += ROTATE_THETA_VALUE_;
+			//浮遊時間の加算
+			floatingBoneTime_ += DELTA_TIME_;
+			if (floatingBoneTime_ > FLOATING_TIME_) {
+				isFinishRiseBone_ = false;
+				isReadyForBoneDrop_ = true;
+			}
+		}
+
+		//落下準備
+		if (isReadyForBoneDrop_ == true) {
+			//高速回転
+			floatingTheta_+=RAPID_ROTATE_THETA_VALUE_;
+			//準備時間を加算
+			readyForDropTime_ += DELTA_TIME_;
+			if (readyForDropTime_ >READY_FOR_DROP_TIME_) {
+				isReadyForBoneDrop_ = false;
+				//落下へ
+				isBoneDrop_ = true;
+			}
+
+			//プレイヤーの座標ロックオン
+			if (isLockOn_ == false) {
+				//プレイヤーの座標を取得
+				loclOnPlayerPosition_ = player_->GetWorldPosition();
+				//骨の座標を取得
+				beforeBoneDropPosition_ = bonePosition_;
+				isLockOn_ = true;
+			}
+		}
+
+
+		//骨が落下する
+		if (isBoneDrop_ == true) {
+			//高速回転
+			floatingTheta_ += RAPID_ROTATE_THETA_VALUE_;
+			dropT_+=0.03f;
+			dropT_ = std::clamp(dropT_, 0.0f, 1.0f);
+			//新しく変数を作って分かりやすくする
+			Vector3 startPosition = beforeBoneDropPosition_;
+			Vector3 endPosition = loclOnPlayerPosition_;
+			//XZ軸は線形補間
+			bonePosition_ = VectorCalculation::Lerp(startPosition, endPosition, dropT_);
+
+		}
+
+		//回転の変更
+		levelDataManager_->SetRotate(levelDataHandle_, bone_, { .x = floatingTheta_,.y = rightGateRotateTheta_,.z = floatingTheta_ });
+		//座標の変更
+		levelDataManager_->SetTranslate(levelDataHandle_, bone_, bonePosition_);
+
+	}
+	
+}
+
 void PlayGameScene::DisplayImGui(){
 
 	ImGui::Begin("プレイ(ゲーム)");
+	ImGui::SliderFloat("T", &dropT_, 0.0f, 1.0f);
+	ImGui::InputFloat3("骨の座標", &bonePosition_.x);
+	ImGui::InputFloat3("ロックオン座標(プレイヤー)", &loclOnPlayerPosition_.x);
+	ImGui::InputFloat3("落下前の座標", &beforeBoneDropPosition_.x);
 	ImGui::SliderFloat3("座標", &fenceTranslate_.x, 0.0f, 100.0f);
 	ImGui::SliderFloat("右門の回転", &rightGateRotateTheta_, 0.0f, 3.0f);
 	ImGui::InputFloat("線形補間", &openT_);

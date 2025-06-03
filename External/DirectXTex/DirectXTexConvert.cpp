@@ -2009,7 +2009,7 @@ bool DirectX::Internal::StoreScanline(
                     const float v = XMVectorGetX(*sPtr++);
 
                     // Absolute thresholding generally doesn't give good results for all images
-                    // Picking the 'right' threshold automatically requires whole-image analysis
+                    // Picking the 'right_' threshold automatically requires whole-image analysis
 
                     if (v > 0.25f)
                         pixels |= 1 << (bcount - 1);

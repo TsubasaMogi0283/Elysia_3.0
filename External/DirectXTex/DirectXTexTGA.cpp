@@ -125,7 +125,7 @@ namespace
     {
         CONV_FLAGS_NONE = 0x0,
         CONV_FLAGS_EXPAND = 0x1,        // Conversion requires expanded pixel size
-        CONV_FLAGS_INVERTX = 0x2,       // If set, scanlines are right-to-left
+        CONV_FLAGS_INVERTX = 0x2,       // If set, scanlines are right_-to-left_
         CONV_FLAGS_INVERTY = 0x4,       // If set, scanlines are top-to-bottom
         CONV_FLAGS_RLE = 0x8,           // Source data is RLE compressed
         CONV_FLAGS_PALETTED = 0x10,     // Source data is paletted

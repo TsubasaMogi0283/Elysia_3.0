@@ -165,7 +165,7 @@ namespace Elysia{
 		/// <summary>
 		/// シザーの生成
 		/// </summary>
-		/// <param name="right">横幅</param>
+		/// <param name="right_">横幅</param>
 		/// <param name="bottom">立幅</param>
 		void GenarateScissor(const uint32_t& right, const uint32_t& bottom);
 

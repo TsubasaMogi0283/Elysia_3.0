@@ -28,12 +28,14 @@ https://youtu.be/Biu44fPONeg
         その他にオーディオも追加できます。衝突判定も追加すればそこに対応した音が流れます。
 
         ![BlenderAudioSetting](https://github.com/user-attachments/assets/3d5ce673-13a4-40f1-acd9-92e2c968d49d)
+	* **演出作り**
+		演出に力を入れたいと思いこのゲームを制作しました。  
+		例えば鍵の取得はただ取得しモデルが消え所持数が増えるだけでは物足りないので。縮小や回転を使い見ているだけでも楽しめるものを制作しました。
 
 
-    * **衝突判定**  
-        特に敵同士の衝突判定を頑張りました。ただ座標と半径を取得するのではなく、進行方向に同じ敵がいたら止まる、いなくなったらまた進むというものを実装しました。
+		![Image](https://github.com/user-attachments/assets/23d74250-9bf8-41a5-87eb-109a02a56bab)
 
-        ![EnemyCollisionSystem](https://github.com/user-attachments/assets/2fb3fd33-74b2-4188-b487-529a4da8de3f)
+
 
 
 
@@ -71,42 +73,6 @@ XAudio2を使い再生と停止の基本機能に加え、ループの細かい�
     以下の関数を使って読み込みをします。拡張子によって自動的に振り分けられます。
     
 
-    ```c++
-    uint32_t Audio::Load(const std::string& fileName){
-
-	    //一度読み込んだものは２度読み込まず返すだけ
-    	if (Audio::GetInstance()->audioInformation_.find(fileName) != Audio::GetInstance()->audioInformation_.end()) {  
-    		return Audio::GetInstance()->audioInformation_[fileName].handle;
-    	}
-
-    	//拡張子を探す
-    	size_t dotPosition = fileName.find('.');
-    	std::string extension = {};
-    	if (dotPosition != std::string::npos) {
-    		//「/」から最後まで
-    		extension = fileName.substr(dotPosition + 1);
-    	}
-
-
-    	//返す値
-    	uint32_t result = 0u;
-
-    	//wavの場合
-    	if (extension == "wav") {
-    		return result = LoadWave(fileName);
-    	}
-    	//mp3の場合
-    	else if (extension == "mp3") {
-    		return result = LoadMP3(fileName);
-    	}
-
-
-    	//無かったら0uを返す
-    	return result;
-
-    }
-
-    ```
 
 
 

@@ -5746,7 +5746,7 @@ inline HRESULT CD3DX12FeatureSupport::QueryHighestRootSignatureVersion()
         }
     }
 
-    // No version left. Set to invalid value and continue.
+    // No version left_. Set to invalid value and continue.
     m_dRootSignature.HighestVersion = static_cast<D3D_ROOT_SIGNATURE_VERSION>(0);
     return S_OK;
 }

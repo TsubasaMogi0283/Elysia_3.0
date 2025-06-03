@@ -177,8 +177,7 @@ public:
 	/// </summary>
 	/// <returns>取得のフラグ</returns>
 	inline bool GetIsPickUpKeyInCemetery()const {
-		return isPickUpKeyInCemetery_
-			;
+		return isPickUpKeyInCemetery_;
 	}
 
 
