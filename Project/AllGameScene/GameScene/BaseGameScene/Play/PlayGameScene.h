@@ -117,9 +117,11 @@ private:
 	//浮遊の高さ
 	const float_t FLOATING_HEIGHT_ = 4.0f;
 	//浮遊時間
-	const float_t FLOATING_TIME_ = 4.0f;
+	const float_t FLOATING_TIME_ = 3.0f;
 	//落下準備時間
 	const float_t READY_FOR_DROP_TIME_=3.0f;
+	//落下時間
+	const float_t DROP_TIME_ = 2.0f;
 
 	//回転の値
 	const float_t ROTATE_THETA_VALUE_ = 0.1f;
@@ -190,6 +192,14 @@ private:
 	bool isBoneDrop_ = false;
 	//落下スピード
 	float_t dropSpeed_ = 0.4f;
+	//プレイヤーの座標ロックオン
+	Vector3 loclOnPlayerPosition_ = {};
+	//ロックオンしたかどうか
+	bool isLockOn_ = false;
+	//落下用の線形補間
+	float_t dropT_ = 0.0f;
+	//落下前の骨の座標
+	Vector3 beforeBoneDropPosition_ = {};
 
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
