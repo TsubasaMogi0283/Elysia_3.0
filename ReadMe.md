@@ -16,27 +16,49 @@
 
 
 
-![静寂の霊園_プレイ2](https://github.com/user-attachments/assets/05c114d1-279a-4c94-8006-91e9f91ad70f)
-https://youtu.be/Biu44fPONeg
+![Image](https://github.com/user-attachments/assets/41601ddf-bf33-4c91-8513-40abd9019b73)
 
 <br>
 
 
 2. 頑張ったところ
-    * **レベルエディタ**  
-        Blenderのアドオン開発をしました。モデルのファイル名を入力と配置をします。必要であれば衝突判定も追加できます。  
-        その他にオーディオも追加できます。衝突判定も追加すればそこに対応した音が流れます。
 
-        ![BlenderAudioSetting](https://github.com/user-attachments/assets/3d5ce673-13a4-40f1-acd9-92e2c968d49d)
-	* **演出作り**
-		演出に力を入れたいと思いこのゲームを制作しました。  
-		例えば鍵の取得はただ取得しモデルが消え所持数が増えるだけでは物足りないので。縮小や回転を使い見ているだけでも楽しめるものを制作しました。
+    * **タイトル**  
 
+        ポストエフェクトのノイズがかかる度に画面のどこかが変化していくというもの実装してみたかったのでやってみました。
+
+        ![Tite](https://github.com/user-attachments/assets/006abf54-80f8-490e-abc8-56a66ea6dd32)
+
+        https://youtu.be/9KhdcMmtb2w
+
+
+	* **鍵の取得**  
+
+		ただ取得しモデルが消え所持数が増えるだけでは物足りないので。縮小や回転を使い見ているだけでも楽しめるものを制作しました。
+
+        https://youtu.be/hfYN3veDvw0
 
 		![Image](https://github.com/user-attachments/assets/23d74250-9bf8-41a5-87eb-109a02a56bab)
 
 
+    * **攻撃**  
 
+        攻撃の迫力を出すために振動や光の強さの減衰を入れました。
+        ゲージの途中までで攻撃した場合は感電し、満タンまで溜めると一撃で倒すことができます。  
+    
+
+        感電  
+        https://youtu.be/MsVvDbbnVHc
+        
+        一撃  
+        https://youtu.be/u0069DaS19M
+
+
+    * **レベルエディタ**  
+        Blenderのアドオン開発をしました。モデルのファイル名を入力と配置をします。必要であれば衝突判定も追加できます。  
+        その他にオーディオも追加できます。衝突判定も追加すればそこに対応した音が流れます。
+
+        ![BlenderAudioSetting](https://github.com/user-attachments/assets/3d5ce673-13a4-40f1-acd9-92e2c968d49d)    
 
 
 <br>
@@ -44,7 +66,7 @@ https://youtu.be/Biu44fPONeg
 
 # Elysia Engine
 
-このエンジンは私がDirectX12を使い制作したものになります。
+このエンジンは私がDirectX 12を使い制作したものになります。
 
 <br>
 
