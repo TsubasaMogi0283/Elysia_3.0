@@ -620,7 +620,7 @@ void Elysia::LevelDataManager::Finalize() {
 
 	//全て解放
 	for (auto& [key, levelData] : levelDatas_) {
-		for (auto& object : levelData->objectDatas) {
+		for (const auto& object : levelData->objectDatas) {
 			//オブジェクトの解放
 			if (object.objectForLeveEditor != nullptr) {
 				delete object.objectForLeveEditor;
