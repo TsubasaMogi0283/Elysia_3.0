@@ -61,7 +61,7 @@ void FlashLight::Initialize() {
 	const Vector2 FADE_INITIAL_POSITION = { .x = 0.0f,.y = 0.0f };
 	attackWhiteFadeSprite_.reset(Elysia::Sprite::Create(whiteTextureHandle, FADE_INITIAL_POSITION));
 	//初期の透明度を設定
-	const float INITIAL_TRANSPARENCY = 0.0f;
+	const float_t INITIAL_TRANSPARENCY = 0.0f;
 	attackWhiteFadeSprite_->SetTransparency(INITIAL_TRANSPARENCY);
 	//ゲージのスプライトを生成
 	uint32_t gaugeTextureHandle = textureManager_->Load("Resources/Sprite/Gauge/Gauge.png");
@@ -125,7 +125,7 @@ void FlashLight::Update() {
 	};
 
 	//上のdirectionから長さを求めてからtanfでyを出す
-	float lengthXZ = sqrtf(std::powf(direction.x, 2.0f) + std::powf(direction.z, 2.0f));
+	float_t lengthXZ = sqrtf(std::powf(direction.x, 2.0f) + std::powf(direction.z, 2.0f));
 	direction_ = {
 		.x = direction.x,
 		.y = lengthXZ * std::tanf(phi_),
@@ -135,7 +135,7 @@ void FlashLight::Update() {
 
 	//プレイヤーの座標と微調整分
 	//ライトを持つときの高さは地面と同じだと変だよね
-	const float LIGHT_HEIGHT = 0.9f;
+	const float_t LIGHT_HEIGHT = 0.9f;
 	const Vector3 OFFSET = { .x = 0.0f, .y = LIGHT_HEIGHT,.z = 0.0f };
 	position_ = VectorCalculation::Add(playerPosition_, OFFSET);
 
@@ -227,12 +227,12 @@ void FlashLight::GenerateParticle() {
 	std::unique_ptr<Elysia::Particle3D> particle = Elysia::Particle3D::Create(ParticleMoveType::Absorb);
 
 	//パーティクルの細かい設定
-	const float SCALE_SIZE = 0.4f;
+	const float_t SCALE_SIZE = 0.4f;
 	particle->SetScale({ .x = SCALE_SIZE,.y = SCALE_SIZE,.z = SCALE_SIZE });
 	particle->SetCount(5u);
 	particle->SetIsReleaseOnceMode(false);
 	particle->SetIsToTransparent(true);
-	const float FREQUENCY = 0.5f;
+	const float_t FREQUENCY = 0.5f;
 	particle->SetFrequency(FREQUENCY);
 
 	//挿入
@@ -298,6 +298,8 @@ void FlashLight::Charge() {
 	}
 
 	//割合
+	//まずは0で初期化する
+	//後、他のインデントの所でも使いたい
 	float_t ratio = 0.0f;
 	//クールタイム
 	if (isCoolTime_ == true) {
@@ -320,16 +322,14 @@ void FlashLight::Charge() {
 	
 	//白フェード
 	if (chargeConditionValue_ >= ChargeCondition::NormalChargeAttack) {
-		//まぶしすぎたので弱める
-		const float_t OFFSET = 0.5f;
+		
 		//攻撃可能な時だけにする
-		attackWhiteFadeSprite_->SetTransparency(ratio- OFFSET);
+		attackWhiteFadeSprite_->SetTransparency(ratio- ATTACL_LIGHT_OFFSET_);
 
 	}
 	
 	//初期+割合分
-	const float_t ATTACK_INTENCITY = 800.0f;
-	spotLight_.intensity = INITIAL_INTENCITY_ + (ratio * ATTACK_INTENCITY);
+	spotLight_.intensity = INITIAL_INTENCITY_ + (ratio * ATTACK_LIGHT_INTENCITY_);
 
 	//値によって伸びる幅が変わる
 	chargeGaugeSprite_->SetScale({ .x = chargeValue_,.y = 1.0f });
