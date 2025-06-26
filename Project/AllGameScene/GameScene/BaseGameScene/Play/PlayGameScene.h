@@ -206,7 +206,7 @@ private:
 	Vector3 beforeBoneDropPosition_ = {};
 
 
-	//骨が欠片のパーティクル
+	//骨の欠片のパーティクル
 	std::unique_ptr<Elysia::Particle3D> bonePieceParticle_ = nullptr;
 	//欠片のモデルハンドル
 	uint32_t bonePieceParticleHandle_ = 0u;
