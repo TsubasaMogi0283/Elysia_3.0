@@ -303,7 +303,7 @@ void KeyManager::DisplayImGui(){
 
 	ImGui::Begin("鍵管理クラス");
 	ImGui::Checkbox("墓場用", &isPickUpKeyInCemetery_);
-	int newQuantity = static_cast<int>(keyQuantity_);
+	int newQuantity = static_cast<int32_t>(keyQuantity_);
 	ImGui::InputInt("鍵の数", &newQuantity);
 	ImGui::Checkbox("取得可能か", &isAbleToPickUpKey_);
 	ImGui::End();

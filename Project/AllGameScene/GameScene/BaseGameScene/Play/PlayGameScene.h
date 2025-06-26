@@ -137,7 +137,6 @@ private:
 	//地面の座標
 	const float_t GROUND_POSITION_Y = 0.0f;
 
-
 	//最大音量
 	const float_t MAX_VOLUME_ = 0.6f;
 	//最小音量

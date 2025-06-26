@@ -621,10 +621,13 @@ void PlayGameScene::PoltergeistProcess(){
 	//墓場内の鍵を取ったら動き出す
 	if (keyManager_->GetIsPickUpKeyInCemetery() == true) {
 
+		const float_t rotateValueOffset = 0.1f;
+
 		//上昇
 		if (isBoneRise_ == true) {
-			floatingTheta_ += ROTATE_THETA_VALUE_;
+			//ふわふわ浮き上がる
 			bonePosition_.y += 0.05f;
+			
 			//上がり切る
 			if (bonePosition_.y > FLOATING_HEIGHT_) {
 				//浮遊へ
@@ -636,14 +639,19 @@ void PlayGameScene::PoltergeistProcess(){
 		
 		//上がり切った時に浮遊
 		if (isFinishRiseBone_ == true) {
-			//回転
-			floatingTheta_ += ROTATE_THETA_VALUE_;
 			//浮遊時間の加算
 			floatingBoneTime_ += DELTA_TIME_;
 			if (floatingBoneTime_ > FLOATING_TIME_) {
 				isFinishRiseBone_ = false;
 				isReadyForBoneDrop_ = true;
 			}
+		}
+		//浮遊状態の時はsin,cosを使ってふわふわ浮いている感じを出す
+		if (isReadyForBoneDrop_ == false && isBoneDrop_ == false) {
+			//回転
+			floatingTheta_ += ROTATE_THETA_VALUE_;
+			bonePosition_.x += std::cosf(floatingTheta_) * rotateValueOffset;
+			bonePosition_.z += std::sinf(floatingTheta_) * rotateValueOffset;
 		}
 
 		//落下準備
@@ -667,7 +675,6 @@ void PlayGameScene::PoltergeistProcess(){
 				isLockOn_ = true;
 			}
 		}
-
 
 		//骨が落下する
 		if (isBoneDrop_ == true) {
