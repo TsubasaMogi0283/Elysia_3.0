@@ -214,6 +214,8 @@ private:
 	Material bonePieceMaterial_ = {};
 	//欠片の数
 	uint32_t bonePieceCount_ = 30u;
+	//一回だけ当たったかどうか
+	bool isTouchOnce_ = false;
 
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;

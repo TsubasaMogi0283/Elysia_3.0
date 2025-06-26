@@ -711,6 +711,34 @@ void PlayGameScene::PoltergeistProcess(){
 				
 			}
 
+
+			//骨との衝突判定
+			Vector3 defference = VectorCalculation::Subtract(player_->GetWorldPosition(), bonePosition_);
+			float_t distance = SingleCalculation::Length(defference);
+
+			if (distance < 2.0f) {
+				if (isTouchOnce_ == false) {
+					//当たった
+					player_->SetIsBoneTouch(true);
+					isTouchOnce_ = true;
+					
+				}
+				else {
+					//一度当たったらダメージ処理は終わり
+					player_->SetIsBoneTouch(false);
+				}
+				
+			}
+			else {
+				player_->SetIsBoneTouch(false);
+			}
+
+
+			//全て消えたらtrue
+			if (bonePieceParticle_!=nullptr&&bonePieceParticle_->GetIsAllInvisible() == true) {
+				isBoneDrop_ = false;
+			}
+
 		}
 
 		//回転の変更

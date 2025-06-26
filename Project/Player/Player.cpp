@@ -167,8 +167,8 @@ void Player::Damaged() {
 	}
 
 	//通常の敵に当たった場合
-	if (isAttacked == true && isDameged_ == false&& 
-		isAcceptDamegeFromNoemalEnemy_==true) {
+	if ((isAttacked == true && isDameged_ == false&& 
+		isAcceptDamegeFromNoemalEnemy_==true)|| isBoneTouch_ == true) {
 		//体力を減らす
 		--hp_;
 		//ダメージを受ける	
