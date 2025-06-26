@@ -122,7 +122,7 @@ private:
 	//浮遊時間
 	const float_t FLOATING_TIME_ = 3.0f;
 	//落下準備時間
-	const float_t READY_FOR_DROP_TIME_=3.0f;
+	const float_t READY_FOR_DROP_TIME_=2.5f;
 	//落下時間
 	const float_t DROP_TIME_ = 2.0f;
 	//欠片の大きさ
@@ -233,6 +233,9 @@ private:
 	//骨が壊れる音
 	uint32_t boneBreakAudioHandle_ = 0u;
 
+	//骨の警告音
+	uint32_t warningBoneAudioHandle_ = 0u;
+	float_t warningFrequencyRatio_ = 1.0f;
 
 	//ビネットの変化時間
 	float_t vignetteChangeTime_ = 0.0f;

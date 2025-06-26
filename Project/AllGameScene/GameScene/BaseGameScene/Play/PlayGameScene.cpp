@@ -90,7 +90,8 @@ void PlayGameScene::Initialize(){
 	closeGateAudioHandle_= Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/CloseGate.mp3");
 	//骨が壊れる音
 	boneBreakAudioHandle_ = Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/BoneBreak.mp3");
-
+	//警告音
+	warningBoneAudioHandle_= Elysia::Audio::GetInstance()->Load("Resources/Audio/SE/BoneWarning.wav");
 }
 
 void PlayGameScene::Update(GameScene* gameScene){
@@ -644,6 +645,9 @@ void PlayGameScene::PoltergeistProcess(){
 
 		//上昇
 		if (isBoneRise_ == true) {
+			//警告音再生
+			Elysia::Audio::GetInstance()->Play(warningBoneAudioHandle_, true);
+
 			//ふわふわ浮き上がる
 			bonePosition_.y += 0.05f;
 			
@@ -675,6 +679,11 @@ void PlayGameScene::PoltergeistProcess(){
 
 		//落下準備
 		if (isReadyForBoneDrop_ == true) {
+			//高さの設定
+			const float_t DELTA_INCREASE_FREAQUENCY_RATION_VALUE_ = 0.005f;
+			warningFrequencyRatio_ += DELTA_INCREASE_FREAQUENCY_RATION_VALUE_;
+			Elysia::Audio::GetInstance()->ChangeFrequencyRatio(warningBoneAudioHandle_, warningFrequencyRatio_);
+
 			//高速回転
 			floatingTheta_+=RAPID_ROTATE_THETA_VALUE_;
 			//準備時間を加算
@@ -729,7 +738,10 @@ void PlayGameScene::PoltergeistProcess(){
 
 					//壊れる音
 					Elysia::Audio::GetInstance()->Play(boneBreakAudioHandle_, false);
-					
+					//警告音停止
+					Elysia::Audio::GetInstance()->Stop(warningBoneAudioHandle_);
+
+
 				}
 				
 			}
