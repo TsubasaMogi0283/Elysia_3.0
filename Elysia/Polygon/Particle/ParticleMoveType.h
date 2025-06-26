@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+ * @file ParticleMoveType.h
+ * @brief  動き方の設定の構造体
+ * @author 茂木翼
+ */
+
 /// <summary>
 /// 動き方の設定
 /// </summary>

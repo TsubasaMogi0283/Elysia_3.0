@@ -92,10 +92,9 @@ void GameScene::Initialize() {
 
 	//環境音の読み込み
 	enviromentAudioHandle_ = audio_->Load("Resources/Audio/Environment/Environment.wav");
-	
+
 	//スタートから始まる
 	detailGameScene_ = std::make_unique<StartGameScene>();
-
 #ifdef _DEBUG
 	//デバッグ時はプレイシーンから始める
 	detailGameScene_ = std::make_unique<PlayGameScene>();

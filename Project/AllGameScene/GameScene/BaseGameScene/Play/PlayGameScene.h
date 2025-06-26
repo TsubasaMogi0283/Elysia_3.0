@@ -12,7 +12,7 @@
 #include "CollisionManager.h"
 #include "GameScene/BaseGameScene/BaseGameScene.h"
 #include "Stage/Gate/Gate.h"
-
+#include <Particle3D.h>
 
 /// <summary>
 /// プレイ(本編)
@@ -34,6 +34,12 @@ public:
 	/// </summary>
 	/// <param name="gameScene">ゲームシーン(メイン)</param>
 	void Update(GameScene* gameScene)override;
+
+	/// <summary>
+	/// 3Dモデルの描画
+	/// </summary>
+	/// <param name="camera">カメラ</param>
+	void DrawObject3D(const Camera& camera)override;
 
 	/// <summary>
 	/// スプライト
@@ -127,7 +133,8 @@ private:
 	const float_t ROTATE_THETA_VALUE_ = 0.1f;
 	//高速回転
 	const float_t RAPID_ROTATE_THETA_VALUE_ = 0.5f;
-
+	//地面の座標
+	const float_t GROUND_POSITION_Y = 0.0f;
 
 
 	//最大音量
@@ -149,7 +156,6 @@ private:
 	//操作のスプライト
 	std::unique_ptr<Elysia::Sprite> operationSprite_ = nullptr;
 
-
 	//透明度
 	float_t fadeTransparency_ = 0.0f;
 
@@ -159,10 +165,8 @@ private:
 
 	//柵の座標
 	Vector3 fenceTranslate_ = {};
-
 	//離した瞬間の状態
 	bool isReleaseAttack_ = false;
-
 	//門の回転
 	float_t rightGateRotateTheta_ = 0.0f;
 	float_t leftGateRotateTheta_ = 0.0f;
@@ -200,6 +204,11 @@ private:
 	float_t dropT_ = 0.0f;
 	//落下前の骨の座標
 	Vector3 beforeBoneDropPosition_ = {};
+
+	//骨が落ちた時のパーティクル
+	std::unique_ptr<Elysia::Particle3D> boneDropParticle_ = nullptr;
+	//パーティクル用のマテリアル
+	Material particleMaterial_ = {};
 
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;

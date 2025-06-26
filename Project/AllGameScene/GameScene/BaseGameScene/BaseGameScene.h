@@ -47,6 +47,11 @@ namespace Elysia {
 class GameScene;
 
 /// <summary>
+/// カメラ
+/// </summary>
+struct Camera;
+
+/// <summary>
 /// プレイヤー
 /// </summary>
 class Player;
@@ -77,6 +82,12 @@ public:
 	/// </summary>
 	/// <param name="gameScene">ゲームシーン(メイン)</param>
 	virtual void Update(GameScene* gameScene) = 0;
+
+	/// <summary>
+	/// 3Dモデルの描画
+	/// </summary>
+	/// <param name="camera"></param>
+	virtual void DrawObject3D(const Camera& camera) = 0;
 
 	/// <summary>
 	/// スプライト

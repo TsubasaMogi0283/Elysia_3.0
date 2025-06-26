@@ -3,6 +3,7 @@
 #include <imgui.h>
 #include <numbers>
 
+#include "Camera.h"
 #include "Input.h"
 #include "TextureManager.h"
 #include "ModelManager.h"
@@ -10,8 +11,7 @@
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
 #include "GameScene/GameScene.h"
-#include <Easing.h>
-
+#include "Easing.h"
 
 PlayGameScene::PlayGameScene(){
 	//インスタンスの取得
@@ -78,6 +78,10 @@ void PlayGameScene::Initialize(){
 
 	//骨の初期座標を取得
 	bonePosition_= levelDataManager_->GetInitialTranslate(levelDataHandle_, bone_);
+	//マテリアルの初期化
+	particleMaterial_.Initialize();
+	particleMaterial_.lightingKinds = LightingType::SpotLighting;
+
 }
 
 void PlayGameScene::Update(GameScene* gameScene){
@@ -85,6 +89,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 	//フレーム初めに
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
+	//パーティクルマテリアルの更新
+	particleMaterial_.Update();
 	//ゲートの更新
 	gate_->Update();
 	//コントロール可能にする
@@ -93,7 +99,6 @@ void PlayGameScene::Update(GameScene* gameScene){
 	PlayerMove();
 	//回転
 	PlayerRotate();
-
 	//プレイヤーにそれぞれの角度を設定する
 	player_->SetTheta(theta_);
 	player_->SetPhi(phi_);
@@ -194,6 +199,14 @@ void PlayGameScene::Update(GameScene* gameScene){
 #endif // _DEBUG
 }
 
+void PlayGameScene::DrawObject3D(const Camera& camera){
+
+	if (boneDropParticle_ != nullptr) {
+		//砕けるパーティクル
+		boneDropParticle_->Draw(camera, particleMaterial_);
+	}
+
+}
 
 void PlayGameScene::DrawSprite(){
 	//操作
@@ -666,6 +679,15 @@ void PlayGameScene::PoltergeistProcess(){
 			Vector3 endPosition = loclOnPlayerPosition_;
 			//XZ軸は線形補間
 			bonePosition_ = VectorCalculation::Lerp(startPosition, endPosition, dropT_);
+
+			if (bonePosition_.y <= GROUND_POSITION_Y) {
+				//座標固定
+				bonePosition_.y = GROUND_POSITION_Y;
+
+				//パーティクルの生成
+				boneDropParticle_=Elysia::Particle3D::Create(ParticleMoveType::ThrowUp);
+				boneDropParticle_->SetTranslate(bonePosition_);
+			}
 
 		}
 
