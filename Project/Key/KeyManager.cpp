@@ -27,13 +27,11 @@ KeyManager::KeyManager() {
 void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vector3>& positions) {
 	//プレイヤーが入っているかどうか
 	assert(player_ != nullptr);
-
 	//モデルハンドルの代入
 	modelHandle_ = modelHandle;
 
 	//小屋の中にある鍵の座標を取得
 	Vector3 keyInHousePosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "KeyInHouse");
-
 	for (size_t i = 0u; i < positions.size(); ++i) {
 		//生成
 		const float_t OFFSET_Y = 0.5f;
@@ -52,7 +50,6 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 	//サイズを取得
 	keySpriteWidth_ = textureManager_->GetTextureWidth(textureHandle);
 	keySpriteHeight_ = textureManager_->GetTextureHeight(textureHandle);
-
 
 	//鍵
 	const Vector2 INITIAL_SCALE = { .x = 0.0f,.y = 0.0f };
