@@ -204,7 +204,8 @@ private:
 	float_t dropT_ = 0.0f;
 	//落下前の骨の座標
 	Vector3 beforeBoneDropPosition_ = {};
-
+	//骨とプレイヤーの方向
+	Vector3 boneDirectionToPlayer_ = {};
 
 	//骨の欠片のパーティクル
 	std::unique_ptr<Elysia::Particle3D> bonePieceParticle_ = nullptr;

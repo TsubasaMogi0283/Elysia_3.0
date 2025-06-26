@@ -671,10 +671,15 @@ void PlayGameScene::PoltergeistProcess(){
 		}
 		//浮遊状態の時はsin,cosを使ってふわふわ浮いている感じを出す
 		if (isReadyForBoneDrop_ == false && isBoneDrop_ == false) {
+			//プレイヤーへの方向
+			boneDirectionToPlayer_ = VectorCalculation::Subtract(player_->GetWorldPosition(), bonePosition_);
+
 			//回転
 			floatingTheta_ += ROTATE_THETA_VALUE_;
-			bonePosition_.x += std::cosf(floatingTheta_) * rotateValueOffset;
-			bonePosition_.z += std::sinf(floatingTheta_) * rotateValueOffset;
+			//座標の更新
+			const float_t BONE_SPEED = 0.01f;
+			bonePosition_.x += std::cosf(floatingTheta_) * rotateValueOffset+boneDirectionToPlayer_.x*BONE_SPEED;
+			bonePosition_.z += std::sinf(floatingTheta_) * rotateValueOffset+boneDirectionToPlayer_.z*BONE_SPEED;
 		}
 
 		//落下準備
