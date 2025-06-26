@@ -39,7 +39,8 @@ public:
 	/// 3Dモデルの描画
 	/// </summary>
 	/// <param name="camera">カメラ</param>
-	void DrawObject3D(const Camera& camera)override;
+	/// <param name="spotLight">スポットライト</param>
+	void DrawObject3D(const Camera& camera, const SpotLight& spotLight)override;
 
 	/// <summary>
 	/// スプライト
@@ -87,8 +88,6 @@ private:
 	/// </summary>
 	void DisplayImGui()override;
 
-
-
 private:
 	//回転
 	const float_t ROTATE_VALUE = 0.01f;
@@ -99,12 +98,10 @@ private:
 
 	//最大の回転
 	const float_t MAX_OPEN_VALUE_ = std::numbers::pi_v<float_t> / 2.0f;
-
 	//コントローラーがある場合
 	const float_t MOVE_LIMITATION_ = 0.02f;
 	//最大値
 	const float_t MAX_VIGNETTE_POW_ = 1.6f;
-
 	//HPが1でピンチの場合
 	const uint32_t DANGEROUS_HP_ = 1u;
 
@@ -115,11 +112,11 @@ private:
 	const float_t MIN_WARNING_TIME_ = 1.0f;
 
 	//レベルエディタのオブジェクトの名前
-	std::string right_ = "GateDoorRight";
-	std::string left_ = "GateDoorLeft";
+	std::string gateRightString_ = "GateDoorRight";
+	std::string gateLeftString_ = "GateDoorLeft";
 
 	//骨の名前
-	std::string bone_ = "Bone001";
+	std::string boneString_ = "Bone001";
 	//浮遊の高さ
 	const float_t FLOATING_HEIGHT_ = 4.0f;
 	//浮遊時間
@@ -128,6 +125,10 @@ private:
 	const float_t READY_FOR_DROP_TIME_=3.0f;
 	//落下時間
 	const float_t DROP_TIME_ = 2.0f;
+	//欠片の大きさ
+	const float_t BONE_PIECE_SCALE_ = 0.5f;
+	//Y方向のベロシティ
+	const float_t THROW_UP_VELOCITY_Y_ = 0.3f;
 
 	//回転の値
 	const float_t ROTATE_THETA_VALUE_ = 0.1f;
@@ -205,10 +206,14 @@ private:
 	//落下前の骨の座標
 	Vector3 beforeBoneDropPosition_ = {};
 
-	//骨が落ちた時のパーティクル
-	std::unique_ptr<Elysia::Particle3D> boneDropParticle_ = nullptr;
-	//パーティクル用のマテリアル
-	Material particleMaterial_ = {};
+	//骨が欠片のパーティクル
+	std::unique_ptr<Elysia::Particle3D> bonePieceParticle_ = nullptr;
+	//欠片のモデルハンドル
+	uint32_t bonePieceParticleHandle_ = 0u;
+	//骨の欠片パーティクル用のマテリアル
+	Material bonePieceMaterial_ = {};
+	//欠片の数
+	uint32_t bonePieceCount_ = 30u;
 
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;

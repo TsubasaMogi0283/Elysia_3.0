@@ -209,6 +209,14 @@ namespace Elysia {
 		}
 
 		/// <summary>
+		/// 鉛直投げ上げのY方向のベロシティを設定
+		/// </summary>
+		/// <param name="velocityY">Yのベロシティ</param>
+		inline void SetThrowUpVeloityY(const float_t& velocityY) {
+			this->throwUpVelocityY_ = velocityY;
+		}
+
+		/// <summary>
 		/// 地面のオフセット
 		/// </summary>
 		/// <param name="offset">オフセット</param>
@@ -382,7 +390,7 @@ namespace Elysia {
 		bool isAllInvisible_ = false;
 
 		//鉛直投げ上げ
-		float_t velocityY_ = 1.2f;
+		float_t throwUpVelocityY_ = 1.2f;
 		//地面の高さ設定
 		float_t groundOffset_ = 0.0f;
 		//最初に放出する

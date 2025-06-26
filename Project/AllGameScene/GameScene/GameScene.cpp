@@ -256,6 +256,10 @@ void GameScene::DrawObject3D() {
 	player_->DrawObject3D(camera_, spotLight);
 	//鍵
 	keyManager_->DrawObject3D(camera_, spotLight);
+
+	//細かいシーンの描画
+	detailGameScene_->DrawObject3D(camera_, spotLight);
+
 }
 
 void GameScene::DrawPostEffect() {

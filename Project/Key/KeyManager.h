@@ -217,14 +217,6 @@ private:
 	static const uint32_t NUMBER_QUANTITY_ = 10u;
 	//鍵の音が聞こえる最大距離
 	const float MAX_DISTANCE_ = 30.0f;
-	//トリガーの増える値
-	const uint32_t INCREASE_VALUE = 1u;
-	//反応する
-	const uint32_t B_REACT_TIME_ = 1u;
-	//反応しない
-	const uint32_t B_NO_REACT_TIME_ = 0u;
-	//コントローラーの押していない時の値
-	const int32_t NO_PUSH_VALUE_ = 0u;
 
 
 private:

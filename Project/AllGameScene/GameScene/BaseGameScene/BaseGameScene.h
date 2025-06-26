@@ -52,6 +52,11 @@ class GameScene;
 struct Camera;
 
 /// <summary>
+/// スポットライト
+/// </summary>
+struct SpotLight;
+
+/// <summary>
 /// プレイヤー
 /// </summary>
 class Player;
@@ -73,7 +78,7 @@ class BaseGameScene {
 public:
 
 	/// <summary>
-	/// 個別の初期化
+	/// 初期化
 	/// </summary>
 	virtual void Initialize() = 0;
 
@@ -86,8 +91,9 @@ public:
 	/// <summary>
 	/// 3Dモデルの描画
 	/// </summary>
-	/// <param name="camera"></param>
-	virtual void DrawObject3D(const Camera& camera) = 0;
+	/// <param name="camera">カメラ</param>
+	/// <param name="spotLight">スポットライト</param>
+	virtual void DrawObject3D(const Camera& camera, const SpotLight& spotLight) = 0;
 
 	/// <summary>
 	/// スプライト

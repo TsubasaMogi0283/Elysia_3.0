@@ -75,12 +75,13 @@ void PlayGameScene::Initialize(){
 	gate_ = std::make_unique<Gate>();
 	//初期化
 	gate_->Initialize(gateModelhandle);
-
+	//欠片のモデルハンドル
+	bonePieceParticleHandle_ = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Particle/BonePiece", "BonePiece.obj");
 	//骨の初期座標を取得
-	bonePosition_= levelDataManager_->GetInitialTranslate(levelDataHandle_, bone_);
+	bonePosition_= levelDataManager_->GetInitialTranslate(levelDataHandle_, boneString_);
 	//マテリアルの初期化
-	particleMaterial_.Initialize();
-	particleMaterial_.lightingKinds = LightingType::SpotLighting;
+	bonePieceMaterial_.Initialize();
+	bonePieceMaterial_.lightingKinds = LightingType::SpotLighting;
 
 }
 
@@ -90,7 +91,7 @@ void PlayGameScene::Update(GameScene* gameScene){
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
 	//パーティクルマテリアルの更新
-	particleMaterial_.Update();
+	bonePieceMaterial_.Update();
 	//ゲートの更新
 	gate_->Update();
 	//コントロール可能にする
@@ -159,8 +160,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 		whiteFadeSprite_->SetTransparency(newOpenT_);
 
 		//門の回転
-		levelDataManager_->SetRotate(levelDataHandle_, right_, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
-		levelDataManager_->SetRotate(levelDataHandle_, left_, { .x = 0.0f,.y = -leftGateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelDataHandle_, gateRightString_, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelDataHandle_, gateLeftString_, { .x = 0.0f,.y = -leftGateRotateTheta_,.z = 0.0f });
 
 		//音を止める
 		enemyManager_->StopAudio();
@@ -199,11 +200,11 @@ void PlayGameScene::Update(GameScene* gameScene){
 #endif // _DEBUG
 }
 
-void PlayGameScene::DrawObject3D(const Camera& camera){
+void PlayGameScene::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
 
-	if (boneDropParticle_ != nullptr) {
+	if (bonePieceParticle_ != nullptr) {
 		//砕けるパーティクル
-		boneDropParticle_->Draw(camera, particleMaterial_);
+		bonePieceParticle_->Draw(camera, bonePieceMaterial_, spotLight);
 	}
 
 }
@@ -681,20 +682,34 @@ void PlayGameScene::PoltergeistProcess(){
 			bonePosition_ = VectorCalculation::Lerp(startPosition, endPosition, dropT_);
 
 			if (bonePosition_.y <= GROUND_POSITION_Y) {
-				//座標固定
-				bonePosition_.y = GROUND_POSITION_Y;
 
+				bonePosition_.y = GROUND_POSITION_Y;
+				//非表示にする
+				levelDataManager_->SetInvisible(levelDataHandle_, boneString_, true);
 				//パーティクルの生成
-				boneDropParticle_=Elysia::Particle3D::Create(ParticleMoveType::ThrowUp);
-				boneDropParticle_->SetTranslate(bonePosition_);
+				if (bonePieceParticle_ == nullptr) {
+					//生成
+					bonePieceParticle_ = Elysia::Particle3D::Create(bonePieceParticleHandle_,ParticleMoveType::ThrowUp);
+					//座標
+					bonePieceParticle_->SetTranslate(bonePosition_);
+					//数
+					bonePieceParticle_->SetCount(bonePieceCount_);
+					//一度きり
+					bonePieceParticle_->SetIsReleaseOnceMode(true);
+					//スケール
+					bonePieceParticle_->SetScale({ BONE_PIECE_SCALE_,BONE_PIECE_SCALE_,BONE_PIECE_SCALE_ });
+					//ベロシティの設定
+					bonePieceParticle_->SetThrowUpVeloityY(THROW_UP_VELOCITY_Y_);
+				}
+				
 			}
 
 		}
 
 		//回転の変更
-		levelDataManager_->SetRotate(levelDataHandle_, bone_, { .x = floatingTheta_,.y = rightGateRotateTheta_,.z = floatingTheta_ });
+		levelDataManager_->SetRotate(levelDataHandle_, boneString_, { .x = floatingTheta_,.y = rightGateRotateTheta_,.z = floatingTheta_ });
 		//座標の変更
-		levelDataManager_->SetTranslate(levelDataHandle_, bone_, bonePosition_);
+		levelDataManager_->SetTranslate(levelDataHandle_, boneString_, bonePosition_);
 
 	}
 	

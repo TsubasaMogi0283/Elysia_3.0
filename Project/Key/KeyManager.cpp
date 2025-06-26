@@ -265,7 +265,7 @@ void KeyManager::PickUp() {
 				//取得可能
 				key->SetIsPrePickUp(true);
 				
-				//SPACEキーで取得
+				//SPACEキーまたはBボタンでで取得
 				if (input_->IsPushKey(DIK_SPACE) == true|| input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
 					//プレイヤーの持っているか鍵の数が増える
 					player_->AddHaveKeyQuantity();
