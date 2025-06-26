@@ -74,9 +74,9 @@ private:
 	void EscapeCondition();
 
 	/// <summary>
-	/// ステージオブジェクトとの当たり判定
+	/// 墓場の処理
 	/// </summary>
-	void ObjectCollision();
+	void CemeteryProcess();
 
 	/// <summary>
 	/// ポルターガイストの処理
@@ -221,6 +221,18 @@ private:
 	std::unique_ptr<Gate> gate_ = nullptr;
 	//脱出成功かどうか
 	bool isSucceedEscape_ = false;
+
+	//門を開ける音
+	uint32_t openGateAudioHandle_ = 0u;
+	//一回だけ鳴らす
+	bool isPlayOpenSE_ = false;
+	//門が閉まる音
+	uint32_t closeGateAudioHandle_ = 0u;
+	//一回だけ鳴らす
+	bool isPlayCloseSE_ = false;
+	//骨が壊れる音
+	uint32_t boneBreakAudioHandle_ = 0u;
+
 
 	//ビネットの変化時間
 	float_t vignetteChangeTime_ = 0.0f;

@@ -5,6 +5,7 @@
 
 #include "Camera.h"
 #include "Input.h"
+#include "Audio.h"
 #include "TextureManager.h"
 #include "ModelManager.h"
 #include "LevelDataManager.h"
@@ -83,6 +84,13 @@ void PlayGameScene::Initialize(){
 	bonePieceMaterial_.Initialize();
 	bonePieceMaterial_.lightingKinds = LightingType::SpotLighting;
 
+	//門を開ける音
+	openGateAudioHandle_ = Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/OpenGate.mp3");
+	//墓地が閉まる音
+	closeGateAudioHandle_= Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/CloseGate.mp3");
+	//骨が壊れる音
+	boneBreakAudioHandle_ = Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/BoneBreak.mp3");
+
 }
 
 void PlayGameScene::Update(GameScene* gameScene){
@@ -107,7 +115,7 @@ void PlayGameScene::Update(GameScene* gameScene){
 	//脱出の仕組み
 	EscapeCondition();
 	//オブジェクトの当たり判定
-	ObjectCollision();
+	CemeteryProcess();
 	//ポルターガイストの処理
 	PoltergeistProcess();
 	//コリジョン管理クラスに登録
@@ -151,7 +159,12 @@ void PlayGameScene::Update(GameScene* gameScene){
 	}
 	//成功
 	if (isSucceedEscape_ == true) {
-
+		//開く音を再生
+		if (isPlayOpenSE_ == false) {
+			Elysia::Audio::GetInstance()->Play(openGateAudioHandle_, false);
+			isPlayOpenSE_ = true;
+		}
+		
 		//回転とフェードを線形補間で管理する
 		openT_ += OPEN_T_VALUE_;
 		float_t newOpenT_ = Easing::EaseInOutQuart(openT_);
@@ -590,7 +603,7 @@ void PlayGameScene::EscapeCondition(){
 	}
 }
 
-void PlayGameScene::ObjectCollision(){
+void PlayGameScene::CemeteryProcess(){
 
 	//初期座標を取得
 	Vector3 initialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "CloseFenceInCemetery");
@@ -605,6 +618,12 @@ void PlayGameScene::ObjectCollision(){
 			player_->GetWorldPosition().z >= -50.0f) {
 			fenceTranslate_ = initialPosition;
 			fenceTranslate_.y = 0.0f;
+			if (isPlayCloseSE_ == false) {
+
+				//閉まる音を再生
+				Elysia::Audio::GetInstance()->Play(closeGateAudioHandle_, false);
+				isPlayCloseSE_ = true;
+			}
 
 		}
 		else {
@@ -707,6 +726,10 @@ void PlayGameScene::PoltergeistProcess(){
 					bonePieceParticle_->SetScale({ BONE_PIECE_SCALE_,BONE_PIECE_SCALE_,BONE_PIECE_SCALE_ });
 					//ベロシティの設定
 					bonePieceParticle_->SetThrowUpVeloityY(THROW_UP_VELOCITY_Y_);
+
+					//壊れる音
+					Elysia::Audio::GetInstance()->Play(boneBreakAudioHandle_, false);
+					
 				}
 				
 			}
