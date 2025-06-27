@@ -92,6 +92,7 @@ void PlayGameScene::Initialize(){
 	boneBreakAudioHandle_ = Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/BoneBreak.mp3");
 	//警告音
 	warningBoneAudioHandle_= Elysia::Audio::GetInstance()->Load("Resources/Audio/SE/BoneWarning.wav");
+
 }
 
 void PlayGameScene::Update(GameScene* gameScene){

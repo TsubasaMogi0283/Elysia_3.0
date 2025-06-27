@@ -9,6 +9,7 @@ Elysia::Audio* Elysia::Audio::GetInstance() {
 	return &instance;
 }
 
+
 void Elysia::Audio::CreateSubmixVoice(const uint32_t& channel) {
 	//44100Hz固定
 	uint32_t sampleRate = 44100u;
@@ -205,7 +206,6 @@ uint32_t Elysia::Audio::LoadWave(const std::string& fileName) {
 	Elysia::Audio::GetInstance()->audioInformation_[fileName].handle = handle;
 	Elysia::Audio::GetInstance()->audioInformation_[fileName].soundData = newSoundData;
 	Elysia::Audio::GetInstance()->audioInformation_[fileName].extension = "wave";
-
 
 	//handleを返す
 	return handle;
@@ -920,6 +920,13 @@ void Elysia::Audio::SetNotchFilter(const uint32_t& audioHandle, float_t& cutOff,
 }
 
 
+int32_t Elysia::Audio::GetBitPerSample(const uint32_t& audioHandle) {
+	//ファイルキーの取得
+	std::string fileKey = GetAudioInformationKey(audioHandle);
+	
+	//bitの数を返す
+	return audioInformation_[fileKey].soundData.wfex.wBitsPerSample;
+}
 
 void Elysia::Audio::SendChannels(const uint32_t& audioHandle, const uint32_t& channelNumber) {
 	XAUDIO2_SEND_DESCRIPTOR send = { 0, Audio::GetInstance()->submixVoice_[0] };
