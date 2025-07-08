@@ -147,14 +147,20 @@ namespace Elysia {
 
 
 	public:
-
-
 		/// <summary>
 		/// 環境マップテクスチャの設定
 		/// </summary>
 		/// <param name="textureHandle"></param>
-		void SetEviromentTexture(const uint32_t& textureHandle) {
+		inline void SetEviromentTexture(const uint32_t& textureHandle) {
 			this->eviromentTextureHandle_ = textureHandle;
+		}
+
+		/// <summary>
+		/// 非表示設定
+		/// </summary>
+		/// <param name="isInvisible"></param>
+		inline void SetInvisible(const bool& isInvisible) {
+			this->isInvisible_ = isInvisible;
 		}
 
 
@@ -182,18 +188,18 @@ namespace Elysia {
 		//インデックスバッファビュー
 		D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
-
 		//カメラリソース
 		ComPtr<ID3D12Resource> cameraResource_ = nullptr;
 		//PixelShaderにカメラの座標を送る為の変数
 		CameraForGPU* cameraForGPU_ = {};
 
-
 		//テクスチャハンドル
 		uint32_t textureHandle_ = 0u;
-
 		//環境マップ
 		uint32_t eviromentTextureHandle_ = 0;
+
+		//非表示設定
+		bool isInvisible_ = false;
 
 		//モデルハンドル
 		ModelData modelData_ = {};

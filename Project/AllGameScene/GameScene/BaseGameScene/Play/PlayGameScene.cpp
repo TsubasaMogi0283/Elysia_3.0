@@ -116,6 +116,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 
 	//脱出の仕組み
 	EscapeCondition();
+	//脱出アシスト
+	EscapeAssist();
 	//オブジェクトの当たり判定
 	CemeteryProcess();
 	//ポルターガイストの処理
@@ -216,6 +218,9 @@ void PlayGameScene::Update(GameScene* gameScene){
 }
 
 void PlayGameScene::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
+	//アシスト
+	assistArrowModel_->Draw(assistArrowWorldTransform_, camera, assistArrowMaterial_, spotLight);
+
 
 	if (bonePieceParticle_ != nullptr) {
 		//砕けるパーティクル
@@ -603,6 +608,17 @@ void PlayGameScene::EscapeCondition(){
 			toEscapeSprite_->SetInvisible(false);
 		}
 	}
+}
+
+void PlayGameScene::EscapeAssist(){
+	//全て取った時だけ通す
+	if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
+		
+
+
+	}
+
+
 }
 
 void PlayGameScene::CemeteryProcess(){

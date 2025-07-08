@@ -74,6 +74,11 @@ private:
 	void EscapeCondition();
 
 	/// <summary>
+	/// 門への案内
+	/// </summary>
+	void EscapeAssist();
+
+	/// <summary>
 	/// 墓場の処理
 	/// </summary>
 	void CemeteryProcess();
@@ -217,6 +222,11 @@ private:
 	uint32_t bonePieceCount_ = 30u;
 	//一回だけ当たったかどうか
 	bool isTouchOnce_ = false;
+
+	//脱出アシスト用の矢印
+	std::unique_ptr<Elysia::Model>assistArrowModel_ = nullptr;
+	WorldTransform assistArrowWorldTransform_ = {};
+	Material assistArrowMaterial_ = {};
 
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
