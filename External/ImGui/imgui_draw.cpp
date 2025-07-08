@@ -56,7 +56,7 @@ Index of this file:
 #pragma clang diagnostic ignored "-Wunknown-pragmas"                // warning: unknown warning group 'xxx'
 #pragma clang diagnostic ignored "-Wold-style-cast"                 // warning: use of old-style cast                            // yes, they are more terse.
 #pragma clang diagnostic ignored "-Wfloat-equal"                    // warning: comparing floating point with == or != is unsafe // storing and comparing against same constants ok.
-#pragma clang diagnostic ignored "-Wglobal-constructors"            // warning: declaration requires a global destructor         // similar to above, not sure what the exact difference is.
+#pragma clang diagnostic ignored "-Wglobal-constructors"            // warning: declaration requires a global destructor         // similar to above, not sure what the exact difference_ is.
 #pragma clang diagnostic ignored "-Wsign-conversion"                // warning: implicit conversion changes signedness
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"  // warning: zero as null pointer constant                    // some standard header variations use #define NULL 0
 #pragma clang diagnostic ignored "-Wcomma"                          // warning: possible misuse of comma operator here
@@ -1928,7 +1928,7 @@ void ImDrawData::DeIndexAllBuffers()
 
 // Helper to scale the ClipRect field of each ImDrawCmd.
 // Use if your final output buffer is at a different scale than draw_data->DisplaySize,
-// or if there is a difference between your window resolution and framebuffer resolution.
+// or if there is a difference_ between your window resolution and framebuffer resolution.
 void ImDrawData::ScaleClipRects(const ImVec2& fb_scale)
 {
     for (ImDrawList* draw_list : CmdLists)

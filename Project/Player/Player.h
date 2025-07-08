@@ -161,7 +161,7 @@ public:
 	/// <summary>
 	/// 目線シータの設定
 	/// </summary>
-	/// <param name="theta"></param>
+	/// <param name="theta_"></param>
 	inline void SetTheta(const float_t& theta) {
 		this->theta_ = theta;
 	}

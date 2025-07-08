@@ -29,7 +29,7 @@ namespace SingleCalculation{
 	/// <summary>
 	/// コタンジェント
 	/// </summary>
-	/// <param name="theta">θ</param>
+	/// <param name="theta_">θ</param>
 	/// <returns>値</returns>
 	float Cot(const float_t& theta);
 

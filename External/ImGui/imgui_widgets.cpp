@@ -2258,7 +2258,7 @@ bool ImGui::DragBehaviorT(ImGuiDataType data_type, TYPE* v, float v_speed, const
     if (v_speed == 0.0f && is_clamped && (v_max - v_min < FLT_MAX))
         v_speed = (float)((v_max - v_min) * g.DragSpeedDefaultRatio);
 
-    // Inputs accumulates into g.DragCurrentAccum, which is flushed into the current value as soon as it makes a difference with our precision settings
+    // Inputs accumulates into g.DragCurrentAccum, which is flushed into the current value as soon as it makes a difference_ with our precision settings
     float adjust_delta = 0.0f;
     if (g.ActiveIdSource == ImGuiInputSource_Mouse && IsMousePosValid() && IsMouseDragPastThreshold(0, g.IO.MouseDragThreshold * DRAG_MOUSE_THRESHOLD_FACTOR))
     {

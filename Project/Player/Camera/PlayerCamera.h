@@ -76,7 +76,7 @@ public:
 	/// <summary>
 	/// シータの設定
 	/// </summary>
-	/// <param name="theta">シータ</param>
+	/// <param name="theta_">シータ</param>
 	inline void SetTheta(const float& theta) {
 		this->theta_=theta;
 	}

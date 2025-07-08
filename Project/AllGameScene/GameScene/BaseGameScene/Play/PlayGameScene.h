@@ -240,6 +240,10 @@ private:
 	//線形補間
 	float_t indicateT_ = 0.0f;
 
+	//門の中心座標
+	Vector3 gateCenterPosition_ = {};
+	Vector3 difference_ = {};
+	float_t arrowTheta_ = 0.0f;
 
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;

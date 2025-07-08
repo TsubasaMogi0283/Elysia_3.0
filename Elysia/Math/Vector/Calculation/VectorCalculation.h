@@ -74,6 +74,14 @@ namespace VectorCalculation {
 	/// <returns></returns>
 	Vector3 Multiply(const Vector3& v1, const float_t& value);
 
+	/// <summary>
+	/// 除算(Vector3/float)
+	/// </summary>
+	/// <param name="v1"></param>
+	/// <param name="value"></param>
+	/// <returns></returns>
+	Vector3 Divide(const Vector3& v1, const float_t& value);
+
 
 	/// <summary>
 	/// 正規化(Vector2)

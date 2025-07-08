@@ -1718,7 +1718,7 @@ int ImGui::TableGetHoveredColumn()
 
 // Return -1 when table is not hovered. Return maxrow+1 if in table but below last submitted row.
 // *IMPORTANT* Unlike TableGetHoveredColumn(), this has a one frame latency in updating the value.
-// This difference with is the reason why this is not public yet.
+// This difference_ with is the reason why this is not public yet.
 int ImGui::TableGetHoveredRow()
 {
     ImGuiContext& g = *GImGui;
@@ -2577,7 +2577,7 @@ void ImGui::TableMergeDrawChannels(ImGuiTable* table)
                 // - On a same-window table (not scrolling = single group), all fitting columns ClipRect -> will extend and match host ClipRect -> will merge
                 // - Columns can use padding and have left_-most ClipRect.Min.x and right_-most ClipRect.Max.x != from host ClipRect -> will extend and match host ClipRect -> will merge
                 // FIXME-TABLE FIXME-WORKRECT: We are wasting a merge opportunity on tables without scrolling if column doesn't fit
-                // within host clip rect, solely because of the half-padding difference between window->WorkRect and window->InnerClipRect.
+                // within host clip rect, solely because of the half-padding difference_ between window->WorkRect and window->InnerClipRect.
                 if ((merge_group_n & 1) == 0 || !has_freeze_h)
                     merge_clip_rect.Min.x = ImMin(merge_clip_rect.Min.x, host_rect.Min.x);
                 if ((merge_group_n & 2) == 0 || !has_freeze_v)

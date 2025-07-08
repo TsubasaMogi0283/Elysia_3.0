@@ -82,6 +82,9 @@ void PlayGameScene::Initialize(){
 	//デバッグ用で表示させる
 	assistArrowModel_->SetInvisible(false);
 #endif // _DEBUG
+	//門の中心座標を計算
+	gateCenterPosition_= VectorCalculation::Add(levelDataManager_->GetInitialTranslate(levelDataHandle_, gateRightString_), levelDataManager_->GetInitialTranslate(levelDataHandle_, gateLeftString_));
+	gateCenterPosition_ = VectorCalculation::Divide(gateCenterPosition_, 2.0f);
 
 
 	//ゲートのモデルの読み込み
@@ -134,7 +137,10 @@ void PlayGameScene::Update(GameScene* gameScene){
 	//脱出の仕組み
 	EscapeCondition();
 	//脱出アシスト
-	EscapeAssist();
+	//全て取った時だけ通す
+	if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
+		EscapeAssist();
+	}
 	//オブジェクトの当たり判定
 	CemeteryProcess();
 	//ポルターガイストの処理
@@ -229,6 +235,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 	collisionManager_->CheckAllCollision();
 
 #ifdef _DEBUG
+	EscapeAssist();
+
 	//ImGui表示用
 	DisplayImGui();
 #endif // _DEBUG
@@ -628,31 +636,28 @@ void PlayGameScene::EscapeCondition(){
 }
 
 void PlayGameScene::EscapeAssist(){
-	//全て取った時だけ通す
-	if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
-		assistArrowModel_->SetInvisible(false);
+	//表示
+	assistArrowModel_->SetInvisible(false);
 
-		//矢印の座標をプレイヤーの向いている向き
-		assistArrowWorldTransform_.translate.x = player_->GetWorldPosition().x + player_->GetFlashLight()->GetSpotLight().direction.x* PLAYER_TO_ARROW_DISTANCE_;
-		assistArrowWorldTransform_.translate.z = player_->GetWorldPosition().z + player_->GetFlashLight()->GetSpotLight().direction.z* PLAYER_TO_ARROW_DISTANCE_;
-
-
-	}
-#ifdef _DEBUG
-	
 	//線形補間
-	indicateT_+= INCREASE_T_VALUE_;
+	indicateT_ += INCREASE_T_VALUE_;
 	if (indicateT_ > 1.0f) {
 		indicateT_ = 0.0f;
 	}
+	//差分
+	difference_ = VectorCalculation::Subtract(gateCenterPosition_, assistArrowWorldTransform_.GetWorldPosition());
+	//角度を求める
+	arrowTheta_ = std::atan2f(difference_.x, difference_.z);
 	//動く量
 	indicateValueZ_ = Easing::EaseInBack(indicateT_);
+	//矢印の向きを変える
+	assistArrowWorldTransform_.rotate.y= arrowTheta_;
+
 
 	//矢印の座標をプレイヤーの向いている向き
 	assistArrowWorldTransform_.translate.x = player_->GetWorldPosition().x + player_->GetFlashLight()->GetSpotLight().direction.x * PLAYER_TO_ARROW_DISTANCE_;
-	assistArrowWorldTransform_.translate.z = player_->GetWorldPosition().z + player_->GetFlashLight()->GetSpotLight().direction.z * PLAYER_TO_ARROW_DISTANCE_ + indicateValueZ_* INDOCATE_DISTANCE_;
+	assistArrowWorldTransform_.translate.z = player_->GetWorldPosition().z + player_->GetFlashLight()->GetSpotLight().direction.z * PLAYER_TO_ARROW_DISTANCE_ + indicateValueZ_ * INDOCATE_DISTANCE_;
 
-#endif // _DEBUG
 
 
 }
@@ -846,6 +851,15 @@ void PlayGameScene::PoltergeistProcess(){
 void PlayGameScene::DisplayImGui(){
 
 	ImGui::Begin("プレイ(ゲーム)");
+
+	if (ImGui::TreeNode("矢印") == true) {
+		ImGui::InputFloat3("門の中心座標", &gateCenterPosition_.x);
+		ImGui::InputFloat3("プレイヤーとの差分", &difference_.x);
+		ImGui::InputFloat("角度", &arrowTheta_);
+
+		ImGui::TreePop();
+	}
+
 	ImGui::SliderFloat("T", &dropT_, 0.0f, 1.0f);
 	ImGui::InputFloat3("骨の座標", &bonePosition_.x);
 	ImGui::InputFloat3("ロックオン座標(プレイヤー)", &loclOnPlayerPosition_.x);
