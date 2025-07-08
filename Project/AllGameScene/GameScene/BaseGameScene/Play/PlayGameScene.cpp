@@ -66,9 +66,21 @@ void PlayGameScene::Initialize(){
 	//ゴールに向かえのテキスト
 	uint32_t toEscapeTextureHandle = textureManager_->Load("Resources/Sprite/Escape/ToGoal.png");
 	toEscapeSprite_.reset(Elysia::Sprite::Create(toEscapeTextureHandle, INITIAL_SPRITE_POSITION_));
-	//宝箱
-	uint32_t openTreasureBoxSpriteHandle = textureManager_->Load("Resources/Sprite/TreasureBox/OpenTreasureBox.png");
-	openTreasureBoxSpriteHandle;
+	
+	//矢印のモデルを読み込む
+	uint32_t arrowModelHandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Arrow","Arrow.obj");
+	//生成
+	assistArrowModel_.reset(Elysia::Model::Create(arrowModelHandle));
+	//初期は非表示
+	assistArrowModel_->SetInvisible(true);
+	assistArrowWorldTransform_.Initialize();
+	assistArrowMaterial_.Initialize();
+	assistArrowMaterial_.lightingKinds = LightingType::SpotLighting;
+#ifdef _DEBUG
+	//デバッグ用で表示させる
+	assistArrowModel_->SetInvisible(false);
+#endif // _DEBUG
+
 
 	//ゲートのモデルの読み込み
 	uint32_t gateModelhandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Gate", "Gate.obj");
@@ -113,6 +125,9 @@ void PlayGameScene::Update(GameScene* gameScene){
 	//プレイヤーにそれぞれの角度を設定する
 	player_->SetTheta(theta_);
 	player_->SetPhi(phi_);
+	//アシスト矢印用
+	assistArrowWorldTransform_.Update();
+	assistArrowMaterial_.Update();
 
 	//脱出の仕組み
 	EscapeCondition();
@@ -613,10 +628,20 @@ void PlayGameScene::EscapeCondition(){
 void PlayGameScene::EscapeAssist(){
 	//全て取った時だけ通す
 	if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
-		
+		assistArrowModel_->SetInvisible(false);
+
+		//矢印の座標をプレイヤーの向いている向き
+		assistArrowWorldTransform_.translate.x = player_->GetWorldPosition().x + player_->GetFlashLight()->GetSpotLight().direction.x* PLAYER_TO_ARROW_DISTANCE_;
+		assistArrowWorldTransform_.translate.z = player_->GetWorldPosition().z + player_->GetFlashLight()->GetSpotLight().direction.z* PLAYER_TO_ARROW_DISTANCE_;
 
 
 	}
+#ifdef _DEBUG
+	//矢印の座標をプレイヤーの向いている向き
+	assistArrowWorldTransform_.translate.x = player_->GetWorldPosition().x + player_->GetFlashLight()->GetSpotLight().direction.x * PLAYER_TO_ARROW_DISTANCE_;
+	assistArrowWorldTransform_.translate.z = player_->GetWorldPosition().z + player_->GetFlashLight()->GetSpotLight().direction.z * PLAYER_TO_ARROW_DISTANCE_;
+
+#endif // _DEBUG
 
 
 }

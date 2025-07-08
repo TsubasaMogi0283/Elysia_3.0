@@ -255,9 +255,7 @@ void Elysia::Model::Draw(const WorldTransform& worldTransform, const Camera& cam
 		return;
 	}
 
-	//スポットライトだけ
-	assert(material.lightingKinds == LightingType::SpotLighting);
-
+	
 
 	//頂点バッファ
 	VertexData* vertexData = nullptr;

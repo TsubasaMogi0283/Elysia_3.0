@@ -149,6 +149,9 @@ private:
 	//音量の減る値
 	const float_t VOLUME_DECREASE_VALUE_ = 0.0005f;
 	
+	//プレイヤーと矢印の距離
+	const float_t PLAYER_TO_ARROW_DISTANCE_ = 3.0f;
+
 private:
 
 	//コリジョン管理
@@ -227,6 +230,7 @@ private:
 	std::unique_ptr<Elysia::Model>assistArrowModel_ = nullptr;
 	WorldTransform assistArrowWorldTransform_ = {};
 	Material assistArrowMaterial_ = {};
+	
 
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
