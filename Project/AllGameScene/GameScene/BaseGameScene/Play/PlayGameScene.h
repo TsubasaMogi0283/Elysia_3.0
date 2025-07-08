@@ -151,7 +151,12 @@ private:
 	
 	//プレイヤーと矢印の距離
 	const float_t PLAYER_TO_ARROW_DISTANCE_ = 3.0f;
-
+	//矢印の大きさ
+	const float_t ARROW_SCALE_ = 0.3f;
+	//線形補間の増える量
+	const float_t INCREASE_T_VALUE_=0.01f;
+	//指し示す距離
+	const float_t INDOCATE_DISTANCE_ = 1.0f;
 private:
 
 	//コリジョン管理
@@ -230,7 +235,11 @@ private:
 	std::unique_ptr<Elysia::Model>assistArrowModel_ = nullptr;
 	WorldTransform assistArrowWorldTransform_ = {};
 	Material assistArrowMaterial_ = {};
-	
+	//指し示す動きの量
+	float_t indicateValueZ_ = {};
+	//線形補間
+	float_t indicateT_ = 0.0f;
+
 
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;

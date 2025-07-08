@@ -74,6 +74,8 @@ void PlayGameScene::Initialize(){
 	//初期は非表示
 	assistArrowModel_->SetInvisible(true);
 	assistArrowWorldTransform_.Initialize();
+	assistArrowWorldTransform_.scale = { .x = ARROW_SCALE_ ,.y = ARROW_SCALE_ ,.z = ARROW_SCALE_ };
+	assistArrowWorldTransform_.translate.y = 0.75f;
 	assistArrowMaterial_.Initialize();
 	assistArrowMaterial_.lightingKinds = LightingType::SpotLighting;
 #ifdef _DEBUG
@@ -637,9 +639,18 @@ void PlayGameScene::EscapeAssist(){
 
 	}
 #ifdef _DEBUG
+	
+	//線形補間
+	indicateT_+= INCREASE_T_VALUE_;
+	if (indicateT_ > 1.0f) {
+		indicateT_ = 0.0f;
+	}
+	//動く量
+	indicateValueZ_ = Easing::EaseInBack(indicateT_);
+
 	//矢印の座標をプレイヤーの向いている向き
 	assistArrowWorldTransform_.translate.x = player_->GetWorldPosition().x + player_->GetFlashLight()->GetSpotLight().direction.x * PLAYER_TO_ARROW_DISTANCE_;
-	assistArrowWorldTransform_.translate.z = player_->GetWorldPosition().z + player_->GetFlashLight()->GetSpotLight().direction.z * PLAYER_TO_ARROW_DISTANCE_;
+	assistArrowWorldTransform_.translate.z = player_->GetWorldPosition().z + player_->GetFlashLight()->GetSpotLight().direction.z * PLAYER_TO_ARROW_DISTANCE_ + indicateValueZ_* INDOCATE_DISTANCE_;
 
 #endif // _DEBUG
 
