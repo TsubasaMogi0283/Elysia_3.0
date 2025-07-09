@@ -71,17 +71,11 @@ void PlayGameScene::Initialize(){
 	uint32_t arrowModelHandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Arrow","Arrow.obj");
 	//生成
 	assistArrowModel_.reset(Elysia::Model::Create(arrowModelHandle));
-	//初期は非表示
-	assistArrowModel_->SetInvisible(true);
 	assistArrowWorldTransform_.Initialize();
 	assistArrowWorldTransform_.scale = { .x = ARROW_SCALE_ ,.y = ARROW_SCALE_ ,.z = ARROW_SCALE_ };
-	assistArrowWorldTransform_.translate.y = 0.75f;
+	assistArrowWorldTransform_.translate.y = ARROW_HEIGHT_;
 	assistArrowMaterial_.Initialize();
 	assistArrowMaterial_.lightingKinds = LightingType::SpotLighting;
-#ifdef _DEBUG
-	//デバッグ用で表示させる
-	assistArrowModel_->SetInvisible(false);
-#endif // _DEBUG
 	//門の中心座標を計算
 	gateCenterPosition_= VectorCalculation::Add(levelDataManager_->GetInitialTranslate(levelDataHandle_, gateRightString_), levelDataManager_->GetInitialTranslate(levelDataHandle_, gateLeftString_));
 	gateCenterPosition_ = VectorCalculation::Divide(gateCenterPosition_, 2.0f);
@@ -636,30 +630,56 @@ void PlayGameScene::EscapeCondition(){
 }
 
 void PlayGameScene::EscapeAssist(){
-	//表示
-	assistArrowModel_->SetInvisible(false);
 
-	//線形補間
-	indicateT_ += INCREASE_T_VALUE_;
-	if (indicateT_ > 1.0f) {
-		indicateT_ = 0.0f;
+	//透明度
+	arrowTransparency_ += INCREASE_TRANSPARENCY_VALUE_;
+	//1.0以上にはしない
+	if (arrowTransparency_ > 1.0f) {
+		arrowTransparency_ = 1.0f;
+		isDisplay_ = true;
 	}
-	//差分
-	difference_ = VectorCalculation::Subtract(gateCenterPosition_, assistArrowWorldTransform_.GetWorldPosition());
-	//角度を求める
-	arrowTheta_ = std::atan2f(difference_.x, difference_.z);
-	//動く量
-	indicateValueZ_ = Easing::EaseInBack(indicateT_);
-	//矢印の向きを変える
-	assistArrowWorldTransform_.rotate.y= arrowTheta_;
+	assistArrowMaterial_.color.w = arrowTransparency_;
 
+	//表示
+	if (isDisplay_ == true) {
+		//線形補間
+		indicateT_ += INCREASE_T_VALUE_;
+		if (indicateT_ > 1.0f) {
+			indicateT_ = 0.0f;
+		}
+		//差分
+		difference_ = VectorCalculation::Subtract(gateCenterPosition_, assistArrowWorldTransform_.GetWorldPosition());
+		//角度を求める
+		arrowTheta_ = std::atan2f(difference_.x, difference_.z);
+		//動く量
+		indicateValueZ_ = Easing::EaseInBack(indicateT_);
+		//矢印の向きを変える
+		assistArrowWorldTransform_.rotate.y = arrowTheta_;
+		//指し示す方向。XとZに注意
+		Vector3 indicatedirection = {
+			.x = std::sinf(arrowTheta_),
+			.y = 0.0f,
+			.z = std::cosf(arrowTheta_),
+		};
 
-	//矢印の座標をプレイヤーの向いている向き
-	assistArrowWorldTransform_.translate.x = player_->GetWorldPosition().x + player_->GetFlashLight()->GetSpotLight().direction.x * PLAYER_TO_ARROW_DISTANCE_;
-	assistArrowWorldTransform_.translate.z = player_->GetWorldPosition().z + player_->GetFlashLight()->GetSpotLight().direction.z * PLAYER_TO_ARROW_DISTANCE_ + indicateValueZ_ * INDOCATE_DISTANCE_;
+		//大元の座標
+		Vector3 basePosition = VectorCalculation::Add(player_->GetWorldPosition(), VectorCalculation::Multiply(player_->GetLightDirection(), PLAYER_TO_ARROW_DISTANCE_));
+		//指し示した後の座標
+		Vector3 indicatedPosition = VectorCalculation::Add(basePosition, indicatedirection);
 
+		//矢印の座標を計算
+		assistArrowWorldTransform_.translate = VectorCalculation::Lerp(basePosition, indicatedPosition, indicateValueZ_);
+		//Yは固定
+		assistArrowWorldTransform_.translate.y = ARROW_HEIGHT_;
 
-
+	}
+	else {
+		//プレイヤーから一定の距離に矢印を置く
+		assistArrowWorldTransform_.translate = VectorCalculation::Add(player_->GetWorldPosition(), VectorCalculation::Multiply(player_->GetLightDirection(), PLAYER_TO_ARROW_DISTANCE_));
+		//Yは固定
+		assistArrowWorldTransform_.translate.y = ARROW_HEIGHT_;
+	}
+	
 }
 
 void PlayGameScene::CemeteryProcess(){

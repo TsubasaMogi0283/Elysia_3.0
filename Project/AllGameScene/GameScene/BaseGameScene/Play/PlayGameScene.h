@@ -155,8 +155,11 @@ private:
 	const float_t ARROW_SCALE_ = 0.3f;
 	//線形補間の増える量
 	const float_t INCREASE_T_VALUE_=0.01f;
-	//指し示す距離
-	const float_t INDOCATE_DISTANCE_ = 1.0f;
+	//矢印の高さ
+	const float_t ARROW_HEIGHT_ = 0.75f;
+
+	//透明度の増える値
+	const float_t INCREASE_TRANSPARENCY_VALUE_ = 0.01f;
 private:
 
 	//コリジョン管理
@@ -239,6 +242,10 @@ private:
 	float_t indicateValueZ_ = {};
 	//線形補間
 	float_t indicateT_ = 0.0f;
+	//透明度
+	float_t arrowTransparency_ = 0.0f;
+	//表示するかどうか
+	bool isDisplay_ = false;
 
 	//門の中心座標
 	Vector3 gateCenterPosition_ = {};
