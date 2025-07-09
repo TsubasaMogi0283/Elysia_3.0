@@ -13,6 +13,7 @@
 #include "GameScene/BaseGameScene/BaseGameScene.h"
 #include "Stage/Gate/Gate.h"
 #include <Particle3D.h>
+#include <EscapeAssistArrow/EscapeAssistArrow.h>
 
 /// <summary>
 /// プレイ(本編)
@@ -72,11 +73,6 @@ private:
 	/// 逃げ状態
 	/// </summary>
 	void EscapeCondition();
-
-	/// <summary>
-	/// 門への案内
-	/// </summary>
-	void EscapeAssist();
 
 	/// <summary>
 	/// 墓場の処理
@@ -149,17 +145,9 @@ private:
 	//音量の減る値
 	const float_t VOLUME_DECREASE_VALUE_ = 0.0005f;
 	
-	//プレイヤーと矢印の距離
-	const float_t PLAYER_TO_ARROW_DISTANCE_ = 3.0f;
-	//矢印の大きさ
-	const float_t ARROW_SCALE_ = 0.3f;
-	//線形補間の増える量
-	const float_t INCREASE_T_VALUE_=0.01f;
-	//矢印の高さ
-	const float_t ARROW_HEIGHT_ = 0.75f;
+	
 
-	//透明度の増える値
-	const float_t INCREASE_TRANSPARENCY_VALUE_ = 0.01f;
+	
 private:
 
 	//コリジョン管理
@@ -193,6 +181,9 @@ private:
 	std::unique_ptr<Elysia::Sprite> escapeTextSprite_ = nullptr;
 	//脱出のスプライト
 	std::unique_ptr<Elysia::Sprite> toEscapeSprite_ = nullptr;
+
+	//アシストの矢印
+	std::unique_ptr<EscapeAssistArrow> escapeAssistArrow_ = nullptr;
 
 	//骨が上がる
 	bool isBoneRise_ = true;
@@ -234,24 +225,7 @@ private:
 	//一回だけ当たったかどうか
 	bool isTouchOnce_ = false;
 
-	//脱出アシスト用の矢印
-	std::unique_ptr<Elysia::Model>assistArrowModel_ = nullptr;
-	WorldTransform assistArrowWorldTransform_ = {};
-	Material assistArrowMaterial_ = {};
-	//指し示す動きの量
-	float_t indicateValueZ_ = {};
-	//線形補間
-	float_t indicateT_ = 0.0f;
-	//透明度
-	float_t arrowTransparency_ = 0.0f;
-	//表示するかどうか
-	bool isDisplay_ = false;
-
-	//門の中心座標
-	Vector3 gateCenterPosition_ = {};
-	Vector3 difference_ = {};
-	float_t arrowTheta_ = 0.0f;
-
+	
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
 	//脱出成功かどうか

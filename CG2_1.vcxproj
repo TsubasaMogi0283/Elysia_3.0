@@ -227,6 +227,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Enemy\StrongEnemy\State\StrongEnemyTracking.cpp" />
     <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemy.cpp" />
     <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.cpp" />
+    <ClCompile Include="Project\EscapeAssistArrow\EscapeAssistArrow.cpp" />
     <ClCompile Include="Project\Key\Key.cpp" />
     <ClCompile Include="Project\Key\KeyManager.cpp" />
     <ClCompile Include="Project\Light\FlashLight\FlashLight.cpp" />
@@ -561,6 +562,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Enemy\StrongEnemy\State\StrongEnemyTracking.h" />
     <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemy.h" />
     <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.h" />
+    <ClInclude Include="Project\EscapeAssistArrow\EscapeAssistArrow.h" />
     <ClInclude Include="Project\Key\Key.h" />
     <ClInclude Include="Project\Key\KeyManager.h" />
     <ClInclude Include="Project\Light\FlashLight\FlashLight.h" />

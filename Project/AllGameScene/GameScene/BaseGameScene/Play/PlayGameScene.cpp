@@ -69,17 +69,14 @@ void PlayGameScene::Initialize(){
 	
 	//矢印のモデルを読み込む
 	uint32_t arrowModelHandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Arrow","Arrow.obj");
-	//生成
-	assistArrowModel_.reset(Elysia::Model::Create(arrowModelHandle));
-	assistArrowWorldTransform_.Initialize();
-	assistArrowWorldTransform_.scale = { .x = ARROW_SCALE_ ,.y = ARROW_SCALE_ ,.z = ARROW_SCALE_ };
-	assistArrowWorldTransform_.translate.y = ARROW_HEIGHT_;
-	assistArrowMaterial_.Initialize();
-	assistArrowMaterial_.lightingKinds = LightingType::SpotLighting;
 	//門の中心座標を計算
-	gateCenterPosition_= VectorCalculation::Add(levelDataManager_->GetInitialTranslate(levelDataHandle_, gateRightString_), levelDataManager_->GetInitialTranslate(levelDataHandle_, gateLeftString_));
+	Vector3 gateCenterPosition_ = VectorCalculation::Add(levelDataManager_->GetInitialTranslate(levelDataHandle_, gateRightString_), levelDataManager_->GetInitialTranslate(levelDataHandle_, gateLeftString_));
 	gateCenterPosition_ = VectorCalculation::Divide(gateCenterPosition_, 2.0f);
 
+	//アシスト用の矢印
+	escapeAssistArrow_ = std::make_unique<EscapeAssistArrow>();
+	escapeAssistArrow_->SetPlayer(player_);
+	escapeAssistArrow_->Initialize(arrowModelHandle,gateCenterPosition_);
 
 	//ゲートのモデルの読み込み
 	uint32_t gateModelhandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Gate", "Gate.obj");
@@ -124,17 +121,17 @@ void PlayGameScene::Update(GameScene* gameScene){
 	//プレイヤーにそれぞれの角度を設定する
 	player_->SetTheta(theta_);
 	player_->SetPhi(phi_);
-	//アシスト矢印用
-	assistArrowWorldTransform_.Update();
-	assistArrowMaterial_.Update();
-
 	//脱出の仕組み
 	EscapeCondition();
+	
 	//脱出アシスト
 	//全て取った時だけ通す
 	if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
-		EscapeAssist();
+		escapeAssistArrow_->SetIsOpaque(true);
 	}
+	//アシスト用の矢印の更新
+	escapeAssistArrow_->Update();
+
 	//オブジェクトの当たり判定
 	CemeteryProcess();
 	//ポルターガイストの処理
@@ -229,17 +226,15 @@ void PlayGameScene::Update(GameScene* gameScene){
 	collisionManager_->CheckAllCollision();
 
 #ifdef _DEBUG
-	EscapeAssist();
-
+	escapeAssistArrow_->SetIsOpaque(true);
 	//ImGui表示用
 	DisplayImGui();
 #endif // _DEBUG
 }
 
 void PlayGameScene::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
-	//アシスト
-	assistArrowModel_->Draw(assistArrowWorldTransform_, camera, assistArrowMaterial_, spotLight);
-
+	//アシスト用の矢印
+	escapeAssistArrow_->Draw(camera, spotLight);
 
 	if (bonePieceParticle_ != nullptr) {
 		//砕けるパーティクル
@@ -629,58 +624,6 @@ void PlayGameScene::EscapeCondition(){
 	}
 }
 
-void PlayGameScene::EscapeAssist(){
-
-	//透明度
-	arrowTransparency_ += INCREASE_TRANSPARENCY_VALUE_;
-	//1.0以上にはしない
-	if (arrowTransparency_ > 1.0f) {
-		arrowTransparency_ = 1.0f;
-		isDisplay_ = true;
-	}
-	assistArrowMaterial_.color.w = arrowTransparency_;
-
-	//表示
-	if (isDisplay_ == true) {
-		//線形補間
-		indicateT_ += INCREASE_T_VALUE_;
-		if (indicateT_ > 1.0f) {
-			indicateT_ = 0.0f;
-		}
-		//差分
-		difference_ = VectorCalculation::Subtract(gateCenterPosition_, assistArrowWorldTransform_.GetWorldPosition());
-		//角度を求める
-		arrowTheta_ = std::atan2f(difference_.x, difference_.z);
-		//動く量
-		indicateValueZ_ = Easing::EaseInBack(indicateT_);
-		//矢印の向きを変える
-		assistArrowWorldTransform_.rotate.y = arrowTheta_;
-		//指し示す方向。XとZに注意
-		Vector3 indicatedirection = {
-			.x = std::sinf(arrowTheta_),
-			.y = 0.0f,
-			.z = std::cosf(arrowTheta_),
-		};
-
-		//大元の座標
-		Vector3 basePosition = VectorCalculation::Add(player_->GetWorldPosition(), VectorCalculation::Multiply(player_->GetLightDirection(), PLAYER_TO_ARROW_DISTANCE_));
-		//指し示した後の座標
-		Vector3 indicatedPosition = VectorCalculation::Add(basePosition, indicatedirection);
-
-		//矢印の座標を計算
-		assistArrowWorldTransform_.translate = VectorCalculation::Lerp(basePosition, indicatedPosition, indicateValueZ_);
-		//Yは固定
-		assistArrowWorldTransform_.translate.y = ARROW_HEIGHT_;
-
-	}
-	else {
-		//プレイヤーから一定の距離に矢印を置く
-		assistArrowWorldTransform_.translate = VectorCalculation::Add(player_->GetWorldPosition(), VectorCalculation::Multiply(player_->GetLightDirection(), PLAYER_TO_ARROW_DISTANCE_));
-		//Yは固定
-		assistArrowWorldTransform_.translate.y = ARROW_HEIGHT_;
-	}
-	
-}
 
 void PlayGameScene::CemeteryProcess(){
 
@@ -871,15 +814,6 @@ void PlayGameScene::PoltergeistProcess(){
 void PlayGameScene::DisplayImGui(){
 
 	ImGui::Begin("プレイ(ゲーム)");
-
-	if (ImGui::TreeNode("矢印") == true) {
-		ImGui::InputFloat3("門の中心座標", &gateCenterPosition_.x);
-		ImGui::InputFloat3("プレイヤーとの差分", &difference_.x);
-		ImGui::InputFloat("角度", &arrowTheta_);
-
-		ImGui::TreePop();
-	}
-
 	ImGui::SliderFloat("T", &dropT_, 0.0f, 1.0f);
 	ImGui::InputFloat3("骨の座標", &bonePosition_.x);
 	ImGui::InputFloat3("ロックオン座標(プレイヤー)", &loclOnPlayerPosition_.x);
