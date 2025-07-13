@@ -108,8 +108,6 @@ private:
 
 	//透明度
 	float_t transparency_ = 0.0f;
-	//表示するかどうか
-	bool isDisplay_ = false;
 
 	//門の中心座標
 	Vector3 gateCenterPosition_ = {};

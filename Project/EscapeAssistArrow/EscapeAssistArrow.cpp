@@ -30,51 +30,42 @@ void EscapeAssistArrow::Update() {
 		//1.0以上にはしない
 		if (transparency_ > 1.0f) {
 			transparency_ = 1.0f;
-			isDisplay_ = true;
 		}
 	}
 	
 	material_.color.w = transparency_;
 
 	//表示
-	if (isDisplay_ == true) {
-		//線形補間
-		indicateT_ += INCREASE_T_VALUE_;
-		if (indicateT_ > 1.0f) {
-			indicateT_ = 0.0f;
-		}
-		//差分
-		difference_ = VectorCalculation::Subtract(gateCenterPosition_, worldTransform_.GetWorldPosition());
-		//角度を求める
-		arrowTheta_ = std::atan2f(difference_.x, difference_.z);
-		//動く量
-		indicateValueZ_ = Easing::EaseInBack(indicateT_);
-		//矢印の向きを変える
-		worldTransform_.rotate.y = arrowTheta_;
-		//指し示す方向。XとZに注意
-		Vector3 indicatedirection = {
-			.x = std::sinf(arrowTheta_),
-			.y = 0.0f,
-			.z = std::cosf(arrowTheta_),
-		};
-
-		//大元の座標
-		Vector3 basePosition = VectorCalculation::Add(player_->GetWorldPosition(), VectorCalculation::Multiply(player_->GetLightDirection(), PLAYER_TO_ARROW_DISTANCE_));
-		//指し示した後の座標
-		Vector3 indicatedPosition = VectorCalculation::Add(basePosition, indicatedirection);
-
-		//矢印の座標を計算
-		worldTransform_.translate = VectorCalculation::Lerp(basePosition, indicatedPosition, indicateValueZ_);
-		//Yは固定
-		worldTransform_.translate.y = HEIGHT_;
-
+	//線形補間
+	indicateT_ += INCREASE_T_VALUE_;
+	if (indicateT_ > 1.0f) {
+		indicateT_ = 0.0f;
 	}
-	else {
-		//プレイヤーから一定の距離に矢印を置く
-		worldTransform_.translate = VectorCalculation::Add(player_->GetWorldPosition(), VectorCalculation::Multiply(player_->GetLightDirection(), PLAYER_TO_ARROW_DISTANCE_));
-		//Yは固定
-		worldTransform_.translate.y = HEIGHT_;
-	}
+	//差分
+	difference_ = VectorCalculation::Subtract(gateCenterPosition_, worldTransform_.GetWorldPosition());
+	//角度を求める
+	arrowTheta_ = std::atan2f(difference_.x, difference_.z);
+	//動く量
+	indicateValueZ_ = Easing::EaseInBack(indicateT_);
+	//矢印の向きを変える
+	worldTransform_.rotate.y = arrowTheta_;
+	//指し示す方向。XとZに注意
+	Vector3 indicatedirection = {
+		.x = std::sinf(arrowTheta_),
+		.y = 0.0f,
+		.z = std::cosf(arrowTheta_),
+	};
+
+	//大元の座標
+	Vector3 basePosition = VectorCalculation::Add(player_->GetWorldPosition(), VectorCalculation::Multiply(player_->GetLightDirection(), PLAYER_TO_ARROW_DISTANCE_));
+	//指し示した後の座標
+	Vector3 indicatedPosition = VectorCalculation::Add(basePosition, indicatedirection);
+
+	//矢印の座標を計算
+	worldTransform_.translate = VectorCalculation::Lerp(basePosition, indicatedPosition, indicateValueZ_);
+	//Yは固定
+	worldTransform_.translate.y = HEIGHT_;
+
 
 	//更新
 	worldTransform_.Update();

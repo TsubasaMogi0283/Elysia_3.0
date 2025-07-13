@@ -624,7 +624,6 @@ void PlayGameScene::EscapeCondition(){
 	}
 }
 
-
 void PlayGameScene::CemeteryProcess(){
 
 	//初期座標を取得
