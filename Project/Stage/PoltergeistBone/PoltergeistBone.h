@@ -1,15 +1,12 @@
 #pragma once
 
 /**
- * @file Door.h
+ * @file GameManager.h
  * @brief ドア(レベルエディタ)の処理用クラス
  * @author 茂木翼
  */
 
 #include <memory>
-
-#include <Sprite.h>
-
 
  /// <summary>
  /// ElysiaEngine
@@ -24,6 +21,12 @@ namespace Elysia {
 	/// レベル管理クラス
 	/// </summary>
 	class LevelDataManager;
+
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
+
 }
 
 /// <summary>
@@ -34,12 +37,12 @@ class Player;
 /// <summary>
 /// ドア(レベルエディタ)
 /// </summary>
-class Door {
+class PoltergeistBone {
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Door();
+	PoltergeistBone();
 
 	/// <summary>
 	/// 初期化
@@ -52,15 +55,21 @@ public:
 	void Update();
 
 	/// <summary>
+	/// 3Dモデルの描画
+	/// </summary>
+	void DrawObject3D();
+
+
+	/// <summary>
 	/// スプライトの描画
 	/// </summary>
 	void DrawSprite();
 
-
+	
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Door() = default;
+	~PoltergeistBone() = default;
 
 public:
 	/// <summary>
@@ -91,8 +100,6 @@ private:
 	Player* player_ = nullptr;
 
 private:
-	const std::string DOOR_STRING_ = "Door";
-
 	//線形補間の最小値
 	const float_t MIN_T_VALUE_ = 0.0f;
 	//線形補間の最大値
@@ -100,23 +107,6 @@ private:
 	//回転
 	const float_t ROTATE_VALUE_ = 0.01f;
 
-	//開けることができる最大の距離
-	const float_t MAX_DISTANCE_ = 6.0f;
-
 private:
-	//開ける
-	std::unique_ptr<Elysia::Sprite>openSptrite_ = nullptr;
 
-	//初期回転
-	float_t initialRotateY_ = {};
-	//最大回転
-	float_t maxRotateY_ = {};
-	//Y軸の回転
-	float_t rotateY_ = {};
-	//開いたかどうか
-	bool isOpen_ = false;
-	//線形補間の値
-	float_t rotateT_ = 0.0f;
-	//距離
-	float_t distance_ = 0.0f;
 };

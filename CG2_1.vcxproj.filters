@@ -903,6 +903,9 @@
     <ClCompile Include="Project\Stage\Door\Door.cpp">
       <Filter>Project\Object\Door</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Stage\PoltergeistBone\PoltergeistBone.cpp">
+      <Filter>Project\Object\PoltergeistBone</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -1494,6 +1497,9 @@
     </ClInclude>
     <ClInclude Include="Project\Stage\Door\Door.h">
       <Filter>Project\Object\Door</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Stage\PoltergeistBone\PoltergeistBone.h">
+      <Filter>Project\Object\PoltergeistBone</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
