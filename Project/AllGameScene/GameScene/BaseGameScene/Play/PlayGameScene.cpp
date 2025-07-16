@@ -3,15 +3,16 @@
 #include <imgui.h>
 #include <numbers>
 
+#include "Camera.h"
 #include "Input.h"
+#include "Audio.h"
 #include "TextureManager.h"
 #include "ModelManager.h"
 #include "LevelDataManager.h"
 #include "VectorCalculation.h"
 #include "SingleCalculation.h"
 #include "GameScene/GameScene.h"
-#include <Easing.h>
-
+#include "Easing.h"
 
 PlayGameScene::PlayGameScene(){
 	//インスタンスの取得
@@ -65,9 +66,25 @@ void PlayGameScene::Initialize(){
 	//ゴールに向かえのテキスト
 	uint32_t toEscapeTextureHandle = textureManager_->Load("Resources/Sprite/Escape/ToGoal.png");
 	toEscapeSprite_.reset(Elysia::Sprite::Create(toEscapeTextureHandle, INITIAL_SPRITE_POSITION_));
-	//宝箱
-	uint32_t openTreasureBoxSpriteHandle = textureManager_->Load("Resources/Sprite/TreasureBox/OpenTreasureBox.png");
-	openTreasureBoxSpriteHandle;
+	
+	//矢印のモデルを読み込む
+	uint32_t arrowModelHandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Arrow","Arrow.obj");
+	//門の中心座標を計算
+	Vector3 gateCenterPosition_ = VectorCalculation::Add(levelDataManager_->GetInitialTranslate(levelDataHandle_, gateRightString_), levelDataManager_->GetInitialTranslate(levelDataHandle_, gateLeftString_));
+	gateCenterPosition_ = VectorCalculation::Divide(gateCenterPosition_, 2.0f);
+
+	//アシスト用の矢印
+	escapeAssistArrow_ = std::make_unique<EscapeAssistArrow>();
+	escapeAssistArrow_->SetPlayer(player_);
+	escapeAssistArrow_->Initialize(arrowModelHandle,gateCenterPosition_);
+
+	//ドア
+	door_ = std::make_unique<Door>();
+	door_->SetLevelDataHandle(levelDataHandle_);
+	door_->SetPlayer(player_);
+	//初期化
+	door_->Initialize();
+
 
 	//ゲートのモデルの読み込み
 	uint32_t gateModelhandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Gate", "Gate.obj");
@@ -75,9 +92,23 @@ void PlayGameScene::Initialize(){
 	gate_ = std::make_unique<Gate>();
 	//初期化
 	gate_->Initialize(gateModelhandle);
-
+	//欠片のモデルハンドル
+	bonePieceParticleHandle_ = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Particle/BonePiece", "BonePiece.obj");
 	//骨の初期座標を取得
-	bonePosition_= levelDataManager_->GetInitialTranslate(levelDataHandle_, bone_);
+	bonePosition_= levelDataManager_->GetInitialTranslate(levelDataHandle_, boneString_);
+	//マテリアルの初期化
+	bonePieceMaterial_.Initialize();
+	bonePieceMaterial_.lightingKinds = LightingType::SpotLighting;
+
+	//門を開ける音
+	openGateAudioHandle_ = Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/OpenGate.mp3");
+	//墓地が閉まる音
+	closeGateAudioHandle_= Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/CloseGate.mp3");
+	//骨が壊れる音
+	boneBreakAudioHandle_ = Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/BoneBreak.mp3");
+	//警告音
+	warningBoneAudioHandle_= Elysia::Audio::GetInstance()->Load("Resources/Audio/SE/BoneWarning.wav");
+
 }
 
 void PlayGameScene::Update(GameScene* gameScene){
@@ -85,23 +116,34 @@ void PlayGameScene::Update(GameScene* gameScene){
 	//フレーム初めに
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
+	//パーティクルマテリアルの更新
+	bonePieceMaterial_.Update();
 	//ゲートの更新
 	gate_->Update();
+	//ドアの更新
+	door_->Update();
 	//コントロール可能にする
 	player_->SetIsAbleToControll(true);
 	//プレイヤーの移動
 	PlayerMove();
 	//回転
 	PlayerRotate();
-
 	//プレイヤーにそれぞれの角度を設定する
 	player_->SetTheta(theta_);
 	player_->SetPhi(phi_);
-
 	//脱出の仕組み
 	EscapeCondition();
+	
+	//脱出アシスト
+	//全て取った時だけ通す
+	if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
+		escapeAssistArrow_->SetIsOpaque(true);
+	}
+	//アシスト用の矢印の更新
+	escapeAssistArrow_->Update();
+
 	//オブジェクトの当たり判定
-	ObjectCollision();
+	CemeteryProcess();
 	//ポルターガイストの処理
 	PoltergeistProcess();
 	//コリジョン管理クラスに登録
@@ -145,7 +187,12 @@ void PlayGameScene::Update(GameScene* gameScene){
 	}
 	//成功
 	if (isSucceedEscape_ == true) {
-
+		//開く音を再生
+		if (isPlayOpenSE_ == false) {
+			Elysia::Audio::GetInstance()->Play(openGateAudioHandle_, false);
+			isPlayOpenSE_ = true;
+		}
+		
 		//回転とフェードを線形補間で管理する
 		openT_ += OPEN_T_VALUE_;
 		float_t newOpenT_ = Easing::EaseInOutQuart(openT_);
@@ -154,8 +201,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 		whiteFadeSprite_->SetTransparency(newOpenT_);
 
 		//門の回転
-		levelDataManager_->SetRotate(levelDataHandle_, right_, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
-		levelDataManager_->SetRotate(levelDataHandle_, left_, { .x = 0.0f,.y = -leftGateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelDataHandle_, gateRightString_, { .x = 0.0f,.y = rightGateRotateTheta_,.z = 0.0f });
+		levelDataManager_->SetRotate(levelDataHandle_, gateLeftString_, { .x = 0.0f,.y = -leftGateRotateTheta_,.z = 0.0f });
 
 		//音を止める
 		enemyManager_->StopAudio();
@@ -189,11 +236,21 @@ void PlayGameScene::Update(GameScene* gameScene){
 	collisionManager_->CheckAllCollision();
 
 #ifdef _DEBUG
+	escapeAssistArrow_->SetIsOpaque(true);
 	//ImGui表示用
 	DisplayImGui();
 #endif // _DEBUG
 }
 
+void PlayGameScene::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
+	//アシスト用の矢印
+	escapeAssistArrow_->Draw(camera, spotLight);
+
+	if (bonePieceParticle_ != nullptr) {
+		//砕けるパーティクル
+		bonePieceParticle_->Draw(camera, bonePieceMaterial_, spotLight);
+	}
+}
 
 void PlayGameScene::DrawSprite(){
 	//操作
@@ -204,20 +261,18 @@ void PlayGameScene::DrawSprite(){
 	keyManager_->DrawSprite();
 	//脱出
 	escapeTextSprite_->Draw();
+	//ドア
+	door_->DrawSprite();
 	//出口へ向かえ
 	if (player_->GetHavingKey() == keyManager_->GetMaxKeyQuantity()) {
 		toEscapeSprite_->Draw();
 	}
-
 	//敵管理クラス
 	enemyManager_->DrawSprite();
-
 	//白フェード
 	whiteFadeSprite_->Draw();
-
 	//黒フェード
 	blackFadeSprite_->Draw();
-
 }
 
 void PlayGameScene::RegisterToCollisionManager(){
@@ -576,7 +631,7 @@ void PlayGameScene::EscapeCondition(){
 	}
 }
 
-void PlayGameScene::ObjectCollision(){
+void PlayGameScene::CemeteryProcess(){
 
 	//初期座標を取得
 	Vector3 initialPosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "CloseFenceInCemetery");
@@ -591,6 +646,12 @@ void PlayGameScene::ObjectCollision(){
 			player_->GetWorldPosition().z >= -50.0f) {
 			fenceTranslate_ = initialPosition;
 			fenceTranslate_.y = 0.0f;
+			if (isPlayCloseSE_ == false) {
+
+				//閉まる音を再生
+				Elysia::Audio::GetInstance()->Play(closeGateAudioHandle_, false);
+				isPlayCloseSE_ = true;
+			}
 
 		}
 		else {
@@ -607,10 +668,16 @@ void PlayGameScene::PoltergeistProcess(){
 	//墓場内の鍵を取ったら動き出す
 	if (keyManager_->GetIsPickUpKeyInCemetery() == true) {
 
+		const float_t rotateValueOffset = 0.1f;
+
 		//上昇
 		if (isBoneRise_ == true) {
-			floatingTheta_ += ROTATE_THETA_VALUE_;
+			//警告音再生
+			Elysia::Audio::GetInstance()->Play(warningBoneAudioHandle_, true);
+
+			//ふわふわ浮き上がる
 			bonePosition_.y += 0.05f;
+			
 			//上がり切る
 			if (bonePosition_.y > FLOATING_HEIGHT_) {
 				//浮遊へ
@@ -622,8 +689,6 @@ void PlayGameScene::PoltergeistProcess(){
 		
 		//上がり切った時に浮遊
 		if (isFinishRiseBone_ == true) {
-			//回転
-			floatingTheta_ += ROTATE_THETA_VALUE_;
 			//浮遊時間の加算
 			floatingBoneTime_ += DELTA_TIME_;
 			if (floatingBoneTime_ > FLOATING_TIME_) {
@@ -631,9 +696,26 @@ void PlayGameScene::PoltergeistProcess(){
 				isReadyForBoneDrop_ = true;
 			}
 		}
+		//浮遊状態の時はsin,cosを使ってふわふわ浮いている感じを出す
+		if (isReadyForBoneDrop_ == false && isBoneDrop_ == false) {
+			//プレイヤーへの方向
+			boneDirectionToPlayer_ = VectorCalculation::Subtract(player_->GetWorldPosition(), bonePosition_);
+
+			//回転
+			floatingTheta_ += ROTATE_THETA_VALUE_;
+			//座標の更新
+			const float_t BONE_SPEED = 0.01f;
+			bonePosition_.x += std::cosf(floatingTheta_) * rotateValueOffset+boneDirectionToPlayer_.x*BONE_SPEED;
+			bonePosition_.z += std::sinf(floatingTheta_) * rotateValueOffset+boneDirectionToPlayer_.z*BONE_SPEED;
+		}
 
 		//落下準備
 		if (isReadyForBoneDrop_ == true) {
+			//高さの設定
+			const float_t DELTA_INCREASE_FREAQUENCY_RATION_VALUE_ = 0.005f;
+			warningFrequencyRatio_ += DELTA_INCREASE_FREAQUENCY_RATION_VALUE_;
+			Elysia::Audio::GetInstance()->ChangeFrequencyRatio(warningBoneAudioHandle_, warningFrequencyRatio_);
+
 			//高速回転
 			floatingTheta_+=RAPID_ROTATE_THETA_VALUE_;
 			//準備時間を加算
@@ -654,7 +736,6 @@ void PlayGameScene::PoltergeistProcess(){
 			}
 		}
 
-
 		//骨が落下する
 		if (isBoneDrop_ == true) {
 			//高速回転
@@ -667,16 +748,75 @@ void PlayGameScene::PoltergeistProcess(){
 			//XZ軸は線形補間
 			bonePosition_ = VectorCalculation::Lerp(startPosition, endPosition, dropT_);
 
+			if (bonePosition_.y <= GROUND_POSITION_Y) {
+
+				bonePosition_.y = GROUND_POSITION_Y;
+				//非表示にする
+				levelDataManager_->SetInvisible(levelDataHandle_, boneString_, true);
+				//パーティクルの生成
+				if (bonePieceParticle_ == nullptr) {
+					//生成
+					bonePieceParticle_ = Elysia::Particle3D::Create(bonePieceParticleHandle_,ParticleMoveType::ThrowUp);
+					//座標
+					bonePieceParticle_->SetTranslate(bonePosition_);
+					//数
+					bonePieceParticle_->SetCount(bonePieceCount_);
+					//一度きり
+					bonePieceParticle_->SetIsReleaseOnceMode(true);
+					//スケール
+					bonePieceParticle_->SetScale({ BONE_PIECE_SCALE_,BONE_PIECE_SCALE_,BONE_PIECE_SCALE_ });
+					//ベロシティの設定
+					bonePieceParticle_->SetThrowUpVeloityY(THROW_UP_VELOCITY_Y_);
+
+					//壊れる音
+					Elysia::Audio::GetInstance()->Play(boneBreakAudioHandle_, false);
+					//警告音停止
+					Elysia::Audio::GetInstance()->Stop(warningBoneAudioHandle_);
+
+
+				}
+				
+			}
+
+
+			//骨との衝突判定
+			Vector3 defference = VectorCalculation::Subtract(player_->GetWorldPosition(), bonePosition_);
+			float_t distance = SingleCalculation::Length(defference);
+
+			if (distance < 2.0f) {
+				if (isTouchOnce_ == false) {
+					//当たった
+					player_->SetIsBoneTouch(true);
+					isTouchOnce_ = true;
+					
+				}
+				else {
+					//一度当たったらダメージ処理は終わり
+					player_->SetIsBoneTouch(false);
+				}
+				
+			}
+			else {
+				player_->SetIsBoneTouch(false);
+			}
+
+
+			//全て消えたらtrue
+			if (bonePieceParticle_!=nullptr&&bonePieceParticle_->GetIsAllInvisible() == true) {
+				isBoneDrop_ = false;
+			}
+
 		}
 
 		//回転の変更
-		levelDataManager_->SetRotate(levelDataHandle_, bone_, { .x = floatingTheta_,.y = rightGateRotateTheta_,.z = floatingTheta_ });
+		levelDataManager_->SetRotate(levelDataHandle_, boneString_, { .x = floatingTheta_,.y = rightGateRotateTheta_,.z = floatingTheta_ });
 		//座標の変更
-		levelDataManager_->SetTranslate(levelDataHandle_, bone_, bonePosition_);
+		levelDataManager_->SetTranslate(levelDataHandle_, boneString_, bonePosition_);
 
 	}
 	
 }
+
 
 void PlayGameScene::DisplayImGui(){
 

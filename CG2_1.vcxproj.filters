@@ -70,9 +70,6 @@
     <Filter Include="Project\Scene\Win">
       <UniqueIdentifier>{c06d8e17-a723-4892-983a-90de5852100f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Gate">
-      <UniqueIdentifier>{04fdbc6f-7a4a-4b0a-ad10-68fef5f36d90}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Enemy\StrongEnemy\State">
       <UniqueIdentifier>{7edab689-453a-4532-93a2-63caf654df74}</UniqueIdentifier>
     </Filter>
@@ -541,6 +538,21 @@
     <Filter Include="Project\Scene\Game\Base\Play">
       <UniqueIdentifier>{6cce928a-35ee-49f8-a1e6-4b2ce45e8f0b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Item\EscapeAssistArrow">
+      <UniqueIdentifier>{34dffcae-5c51-4dd7-a571-7d5ca8c735c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Object">
+      <UniqueIdentifier>{4870d8ef-96e1-4748-be83-6f3493ee1de9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Object\Gate">
+      <UniqueIdentifier>{04fdbc6f-7a4a-4b0a-ad10-68fef5f36d90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Object\Door">
+      <UniqueIdentifier>{b3187852-9c39-46bf-89b8-e59f491a9644}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Object\PoltergeistBone">
+      <UniqueIdentifier>{cf46383d-23c8-4c74-8da3-24195e1c6ae5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -598,7 +610,7 @@
       <Filter>Project\Player\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Project\Stage\Gate\Gate.cpp">
-      <Filter>Project\Gate</Filter>
+      <Filter>Project\Object\Gate</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\NormalEnemy\NormalEnemy.cpp">
       <Filter>Project\Enemy\NormalEnemy</Filter>
@@ -885,6 +897,12 @@
     <ClCompile Include="Elysia\Material\RandomNoise\RandomNoise.cpp">
       <Filter>Elysia\Source File\Material</Filter>
     </ClCompile>
+    <ClCompile Include="Project\EscapeAssistArrow\EscapeAssistArrow.cpp">
+      <Filter>Project\Item\EscapeAssistArrow</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Stage\Door\Door.cpp">
+      <Filter>Project\Object\Door</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Particle3D\Particle3d.PS.hlsl">
@@ -1055,7 +1073,7 @@
       <Filter>Project\Scene\Factory</Filter>
     </ClInclude>
     <ClInclude Include="Project\Stage\Gate\Gate.h">
-      <Filter>Project\Gate</Filter>
+      <Filter>Project\Object\Gate</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\NormalEnemy\NormalEnemy.h">
       <Filter>Project\Enemy\NormalEnemy</Filter>
@@ -1470,6 +1488,12 @@
     </ClInclude>
     <ClInclude Include="Elysia\Material\RandomNoise\RandomNoise.h">
       <Filter>Elysia\Header File\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\EscapeAssistArrow\EscapeAssistArrow.h">
+      <Filter>Project\Item\EscapeAssistArrow</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Stage\Door\Door.h">
+      <Filter>Project\Object\Door</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -180,7 +180,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Elysia\Polygon\3D\Particle3D\Particle3D.cpp" />
     <ClCompile Include="Elysia\Polygon\3D\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Elysia\Polygon\3D\Sphere\Sphere.cpp" />
-    <ClCompile Include="Elysia\Polygon\Particle\Emitter.cpp" />
     <ClCompile Include="Elysia\Polygon\PostEffect\BackTest\BackTexture.cpp" />
     <ClCompile Include="Elysia\Polygon\PostEffect\BoxFilter\BoxFilter.cpp" />
     <ClCompile Include="Elysia\Polygon\PostEffect\Dissolve\DissolveEffect.cpp" />
@@ -228,6 +227,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Enemy\StrongEnemy\State\StrongEnemyTracking.cpp" />
     <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemy.cpp" />
     <ClCompile Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.cpp" />
+    <ClCompile Include="Project\EscapeAssistArrow\EscapeAssistArrow.cpp" />
     <ClCompile Include="Project\Key\Key.cpp" />
     <ClCompile Include="Project\Key\KeyManager.cpp" />
     <ClCompile Include="Project\Light\FlashLight\FlashLight.cpp" />
@@ -241,6 +241,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\Player\PlayerCollisionToStageObject.cpp" />
     <ClCompile Include="Project\Player\PlayerCollisionToStrongEnemy.cpp" />
     <ClCompile Include="Project\RailCamera\TitleRailCamera.cpp" />
+    <ClCompile Include="Project\Stage\Door\Door.cpp" />
     <ClCompile Include="Project\Stage\Gate\Gate.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -562,6 +563,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Enemy\StrongEnemy\State\StrongEnemyTracking.h" />
     <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemy.h" />
     <ClInclude Include="Project\Enemy\StrongEnemy\StrongEnemyCollisionToPlayer.h" />
+    <ClInclude Include="Project\EscapeAssistArrow\EscapeAssistArrow.h" />
     <ClInclude Include="Project\Key\Key.h" />
     <ClInclude Include="Project\Key\KeyManager.h" />
     <ClInclude Include="Project\Light\FlashLight\FlashLight.h" />
@@ -575,6 +577,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\Player\PlayerCollisionToStageObject.h" />
     <ClInclude Include="Project\Player\PlayerCollisionToStrongEnemy.h" />
     <ClInclude Include="Project\RailCamera\TitleRailCamera.h" />
+    <ClInclude Include="Project\Stage\Door\Door.h" />
     <ClInclude Include="Project\Stage\Gate\Gate.h" />
   </ItemGroup>
   <ItemGroup>

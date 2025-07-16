@@ -161,7 +161,7 @@ public:
 	/// <summary>
 	/// 目線シータの設定
 	/// </summary>
-	/// <param name="theta"></param>
+	/// <param name="theta_"></param>
 	inline void SetTheta(const float_t& theta) {
 		this->theta_ = theta;
 	}
@@ -281,6 +281,13 @@ public:
 		this->levelHandle_ = levelHandle;
 	}
 
+	/// <summary>
+	/// 骨に当たったかどうか
+	/// </summary>
+	/// <param name="isBoneTouch"></param>
+	inline void SetIsBoneTouch(const bool& isBoneTouch) {
+		this->isBoneTouch_ = isBoneTouch;
+	}
 
 public:
 	/// <summary>
@@ -386,6 +393,8 @@ private:
 	bool isDameged_ = false;
 	//通常の敵からダメージを受けたかどうか
 	bool isAcceptDamegeFromNoemalEnemy_ = false;
+	//骨に当たったかどうか
+	bool isBoneTouch_ = false;
 
 	//時間
 	float_t vibeTime_ = 0u;

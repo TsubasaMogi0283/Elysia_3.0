@@ -47,6 +47,16 @@ namespace Elysia {
 class GameScene;
 
 /// <summary>
+/// カメラ
+/// </summary>
+struct Camera;
+
+/// <summary>
+/// スポットライト
+/// </summary>
+struct SpotLight;
+
+/// <summary>
 /// プレイヤー
 /// </summary>
 class Player;
@@ -68,7 +78,7 @@ class BaseGameScene {
 public:
 
 	/// <summary>
-	/// 個別の初期化
+	/// 初期化
 	/// </summary>
 	virtual void Initialize() = 0;
 
@@ -77,6 +87,13 @@ public:
 	/// </summary>
 	/// <param name="gameScene">ゲームシーン(メイン)</param>
 	virtual void Update(GameScene* gameScene) = 0;
+
+	/// <summary>
+	/// 3Dモデルの描画
+	/// </summary>
+	/// <param name="camera">カメラ</param>
+	/// <param name="spotLight">スポットライト</param>
+	virtual void DrawObject3D(const Camera& camera, const SpotLight& spotLight) = 0;
 
 	/// <summary>
 	/// スプライト
@@ -177,6 +194,11 @@ protected:
 	const Vector2 INITIAL_SPRITE_POSITION_ = { .x = 0.0f,.y = 0.0f };
 	//時間変化
 	const float_t DELTA_TIME_ = 1.0f / 60.0f;
+
+	//線形補間の最小値
+	const float_t MIN_T_VALUE_ = 0.0f;
+	//線形補間の最大値
+	const float_t MAX_T_VALUE_ = 1.0f;
 
 protected:
 	//強敵と接触したかどうか

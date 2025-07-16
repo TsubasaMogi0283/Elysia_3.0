@@ -135,9 +135,11 @@ void Player::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
 	for (std::unique_ptr<BasePlayerCollision>& collision : colliders_) {
 		collision->Draw(camera, material_, spotLight);
 	}
+
+#endif // _DEBUG
 	//懐中電灯
 	flashLight_->DrawObject3D(camera);
-#endif // _DEBUG
+
 }
 
 void Player::DrawSprite(){
@@ -167,8 +169,8 @@ void Player::Damaged() {
 	}
 
 	//通常の敵に当たった場合
-	if (isAttacked == true && isDameged_ == false&& 
-		isAcceptDamegeFromNoemalEnemy_==true) {
+	if ((isAttacked == true && isDameged_ == false&& 
+		isAcceptDamegeFromNoemalEnemy_==true)|| isBoneTouch_ == true) {
 		//体力を減らす
 		--hp_;
 		//ダメージを受ける	

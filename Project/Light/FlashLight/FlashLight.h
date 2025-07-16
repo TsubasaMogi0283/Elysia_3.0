@@ -137,7 +137,7 @@ public:
 	/// <summary>
 	/// θの設定
 	/// </summary>
-	/// <param name="theta">θ</param>
+	/// <param name="theta_">θ</param>
 	inline void SetTheta(const float_t& theta) {
 		this->theta_ = theta;
 	}

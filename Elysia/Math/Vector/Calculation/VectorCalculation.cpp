@@ -77,6 +77,16 @@ Vector3 VectorCalculation::Multiply(const Vector3& v1, const float_t& value){
 	return result;
 }
 
+Vector3 VectorCalculation::Divide(const Vector3& v1, const float_t& value){
+	Vector3 result = {
+		.x = v1.x / value,
+		.y = v1.y / value,
+		.z = v1.z / value
+	};
+
+	return result;
+}
+
 Vector2 VectorCalculation::Normalize(const Vector2& v){
 	Vector2 result = {};
 

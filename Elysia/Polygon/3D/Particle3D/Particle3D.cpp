@@ -148,8 +148,7 @@ ParticleInformation Elysia::Particle3D::MakeNewParticle(std::mt19937& randomEngi
 	particle.lifeTime = distTime(randomEngine);
 	particle.currentTime = 0.0f;
 
-
-	//線形保管用
+	//線形補間用
 	particle.absorbT = 0.0f;
 
 	return particle;
@@ -213,7 +212,7 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 
 
 	//座標の計算など
-	numInstance_ = 0;
+	numInstance_ = 0u;
 	for (std::list<ParticleInformation>::iterator particleIterator = particles_.begin();
 		particleIterator != particles_.end(); ++particleIterator) {
 
@@ -283,11 +282,11 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 
 		case ParticleMoveType::ThrowUp:
 #pragma region 鉛直投げ上げ
-			velocityY_ += accel;
+			throwUpVelocityY_ += accel;
 
 			//加速を踏まえた位置計算
 			particleIterator->transform.translate.x += particleIterator->velocity.x / 3.0f;
-			particleIterator->transform.translate.y += velocityY_;
+			particleIterator->transform.translate.y += throwUpVelocityY_;
 			particleIterator->transform.translate.z += particleIterator->velocity.z / 3.0f;
 
 			//カメラの回転を適用する
@@ -370,10 +369,8 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 				}
 
 			}
-			break;
-
 #pragma endregion
-
+			break;
 		case ParticleMoveType::Absorb:
 #pragma region 吸収
 
@@ -416,8 +413,9 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 				}
 
 			}
-			break;
+
 #pragma endregion
+			break;
 		
 		case ParticleMoveType::Stay:
 #pragma region 滞留
@@ -456,9 +454,7 @@ void Elysia::Particle3D::Update(const Camera& camera) {
 
 #pragma endregion
 			
-			
 			break;
-
 		}
 
 		//生成を止めた時

@@ -310,6 +310,12 @@ namespace Elysia {
 		void SetNotchFilter(const uint32_t& audioHandle, float_t& cutOff, const float_t& oneOverQ);
 
 #pragma endregion
+		/// <summary>
+		/// bitの数を取得
+		/// </summary>
+		/// <param name="audioHandle">ハンドル</param>
+		/// <returns></returns>
+		int32_t GetBitPerSample(const uint32_t& audioHandle);
 
 		/// <summary>
 		/// サブミックスボイスの作成

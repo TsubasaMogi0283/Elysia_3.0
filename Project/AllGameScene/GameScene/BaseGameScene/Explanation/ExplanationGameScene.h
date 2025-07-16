@@ -35,6 +35,13 @@ public:
 	void Update(GameScene* gameScene)override;
 
 	/// <summary>
+	/// 3Dモデルの描画
+	/// </summary>
+	/// <param name="camera"></param>
+	/// <param name="spotLight"></param>
+	void DrawObject3D([[maybe_unused]] const Camera& camera, [[maybe_unused]] const SpotLight& spotLight)override {};
+
+	/// <summary>
 	/// スプライト
 	/// </summary>
 	void DrawSprite()override;

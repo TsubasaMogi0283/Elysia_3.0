@@ -27,13 +27,11 @@ KeyManager::KeyManager() {
 void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vector3>& positions) {
 	//プレイヤーが入っているかどうか
 	assert(player_ != nullptr);
-
 	//モデルハンドルの代入
 	modelHandle_ = modelHandle;
 
 	//小屋の中にある鍵の座標を取得
 	Vector3 keyInHousePosition = levelDataManager_->GetInitialTranslate(levelDataHandle_, "KeyInHouse");
-
 	for (size_t i = 0u; i < positions.size(); ++i) {
 		//生成
 		const float_t OFFSET_Y = 0.5f;
@@ -52,7 +50,6 @@ void KeyManager::Initialize(const uint32_t& modelHandle, const std::vector<Vecto
 	//サイズを取得
 	keySpriteWidth_ = textureManager_->GetTextureWidth(textureHandle);
 	keySpriteHeight_ = textureManager_->GetTextureHeight(textureHandle);
-
 
 	//鍵
 	const Vector2 INITIAL_SCALE = { .x = 0.0f,.y = 0.0f };
@@ -223,8 +220,6 @@ void KeyManager::Delete() {
 				++keyQuantity_;
 				return true;
 			}
-
-
 		}
 		return false;
 	});
@@ -237,11 +232,7 @@ void KeyManager::Delete() {
 		if (dropPlateTime_ == SE_PLAY_TIME) {
 			audio_->Play(dropPlateSEHandle_, false);
 		}
-
 	}
-		
-
-
 }
 
 void KeyManager::PickUp() {
@@ -265,7 +256,7 @@ void KeyManager::PickUp() {
 				//取得可能
 				key->SetIsPrePickUp(true);
 				
-				//SPACEキーで取得
+				//SPACEキーまたはBボタンでで取得
 				if (input_->IsPushKey(DIK_SPACE) == true|| input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
 					//プレイヤーの持っているか鍵の数が増える
 					player_->AddHaveKeyQuantity();
@@ -303,7 +294,7 @@ void KeyManager::DisplayImGui(){
 
 	ImGui::Begin("鍵管理クラス");
 	ImGui::Checkbox("墓場用", &isPickUpKeyInCemetery_);
-	int newQuantity = static_cast<int>(keyQuantity_);
+	int newQuantity = static_cast<int32_t>(keyQuantity_);
 	ImGui::InputInt("鍵の数", &newQuantity);
 	ImGui::Checkbox("取得可能か", &isAbleToPickUpKey_);
 	ImGui::End();
