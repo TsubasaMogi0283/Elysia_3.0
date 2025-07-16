@@ -78,6 +78,12 @@ void PlayGameScene::Initialize(){
 	escapeAssistArrow_->SetPlayer(player_);
 	escapeAssistArrow_->Initialize(arrowModelHandle,gateCenterPosition_);
 
+	//ドア
+	//初期回転の値を取得
+	initialRotateY_ = levelDataManager_->GetInitialRotate(levelDataHandle_, "Door").y;
+	maxDoorRotateY_ = initialRotateY_ + (std::numbers::pi_v<float_t>*3.0f) / 4.0f;
+	doorRotateY_ = initialRotateY_;
+
 	//ゲートのモデルの読み込み
 	uint32_t gateModelhandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Gate", "Gate.obj");
 	//生成
@@ -136,6 +142,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 	CemeteryProcess();
 	//ポルターガイストの処理
 	PoltergeistProcess();
+	//ドアの処理
+	DoorProcess();
 	//コリジョン管理クラスに登録
 	RegisterToCollisionManager();
 
@@ -810,9 +818,36 @@ void PlayGameScene::PoltergeistProcess(){
 	
 }
 
+void PlayGameScene::DoorProcess(){
+
+	//距離を計算
+	Vector3 doorDefference = VectorCalculation::Subtract(player_->GetWorldPosition(), levelDataManager_->GetInitialTranslate(levelDataHandle_, "Door"));
+	doorLength = SingleCalculation::Length(doorDefference);
+	if (doorLength < 6.0f&& isDoorOpen_==false) {
+		//スペース化Bボタンで開ける
+		if (input_->IsTriggerKey(DIK_SPACE) == true|| input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
+			isDoorOpen_ = true;
+		}
+	}
+
+	//開いた状態
+	if (isDoorOpen_==true) {
+		//線形補間で開ける
+		rotateT_ += ROTATE_VALUE_;
+		rotateT_ = std::clamp(rotateT_, MIN_T_VALUE_, MAX_T_VALUE_);
+		doorRotateY_ = SingleCalculation::Lerp(initialRotateY_, maxDoorRotateY_, rotateT_);
+	}
+
+	//設定
+	levelDataManager_->SetRotate(levelDataHandle_, "Door", { .x = 0.0f,.y = doorRotateY_,.z = 0.0f });
+}
+
 void PlayGameScene::DisplayImGui(){
 
 	ImGui::Begin("プレイ(ゲーム)");
+	ImGui::InputFloat("ドアT", &rotateT_);
+	ImGui::InputFloat("ドアとの長さ", &doorLength);
+	ImGui::SliderFloat("ドアの回転", &doorRotateY_,-3.0f,5.0f);
 	ImGui::SliderFloat("T", &dropT_, 0.0f, 1.0f);
 	ImGui::InputFloat3("骨の座標", &bonePosition_.x);
 	ImGui::InputFloat3("ロックオン座標(プレイヤー)", &loclOnPlayerPosition_.x);

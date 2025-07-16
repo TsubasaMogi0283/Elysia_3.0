@@ -70,9 +70,6 @@
     <Filter Include="Project\Scene\Win">
       <UniqueIdentifier>{c06d8e17-a723-4892-983a-90de5852100f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Gate">
-      <UniqueIdentifier>{04fdbc6f-7a4a-4b0a-ad10-68fef5f36d90}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Enemy\StrongEnemy\State">
       <UniqueIdentifier>{7edab689-453a-4532-93a2-63caf654df74}</UniqueIdentifier>
     </Filter>
@@ -544,6 +541,12 @@
     <Filter Include="Project\Item\EscapeAssistArrow">
       <UniqueIdentifier>{34dffcae-5c51-4dd7-a571-7d5ca8c735c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Object">
+      <UniqueIdentifier>{4870d8ef-96e1-4748-be83-6f3493ee1de9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Object\Gate">
+      <UniqueIdentifier>{04fdbc6f-7a4a-4b0a-ad10-68fef5f36d90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -601,7 +604,7 @@
       <Filter>Project\Player\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Project\Stage\Gate\Gate.cpp">
-      <Filter>Project\Gate</Filter>
+      <Filter>Project\Object\Gate</Filter>
     </ClCompile>
     <ClCompile Include="Project\Enemy\NormalEnemy\NormalEnemy.cpp">
       <Filter>Project\Enemy\NormalEnemy</Filter>
@@ -1061,7 +1064,7 @@
       <Filter>Project\Scene\Factory</Filter>
     </ClInclude>
     <ClInclude Include="Project\Stage\Gate\Gate.h">
-      <Filter>Project\Gate</Filter>
+      <Filter>Project\Object\Gate</Filter>
     </ClInclude>
     <ClInclude Include="Project\Enemy\NormalEnemy\NormalEnemy.h">
       <Filter>Project\Enemy\NormalEnemy</Filter>

@@ -85,13 +85,18 @@ private:
 	void PoltergeistProcess();
 
 	/// <summary>
+	/// ドア処理
+	/// </summary>
+	void DoorProcess();
+
+	/// <summary>
 	/// ImGui表示用
 	/// </summary>
 	void DisplayImGui()override;
 
 private:
 	//回転
-	const float_t ROTATE_VALUE = 0.01f;
+	const float_t ROTATE_VALUE_ = 0.01f;
 	//回転用の線形補間
 	const float_t OPEN_T_VALUE_ = 0.01f;
 	//フェードの増加分
@@ -144,9 +149,6 @@ private:
 	const float_t MIN_VOLUME_ = 0.0f;
 	//音量の減る値
 	const float_t VOLUME_DECREASE_VALUE_ = 0.0005f;
-	
-	
-
 	
 private:
 
@@ -225,7 +227,18 @@ private:
 	//一回だけ当たったかどうか
 	bool isTouchOnce_ = false;
 
-	
+	//ドア
+	//初期回転
+	float_t initialRotateY_ = {};
+	//最大回転
+	float_t maxDoorRotateY_ = {};
+	float_t doorRotateY_ = {};
+	bool isDoorOpen_ = false;
+	float_t rotateT_ = 0.0f;
+	float_t doorLength = 0.0f;
+
+
+
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
 	//脱出成功かどうか

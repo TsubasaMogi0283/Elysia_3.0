@@ -195,6 +195,11 @@ protected:
 	//時間変化
 	const float_t DELTA_TIME_ = 1.0f / 60.0f;
 
+	//線形補間の最小値
+	const float_t MIN_T_VALUE_ = 0.0f;
+	//線形補間の最大値
+	const float_t MAX_T_VALUE_ = 1.0f;
+
 protected:
 	//強敵と接触したかどうか
 	bool isTouchStrongEnemy_ = false;

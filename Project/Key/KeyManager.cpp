@@ -220,8 +220,6 @@ void KeyManager::Delete() {
 				++keyQuantity_;
 				return true;
 			}
-
-
 		}
 		return false;
 	});
@@ -234,11 +232,7 @@ void KeyManager::Delete() {
 		if (dropPlateTime_ == SE_PLAY_TIME) {
 			audio_->Play(dropPlateSEHandle_, false);
 		}
-
 	}
-		
-
-
 }
 
 void KeyManager::PickUp() {
