@@ -547,6 +547,9 @@
     <Filter Include="Project\Object\Gate">
       <UniqueIdentifier>{04fdbc6f-7a4a-4b0a-ad10-68fef5f36d90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Object\Door">
+      <UniqueIdentifier>{b3187852-9c39-46bf-89b8-e59f491a9644}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -893,6 +896,9 @@
     </ClCompile>
     <ClCompile Include="Project\EscapeAssistArrow\EscapeAssistArrow.cpp">
       <Filter>Project\Item\EscapeAssistArrow</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Stage\Door\Door.cpp">
+      <Filter>Project\Object\Door</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1482,6 +1488,9 @@
     </ClInclude>
     <ClInclude Include="Project\EscapeAssistArrow\EscapeAssistArrow.h">
       <Filter>Project\Item\EscapeAssistArrow</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Stage\Door\Door.h">
+      <Filter>Project\Object\Door</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

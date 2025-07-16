@@ -14,6 +14,7 @@
 #include "Stage/Gate/Gate.h"
 #include <Particle3D.h>
 #include <EscapeAssistArrow/EscapeAssistArrow.h>
+#include <Stage/Door/Door.h>
 
 /// <summary>
 /// プレイ(本編)
@@ -83,11 +84,6 @@ private:
 	/// ポルターガイストの処理
 	/// </summary>
 	void PoltergeistProcess();
-
-	/// <summary>
-	/// ドア処理
-	/// </summary>
-	void DoorProcess();
 
 	/// <summary>
 	/// ImGui表示用
@@ -228,15 +224,7 @@ private:
 	bool isTouchOnce_ = false;
 
 	//ドア
-	//初期回転
-	float_t initialRotateY_ = {};
-	//最大回転
-	float_t maxDoorRotateY_ = {};
-	float_t doorRotateY_ = {};
-	bool isDoorOpen_ = false;
-	float_t rotateT_ = 0.0f;
-	float_t doorLength = 0.0f;
-
+	std::unique_ptr<Door>door_ = nullptr;
 
 
 	//ゲート
