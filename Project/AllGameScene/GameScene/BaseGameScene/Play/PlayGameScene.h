@@ -226,7 +226,6 @@ private:
 	//ドア
 	std::unique_ptr<Door>door_ = nullptr;
 
-
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
 	//脱出成功かどうか

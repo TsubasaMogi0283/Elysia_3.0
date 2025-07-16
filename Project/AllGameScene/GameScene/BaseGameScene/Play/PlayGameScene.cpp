@@ -250,7 +250,6 @@ void PlayGameScene::DrawObject3D(const Camera& camera, const SpotLight& spotLigh
 		//砕けるパーティクル
 		bonePieceParticle_->Draw(camera, bonePieceMaterial_, spotLight);
 	}
-
 }
 
 void PlayGameScene::DrawSprite(){
@@ -274,7 +273,6 @@ void PlayGameScene::DrawSprite(){
 	whiteFadeSprite_->Draw();
 	//黒フェード
 	blackFadeSprite_->Draw();
-
 }
 
 void PlayGameScene::RegisterToCollisionManager(){

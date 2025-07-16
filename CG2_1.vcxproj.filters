@@ -550,6 +550,9 @@
     <Filter Include="Project\Object\Door">
       <UniqueIdentifier>{b3187852-9c39-46bf-89b8-e59f491a9644}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Object\PoltergeistBone">
+      <UniqueIdentifier>{cf46383d-23c8-4c74-8da3-24195e1c6ae5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
