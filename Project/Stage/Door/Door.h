@@ -91,7 +91,15 @@ private:
 	Player* player_ = nullptr;
 
 private:
+	//ドア
 	const std::string DOOR_STRING_ = "Door";
+	//ドアのコリジョン
+	const std::string DOOR_COLLISION_STRING_ = "DoorCollision";
+
+	//スプライトの初期座標
+	const Vector2 INITIAL_POSITION = { .x = 0.0f,.y = 0.0f };
+	//コリジョンを下げた時の座標
+	const Vector3 noCollisionPosition_ = { .x = 0.0f,.y = -10.0f,.z = 0.0f };
 
 	//線形補間の最小値
 	const float_t MIN_T_VALUE_ = 0.0f;
@@ -106,6 +114,7 @@ private:
 private:
 	//開ける
 	std::unique_ptr<Elysia::Sprite>openSptrite_ = nullptr;
+
 
 	//初期回転
 	float_t initialRotateY_ = {};
