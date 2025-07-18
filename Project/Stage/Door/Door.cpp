@@ -40,6 +40,8 @@ void Door::Initialize() {
 	Vector3 collisionInitialPosition= levelDataManager_->GetInitialTranslate(levelDataHandle_, DOOR_COLLISION_STRING_);
 	levelDataManager_->SetTranslate(levelDataHandle_, DOOR_COLLISION_STRING_, collisionInitialPosition);
 
+	//開ける音の読み込み
+	openSEHandle_ = Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/OpenDoor.mp3");
 }
 
 
@@ -53,6 +55,8 @@ void Door::Update() {
 
 		//スペース化Bボタンで開ける
 		if (input_->IsTriggerKey(DIK_SPACE) == true || input_->IsTriggerButton(XINPUT_GAMEPAD_B) == true) {
+			//開ける音を鳴らす
+			Elysia::Audio::GetInstance()->Play(openSEHandle_, false);
 			isOpen_ = true;
 		}
 	}

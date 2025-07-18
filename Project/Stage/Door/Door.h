@@ -128,4 +128,8 @@ private:
 	float_t rotateT_ = 0.0f;
 	//距離
 	float_t distance_ = 0.0f;
+
+	//開ける音
+	uint32_t openSEHandle_ = 0u;
+
 };
