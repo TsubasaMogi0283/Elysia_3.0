@@ -50,19 +50,14 @@ void EnemyManager::Initialize(const uint32_t& normalEnemyModel, const uint32_t& 
 	//強敵
 	strongEnemyModelHandle_ = strongEnemyModel;
 
-	//生成数
-	size_t genarateQuantity = normalEnemyPositions.size();
-#ifdef _DEBUG
-	genarateQuantity = 1u;
-#endif // _DEBUG
-
 	//通常の敵の生成
-	for (size_t i = 0u; i < genarateQuantity; ++i) {
+	for (size_t i = 0u; i < normalEnemyPositions.size(); ++i) {
 		//生成
 		GenerateNormalEnemy(normalEnemyPositions[i]);
 	}
 
 	//プレイ会の時に強敵入れない方が良いとの感想があったので生成はしない
+	//でもいつでも生成できるよ
 	//レベルエディタ側でやっておく
 	for (size_t i = 0u; i < strongEnemyPositions.size(); ++i) {
 		//生成

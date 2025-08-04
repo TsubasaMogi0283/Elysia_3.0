@@ -15,6 +15,7 @@
 #include <Particle3D.h>
 #include <EscapeAssistArrow/EscapeAssistArrow.h>
 #include <Stage/Door/Door.h>
+#include <Stage/PoltergeistBone/PoltergeistBone.h>
 
 /// <summary>
 /// プレイ(本編)
@@ -79,12 +80,6 @@ private:
 	/// 墓場の処理
 	/// </summary>
 	void CemeteryProcess();
-
-	/// <summary>
-	/// ポルターガイストの処理
-	/// </summary>
-	void PoltergeistProcess();
-
 	/// <summary>
 	/// ImGui表示用
 	/// </summary>
@@ -117,27 +112,7 @@ private:
 	std::string gateRightString_ = "GateDoorRight";
 	std::string gateLeftString_ = "GateDoorLeft";
 
-	//骨の名前
-	std::string boneString_ = "Bone001";
-	//浮遊の高さ
-	const float_t FLOATING_HEIGHT_ = 4.0f;
-	//浮遊時間
-	const float_t FLOATING_TIME_ = 3.0f;
-	//落下準備時間
-	const float_t READY_FOR_DROP_TIME_=2.5f;
-	//落下時間
-	const float_t DROP_TIME_ = 2.0f;
-	//欠片の大きさ
-	const float_t BONE_PIECE_SCALE_ = 0.5f;
-	//Y方向のベロシティ
-	const float_t THROW_UP_VELOCITY_Y_ = 0.3f;
-
-	//回転の値
-	const float_t ROTATE_THETA_VALUE_ = 0.1f;
-	//高速回転
-	const float_t RAPID_ROTATE_THETA_VALUE_ = 0.5f;
-	//地面の座標
-	const float_t GROUND_POSITION_Y = 0.0f;
+	
 
 	//最大音量
 	const float_t MAX_VOLUME_ = 0.6f;
@@ -183,49 +158,10 @@ private:
 	//アシストの矢印
 	std::unique_ptr<EscapeAssistArrow> escapeAssistArrow_ = nullptr;
 
-	//骨が上がる
-	bool isBoneRise_ = true;
-	//骨が上がり切ったかどうか
-	bool isFinishRiseBone_ = false;
-	//浮遊時間
-	float_t floatingBoneTime_ = 0.0f;
-	//浮遊時に使うθ
-	float_t floatingTheta_ = 0.0f;
-	//骨の座標
-	Vector3 bonePosition_ = {};
-	//落下準備
-	bool isReadyForBoneDrop_ = false;
-	//落下準備委時間
-	float_t readyForDropTime_ = 0.0f;
-	//落下
-	bool isBoneDrop_ = false;
-	//落下スピード
-	float_t dropSpeed_ = 0.4f;
-	//プレイヤーの座標ロックオン
-	Vector3 loclOnPlayerPosition_ = {};
-	//ロックオンしたかどうか
-	bool isLockOn_ = false;
-	//落下用の線形補間
-	float_t dropT_ = 0.0f;
-	//落下前の骨の座標
-	Vector3 beforeBoneDropPosition_ = {};
-	//骨とプレイヤーの方向
-	Vector3 boneDirectionToPlayer_ = {};
-
-	//骨の欠片のパーティクル
-	std::unique_ptr<Elysia::Particle3D> bonePieceParticle_ = nullptr;
-	//欠片のモデルハンドル
-	uint32_t bonePieceParticleHandle_ = 0u;
-	//骨の欠片パーティクル用のマテリアル
-	Material bonePieceMaterial_ = {};
-	//欠片の数
-	uint32_t bonePieceCount_ = 30u;
-	//一回だけ当たったかどうか
-	bool isTouchOnce_ = false;
-
 	//ドア
 	std::unique_ptr<Door>door_ = nullptr;
-
+	//ポルターガイスト
+	std::unique_ptr<PoltergeistBone>poltergeistBone_ = nullptr;
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
 	//脱出成功かどうか
@@ -239,12 +175,7 @@ private:
 	uint32_t closeGateAudioHandle_ = 0u;
 	//一回だけ鳴らす
 	bool isPlayCloseSE_ = false;
-	//骨が壊れる音
-	uint32_t boneBreakAudioHandle_ = 0u;
-
-	//骨の警告音
-	uint32_t warningBoneAudioHandle_ = 0u;
-	float_t warningFrequencyRatio_ = 1.0f;
+	
 
 	//ビネットの変化時間
 	float_t vignetteChangeTime_ = 0.0f;
