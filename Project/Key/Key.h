@@ -61,8 +61,6 @@ public:
 	/// </summary>
 	~Key() = default;
 
-
-
 private:
 	/// <summary>
 	/// 上昇し回転
@@ -164,9 +162,9 @@ public:
 private:
 	
 	//上下移動の大きさ
-	const float MOVE_AMOUNT_ = 0.1f;
+	const float_t MOVE_AMOUNT_ = 0.1f;
 	//縮小
-	const float SCALE_DOWN_AMOUNT_ = 0.05f;
+	const float_t SCALE_DOWN_AMOUNT_ = 0.05f;
 	//回転の大きさ
 	const float_t ROTATE_AMOUNT_ = 0.1f;
 	//始点
@@ -192,38 +190,33 @@ private:
 	//取得されたか
 	bool isPickUp_ = false;
 	//半径
-	float radius_ = 0.0f;
+	float_t radius_ = 0.0f;
 
 	//元の座標
-	float originalPositionY_ = 0.001f;
+	float_t originalPositionY_ = 0.001f;
 
 	//上昇前の座標を記録する
 	bool isWritePreUpPosition_ = false;
 	Vector3 preUpPosition_ = {};
 
 	//sinの動きにしたいのでthetaを作る
-	float heightTheta_ = 0.0f;
+	float_t heightTheta_ = 0.0f;
 
 	//回転終わり
 	bool isFinishRise_ = false;
-	float upT_ = 0.0f;
+	float_t upT_ = 0.0f;
 	//終点
 	Vector2 spriteEndPosition_ = { };
-
 
 	//スプライトが動くかどうか
 	bool isSpriteMove_ = false;
 	//スケールを線形補間で実装する
-	float scaleTheta_ = 0.0f;
-	float scaleT_ = 0.0f;
+	float_t scaleTheta_ = 0.0f;
+	float_t scaleT_ = 0.0f;
 	//スプライトの回転
-	float spriteRotate_ = 0.0f;
-
+	float_t spriteRotate_ = 0.0f;
 
 	//消える
 	bool isDelete_ = false;
-
-
-
 };
 

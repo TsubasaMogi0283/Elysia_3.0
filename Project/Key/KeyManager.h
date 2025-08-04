@@ -216,7 +216,7 @@ private:
 	//数
 	static const uint32_t NUMBER_QUANTITY_ = 10u;
 	//鍵の音が聞こえる最大距離
-	const float MAX_DISTANCE_ = 30.0f;
+	const float_t MAX_DISTANCE_ = 30.0f;
 
 
 private:
@@ -234,7 +234,7 @@ private:
 	uint64_t keySpriteHeight_ = 0u;
 
 	//スケール
-	std::array<float, MAX_KEY_QUANTITY_> spriteTs_ = {};
+	std::array<float_t, MAX_KEY_QUANTITY_> spriteTs_ = {};
 
 	//初期座標
 	Vector2 initialPosition_ = { .x = 20.0f,.y = 10.0f };
@@ -245,7 +245,7 @@ private:
 	//鍵取得するかどうか
 	std::unique_ptr<Elysia::Sprite> pickUpKey_ = nullptr;
 	//プレイヤーと全ての鍵の距離
-	std::list<float>keyAndPlayerDistances_ = {};
+	std::list<float_t>keyAndPlayerDistances_ = {};
 
 	//拾う音
 	uint32_t pickUpSEHandle = 0u;

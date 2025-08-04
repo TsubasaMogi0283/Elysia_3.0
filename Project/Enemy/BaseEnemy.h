@@ -65,7 +65,6 @@ public:
 	/// </summary>
 	virtual void Update() = 0;
 
-
 	/// <summary>
 	/// 描画
 	/// </summary>
@@ -77,8 +76,6 @@ public:
 	/// デストラクタ
 	/// </summary>
 	virtual ~BaseEnemy()=default;
-
-
 
 public:
 	/// <summary>
