@@ -37,6 +37,7 @@ GameScene::GameScene() {
 
 void GameScene::Initialize() {
 
+
 	//ハンドルの取得
 	levelHandle_ = levelDataManager_->Load("GameStage/GameStage.json");
 
