@@ -392,7 +392,7 @@ void EnemyManager::GenerateStrongEnemy(const Vector3& position) {
 	//方向を決める
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
-	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
+	std::uniform_real_distribution<float_t> speedDistribute(-1.0f, 1.0f);
 	Vector3 direction = { .x = speedDistribute(randomEngine),.y = 0.0f,.z = speedDistribute(randomEngine) };
 
 	//初期化
