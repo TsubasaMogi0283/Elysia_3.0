@@ -243,6 +243,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Project\RailCamera\TitleRailCamera.cpp" />
     <ClCompile Include="Project\Stage\Door\Door.cpp" />
     <ClCompile Include="Project\Stage\Gate\Gate.cpp" />
+    <ClCompile Include="Project\Stage\PoltergeistBone\PoltergeistBone.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\AnimationObject3D\AnimationObject3D.PS.hlsl">
@@ -579,6 +580,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Project\RailCamera\TitleRailCamera.h" />
     <ClInclude Include="Project\Stage\Door\Door.h" />
     <ClInclude Include="Project\Stage\Gate\Gate.h" />
+    <ClInclude Include="Project\Stage\PoltergeistBone\PoltergeistBone.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
