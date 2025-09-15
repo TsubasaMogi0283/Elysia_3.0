@@ -121,8 +121,6 @@ void PlayGameScene::Update(GameScene* gameScene){
 	gate_->Update();
 	//ドアの更新
 	door_->Update();
-	//ポルターガイストの更新
-	poltergeistBone_->Update();
 	//コントロール可能にする
 	player_->SetIsAbleToControll(true);
 	//プレイヤーの移動

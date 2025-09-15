@@ -153,12 +153,10 @@ void PoltergeistBone::Update() {
 				//当たった
 				player_->SetIsBoneTouch(true);
 				isTouchOnce_ = true;
-				isProcessEnd_ = true;
 			}
 			else {
 				//一度当たったらダメージ処理は終わり
 				player_->SetIsBoneTouch(false);
-				isProcessEnd_ = true;
 			}
 
 		}
@@ -170,16 +168,12 @@ void PoltergeistBone::Update() {
 		//全て消えたらtrue
 		if (bonePieceParticle_ != nullptr && bonePieceParticle_->GetIsAllInvisible() == true) {
 			isBoneDrop_ = false;
+			//警告音停止
+			audio_->Stop(warningBoneAudioHandle_);
 		}
 
 	}
 
-	//処理終了
-	if (isProcessEnd_ == true) {
-		//警告音停止
-		audio_->Stop(warningBoneAudioHandle_);
-		return;
-	}
 
 	//回転の変更
 	levelDataManager_->SetRotate(levelDataHandle_, boneString_, { .x = floatingTheta_,.y = floatingTheta_,.z = floatingTheta_ });

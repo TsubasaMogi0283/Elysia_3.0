@@ -172,6 +172,4 @@ private:
 	uint32_t warningBoneAudioHandle_ = 0u;
 	float_t warningFrequencyRatio_ = 1.0f;
 
-	//処理が終わったか
-	bool isProcessEnd_ = false;
 };
