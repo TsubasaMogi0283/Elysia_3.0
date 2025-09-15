@@ -64,6 +64,22 @@ public:
 		this->player_ = player;
 	}
 
+	/// <summary>
+	/// 動き始める
+	/// </summary>
+	inline void SetStart() {
+		this->isBoneRise_ = true;
+	}
+
+	/// <summary>
+	/// レべルデータの設定
+	/// </summary>
+	/// <param name="levelDataHandle"></param>
+	inline void SetLevelDataHandle(const uint32_t& levelDataHandle) {
+		this->levelDataHandle_ = levelDataHandle;
+	}
+
+
 private:
 	//レベルエディタ
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
@@ -72,7 +88,7 @@ private:
 	//オーディオ
 	Elysia::Audio* audio_ = nullptr;
 	//骨の名前
-	std::string boneString_ = "Bone001";
+	std::string boneString_ = "Bone";
 	//プレイヤー
 	Player* player_ = nullptr;
 
@@ -98,7 +114,10 @@ private:
 	const float_t RAPID_ROTATE_THETA_VALUE_ = 0.5f;
 	//地面の座標
 	const float_t GROUND_POSITION_Y = 0.0f;
-
+	//回転する値の補正
+	const float_t ROTATE_VALUE_OFFSET_ = 0.1f;
+	//骨のスピード
+	const float_t BONE_SPEED_ = 0.01f;
 private:
 	//骨が上がる
 	bool isBoneRise_ = true;
@@ -146,5 +165,8 @@ private:
 	//骨の警告音
 	uint32_t warningBoneAudioHandle_ = 0u;
 	float_t warningFrequencyRatio_ = 1.0f;
+
+	//処理が終わったか
+	bool isProcessEnd_ = false;
 };
 

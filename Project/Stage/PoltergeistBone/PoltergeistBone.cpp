@@ -34,12 +34,12 @@ void PoltergeistBone::Initialize() {
 
 
 void PoltergeistBone::Update() {
-	const float_t rotateValueOffset = 0.1f;
+	
 
 	//上昇
 	if (isBoneRise_ == true) {
 		//警告音再生
-		Elysia::Audio::GetInstance()->Play(warningBoneAudioHandle_, true);
+		audio_->Play(warningBoneAudioHandle_, true);
 
 		//ふわふわ浮き上がる
 		bonePosition_.y += 0.05f;
@@ -70,9 +70,9 @@ void PoltergeistBone::Update() {
 		//回転
 		floatingTheta_ += ROTATE_THETA_VALUE_;
 		//座標の更新
-		const float_t BONE_SPEED = 0.01f;
-		bonePosition_.x += std::cosf(floatingTheta_) * rotateValueOffset + boneDirectionToPlayer_.x * BONE_SPEED;
-		bonePosition_.z += std::sinf(floatingTheta_) * rotateValueOffset + boneDirectionToPlayer_.z * BONE_SPEED;
+		
+		bonePosition_.x += std::cosf(floatingTheta_) * ROTATE_VALUE_OFFSET_ + boneDirectionToPlayer_.x * BONE_SPEED_;
+		bonePosition_.z += std::sinf(floatingTheta_) * ROTATE_VALUE_OFFSET_ + boneDirectionToPlayer_.z * BONE_SPEED_;
 	}
 
 	//落下準備
@@ -115,7 +115,7 @@ void PoltergeistBone::Update() {
 		bonePosition_ = VectorCalculation::Lerp(startPosition, endPosition, dropT_);
 
 		if (bonePosition_.y <= GROUND_POSITION_Y) {
-
+			
 			bonePosition_.y = GROUND_POSITION_Y;
 			//非表示にする
 			levelDataManager_->SetInvisible(levelDataHandle_, boneString_, true);
@@ -135,10 +135,8 @@ void PoltergeistBone::Update() {
 				bonePieceParticle_->SetThrowUpVeloityY(THROW_UP_VELOCITY_Y_);
 
 				//壊れる音
-				Elysia::Audio::GetInstance()->Play(boneBreakAudioHandle_, false);
-				//警告音停止
-				Elysia::Audio::GetInstance()->Stop(warningBoneAudioHandle_);
-
+				audio_->Play(boneBreakAudioHandle_, false);
+				
 
 			}
 
@@ -154,11 +152,12 @@ void PoltergeistBone::Update() {
 				//当たった
 				player_->SetIsBoneTouch(true);
 				isTouchOnce_ = true;
-
+				isProcessEnd_ = true;
 			}
 			else {
 				//一度当たったらダメージ処理は終わり
 				player_->SetIsBoneTouch(false);
+				isProcessEnd_ = true;
 			}
 
 		}
@@ -172,6 +171,13 @@ void PoltergeistBone::Update() {
 			isBoneDrop_ = false;
 		}
 
+	}
+
+	//処理終了
+	if (isProcessEnd_ == true) {
+		//警告音停止
+		audio_->Stop(warningBoneAudioHandle_);
+		return;
 	}
 
 	//回転の変更

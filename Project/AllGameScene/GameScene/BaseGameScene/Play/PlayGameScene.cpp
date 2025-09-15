@@ -87,6 +87,7 @@ void PlayGameScene::Initialize(){
 
 	//骨のポルターガイスト
 	poltergeistBone_ = std::make_unique<PoltergeistBone>();
+	poltergeistBone_->SetLevelDataHandle(levelDataHandle_);
 	poltergeistBone_->SetPlayer(player_);
 	poltergeistBone_->Initialize();
 
@@ -110,8 +111,7 @@ void PlayGameScene::Update(GameScene* gameScene){
 	//フレーム初めに
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
-	//パーティクルマテリアルの更新
-	poltergeistBone_->Update();
+	
 	//ゲートの更新
 	gate_->Update();
 	//ドアの更新
@@ -239,14 +239,6 @@ void PlayGameScene::Update(GameScene* gameScene){
 void PlayGameScene::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
 	//アシスト用の矢印
 	escapeAssistArrow_->Draw(camera, spotLight);
-
-	//poltergeistBone_->Draw(camera, spotLight);
-	
-
-	//if (bonePieceParticle_ != nullptr) {
-	//	//砕けるパーティクル
-	//	bonePieceParticle_->Draw(camera, bonePieceMaterial_, spotLight);
-	//}
 }
 
 void PlayGameScene::DrawSprite(){
@@ -664,10 +656,10 @@ void PlayGameScene::CemeteryProcess(){
 void PlayGameScene::PoltergeistProcess(){
 	//墓場内の鍵を取ったら動き出す
 	if (keyManager_->GetIsPickUpKeyInCemetery() == true) {
-
+		poltergeistBone_->SetStart();
+		poltergeistBone_->Update();
 		
 	}
-	
 }
 
 
