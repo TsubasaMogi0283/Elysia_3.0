@@ -26,6 +26,11 @@ namespace Elysia {
 }
 
 /// <summary>
+/// プレイヤー
+/// </summary>
+class Player;
+
+/// <summary>
 /// 骨のポルターガイスト
 /// </summary>
 class PoltergeistBone{
@@ -54,6 +59,16 @@ public:
 	/// デストラクタ
 	/// </summary>
 	~PoltergeistBone() = default;
+
+public:
+	/// <summary>
+	/// プレイヤー
+	/// </summary>
+	/// <param name="player"></param>
+	inline void SetPlayer(Player* player) {
+		this->player_ = player;
+	}
+
 private:
 	//レベルエディタ
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
@@ -63,7 +78,8 @@ private:
 	Elysia::Audio* audio_ = nullptr;
 	//骨の名前
 	std::string boneString_ = "Bone001";
-
+	//プレイヤー
+	Player* player_ = nullptr;
 
 private:
 	//浮遊の高さ
@@ -78,7 +94,8 @@ private:
 	const float_t BONE_PIECE_SCALE_ = 0.5f;
 	//Y方向のベロシティ
 	const float_t THROW_UP_VELOCITY_Y_ = 0.3f;
-
+	//時間変化
+	const float_t DELTA_TIME_ = 1.0f / 60.0f;
 
 private:
 	//骨が上がる

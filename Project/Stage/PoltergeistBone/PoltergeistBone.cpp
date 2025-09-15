@@ -6,6 +6,7 @@
 #include <VectorCalculation.h>
 #include <SingleCalculation.h>
 #include <imgui.h>
+#include <Player/Player.h>
 
 PoltergeistBone::PoltergeistBone(){
 	//レベルエディタ管理クラス
@@ -179,7 +180,7 @@ void PoltergeistBone::Update() {
 	levelDataManager_->SetTranslate(levelDataHandle_, boneString_, bonePosition_);
 
 #ifdef _DEBUG
-	ImGui::Begin();
+	ImGui::Begin("ポルターガイスト(骨)");
 	ImGui::SliderFloat("T", &dropT_, 0.0f, 1.0f);
 	ImGui::InputFloat3("骨の座標", &bonePosition_.x);
 	ImGui::InputFloat3("ロックオン座標(プレイヤー)", &loclOnPlayerPosition_.x);
