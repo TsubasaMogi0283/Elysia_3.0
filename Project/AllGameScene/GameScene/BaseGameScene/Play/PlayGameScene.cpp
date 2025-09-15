@@ -87,6 +87,7 @@ void PlayGameScene::Initialize(){
 
 	//骨のポルターガイスト
 	poltergeistBone_ = std::make_unique<PoltergeistBone>();
+	poltergeistBone_->SetPlayer(player_);
 	poltergeistBone_->Initialize();
 
 	//ゲートのモデルの読み込み
@@ -239,7 +240,7 @@ void PlayGameScene::DrawObject3D(const Camera& camera, const SpotLight& spotLigh
 	//アシスト用の矢印
 	escapeAssistArrow_->Draw(camera, spotLight);
 
-	poltergeistBone_->Draw(camera, spotLight);
+	//poltergeistBone_->Draw(camera, spotLight);
 	
 
 	//if (bonePieceParticle_ != nullptr) {

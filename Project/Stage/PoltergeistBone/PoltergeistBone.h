@@ -51,11 +51,6 @@ public:
 	void Update();
 
 	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw(const Camera& camera, const SpotLight& spotLight);
-
-	/// <summary>
 	/// デストラクタ
 	/// </summary>
 	~PoltergeistBone() = default;
@@ -96,6 +91,13 @@ private:
 	const float_t THROW_UP_VELOCITY_Y_ = 0.3f;
 	//時間変化
 	const float_t DELTA_TIME_ = 1.0f / 60.0f;
+
+	//回転の値
+	const float_t ROTATE_THETA_VALUE_ = 0.1f;
+	//高速回転
+	const float_t RAPID_ROTATE_THETA_VALUE_ = 0.5f;
+	//地面の座標
+	const float_t GROUND_POSITION_Y = 0.0f;
 
 private:
 	//骨が上がる

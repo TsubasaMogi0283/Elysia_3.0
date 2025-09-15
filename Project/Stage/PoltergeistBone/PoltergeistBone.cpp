@@ -175,7 +175,7 @@ void PoltergeistBone::Update() {
 	}
 
 	//回転の変更
-	levelDataManager_->SetRotate(levelDataHandle_, boneString_, { .x = floatingTheta_,.y = rightGateRotateTheta_,.z = floatingTheta_ });
+	levelDataManager_->SetRotate(levelDataHandle_, boneString_, { .x = floatingTheta_,.y = floatingTheta_,.z = floatingTheta_ });
 	//座標の変更
 	levelDataManager_->SetTranslate(levelDataHandle_, boneString_, bonePosition_);
 
@@ -188,9 +188,5 @@ void PoltergeistBone::Update() {
 	ImGui::End();
 #endif // _DEBUG
 
-
-}
-
-void PoltergeistBone::Draw(const Camera& camera, const SpotLight& spotLight) {
 
 }
