@@ -103,6 +103,12 @@ void PlayGameScene::Initialize(){
 	//墓地が閉まる音
 	closeGateAudioHandle_= Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/CloseGate.mp3");
 	
+#ifdef _DEBUG
+	//このシーンから始めた時に聞こえなかったので値をここで設定する
+	enviromentAudioVolume_ = 1.0f;
+#endif // _DEBUG
+
+
 
 }
 
