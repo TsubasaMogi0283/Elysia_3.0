@@ -124,6 +124,8 @@ private:
 	const float_t ROTATE_VALUE_OFFSET_ = 0.1f;
 	//骨のスピード
 	const float_t BONE_SPEED_ = 0.01f;
+	//警告音のピッチ用
+	const float_t DELTA_INCREASE_FREAQUENCY_RATION_VALUE_ = 0.005f;
 private:
 	//骨が上がる
 	bool isBoneRise_ = false;

@@ -82,9 +82,8 @@ void PoltergeistBone::Update() {
 	//落下準備
 	if (isReadyForBoneDrop_ == true) {
 		//高さの設定
-		const float_t DELTA_INCREASE_FREAQUENCY_RATION_VALUE_ = 0.005f;
 		warningFrequencyRatio_ += DELTA_INCREASE_FREAQUENCY_RATION_VALUE_;
-		Elysia::Audio::GetInstance()->ChangeFrequencyRatio(warningBoneAudioHandle_, warningFrequencyRatio_);
+		audio_->ChangeFrequencyRatio(warningBoneAudioHandle_, warningFrequencyRatio_);
 
 		//高速回転
 		floatingTheta_ += RAPID_ROTATE_THETA_VALUE_;
