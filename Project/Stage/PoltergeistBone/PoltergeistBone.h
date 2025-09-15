@@ -171,5 +171,6 @@ private:
 	//骨の警告音
 	uint32_t warningBoneAudioHandle_ = 0u;
 	float_t warningFrequencyRatio_ = 1.0f;
+	bool isPlayWarningSE_ = false;
 
 };

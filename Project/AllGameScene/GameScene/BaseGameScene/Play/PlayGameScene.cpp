@@ -237,6 +237,7 @@ void PlayGameScene::Update(GameScene* gameScene){
 	collisionManager_->CheckAllCollision();
 
 #ifdef _DEBUG
+	//常に表示
 	escapeAssistArrow_->SetIsOpaque(true);
 	//ImGui表示用
 	DisplayImGui();

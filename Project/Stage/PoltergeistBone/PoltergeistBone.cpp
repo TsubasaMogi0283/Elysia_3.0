@@ -40,8 +40,11 @@ void PoltergeistBone::Update() {
 	//上昇
 	if (isBoneRise_ == true) {
 		//警告音再生
-		audio_->Play(warningBoneAudioHandle_, true);
-
+		if (isPlayWarningSE_ == false) {
+			audio_->Play(warningBoneAudioHandle_, true);
+			isPlayWarningSE_ = true;
+		}
+		
 		//ふわふわ浮き上がる
 		bonePosition_.y += 0.05f;
 
@@ -137,7 +140,8 @@ void PoltergeistBone::Update() {
 
 				//壊れる音
 				audio_->Play(boneBreakAudioHandle_, false);
-				
+				//警告音停止
+				audio_->Stop(warningBoneAudioHandle_);
 
 			}
 
@@ -168,8 +172,6 @@ void PoltergeistBone::Update() {
 		//全て消えたらtrue
 		if (bonePieceParticle_ != nullptr && bonePieceParticle_->GetIsAllInvisible() == true) {
 			isBoneDrop_ = false;
-			//警告音停止
-			audio_->Stop(warningBoneAudioHandle_);
 		}
 
 	}
