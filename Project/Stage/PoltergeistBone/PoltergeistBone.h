@@ -23,6 +23,10 @@ namespace Elysia {
 	/// </summary>
 	class LevelDataManager;
 
+	/// <summary>
+	/// モデル管理クラス
+	/// </summary>
+	class ModelManager;
 }
 
 /// <summary>
@@ -84,6 +88,8 @@ private:
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
+	//モデル管理クラス
+	Elysia::ModelManager* modelManager_ = nullptr;
 	//オーディオ
 	Elysia::Audio* audio_ = nullptr;
 	//骨の名前
@@ -120,7 +126,7 @@ private:
 	const float_t BONE_SPEED_ = 0.01f;
 private:
 	//骨が上がる
-	bool isBoneRise_ = true;
+	bool isBoneRise_ = false;
 	//骨が上がり切ったかどうか
 	bool isFinishRiseBone_ = false;
 	//浮遊時間

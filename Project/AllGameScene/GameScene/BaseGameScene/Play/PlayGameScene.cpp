@@ -140,7 +140,12 @@ void PlayGameScene::Update(GameScene* gameScene){
 	CemeteryProcess();
 	//コリジョン管理クラスに登録
 	RegisterToCollisionManager();
+	//墓場内の鍵を取ったら動き出す
+	if (keyManager_->GetIsPickUpKeyInCemetery() == true) {
+		poltergeistBone_->SetStart();
+		poltergeistBone_->Update();
 
+	}
 
 	//体力が0になったら負け
 	//または一発アウトの敵に接触した場合
@@ -649,15 +654,6 @@ void PlayGameScene::CemeteryProcess(){
 	levelDataManager_->SetTranslate(levelDataHandle_, "CloseFenceInCemetery", fenceTranslate_);
 
 
-}
-
-void PlayGameScene::PoltergeistProcess(){
-	//墓場内の鍵を取ったら動き出す
-	if (keyManager_->GetIsPickUpKeyInCemetery() == true) {
-		poltergeistBone_->SetStart();
-		poltergeistBone_->Update();
-		
-	}
 }
 
 
