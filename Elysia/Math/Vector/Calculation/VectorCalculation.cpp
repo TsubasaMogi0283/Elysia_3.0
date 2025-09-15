@@ -13,7 +13,7 @@
 Vector2 VectorCalculation::Add(const Vector2& v1, const Vector2& v2){
 	Vector2 result = {
 		.x = v1.x + v2.x,
-		.y = v1.x + v2.y
+		.y = v1.y + v2.y
 	};
 
 	return result;

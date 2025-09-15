@@ -113,6 +113,12 @@ private:
 	std::string gateLeftString_ = "GateDoorLeft";
 
 	
+	//回転の値
+	const float_t ROTATE_THETA_VALUE_ = 0.1f;
+	//高速回転
+	const float_t RAPID_ROTATE_THETA_VALUE_ = 0.5f;
+	//地面の座標
+	const float_t GROUND_POSITION_Y = 0.0f;
 
 	//最大音量
 	const float_t MAX_VOLUME_ = 0.6f;
@@ -154,7 +160,6 @@ private:
 	std::unique_ptr<Elysia::Sprite> escapeTextSprite_ = nullptr;
 	//脱出のスプライト
 	std::unique_ptr<Elysia::Sprite> toEscapeSprite_ = nullptr;
-
 	//アシストの矢印
 	std::unique_ptr<EscapeAssistArrow> escapeAssistArrow_ = nullptr;
 

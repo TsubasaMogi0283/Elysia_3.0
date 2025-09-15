@@ -1,40 +1,27 @@
 #pragma once
 
 /**
- * @file GameManager.h
- * @brief ドア(レベルエディタ)の処理用クラス
+ * @file PoltergeistBone.h
+ * @brief 骨のポルターガイストクラス
  * @author 茂木翼
  */
 
-#include <memory>
-#include <Vector3.h>
 #include <Particle3D.h>
 #include <Material.h>
 
- /// <summary>
- /// ElysiaEngine
- /// </summary>
+/// <summary>
+/// ElysiaEngine
+/// </summary>
 namespace Elysia {
-	/// <summary>
-	/// 入力
-	/// </summary>
-	class Input;
-
-	/// <summary>
-	/// レベル管理クラス
-	/// </summary>
-	class LevelDataManager;
-
-	/// <summary>
-	/// モデル管理クラス
-	/// </summary>
-	class ModelManager;
-
 	/// <summary>
 	/// オーディオ
 	/// </summary>
 	class Audio;
 
+	/// <summary>
+	/// レベルデータ管理クラス
+	/// </summary>
+	class LevelDataManager;
 
 }
 
@@ -44,14 +31,9 @@ namespace Elysia {
 class Player;
 
 /// <summary>
-/// 鍵管理クラス
+/// 骨のポルターガイスト
 /// </summary>
-class KeyManager;
-
-/// <summary>
-/// ドア(レベルエディタ)
-/// </summary>
-class PoltergeistBone {
+class PoltergeistBone{
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -68,73 +50,49 @@ public:
 	/// </summary>
 	void Update();
 
-	/// <summary>
-	/// 3Dモデルの描画
-	/// </summary>
-	/// <param name="camera">カメラ</param>
-	/// <param name="spotLight">スポットライト</param>
-	void Draw(const Camera& camera, const SpotLight& spotLight);
-	
-	/// <summary>
 	/// デストラクタ
 	/// </summary>
 	~PoltergeistBone() = default;
 
 public:
 	/// <summary>
-	/// レベルデータのハンドルを取得
+	/// プレイヤー
 	/// </summary>
-	/// <param name="levelDataHandle">ハンドル</param>
-	inline void SetLevelDataHandle(const uint32_t& levelDataHandle) {
-		this->levelDataHandle_ = levelDataHandle;
-	}
-	/// <summary>
-	/// プレイヤーの設定
-	/// </summary>
-	/// <param name="player">プレイヤー</param>
+	/// <param name="player"></param>
 	inline void SetPlayer(Player* player) {
 		this->player_ = player;
 	}
 
 	/// <summary>
-	/// 鍵管理クラスの設定
+	/// 動き始める
 	/// </summary>
-	/// <param name="keyManager"></param>
-	inline void SetKeyManager(KeyManager* keyManager) {
-		this->keyManager_ = keyManager;
+	inline void SetStart() {
+		this->isBoneRise_ = true;
+	}
+
+	/// <summary>
+	/// レべルデータの設定
+	/// </summary>
+	/// <param name="levelDataHandle"></param>
+	inline void SetLevelDataHandle(const uint32_t& levelDataHandle) {
+		this->levelDataHandle_ = levelDataHandle;
 	}
 
 
 private:
-	
-	//入力クラス
-	Elysia::Input* input_ = nullptr;
 	//レベルエディタ
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
-	//モデル管理クラス
-	Elysia::ModelManager* modelManager_ = nullptr;
-	//オーディオ
-	Elysia::Audio* audio_ = nullptr;
 	//ハンドル
 	uint32_t levelDataHandle_ = 0u;
+	//オーディオ
+	Elysia::Audio* audio_ = nullptr;
+	//骨の名前
+	std::string boneString_ = "Bone";
 	//プレイヤー
 	Player* player_ = nullptr;
-	//鍵管理クラス
-	KeyManager* keyManager_ = nullptr;
 
 private:
-	//時間変化
-	const float_t DELTA_TIME_ = 1.0f / 60.0f;
 
-	//線形補間の最小値
-	const float_t MIN_T_VALUE_ = 0.0f;
-	//線形補間の最大値
-	const float_t MAX_T_VALUE_ = 1.0f;
-	//回転
-	const float_t ROTATE_VALUE_ = 0.01f;
-
-	//骨の名前
-	std::string boneString_ = "Bone001";
 	//浮遊の高さ
 	const float_t FLOATING_HEIGHT_ = 4.0f;
 	//浮遊時間
@@ -147,6 +105,8 @@ private:
 	const float_t BONE_PIECE_SCALE_ = 0.5f;
 	//Y方向のベロシティ
 	const float_t THROW_UP_VELOCITY_Y_ = 0.3f;
+	//時間変化
+	const float_t DELTA_TIME_ = 1.0f / 60.0f;
 
 	//回転の値
 	const float_t ROTATE_THETA_VALUE_ = 0.1f;
@@ -154,6 +114,10 @@ private:
 	const float_t RAPID_ROTATE_THETA_VALUE_ = 0.5f;
 	//地面の座標
 	const float_t GROUND_POSITION_Y = 0.0f;
+	//回転する値の補正
+	const float_t ROTATE_VALUE_OFFSET_ = 0.1f;
+	//骨のスピード
+	const float_t BONE_SPEED_ = 0.01f;
 private:
 	//骨が上がる
 	bool isBoneRise_ = true;
@@ -202,4 +166,6 @@ private:
 	uint32_t warningBoneAudioHandle_ = 0u;
 	float_t warningFrequencyRatio_ = 1.0f;
 
+	//処理が終わったか
+	bool isProcessEnd_ = false;
 };

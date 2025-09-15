@@ -21,7 +21,7 @@
 
 GameScene::GameScene() {
 	//インスタンスの取得
-	//入力
+	//入力	
 	input_ = Elysia::Input::GetInstance();
 	//テクスチャ管理クラス
 	textureManager_ = Elysia::TextureManager::GetInstance();
@@ -36,6 +36,7 @@ GameScene::GameScene() {
 }
 
 void GameScene::Initialize() {
+
 
 	//ハンドルの取得
 	levelHandle_ = levelDataManager_->Load("GameStage/GameStage.json");

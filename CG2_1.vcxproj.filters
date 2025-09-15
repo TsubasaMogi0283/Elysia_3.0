@@ -553,6 +553,9 @@
     <Filter Include="Project\Object\PoltergeistBone">
       <UniqueIdentifier>{cf46383d-23c8-4c74-8da3-24195e1c6ae5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Object\Bone">
+      <UniqueIdentifier>{f148d6ae-e8d4-47cc-8dc6-4b3301d79dd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -904,7 +907,7 @@
       <Filter>Project\Object\Door</Filter>
     </ClCompile>
     <ClCompile Include="Project\Stage\PoltergeistBone\PoltergeistBone.cpp">
-      <Filter>Project\Object\PoltergeistBone</Filter>
+      <Filter>Elysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1499,7 +1502,7 @@
       <Filter>Project\Object\Door</Filter>
     </ClInclude>
     <ClInclude Include="Project\Stage\PoltergeistBone\PoltergeistBone.h">
-      <Filter>Project\Object\PoltergeistBone</Filter>
+      <Filter>Elysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

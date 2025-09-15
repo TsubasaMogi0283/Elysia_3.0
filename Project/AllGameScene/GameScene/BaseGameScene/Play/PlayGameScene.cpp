@@ -85,14 +85,11 @@ void PlayGameScene::Initialize(){
 	//初期化
 	door_->Initialize();
 
-	//ポルターガイスト
+	//骨のポルターガイスト
 	poltergeistBone_ = std::make_unique<PoltergeistBone>();
-	poltergeistBone_->SetPlayer(player_);
-	poltergeistBone_->SetKeyManager(keyManager_);
 	poltergeistBone_->SetLevelDataHandle(levelDataHandle_);
-	//初期化
+	poltergeistBone_->SetPlayer(player_);
 	poltergeistBone_->Initialize();
-
 
 	//ゲートのモデルの読み込み
 	uint32_t gateModelhandle = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Sample/Gate", "Gate.obj");
@@ -101,7 +98,6 @@ void PlayGameScene::Initialize(){
 	//初期化
 	gate_->Initialize(gateModelhandle);
 	
-
 	//門を開ける音
 	openGateAudioHandle_ = Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/OpenGate.mp3");
 	//墓地が閉まる音
@@ -241,8 +237,6 @@ void PlayGameScene::Update(GameScene* gameScene){
 void PlayGameScene::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
 	//アシスト用の矢印
 	escapeAssistArrow_->Draw(camera, spotLight);
-	poltergeistBone_->Draw(camera, spotLight);
-	
 }
 
 void PlayGameScene::DrawSprite(){
@@ -656,6 +650,16 @@ void PlayGameScene::CemeteryProcess(){
 
 
 }
+
+void PlayGameScene::PoltergeistProcess(){
+	//墓場内の鍵を取ったら動き出す
+	if (keyManager_->GetIsPickUpKeyInCemetery() == true) {
+		poltergeistBone_->SetStart();
+		poltergeistBone_->Update();
+		
+	}
+}
+
 
 void PlayGameScene::DisplayImGui(){
 

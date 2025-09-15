@@ -51,10 +51,10 @@ public:
 	//リソース
 	ComPtr<ID3D12Resource> resource = nullptr;
 	//倍
-	float_t scale;
+	float_t scale=0.0f;
 	//乗
-	float_t pow;
+	float_t pow=0.0f;
 	//色
-	Vector3 color;
+	Vector3 color = {};
 
 };

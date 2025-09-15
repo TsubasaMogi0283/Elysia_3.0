@@ -183,7 +183,7 @@ void EnemyManager::Update(){
 		//プレイヤーと敵の差分ベクトル
 		Vector3 defference = VectorCalculation::Subtract(playerPosition, enemy->GetWorldPosition());
 		//距離
-		float defferenceDistance = SingleCalculation::Length(defference);
+		float_t defferenceDistance = SingleCalculation::Length(defference);
 
 		//通常の動き
 		if (currentState == "Move") {
@@ -247,7 +247,6 @@ void EnemyManager::Update(){
 			//衝突判定
 			for (size_t i = 0; i < positions.size() && i < aabbs.size() && i < colliders.size(); ++i) {
 
-
 				//AABBを取得
 				AABB objectAABB = aabbs[i];
 				//位置を取得
@@ -274,8 +273,8 @@ void EnemyManager::Update(){
 
 						//差分ベクトルのXとZの大きさを比べ
 						//値が大きい方で反転させる
-						float defferenceValueX = std::abs(defference.x);
-						float defferenceValueZ = std::abs(defference.z);
+						float_t defferenceValueX = std::abs(defference.x);
+						float_t defferenceValueZ = std::abs(defference.z);
 
 
 						//X軸反転
@@ -295,19 +294,17 @@ void EnemyManager::Update(){
 		//差分を求める
 		Vector3 playerStrongEnemyDifference = VectorCalculation::Subtract(playerPosition, strongEnemy->GetWorldPosition());
 		//距離を求める
-		float playerStrongEnemyDistance = SingleCalculation::Length(playerStrongEnemyDifference);
+		float_t playerStrongEnemyDistance = SingleCalculation::Length(playerStrongEnemyDifference);
 		//正規化
 		Vector3 directionToPlayer = VectorCalculation::Normalize(playerStrongEnemyDifference);
 
 
 		//大きさの処理
 		//追跡開始する距離と強敵とプレイヤーの距離の割合で音量を決める
-		const float MAX_VOLUME = 1.0f;
-		float volume = MAX_VOLUME - (playerStrongEnemyDistance / STRONG_ENEMY_TRACKING_START_DISTANCE_);
-
+		float_t volume = MAX_VOLUME_ - (playerStrongEnemyDistance / STRONG_ENEMY_TRACKING_START_DISTANCE_);
 
 		//0だったら鳴らす意味はないので止めておく
-		const float MIN_VOLUME = 0.0f;
+		const float_t MIN_VOLUME = 0.0f;
 		if (volume < MIN_VOLUME) {
 			audio_->Stop(audioHandle_);
 		}
@@ -318,8 +315,6 @@ void EnemyManager::Update(){
 
 		//音量変化
 		audio_->ChangeVolume(audioHandle_, volume);
-
-
 
 
 #ifdef _DEBUG
@@ -397,7 +392,7 @@ void EnemyManager::GenerateStrongEnemy(const Vector3& position) {
 	//方向を決める
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
-	std::uniform_real_distribution<float> speedDistribute(-1.0f, 1.0f);
+	std::uniform_real_distribution<float_t> speedDistribute(-1.0f, 1.0f);
 	Vector3 direction = { .x = speedDistribute(randomEngine),.y = 0.0f,.z = speedDistribute(randomEngine) };
 
 	//初期化
@@ -413,7 +408,7 @@ void EnemyManager::DeleteEnemy() {
 		//スマートポインタの場合はこれだけで良いよ
 		//勿論こっちもdeleteが無くなってすっきりだね!
 		return enemy->GetIsDeleted();
-		});
+	});
 }
 
 void EnemyManager::StopAudio() {
@@ -426,7 +421,7 @@ void EnemyManager::Warning(){
 	auto minIt = std::min_element(enemyDistancePairs.begin(), enemyDistancePairs.end(),
 		[](const auto& a, const auto& b) {
 			return a.first < b.first;
-		});
+	});
 
 	//最短だった場合を記録
 	if (minIt != enemyDistancePairs.end()) {
@@ -444,7 +439,6 @@ void EnemyManager::Warning(){
 	else {
 		warningSprite_->SetInvisible(true);
 	}
-
 
 	//拡縮
 	warningScaleT_ += SCALE_T_INCREASE_VALUE_;

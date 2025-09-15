@@ -658,7 +658,6 @@ void Elysia::Audio::ChangePitch(const uint32_t& audioHandle, const int32_t& scal
 	assert(SUCCEEDED(hResult));
 }
 
-//Pan振り
 void Elysia::Audio::SetPan(const uint32_t& audioHandle, const float_t& pan) {
 
 	//ファイルキーの取得

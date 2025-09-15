@@ -232,7 +232,8 @@ private:
 	const float_t MAX_SCALE_T_ = 1.0f;
 	//最小値
 	const float_t MIN_SCALE_T_ = 0.0f;
-
+	//最大音量
+	const float_t MAX_VOLUME_ = 1.0f;
 private:
 	/// <summary>
 	/// 最短の情報
