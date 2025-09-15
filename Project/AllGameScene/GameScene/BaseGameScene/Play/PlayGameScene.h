@@ -80,12 +80,6 @@ private:
 	/// 墓場の処理
 	/// </summary>
 	void CemeteryProcess();
-
-	/// <summary>
-	/// ポルターガイストの処理
-	/// </summary>
-	void PoltergeistProcess();
-
 	/// <summary>
 	/// ImGui表示用
 	/// </summary>
@@ -118,7 +112,6 @@ private:
 	std::string gateRightString_ = "GateDoorRight";
 	std::string gateLeftString_ = "GateDoorLeft";
 
-	
 	
 	//回転の値
 	const float_t ROTATE_THETA_VALUE_ = 0.1f;
@@ -169,8 +162,11 @@ private:
 	std::unique_ptr<Elysia::Sprite> toEscapeSprite_ = nullptr;
 	//アシストの矢印
 	std::unique_ptr<EscapeAssistArrow> escapeAssistArrow_ = nullptr;
+
 	//ドア
 	std::unique_ptr<Door>door_ = nullptr;
+	//ポルターガイスト
+	std::unique_ptr<PoltergeistBone>poltergeistBone_ = nullptr;
 	//ゲート
 	std::unique_ptr<Gate> gate_ = nullptr;
 	//脱出成功かどうか
@@ -185,8 +181,6 @@ private:
 	//一回だけ鳴らす
 	bool isPlayCloseSE_ = false;
 	
-	//骨のポルターガイスト
-	std::unique_ptr<PoltergeistBone> poltergeistBone_ = nullptr;
 
 	//ビネットの変化時間
 	float_t vignetteChangeTime_ = 0.0f;

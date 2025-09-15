@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * @file GameManager.h
+ * @file Door.h
  * @brief ドア(レベルエディタ)の処理用クラス
  * @author 茂木翼
  */
@@ -91,22 +91,45 @@ private:
 	Player* player_ = nullptr;
 
 private:
+	//ドア
+	const std::string DOOR_STRING_ = "Door";
+	//ドアのコリジョン
+	const std::string DOOR_COLLISION_STRING_ = "DoorCollision";
+
+	//スプライトの初期座標
+	const Vector2 INITIAL_POSITION = { .x = 0.0f,.y = 0.0f };
+	//コリジョンを下げた時の座標
+	const Vector3 noCollisionPosition_ = { .x = 0.0f,.y = -10.0f,.z = 0.0f };
+
 	//線形補間の最小値
 	const float_t MIN_T_VALUE_ = 0.0f;
 	//線形補間の最大値
 	const float_t MAX_T_VALUE_ = 1.0f;
 	//回転
 	const float_t ROTATE_VALUE_ = 0.01f;
+
+	//開けることができる最大の距離
+	const float_t MAX_DISTANCE_ = 6.0f;
+
 private:
 	//開ける
 	std::unique_ptr<Elysia::Sprite>openSptrite_ = nullptr;
 
+
 	//初期回転
 	float_t initialRotateY_ = {};
 	//最大回転
-	float_t maxDoorRotateY_ = {};
-	float_t doorRotateY_ = {};
-	bool isDoorOpen_ = false;
+	float_t maxRotateY_ = {};
+	//Y軸の回転
+	float_t rotateY_ = {};
+	//開いたかどうか
+	bool isOpen_ = false;
+	//線形補間の値
 	float_t rotateT_ = 0.0f;
-	float_t doorLength = 0.0f;
+	//距離
+	float_t distance_ = 0.0f;
+
+	//開ける音
+	uint32_t openSEHandle_ = 0u;
+
 };

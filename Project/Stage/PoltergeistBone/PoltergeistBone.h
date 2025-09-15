@@ -50,7 +50,6 @@ public:
 	/// </summary>
 	void Update();
 
-	/// <summary>
 	/// デストラクタ
 	/// </summary>
 	~PoltergeistBone() = default;
@@ -93,6 +92,7 @@ private:
 	Player* player_ = nullptr;
 
 private:
+
 	//浮遊の高さ
 	const float_t FLOATING_HEIGHT_ = 4.0f;
 	//浮遊時間
@@ -169,4 +169,3 @@ private:
 	//処理が終わったか
 	bool isProcessEnd_ = false;
 };
-

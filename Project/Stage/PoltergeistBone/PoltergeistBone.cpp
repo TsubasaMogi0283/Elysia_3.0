@@ -1,5 +1,4 @@
 #include "PoltergeistBone.h"
-
 #include <LevelDataManager.h>
 #include <Audio.h>
 #include <ModelManager.h>
@@ -7,24 +6,28 @@
 #include <SingleCalculation.h>
 #include <imgui.h>
 #include <Player/Player.h>
+#include <Key/KeyManager.h>
 
 PoltergeistBone::PoltergeistBone(){
-	//レベルエディタ管理クラス
+	//インスタンスの取得
+	//レベルデータ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
+	//モデル管理クラス
+	modelManager_ = Elysia::ModelManager::GetInstance();
 	//オーディオ
 	audio_ = Elysia::Audio::GetInstance();
+	
 }
 
 
 void PoltergeistBone::Initialize() {
-	//欠片のモデルハンドル
-	bonePieceParticleHandle_ = Elysia::ModelManager::GetInstance()->Load("Resources/Model/Particle/BonePiece", "BonePiece.obj");
+	bonePieceParticleHandle_ = modelManager_->Load("Resources/Model/Particle/BonePiece", "BonePiece.obj");
+
 	//骨の初期座標を取得
 	bonePosition_ = levelDataManager_->GetInitialTranslate(levelDataHandle_, boneString_);
 	//マテリアルの初期化
 	bonePieceMaterial_.Initialize();
 	bonePieceMaterial_.lightingKinds = LightingType::SpotLighting;
-
 
 	//骨が壊れる音
 	boneBreakAudioHandle_ = audio_->Load("Resources/Audio/Action/BoneBreak.mp3");
@@ -34,8 +37,6 @@ void PoltergeistBone::Initialize() {
 
 
 void PoltergeistBone::Update() {
-	
-
 	//上昇
 	if (isBoneRise_ == true) {
 		//警告音再生
@@ -193,6 +194,4 @@ void PoltergeistBone::Update() {
 	ImGui::InputFloat3("落下前の座標", &beforeBoneDropPosition_.x);
 	ImGui::End();
 #endif // _DEBUG
-
-
 }

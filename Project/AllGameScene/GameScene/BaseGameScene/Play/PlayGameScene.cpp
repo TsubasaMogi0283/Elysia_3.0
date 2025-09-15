@@ -111,11 +111,12 @@ void PlayGameScene::Update(GameScene* gameScene){
 	//フレーム初めに
 	//コリジョンリストのクリア
 	collisionManager_->ClearList();
-	
 	//ゲートの更新
 	gate_->Update();
 	//ドアの更新
 	door_->Update();
+	//ポルターガイストの更新
+	poltergeistBone_->Update();
 	//コントロール可能にする
 	player_->SetIsAbleToControll(true);
 	//プレイヤーの移動
@@ -135,11 +136,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 	}
 	//アシスト用の矢印の更新
 	escapeAssistArrow_->Update();
-
 	//オブジェクトの当たり判定
 	CemeteryProcess();
-	//ポルターガイストの処理
-	PoltergeistProcess();
 	//コリジョン管理クラスに登録
 	RegisterToCollisionManager();
 
@@ -666,7 +664,6 @@ void PlayGameScene::PoltergeistProcess(){
 void PlayGameScene::DisplayImGui(){
 
 	ImGui::Begin("プレイ(ゲーム)");
-	
 	ImGui::SliderFloat3("座標", &fenceTranslate_.x, 0.0f, 100.0f);
 	ImGui::SliderFloat("右門の回転", &rightGateRotateTheta_, 0.0f, 3.0f);
 	ImGui::InputFloat("線形補間", &openT_);
