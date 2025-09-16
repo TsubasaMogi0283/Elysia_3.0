@@ -194,7 +194,6 @@ private:
 	const float_t FADE_OUT_INTERVAL_ = 0.01f;
 	//負けシーンに遷移するときの値
 	const float_t CHANGE_TO_LOSE_SCENE_VALUE_ = 2.0f;
-
 	//完全に透明になる値
 	const float_t PERFECT_TRANSPARENT_ = 0.0f;
 	//ビネットの最大値
