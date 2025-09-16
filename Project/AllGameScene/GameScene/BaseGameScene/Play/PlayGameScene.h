@@ -16,6 +16,7 @@
 #include <EscapeAssistArrow/EscapeAssistArrow.h>
 #include <Stage/Door/Door.h>
 #include <Stage/PoltergeistBone/PoltergeistBone.h>
+#include <Stage/SurpriseEye/SurpriseEye.h>
 
 /// <summary>
 /// プレイ(本編)
@@ -162,9 +163,10 @@ private:
 	std::unique_ptr<Elysia::Sprite> toEscapeSprite_ = nullptr;
 	//アシストの矢印
 	std::unique_ptr<EscapeAssistArrow> escapeAssistArrow_ = nullptr;
-
 	//ドア
 	std::unique_ptr<Door>door_ = nullptr;
+	//目(びっくり要素)
+	std::unique_ptr<SurpriseEye>surpriseEye_ = nullptr;
 	//ポルターガイスト
 	std::unique_ptr<PoltergeistBone>poltergeistBone_ = nullptr;
 	//ゲート

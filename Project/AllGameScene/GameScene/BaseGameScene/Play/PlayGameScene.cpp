@@ -98,6 +98,10 @@ void PlayGameScene::Initialize(){
 	//初期化
 	gate_->Initialize(gateModelhandle);
 	
+	//目
+	surpriseEye_ = std::make_unique<SurpriseEye>();
+	surpriseEye_->Initialize();
+
 	//門を開ける音
 	openGateAudioHandle_ = Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/OpenGate.mp3");
 	//墓地が閉まる音
@@ -121,6 +125,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 	gate_->Update();
 	//ドアの更新
 	door_->Update();
+	//目の更新
+	surpriseEye_->Update();
 	//コントロール可能にする
 	player_->SetIsAbleToControll(true);
 	//プレイヤーの移動
@@ -268,6 +274,8 @@ void PlayGameScene::DrawSprite(){
 	}
 	//敵管理クラス
 	enemyManager_->DrawSprite();
+	//目の描画
+	surpriseEye_->DrawSprite();
 	//白フェード
 	whiteFadeSprite_->Draw();
 	//黒フェード
@@ -662,7 +670,6 @@ void PlayGameScene::CemeteryProcess(){
 
 
 }
-
 
 void PlayGameScene::DisplayImGui(){
 
