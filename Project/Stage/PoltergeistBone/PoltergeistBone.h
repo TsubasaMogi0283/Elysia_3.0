@@ -35,6 +35,16 @@ namespace Elysia {
 class Player;
 
 /// <summary>
+/// カメラ
+/// </summary>
+struct Camera;
+
+/// <summary>
+/// スポットライト
+/// </summary>
+struct SpotLight;
+
+/// <summary>
 /// 骨のポルターガイスト
 /// </summary>
 class PoltergeistBone{
@@ -53,6 +63,13 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="camera">カメラ</param>
+	/// <param name="spotlight">スポットライト</param>
+	void Draw(const Camera& camera, const SpotLight& spotlight);
 
 	/// デストラクタ
 	/// </summary>

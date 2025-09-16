@@ -247,6 +247,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 void PlayGameScene::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
 	//アシスト用の矢印
 	escapeAssistArrow_->Draw(camera, spotLight);
+	//ポルターガイスト(破片)
+	poltergeistBone_->Draw(camera, spotLight);
 }
 
 void PlayGameScene::DrawSprite(){

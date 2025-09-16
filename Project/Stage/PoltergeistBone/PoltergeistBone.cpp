@@ -193,6 +193,8 @@ void PoltergeistBone::Update() {
 	levelDataManager_->SetRotate(levelDataHandle_, boneString_, { .x = floatingTheta_,.y = floatingTheta_,.z = floatingTheta_ });
 	//座標の変更
 	levelDataManager_->SetTranslate(levelDataHandle_, boneString_, bonePosition_);
+	//パーティクルのマテリアルを更新
+	bonePieceMaterial_.Update();
 
 #ifdef _DEBUG
 	ImGui::Begin("ポルターガイスト(骨)");
@@ -203,4 +205,12 @@ void PoltergeistBone::Update() {
 	ImGui::End();
 #endif // _DEBUG
 
+}
+
+void PoltergeistBone::Draw(const Camera& camera, const SpotLight& spotlight) {
+	//破片のパーティクル
+	if(bonePieceParticle_ != nullptr) {
+		bonePieceParticle_->Draw(camera, bonePieceMaterial_, spotlight);
+	}
+	
 }
