@@ -111,11 +111,8 @@ void PlayGameScene::Initialize(){
 	
 #ifdef _DEBUG
 	//このシーンから始めた時に聞こえなかったので値をここで設定する
-	enviromentAudioVolume_ = 1.0f;
+	enviromentAudioVolume_ = 0.8f;
 #endif // _DEBUG
-
-
-
 }
 
 void PlayGameScene::Update(GameScene* gameScene){
@@ -183,10 +180,10 @@ void PlayGameScene::Update(GameScene* gameScene){
 		if (enviromentAudioVolume_ <= MIN_VOLUME_) {
 			enviromentAudioVolume_ = MIN_VOLUME_;
 		}
-		gameScene->SetEnviromentAudioVolume(enviromentAudioVolume_);
+		
 
 		//処理終了にし負け
-		if (fadeTransparency_ >= PERFECT_NONE_TRANSPARENT_ && enviromentAudioVolume_ <= MIN_VOLUME_) {
+		if (fadeTransparency_ >= PERFECT_NONE_TRANSPARENT_) {
 			gameScene->SetIsEnd();
 			gameScene->SetIsLose();
 			return;
@@ -229,11 +226,9 @@ void PlayGameScene::Update(GameScene* gameScene){
 		if (enviromentAudioVolume_ <= MIN_VOLUME_) {
 			enviromentAudioVolume_ = MIN_VOLUME_;
 		}
-		gameScene->SetEnviromentAudioVolume(enviromentAudioVolume_);
-
 
 		//処理終了にし勝ち
-		if (openT_ >= PERFECT_NONE_TRANSPARENT_ && enviromentAudioVolume_ <= MIN_VOLUME_) {
+		if (openT_ >= PERFECT_NONE_TRANSPARENT_) {
 			gameScene->SetIsEnd();
 			gameScene->SetIsWin();
 			return;
@@ -241,6 +236,9 @@ void PlayGameScene::Update(GameScene* gameScene){
 		
 	}
 	
+	//環境音の設定
+	gameScene->SetEnviromentAudioVolume(enviromentAudioVolume_);
+
 	//当たり判定チェック
 	collisionManager_->CheckAllCollision();
 

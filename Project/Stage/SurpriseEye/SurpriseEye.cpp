@@ -36,6 +36,13 @@ void SurpriseEye::Initialize() {
 
 	//音の読み込み
 	surpriseSeHandle_ = audio_->Load("Resources/Audio/SE/SuprisedEye.wav");
+
+#ifdef _DEBUG
+	//本当にびっくりしたのでデバッグ時は薄くする
+	eye_->SetTransparency(0.1f);
+#endif // _DEBUG
+
+	
 }
 
 void SurpriseEye::Update() {
