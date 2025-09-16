@@ -100,6 +100,8 @@ void PlayGameScene::Initialize(){
 	
 	//目
 	surpriseEye_ = std::make_unique<SurpriseEye>();
+	surpriseEye_->SetPlayer(player_);
+	surpriseEye_->SetLevelDataHandle(levelDataHandle_);
 	surpriseEye_->Initialize();
 
 	//門を開ける音
