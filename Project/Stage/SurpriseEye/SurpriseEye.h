@@ -113,7 +113,7 @@ private:
 	//時間変化
 	const float_t DELTA_TIME_ = 1.0f / 60.0f;
 	//最大表示時間
-	const float_t MAX_DISPLAY_TIME_ = 2.0f;
+	const float_t MAX_DISPLAY_TIME_ = 1.0f;
 	//最大距離
 	const float_t DISTANCE_ = 5.0f;
 private:

@@ -211,6 +211,8 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 
 	//処理が終わった時
 	if (isEnd_ == true) {
+		//止める
+		audio_->Stop(enviromentAudioHandle_);
 		//勝ったとき
 		if (isWin_ == true) {
 			gameManager->ChangeScene("Win");
