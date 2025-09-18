@@ -35,6 +35,16 @@ namespace Elysia {
 class Player;
 
 /// <summary>
+/// カメラ
+/// </summary>
+struct Camera;
+
+/// <summary>
+/// スポットライト
+/// </summary>
+struct SpotLight;
+
+/// <summary>
 /// 骨のポルターガイスト
 /// </summary>
 class PoltergeistBone{
@@ -54,6 +64,13 @@ public:
 	/// </summary>
 	void Update();
 
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="camera">カメラ</param>
+	/// <param name="spotlight">スポットライト</param>
+	void Draw(const Camera& camera, const SpotLight& spotlight);
+
 	/// デストラクタ
 	/// </summary>
 	~PoltergeistBone() = default;
@@ -71,7 +88,7 @@ public:
 	/// 動き始める
 	/// </summary>
 	inline void SetStart() {
-		this->isBoneRise_ = true;
+		//this->isBoneRise_ = true;
 	}
 
 	/// <summary>
@@ -101,6 +118,8 @@ private:
 
 	//浮遊の高さ
 	const float_t FLOATING_HEIGHT_ = 4.0f;
+	//浮遊の増える値
+	const float_t FLOATING_AMOUNT_ = 0.05f;
 	//浮遊時間
 	const float_t FLOATING_TIME_ = 3.0f;
 	//落下準備時間
@@ -113,7 +132,6 @@ private:
 	const float_t THROW_UP_VELOCITY_Y_ = 0.3f;
 	//時間変化
 	const float_t DELTA_TIME_ = 1.0f / 60.0f;
-
 	//回転の値
 	const float_t ROTATE_THETA_VALUE_ = 0.1f;
 	//高速回転
@@ -126,9 +144,28 @@ private:
 	const float_t BONE_SPEED_ = 0.01f;
 	//警告音のピッチ用
 	const float_t DELTA_INCREASE_FREAQUENCY_RATION_VALUE_ = 0.005f;
+
 private:
-	//骨が上がる
-	bool isBoneRise_ = false;
+	/// <summary>
+	/// 動きの状態
+	/// </summary>
+	enum PoltergeistBoneMovement {
+		//準備
+		BoneRise,
+		//浮遊
+		BoneFloat,
+		//落下準備
+		BoneReadyForDrop,
+		//落下
+		BoneDrop,
+		//終了
+		BoneProcessEnd,
+	};
+
+private:
+	//動きの状態
+	PoltergeistBoneMovement movementState_ = PoltergeistBoneMovement::BoneRise;
+
 	//骨が上がり切ったかどうか
 	bool isFinishRiseBone_ = false;
 	//浮遊時間
@@ -137,12 +174,8 @@ private:
 	float_t floatingTheta_ = 0.0f;
 	//骨の座標
 	Vector3 bonePosition_ = {};
-	//落下準備
-	bool isReadyForBoneDrop_ = false;
 	//落下準備委時間
 	float_t readyForDropTime_ = 0.0f;
-	//落下
-	bool isBoneDrop_ = false;
 	//落下スピード
 	float_t dropSpeed_ = 0.4f;
 	//プレイヤーの座標ロックオン

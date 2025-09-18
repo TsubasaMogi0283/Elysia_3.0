@@ -556,6 +556,9 @@
     <Filter Include="Project\Object\Bone">
       <UniqueIdentifier>{f148d6ae-e8d4-47cc-8dc6-4b3301d79dd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Object\SurpriseEye">
+      <UniqueIdentifier>{35db72b9-601d-4d19-b18a-ab1b1457793f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project\Player\Player.cpp">
@@ -907,6 +910,9 @@
       <Filter>Project\Object\Door</Filter>
     </ClCompile>
     <ClCompile Include="Project\Stage\PoltergeistBone\PoltergeistBone.cpp">
+      <Filter>Elysia\Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Stage\SurpriseEye\SurpriseEye.cpp">
       <Filter>Elysia\Source File</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1502,6 +1508,9 @@
       <Filter>Project\Object\Door</Filter>
     </ClInclude>
     <ClInclude Include="Project\Stage\PoltergeistBone\PoltergeistBone.h">
+      <Filter>Elysia\Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Stage\SurpriseEye\SurpriseEye.h">
       <Filter>Elysia\Header File</Filter>
     </ClInclude>
   </ItemGroup>

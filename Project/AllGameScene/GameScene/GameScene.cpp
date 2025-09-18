@@ -96,10 +96,7 @@ void GameScene::Initialize() {
 
 	//スタートから始まる
 	detailGameScene_ = std::make_unique<StartGameScene>();
-#ifdef _DEBUG
-	//デバッグ時はプレイシーンから始める
-	detailGameScene_ = std::make_unique<PlayGameScene>();
-#endif // _DEBUG
+
 	//レベルデータハンドルの設定
 	detailGameScene_->SetLevelDataHandle(levelHandle_);
 	//各ゲームオブジェクトのポインタを設定
@@ -214,6 +211,8 @@ void GameScene::Update(Elysia::GameManager* gameManager) {
 
 	//処理が終わった時
 	if (isEnd_ == true) {
+		//止める
+		audio_->Stop(enviromentAudioHandle_);
 		//勝ったとき
 		if (isWin_ == true) {
 			gameManager->ChangeScene("Win");

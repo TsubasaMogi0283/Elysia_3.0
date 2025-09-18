@@ -98,6 +98,12 @@ void PlayGameScene::Initialize(){
 	//初期化
 	gate_->Initialize(gateModelhandle);
 	
+	//目
+	surpriseEye_ = std::make_unique<SurpriseEye>();
+	surpriseEye_->SetPlayer(player_);
+	surpriseEye_->SetLevelDataHandle(levelDataHandle_);
+	surpriseEye_->Initialize();
+
 	//門を開ける音
 	openGateAudioHandle_ = Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/OpenGate.mp3");
 	//墓地が閉まる音
@@ -105,11 +111,8 @@ void PlayGameScene::Initialize(){
 	
 #ifdef _DEBUG
 	//このシーンから始めた時に聞こえなかったので値をここで設定する
-	enviromentAudioVolume_ = 1.0f;
+	enviromentAudioVolume_ = 0.8f;
 #endif // _DEBUG
-
-
-
 }
 
 void PlayGameScene::Update(GameScene* gameScene){
@@ -121,6 +124,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 	gate_->Update();
 	//ドアの更新
 	door_->Update();
+	//目の更新
+	surpriseEye_->Update();
 	//コントロール可能にする
 	player_->SetIsAbleToControll(true);
 	//プレイヤーの移動
@@ -175,10 +180,10 @@ void PlayGameScene::Update(GameScene* gameScene){
 		if (enviromentAudioVolume_ <= MIN_VOLUME_) {
 			enviromentAudioVolume_ = MIN_VOLUME_;
 		}
-		gameScene->SetEnviromentAudioVolume(enviromentAudioVolume_);
+		
 
 		//処理終了にし負け
-		if (fadeTransparency_ >= PERFECT_NONE_TRANSPARENT_ && enviromentAudioVolume_ <= MIN_VOLUME_) {
+		if (fadeTransparency_ >= PERFECT_NONE_TRANSPARENT_) {
 			gameScene->SetIsEnd();
 			gameScene->SetIsLose();
 			return;
@@ -221,11 +226,9 @@ void PlayGameScene::Update(GameScene* gameScene){
 		if (enviromentAudioVolume_ <= MIN_VOLUME_) {
 			enviromentAudioVolume_ = MIN_VOLUME_;
 		}
-		gameScene->SetEnviromentAudioVolume(enviromentAudioVolume_);
-
 
 		//処理終了にし勝ち
-		if (openT_ >= PERFECT_NONE_TRANSPARENT_ && enviromentAudioVolume_ <= MIN_VOLUME_) {
+		if (openT_ >= PERFECT_NONE_TRANSPARENT_) {
 			gameScene->SetIsEnd();
 			gameScene->SetIsWin();
 			return;
@@ -233,6 +236,9 @@ void PlayGameScene::Update(GameScene* gameScene){
 		
 	}
 	
+	//環境音の設定
+	gameScene->SetEnviromentAudioVolume(enviromentAudioVolume_);
+
 	//当たり判定チェック
 	collisionManager_->CheckAllCollision();
 
@@ -247,6 +253,8 @@ void PlayGameScene::Update(GameScene* gameScene){
 void PlayGameScene::DrawObject3D(const Camera& camera, const SpotLight& spotLight){
 	//アシスト用の矢印
 	escapeAssistArrow_->Draw(camera, spotLight);
+	//ポルターガイスト(破片)
+	poltergeistBone_->Draw(camera, spotLight);
 }
 
 void PlayGameScene::DrawSprite(){
@@ -266,6 +274,8 @@ void PlayGameScene::DrawSprite(){
 	}
 	//敵管理クラス
 	enemyManager_->DrawSprite();
+	//目の描画
+	surpriseEye_->DrawSprite();
 	//白フェード
 	whiteFadeSprite_->Draw();
 	//黒フェード
@@ -660,7 +670,6 @@ void PlayGameScene::CemeteryProcess(){
 
 
 }
-
 
 void PlayGameScene::DisplayImGui(){
 
