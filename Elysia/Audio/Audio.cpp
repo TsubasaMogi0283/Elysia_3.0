@@ -709,28 +709,6 @@ void Elysia::Audio::SetPan(const uint32_t& audioHandle, const float_t& pan) {
 	}
 
 
-#pragma region 解説
-	//調べてもよく分からなかったのでChatGPTに聞いた
-	//outputMatrix_[0]: 主にモノラル音声の場合に使用され、すべての音声を単一のスピーカーに送信します。
-	//outputMatrix_[1] : ステレオ音声の場合、左側のスピーカーに対する音声の振幅を指定します。
-	//outputMatrix_[2] : ステレオ音声の場合、右側のスピーカーに対する音声の振幅を指定します。
-	//outputMatrix_[3] : クアッドフォニックスシステムの場合、左前のスピーカーに対する音声の振幅を指定します。
-	//outputMatrix_[4] : クアッドフォニックスシステムの場合、右前のスピーカーに対する音声の振幅を指定します。
-	//outputMatrix_[5] : クアッドフォニックスシステムの場合、左後ろのスピーカーに対する音声の振幅を指定します。
-	//outputMatrix_[6] : クアッドフォニックスシステムの場合、右後ろのスピーカーに対する音声の振幅を指定します。
-	//outputMatrix_[7] : 7.1サラウンドシステムなどのように、サラウンドサウンドをサポートするシステムにおいて、
-	//	追加のサラウンドスピーカーに対する音声の振幅を指定するためのものです。
-	//	通常、これはセンターバックスピーカーに対する音声の振幅を制御するために使用されます。
-
-	//公式嘘ついてる・・
-	//0,1だけだと左しかできないし。
-	//要約するとそれぞれのスピーカーの位置的なやつだと。
-
-	//普通のスピーカーは1,2を使う。L,Rだから2つだね。
-
-#pragma endregion
-
-
 	//詳細の取得
 	XAUDIO2_VOICE_DETAILS voiceDetails;
 	audioInformation_[fileKey].sourceVoice->GetVoiceDetails(&voiceDetails);
