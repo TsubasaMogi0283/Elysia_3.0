@@ -38,10 +38,6 @@ namespace Elysia {
 /// </summary>
 struct Camera;
 
-
-
-
-
 /// <summary>
 /// チャージ段階
 /// </summary>
@@ -198,7 +194,6 @@ public:
 		return flashLightCollision_.get();
 	}
 
-
 private:
 	//グローバル変数クラス
 	Elysia::GlobalVariables* globalVariables_ = nullptr;
@@ -267,14 +262,11 @@ private:
 
 	//ライトの幅
 	float_t ratio_ = 0.0f;
-
 	//角度
 	float_t theta_ = 0.0f;
 	float_t phi_ = 0.0f;
-
 	//扇
 	Fan3D fan3D_ = {};
-
 
 	//チャージ時のパーティクル
 	std::list<std::unique_ptr<Elysia::Particle3D>>chargeParticle_ = {};
@@ -284,7 +276,6 @@ private:
 	bool isGenerate_ = false;
 	float_t readyForGenerateParticleTime_ = 0.0f;
 	
-
 	//チャージのゲージ
 	std::unique_ptr<Elysia::Sprite>chargeGaugeSprite_ = nullptr;
 	//通常のチャージの色
@@ -306,7 +297,6 @@ private:
 
 	//攻撃のホワイトフェード
 	std::unique_ptr<Elysia::Sprite>attackWhiteFadeSprite_ = nullptr;
-
 
 private:
 	//当たり判定

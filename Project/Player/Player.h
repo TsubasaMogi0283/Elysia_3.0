@@ -59,6 +59,12 @@ namespace Elysia {
 	/// レベルデータ管理クラス
 	/// </summary>
 	class LevelDataManager;
+
+	/// <summary>
+	/// オーディオ
+	/// </summary>
+	class Audio;
+
 };
 
 
@@ -338,6 +344,9 @@ private:
 	Elysia::LevelDataManager* levelDataManager_ = nullptr;
 	//ハンドル
 	uint32_t levelHandle_ = 0u;
+	//オーディオ
+	Elysia::Audio* audio_ = nullptr;
+
 
 private:
 	//プレイヤーの最大体力
@@ -395,10 +404,10 @@ private:
 	bool isAcceptDamegeFromNoemalEnemy_ = false;
 	//骨に当たったかどうか
 	bool isBoneTouch_ = false;
-
-	//時間
+	//振動時間
 	float_t vibeTime_ = 0u;
-
+	//ダメージの効果音
+	uint32_t damagedSEHanle_ = 0u;
 
 private:
 	//UI

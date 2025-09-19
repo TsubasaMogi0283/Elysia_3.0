@@ -330,10 +330,6 @@ namespace Elysia {
 		/// <param name="channelNumber"></param>
 		void SendChannels(const uint32_t& audioHandle, const uint32_t& channelNumber);
 
-		//リバーブ
-		//まだ未完成だから使わないでね
-		void CreateReverb(const uint32_t& audioHandle, const uint32_t& channel);
-
 		/// <summary>
 		/// エフェクトの効果を無効にする
 		/// </summary>

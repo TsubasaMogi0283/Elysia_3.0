@@ -183,14 +183,16 @@ private:
 	//一回だけ鳴らす
 	bool isPlayCloseSE_ = false;
 	
-
 	//ビネットの変化時間
 	float_t vignetteChangeTime_ = 0.0f;
 	//警告の時間
 	float_t warningTime_ = 0.0f;
-
 	//環境音の音量
 	float_t enviromentAudioVolume_ = 0u;
 
-
+	//懐中電灯
+	//チャージ
+	uint32_t chargeSEHandle_ = 0u;
+	//攻撃
+	uint32_t attackSEHandle_ = 0u;
 };
