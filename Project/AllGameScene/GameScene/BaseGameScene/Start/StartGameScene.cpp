@@ -38,9 +38,6 @@ void StartGameScene::Update(GameScene* gameScene){
 
 	//環境音の音量の設定
 	enviromentAudioVolume_+=VOLUME_INCREASE_VALUE_;
-	if (enviromentAudioVolume_ >= MAX_VOLUME_) {
-		enviromentAudioVolume_ = MAX_VOLUME_;
-	}
 	gameScene->SetEnviromentAudioVolume(enviromentAudioVolume_);
 
 	//透明度の設定
@@ -48,9 +45,9 @@ void StartGameScene::Update(GameScene* gameScene){
 	fadeTransparency_ -= FADE_VALUE_;
 	blackFadeSprite_->SetTransparency(fadeTransparency_);
 
-	//完全に透明になったらゲームが始まる
-	if (fadeTransparency_ < PERFECT_TRANSPARENT_) {
-		fadeTransparency_ = PERFECT_TRANSPARENT_;
+	if (enviromentAudioVolume_ >= MAX_VOLUME_&& fadeTransparency_<=0.0f) {
+		fadeTransparency_ = MIN_VOLUME_;
+		enviromentAudioVolume_ = MAX_VOLUME_;
 		//説明シーンへ
 		gameScene->ChangeDetailScene(std::make_unique<ExplanationGameScene>());
 		return;
@@ -69,6 +66,7 @@ void StartGameScene::DrawSprite(){
 
 void StartGameScene::DisplayImGui(){
 	ImGui::Begin("開始(ゲーム)");
+	ImGui::InputFloat("環境音の音量", &enviromentAudioVolume_);
 	ImGui::InputFloat("フェードの透明度", &fadeTransparency_);
 	ImGui::End();
 

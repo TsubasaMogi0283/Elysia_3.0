@@ -85,7 +85,7 @@ struct AudioInformation {
 	uint32_t handle;
 
 	//Pan用
-	float left;
-	float right;
+	float_t left;
+	float_t right;
 
 };

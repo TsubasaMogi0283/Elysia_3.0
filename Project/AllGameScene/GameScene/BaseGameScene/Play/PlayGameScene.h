@@ -122,7 +122,7 @@ private:
 	const float_t GROUND_POSITION_Y = 0.0f;
 
 	//最大音量
-	const float_t MAX_VOLUME_ = 0.6f;
+	const float_t MAX_VOLUME_ = 0.4f;
 	//最小音量
 	const float_t MIN_VOLUME_ = 0.0f;
 	//音量の減る値
@@ -183,14 +183,16 @@ private:
 	//一回だけ鳴らす
 	bool isPlayCloseSE_ = false;
 	
-
 	//ビネットの変化時間
 	float_t vignetteChangeTime_ = 0.0f;
 	//警告の時間
 	float_t warningTime_ = 0.0f;
-
 	//環境音の音量
 	float_t enviromentAudioVolume_ = 0u;
 
-
+	//懐中電灯
+	//チャージ
+	uint32_t chargeSEHandle_ = 0u;
+	//攻撃
+	uint32_t attackSEHandle_ = 0u;
 };

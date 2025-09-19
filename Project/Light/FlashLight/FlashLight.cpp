@@ -286,14 +286,17 @@ void FlashLight::Charge() {
 			//攻撃できない
 			isAbleToAttack_ = false;
 		}
+
 	}
 	else {
+		//チャージ中
 		for (const std::unique_ptr <Elysia::Particle3D>& particle : chargeParticle_) {
 			if (particle != nullptr) {
 				//スポットライトの座標に集まってくるようにする
 				particle->SetIsStopGenerate(true);
 			}
 		}
+
 		isGenerate_ = false;
 	}
 

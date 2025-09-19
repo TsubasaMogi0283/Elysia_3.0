@@ -22,6 +22,8 @@ PlayGameScene::PlayGameScene(){
 	input_ = Elysia::Input::GetInstance();
 	//レベルエディタ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 
@@ -105,14 +107,17 @@ void PlayGameScene::Initialize(){
 	surpriseEye_->Initialize();
 
 	//門を開ける音
-	openGateAudioHandle_ = Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/OpenGate.mp3");
+	openGateAudioHandle_ = audio_->Load("Resources/Audio/Action/OpenGate.mp3");
 	//墓地が閉まる音
-	closeGateAudioHandle_= Elysia::Audio::GetInstance()->Load("Resources/Audio/Action/CloseGate.mp3");
-	
-#ifdef _DEBUG
-	//このシーンから始めた時に聞こえなかったので値をここで設定する
-	enviromentAudioVolume_ = 0.8f;
-#endif // _DEBUG
+	closeGateAudioHandle_= audio_->Load("Resources/Audio/Action/CloseGate.mp3");
+	//チャージ
+	chargeSEHandle_ = audio_->Load("Resources/Audio/Action/ChargeSE.wav");
+	//攻撃
+	attackSEHandle_ = audio_->Load("Resources/Audio/Action/Onoma-Flash12-1(Dry).mp3");
+
+	//環境音の音量設定
+	enviromentAudioVolume_ = MAX_VOLUME_;
+
 }
 
 void PlayGameScene::Update(GameScene* gameScene){
@@ -506,9 +511,13 @@ void PlayGameScene::PlayerMove(){
 	//エンターキーまたはXボタンでチャージ開始
 	if (input_->IsPushKey(DIK_RETURN) == true || input_->IsPushButton(XINPUT_GAMEPAD_RIGHT_SHOULDER) == true) {
 		isCharge = true;
+		//チャージ音再生
+		audio_->Play(chargeSEHandle_, true);
 	}
 	else {
 		isCharge = false;
+		//停止
+		audio_->Stop(chargeSEHandle_);
 	}
 
 	//チャージ状態を設定
@@ -520,10 +529,13 @@ void PlayGameScene::PlayerMove(){
 		//クールタイムにする
 		player_->GetFlashLight()->SetIsCoolTime(true);
 		//カメラの振動
-		//攻撃できる時だけにする。その方が迫力が出るよね。
+		//攻撃できる時だけにする。
 		if (player_->GetFlashLight()->GetChargeCondition() >= ChargeCondition::NormalChargeAttack) {
 			player_->GetEyeCamera()->SetIsShake(true);
 		}
+
+		//攻撃音再生
+		audio_->Play(attackSEHandle_, false);
 	}
 	else {
 		isReleaseAttack_ = false;

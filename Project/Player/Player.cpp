@@ -13,7 +13,6 @@
 #include "PushBackCalculation.h"
 
 Player::Player(){
-
 	//インスタンスの取得
 	//入力クラス
 	input_ = Elysia::Input::GetInstance();
@@ -23,6 +22,8 @@ Player::Player(){
 	textureManager_ = Elysia::TextureManager::GetInstance();
 	//レベルエディタ管理クラス
 	levelDataManager_ = Elysia::LevelDataManager::GetInstance();
+	//オーディオ
+	audio_ = Elysia::Audio::GetInstance();
 }
 
 void Player::Initialize(){
@@ -69,6 +70,9 @@ void Player::Initialize(){
 	//フレームを生成
 	playerHPBackFrameSprite_.reset(Elysia::Sprite::Create(playerHPBackFrameTextureHandle, FRAME_INITIAL_POSITION));
 
+	//ダメージの効果音
+	damagedSEHanle_ = audio_->Load("Resources/Audio/Action/DamagedSE.wav");
+
 }
 
 void Player::Update(){
@@ -87,7 +91,6 @@ void Player::Update(){
 	worldTransform_.translate = playerCenterPosition_;
 	worldTransform_.translate.y = HEIGHT_;
 	worldTransform_.Update();
-
 
 	//AABBの計算
 	aabb_.min = VectorCalculation::Subtract(worldTransform_.GetWorldPosition(), { SIDE_SIZE ,SIDE_SIZE ,SIDE_SIZE });
@@ -185,15 +188,17 @@ void Player::Damaged() {
 		isControll_ = false;
 		//線形補間で振動処理をする
 		vibeTime_ += DELTA_TIME;
-		
 		//線形補間を使い振動を減衰させる
 		//振動の強さ
-		float_t vibeStrength_ =  SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
+		float_t vibeStrength =  SingleCalculation::Lerp(MAX_VIBE_, MIN_VIBE_, vibeTime_);
 		//振動の設定
-		input_->SetVibration(vibeStrength_, vibeStrength_);
+		input_->SetVibration(vibeStrength, vibeStrength);
+
+		//ダメージの効果音を流す
+		audio_->Play(damagedSEHanle_, false);
 
 		//振動を止める
-		if (vibeStrength_ <= MIN_VIBE_) {
+		if (vibeStrength <= MIN_VIBE_) {
 			//振動が止まる
 			input_->StopVibration();
 			//時間を戻す
