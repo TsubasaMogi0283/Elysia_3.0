@@ -115,10 +115,9 @@ void PlayGameScene::Initialize(){
 	//攻撃
 	attackSEHandle_ = audio_->Load("Resources/Audio/Action/Onoma-Flash12-1(Dry).mp3");
 
-#ifdef _DEBUG
-	//このシーンから始めた時に聞こえなかったので値をここで設定する
-	enviromentAudioVolume_ = 0.6f;
-#endif // _DEBUG
+	//環境音の音量設定
+	enviromentAudioVolume_ = MAX_VOLUME_;
+
 }
 
 void PlayGameScene::Update(GameScene* gameScene){

@@ -122,7 +122,7 @@ private:
 	const float_t GROUND_POSITION_Y = 0.0f;
 
 	//最大音量
-	const float_t MAX_VOLUME_ = 0.6f;
+	const float_t MAX_VOLUME_ = 0.4f;
 	//最小音量
 	const float_t MIN_VOLUME_ = 0.0f;
 	//音量の減る値
