@@ -910,10 +910,10 @@
       <Filter>Project\Object\Door</Filter>
     </ClCompile>
     <ClCompile Include="Project\Stage\PoltergeistBone\PoltergeistBone.cpp">
-      <Filter>Elysia\Source File</Filter>
+      <Filter>Project\Object\PoltergeistBone</Filter>
     </ClCompile>
     <ClCompile Include="Project\Stage\SurpriseEye\SurpriseEye.cpp">
-      <Filter>Elysia\Source File</Filter>
+      <Filter>Project\Object\SurpriseEye</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1508,10 +1508,10 @@
       <Filter>Project\Object\Door</Filter>
     </ClInclude>
     <ClInclude Include="Project\Stage\PoltergeistBone\PoltergeistBone.h">
-      <Filter>Elysia\Header File</Filter>
+      <Filter>Project\Object\PoltergeistBone</Filter>
     </ClInclude>
     <ClInclude Include="Project\Stage\SurpriseEye\SurpriseEye.h">
-      <Filter>Elysia\Header File</Filter>
+      <Filter>Project\Object\SurpriseEye</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
