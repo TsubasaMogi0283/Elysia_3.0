@@ -44,8 +44,8 @@ void Elysia::Audio::Initialize() {
 
 
 	//一度全部0に初期化
-	for (int i = 0; i < 8; i++) {
-		outputMatrix_[i] = 0;
+	for (int32_t i = 0; i < 8; i++) {
+		outputMatrix_[i] = 0.0f;
 	}
 
 	//サブミックスボイス(DTMでのバス)をここで作る
@@ -54,8 +54,9 @@ void Elysia::Audio::Initialize() {
 	}
 
 	//聞き手
-	emitter_.ChannelCount = 1;
-	emitter_.CurveDistanceScaler = emitter_.DopplerScaler = 1.0f;
+	emitter_.ChannelCount = 1u;
+	emitter_.CurveDistanceScaler = 1.0f;
+	emitter_.DopplerScaler = 1.0f;
 }
 
 
@@ -98,16 +99,17 @@ uint32_t Elysia::Audio::Load(const std::string& fileName) {
 }
 //読み込み
 uint32_t Elysia::Audio::LoadWave(const std::string& fileName) {
-
 	//一度読み込んだものは２度読み込まず返すだけ
 	if (Elysia::Audio::GetInstance()->audioInformation_.find(fileName) != Elysia::Audio::GetInstance()->audioInformation_.end()) {
 		return Elysia::Audio::GetInstance()->audioInformation_[fileName].handle;
 	}
 
+
 	//indexを取得
 	uint32_t handle = index_;
 	//加算
 	++index_;
+
 
 #pragma region １,ファイルオープン
 	//ファイル入力ストリームのインスタンス
@@ -147,6 +149,7 @@ uint32_t Elysia::Audio::LoadWave(const std::string& fileName) {
 	assert(format.chunk.size <= sizeof(format.fmt));
 	file.read((char*)&format.fmt, format.chunk.size);
 
+
 	//Dataチャンクの読み込み
 	ChunkHeader data;
 	file.read((char*)&data, sizeof(data));
@@ -173,8 +176,6 @@ uint32_t Elysia::Audio::LoadWave(const std::string& fileName) {
 	file.close();
 
 #pragma endregion
-
-
 #pragma region 読み込んだ音声データを返す
 
 	//波形フォーマットを基にSourceVoiceの生成
@@ -184,6 +185,7 @@ uint32_t Elysia::Audio::LoadWave(const std::string& fileName) {
 	assert(SUCCEEDED(hResult));
 
 	SoundData newSoundData = {
+
 		.wfex = format.fmt,
 		.pBuffer = reinterpret_cast<BYTE*>(pBuffer),
 		.bufferSize = data.size,
@@ -195,13 +197,12 @@ uint32_t Elysia::Audio::LoadWave(const std::string& fileName) {
 	Elysia::Audio::GetInstance()->audioInformation_[fileName].soundData = newSoundData;
 	Elysia::Audio::GetInstance()->audioInformation_[fileName].extension = "wave";
 
-	//ハンドルを返す
+	//handleを返す
 	return handle;
 
 #pragma endregion
 
 }
-
 
 uint32_t Elysia::Audio::LoadMP3(const std::string& fileName) {
 
@@ -235,8 +236,6 @@ uint32_t Elysia::Audio::LoadMP3(const std::string& fileName) {
 	HRESULT hResult = MFCreateSourceReaderFromURL(lpcWString, nullptr, &Elysia::Audio::GetInstance()->audioInformation_[fileName].sourceReader);
 	assert(SUCCEEDED(hResult));
 
-
-
 	//メディアタイプの取得
 	IMFMediaType* pMFMediaType{ nullptr };
 	MFCreateMediaType(&pMFMediaType);
@@ -251,8 +250,6 @@ uint32_t Elysia::Audio::LoadMP3(const std::string& fileName) {
 	//オーディオデータ形式の作成
 	WAVEFORMATEX* waveFormat{};
 	MFCreateWaveFormatExFromMFMediaType(pMFMediaType, &waveFormat, nullptr);
-
-
 
 	while (true)
 	{
@@ -302,6 +299,9 @@ void Elysia::Audio::Play(const uint32_t& audioHandle, const bool& isLoop) {
 void Elysia::Audio::Play(const uint32_t& audioHandle, const uint32_t& loopCount) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
+	//また再生するときに最初から再生されるように一旦止める
+	HRESULT hResult = audioInformation_[fileKey].sourceVoice->Stop();
+	assert(SUCCEEDED(hResult));
 
 	if (audioInformation_[fileKey].extension == "wave") {
 		PlayWave(audioHandle, loopCount);
@@ -311,6 +311,7 @@ void Elysia::Audio::Play(const uint32_t& audioHandle, const uint32_t& loopCount)
 	}
 
 }
+
 
 void Elysia::Audio::PlayMP3(const uint32_t& audioHandle, const bool& isLoop) {
 	//ファイルキーの取得
@@ -344,7 +345,12 @@ void Elysia::Audio::PlayMP3(const uint32_t& audioHandle, const bool& isLoop) {
 void Elysia::Audio::PlayMP3(const uint32_t& audioHandle, const uint32_t& loopCount) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
-	HRESULT hResult = audioInformation_[fileKey].sourceVoice->FlushSourceBuffers();
+
+	//同じものが再生されていたら一旦止める
+	HRESULT hResult = audioInformation_[fileKey].sourceVoice->Stop();
+	assert(SUCCEEDED(hResult));
+
+	hResult = audioInformation_[fileKey].sourceVoice->FlushSourceBuffers();
 	assert(SUCCEEDED(hResult));
 
 	//bufferの設定
@@ -355,7 +361,7 @@ void Elysia::Audio::PlayMP3(const uint32_t& audioHandle, const uint32_t& loopCou
 	//ここでループ回数を設定
 	//1回多くなっているので-1してあげた方が良いかも
 	//1でfalseの場合と同じ
-	buffer.LoopCount = loopCount - 1;
+	buffer.LoopCount = loopCount - 1u;
 
 	hResult = Elysia::Audio::GetInstance()->audioInformation_[fileKey].sourceVoice->SubmitSourceBuffer(&buffer);
 	assert(SUCCEEDED(hResult));
@@ -369,8 +375,12 @@ void Elysia::Audio::PlayWave(const uint32_t& audioHandle, const bool& isLoop) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
-	HRESULT hr = audioInformation_[fileKey].sourceVoice->FlushSourceBuffers();
-	assert(SUCCEEDED(hr));
+	//同じものが再生されていたら一旦止める
+	HRESULT hResult = audioInformation_[fileKey].sourceVoice->Stop();
+	assert(SUCCEEDED(hResult));
+
+	hResult = audioInformation_[fileKey].sourceVoice->FlushSourceBuffers();
+	assert(SUCCEEDED(hResult));
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buffer{};
 	buffer.pAudioData = audioInformation_[fileKey].soundData.pBuffer;
@@ -384,13 +394,13 @@ void Elysia::Audio::PlayWave(const uint32_t& audioHandle, const bool& isLoop) {
 		buffer.LoopCount = XAUDIO2_NO_LOOP_REGION;
 	}
 
-	//Buffer登録
-	hr = audioInformation_[fileKey].sourceVoice->SubmitSourceBuffer(&buffer);
-	assert(SUCCEEDED(hr));
-	//波形データの再生
-	hr = audioInformation_[fileKey].sourceVoice->Start();
 
-	assert(SUCCEEDED(hr));
+	//Buffer登録
+	hResult = audioInformation_[fileKey].sourceVoice->SubmitSourceBuffer(&buffer);
+	assert(SUCCEEDED(hResult));
+	//波形データの再生
+	hResult = audioInformation_[fileKey].sourceVoice->Start();
+	assert(SUCCEEDED(hResult));
 }
 
 //ループ回数設定版
@@ -398,6 +408,9 @@ void Elysia::Audio::PlayWave(const uint32_t& audioHandle, const uint32_t& loopCo
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
+	//同じものが再生されていたら一旦止める
+	HRESULT hResult = audioInformation_[fileKey].sourceVoice->Stop();
+	assert(SUCCEEDED(hResult));
 
 	//再生する波形データの設定
 	XAUDIO2_BUFFER buffer{};
@@ -405,19 +418,15 @@ void Elysia::Audio::PlayWave(const uint32_t& audioHandle, const uint32_t& loopCo
 	buffer.AudioBytes = audioInformation_[fileKey].soundData.bufferSize;
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
 	//ここでループ回数を設定
-	//1回多くなっているので-1してあげた方が良いかも
+	//1回多くなっているので-1してあげた方が良い
 	buffer.LoopCount = loopCount - 1;
 
-
-	HRESULT hr{};
 	//Buffer登録
-	hr = audioInformation_[fileKey].sourceVoice->SubmitSourceBuffer(&buffer);
+	hResult = audioInformation_[fileKey].sourceVoice->SubmitSourceBuffer(&buffer);
+	assert(SUCCEEDED(hResult));
 	//波形データの再生
-	hr = audioInformation_[fileKey].sourceVoice->Start();
-
-
-
-	assert(SUCCEEDED(hr));
+	hResult = audioInformation_[fileKey].sourceVoice->Start();
+	assert(SUCCEEDED(hResult));
 }
 
 void Elysia::Audio::PauseWave(const uint32_t& audioHandle) {
@@ -456,15 +465,12 @@ void Elysia::Audio::ExitLoop(const uint32_t& audioHandle) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 	//ExitLoop関数でループを抜ける
-	HRESULT hr = audioInformation_[fileKey].sourceVoice->ExitLoop();
-	assert(SUCCEEDED(hr));
+	HRESULT hResult = audioInformation_[fileKey].sourceVoice->ExitLoop();
+	assert(SUCCEEDED(hResult));
 }
 
 
 void Elysia::Audio::AfterLoopPlayWave(const uint32_t& audioHandle, const float_t& second) {
-	//別名サスティンループというらしい
-	//シンセとかにあるサスティンと関係があるのかな
-
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
@@ -478,12 +484,10 @@ void Elysia::Audio::AfterLoopPlayWave(const uint32_t& audioHandle, const float_t
 	buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
 	//長いので新しく変数を作って分かりやすくする
-	int samplingRate = Elysia::Audio::GetInstance()->audioInformation_[fileKey].soundData.wfex.nSamplesPerSec;
+	int32_t samplingRate = Elysia::Audio::GetInstance()->audioInformation_[fileKey].soundData.wfex.nSamplesPerSec;
 
 	//ここでループしたい位置を設定してあげる
 	buffer.LoopBegin = uint32_t(second * samplingRate);
-
-
 
 	//Buffer登録
 	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SubmitSourceBuffer(&buffer);
@@ -497,8 +501,6 @@ void Elysia::Audio::AfterLoopPlayWave(const uint32_t& audioHandle, const float_t
 
 
 void Elysia::Audio::BeforeLoopPlayWave(const uint32_t& audioHandle, const float_t& lengthSecond) {
-	//別名サスティンループというらしい
-	//シンセとかにあるサスティンと関係があるのかな
 	//こっちは前半でループ
 
 	//ファイルキーの取得
@@ -513,13 +515,11 @@ void Elysia::Audio::BeforeLoopPlayWave(const uint32_t& audioHandle, const float_
 	buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
 	//長いので新しく変数を作って分かりやすくする
-	int samplingRate = Elysia::Audio::GetInstance()->audioInformation_[fileKey].soundData.wfex.nSamplesPerSec;
+	int32_t samplingRate = Elysia::Audio::GetInstance()->audioInformation_[fileKey].soundData.wfex.nSamplesPerSec;
 
 	//ここでループしたい位置を設定してあげる
 	buffer.LoopBegin = 0;
 	buffer.LoopLength = static_cast<uint32_t>(lengthSecond * samplingRate);
-
-
 
 	//Buffer登録
 	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SubmitSourceBuffer(&buffer);
@@ -550,14 +550,11 @@ void Elysia::Audio::PartlyLoopPlayWave(const uint32_t& audioHandle, const float_
 	buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
 	//長いので新しく変数を作って分かりやすくする
-	int samplingRate = Elysia::Audio::GetInstance()->audioInformation_[fileKey].soundData.wfex.nSamplesPerSec;
+	int32_t samplingRate = Elysia::Audio::GetInstance()->audioInformation_[fileKey].soundData.wfex.nSamplesPerSec;
 
 	//ここでループしたい位置を設定してあげる
 	buffer.LoopBegin = static_cast<uint32_t>(start * samplingRate);
 	buffer.LoopLength = static_cast<uint32_t>(lengthSecond * samplingRate);
-
-
-
 
 	//Buffer登録
 	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SubmitSourceBuffer(&buffer);
@@ -566,8 +563,6 @@ void Elysia::Audio::PartlyLoopPlayWave(const uint32_t& audioHandle, const float_
 	//波形データの再生
 	hResult = audioInformation_[fileKey].sourceVoice->Start(0);
 	assert(SUCCEEDED(hResult));
-
-
 
 }
 
@@ -584,7 +579,6 @@ void Elysia::Audio::ChangeVolume(const uint32_t& audioHandle, const float_t& vol
 
 void Elysia::Audio::ChangeFrequencyRatio(const uint32_t& audioHandle, float_t& ratio_) {
 
-
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
@@ -594,47 +588,44 @@ void Elysia::Audio::ChangeFrequencyRatio(const uint32_t& audioHandle, float_t& r
 
 void Elysia::Audio::ChangePitch(const uint32_t& audioHandle, const int32_t& scale) {
 
-
-	float ratio_ = 1.0f;
+	float_t ratio = 1.0f;
 
 	//入力された値がプラスだった場合
 	if (scale >= 0) {
 		//プラスのピッチの方を探す
 		for (int32_t i = 0; i < SCALE_AMOUNT_; i++) {
 			if (scale == i) {
-				ratio_ = SEMITONE_RATIO_[i];
+				ratio = SEMITONE_RATIO_[i];
 				break;
 			}
 
 		}
 		//12以上は上がらなかった
 		if (scale > 12) {
-			ratio_ = SEMITONE_RATIO_[12];
+			ratio = SEMITONE_RATIO_[12];
 		}
-
 	}
 	//入力された値がマイナスだった場合
 	else if (scale < 0) {
 		//マイナスのピッチの方を探す
 		for (int32_t i = 0; i < SCALE_AMOUNT_; i++) {
 			if (scale == -i) {
-				ratio_ = MINUS_SEMITONE_RATION[i];
+				ratio = MINUS_SEMITONE_RATION[i];
 				break;
 			}
 
 		}
 		//-12以上は下がらなかった
 		if (scale < -12) {
-			ratio_ = MINUS_SEMITONE_RATION[12];
+			ratio = MINUS_SEMITONE_RATION[12];
 		}
 	}
 
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
 
-
 	//比率の設定
-	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFrequencyRatio(ratio_);
+	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFrequencyRatio(ratio);
 	assert(SUCCEEDED(hResult));
 }
 
@@ -688,7 +679,6 @@ void Elysia::Audio::SetPan(const uint32_t& audioHandle, const float_t& pan) {
 		break;
 	}
 
-
 	//詳細の取得
 	XAUDIO2_VOICE_DETAILS voiceDetails;
 	audioInformation_[fileKey].sourceVoice->GetVoiceDetails(&voiceDetails);
@@ -707,8 +697,8 @@ void Elysia::Audio::SetPan(const uint32_t& audioHandle, const float_t& pan) {
 }
 
 void Elysia::Audio::SetLowPassFilter(const uint32_t& audioHandle, float_t& cutOff) {
-	//いきなり効果アリにすると違和感ある
-	//LowPassは最初「1.0f」にした方が良い
+	//いきなり効果アリにすると違和感あるよね
+	//LowPassは最初「1.0f」にした方が良いかも
 	cutOff = max(cutOff, 1.0f);
 	cutOff = min(cutOff, 0.0f);
 
@@ -729,8 +719,8 @@ void Elysia::Audio::SetLowPassFilter(const uint32_t& audioHandle, float_t& cutOf
 }
 
 void Elysia::Audio::SetLowPassFilter(const uint32_t& audioHandle, float_t& cutOff, const float_t& oneOverQ) {
-	//いきなり効果アリにすると違和感ある
-	//LowPassは最初「1.0f」にした方が良い
+	//いきなり効果アリにすると違和感あるよね
+	//LowPassは最初「1.0f」にした方が良いかも
 	cutOff = max(cutOff, 1.0f);
 	cutOff = min(cutOff, 0.0f);
 
@@ -751,8 +741,8 @@ void Elysia::Audio::SetLowPassFilter(const uint32_t& audioHandle, float_t& cutOf
 }
 
 void Elysia::Audio::SetHighPassFilter(const uint32_t& audioHandle, float_t& cutOff) {
-	//いきなり効果アリにすると違和感ある
-	//HighPassは最初「0.0f」にした方が良い
+	//いきなり効果アリにすると違和感あるよね
+	//HighPassは最初「0.0f」にした方が良いかも
 
 	cutOff = max(cutOff, 1.0f);
 	cutOff = min(cutOff, 0.0f);
@@ -766,6 +756,7 @@ void Elysia::Audio::SetHighPassFilter(const uint32_t& audioHandle, float_t& cutO
 
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
+
 
 	//パラメータの設定
 	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFilterParameters(&filterParams);
@@ -794,6 +785,7 @@ void Elysia::Audio::SetHighPassFilter(const uint32_t& audioHandle, float_t& cutO
 }
 
 void Elysia::Audio::SetBandPassFilter(const uint32_t& audioHandle, float_t& cutOff) {
+
 	cutOff = max(cutOff, 1.0f);
 	cutOff = min(cutOff, 0.0f);
 
@@ -822,10 +814,8 @@ void Elysia::Audio::SetBandPassFilter(const uint32_t& audioHandle, float_t& cutO
 	FilterParams.Frequency = cutOff;
 	FilterParams.OneOverQ = oneOverQ;
 
-
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
-
 
 	//パラメーターの設定
 	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetFilterParameters(&FilterParams);
@@ -873,7 +863,7 @@ void Elysia::Audio::SetNotchFilter(const uint32_t& audioHandle, float_t& cutOff,
 int32_t Elysia::Audio::GetBitPerSample(const uint32_t& audioHandle) {
 	//ファイルキーの取得
 	std::string fileKey = GetAudioInformationKey(audioHandle);
-	
+
 	//bitの数を返す
 	return audioInformation_[fileKey].soundData.wfex.wBitsPerSample;
 }
@@ -888,7 +878,6 @@ void Elysia::Audio::SendChannels(const uint32_t& audioHandle, const uint32_t& ch
 	HRESULT hResult = audioInformation_[fileKey].sourceVoice->SetOutputVoices(&sendlist);
 	assert(SUCCEEDED(hResult));
 }
-
 
 //エフェクトの効果を無効にする
 void Elysia::Audio::OffEffect(const uint32_t& audioHandle) {
