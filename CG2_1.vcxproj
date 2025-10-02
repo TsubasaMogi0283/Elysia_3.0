@@ -191,6 +191,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Elysia\Polygon\PostEffect\SepiaScale\SepiaScale.cpp" />
     <ClCompile Include="Elysia\Polygon\PostEffect\Vignette\VignettePostEffect.cpp" />
     <ClCompile Include="Elysia\StringOption\StringOption.cpp" />
+    <ClCompile Include="Project\AllGameScene\AudioTest\AudioTest.cpp" />
     <ClCompile Include="Project\AllGameScene\GameSceneFactory.cpp" />
     <ClCompile Include="Project\AllGameScene\GameScene\BaseGameScene\Explanation\ExplanationGameScene.cpp" />
     <ClCompile Include="Project\AllGameScene\GameScene\BaseGameScene\Play\PlayGameScene.cpp" />
@@ -520,6 +521,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Elysia\Polygon\PostEffect\SepiaScale\SepiaScale.h" />
     <ClInclude Include="Elysia\Polygon\PostEffect\Vignette\VignettePostEffect.h" />
     <ClInclude Include="Elysia\StringOption\StringOption.h" />
+    <ClInclude Include="Project\AllGameScene\AudioTest\AudioTest.h" />
     <ClInclude Include="Project\AllGameScene\GameSceneFactory.h" />
     <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\BaseGameScene.h" />
     <ClInclude Include="Project\AllGameScene\GameScene\BaseGameScene\Explanation\ExplanationGameScene.h" />

@@ -5,6 +5,7 @@
 #include "WinScene/WinScene.h"
 #include "LoseScene/LoseScene.h"
 #include "TestScene/TestScene.h"
+#include <AudioTest/AudioTest.h>
 
 std::unique_ptr<Elysia::IGameScene> GameSceneFactory::CreateScene(const std::string& sceneName){
 
@@ -31,7 +32,9 @@ std::unique_ptr<Elysia::IGameScene> GameSceneFactory::CreateScene(const std::str
     else if (sceneName == "Test") {
         newScene = std::make_unique<TestScene>();
     }
-
+    else if (sceneName == "AudioTest") {
+        newScene = std::make_unique<AudioTest>();
+    }
 
     return newScene;
 }
