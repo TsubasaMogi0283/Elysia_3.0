@@ -318,6 +318,13 @@ namespace Elysia {
 		int32_t GetBitPerSample(const uint32_t& audioHandle);
 
 		/// <summary>
+		/// 現在再生している時間を取得
+		/// </summary>
+		/// <param name="audioHandle">ハンドル</param>
+		/// <returns></returns>
+		float_t GetPlayCurrentTime(const uint32_t& audioHandle);
+
+		/// <summary>
 		/// サブミックスボイスの作成
 		/// </summary>
 		/// <param name="channel"></param>
