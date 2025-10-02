@@ -122,6 +122,8 @@ namespace Elysia {
 		/// </summary>
 		void Play(const uint32_t& audioHandle, const uint32_t& loopCount);
 
+	private:
+
 		/// <summary>
 		/// 再生
 		/// </summary>
@@ -151,6 +153,7 @@ namespace Elysia {
 		/// <param name="loopCount"></param>
 		void PlayMP3(const uint32_t& audioHandle, const uint32_t& loopCount);
 
+	public:
 
 		/// <summary>
 		/// 一時停止
