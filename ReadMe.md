@@ -124,3 +124,10 @@ XAudio2を使い再生と停止の基本機能に加え、ループの細かい�
 * nlohmann-json
 * Assimp
 * ImGui
+
+
+
+
+
+## その他制作作品(ポートフォリオ)
+https://docs.google.com/presentation/d/17UZqE148mEpKzB4lyVX0v-e63J3Jz6tnAAnuspaHqds/edit?usp=sharing
